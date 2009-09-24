@@ -5,8 +5,8 @@
 # ============
 
 python (>= 2.3.5-7), python-xml, python-mutagen, python-imaging (>= 1.1.6),
-python-numpy, python-ctypes (>= 1.0.1), python-scikits-audiolab (>= 0.10),
-python-setuptools (>= 0.6b3), python-support (>= 0.3), python-scipy,
+python-numpy, python-scipy, python-scikits-audiolab (>= 0.10),
+python-setuptools (>= 0.6b3), python-support (>= 0.3), python-ctypes (>= 1.0.1),
 libsndfile1 (>= 1.0.17), sox (>= 14.2), vorbis-tools, flac, libgd2-xpm,
 lame (>= 3.98.2)
 
