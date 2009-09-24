@@ -1,0 +1,116 @@
+.ts-skin-lab .ts-player {
+  background: #3c4251;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: dotted #b2b2b2 1px;
+}
+
+.ts-skin-lab .ts-player .ts-viewer {
+  margin: 0 12px 10px 12px;
+  border: solid 1px white;
+}
+
+.ts-skin-lab .ts-player .ts-viewer .ts-marker {
+    color: white;
+    background: #7290bc;
+}
+
+.ts-skin-lab .ts-player .ts-viewer a.ts-marker, .ts-skin-lab .ts-player .ts-viewer a.ts-pointer {
+    text-decoration: none;
+    line-height: 13px;
+}
+
+.ts-skin-lab .ts-player .ts-viewer .ts-pointer {
+    color: #3c4251;
+    background: #e7e7e7;
+}
+
+.ts-skin-lab .ts-player .ts-ruler .ts-section .ts-label {
+    color: #c3c2cc;
+    background: #2a3242;
+    padding-bottom: 1px;
+    padding-left: 2px;
+    line-height: 13px;
+}
+
+.ts-skin-lab .ts-player .ts-ruler .ts-section .ts-lines {
+    background: #384051;
+    color: #9498a1;
+    border-bottom: solid 1px white;
+    line-height: 13px;
+}
+
+.ts-skin-lab .ts-player .ts-wave .ts-image {
+    background: #090e0d ;
+}
+
+.ts-skin-lab .ts-player .ts-control {
+    background: url('img/controlbg.png');
+    height: 28px;
+    border-top: dotted #b2b2b2 1px;
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-layout {
+    margin-left: 12px;
+    margin-right: 12px;
+    padding-top: 4px;
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback a {
+    display: block;
+    float: left;
+    width: 21px;
+    padding: 21px 0 0 0;
+    overflow: hidden;
+    height: 0px !important; 
+    height /**/:21px; /* for IE5/Win only */
+    margin-right: 1px;
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback a:hover {
+    background-position: 0 -21px;
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback .ts-play {
+    background-image: url('img/play.png');
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback .ts-pause {
+    background-image: url('img/pause.png');
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback .ts-rewind {
+    background-image: url('img/rewind.png');
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback .ts-forward {
+    background-image: url('img/forward.png');
+}
+
+.ts-skin-lab .ts-player .ts-control .ts-playback .ts-set-marker {
+    background-image: url('img/setmarker.png');
+}
+
+/* unused */
+.ts-skin-lab .ts-player .ts-marker-control .ts-set-marker {
+    display: block;
+    width: 89px;
+    padding: 21px 0 0 0;
+    overflow: hidden;
+    height: 0px !important; 
+    height /**/:21px; /* for IE5/Win only */
+    background-image: url('img/setmarker.gif');
+    margin: 5px auto 0 auto;
+}
+
+/* unused */
+.ts-skin-lab .ts-player .ts-marker-control .ts-set-marker:hover {
+    background-position: 0 -21px;
+}
+
+.ts-skin-lab .ts-player .ts-marker-control {
+    border-top: dotted #b2b2b2 1px;
+    border-bottom: dotted #b2b2b2 1px;
+    height: 30px;
+}
+

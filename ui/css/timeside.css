@@ -1,0 +1,29 @@
+/* FIXME: These CSS styles are essential and non intrusive. They should be 
+ * dynamically assigned in javascript, and this file removed. */
+
+.ts-player .ts-ruler .ts-section .ts-canvas {
+    position: relative;
+}
+
+.ts-player .ts-wave {
+    position: relative;
+    clear: both;
+    overflow: hidden;
+}
+
+.ts-player .ts-wave .ts-image-container {
+    position: relative;
+}
+
+.ts-player .ts-wave .ts-image {
+    position: absolute;
+    left: 0;
+    clear: both;
+}
+
+.ts-player .ts-wave .ts-image-canvas {
+    position: absolute;
+    z-index: 100;
+    overflow: hidden;
+}
+
