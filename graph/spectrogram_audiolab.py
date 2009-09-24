@@ -21,7 +21,6 @@
 
 from timeside.core import *
 from timeside.graph.api import IMediaItemGrapher
-from django.conf import settings
 from tempfile import NamedTemporaryFile
 from timeside.graph.wav2png import *
 

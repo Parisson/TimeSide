@@ -112,7 +112,7 @@ class VampCoreAnalyzer:
             yield __chunk
         
 
-class VampProcessError(TelemetaError):
+class VampProcessError(TimeSideError):
 
     def __init__(self, message, command, subprocess):
         self.message = message

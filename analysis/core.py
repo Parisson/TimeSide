@@ -21,7 +21,6 @@
 #   Bram de Jong <bram.dejong at domain.com where domain in gmail>
 #   Guillaume Pellerin <yomguy at parisson.com>
 
-from django.conf import settings
 from timeside.core import *
 import optparse, math, sys
 import numpy

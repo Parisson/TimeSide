@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # wav2png.py -- converts wave files to wave file and spectrogram images
 # Copyright (C) 2008 MUSIC TECHNOLOGY GROUP (MTG)
