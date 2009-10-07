@@ -23,15 +23,15 @@ import os
 import string
 import subprocess
 
-from timeside.export.core import *
-from timeside.export.api import IExporter
+from timeside.encode.core import *
+from timeside.encode.api import IEncoder
 from mutagen.flac import FLAC
 from tempfile import NamedTemporaryFile
 
-class FlacExporter(ExporterCore):
-    """Defines methods to export to FLAC"""
+class FlacEncoder(EncoderCore):
+    """Defines methods to encode to FLAC"""
 
-    implements(IExporter)
+    implements(IEncoder)
     
     def __init__(self):
         self.item_id = ''
@@ -65,12 +65,12 @@ class FlacExporter(ExporterCore):
             self.info = info
             return self.info
         except:
-            raise IOError('ExporterError: metaflac is not installed or ' + \
+            raise IOError('EncoderError: metaflac is not installed or ' + \
                            'file does not exist.')
 
     def set_cache_dir(self,path):
         """Set the directory where cached files should be stored. Does nothing
-        if the exporter doesn't support caching. 
+        if the encodeer doesn't support caching. 
        
         The driver shouldn't assume that this method will always get called. A
         temporary directory should be used if that's not the case.
@@ -85,7 +85,7 @@ class FlacExporter(ExporterCore):
             self.source = dest
             return dest
         except:
-            raise IOError('ExporterError: decoder is not compatible.')
+            raise IOError('EncoderError: decoder is not compatible.')
 
     def write_tags(self, file):
         media = FLAC(file)
@@ -99,7 +99,7 @@ class FlacExporter(ExporterCore):
         try:
             media.save()
         except:
-            raise IOError('ExporterError: cannot write tags.')
+            raise IOError('EncoderError: cannot write tags.')
 
     def get_args(self,options=None):
         """Get process options and return arguments for the encoder"""

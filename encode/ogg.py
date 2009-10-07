@@ -23,14 +23,14 @@ import os
 import string
 import subprocess
 
-from timeside.export.core import *
-from timeside.export.api import IExporter
+from timeside.encode.core import *
+from timeside.encode.api import IEncoder
 from mutagen.oggvorbis import OggVorbis
 
-class OggExporter(ExporterCore):
-    """Defines methods to export to OGG Vorbis"""
+class OggEncoder(EncoderCore):
+    """Defines methods to encode to OGG Vorbis"""
 
-    implements(IExporter)
+    implements(IEncoder)
     
     def __init__(self):
         self.item_id = ''
@@ -67,7 +67,7 @@ class OggExporter(ExporterCore):
             self.info = info
             return self.info
         except:
-            raise IOError('ExporterError: file does not exist.')
+            raise IOError('EncoderError: file does not exist.')
 
     def set_cache_dir(self,path):
        self.cache_dir = path
@@ -78,7 +78,7 @@ class OggExporter(ExporterCore):
                       '.wav" "'+self.source+'"')
             return self.cache_dir+os.sep+self.item_id+'.wav'
         except:
-            raise IOError('ExporterError: decoder is not compatible.')
+            raise IOError('EncoderError: decoder is not compatible.')
 
     def write_tags(self):
         media = OggVorbis(self.dest)

@@ -27,13 +27,13 @@ import string
 import subprocess
 import mutagen
 
-from timeside.export import *
+from timeside.decode import *
 from timeside.core import *
 import xml.dom.minidom
 import xml.dom.ext
 
-class ExporterCore(Component):
-    """Defines the main parts of the exporting tools :
+class DecoderCore(Component):
+    """Defines the main parts of the decodeing tools :
     paths, metadata parsing, data streaming thru system command"""
 
     def __init__(self):
@@ -57,7 +57,7 @@ class ExporterCore(Component):
             os.system('normalize-audio '+args+' "'+self.source+'"')
             return self.source
         except:
-            raise IOError('ExporterError: cannot normalize, path does not exist.')
+            raise IOError('DecoderError: cannot normalize, path does not exist.')
 
     def check_md5_key(self):
         """ Check if the md5 key is OK and return a boolean """
@@ -66,11 +66,11 @@ class ExporterCore(Component):
                                 '" "'+self.dest+'.md5"')
             return 'OK' in md5_log.split(':')
         except IOError:
-            raise IOError('ExporterError: cannot check the md5 key.')
+            raise IOError('DecoderError: cannot check the md5 key.')
     
     def get_file_info(self):
         """ Return the list of informations of the dest """
-        return self.export.get_file_info()
+        return self.decode.get_file_info()
 
     def get_wav_length_sec(self) :
         """ Return the length of the audio source file in seconds """
@@ -82,7 +82,7 @@ class ExporterCore(Component):
                 value = int(int(line_split[1])/(4*44100))
                 return value
         except:
-            raise IOError('ExporterError: cannot get the wav length.')
+            raise IOError('DecoderError: cannot get the wav length.')
 
     def compare_md5_key(self, source, dest):
         """ Compare source and dest files wih md5 method """
@@ -106,7 +106,7 @@ class ExporterCore(Component):
 
     def pre_process(self, item_id, source, metadata, ext,
                     cache_dir, options=None):
-        """ Pre processing : prepare the export path and return it"""
+        """ Pre processing : prepare the decode path and return it"""
         self.item_id = str(item_id)
         self.source = source
         file_name = get_file_name(self.source)
@@ -124,19 +124,19 @@ class ExporterCore(Component):
                 self.options['normalize'] == True:
                 self.normalize()
 
-        # Define the export directory
+        # Define the decode directory
         self.ext = self.get_file_extension()
-        export_dir = os.path.join(self.cache_dir,self.ext)
+        decode_dir = os.path.join(self.cache_dir,self.ext)
 
-        if not os.path.exists(export_dir):
-            export_dir_split = export_dir.split(os.sep)
-            path = os.sep + export_dir_split[0]
-            for _dir in export_dir_split[1:]:
+        if not os.path.exists(decode_dir):
+            decode_dir_split = decode_dir.split(os.sep)
+            path = os.sep + decode_dir_split[0]
+            for _dir in decode_dir_split[1:]:
                 path = os.path.join(path,_dir)
                 if not os.path.exists(path):
                     os.mkdir(path)
         else:
-            path = export_dir
+            path = decode_dir
 
         # Set the target file
         target_file = self.item_id+'.'+self.ext
@@ -212,7 +212,7 @@ def get_file_mime_type(path):
             mime = line_split[len(line_split)-1]
             return mime[:len(mime)-1]
     except:
-        raise IOError('ExporterError: path does not exist.')
+        raise IOError('DecoderError: path does not exist.')
 
 def get_file_type_desc(path):
     """ Return the type of a file given by the 'file' command """
@@ -223,7 +223,7 @@ def get_file_type_desc(path):
             description = description[1].split(', ')
             return description
     except:
-        raise IOError('ExporterError: path does not exist.')
+        raise IOError('DecoderError: path does not exist.')
 
 def iswav(path):
     """ Tell if path is a WAV """
@@ -231,7 +231,7 @@ def iswav(path):
         mime = get_file_mime_type(path)
         return mime == 'audio/x-wav'
     except:
-        raise IOError('ExporterError: path does not exist.')
+        raise IOError('DecoderError: path does not exist.')
 
 def iswav16(path):
     """ Tell if path is a 16 bit WAV """
@@ -239,7 +239,7 @@ def iswav16(path):
         file_type_desc = get_file_type_desc(path)
         return iswav(path) and '16 bit' in file_type_desc
     except:
-        raise IOError('ExporterError: path does not exist.')
+        raise IOError('DecoderError: path does not exist.')
 
 def get_file_name(path):
     """ Return the file name targeted in the path """
@@ -250,11 +250,11 @@ def split_file_name(file):
     try:
         return os.path.splitext(file)
     except:
-        raise IOError('ExporterError: path does not exist.')
+        raise IOError('DecoderError: path does not exist.')
 
 def clean_word(word) :
     """ Return the word without excessive blank spaces, underscores and
-    characters causing problem to exporters"""
+    characters causing problem to decodeers"""
     word = re.sub("^[^\w]+","",word)    #trim the beginning
     word = re.sub("[^\w]+$","",word)    #trim the end
     word = re.sub("_+","_",word)        #squeeze continuous _ to one _

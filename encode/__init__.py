@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from timeside.export.api import *
-from timeside.export.core import *
-from timeside.export.ogg import *
-from timeside.export.flac import *
-from timeside.export.wav import *
-from timeside.export.mp3 import *
+from timeside.encode.api import *
+from timeside.encode.core import *
+from timeside.encode.ogg import *
+from timeside.encode.flac import *
+from timeside.encode.wav import *
+from timeside.encode.mp3 import *

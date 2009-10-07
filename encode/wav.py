@@ -22,13 +22,13 @@
 import os
 import string
 
-from timeside.export.core import *
-from timeside.export.api import IExporter
+from timeside.encode.core import *
+from timeside.encode.api import IEncoder
 
-class WavExporter(ExporterCore):
-    """Defines methods to export to WAV"""
+class WavEncoder(EncoderCore):
+    """Defines methods to encode to WAV"""
 
-    implements(IExporter)
+    implements(IEncoder)
     
     def __init__(self):
         self.item_id = ''
@@ -61,7 +61,7 @@ class WavExporter(ExporterCore):
             self.info = info
             return self.info
         except:
-            raise IOError('ExporterError: wavinfo id not installed or file does not exist.')
+            raise IOError('EncoderError: wavinfo id not installed or file does not exist.')
 
     def set_cache_dir(self,path):
         self.cache_dir = path
@@ -75,7 +75,7 @@ class WavExporter(ExporterCore):
             self.source = dest
             return dest
         except:
-            raise IOError('ExporterError: decoder is not compatible.')
+            raise IOError('EncoderError: decoder is not compatible.')
 
     def write_tags(self):
         # Create metadata XML file !
@@ -86,7 +86,7 @@ class WavExporter(ExporterCore):
         try:
             os.system('md5sum -b "'+self.dest+'" >"'+self.dest+'.md5"')
         except:
-            raise IOError('ExporterError: cannot create the md5 key.')
+            raise IOError('EncoderError: cannot create the md5 key.')
     
     def create_par_key(self):
         """ Create the par2 keys of the dest """
@@ -99,7 +99,7 @@ class WavExporter(ExporterCore):
         try:
             os.system('par2 '+args+' "'+self.dest+'"')
         except:
-            raise IOError('ExporterError: cannot create the par2 key.')
+            raise IOError('EncoderError: cannot create the par2 key.')
 
     def process(self, item_id, source, metadata, options=None):
         self.item_id = item_id

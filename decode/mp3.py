@@ -24,14 +24,14 @@ import os
 import string
 import subprocess
 
-from timeside.export.core import *
-from timeside.export.api import IExporter
+from timeside.decode.core import *
+from timeside.decode.api import IDecoder
 #from mutagen.id3 import *
 
-class Mp3Exporter(ExporterCore):
-    """Defines methods to export to MP3"""
+class Mp3Decoder(DecoderCore):
+    """Defines methods to decode to MP3"""
 
-    implements(IExporter)
+    implements(IDecoder)
     
     def __init__(self):
         self.item_id = ''
@@ -83,7 +83,7 @@ class Mp3Exporter(ExporterCore):
             self.info = info
             return self.info
         except:
-            raise IOError('ExporterError: file does not exist.')
+            raise IOError('DecoderError: file does not exist.')
 
     def decode(self):
         try:
@@ -91,7 +91,7 @@ class Mp3Exporter(ExporterCore):
                         +self.cache_dir+os.sep+self.item_id+'"')
             return self.cache_dir+os.sep+self.item_id+'.wav'
         except:
-            raise IOError('ExporterError: decoder is not compatible.')
+            raise IOError('DecoderError: decoder is not compatible.')
 
     def write_tags(self):
         """Write all ID3v2.4 tags by mapping dub2id3_dict dictionnary with the
@@ -106,11 +106,11 @@ class Mp3Exporter(ExporterCore):
                 try:
                     id3.add(frame)
                 except:
-                    raise IOError('ExporterError: cannot tag "'+tag+'"')
+                    raise IOError('DecoderError: cannot tag "'+tag+'"')
         try:
             id3.save()
         except:
-            raise IOError('ExporterError: cannot write tags')
+            raise IOError('DecoderError: cannot write tags')
 
     def get_args(self, options=None):
         """Get process options and return arguments for the encoder"""
