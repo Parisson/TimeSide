@@ -24,49 +24,46 @@ from timeside.core import Interface, TimeSideError
 class IEncoder(Interface):
     """Encoder driver interface"""
 
-    # Remark: the method prototypes do not include any self or cls argument 
-    # because an interface is meant to show what methods a class must expose 
-    # from the caller's point of view. However, when implementing the class 
+    # Remark: the method prototypes do not include any self or cls argument
+    # because an interface is meant to show what methods a class must expose
+    # from the caller's point of view. However, when implementing the class
     # you'll obviously want to include this extra argument.
 
-    def get_format():
-        """Return the encode/encoding format as a short string 
+    def format():
+        """Return the encode/encoding format as a short string
         Example: "MP3", "OGG", "AVI", ...
         """
-   
-    def get_description():
-        """Return a string describing what this encode format provides, is good 
-        for, etc... The description is meant to help the end user decide what 
+
+    def description():
+        """Return a string describing what this encode format provides, is good
+        for, etc... The description is meant to help the end user decide what
         format is good for him/her
         """
 
-    def get_file_extension():
+    def file_extension():
         """Return the filename extension corresponding to this encode format"""
 
-    def get_mime_type():
+    def mime_type():
         """Return the mime type corresponding to this encode format"""
 
     def set_cache_dir(path):
         """Set the directory where cached files should be stored. Does nothing
-        if the encodeer doesn't support caching. 
-       
+        if the encodeer doesn't support caching.
+
         The driver shouldn't assume that this method will always get called. A
         temporary directory should be used if that's not the case.
         """
 
-    def process(item_id, source, metadata, options=None):
+    def process(source, metadata, options=None):
         """Perform the encoding process and stream the result as a generator.
 
-        item_id is the media item id that uniquely identifies this audio/video
-        resource
-
-        source is a raw audio stream coming from the decoder.
+        source is a raw audio stream coming from a decoder.
 
         metadata is a tuple containing tuples for each descriptor return by
         the dc.Ressource of the item, in the model order :
         ((name1, value1),(name2, value2),(name1, value3), ...)
 
-        The returned file path is not meant to be permanent in any way, it 
+        The returned file path is not meant to be permanent in any way, it
         should be considered temporary/volatile by the caller.
 
         It is highly recommended that encode drivers implement some sort of
@@ -76,7 +73,7 @@ class IEncoder(Interface):
         different items, using the same driver instance.
         """
 
-class ExportProcessError(TimeSideError):
+class EncodeProcessError(TimeSideError):
 
     def __init__(self, message, command, subprocess):
         self.message = message

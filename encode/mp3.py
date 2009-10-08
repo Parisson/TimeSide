@@ -32,17 +32,12 @@ class Mp3Encoder(EencoderCore):
     """Defines methods to encode to MP3"""
 
     implements(IEncoder)
-    
+
     def __init__(self):
-        self.item_id = ''
-        self.metadata = {}
-        self.description = ''
-        self.info = []
-        self.source = ''
-        self.dest = ''
-        self.options = {}
+        self.description = self.description()
+        self.format = self.format()
+        self.mime_type = self.mime_type()
         self.bitrate_default = '192'
-        self.buffer_size = 0xFFFF
         self.dub2id3_dict = {'title': 'TIT2', #title2
                              'creator': 'TCOM', #composer
                              'creator': 'TPE1', #lead
@@ -61,7 +56,7 @@ class Mp3Encoder(EencoderCore):
                              }
     def get_format(self):
         return 'MP3'
-    
+
     def get_file_extension(self):
         return 'mp3'
 
@@ -69,10 +64,9 @@ class Mp3Encoder(EencoderCore):
         return 'audio/mpeg'
 
     def get_description(self):
-        return "FIXME"
-
-    def set_cache_dir(self,path):
-       self.cache_dir = path
+        return """
+        MPEG-1 Audio Layer 3, more commonly referred to as MP3, is a patented digital audio encoding format using a form of lossy data compression. It is a common audio format for consumer audio storage, as well as a de facto standard of digital audio compression for the transfer and playback of music on digital audio players. MP3 is an audio-specific format that was designed by the Moving Picture Experts Group as part of its MPEG-1 standard.
+        """
 
     def get_file_info(self):
         try:
@@ -85,18 +79,10 @@ class Mp3Encoder(EencoderCore):
         except:
             raise IOError('EncoderError: file does not exist.')
 
-    def decode(self):
-        try:
-            os.system('sox "'+self.source+'" -s -q -r 44100 -t wav "' \
-                        +self.cache_dir+os.sep+self.item_id+'"')
-            return self.cache_dir+os.sep+self.item_id+'.wav'
-        except:
-            raise IOError('EncoderError: decoder is not compatible.')
-
     def write_tags(self):
         """Write all ID3v2.4 tags by mapping dub2id3_dict dictionnary with the
             respect of mutagen classes and methods"""
-        from mutagen import id3  
+        from mutagen import id3
         id3 = id3.ID3(self.dest)
         for tag in self.metadata.keys():
             if tag in self.dub2id3_dict.keys():
@@ -112,11 +98,10 @@ class Mp3Encoder(EencoderCore):
         except:
             raise IOError('EncoderError: cannot write tags')
 
-    def get_args(self, options=None):
+    def get_args(self):
         """Get process options and return arguments for the encoder"""
         args = []
-        if not options is None: 
-            self.options = options
+        if not self.options is None:
             if not ( 'verbose' in self.options and self.options['verbose'] != '0' ):
                 args.append('-S')
             if 'mp3_bitrate' in self.options:
@@ -136,34 +121,14 @@ class Mp3Encoder(EencoderCore):
                 args.append('--' + arg + ' "' + value + '"')
         return args
 
-    def process(self, item_id, source, metadata, options=None):
-        self.item_id = item_id
-        self.source = source
+    def process(self, source, metadata, options=None):
         self.metadata = metadata
-        self.args = self.get_args(options)
-        self.ext = self.get_file_extension()
-        self.args = ' '.join(self.args)
-        self.command = 'sox "%s" -q -b 16 -r 44100 -t wav - | lame %s -' % (self.source, self.args)
-        #self.command = 'lame %s "%s" -' % (self.args, self.source)
+        self.options = options
+        args = get_args(options)
+        args = ' '.join(args)
+        command = 'lame %s - -' % args
 
-        # Pre-proccessing
-        self.dest = self.pre_process(self.item_id,
-                                         self.source,
-                                         self.metadata,
-                                         self.ext,
-                                         self.cache_dir,
-                                         self.options)
-
-        # Processing (streaming + cache writing)
-        stream = self.core_process(self.command, self.buffer_size, self.dest)
-        for chunk in stream:
-            yield chunk
-    
-        # Post-proccessing
-        #self.post_process(self.item_id,
-                         #self.source,
-                         #self.metadata,
-                         #self.ext,
-                         #self.cache_dir,
-                         #self.options)
+        stream = self.core_process(command, source)
+        for __chunk in stream:
+            yield __chunk
 

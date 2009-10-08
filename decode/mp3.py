@@ -26,53 +26,31 @@ import subprocess
 
 from timeside.decode.core import *
 from timeside.decode.api import IDecoder
-#from mutagen.id3 import *
+
 
 class Mp3Decoder(DecoderCore):
     """Defines methods to decode to MP3"""
 
     implements(IDecoder)
-    
+
     def __init__(self):
-        self.item_id = ''
-        self.metadata = {}
-        self.description = ''
-        self.info = []
-        self.source = ''
-        self.dest = ''
-        self.options = {}
-        self.bitrate_default = '192'
-        self.buffer_size = 0xFFFF
-        self.dub2id3_dict = {'title': 'TIT2', #title2
-                             'creator': 'TCOM', #composer
-                             'creator': 'TPE1', #lead
-                             'identifier': 'UFID', #Unique ID...
-                             'identifier': 'TALB', #album
-                             'type': 'TCON', #genre
-                             'publisher': 'TPUB', #comment
-                             #'date': 'TYER', #year
-                             }
-        self.dub2args_dict = {'title': 'tt', #title2
-                             'creator': 'ta', #composerS
-                             'relation': 'tl', #album
-                             #'type': 'tg', #genre
-                             'publisher': 'tc', #comment
-                             'date': 'ty', #year
-                             }
-    def get_format(self):
+        self.description = self.description()
+        self.format = self.format()
+        self.mime_type = self.mime_type()
+
+    def format(self):
         return 'MP3'
-    
-    def get_file_extension(self):
+
+    def file_extension(self):
         return 'mp3'
 
-    def get_mime_type(self):
+    def mime_type(self):
         return 'audio/mpeg'
 
-    def get_description(self):
-        return "FIXME"
-
-    def set_cache_dir(self,path):
-       self.cache_dir = path
+    def description(self):
+        return """
+        MPEG-1 Audio Layer 3, more commonly referred to as MP3, is a patented digital audio encoding format using a form of lossy data compression. It is a common audio format for consumer audio storage, as well as a de facto standard of digital audio compression for the transfer and playback of music on digital audio players. MP3 is an audio-specific format that was designed by the Moving Picture Experts Group as part of its MPEG-1 standard.
+        """
 
     def get_file_info(self):
         try:
@@ -84,86 +62,4 @@ class Mp3Decoder(DecoderCore):
             return self.info
         except:
             raise IOError('DecoderError: file does not exist.')
-
-    def decode(self):
-        try:
-            os.system('sox "'+self.source+'" -s -q -r 44100 -t wav "' \
-                        +self.cache_dir+os.sep+self.item_id+'"')
-            return self.cache_dir+os.sep+self.item_id+'.wav'
-        except:
-            raise IOError('DecoderError: decoder is not compatible.')
-
-    def write_tags(self):
-        """Write all ID3v2.4 tags by mapping dub2id3_dict dictionnary with the
-            respect of mutagen classes and methods"""
-        from mutagen import id3  
-        id3 = id3.ID3(self.dest)
-        for tag in self.metadata.keys():
-            if tag in self.dub2id3_dict.keys():
-                frame_text = self.dub2id3_dict[tag]
-                value = self.metadata[tag]
-                frame = mutagen.id3.Frames[frame_text](3,value)
-                try:
-                    id3.add(frame)
-                except:
-                    raise IOError('DecoderError: cannot tag "'+tag+'"')
-        try:
-            id3.save()
-        except:
-            raise IOError('DecoderError: cannot write tags')
-
-    def get_args(self, options=None):
-        """Get process options and return arguments for the encoder"""
-        args = []
-        if not options is None: 
-            self.options = options
-            if not ( 'verbose' in self.options and self.options['verbose'] != '0' ):
-                args.append('-S')
-            if 'mp3_bitrate' in self.options:
-                args.append('-b ' + self.options['mp3_bitrate'])
-            else:
-                args.append('-b '+self.bitrate_default)
-            #Copyrights, etc..
-            args.append('-c -o')
-        else:
-            args.append('-S -c -o')
-
-        for tag in self.metadata:
-            name = tag[0]
-            value = clean_word(tag[1])
-            if name in self.dub2args_dict.keys():
-                arg = self.dub2args_dict[name]
-                args.append('--' + arg + ' "' + value + '"')
-        return args
-
-    def process(self, item_id, source, metadata, options=None):
-        self.item_id = item_id
-        self.source = source
-        self.metadata = metadata
-        self.args = self.get_args(options)
-        self.ext = self.get_file_extension()
-        self.args = ' '.join(self.args)
-        self.command = 'sox "%s" -q -b 16 -r 44100 -t wav - | lame %s -' % (self.source, self.args)
-        #self.command = 'lame %s "%s" -' % (self.args, self.source)
-
-        # Pre-proccessing
-        self.dest = self.pre_process(self.item_id,
-                                         self.source,
-                                         self.metadata,
-                                         self.ext,
-                                         self.cache_dir,
-                                         self.options)
-
-        # Processing (streaming + cache writing)
-        stream = self.core_process(self.command, self.buffer_size, self.dest)
-        for chunk in stream:
-            yield chunk
-    
-        # Post-proccessing
-        #self.post_process(self.item_id,
-                         #self.source,
-                         #self.metadata,
-                         #self.ext,
-                         #self.cache_dir,
-                         #self.options)
 

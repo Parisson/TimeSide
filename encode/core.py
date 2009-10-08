@@ -32,151 +32,44 @@ from timeside.core import *
 import xml.dom.minidom
 import xml.dom.ext
 
-class EncoderCore(Component):
-    """Defines the main parts of the encodeing tools :
-    paths, metadata parsing, data streaming thru system command"""
 
-    def __init__(self):
-        self.source = ''
-        self.collection = ''
-        self.verbose = ''
-        self.dest = ''
-        self.metadata = []
-        self.cache_dir = 'cache'
+class SubProcessPipe:
+    """Read media and stream data through a generator.
+    Taken from Telemeta (see http://telemeta.org)"""
+
+    def __init__(self, command, stdin=None):
         self.buffer_size = 0xFFFF
+        if not stdin:
+            stdin =  subprocess.PIPE
 
-    def set_cache_dir(self,path):
-        self.cache_dir = path
-
-    def normalize(self):
-        """ Normalize the source and return its path """
-        args = ''
-        if self.verbose == '0':
-            args = '-q'
-        try:
-            os.system('normalize-audio '+args+' "'+self.source+'"')
-            return self.source
-        except:
-            raise IOError('EncoderError: cannot normalize, path does not exist.')
-
-    def check_md5_key(self):
-        """ Check if the md5 key is OK and return a boolean """
-        try:
-            md5_log = os.popen4('md5sum -c "'+self.dest+ \
-                                '" "'+self.dest+'.md5"')
-            return 'OK' in md5_log.split(':')
-        except IOError:
-            raise IOError('EncoderError: cannot check the md5 key.')
-    
-    def get_file_info(self):
-        """ Return the list of informations of the dest """
-        return self.encode.get_file_info()
-
-    def get_wav_length_sec(self) :
-        """ Return the length of the audio source file in seconds """
-        try:
-            file1, file2 = os.popen4('wavinfo "'+self.source+ \
-                                     '" | grep wavDataSize')
-            for line in file2.readlines():
-                line_split = line.split(':')
-                value = int(int(line_split[1])/(4*44100))
-                return value
-        except:
-            raise IOError('EncoderError: cannot get the wav length.')
-
-    def compare_md5_key(self, source, dest):
-        """ Compare source and dest files wih md5 method """
-        f_source = open(source).read()
-        f_dest = open(dest).read()
-        return md5.new(f_source).digest() == md5.new(f_dest).digest()
-
-    def write_metadata_xml(self,path):
-        doc = xml.dom.minidom.Document()
-        root = doc.createElement('timeside')
-        doc.appendChild(root)
-        for tag in self.metadata.keys() :
-            value = self.metadata[tag]
-            node = doc.createElement(tag)
-            node.setAttribute('value', str(value))
-            #node.setAttribute('type', get_type(value))
-            root.appendChild(node)
-        xml_file = open(path, "w")
-        xml.dom.ext.PrettyPrint(doc, xml_file)
-        xml_file.close()
-
-    def pre_process(self, item_id, source, metadata, ext,
-                    cache_dir, options=None):
-        """ Pre processing : prepare the encode path and return it"""
-        self.item_id = str(item_id)
-        self.source = source
-        file_name = get_file_name(self.source)
-        file_name_wo_ext, file_ext = split_file_name(file_name)
-        self.cache_dir = cache_dir
-        self.metadata = metadata
-        #self.collection = self.metadata['Collection']
-        #self.artist = self.metadata['Artist']
-        #self.title = self.metadata['Title']
-
-        # Normalize if demanded
-        if not options is None:
-            self.options = options
-            if 'normalize' in self.options and \
-                self.options['normalize'] == True:
-                self.normalize()
-
-        # Define the encode directory
-        self.ext = self.get_file_extension()
-        encode_dir = os.path.join(self.cache_dir,self.ext)
-
-        if not os.path.exists(encode_dir):
-            encode_dir_split = encode_dir.split(os.sep)
-            path = os.sep + encode_dir_split[0]
-            for _dir in encode_dir_split[1:]:
-                path = os.path.join(path,_dir)
-                if not os.path.exists(path):
-                    os.mkdir(path)
-        else:
-            path = encode_dir
-
-        # Set the target file
-        target_file = self.item_id+'.'+self.ext
-        dest = os.path.join(path,target_file)
-        return dest
-
-    def core_process(self, command, buffer_size, dest):
-        """Encode and stream audio data through a generator"""
-
-        __chunk = 0
-        file_out = open(dest,'w')
-
-        proc = subprocess.Popen(command.encode('utf-8'),
+        self.proc = subprocess.Popen(command.encode('utf-8'),
                     shell = True,
-                    bufsize = buffer_size,
-                    stdin = subprocess.PIPE,
+                    bufsize = self.buffer_size,
+                    stdin = stdin,
                     stdout = subprocess.PIPE,
                     close_fds = True)
 
-        # Core processing
+        self.input = self.proc.stdin
+        self.output = self.proc.stdout
+
+
+class EncoderCore(Component):
+    """Defines the main parts of the encoding tools :
+    paths, metadata parsing, data streaming thru system command"""
+
+    def core_process(self, command, stdin):
+        """Encode and stream audio data through a generator"""
+
+        proc = SubProcessPipe(command, stdin)
+
         while True:
-            __chunk = proc.stdout.read(buffer_size)
+            __chunk = proc.output.read(self.proc.buffer_size)
             status = proc.poll()
             if status != None and status != 0:
-                raise ExportProcessError('Command failure:', command, proc)
+                raise EncodeProcessError('Command failure:', command, proc)
             if len(__chunk) == 0:
                 break
             yield __chunk
-            file_out.write(__chunk)
-
-        file_out.close()
-
-    def post_process(self, item_id, source, metadata, ext, 
-                     cache_dir, options=None):
-        """ Post processing : write tags, print infos, etc..."""
-        #self.write_tags()
-        if not options is None:
-            if 'verbose' in self.options and self.options['verbose'] != '0':
-                print self.dest
-                print self.get_file_info()
 
 
 # External functions

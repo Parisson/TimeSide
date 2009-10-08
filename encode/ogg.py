@@ -25,42 +25,38 @@ import subprocess
 
 from timeside.encode.core import *
 from timeside.encode.api import IEncoder
-from mutagen.oggvorbis import OggVorbis
 
-class OggEncoder(EncoderCore):
+class OggVorbisEncoder(EncoderCore):
     """Defines methods to encode to OGG Vorbis"""
 
     implements(IEncoder)
-    
+
     def __init__(self):
-        self.item_id = ''
-        self.metadata = {}
-        self.description = ''
-        self.info = []
-        self.source = ''
-        self.dest = ''
-        self.options = {}
+        self.description = self.description()
+        self.format = self.format()
+        self.mime_type = self.mime_type()
         self.bitrate_default = '192'
-        self.buffer_size = 0xFFFF
         self.dub2args_dict = {'creator': 'artist',
                              'relation': 'album'
                              }
-        
-    def get_format(self):
-        return 'OGG'
-    
-    def get_file_extension(self):
+
+    def format(self):
+        return 'OggVorbis'
+
+    def file_extension(self):
         return 'ogg'
 
-    def get_mime_type(self):
+    def mime_type(self):
         return 'application/ogg'
 
-    def get_description(self):
-        return 'FIXME'
+    def description(self):
+        return """
+        Vorbis is a free software / open source project headed by the Xiph.Org Foundation (formerly Xiphophorus company). The project produces an audio format specification and software implementation (codec) for lossy audio compression. Vorbis is most commonly used in conjunction with the Ogg container format and it is therefore often referred to as Ogg Vorbis. (source Wikipedia)
+        """
 
-    def get_file_info(self):
+    def get_file_info(self, file):
         try:
-            file_out1, file_out2 = os.popen4('ogginfo "'+self.dest+'"')
+            file_out1, file_out2 = os.popen4('ogginfo "' + file + '"')
             info = []
             for line in file_out2.readlines():
                 info.append(clean_word(line[:-1]))
@@ -69,28 +65,17 @@ class OggEncoder(EncoderCore):
         except:
             raise IOError('EncoderError: file does not exist.')
 
-    def set_cache_dir(self,path):
-       self.cache_dir = path
-
-    def decode(self):
-        try:
-            os.system('oggdec -o "'+self.cache_dir+os.sep+self.item_id+
-                      '.wav" "'+self.source+'"')
-            return self.cache_dir+os.sep+self.item_id+'.wav'
-        except:
-            raise IOError('EncoderError: decoder is not compatible.')
-
-    def write_tags(self):
-        media = OggVorbis(self.dest)
+    def write_tags(self, file):
+        from mutagen.oggvorbis import OggVorbis
+        media = OggVorbis(file)
         for tag in self.metadata.keys():
             media[tag] = str(self.metadata[tag])
         media.save()
 
-    def get_args(self,options=None):
+    def get_args(self):
         """Get process options and return arguments for the encoder"""
         args = []
-        if not options is None:
-            self.options = options
+        if not self.options is None:
             if not ('verbose' in self.options and self.options['verbose'] != '0'):
                 args.append('-Q ')
             if 'ogg_bitrate' in self.options:
@@ -111,33 +96,15 @@ class OggEncoder(EncoderCore):
                 args.append('-c %s="%s"' % (arg, value))
         return args
 
-    def process(self, item_id, source, metadata, options=None):
-        self.item_id = item_id
-        self.source = source
+    def process(self, source, metadata, options=None):
         self.metadata = metadata
-        self.args = self.get_args(options)
-        self.ext = self.get_file_extension()
-        self.args = ' '.join(self.args)
-        self.command = 'sox "%s" -s -q -b 16 -r 44100 -t wav -c2 - | oggenc %s -' % (self.source, self.args)
+        self.options = options
+        args = self.get_args(options)
+        args = ' '.join(args)
+        command = 'oggenc %s -' % args
 
-        # Pre-proccessing
-        self.dest = self.pre_process(self.item_id,
-                                        self.source,
-                                        self.metadata,
-                                        self.ext,
-                                        self.cache_dir,
-                                        self.options)
+        stream = self.core_process(command, source)
+        for __chunk in stream:
+            yield __chunk
 
-        # Processing (streaming + cache writing)
-        stream = self.core_process(self.command, self.buffer_size, self.dest)
-        for chunk in stream:
-            yield chunk
-    
-        # Post-proccessing
-        #self.post_process(self.item_id,
-                        #self.source,
-                        #self.metadata,
-                        #self.ext,
-                        #self.cache_dir,
-                        #self.options)
 
