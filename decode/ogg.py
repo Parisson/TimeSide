@@ -53,7 +53,12 @@ class OggDecoder(DecoderCore):
 
     def description(self):
         return """
-        Vorbis is a free software / open source project headed by the Xiph.Org Foundation (formerly Xiphophorus company). The project produces an audio format specification and software implementation (codec) for lossy audio compression. Vorbis is most commonly used in conjunction with the Ogg container format and it is therefore often referred to as Ogg Vorbis. (source Wikipedia)
+        Vorbis is a free software / open source project headed by the Xiph.Org
+        Foundation (formerly Xiphophorus company). The project produces an audio
+        format specification and software implementation (codec) for lossy audio
+        compression. Vorbis is most commonly used in conjunction with the Ogg
+        container format and it is therefore often referred to as Ogg Vorbis.
+        (source Wikipedia)
         """
 
     def get_file_info(self):

@@ -46,7 +46,14 @@ class WavDecoder(DecoderCore):
 
     def description(self):
         return """
-        WAV (or WAVE), short for Waveform audio format, also known as Audio for Windows, is a Microsoft and IBM audio file format standard for storing an audio bitstream on PCs. It is an application of the RIFF bitstream format method for storing data in “chunks”, and thus is also close to the 8SVX and the AIFF format used on Amiga and Macintosh computers, respectively. It is the main format used on Windows systems for raw and typically uncompressed audio. The usual bitstream encoding is the Pulse Code Modulation (PCM) format.
+        WAV (or WAVE), short for Waveform audio format, also known as Audio for
+        Windows, is a Microsoft and IBM audio file format standard for storing
+        an audio bitstream on PCs. It is an application of the RIFF bitstream
+        format method for storing data in “chunks”, and thus is also close to
+        the 8SVX and the AIFF format used on Amiga and Macintosh computers,
+        respectively. It is the main format used on Windows systems for raw and
+        typically uncompressed audio. The usual bitstream encoding is the Pulse
+        Code Modulation (PCM) format.
         """
 
     def get_file_info(self):
