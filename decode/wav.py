@@ -26,7 +26,7 @@ from timeside.decode.core import *
 from timeside.decode.api import IDecoder
 
 class WavDecoder(DecoderCore):
-    """Defines methods to decode to WAV"""
+    """Defines methods to decode from WAV"""
 
     implements(IDecoder)
 

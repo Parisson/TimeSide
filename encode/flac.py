@@ -25,7 +25,6 @@ import subprocess
 
 from timeside.encode.core import *
 from timeside.encode.api import IEncoder
-from mutagen.flac import FLAC
 from tempfile import NamedTemporaryFile
 
 class FlacEncoder(EncoderCore):
@@ -67,6 +66,7 @@ class FlacEncoder(EncoderCore):
                            'file does not exist.')
 
     def write_tags(self, file):
+        from mutagen.flac import FLAC
         media = FLAC(file)
         for tag in self.metadata:
             name = tag[0]

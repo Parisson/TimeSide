@@ -29,7 +29,7 @@ from mutagen.flac import FLAC
 from tempfile import NamedTemporaryFile
 
 class FlacDecoder(DecoderCore):
-    """Defines methods to decode to FLAC"""
+    """Defines methods to decode from FLAC"""
 
     implements(IDecoder)
 

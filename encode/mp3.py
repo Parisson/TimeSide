@@ -26,7 +26,7 @@ import subprocess
 
 from timeside.encode.core import *
 from timeside.encode.api import IEncoder
-#from mutagen.id3 import *
+
 
 class Mp3Encoder(EencoderCore):
     """Defines methods to encode to MP3"""

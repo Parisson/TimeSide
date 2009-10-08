@@ -29,7 +29,7 @@ from timeside.decode.api import IDecoder
 
 
 class Mp3Decoder(DecoderCore):
-    """Defines methods to decode to MP3"""
+    """Defines methods to decode from MP3"""
 
     implements(IDecoder)
 

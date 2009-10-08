@@ -28,7 +28,7 @@ from timeside.decode.api import IDecoder
 from mutagen.oggvorbis import OggVorbis
 
 class OggDecoder(DecoderCore):
-    """Defines methods to decode to OGG Vorbis"""
+    """Defines methods to decode from OGG Vorbis"""
 
     implements(IDecoder)
 
@@ -36,8 +36,6 @@ class OggDecoder(DecoderCore):
         self.description = self.description()
         self.format = self.format()
         self.mime_type = self.mime_type()
-
-        self.bitrate_default = '192'
         self.dub2args_dict = {'creator': 'artist',
                              'relation': 'album'
                              }
