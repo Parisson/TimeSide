@@ -45,7 +45,7 @@ class WaveFormGrapherAudiolab(Component):
     def render(self, media_item, width=None, height=None, options=None):
         """Generator that streams the waveform as a PNG image with a python method"""
 
-        wav_file = media_item.file.path
+        wav_file = media_item
         pngFile = NamedTemporaryFile(suffix='.png')
 
         if not width == None:

@@ -4,10 +4,11 @@
 import timeside
 from timeside.core import Component, ExtensionPoint, ComponentManager
 
+
 class TestAnalyzers(Component):
     analyzers = ExtensionPoint(timeside.analyze.IAnalyzer)
 
-    def run(self):
+    def list(self):
         analyzers = []
         for analyzer in self.analyzers:
             analyzers.append({'name':analyzer.name(),
@@ -16,10 +17,17 @@ class TestAnalyzers(Component):
                             })
         print analyzers
 
+    def run(self, media):
+        print '\n=== Analyzer testing ===\n'
+        for analyzer in self.analyzers:
+            id = analyzer.id()
+            value = analyzer.render(media)
+            print id + ' = ' + str(value) + ' ' + analyzer.unit()
+
 class TestDecoders(Component):
     decoders = ExtensionPoint(timeside.decode.IDecoder)
 
-    def run(self):
+    def list(self):
         decoders = []
         for decoder in self.decoders:
             decoders.append({'format':decoder.format(),
@@ -31,7 +39,7 @@ class TestDecoders(Component):
 class TestEncoders(Component):
     encoders = ExtensionPoint(timeside.encode.IEncoder)
 
-    def run(self):
+    def list(self):
         encoders = []
         for encoder in self.encoders:
             encoders.append({'format':encoder.format(),
@@ -42,7 +50,7 @@ class TestEncoders(Component):
 class TestGraphers(Component):
     graphers = ExtensionPoint(timeside.graph.IGrapher)
 
-    def run(self):
+    def list(self):
         graphers = []
         for grapher in self.graphers:
             graphers.append({'id':grapher.id(),
@@ -50,14 +58,32 @@ class TestGraphers(Component):
                             })
         print graphers
 
+    def run(self, media):
+        print '\n=== Grapher testing ===\n'
+        for grapher in self.graphers:
+            id = grapher.id()
+            image = grapher.render(media)
+            file_path = 'results/'+id+'.png'
+            file = open(file_path, 'w')
+            for chunk in image:
+                file.write(chunk)
+            print 'Image exported to :' + file_path
+            file.close()
+
 if __name__ == '__main__':
+    sample = 'samples/sweep.wav'
     comp_mgr = ComponentManager()
     a = TestAnalyzers(comp_mgr)
     d = TestDecoders(comp_mgr)
     e = TestEncoders(comp_mgr)
     g = TestGraphers(comp_mgr)
-    a.run()
-    d.run()
-    e.run()
-    g.run()
+    a.list()
+    d.list()
+    e.list()
+    g.list()
+    a.run(sample)
+    #d.run()
+    #e.run()
+    g.run(sample)
+
 
