@@ -20,13 +20,13 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.analyze.core import *
-from timeside.analyze.api import IMediaItemAnalyzer
+from timeside.analyze.api import IAnalyzer
 import numpy
 
 class SampleRateAnalyzer(AudioProcessor):
     """Media item analyzer driver interface"""
 
-    implements(IMediaItemAnalyzer)
+    implements(IAnalyzer)
 
     def get_id(self):
         return "samplerate"

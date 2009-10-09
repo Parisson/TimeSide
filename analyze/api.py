@@ -21,7 +21,7 @@
 
 from timeside.core import *
 
-class IMediaItemAnalyzer(Interface):
+class IAnalyzer(Interface):
     """Media item analyzer driver interface"""
 
     def get_id():
@@ -35,7 +35,7 @@ class IMediaItemAnalyzer(Interface):
     def get_unit():
         """Return the unit of the data such as "dB", "seconds", etc...
         """
-    
+
     def render(media_item, options=None):
         """Return the result data of the process"""
-            
+
