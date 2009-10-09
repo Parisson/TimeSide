@@ -65,16 +65,18 @@ class DecoderCore(Component):
     def process(self, source, options=None):
         """Encode and stream audio data through a generator"""
 
-        proc = SubProcessPipe(self.command) % source
+        command = self.command % source
+        proc = SubProcessPipe(command)
+        return proc.output
 
-        while True:
-            __chunk = proc.output.read(self.proc.buffer_size)
-            status = proc.poll()
-            if status != None and status != 0:
-                raise ExportProcessError('Command failure:', command, proc)
-            if len(__chunk) == 0:
-                break
-            yield __chunk
+        #while True:
+            #__chunk = proc.output.read(self.proc.buffer_size)
+            #status = proc.poll()
+            #if status != None and status != 0:
+                #raise ExportProcessError('Command failure:', command, proc)
+            #if len(__chunk) == 0:
+                #break
+            #yield __chunk
 
 
 

@@ -105,18 +105,19 @@ class FlacEncoder(EncoderCore):
 
     def process(self, source, metadata, options=None):
         buffer_size = 0xFFFF
-        args = self.get_args(options)
+        self.options = options
+        args = self.get_args()
         args = ' '.join(args)
-        ext = self.get_file_extension()
+        ext = self.file_extension()
         command = 'flac -c %s -' % args
 
         stream = self.core_process(command, source)
-        temp_file = NamedTemporaryFile(delete=False)
+        temp_file = NamedTemporaryFile()
         for __chunk in stream:
             temp_file.write(__chunk)
             temp_file.flush()
 
-        self.write_tags(temp_file)
+        #self.write_tags(temp_file)
 
         while True:
             __chunk = temp_file.read(buffer_size)

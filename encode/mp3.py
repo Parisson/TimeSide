@@ -127,7 +127,7 @@ class Mp3Encoder(EncoderCore):
     def process(self, source, metadata, options=None):
         self.metadata = metadata
         self.options = options
-        args = get_args(options)
+        args = self.get_args()
         args = ' '.join(args)
         command = 'lame %s - -' % args
 

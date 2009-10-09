@@ -63,10 +63,10 @@ class EncoderCore(Component):
         proc = SubProcessPipe(command, stdin)
 
         while True:
-            __chunk = proc.output.read(self.proc.buffer_size)
-            status = proc.poll()
-            if status != None and status != 0:
-                raise EncodeProcessError('Command failure:', command, proc)
+            __chunk = proc.output.read(proc.buffer_size)
+            #status = proc.poll()
+            #if status != None and status != 0:
+                #raise EncodeProcessError('Command failure:', command, proc)
             if len(__chunk) == 0:
                 break
             yield __chunk

@@ -101,7 +101,7 @@ class OggVorbisEncoder(EncoderCore):
     def process(self, source, metadata, options=None):
         self.metadata = metadata
         self.options = options
-        args = self.get_args(options)
+        args = self.get_args()
         args = ' '.join(args)
         command = 'oggenc %s -' % args
 
