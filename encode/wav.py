@@ -33,16 +33,16 @@ class WavEncoder(EncoderCore):
     def __init__(self):
         pass
 
-    def get_format(self):
+    def format(self):
         return 'WAV'
 
-    def get_file_extension(self):
+    def file_extension(self):
         return 'wav'
 
-    def get_mime_type(self):
+    def mime_type(self):
         return 'audio/x-wav'
 
-    def get_description(self):
+    def description(self):
         return """
         WAV (or WAVE), short for Waveform audio format, also known as Audio for
         Windows, is a Microsoft and IBM audio file format standard for storing
