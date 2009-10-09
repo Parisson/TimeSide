@@ -28,7 +28,7 @@ class IMediaItemAnalyzer(Interface):
         """Return a short id alphanumeric, lower-case string."""
 
     def get_name():
-        """Return the analysis name, such as "Mean Level", "Max level",
+        """Return the analyze name, such as "Mean Level", "Max level",
         "Total length, etc..
         """
 

@@ -21,7 +21,7 @@
 
 from timeside.core import *
 from tempfile import NamedTemporaryFile
-from timeside.analysis.api import IMediaItemAnalyzer
+from timeside.analyze.api import IMediaItemAnalyzer
 import os
 import random
 import subprocess

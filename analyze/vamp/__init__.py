@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from timeside.analysis.vamp.core import *
+from timeside.analyze.vamp.core import *

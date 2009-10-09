@@ -28,7 +28,7 @@ from timeside.encode.core import *
 from timeside.encode.api import IEncoder
 
 
-class Mp3Encoder(EencoderCore):
+class Mp3Encoder(EncoderCore):
     """Defines methods to encode to MP3"""
 
     implements(IEncoder)

@@ -19,8 +19,8 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.analysis.core import *
-from timeside.analysis.api import IMediaItemAnalyzer
+from timeside.analyze.core import *
+from timeside.analyze.api import IMediaItemAnalyzer
 import numpy
 
 class FormatAnalyser(AudioProcessor):
