@@ -37,13 +37,13 @@ class VampCoreAnalyzer:
         self.host = 'vamp-simple-host'
         self.buffer_size = 0xFFFF
                
-    def get_id(self):
+    def id(self):
         return "vamp_plugins"
 
-    def get_name(self):
+    def name(self):
         return "Vamp plugins"
 
-    def get_unit(self):
+    def unit(self):
         return ""
 
     def get_plugins_list(self):

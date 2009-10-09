@@ -35,16 +35,16 @@ class FlacEncoder(EncoderCore):
     def __init__(self):
         self.quality_default = '-5'
 
-    def get_format(self):
+    def format(self):
         return 'FLAC'
 
-    def get_file_extension(self):
+    def file_extension(self):
         return 'flac'
 
-    def get_mime_type(self):
+    def mime_type(self):
         return 'application/flac'
 
-    def get_description(self):
+    def description(self):
         return """
         Free Lossless Audio Codec (FLAC) is a file format for lossless audio
         data compression. During compression, FLAC does not lose quality from

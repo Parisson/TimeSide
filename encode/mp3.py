@@ -34,9 +34,6 @@ class Mp3Encoder(EncoderCore):
     implements(IEncoder)
 
     def __init__(self):
-        self.description = self.description()
-        self.format = self.format()
-        self.mime_type = self.mime_type()
         self.bitrate_default = '192'
         self.dub2id3_dict = {'title': 'TIT2', #title2
                              'creator': 'TCOM', #composer
@@ -54,16 +51,16 @@ class Mp3Encoder(EncoderCore):
                              'publisher': 'tc', #comment
                              'date': 'ty', #year
                              }
-    def get_format(self):
+    def format(self):
         return 'MP3'
 
-    def get_file_extension(self):
+    def file_extension(self):
         return 'mp3'
 
-    def get_mime_type(self):
+    def mime_type(self):
         return 'audio/mpeg'
 
-    def get_description(self):
+    def description(self):
         return """
         MPEG-1 Audio Layer 3, more commonly referred to as MP3, is a patented
         digital audio encoding format using a form of lossy data compression.

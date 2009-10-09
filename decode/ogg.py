@@ -33,9 +33,6 @@ class OggDecoder(DecoderCore):
     implements(IDecoder)
 
     def __init__(self):
-        self.description = self.description()
-        self.format = self.format()
-        self.mime_type = self.mime_type()
         self.dub2args_dict = {'creator': 'artist',
                              'relation': 'album'
                              }

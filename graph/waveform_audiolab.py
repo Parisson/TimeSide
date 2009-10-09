@@ -20,22 +20,22 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import *
-from timeside.graph.api import IMediaItemGrapher
+from timeside.graph.api import IGrapher
 from tempfile import NamedTemporaryFile
 from timeside.graph.wav2png import *
 
 class WaveFormGrapherAudiolab(Component):
     """WaveForm graph driver (python style thanks to wav2png.py and scikits.audiolab)"""
 
-    implements(IMediaItemGrapher)
+    implements(IGrapher)
 
     bg_color = None
     color_scheme = None
 
-    def get_id(self):
+    def id(self):
         return "waveform_audiolab"
 
-    def get_name(self):
+    def name(self):
         return "Waveform (audiolab)"
 
     def set_colors(self, background=None, scheme=None):
@@ -58,7 +58,7 @@ class WaveFormGrapherAudiolab(Component):
             image_height = 200
 
         fft_size = 2048
-        args = (wav_file, pngFile.name, image_width, image_height, fft_size, 
+        args = (wav_file, pngFile.name, image_width, image_height, fft_size,
                 self.bg_color, self.color_scheme)
         create_wavform_png(*args)
 

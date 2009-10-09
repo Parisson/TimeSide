@@ -28,13 +28,13 @@ class SampleRateAnalyzer(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def get_id(self):
+    def id(self):
         return "samplerate"
 
-    def get_name(self):
+    def name(self):
         return "Samplerate"
 
-    def get_unit(self):
+    def unit(self):
         return "Hz"
 
     def render(self, media_item, options=None):

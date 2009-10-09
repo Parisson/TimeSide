@@ -28,13 +28,13 @@ class MaxLevelAnalyzer(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def get_id(self):
+    def id(self):
         return "max_level"
 
-    def get_name(self):
+    def name(self):
         return "Maximum peak level"
 
-    def get_unit(self):
+    def unit(self):
         return "dB"
 
     def render(self, media_item, options=None):

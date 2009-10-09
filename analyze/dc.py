@@ -28,13 +28,13 @@ class MeanDCShiftAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def get_id(self):
+    def id(self):
         return "dc"
 
-    def get_name(self):
+    def name(self):
         return "Mean DC shift"
 
-    def get_unit(self):
+    def unit(self):
         return "%"
 
     def render(self, media_item, options=None):

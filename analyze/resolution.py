@@ -28,13 +28,13 @@ class ResolutionAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def get_id(self):
+    def id(self):
         return "resolution"
 
-    def get_name(self):
+    def name(self):
         return "Resolution"
 
-    def get_unit(self):
+    def unit(self):
         return "bits"
 
     def render(self, media_item, options=None):

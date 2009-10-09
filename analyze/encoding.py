@@ -28,13 +28,13 @@ class EncodingAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def get_id(self):
+    def id(self):
         return "encoding"
 
-    def get_name(self):
+    def name(self):
         return "Encoding format"
 
-    def get_unit(self):
+    def unit(self):
         return ""
 
     def render(self, media_item, options=None):

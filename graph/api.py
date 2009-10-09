@@ -22,19 +22,19 @@
 
 from timeside.core import *
 
-class IMediaItemGrapher(Interface):
+class IGrapher(Interface):
     """Media item visualizer driver interface"""
 
-    def get_id():
+    def id():
         """Return a short id alphanumeric, lower-case string."""
 
-    def get_name():
+    def name():
         """Return the graph name, such as "Waveform", "Spectral view",
         etc..
         """
 
     def set_colors(self, background=None, scheme=None):
-        """Set the colors used for image generation. background is a RGB tuple, 
+        """Set the colors used for image generation. background is a RGB tuple,
         and scheme a a predefined color theme name"""
         pass
 

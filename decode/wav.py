@@ -30,11 +30,6 @@ class WavDecoder(DecoderCore):
 
     implements(IDecoder)
 
-    def __init__(self):
-        self.description = self.description()
-        self.format = self.format()
-        self.mime_type = self.mime_type()
-
     def format(self):
         return 'WAV'
 

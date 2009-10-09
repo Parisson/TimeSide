@@ -20,24 +20,24 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import *
-from timeside.graph.api import IMediaItemGrapher
+from timeside.graph.api import IGrapher
 from tempfile import NamedTemporaryFile
 from timeside.graph.wav2png import *
 
 class SpectrogramGrapherAudiolab(Component):
     """Spectrogram graph driver (python style thanks to wav2png.py and scikits.audiolab)"""
 
-    implements(IMediaItemGrapher)
+    implements(IGrapher)
 
     bg_color = None
     color_scheme = None
 
-    def get_id(self):
+    def id(self):
         return "spectrogram_audiolab"
 
-    def get_name(self):
+    def name(self):
         return "Spectrogram (audiolab)"
-    
+
     def set_colors(self, background=None, scheme=None):
         self.bg_color = background
         self.color_scheme = scheme
@@ -56,9 +56,9 @@ class SpectrogramGrapherAudiolab(Component):
             image_height = height
         else:
             image_height = 200
-            
+
         fft_size = 2048
-        args = (wav_file, pngFile.name, image_width, image_height, fft_size, 
+        args = (wav_file, pngFile.name, image_width, image_height, fft_size,
                 self.bg_color, self.color_scheme)
         create_spectrogram_png(*args)
 

@@ -46,14 +46,6 @@ class IEncoder(Interface):
     def mime_type():
         """Return the mime type corresponding to this encode format"""
 
-    def set_cache_dir(path):
-        """Set the directory where cached files should be stored. Does nothing
-        if the encodeer doesn't support caching.
-
-        The driver shouldn't assume that this method will always get called. A
-        temporary directory should be used if that's not the case.
-        """
-
     def process(source, metadata, options=None):
         """Perform the encoding process and stream the result as a generator.
 

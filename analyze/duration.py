@@ -29,13 +29,13 @@ class DurationAnalyzer(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def get_id(self):
+    def id(self):
         return "duration"
 
-    def get_name(self):
+    def name(self):
         return "Duration"
 
-    def get_unit(self):
+    def unit(self):
         return "h:m:s"
 
     def render(self, media_item, options=None):
