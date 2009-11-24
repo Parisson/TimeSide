@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import os
 import timeside
+import magic
 from timeside.core import Component, ExtensionPoint, ComponentManager
 
 
@@ -29,18 +31,38 @@ class TestDecoders(Component):
     decoders = ExtensionPoint(timeside.decode.IDecoder)
 
     def list(self):
-        decoders = []
+        decoders_list = []
         for decoder in self.decoders:
-            decoders.append({'format':decoder.format(),
-                            'mime_type':decoder.mime_type(),
+            decoders_list.append({'format': decoder.format(),
+                            'mime_type': decoder.mime_type(),
+                            'file_extension': decoder.file_extension(),
                             })
-        print decoders
+        print decoders_list
 
-    def run(self, media, format):
+    def get_decoder(self, mime_type):
         for decoder in self.decoders:
-            if decoder.format() == format:
-                return decoder.process(media)
+            if decoder.mime_type() == mime_type:
+                return decoder
 
+    def export(self, media_dir):
+        files = os.listdir(media_dir)
+        m = magic.Magic(mime=True)
+        for file in files:
+            media = media_dir + os.sep + file
+            magic_file = m.from_file(media)
+            mime = magic_file.lower()
+            print mime
+            file_ext = file.split('.')[-1]
+            decoder = self.get_decoder(mime)
+            if decoder:
+                stream = decoder.process(media)
+                print decoder.command
+                file_path = 'results/sweep' + '_' + file_ext + '.wav'
+                f = open(file_path, 'w')
+                for chunk in stream:
+                    f.write(chunk)
+                    f.flush()
+                f.close()
 
 class TestEncoders(Component):
     encoders = ExtensionPoint(timeside.encode.IEncoder)
@@ -48,17 +70,26 @@ class TestEncoders(Component):
     def list(self):
         encoders = []
         for encoder in self.encoders:
-            encoders.append({'format':encoder.format(),
-                            'mime_type':encoder.mime_type(),
+            encoders.append({'format': encoder.format(),
+                            'mime_type': encoder.mime_type(),
                             })
         print encoders
+
+    def get_encoder(self, mime_type):
+        for encoder in self.encoders:
+            if encoder.mime_type() == mime_type:
+                return encoder
 
     def run(self, source, metadata):
         print '\n=== Encoder testing ===\n'
         for encoder in self.encoders:
+            m = magic.Magic(mime=True)
+            magic_file = m.from_file(source)
+            mime = magic_file.lower()
             format = encoder.format()
             decoders = TestDecoders(comp_mgr)
-            decoded = decoders.run(source, 'WAV')
+            decoder = decoders.get_decoder(mime)
+            decoded = decoder.process(source)
             ext = encoder.file_extension()
             stream = encoder.process(decoded, metadata)
             file_path = 'results/sweep' + '.' + ext
@@ -95,7 +126,7 @@ class TestGraphers(Component):
 
 
 if __name__ == '__main__':
-    sample = 'samples/sweep.wav'
+    sample = 'samples/sweep_source.wav'
     metadata = (('creator', 'yomguy'), ('date', '2009'), ('name', 'test'))
     comp_mgr = ComponentManager()
     a = TestAnalyzers(comp_mgr)
@@ -109,5 +140,6 @@ if __name__ == '__main__':
     a.run(sample)
     g.run(sample)
     e.run(sample, metadata)
+    d.export('samples/')
 
 

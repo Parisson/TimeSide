@@ -21,6 +21,7 @@
 
 import os
 import string
+import subprocess
 
 from timeside.decode.core import *
 from timeside.decode.api import IDecoder

@@ -32,11 +32,6 @@ class OggDecoder(DecoderCore):
 
     implements(IDecoder)
 
-    def __init__(self):
-        self.dub2args_dict = {'creator': 'artist',
-                             'relation': 'album'
-                             }
-
     def format(self):
         return 'OggVorbis'
 

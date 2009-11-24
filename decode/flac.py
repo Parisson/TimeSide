@@ -40,7 +40,7 @@ class FlacDecoder(DecoderCore):
         return 'flac'
 
     def mime_type(self):
-        return 'application/flac'
+        return 'audio/x-flac'
 
     def description(self):
         return """
