@@ -56,7 +56,7 @@ class TestDecoders(Component):
             decoder = self.get_decoder(mime)
             if decoder:
                 stream = decoder.process(media)
-                print decoder.command
+                #print decoder.command
                 file_path = 'results/sweep' + '_' + file_ext + '.wav'
                 f = open(file_path, 'w')
                 for chunk in stream:
