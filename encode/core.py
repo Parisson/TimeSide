@@ -71,7 +71,6 @@ class EncoderCore(Component):
                 break
             yield __chunk
 
-
 # External functions
 
 def get_type(value):

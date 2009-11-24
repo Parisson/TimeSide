@@ -68,7 +68,7 @@ class WavEncoder(EncoderCore):
     def process(self, source, metadata, options=None):
         self.metadata = metadata
         self.options = options
-        command = 'sox - -s -q -b 16 -r 44100 -t wav -c2 -'
+        command = 'sox -t wav - -s -q -b 16 -r 44100 -t wav -c2 -'
 
         stream = self.core_process(command, source)
         for __chunk in stream:

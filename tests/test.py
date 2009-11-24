@@ -39,8 +39,7 @@ class TestDecoders(Component):
     def run(self, media, format):
         for decoder in self.decoders:
             if decoder.format() == format:
-                break
-        return decoder.process(media)
+                return decoder.process(media)
 
 
 class TestEncoders(Component):
@@ -58,8 +57,10 @@ class TestEncoders(Component):
         print '\n=== Encoder testing ===\n'
         for encoder in self.encoders:
             format = encoder.format()
+            decoders = TestDecoders(comp_mgr)
+            decoded = decoders.run(source, 'WAV')
             ext = encoder.file_extension()
-            stream = encoder.process(source, metadata)
+            stream = encoder.process(decoded, metadata)
             file_path = 'results/sweep' + '.' + ext
             file = open(file_path, 'w')
             for chunk in stream:
@@ -95,7 +96,7 @@ class TestGraphers(Component):
 
 if __name__ == '__main__':
     sample = 'samples/sweep.wav'
-    metadata = {'creator': 'yomguy', 'date': '2009', 'name': 'test'}
+    metadata = (('creator', 'yomguy'), ('date', '2009'), ('name', 'test'))
     comp_mgr = ComponentManager()
     a = TestAnalyzers(comp_mgr)
     d = TestDecoders(comp_mgr)
@@ -107,7 +108,6 @@ if __name__ == '__main__':
     g.list()
     a.run(sample)
     g.run(sample)
-    audio = d.run(sample, 'WAV')
-    e.run(audio, metadata)
+    e.run(sample, metadata)
 
 

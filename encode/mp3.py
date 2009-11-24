@@ -114,7 +114,7 @@ class Mp3Encoder(EncoderCore):
             #Copyrights, etc..
             args.append('-c -o')
         else:
-            args.append('-S -c -o')
+            args.append('-S -c --tt "unknown" -o')
 
         for tag in self.metadata:
             name = tag[0]

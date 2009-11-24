@@ -34,6 +34,9 @@ class FlacEncoder(EncoderCore):
 
     def __init__(self):
         self.quality_default = '-5'
+        self.dub2args_dict = {'creator': 'artist',
+                             'relation': 'album'
+                             }
 
     def format(self):
         return 'FLAC'
@@ -71,7 +74,9 @@ class FlacEncoder(EncoderCore):
         for tag in self.metadata:
             name = tag[0]
             value = clean_word(tag[1])
-            if name == 'COMMENT':
+            if name in self.dub2args_dict.keys():
+                name = self.dub2args_dict[name]
+            if name == 'comment':
                 media['DESCRIPTION'] = unicode(value)
             else:
                 media[name] = unicode(value)
@@ -79,6 +84,7 @@ class FlacEncoder(EncoderCore):
             media.save()
         except:
             raise IOError('EncoderError: cannot write tags.')
+
 
     def get_args(self,options=None):
         """Get process options and return arguments for the encoder"""
@@ -105,19 +111,22 @@ class FlacEncoder(EncoderCore):
 
     def process(self, source, metadata, options=None):
         buffer_size = 0xFFFF
+        self.metadata= metadata
         self.options = options
         args = self.get_args()
         args = ' '.join(args)
         ext = self.file_extension()
-        command = 'flac -c %s -' % args
+        temp_file = NamedTemporaryFile()
+        command = 'flac %s - -o %s ' % (args, temp_file.name)
 
         stream = self.core_process(command, source)
-        temp_file = NamedTemporaryFile()
+        
         for __chunk in stream:
-            temp_file.write(__chunk)
-            temp_file.flush()
+            #temp_file.write(__chunk)
+            #temp_file.flush()
+            pass
 
-        #self.write_tags(temp_file)
+        self.write_tags(temp_file.name)
 
         while True:
             __chunk = temp_file.read(buffer_size)
