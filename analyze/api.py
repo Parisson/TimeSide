@@ -26,9 +26,9 @@ class IAnalyzer(Interface):
 
     def id():
         """Return a short id alphanumeric, lower-case string."""
-
+s
     def name():
-        """Return the analyze name, such as "Mean Level", "Max level",
+        """Return the analyzer name, such as "Mean Level", "Max level",
         "Total length, etc..
         """
 

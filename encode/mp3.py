@@ -64,11 +64,6 @@ class Mp3Encoder(EncoderCore):
         return """
         MPEG-1 Audio Layer 3, more commonly referred to as MP3, is a patented
         digital audio encoding format using a form of lossy data compression.
-        It is a common audio format for consumer audio storage, as well as a
-        de facto standard of digital audio compression for the transfer and
-        playback of music on digital audio players. MP3 is an audio-specific
-        format that was designed by the Moving Picture Experts Group as part
-        of its MPEG-1 standard. (source Wikipedia)
         """
 
     def get_file_info(self):
