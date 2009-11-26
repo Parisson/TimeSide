@@ -46,11 +46,9 @@ class TestDecoders(Component):
 
     def export(self, media_dir):
         files = os.listdir(media_dir)
-        m = magic.Magic(mime=True)
         for file in files:
             media = media_dir + os.sep + file
-            magic_file = m.from_file(media)
-            mime = magic_file.lower()
+            mime = mimetype(media)
             print mime
             file_ext = file.split('.')[-1]
             decoder = self.get_decoder(mime)
@@ -83,9 +81,7 @@ class TestEncoders(Component):
     def run(self, source, metadata):
         print '\n=== Encoder testing ===\n'
         for encoder in self.encoders:
-            m = magic.Magic(mime=True)
-            magic_file = m.from_file(source)
-            mime = magic_file.lower()
+            mime = mimetype(source)
             format = encoder.format()
             decoders = TestDecoders(comp_mgr)
             decoder = decoders.get_decoder(mime)
@@ -123,7 +119,19 @@ class TestGraphers(Component):
             print 'Image exported to :' + file_path
             file.close()
 
+def mimetype(path):
+    if hasattr(magic, "Magic"):
+        if not hasattr(mimetype, "magic"):
+            mimetype.magic = magic.Magic(mime=True)
+        magic_file = mimetype.magic.from_file(path)
+        mime = magic_file.lower()
+    else:
+        if not hasattr(mimetype, "magic"):
+            mimetype.magic = magic.open(magic.MAGIC_MIME)
+            mimetype.magic.load()
+        mime = mimetype.magic.file(path).lower()
 
+    return mime
 
 if __name__ == '__main__':
     sample = 'samples/sweep_source.wav'
