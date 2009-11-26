@@ -4,15 +4,21 @@
 import os
 import timeside
 import magic
-from timeside.core import Component, ExtensionPoint, ComponentManager
+from timeside.core import *
 
 
 class TestAnalyzers(Component):
-    analyzers = ExtensionPoint(timeside.analyze.IAnalyzer)
+    analyzers = implementations(timeside.analyze.IAnalyzer)
 
     def list(self):
         analyzers = []
-        for analyzer in self.analyzers:
+        for analyzer_class in self.analyzers:
+            # FIXME: should access the name, id and unit member statically
+            # there should be no need to instantiate analyzer_class
+            # eg: access directly analyzer_class.name, etc...
+            #
+            # This remark is true at many places in this file
+            analyzer = analyzer_class()
             analyzers.append({'name':analyzer.name(),
                             'id':analyzer.id(),
                             'unit':analyzer.unit(),
@@ -21,18 +27,20 @@ class TestAnalyzers(Component):
 
     def run(self, media):
         print '\n=== Analyzer testing ===\n'
-        for analyzer in self.analyzers:
+        for analyzer_class in self.analyzers:
+            analyzer = analyzer_class()
             id = analyzer.id()
             value = analyzer.render(media)
             print id + ' = ' + str(value) + ' ' + analyzer.unit()
 
 
 class TestDecoders(Component):
-    decoders = ExtensionPoint(timeside.decode.IDecoder)
+    decoders = implementations(timeside.decode.IDecoder)
 
     def list(self):
         decoders_list = []
-        for decoder in self.decoders:
+        for decoder_class in self.decoders:
+            decoder = decoder_class()
             decoders_list.append({'format': decoder.format(),
                             'mime_type': decoder.mime_type(),
                             'file_extension': decoder.file_extension(),
@@ -40,7 +48,8 @@ class TestDecoders(Component):
         print decoders_list
 
     def get_decoder(self, mime_type):
-        for decoder in self.decoders:
+        for decoder_class in self.decoders:
+            decoder = decoder_class()
             if decoder.mime_type() == mime_type:
                 return decoder
 
@@ -63,27 +72,30 @@ class TestDecoders(Component):
                 f.close()
 
 class TestEncoders(Component):
-    encoders = ExtensionPoint(timeside.encode.IEncoder)
+    encoders = implementations(timeside.encode.IEncoder)
 
     def list(self):
         encoders = []
-        for encoder in self.encoders:
+        for encoder_class in self.encoders:
+            encoder = encoder_class()
             encoders.append({'format': encoder.format(),
                             'mime_type': encoder.mime_type(),
                             })
         print encoders
 
     def get_encoder(self, mime_type):
-        for encoder in self.encoders:
+        for encoder_class in self.encoders:
+            encoder = encoder_class()
             if encoder.mime_type() == mime_type:
                 return encoder
 
     def run(self, source, metadata):
         print '\n=== Encoder testing ===\n'
-        for encoder in self.encoders:
+        for encoder_class in self.encoders:
+            encoder = encoder_class()
             mime = mimetype(source)
             format = encoder.format()
-            decoders = TestDecoders(comp_mgr)
+            decoders = TestDecoders()
             decoder = decoders.get_decoder(mime)
             decoded = decoder.process(source)
             ext = encoder.file_extension()
@@ -97,11 +109,12 @@ class TestEncoders(Component):
 
 
 class TestGraphers(Component):
-    graphers = ExtensionPoint(timeside.graph.IGrapher)
+    graphers = implementations(timeside.graph.IGrapher)
 
     def list(self):
         graphers = []
-        for grapher in self.graphers:
+        for grapher_class in self.graphers:
+            grapher = grapher_class()
             graphers.append({'id':grapher.id(),
                             'name':grapher.name(),
                             })
@@ -109,7 +122,8 @@ class TestGraphers(Component):
 
     def run(self, media):
         print '\n=== Grapher testing ===\n'
-        for grapher in self.graphers:
+        for grapher_class in self.graphers:
+            grapher = grapher_class()
             id = grapher.id()
             image = grapher.render(media)
             file_path = 'results/'+id+'.png'
@@ -136,11 +150,10 @@ def mimetype(path):
 if __name__ == '__main__':
     sample = 'samples/sweep_source.wav'
     metadata = (('creator', 'yomguy'), ('date', '2009'), ('name', 'test'))
-    comp_mgr = ComponentManager()
-    a = TestAnalyzers(comp_mgr)
-    d = TestDecoders(comp_mgr)
-    e = TestEncoders(comp_mgr)
-    g = TestGraphers(comp_mgr)
+    a = TestAnalyzers()
+    d = TestDecoders()
+    e = TestEncoders()
+    g = TestGraphers()
     a.list()
     d.list()
     e.list()

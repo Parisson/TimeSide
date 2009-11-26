@@ -1,219 +1,95 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007 Samalyse SARL
-# Copyright (C) 2003-2005 Edgewall Software
-# Copyright (C) 2003-2004 Jonas Borgström <jonas@edgewall.com>
-# Copyright (C) 2004-2005 Christopher Lenz <cmlenz@gmx.de>
-# All rights reserved.
+# Copyright (c) 2009 Olivier Guilyardi <olivier@samalyse.com>
 #
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
+# This file is part of TimeSide.
+
+# TimeSide is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+# This file defines an object interface mechanism and a way to determine
+# which components implements a given interface
 #
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in
-#    the documentation and/or other materials provided with the
-#    distribution.
-#3. The name of the author may not be used to endorse or promote
-#   products derived from this software without specific prior
-#   written permission.
+# For example, the following defines the Music class as implementing the
+# listenable interface.
 #
-#THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
-#OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-#WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-#ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-#DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-#GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-#IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-#OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-#IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# class Listenable(Interface):
+#     pass
+#
+# class Music(Component):
+#    implements(Listenable)
+#
+# Several class can implements a such interface, and it is possible to 
+# discover which class implements it with implementations():
+#
+# list_of_classes = implementations(Listenable)
+#
+# This mechanism support inheritance of both interfaces and components:
+#
+# - all descendants of a class implementing a given interface are also considered
+#   to implement this interface
+# - a class implementing a given interface is also considered to implement all
+#   the ascendants of this interface
 
-# Author: Jonas Borgström <jonas@edgewall.com>
-#         Christopher Lenz <cmlenz@gmx.de>
-#         Olivier Guilyardi <olivier@samalyse.com>
-
-
-__all__ = ['Component', 'ExtensionPoint', 'implements', 'Interface',
-           'TimeSideError']
-
+__all__ = ['Component', 'implements', 'Interface', 'implementations', 'TimeSideError']
 
 class TimeSideError(Exception):
     """Exception base class for errors in TimeSide."""
     # FIXME: is this redundant with Django's error handling ?
-
-#    def __init__(self, message, title=None, show_traceback=False):
-#        Exception.__init__(self, message)
-#        self.message = message
-#        self.title = title
-#        self.show_traceback = show_traceback
-
+    # FIXME: this class doesn't belong to the core
 
 class Interface(object):
-    """Marker base class for extension point interfaces."""
-
-
-class ExtensionPoint(property):
-    """Marker class for extension points in components."""
-
-    def __init__(self, interface):
-        """Create the extension point.
-        
-        @param interface: the `Interface` subclass that defines the protocol
-            for the extension point
-        """
-        property.__init__(self, self.extensions)
-        self.interface = interface
-        self.__doc__ = 'List of components that implement `%s`' % \
-                       self.interface.__name__
-
-    def extensions(self, component):
-        """Return a list of components that declare to implement the extension
-        point interface."""
-        extensions = ComponentMeta._registry.get(self.interface, [])
-        return filter(None, [component.compmgr[cls] for cls in extensions])
-
-    def __repr__(self):
-        """Return a textual representation of the extension point."""
-        return '<ExtensionPoint %s>' % self.interface.__name__
-
-
-class ComponentMeta(type):
-    """Meta class for components.
-    
-    Takes care of component and extension point registration.
-    """
-    _components = []
-    _registry = {}
-
-    def __new__(cls, name, bases, d):
-        """Create the component class."""
-
-        d['_implements'] = _implements[:]
-        del _implements[:]
-
-        new_class = type.__new__(cls, name, bases, d)
-        if name == 'Component':
-            # Don't put the Component base class in the registry
-            return new_class
-
-        # Only override __init__ for Components not inheriting ComponentManager
-        if True not in [issubclass(x, ComponentManager) for x in bases]:
-            # Allow components to have a no-argument initializer so that
-            # they don't need to worry about accepting the component manager
-            # as argument and invoking the super-class initializer
-            init = d.get('__init__')
-            if not init:
-                # Because we're replacing the initializer, we need to make sure
-                # that any inherited initializers are also called.
-                for init in [b.__init__._original for b in new_class.mro()
-                             if issubclass(b, Component)
-                             and '__init__' in b.__dict__]:
-                    break
-            def maybe_init(self, compmgr, init=init, cls=new_class):
-                if cls not in compmgr.components:
-                    compmgr.components[cls] = self
-                    if init:
-                        init(self)
-            maybe_init._original = init
-            new_class.__init__ = maybe_init
-
-        if d.get('abstract'):
-            # Don't put abstract component classes in the registry
-            return new_class
-
-        ComponentMeta._components.append(new_class)
-        for interface in d.get('_implements', []):
-            ComponentMeta._registry.setdefault(interface, []).append(new_class)
-        for base in [base for base in bases if hasattr(base, '_implements')]:
-            for interface in base._implements:
-                ComponentMeta._registry.setdefault(interface, []).append(new_class)
-
-        return new_class
-
-
-_implements = []
+    """Marker base class for interfaces."""
 
 def implements(*interfaces):
-    """Can be used in the class definiton of `Component` subclasses to declare
-    the extension points that are extended.
-    """
     _implements.extend(interfaces)
 
+def implementations(interface):
+    result = []
+    find_implementations(interface, result)
+    return result
+
+_implementations = []
+_implements = []
+
+class ComponentMeta(type):
+
+    def __new__(cls, name, bases, d):
+        new_class = type.__new__(cls, name, bases, d)
+        if _implements:
+            for i in _implements:
+                _implementations.append((i, new_class))
+        del _implements[:]
+        return new_class
 
 class Component(object):
-    """Base class for components.
+    __metaclass__ = ComponentMeta 
 
-    Every component can declare what extension points it provides, as well as
-    what extension points of other components it extends.
-    """
-    __metaclass__ = ComponentMeta
+def extend_unique(list1, list2):
+    for item in list2:
+        if item not in list1:
+            list1.append(item)
 
-    def __new__(cls, *args, **kwargs):
-        """Return an existing instance of the component if it has already been
-        activated, otherwise create a new instance.
-        """
-        # If this component is also the component manager, just invoke that
-        if issubclass(cls, ComponentManager):
-            self = super(Component, cls).__new__(cls)
-            self.compmgr = self
-            return self
+def find_implementations(interface, result):
+    for i, cls in _implementations:
+        if (i == interface):
+            extend_unique(result, [cls])
+            extend_unique(result, cls.__subclasses__())
 
-        # The normal case where the component is not also the component manager
-        compmgr = args[0]
-        self = compmgr.components.get(cls)
-        if self is None:
-            self = super(Component, cls).__new__(cls)
-            self.compmgr = compmgr
-            compmgr.component_activated(self)
-        return self
+    subinterfaces = interface.__subclasses__()
+    if subinterfaces:
+        for i in subinterfaces:
+            find_implementations(i, result)
 
-
-class ComponentManager(object):
-    """The component manager keeps a pool of active components."""
-
-    def __init__(self):
-        """Initialize the component manager."""
-        self.components = {}
-        self.enabled = {}
-        if isinstance(self, Component):
-            self.components[self.__class__] = self
-
-    def __contains__(self, cls):
-        """Return wether the given class is in the list of active components."""
-        return cls in self.components
-
-    def __getitem__(self, cls):
-        """Activate the component instance for the given class, or return the
-        existing the instance if the component has already been activated."""
-        if cls not in self.enabled:
-            self.enabled[cls] = self.is_component_enabled(cls)
-        if not self.enabled[cls]:
-            return None
-        component = self.components.get(cls)
-        if not component:
-            if cls not in ComponentMeta._components:
-                raise TimeSideError, 'Component "%s" not registered' % cls.__name__
-            try:
-                component = cls(self)
-            except TypeError, e:
-                raise TimeSideError, 'Unable to instantiate component %r (%s)' \
-                                 % (cls, e)
-        return component
-
-    def component_activated(self, component):
-        """Can be overridden by sub-classes so that special initialization for
-        components can be provided.
-        """
-
-    def is_component_enabled(self, cls):
-        """Can be overridden by sub-classes to veto the activation of a
-        component.
-
-        If this method returns False, the component with the given class will
-        not be available.
-        """
-        return True

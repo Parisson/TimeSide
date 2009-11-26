@@ -1,5 +1,5 @@
 
-from timeside.newcore import *
+from timeside.core import *
 from sys import stdout
 
 class I1(Interface):
