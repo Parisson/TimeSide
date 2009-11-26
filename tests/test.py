@@ -15,7 +15,7 @@ class TestAnalyzers(Component):
         for analyzer_class in self.analyzers:
             # FIXME: should access the name, id and unit member statically
             # there should be no need to instantiate analyzer_class
-            # eg: access directly analyzer_class.name, etc...
+            # eg: access directly analyzer_class.name(), etc...
             #
             # This remark is true at many places in this file
             analyzer = analyzer_class()

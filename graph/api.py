@@ -25,9 +25,11 @@ from timeside.core import *
 class IGrapher(Interface):
     """Media item visualizer driver interface"""
 
+    @staticmethod
     def id():
         """Return a short id alphanumeric, lower-case string."""
 
+    @staticmethod
     def name():
         """Return the graph name, such as "Waveform", "Spectral view",
         etc..
@@ -38,5 +40,5 @@ class IGrapher(Interface):
         and scheme a a predefined color theme name"""
         pass
 
-    def render(media_item, width=None, height=None, options=None):
+    def render(self, media_item, width=None, height=None, options=None):
         """Generator that streams the graph output as a PNG image"""

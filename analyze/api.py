@@ -24,18 +24,21 @@ from timeside.core import *
 class IAnalyzer(Interface):
     """Media item analyzer driver interface"""
 
+    @staticmethod
     def id():
         """Return a short id alphanumeric, lower-case string."""
 
+    @staticmethod
     def name():
         """Return the analyzer name, such as "Mean Level", "Max level",
         "Total length, etc..
         """
 
+    @staticmethod
     def unit():
         """Return the unit of the data such as "dB", "seconds", etc...
         """
 
-    def render(media, options=None):
+    def render(self, media, options=None):
         """Return the result data of the process"""
 

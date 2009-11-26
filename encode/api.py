@@ -24,13 +24,7 @@ from timeside.core import Interface, TimeSideError
 class IEncoder(Interface):
     """Encoder driver interface"""
 
-    # Remark: the method prototypes do not include any self or cls argument
-    # because an interface is meant to show what methods a class must expose
-    # from the caller's point of view. However, when implementing the class
-    # you'll obviously want to include this extra argument.
-
-    # FIXME: this constructor conflicts with the core component architecture
-    def __init__(output, nchannels, samplerate):
+    def __init__(self, output, nchannels, samplerate):
         """The constructor must always accept the output, nchannels and samplerate 
         arguments.  It may accepts extra arguments such as bitrate, depth, etc.., 
         but these must be optionnal, that is have a default value.
@@ -40,40 +34,44 @@ class IEncoder(Interface):
         block of binary data.
         """
 
+    @staticmethod
     def format():
         """Return the encode/encoding format as a short string
         Example: "MP3", "OGG", "AVI", ...
         """
 
+    @staticmethod
     def description():
         """Return a string describing what this encode format provides, is good
         for, etc... The description is meant to help the end user decide what
         format is good for him/her
         """
 
+    @staticmethod
     def file_extension():
         """Return the filename extension corresponding to this encode format"""
 
+    @staticmethod
     def mime_type():
         """Return the mime type corresponding to this encode format"""
 
-    def set_metadata(metadata):
+    def set_metadata(self, metadata):
         """metadata is a tuple containing tuples for each descriptor return by
         the dc.Ressource of the item, in the model order :
         ((name1, value1),(name2, value2),(name1, value3), ...)"""
 
-    def update():
+    def update(self):
         """Updates the metadata into the file passed as the output argument
            to the constructor. This method can't be called in streaming
            mode."""
 
-    def process(frames):
+    def process(self, frames):
         """Encode the frames passed as a numpy array, where columns are channels.
         
            In streaming mode the callback passed to the constructor is called whenever
            a block of encoded data is ready."""
 
-    def finish():
+    def finish(self):
         """Flush the encoded data and close the output file/stream. Calling this method
         may cause the streaming callback to be called if in streaming mode."""
   

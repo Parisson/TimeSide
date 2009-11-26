@@ -24,29 +24,28 @@ from timeside.core import Interface, TimeSideError
 class IDecoder(Interface):
     """Decoder driver interface"""
 
-    # Remark: the method prototypes do not include any self or cls argument 
-    # because an interface is meant to show what methods a class must expose 
-    # from the caller's point of view. However, when implementing the class 
-    # you'll obviously want to include this extra argument.
-
+    @staticmethod
     def format():
         """Return the decode/encoding format as a short string 
         Example: "MP3", "OGG", "AVI", ...
         """
    
+    @staticmethod
     def description():
         """Return a string describing what this decode format provides, is good 
         for, etc... The description is meant to help the end user decide what 
         format is good for him/her
         """
 
+    @staticmethod
     def file_extension():
         """Return the filename extension corresponding to this decode format"""
 
+    @staticmethod
     def mime_type():
         """Return the mime type corresponding to this decode format"""
 
-    def process(source, options=None):
+    def process(self, source, options=None):
         """Perform the decoding process and stream the result through a generator
 
         source is the audio/video source file absolute path.
