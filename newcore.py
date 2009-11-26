@@ -43,7 +43,12 @@
 # - a class implementing a given interface is also considered to implement all
 #   the ascendants of this interface
 
-__all__ = ['Component', 'implements', 'Interface', 'implementations']
+__all__ = ['Component', 'implements', 'Interface', 'implementations', 'TimeSideError']
+
+class TimeSideError(Exception):
+    """Exception base class for errors in TimeSide."""
+    # FIXME: is this redundant with Django's error handling ?
+    # FIXME: this class doesn't belong to the core
 
 class Interface(object):
     """Marker base class for interfaces."""
