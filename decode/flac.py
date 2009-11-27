@@ -24,7 +24,7 @@ import string
 import subprocess
 
 from timeside.decode.core import *
-from timeside.decode.api import IDecoder
+from timeside.api import IDecoder
 from mutagen.flac import FLAC
 from tempfile import NamedTemporaryFile
 

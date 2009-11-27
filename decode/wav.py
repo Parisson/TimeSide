@@ -24,7 +24,7 @@ import string
 import subprocess
 
 from timeside.decode.core import *
-from timeside.decode.api import IDecoder
+from timeside.api import IDecoder
 
 class WavDecoder(DecoderCore):
     """Defines methods to decode from WAV"""

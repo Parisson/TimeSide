@@ -19,13 +19,11 @@
 
 from timeside.component import *
 from timeside.api import IProcessor
+from timeside.exceptions import Error, ApiError
 import re
 
-__all__ = ['Processor', 'Component', 'implements', 'processors', 'TimeSideError']
-
-class TimeSideError(Exception):
-    """Exception base class for errors in TimeSide."""
-    # FIXME: is this redundant with Django's error handling ?
+__all__ = ['Processor', 'MetaProcessor', 'implements', 'processors', 
+           'get_processor']
 
 _processors = {}
 
@@ -40,12 +38,11 @@ class MetaProcessor(MetaComponent):
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
             if _processors.has_key(id):
-                raise TimeSideError("%s and %s have the same id: '%s'"
+                raise ApiError("%s and %s have the same id: '%s'"
                     % (new_class.__name__, _processors[id].__name__, id))
             if not MetaProcessor.valid_id.match(id):
-                raise TimeSideError("%s has a malformed id: '%s'"
+                raise ApiError("%s has a malformed id: '%s'"
                     % (new_class.__name__, id))
-                
 
             _processors[id] = new_class
 
@@ -60,3 +57,12 @@ def processors(interface=IProcessor, recurse=True):
     any of the descendants of this interface."""
     return implementations(interface, recurse)
     
+
+def get_processor(processor_id):
+    """Return a processor by its id"""
+    if not _processors.has_key(processor_id):
+        raise Error("No processor registered with id: '%s'" 
+              % processor_id)
+
+    return _processors[processor_id]
+

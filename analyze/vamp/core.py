@@ -21,7 +21,8 @@
 
 from timeside.core import *
 from tempfile import NamedTemporaryFile
-from timeside.analyze.api import IAnalyzer
+from timeside.api import IAnalyzer
+from timeside.exceptions import SubProcessError
 import os
 import random
 import subprocess
@@ -99,31 +100,16 @@ class VampCoreAnalyzer:
                     stdout = subprocess.PIPE,
                     close_fds = True)
         except:
-            raise VampProcessError('Command failure:', command, proc)
+            raise SubProcessError('Command failure:', command, proc)
             
         # Core processing
         while True:
             __chunk = proc.stdout.read(buffer_size)
             status = proc.poll()
             if status != None and status != 0:
-                raise VampProcessError('Command failure:', command, proc)
+                raise SubProcessError('Command failure:', command, proc)
             if len(__chunk) == 0:
                 break
             yield __chunk
         
 
-class VampProcessError(TimeSideError):
-
-    def __init__(self, message, command, subprocess):
-        self.message = message
-        self.command = str(command)
-        self.subprocess = subprocess
-
-    def __str__(self):
-        if self.subprocess.stderr != None:
-            error = self.subprocess.stderr.read()
-        else:
-            error = ''
-        return "%s ; command: %s; error: %s" % (self.message,
-                                                self.command,
-                                                error)

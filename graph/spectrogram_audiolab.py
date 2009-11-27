@@ -20,7 +20,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import *
-from timeside.graph.api import IGrapher
+from timeside.api import IGrapher
 from tempfile import NamedTemporaryFile
 from timeside.graph.wav2png import *
 

@@ -7,8 +7,8 @@ import magic
 from timeside.core import *
 
 
-class TestAnalyzers(Component):
-    analyzers = processors(timeside.analyze.IAnalyzer)
+class TestAnalyzers:
+    analyzers = processors(timeside.api.IAnalyzer)
 
     def list(self):
         analyzers = []
@@ -34,8 +34,8 @@ class TestAnalyzers(Component):
             print id + ' = ' + str(value) + ' ' + analyzer.unit()
 
 
-class TestDecoders(Component):
-    decoders = processors(timeside.decode.IDecoder)
+class TestDecoders:
+    decoders = processors(timeside.api.IDecoder)
 
     def list(self):
         decoders_list = []
@@ -71,8 +71,8 @@ class TestDecoders(Component):
                     f.flush()
                 f.close()
 
-class TestEncoders(Component):
-    encoders = processors(timeside.encode.IEncoder)
+class TestEncoders:
+    encoders = processors(timeside.api.IEncoder)
 
     def list(self):
         encoders = []
@@ -108,8 +108,8 @@ class TestEncoders(Component):
             file.close()
 
 
-class TestGraphers(Component):
-    graphers = processors(timeside.graph.IGrapher)
+class TestGraphers:
+    graphers = processors(timeside.api.IGrapher)
 
     def list(self):
         graphers = []

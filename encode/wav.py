@@ -23,7 +23,7 @@ import os
 import string
 
 from timeside.encode.core import *
-from timeside.encode.api import IEncoder
+from timeside.api import IEncoder
 
 class WavEncoder(EncoderCore):
     """Defines methods to encode to WAV"""

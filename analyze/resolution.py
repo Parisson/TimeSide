@@ -20,7 +20,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.analyze.core import *
-from timeside.analyze.api import IAnalyzer
+from timeside.api import IAnalyzer
 import numpy
 
 class ResolutionAnalyser(AudioProcessor):

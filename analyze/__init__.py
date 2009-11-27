@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from timeside.analyze.api import *
 from timeside.analyze.core import *
 from timeside.analyze.channels import *
 from timeside.analyze.format import *

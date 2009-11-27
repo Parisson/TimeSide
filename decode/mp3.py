@@ -25,7 +25,7 @@ import string
 import subprocess
 
 from timeside.decode.core import *
-from timeside.decode.api import IDecoder
+from timeside.api import IDecoder
 
 
 class Mp3Decoder(DecoderCore):

@@ -24,7 +24,7 @@ import string
 import subprocess
 
 from timeside.encode.core import *
-from timeside.encode.api import IEncoder
+from timeside.api import IEncoder
 from tempfile import NamedTemporaryFile
 
 class FlacEncoder(EncoderCore):

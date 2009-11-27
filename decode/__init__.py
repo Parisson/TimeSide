@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from timeside.decode.api import *
 from timeside.decode.core import *
 from timeside.decode.ogg import *
 from timeside.decode.flac import *
