@@ -20,13 +20,13 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.analyze.core import *
-from timeside.api import IAnalyzer
+from timeside.api import IValueAnalyzer
 import numpy
 
 class MeanDCShiftAnalyser(AudioProcessor):
     """Media item analyzer driver interface"""
 
-    implements(IAnalyzer)
+    implements(IValueAnalyzer)
 
     @staticmethod
     def id():

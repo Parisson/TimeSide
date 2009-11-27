@@ -34,7 +34,6 @@ class SpectrogramGrapherAudiolab(Processor):
 
     @staticmethod
     def id():
-        #FIXME: too long + underscore discouraged
         return "spectrogram"
 
     def name(self):

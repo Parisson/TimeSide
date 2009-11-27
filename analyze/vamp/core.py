@@ -21,7 +21,6 @@
 
 from timeside.core import *
 from tempfile import NamedTemporaryFile
-from timeside.api import IAnalyzer
 from timeside.exceptions import SubProcessError
 import os
 import random

@@ -35,7 +35,8 @@ class IProcessor(Interface):
         and be passed as a GET parameter. Thus it should be as short as possible."""
 
 class IEncoder(IProcessor):
-    """Encoder driver interface"""
+    """Encoder driver interface. Each encoder is expected to support a specific
+    format."""
 
     def __init__(self, output, nchannels, samplerate):
         """The constructor must always accept the output, nchannels and samplerate 
@@ -79,83 +80,105 @@ class IEncoder(IProcessor):
            mode."""
 
     def process(self, frames):
-        """Encode the frames passed as a numpy array, where columns are channels.
+        """Encode buffersize frames passed as a numpy array, where columns are channels.
         
+           A number of frames less than buffersize means that the end of the data
+           has been reached, and that the encoder should close the output file, stream,
+           etc...
+
            In streaming mode the callback passed to the constructor is called whenever
            a block of encoded data is ready."""
 
-    def finish(self):
-        """Flush the encoded data and close the output file/stream. Calling this method
-        may cause the streaming callback to be called if in streaming mode."""
-  
-
 class IDecoder(IProcessor):
-    """Decoder driver interface"""
+    """Decoder driver interface. Decoders are different of encoders in that
+    a given driver may support several input formats, hence this interface doesn't
+    export any static method, all informations are dynamic."""
 
-    @staticmethod
+    def __init__(self, filename):
+        """Create a new decoder for filename. Implementations of this interface 
+        may accept optionnal arguments after filename."""
+
+    def channels():
+        """Return the number of channels"""
+
+    def samplerate():
+        """Return the samplerate"""
+
+    def duration():
+        """Return the duration in seconds"""
+
     def format():
-        """Return the decode/encoding format as a short string 
-        Example: "MP3", "OGG", "AVI", ...
-        """
+        """Return a user-friendly file format string"""
    
-    @staticmethod
-    def description():
-        """Return a string describing what this decode format provides, is good 
-        for, etc... The description is meant to help the end user decide what 
-        format is good for him/her
-        """
+    def encoding():
+        """Return a user-friendly encoding string"""
 
-    @staticmethod
-    def file_extension():
-        """Return the filename extension corresponding to this decode format"""
+    def resolution():
+        """Return the sample depth"""
 
-    @staticmethod
-    def mime_type():
-        """Return the mime type corresponding to this decode format"""
-
-    def process(self, source, options=None):
-        """Perform the decoding process and stream the result through a generator
-
-        source is the audio/video source file absolute path.
-
-        It is highly recommended that decode drivers implement some sort of
-        cache instead of re-encoding each time process() is called.
-
-        It should be possible to make subsequent calls to process() with
-        different items, using the same driver instance.
-        """
+    def process(self):
+        """Return a generator over the decoded data, as numpy arrays, where columns are
+        channels, each array containing buffersize frames or less if the end of file
+        has been reached."""
 
 class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
+    def __init__(self, width, height):
+        """Create a new grapher. Implementations of this interface 
+        may accept optionnal arguments. width and height are generally
+        in pixels but could be something else for eg. svg rendering, etc.."""
+
     @staticmethod
     def name():
         """Return the graph name, such as "Waveform", "Spectral view",
-        etc..
-        """
+        etc..  """
 
     def set_colors(self, background=None, scheme=None):
         """Set the colors used for image generation. background is a RGB tuple,
         and scheme a a predefined color theme name"""
         pass
 
-    def render(self, media_item, width=None, height=None, options=None):
-        """Generator that streams the graph output as a PNG image"""
+    def process(self, frames):
+        """Process a block of buffersize frames passed as a numpy array, where 
+        columns are channels. Passing less than buffersize frames means that
+        the end of data has been reached"""
+
+    def render(self):
+        """Return a PIL Image object visually representing all of the data passed
+        by repeatedly calling process()"""
 
 class IAnalyzer(IProcessor):
-    """Media item analyzer driver interface"""
+    """Media item analyzer driver interface. This interface is abstract, it doesn't
+    describe a particular type of analyzer but is rather meant to group analyzers.
+    In particular, the way the result is returned may greatly vary from sub-interface
+    to sub-interface. For example the IValueAnalyzer returns a final single numeric
+    result at the end of the whole analysis. But some other analyzers may return
+    numpy arrays, and this, either at the end of the analysis, or from process()
+    for each block of data (as in Vamp)."""
+
+    def __init__(self):
+        """Create a new analyzer. Implementations of this interface 
+        may accept optionnal arguments."""
 
     @staticmethod
     def name():
         """Return the analyzer name, such as "Mean Level", "Max level",
-        "Total length, etc..
-        """
+        "Total length, etc..  """
 
     @staticmethod
     def unit():
-        """Return the unit of the data such as "dB", "seconds", etc...
-        """
+        """Return the unit of the data such as "dB", "seconds", etc...  """
 
-    def render(self, media, options=None):
-        """Return the result data of the process"""
+    def process(self, frames):
+        """Process a block of buffersize frames passed as a numpy array, where 
+        columns are channels. Passing less than buffersize frames means that
+        the end of data has been reached"""
+
+class IValueAnalyzer(IAnalyzer):
+    """Interface for analyzers which return a single numeric value from result()"""
+
+    def result():
+        """Return the final result of the analysis performed over the data passed by
+        repeatedly calling process()"""
 

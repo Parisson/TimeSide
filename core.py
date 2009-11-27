@@ -52,6 +52,32 @@ class Processor(Component):
     """Base component class of all processors"""
     __metaclass__ = MetaProcessor
 
+    DEFAULT_BUFFERSIZE = 0x10000
+    MIN_BUFFERSIZE = 0x1000
+
+    __buffersize = DEFAULT_BUFFERSIZE
+
+    def buffersize(self):
+        """Get the current buffer size"""
+        return __buffersize
+
+    def set_buffersize(self, value):
+        """Set the buffer size used by this processor. The buffersize must be a 
+        power of 2 and greater than or equal to MIN_BUFFERSIZE or an exception will 
+        be raised."""
+        if value < self.MIN_BUFFERSIZE:
+            raise Error("Invalid buffer size: %d. Must be greater than or equal to %d",
+                        value, MIN_BUFFERSIZE);
+        v = value                        
+        while v > 1:
+            if v & 1:
+                raise Error("Invalid buffer size: %d. Must be a power of two",
+                            value, MIN_BUFFERSIZE);
+            v >>= 1                            
+
+        self.__buffersize = value
+
+
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
     any of the descendants of this interface."""

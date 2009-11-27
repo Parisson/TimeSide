@@ -34,7 +34,6 @@ class WaveFormGrapherAudiolab(Processor):
 
     @staticmethod
     def id():
-        #FIXME: too long + underscore discouraged
         return "waveform"
 
     def name(self):
