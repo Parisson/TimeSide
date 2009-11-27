@@ -25,10 +25,6 @@ class IAnalyzer(IProcessor):
     """Media item analyzer driver interface"""
 
     @staticmethod
-    def id():
-        """Return a short id alphanumeric, lower-case string."""
-
-    @staticmethod
     def name():
         """Return the analyzer name, such as "Mean Level", "Max level",
         "Total length, etc..

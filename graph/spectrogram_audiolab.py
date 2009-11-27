@@ -32,8 +32,10 @@ class SpectrogramGrapherAudiolab(Processor):
     bg_color = None
     color_scheme = None
 
-    def id(self):
-        return "spectrogram_audiolab"
+    @staticmethod
+    def id():
+        #FIXME: too long + underscore discouraged
+        return "spectrogram"
 
     def name(self):
         return "Spectrogram (audiolab)"

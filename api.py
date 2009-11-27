@@ -20,5 +20,14 @@
 from timeside.component import Interface
 
 class IProcessor(Interface):
-    pass
+
+    @staticmethod
+    def id():
+        """Return a short alphanumeric, lower-case string which uniquely
+        identify this processor. Only letters and digits are allowed.
+        An exception will be raised by MetaProcessor if the id is malformed or
+        not unique amongst registered processors.
+        
+        Typically this identifier is likely to be used during HTTP requests
+        and be passed as a GET parameter. Thus it should be as short as possible."""
 

@@ -37,6 +37,10 @@ class OggVorbisEncoder(EncoderCore):
                              'relation': 'album'
                              }
 
+    @staticmethod
+    def id():
+        return "oggenc"
+
     def format(self):
         return 'OggVorbis'
 

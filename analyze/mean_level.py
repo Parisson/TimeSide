@@ -28,8 +28,9 @@ class MeanLevelAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
-        return "mean_level"
+    @staticmethod
+    def id():
+        return "meanlevel"
 
     def name(self):
         return "Mean RMS level"

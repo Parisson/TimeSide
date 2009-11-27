@@ -32,6 +32,10 @@ class OggDecoder(DecoderCore):
 
     implements(IDecoder)
 
+    @staticmethod
+    def id():
+        return "oggdec"
+    
     def format(self):
         return 'OggVorbis'
 

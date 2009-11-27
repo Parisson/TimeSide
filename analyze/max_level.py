@@ -28,8 +28,9 @@ class MaxLevelAnalyzer(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
-        return "max_level"
+    @staticmethod
+    def id():
+        return "maxlevel"
 
     def name(self):
         return "Maximum peak level"

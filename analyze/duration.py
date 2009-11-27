@@ -29,7 +29,8 @@ class DurationAnalyzer(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
+    @staticmethod
+    def id():
         return "duration"
 
     def name(self):

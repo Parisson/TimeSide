@@ -26,10 +26,6 @@ class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
     @staticmethod
-    def id():
-        """Return a short id alphanumeric, lower-case string."""
-
-    @staticmethod
     def name():
         """Return the graph name, such as "Waveform", "Spectral view",
         etc..

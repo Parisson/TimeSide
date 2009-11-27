@@ -32,8 +32,10 @@ class WaveFormGrapherAudiolab(Processor):
     bg_color = None
     color_scheme = None
 
-    def id(self):
-        return "waveform_audiolab"
+    @staticmethod
+    def id():
+        #FIXME: too long + underscore discouraged
+        return "waveform"
 
     def name(self):
         return "Waveform (audiolab)"

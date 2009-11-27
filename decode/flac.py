@@ -33,6 +33,10 @@ class FlacDecoder(DecoderCore):
 
     implements(IDecoder)
 
+    @staticmethod
+    def id():
+        return "flacdec"
+    
     def format(self):
         return 'FLAC'
 

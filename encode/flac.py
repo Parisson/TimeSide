@@ -38,6 +38,10 @@ class FlacEncoder(EncoderCore):
                              'relation': 'album'
                              }
 
+    @staticmethod
+    def id():
+        return "flacenc"
+    
     def format(self):
         return 'FLAC'
 

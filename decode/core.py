@@ -55,7 +55,7 @@ class SubProcessPipe:
         self.output = self.proc.stdout
 
 
-class DecoderCore(Component):
+class DecoderCore(Processor):
     """Defines the main parts of the decoding tools :
     paths, metadata parsing, data streaming thru system command"""
 

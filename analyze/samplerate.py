@@ -28,7 +28,8 @@ class SampleRateAnalyzer(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
+    @staticmethod
+    def id():
         return "samplerate"
 
     def name(self):

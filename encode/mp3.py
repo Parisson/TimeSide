@@ -51,6 +51,11 @@ class Mp3Encoder(EncoderCore):
                              'publisher': 'tc', #comment
                              'date': 'ty', #year
                              }
+
+    @staticmethod
+    def id():
+        return "mp3enc"
+    
     def format(self):
         return 'MP3'
 

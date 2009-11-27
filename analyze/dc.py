@@ -28,7 +28,8 @@ class MeanDCShiftAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
+    @staticmethod
+    def id():
         return "dc"
 
     def name(self):

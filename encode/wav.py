@@ -33,6 +33,10 @@ class WavEncoder(EncoderCore):
     def __init__(self):
         pass
 
+    @staticmethod
+    def id():
+        return "wavenc"
+
     def format(self):
         return 'WAV'
 

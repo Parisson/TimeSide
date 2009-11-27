@@ -28,7 +28,8 @@ class ResolutionAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
+    @staticmethod
+    def id():
         return "resolution"
 
     def name(self):

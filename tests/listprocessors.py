@@ -7,6 +7,6 @@ def list_processors(interface, prefix=""):
         list_processors(i, prefix + "  ")
     processors = timeside.processors(interface, False)
     for p in processors:
-        print prefix + "  " + p.__name__
+        print prefix + "  %s [%s]" % (p.__name__, p.id())
 
 list_processors(timeside.api.IProcessor)        

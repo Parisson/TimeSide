@@ -28,8 +28,9 @@ class ChannelAnalyser(AudioProcessor):
 
     implements(IAnalyzer)
 
-    def id(self):
-        return "nb_channels"
+    @staticmethod
+    def id():
+        return "nchannels"
 
     def name(self):
         return "Channels"

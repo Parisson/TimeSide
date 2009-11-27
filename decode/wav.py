@@ -31,6 +31,10 @@ class WavDecoder(DecoderCore):
 
     implements(IDecoder)
 
+    @staticmethod
+    def id():
+        return "wavdec"
+    
     def format(self):
         return 'WAV'
 

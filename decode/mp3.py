@@ -36,6 +36,10 @@ class Mp3Decoder(DecoderCore):
     def __init__(self):
         self.command = 'sox -t mp3 "%s" -q -b 16 -r 44100 -t wav -c2 - '
 
+    @staticmethod
+    def id():
+        return "mp3dec"
+    
     def format(self):
         return 'MP3'
 
