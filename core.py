@@ -36,12 +36,12 @@
 #
 # list_of_classes = implementations(Listenable)
 #
-# This mechanism support inheritance of both interfaces and components:
+# This mechanism support inheritance of interfaces: a class implementing a given 
+# interface is also considered to implement all the ascendants of this interface.
 #
-# - all descendants of a class implementing a given interface are also considered
-#   to implement this interface
-# - a class implementing a given interface is also considered to implement all
-#   the ascendants of this interface
+# However, inheritance is not supported for components. The descendants of a class 
+# implementing a given interface are not automatically considered to implement this 
+# interface too. 
 
 __all__ = ['Component', 'implements', 'Interface', 'implementations', 'TimeSideError']
 
@@ -86,7 +86,6 @@ def find_implementations(interface, result):
     for i, cls in _implementations:
         if (i == interface):
             extend_unique(result, [cls])
-            extend_unique(result, cls.__subclasses__())
 
     subinterfaces = interface.__subclasses__()
     if subinterfaces:

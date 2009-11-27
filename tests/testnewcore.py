@@ -26,6 +26,9 @@ class I7(Interface):
 class I8(Interface):
     pass
 
+class I9(I8):
+    pass
+
 class C1(Component):
     implements(I1)
 
@@ -50,8 +53,8 @@ class C7(C6):
 class C8(Component):
     implements(I8)
 
-class C9(C8):
-    implements(I8)
+class C9(Component):
+    implements(I8, I9)
 
 def list_equals(list1, list2):
     if len(list1) != len(list2):
@@ -82,5 +85,5 @@ test("Test a component implementing two interfaces (1/2)", implementations(I2), 
 test("Test a component implementing two interfaces (2/2)", implementations(I3), [C2])
 test("Test an interface implemented by two components", implementations(I4), [C3, C4])
 test("Test whether a component implements an interface's parent", implementations(I5), [C5])
-test("Test whether a child component implements the interface implemented by its parent", implementations(I7), [C6, C7])
-test("Test implementation redundancy across descendants", implementations(I8), [C8, C9])
+test("Test that a component doesn't implement the interface implemented by its parent", implementations(I7), [C6])
+test("Test implementation redundancy across inheritance", implementations(I8), [C8, C9])
