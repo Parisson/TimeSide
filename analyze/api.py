@@ -19,9 +19,9 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import *
+from timeside.api import IProcessor
 
-class IAnalyzer(Interface):
+class IAnalyzer(IProcessor):
     """Media item analyzer driver interface"""
 
     @staticmethod

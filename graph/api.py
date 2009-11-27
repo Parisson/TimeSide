@@ -20,9 +20,9 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 # Author: Olivier Guilyardi <olivier@samalyse.com>
 
-from timeside.core import *
+from timeside.api import IProcessor
 
-class IGrapher(Interface):
+class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
     @staticmethod

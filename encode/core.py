@@ -52,8 +52,7 @@ class SubProcessPipe:
         self.input = self.proc.stdin
         self.output = self.proc.stdout
 
-
-class EncoderCore(Component):
+class EncoderCore(Processor):
     """Defines the main parts of the encoding tools :
     paths, metadata parsing, data streaming thru system command"""
 

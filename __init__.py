@@ -1,5 +1,5 @@
 
-import core
+from core import *
 import decode
 import encode
 import analyze

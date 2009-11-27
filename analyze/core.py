@@ -26,7 +26,8 @@ import optparse, math, sys
 import numpy
 import scikits.audiolab as audiolab
 
-class AudioProcessor(Component):
+# FIXME: AudioProcessor: wrong name, should be Analyzer or AnalyzerCore
+class AudioProcessor(Processor):
 
     def __init__(self):
         self.fft_size = 2048

@@ -19,9 +19,10 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-from timeside.core import Interface, TimeSideError
+from timeside.api import IProcessor
+from timeside.core import TimeSideError
 
-class IDecoder(Interface):
+class IDecoder(IProcessor):
     """Decoder driver interface"""
 
     @staticmethod

@@ -8,7 +8,7 @@ from timeside.core import *
 
 
 class TestAnalyzers(Component):
-    analyzers = implementations(timeside.analyze.IAnalyzer)
+    analyzers = processors(timeside.analyze.IAnalyzer)
 
     def list(self):
         analyzers = []
@@ -35,7 +35,7 @@ class TestAnalyzers(Component):
 
 
 class TestDecoders(Component):
-    decoders = implementations(timeside.decode.IDecoder)
+    decoders = processors(timeside.decode.IDecoder)
 
     def list(self):
         decoders_list = []
@@ -72,7 +72,7 @@ class TestDecoders(Component):
                 f.close()
 
 class TestEncoders(Component):
-    encoders = implementations(timeside.encode.IEncoder)
+    encoders = processors(timeside.encode.IEncoder)
 
     def list(self):
         encoders = []
@@ -109,7 +109,7 @@ class TestEncoders(Component):
 
 
 class TestGraphers(Component):
-    graphers = implementations(timeside.graph.IGrapher)
+    graphers = processors(timeside.graph.IGrapher)
 
     def list(self):
         graphers = []
