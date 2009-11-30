@@ -60,7 +60,7 @@ class DecoderCore(Processor):
     paths, metadata parsing, data streaming thru system command"""
 
     def __init__(self):
-        self.command = 'sox "%s" -q -b 16 -r 44100 -t wav -c2 - '
+        self.command = 'ffmpeg -i "%s" -f wav - '
 
     def process(self, source, options=None):
         """Encode and stream audio data through a generator"""

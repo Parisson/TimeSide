@@ -127,7 +127,7 @@ class FlacEncoder(EncoderCore):
             #temp_file.flush()
             pass
 
-        self.write_tags(temp_file.name)
+        #self.write_tags(temp_file.name)
 
         while True:
             __chunk = temp_file.read(buffer_size)

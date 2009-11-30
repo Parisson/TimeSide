@@ -92,6 +92,7 @@ class TestEncoders:
     def run(self, source, metadata):
         print '\n=== Encoder testing ===\n'
         for encoder_class in self.encoders:
+            print '=================================='
             encoder = encoder_class()
             mime = mimetype(source)
             format = encoder.format()
@@ -106,6 +107,7 @@ class TestEncoders:
                 file.write(chunk)
             print 'Sound exported to :' + file_path
             file.close()
+            print '==================================\n'
 
 
 class TestGraphers:
