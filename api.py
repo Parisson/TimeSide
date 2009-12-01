@@ -22,31 +22,68 @@
 from timeside.component import Interface
 
 class IProcessor(Interface):
-    """Base processor interface"""
+    """Common processor interface"""
 
     @staticmethod
     def id():
-        """Return a short alphanumeric, lower-case string which uniquely
-        identify this processor. Only letters and digits are allowed.
-        An exception will be raised by MetaProcessor if the id is malformed or
-        not unique amongst registered processors.
+        """Short alphanumeric, lower-case string which uniquely identify this 
+        processor, suitable for use as an HTTP/GET argument value, in filenames, 
+        etc..."""
+
+        # implementation: only letters and digits are allowed. An exception will
+        # be raised by MetaProcessor if the id is malformed or not unique amongst
+        # registered processors.
+
+    def buffersize(self):
+        """Buffersize this processor operates on, that is; the number of frames 
+        expected/returned by process()."""
+
+    def set_buffersize(self, value):        
+        """Set the buffer size used by this processor."""
+
+    def set_input_format(self, nchannels, samplerate):
+        """Set the format of input data passed to process(). It is required to call
+        this method before calling process(), except for output-only processors."""
+
+    def input_format(self):
+        """Return a tuple of the form (nchannels, samplerate) indicating the
+        format of the data expected by process(), with the same values as the 
+        nchannels and samplerate arguments passed to the constructor."""
+    
+    def output_format(self):
+        """Return a tuple of the form (nchannels, samplerate) indicating the
+        format of the data returned by process(). These may differ from the values
+        passed to the constructor (ie: stereo-to-mono effect, samplerate converter, 
+        etc...)"""
+
+    def process(self, frames=None):
+        """Process buffersize input frames and return buffersize output frames, both 
+        as numpy arrays, where columns are channels. An input/output of less than 
+        buffersize frames (or None) means that the end-of-data has been reached (the
+        caller must ensure that this happens).
         
-        Typically this identifier is likely to be used during HTTP requests
-        and be passed as a GET parameter. Thus it should be as short as possible."""
+        Output-only processors (such as decoders) will raise an exception if the
+        frames argument is not None. All processors (even encoders) return data,
+        even if that means returning the input unchanged.
+        
+        Warning: it is required to call set_input_format() before this method
+        for processors which accept input."""
 
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific
     format."""
 
-    def __init__(self, output, nchannels, samplerate):
-        """The constructor must always accept the output, nchannels and samplerate 
-        arguments.  It may accepts extra arguments such as bitrate, depth, etc.., 
-        but these must be optionnal, that is have a default value.
-        
-        The output must either be a filepath or a callback function/method for 
-        for the streaming mode. The callback must accept one argument which is 
-        block of binary data.
-        """
+    def __init__(self, output):
+        """Create a new encoder. output can either be a filename or a python callback 
+        function/method for streaming mode.
+
+        The streaming callback prototype is: callback(data, eod)
+        Where data is a block of binary data of an undetermined size, and eod
+        True when end-of-data is reached."""
+
+        # implementation: the constructor must always accept the output argument. It may 
+        # accepts extra arguments such as bitrate, depth, etc.., but these must be optionnal, 
+        # that is have a default value.
 
     @staticmethod
     def format():
@@ -70,24 +107,14 @@ class IEncoder(IProcessor):
         """Return the mime type corresponding to this encode format"""
 
     def set_metadata(self, metadata):
-        """metadata is a tuple containing tuples for each descriptor return by
-        the dc.Ressource of the item, in the model order :
-        ((name1, value1),(name2, value2),(name1, value3), ...)"""
-
-    def update(self):
-        """Updates the metadata into the file passed as the output argument
-           to the constructor. This method can't be called in streaming
-           mode."""
-
-    def process(self, frames):
-        """Encode buffersize frames passed as a numpy array, where columns are channels.
+        """Set the metadata to be embedded in the encoded output.
         
-           A number of frames less than buffersize means that the end of the data
-           has been reached, and that the encoder should close the output file, stream,
-           etc...
-
-           In streaming mode the callback passed to the constructor is called whenever
-           a block of encoded data is ready."""
+        In non-streaming mode, this method updates the metadata directly into the 
+        output file, without re-encoding the audio data, provided this file already 
+        exists.
+        
+        It isn't required to call this method, but if called, it must be before 
+        process()."""
 
 class IDecoder(IProcessor):
     """Decoder driver interface. Decoders are different of encoders in that
@@ -95,17 +122,14 @@ class IDecoder(IProcessor):
     export any static method, all informations are dynamic."""
 
     def __init__(self, filename):
-        """Create a new decoder for filename. Implementations of this interface 
-        may accept optionnal arguments after filename."""
-
-    def channels():
-        """Return the number of channels"""
-
-    def samplerate():
-        """Return the samplerate"""
+        """Create a new decoder for filename."""
+        # implementation: additional optionnal arguments are allowed 
 
     def duration():
         """Return the duration in seconds"""
+
+    def nframes():
+        """Return the number of frames"""
 
     def format():
         """Return a user-friendly file format string"""
@@ -116,33 +140,29 @@ class IDecoder(IProcessor):
     def resolution():
         """Return the sample depth"""
 
-    def process(self):
-        """Return a generator over the decoded data, as numpy arrays, where columns are
-        channels, each array containing buffersize frames or less if the end of file
-        has been reached."""
+    def metadata(self):
+        """Return the metadata embedded into the encoded stream, if any."""
 
 class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
     def __init__(self, width, height):
-        """Create a new grapher. Implementations of this interface 
-        may accept optionnal arguments. width and height are generally
+        """Create a new grapher. width and height are generally
         in pixels but could be something else for eg. svg rendering, etc.."""
+        # implementation: additional optionnal arguments are allowed 
 
     @staticmethod
     def name():
         """Return the graph name, such as "Waveform", "Spectral view",
         etc..  """
 
+    def set_nframes(self, nframes):
+        """Duration in frames of the input data. Must be called before process()."""
+
     def set_colors(self, background=None, scheme=None):
         """Set the colors used for image generation. background is a RGB tuple,
         and scheme a a predefined color theme name"""
         pass
-
-    def process(self, frames):
-        """Process a block of buffersize frames passed as a numpy array, where 
-        columns are channels. Passing less than buffersize frames means that
-        the end of data has been reached"""
 
     def render(self):
         """Return a PIL Image object visually representing all of the data passed
@@ -158,8 +178,8 @@ class IAnalyzer(IProcessor):
     for each block of data (as in Vamp)."""
 
     def __init__(self):
-        """Create a new analyzer. Implementations of this interface 
-        may accept optionnal arguments."""
+        """Create a new analyzer."""
+        # implementation: additional optionnal arguments are allowed 
 
     @staticmethod
     def name():
@@ -170,15 +190,21 @@ class IAnalyzer(IProcessor):
     def unit():
         """Return the unit of the data such as "dB", "seconds", etc...  """
 
-    def process(self, frames):
-        """Process a block of buffersize frames passed as a numpy array, where 
-        columns are channels. Passing less than buffersize frames means that
-        the end of data has been reached"""
-
 class IValueAnalyzer(IAnalyzer):
     """Interface for analyzers which return a single numeric value from result()"""
 
     def result():
         """Return the final result of the analysis performed over the data passed by
         repeatedly calling process()"""
+
+class IEffect(IProcessor):
+    """Effect processor interface"""
+
+    def __init__(self):
+        """Create a new effect."""
+        # implementation: additional optionnal arguments are allowed 
+
+    @staticmethod
+    def name():
+        """Return the effect name"""
 

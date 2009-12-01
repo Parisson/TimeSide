@@ -22,8 +22,8 @@ from timeside.api import IProcessor
 from timeside.exceptions import Error, ApiError
 import re
 
-__all__ = ['Processor', 'MetaProcessor', 'implements', 'processors', 
-           'get_processor']
+__all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract', 
+           'interfacedoc', 'processors', 'get_processor']
 
 _processors = {}
 
@@ -31,7 +31,7 @@ class MetaProcessor(MetaComponent):
     """Metaclass of the Processor class, used mainly for ensuring that processor
     id's are wellformed and unique"""
 
-    valid_id = re.compile("^[a-z][a-z0-9]*$")
+    valid_id = re.compile("^[a-z][_a-z0-9]*$")
 
     def __new__(cls, name, bases, d):
         new_class = MetaComponent.__new__(cls, name, bases, d)
@@ -52,14 +52,17 @@ class Processor(Component):
     """Base component class of all processors"""
     __metaclass__ = MetaProcessor
 
+    abstract()
+    implements(IProcessor)
+
     DEFAULT_BUFFERSIZE = 0x10000
     MIN_BUFFERSIZE = 0x1000
 
     __buffersize = DEFAULT_BUFFERSIZE
 
+    @interfacedoc
     def buffersize(self):
-        """Get the current buffer size"""
-        return __buffersize
+        return self.__buffersize
 
     def set_buffersize(self, value):
         """Set the buffer size used by this processor. The buffersize must be a 
@@ -77,6 +80,22 @@ class Processor(Component):
 
         self.__buffersize = value
 
+    @interfacedoc
+    def set_input_format(self, nchannels=None, samplerate=None):
+        self.input_channels   = nchannels
+        self.input_samplerate = samplerate
+
+    @interfacedoc
+    def input_format(self):
+        return (self.input_channels, self.input_samplerate)
+
+    @interfacedoc
+    def output_format(self):        
+        return (self.input_channels, self.input_samplerate)
+
+    @interfacedoc
+    def process(self, frames):
+        return frames
 
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,

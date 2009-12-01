@@ -42,7 +42,8 @@
 # implementing a given interface are not automatically considered to implement this 
 # interface too. 
 
-__all__ = ['Component', 'MetaComponent', 'implements', 'Interface', 'implementations']
+__all__ = ['Component', 'MetaComponent', 'implements', 'abstract', 
+           'interfacedoc', 'Interface', 'implementations', 'ComponentError']
 
 class Interface(object):
     """Marker base class for interfaces."""
@@ -50,27 +51,67 @@ class Interface(object):
 def implements(*interfaces):
     """Registers the interfaces implemented by a component when placed in the
     class header"""
-    _implements.extend(interfaces)
+    MetaComponent.implements.extend(interfaces)
 
-def implementations(interface, recurse=True):
+def abstract():
+    """Declare a component as abstract when placed in the class header"""
+    MetaComponent.abstract = True
+
+def implementations(interface, recurse=True, abstract=False):
     """Returns the components implementing interface, and if recurse, any of 
-    the descendants of interface."""
+    the descendants of interface. If abstract is True, also return the 
+    abstract implementations."""
     result = []
-    find_implementations(interface, recurse, result)
+    find_implementations(interface, recurse, abstract, result)
     return result
 
-_implementations = []
-_implements = []
+def interfacedoc(func):
+    if isinstance(func, staticmethod):
+        raise ComponentError("@interfacedoc can't handle staticmethod (try to put @staticmethod above @interfacedoc)")
+
+    if not func.__doc__:
+        func.__doc__ = "@interfacedoc"
+        func._interfacedoc = True
+    return func
 
 class MetaComponent(type):
     """Metaclass of the Component class, used mainly to register the interface
     declared to be implemented by a component."""
+
+    implementations     = []
+    implements          = []
+    abstract            = False
+
     def __new__(cls, name, bases, d):
         new_class = type.__new__(cls, name, bases, d)
-        if _implements:
-            for i in _implements:
-                _implementations.append((i, new_class))
-        del _implements[:]
+
+        # Register implementations
+        if MetaComponent.implements:
+            for i in MetaComponent.implements:
+                MetaComponent.implementations.append({
+                    'interface': i, 
+                    'class':     new_class,
+                    'abstract':  MetaComponent.abstract})
+
+        # Propagate @interfacedoc
+        for name in new_class.__dict__:
+            member = new_class.__dict__[name]
+            if isinstance(member, staticmethod):
+                member = getattr(new_class, name)
+
+            if member.__doc__ == "@interfacedoc":
+                if_member = None
+                for i in MetaComponent.implements:
+                    if hasattr(i, name):
+                        if_member = getattr(i, name)
+                if not if_member:
+                    raise ComponentError("@interfacedoc: %s.%s: no such member in implemented interfaces: %s"
+                                         % (new_class.__name__, name, str(MetaComponent.implements)))
+                member.__doc__ = if_member.__doc__
+                
+        MetaComponent.implements = []
+        MetaComponent.abstract   = False
+
         return new_class
 
 class Component(object):
@@ -84,16 +125,18 @@ def extend_unique(list1, list2):
         if item not in list1:
             list1.append(item)
 
-def find_implementations(interface, recurse, result):
+def find_implementations(interface, recurse, abstract, result):
     """Find implementations of an interface or of one of its descendants and
     extend result with the classes found."""
-    for i, cls in _implementations:
-        if (i == interface):
-            extend_unique(result, [cls])
+    for item in MetaComponent.implementations:
+        if (item['interface'] == interface and (abstract or not item['abstract'])):
+            extend_unique(result, [item['class']])
 
     if recurse:
         subinterfaces = interface.__subclasses__()
         if subinterfaces:
             for i in subinterfaces:
-                find_implementations(i, recurse, result)
+                find_implementations(i, recurse, abstract, result)
 
+class ComponentError(Exception):
+    pass
