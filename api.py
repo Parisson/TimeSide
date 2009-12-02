@@ -58,6 +58,10 @@ class IProcessor(Interface):
         
         Warning: it is required to call setup() before this method."""
 
+    def release(self):
+        """Release resources owned by this processor. The processor cannot
+        be used anymore after calling this method."""
+
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific
     format."""

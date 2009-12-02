@@ -1,5 +1,7 @@
 from timeside.tests.api import examples
 from timeside.core import *
+from timeside.api import *
+from sys import stdout
 
 import os
 source=os.path.dirname(__file__) + "../samples/guitar.wav"

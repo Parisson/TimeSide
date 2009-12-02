@@ -3,10 +3,10 @@ import os
 
 source=os.path.dirname(__file__) + "../samples/guitar.wav"
 
-Decoder = examples.AudiolabDecoder
+Decoder = examples.FileDecoder
 print "Creating decoder with id=%s for: %s" % (Decoder.id(), source)
 decoder    = Decoder(source)
-analyzer = examples.MaxLevelAnalyzer()
+analyzer = examples.MaxLevel()
 decoder.setup()
 nchannels  = decoder.channels()
 samplerate = decoder.samplerate()
@@ -24,6 +24,8 @@ while True:
 max_level = analyzer.result()
 print "Max level: %f" % max_level
 
+analyzer.release()
+
 destination = "normalized.wav"
 Encoder = examples.WavEncoder
 print "Creating encoder with id=%s for: %s" % (Encoder.id(), destination)
@@ -33,7 +35,7 @@ gain = 1
 if max_level > 0:
     gain = 0.9 / max_level
 
-effect = examples.GainEffect(gain)
+effect = examples.Gain(gain)
 
 decoder.setup()
 effect.setup(decoder.channels(), decoder.samplerate())
@@ -47,3 +49,6 @@ while True:
     if eod:
         break
 
+decoder.release()
+effect.release()
+encoder.release()

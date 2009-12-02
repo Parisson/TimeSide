@@ -16,15 +16,22 @@ class FileDecoder(Processor):
     @interfacedoc
     def __init__(self, filename):
         self.filename = filename
-        self.file     = None
+        # The file has to be opened here so that nframes(), samplerate(), 
+        # etc.. work before setup() is called. 
+        self.file     = audiolab.sndfile(self.filename, 'read')
+        self.position = 0
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None):
         Processor.setup(self, channels, samplerate)
+        if self.position != 0:
+            self.file.seek(0);
+            self.position = 0
+
+    def release(self):
         if self.file:
-            self.file.close();
-        self.file = audiolab.sndfile(self.filename, 'read')
-        self.position = 0
+            self.file.close()
+            self.file = None
 
     @interfacedoc
     def channels(self):
@@ -82,15 +89,9 @@ class FileDecoder(Processor):
         if toread > buffersize:
             toread = buffersize
 
-        frames = self.file.read_frames(toread)
-
+        frames         = self.file.read_frames(toread)
+        eod            = (toread < buffersize)
         self.position += toread
-
-        eod = False
-        if toread < buffersize:
-            self.file.close()
-            self.file = None
-            eod = True
 
         return frames, eod
 
@@ -201,3 +202,4 @@ class WavEncoder(Processor):
             self.file = None
 
         return frames, eod
+

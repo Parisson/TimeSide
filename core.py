@@ -76,6 +76,10 @@ class Processor(Component):
     def process(self, frames):
         return frames
 
+    @interfacedoc
+    def release(self):
+        pass
+
     def __or__(self, item):
         return ProcessPipe(self, item)
 
