@@ -34,40 +34,29 @@ class IProcessor(Interface):
         # be raised by MetaProcessor if the id is malformed or not unique amongst
         # registered processors.
 
-    def buffersize(self):
-        """Buffersize this processor operates on, that is; the number of frames 
-        expected/returned by process()."""
+    def setup(self, channels=None, samplerate=None):
+        """Setup this processor to handle incoming data with nchannels at samplerate.
+        Also reset the processor internal state so that it can be reused."""
 
-    def set_buffersize(self, value):        
-        """Set the buffer size used by this processor."""
+    def channels(self):
+        """Number of channels in the data returned by process(). May be different from
+        the number of channels passed to setup()"""
 
-    def set_input_format(self, nchannels, samplerate):
-        """Set the format of input data passed to process(). It is required to call
-        this method before calling process(), except for output-only processors."""
+    def samplerate(self):
+        """Samplerate of the data returned by process(). May be different from
+        the samplerate passed to setup()"""
 
-    def input_format(self):
-        """Return a tuple of the form (nchannels, samplerate) indicating the
-        format of the data expected by process(), with the same values as the 
-        nchannels and samplerate arguments passed to the constructor."""
-    
-    def output_format(self):
-        """Return a tuple of the form (nchannels, samplerate) indicating the
-        format of the data returned by process(). These may differ from the values
-        passed to the constructor (ie: stereo-to-mono effect, samplerate converter, 
-        etc...)"""
-
-    def process(self, frames=None):
-        """Process buffersize input frames and return buffersize output frames, both 
-        as numpy arrays, where columns are channels. An input/output of less than 
-        buffersize frames (or None) means that the end-of-data has been reached (the
-        caller must ensure that this happens).
+    def process(self, frames=None, eod=False):
+        """Process input frames and return a (output_frames, eod) tuple.
+        Both input and output frames are numpy arrays, where columns are 
+        channels, and containing an undetermined number of frames.  eod=True 
+        means that the end-of-data has been reached.
         
         Output-only processors (such as decoders) will raise an exception if the
         frames argument is not None. All processors (even encoders) return data,
         even if that means returning the input unchanged.
         
-        Warning: it is required to call set_input_format() before this method
-        for processors which accept input."""
+        Warning: it is required to call setup() before this method."""
 
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific
@@ -148,16 +137,15 @@ class IGrapher(IProcessor):
 
     def __init__(self, width, height):
         """Create a new grapher. width and height are generally
-        in pixels but could be something else for eg. svg rendering, etc.."""
-        # implementation: additional optionnal arguments are allowed 
+        in pixels but could be something else for eg. svg rendering, etc.. """
+
+        # implementation: additional optionnal arguments (such as the total number 
+        # of frames, etc...) are allowed 
 
     @staticmethod
     def name():
         """Return the graph name, such as "Waveform", "Spectral view",
         etc..  """
-
-    def set_nframes(self, nframes):
-        """Duration in frames of the input data. Must be called before process()."""
 
     def set_colors(self, background=None, scheme=None):
         """Set the colors used for image generation. background is a RGB tuple,

@@ -23,7 +23,7 @@ from timeside.exceptions import Error, ApiError
 import re
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract', 
-           'interfacedoc', 'processors', 'get_processor']
+           'interfacedoc', 'processors', 'get_processor', 'ProcessPipe']
 
 _processors = {}
 
@@ -55,47 +55,29 @@ class Processor(Component):
     abstract()
     implements(IProcessor)
 
-    DEFAULT_BUFFERSIZE = 0x10000
-    MIN_BUFFERSIZE = 0x1000
-
-    __buffersize = DEFAULT_BUFFERSIZE
-
     @interfacedoc
-    def buffersize(self):
-        return self.__buffersize
-
-    def set_buffersize(self, value):
-        """Set the buffer size used by this processor. The buffersize must be a 
-        power of 2 and greater than or equal to MIN_BUFFERSIZE or an exception will 
-        be raised."""
-        if value < self.MIN_BUFFERSIZE:
-            raise Error("Invalid buffer size: %d. Must be greater than or equal to %d",
-                        value, MIN_BUFFERSIZE);
-        v = value                        
-        while v > 1:
-            if v & 1:
-                raise Error("Invalid buffer size: %d. Must be a power of two",
-                            value, MIN_BUFFERSIZE);
-            v >>= 1                            
-
-        self.__buffersize = value
-
-    @interfacedoc
-    def set_input_format(self, nchannels=None, samplerate=None):
-        self.input_channels   = nchannels
+    def setup(self, channels=None, samplerate=None):
+        self.input_channels   = channels
         self.input_samplerate = samplerate
 
     @interfacedoc
-    def input_format(self):
-        return (self.input_channels, self.input_samplerate)
+    def channels(self):
+        # default implementation returns the input channels, but processors may change
+        # this behaviour by overloading this method
+        return self.input_channels
 
     @interfacedoc
-    def output_format(self):        
-        return (self.input_channels, self.input_samplerate)
+    def samplerate(self):
+        # default implementation returns the input samplerate, but processors may change
+        # this behaviour by overloading this method
+        return self.input_samplerate
 
     @interfacedoc
     def process(self, frames):
         return frames
+
+    def __or__(self, item):
+        return ProcessPipe(self, item)
 
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
@@ -110,4 +92,37 @@ def get_processor(processor_id):
               % processor_id)
 
     return _processors[processor_id]
+
+class ProcessPipe(object):
+    """Handle a pipe of processors"""
+
+    def __init__(self, *processors):
+        self.processors = processors
+
+    def __or__(self, processor):
+        p = []
+        p.extend(self.processors)
+        p.append(processor)
+        return ProcessPipe(*p)
+
+    def run(self):
+        """Setup/reset all processors in cascade and stream audio data along
+        the pipe"""
+
+        source = self.processors[0]
+        items  = self.processors[1:]
+
+        # setup/reset processors and configure channels and samplerate throughout the pipe
+        source.setup()
+        last = source
+        for item in items:
+            item.setup(last.channels(), last.samplerate())
+            last = item
+
+        # now stream audio data along the pipe
+        eod = False
+        while not eod:
+            frames, eod = source.process()
+            for item in items:
+                frames, eod = item.process(frames, eod)
 

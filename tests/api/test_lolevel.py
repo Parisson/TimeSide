@@ -1,22 +1,24 @@
 from timeside.tests.api import examples
 import os
 
-source=os.path.dirname(__file__) + "../samples/sweep_source.wav"
+source=os.path.dirname(__file__) + "../samples/guitar.wav"
 
 Decoder = examples.AudiolabDecoder
 print "Creating decoder with id=%s for: %s" % (Decoder.id(), source)
-decoder = Decoder(source)
-nchannels, samplerate = decoder.output_format()
+decoder    = Decoder(source)
+analyzer = examples.MaxLevelAnalyzer()
+decoder.setup()
+nchannels  = decoder.channels()
+samplerate = decoder.samplerate()
+analyzer.setup(nchannels, samplerate)
+
 print "Stats: duration=%f, nframes=%d, nchannels=%d, samplerate=%d, resolution=%d" % (
         decoder.duration(), decoder.nframes(), nchannels, samplerate, decoder.resolution())
 
-analyzer = examples.MaxLevelAnalyzer()
-analyzer.set_input_format(nchannels, samplerate)
-
 while True:
-    frames = decoder.process()
-    analyzer.process(frames)
-    if len(frames) < decoder.buffersize():
+    frames, eod = decoder.process()
+    analyzer.process(frames, eod)
+    if eod:
         break
 
 max_level = analyzer.result()
@@ -26,10 +28,6 @@ destination = "normalized.wav"
 Encoder = examples.WavEncoder
 print "Creating encoder with id=%s for: %s" % (Encoder.id(), destination)
 encoder = Encoder(destination)
-decoder = Decoder(source)
-
-nchannels, samplerate = decoder.output_format()
-encoder.set_input_format(nchannels, samplerate)
 
 gain = 1
 if max_level > 0:
@@ -37,11 +35,15 @@ if max_level > 0:
 
 effect = examples.GainEffect(gain)
 
+decoder.setup()
+effect.setup(decoder.channels(), decoder.samplerate())
+encoder.setup(effect.channels(), effect.samplerate())
+
 print "Applying effect id=%s with gain=%f" % (effect.id(), gain)
 
 while True:
-    frames = decoder.process()
-    encoder.process(effect.process(frames))
-    if len(frames) < decoder.buffersize():
+    frames, eod = decoder.process()
+    encoder.process(*effect.process(frames, eod))
+    if eod:
         break
 

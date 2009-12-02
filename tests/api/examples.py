@@ -4,7 +4,7 @@ from timeside import Metadata
 from scikits import audiolab
 import numpy
 
-class AudiolabDecoder(Processor):
+class FileDecoder(Processor):
     """A simple audiolab-based example decoder"""
     implements(IDecoder)
 
@@ -15,12 +15,24 @@ class AudiolabDecoder(Processor):
 
     @interfacedoc
     def __init__(self, filename):
-        self.file = audiolab.sndfile(filename, 'read')
+        self.filename = filename
+        self.file     = None
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None):
+        Processor.setup(self, channels, samplerate)
+        if self.file:
+            self.file.close();
+        self.file = audiolab.sndfile(self.filename, 'read')
         self.position = 0
 
     @interfacedoc
-    def output_format(self):
-        return (self.file.get_channels(), self.file.get_samplerate())
+    def channels(self):
+        return self.file.get_channels()
+        
+    @interfacedoc    
+    def samplerate(self):        
+        return self.file.get_samplerate()
 
     @interfacedoc
     def duration(self):
@@ -58,11 +70,11 @@ class AudiolabDecoder(Processor):
         return Metadata()
 
     @interfacedoc
-    def process(self, frames=None):
+    def process(self, frames=None, eod=False):
         if frames:
             raise Exception("Decoder doesn't accept input frames")
 
-        buffersize = self.buffersize()
+        buffersize = 0x10000
 
         # Need this because audiolab raises a bogus exception when asked
         # to read passed the end of the file
@@ -74,16 +86,20 @@ class AudiolabDecoder(Processor):
 
         self.position += toread
 
+        eod = False
         if toread < buffersize:
             self.file.close()
+            self.file = None
+            eod = True
 
-        return frames
+        return frames, eod
 
-class MaxLevelAnalyzer(Processor):
+class MaxLevel(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def __init__(self):
+    def setup(self, channels=None, samplerate=None):
+        Processor.setup(self, channels, samplerate)
         self.max_value = 0
 
     @staticmethod
@@ -102,17 +118,17 @@ class MaxLevelAnalyzer(Processor):
         # power? amplitude?
         return ""
 
-    def process(self, frames=None):        
+    def process(self, frames, eod=False):        
         max = frames.max()
         if max > self.max_value:
             self.max_value = max
 
-        return frames
+        return frames, eod
 
     def result(self):
         return self.max_value
 
-class GainEffect(Processor):
+class Gain(Processor):
     implements(IEffect)
 
     @interfacedoc
@@ -129,8 +145,8 @@ class GainEffect(Processor):
     def name():
         return "Gain test effect"
    
-    def process(self, frames=None):        
-        return numpy.multiply(frames, self.gain)
+    def process(self, frames, eod=False):        
+        return numpy.multiply(frames, self.gain), eod
 
 class WavEncoder(Processor):
     implements(IEncoder)
@@ -142,6 +158,16 @@ class WavEncoder(Processor):
         else:
             raise Exception("Streaming not supported")
     
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None):
+        Processor.setup(self, channels, samplerate)
+        if self.file:
+            self.file.close();
+
+        info = audiolab.formatinfo("wav", "pcm16")
+        self.file = audiolab.sndfile(self.filename, "write", format=info, channels=channels,
+                                     samplerate=samplerate)
+
     @staticmethod
     @interfacedoc
     def id():
@@ -168,15 +194,10 @@ class WavEncoder(Processor):
         pass
 
     @interfacedoc
-    def process(self, frames):
-        if not self.file:
-            # Can't open the file in constructor because input_channels and input_samplerate
-            # aren't available before set_input_format() has been called
-            info = audiolab.formatinfo("wav", "pcm16")
-            self.file = audiolab.sndfile(self.filename, "write", format=info, channels=self.input_channels,
-                                         samplerate=self.input_samplerate)
+    def process(self, frames, eod=False):
         self.file.write_frames(frames)
-        if len(frames) < self.buffersize():
+        if eod:
             self.file.close()
+            self.file = None
 
-        return frames            
+        return frames, eod
