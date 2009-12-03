@@ -80,8 +80,8 @@ class Processor(Component):
     def release(self):
         pass
 
-    def __or__(self, item):
-        return ProcessPipe(self, item)
+    def __or__(self, other):
+        return ProcessPipe(self, other)
 
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
@@ -100,14 +100,23 @@ def get_processor(processor_id):
 class ProcessPipe(object):
     """Handle a pipe of processors"""
 
-    def __init__(self, *processors):
-        self.processors = processors
+    def __init__(self, *others):
+        self.processors = []
+        for p in others:
+            self |= p
 
-    def __or__(self, processor):
-        p = []
-        p.extend(self.processors)
-        p.append(processor)
-        return ProcessPipe(*p)
+    def __or__(self, other):
+        return ProcessPipe(self, other)
+
+    def __ior__(self, other):
+        if isinstance(other, Processor):
+            self.processors.append(other)
+        elif isinstance(other, ProcessPipe):
+            self.processors.extend(other.processors)
+        else:
+            raise Error("Piped item is neither a Processor nor a ProcessPipe")
+
+        return self            
 
     def run(self):
         """Setup/reset all processors in cascade and stream audio data along

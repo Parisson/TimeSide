@@ -6,6 +6,7 @@ from sys import stdout
 import os
 source=os.path.dirname(__file__) + "../samples/guitar.wav"
 
+print "Normalizing %s" % source
 decoder  = examples.FileDecoder(source)
 maxlevel = examples.MaxLevel()
 
@@ -21,6 +22,10 @@ print "gain: %f" % gain
 gain     = examples.Gain(gain)
 encoder  = examples.WavEncoder("normalized.wav")
 
-(decoder | gain | maxlevel | encoder).run()
+subpipe  = gain | maxlevel
+
+(decoder | subpipe | encoder).run()
 
 print "output maxlevel: %f" % maxlevel.result()
+
+
