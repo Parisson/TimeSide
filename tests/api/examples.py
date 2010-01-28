@@ -210,6 +210,7 @@ class Waveform(Processor):
 
     @interfacedoc
     def __init__(self, width, height, output=None):
+        self.filename = output
         self.image = None
         if width:
             self.width = width
@@ -223,7 +224,9 @@ class Waveform(Processor):
             self.filename = output
         else:
             raise Exception("Streaming not supported")
-
+        self.bg_color = None
+        self.color_scheme = None
+        
     @staticmethod
     @interfacedoc
     def id():
@@ -235,7 +238,7 @@ class Waveform(Processor):
         return "Waveform test"
 
     @interfacedoc
-    def set_colors(self, background=None, scheme=None):
+    def set_colors(self, background, scheme):
         self.bg_color = background
         self.color_scheme = scheme
 
