@@ -154,7 +154,6 @@ class IGrapher(IProcessor):
     def set_colors(self, background=None, scheme=None):
         """Set the colors used for image generation. background is a RGB tuple,
         and scheme a a predefined color theme name"""
-        pass
 
     def render(self):
         """Return a PIL Image object visually representing all of the data passed

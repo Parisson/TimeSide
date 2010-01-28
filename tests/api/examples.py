@@ -1,5 +1,6 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import *
+from timeside.graph import *
 from timeside import Metadata
 from scikits import audiolab
 import numpy
@@ -56,7 +57,6 @@ class FileDecoder(Processor):
     @interfacedoc
     def encoding(self):
         return self.file.get_encoding()
-
     @interfacedoc
     def resolution(self):
         resolution = None
@@ -64,6 +64,7 @@ class FileDecoder(Processor):
 
         if encoding == "pcm8":
             resolution = 8
+
         elif encoding == "pcm16":
             resolution = 16
         elif encoding == "pcm32":
@@ -163,7 +164,7 @@ class WavEncoder(Processor):
     def setup(self, channels=None, samplerate=None):
         Processor.setup(self, channels, samplerate)
         if self.file:
-            self.file.close();
+            self.file.close()
 
         info = audiolab.formatinfo("wav", "pcm16")
         self.file = audiolab.sndfile(self.filename, "write", format=info, channels=channels,
@@ -202,4 +203,54 @@ class WavEncoder(Processor):
             self.file = None
 
         return frames, eod
+
+
+class Waveform(Processor):
+    implements(IGrapher)
+
+    @interfacedoc
+    def __init__(self, width, height, output=None):
+        self.image = None
+        if width:
+            self.width = width
+        else:
+            self.width = 1500
+        if height:
+            self.height = height
+        else:
+            self.height = 200
+        if isinstance(output, basestring):
+            self.filename = output
+        else:
+            raise Exception("Streaming not supported")
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "test_waveform"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Waveform test"
+
+    @interfacedoc
+    def set_colors(self, background=None, scheme=None):
+        self.bg_color = background
+        self.color_scheme = scheme
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None):
+        Processor.setup(self, channels, samplerate)
+        if self.image:
+            self.image.close()
+        self.image = WaveformImage(self.width, self.height, self.bg_color, self.color_scheme, self.filename)
+    
+    @interfacedoc
+    def render(self):
+        self.image.process()
+        if self.filename:
+            self.image.save()
+        return self.image
+        
 
