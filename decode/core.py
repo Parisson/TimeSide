@@ -29,8 +29,6 @@ import mutagen
 
 from timeside.decode import *
 from timeside.core import *
-import xml.dom.minidom
-import xml.dom.ext
 
 
 class SubProcessPipe:
