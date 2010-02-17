@@ -30,9 +30,10 @@ class MaxLevelAnalyzer(AudioProcessor):
 
     @staticmethod
     def id():
-        return "maxlevel"
+        return "max_level"
 
-    def name(self):
+    @staticmethod
+    def name():
         return "Maximum peak level"
 
     def unit(self):
