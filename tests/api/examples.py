@@ -322,14 +322,10 @@ class FixedInputProcessor(Processor):
 
     @interfacedoc
     def process(self, frames, eod=False):
-        try:
-            for buffer, end in self.adapter.process(frames, eod):
-                # Test that the adapter is actually doing the job:
-                if len(buffer) != self.BUFFER_SIZE:
-                    raise Exception("Bad buffer size from adapter")
-        except ValueError:
-            print len(frames)
-            raise
+        for buffer, end in self.adapter.process(frames, eod):
+            # Test that the adapter is actually doing the job:
+            if len(buffer) != self.BUFFER_SIZE:
+                raise Exception("Bad buffer size from adapter")
 
         return frames, eod                    
 
