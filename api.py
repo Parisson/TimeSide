@@ -34,9 +34,14 @@ class IProcessor(Interface):
         # be raised by MetaProcessor if the id is malformed or not unique amongst
         # registered processors.
 
-    def setup(self, channels=None, samplerate=None):
-        """Setup this processor to handle incoming data with nchannels at samplerate.
-        Also reset the processor internal state so that it can be reused."""
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        """Allocate internal resources and reset state, so that this processor is
+        ready for a new run. 
+        
+        The channels, samplerate and/or nframes arguments may be required by 
+        processors which accept input. An error will occur if any of
+        these arguments is passed to an output-only processor such as a decoder.
+        """
 
     def channels(self):
         """Number of channels in the data returned by process(). May be different from
@@ -45,6 +50,10 @@ class IProcessor(Interface):
     def samplerate(self):
         """Samplerate of the data returned by process(). May be different from
         the samplerate passed to setup()"""
+
+    def nframes():
+        """The total number of frames that this processor can output, or None if
+        the duration is unknown."""
 
     def process(self, frames=None, eod=False):
         """Process input frames and return a (output_frames, eod) tuple.
@@ -62,6 +71,8 @@ class IProcessor(Interface):
         """Release resources owned by this processor. The processor cannot
         be used anymore after calling this method."""
 
+        # implementations should always call the parent method
+
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific
     format."""
@@ -75,8 +86,7 @@ class IEncoder(IProcessor):
         True when end-of-data is reached."""
 
         # implementation: the constructor must always accept the output argument. It may 
-        # accepts extra arguments such as bitrate, depth, etc.., but these must be optionnal, 
-        # that is have a default value.
+        # accept extra arguments such as bitrate, depth, etc.., but these must be optionnal 
 
     @staticmethod
     def format():
@@ -118,12 +128,6 @@ class IDecoder(IProcessor):
         """Create a new decoder for filename."""
         # implementation: additional optionnal arguments are allowed 
 
-    def duration():
-        """Return the duration in seconds"""
-
-    def nframes():
-        """Return the number of frames"""
-
     def format():
         """Return a user-friendly file format string"""
    
@@ -139,12 +143,14 @@ class IDecoder(IProcessor):
 class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
+    # implementation: graphers which need to know the total number of frames
+    # should raise an exception in setup() if the nframes argument is None 
+
     def __init__(self, width, height):
         """Create a new grapher. width and height are generally
         in pixels but could be something else for eg. svg rendering, etc.. """
 
-        # implementation: additional optionnal arguments (such as the total number 
-        # of frames, etc...) are allowed 
+        # implementation: additional optionnal arguments are allowed 
 
     @staticmethod
     def name():

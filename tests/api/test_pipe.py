@@ -10,8 +10,9 @@ source = os.path.join(os.path.dirname(__file__),  "../samples/guitar.wav")
 print "Normalizing %s" % source
 decoder  = examples.FileDecoder(source)
 maxlevel = examples.MaxLevel()
+duration = examples.Duration()
 
-(decoder | maxlevel).run()
+(decoder | maxlevel | duration).run()
 
 gain = 1
 if maxlevel.result() > 0:
@@ -19,6 +20,7 @@ if maxlevel.result() > 0:
 
 print "input maxlevel: %f" % maxlevel.result()
 print "gain: %f" % gain
+print "duration: %f %s" % (duration.result(), duration.unit())
 
 gain     = examples.Gain(gain)
 encoder  = examples.WavEncoder("normalized.wav")

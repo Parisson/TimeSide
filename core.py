@@ -21,9 +21,11 @@ from timeside.component import *
 from timeside.api import IProcessor
 from timeside.exceptions import Error, ApiError
 import re
+import numpy
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract', 
-           'interfacedoc', 'processors', 'get_processor', 'ProcessPipe']
+           'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
+           'FixedSizeInputAdapter']
 
 _processors = {}
 
@@ -56,33 +58,97 @@ class Processor(Component):
     implements(IProcessor)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None):
+    def setup(self, channels=None, samplerate=None, nframes=None):
         self.input_channels   = channels
         self.input_samplerate = samplerate
+        self.input_nframes    = nframes
 
+    # default channels(), samplerate() and nframes() implementations returns 
+    # the input characteristics, but processors may change this behaviour by 
+    # overloading those methods
     @interfacedoc
     def channels(self):
-        # default implementation returns the input channels, but processors may change
-        # this behaviour by overloading this method
         return self.input_channels
 
     @interfacedoc
     def samplerate(self):
-        # default implementation returns the input samplerate, but processors may change
-        # this behaviour by overloading this method
         return self.input_samplerate
 
     @interfacedoc
-    def process(self, frames):
-        return frames
+    def nframes(self):
+        return self.input_nframes
+
+    @interfacedoc
+    def process(self, frames, eod):
+        return frames, eod
 
     @interfacedoc
     def release(self):
         pass
 
+    def __del__(self):
+        self.release()
+
     def __or__(self, other):
         return ProcessPipe(self, other)
 
+class FixedSizeInputAdapter(object):
+    """Utility to make it easier to write processors which require fixed
+    size input buffers."""
+
+    def __init__(self, buffer_size, channels, pad=False):
+        """Construct a new adapter: buffer_size is the desired buffer size in frames,
+        channels the number of channels, and pad indicates whether the last block should 
+        be padded with zero. """
+
+        self.buffer      = numpy.empty((buffer_size, channels))
+        self.buffer_size = buffer_size
+        self.len         = 0
+        self.pad         = pad
+
+    def nframes(self, input_nframes):
+        """Return the total number of frames that this adapter will output according to the
+        input_nframes argument"""
+
+        nframes = input_nframes
+        if self.pad:
+            mod = input_nframes % self.buffer_size
+            if mod:
+                nframes += self.buffer_size - mod
+
+        return nframes                
+
+
+    def process(self, frames, eod):
+        """Returns an iterator over tuples of the form (buffer, eod) where buffer is a 
+        fixed-sized block of data, and eod indicates whether this is the last block.
+        In case padding is deactivated the last block may be smaller than the buffer size.
+        """
+        src_index = 0
+        remaining = len(frames)
+
+        while remaining:
+            space   = self.buffer_size - self.len
+            copylen = remaining < space and remaining or space
+            self.buffer[self.len:self.len + copylen] = frames[src_index:src_index + copylen]
+            remaining -= copylen
+            src_index += copylen
+            self.len  += copylen
+
+            if self.len == self.buffer_size:
+                yield self.buffer, False
+                self.len = 0
+
+        if eod and self.len:
+            block = self.buffer
+            if self.pad:
+                self.buffer[self.len:self.buffer_size] = 0
+            else:
+                block = self.buffer[0:self.len]
+
+            yield block, True
+            self.len = 0
+                            
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
     any of the descendants of this interface."""
@@ -102,8 +168,7 @@ class ProcessPipe(object):
 
     def __init__(self, *others):
         self.processors = []
-        for p in others:
-            self |= p
+        self |= others
 
     def __or__(self, other):
         return ProcessPipe(self, other)
@@ -114,13 +179,19 @@ class ProcessPipe(object):
         elif isinstance(other, ProcessPipe):
             self.processors.extend(other.processors)
         else:
-            raise Error("Piped item is neither a Processor nor a ProcessPipe")
+            try:
+                iter(other)
+            except TypeError:
+                raise Error("Can not add this type of object to a pipe: %s", str(other))
+
+            for item in other:
+                self |= item
 
         return self            
 
     def run(self):
         """Setup/reset all processors in cascade and stream audio data along
-        the pipe"""
+        the pipe. Also returns the pipe itself."""
 
         source = self.processors[0]
         items  = self.processors[1:]
@@ -129,7 +200,7 @@ class ProcessPipe(object):
         source.setup()
         last = source
         for item in items:
-            item.setup(last.channels(), last.samplerate())
+            item.setup(last.channels(), last.samplerate(), last.nframes())
             last = item
 
         # now stream audio data along the pipe
@@ -139,3 +210,5 @@ class ProcessPipe(object):
             for item in items:
                 frames, eod = item.process(frames, eod)
 
+        return self                
+       

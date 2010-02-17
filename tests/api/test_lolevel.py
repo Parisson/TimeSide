@@ -10,10 +10,11 @@ analyzer = examples.MaxLevel()
 decoder.setup()
 nchannels  = decoder.channels()
 samplerate = decoder.samplerate()
+nframes = decoder.nframes()
 analyzer.setup(nchannels, samplerate)
 
 print "Stats: duration=%f, nframes=%d, nchannels=%d, samplerate=%d, resolution=%d" % (
-        decoder.duration(), decoder.nframes(), nchannels, samplerate, decoder.resolution())
+        nframes / float(samplerate), nframes, nchannels, samplerate, decoder.resolution())
 
 while True:
     frames, eod = decoder.process()
@@ -23,8 +24,6 @@ while True:
 
 max_level = analyzer.result()
 print "Max level: %f" % max_level
-
-analyzer.release()
 
 destination = "normalized.wav"
 Encoder = examples.WavEncoder
@@ -49,6 +48,3 @@ while True:
     if eod:
         break
 
-decoder.release()
-effect.release()
-encoder.release()

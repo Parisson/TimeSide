@@ -24,13 +24,14 @@ class FileDecoder(Processor):
         self.position = 0
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None):
-        Processor.setup(self, channels, samplerate)
+    def setup(self):
+        super(FileDecoder, self).setup()
         if self.position != 0:
             self.file.seek(0);
             self.position = 0
 
     def release(self):
+        super(FileDecoder, self).release()
         if self.file:
             self.file.close()
             self.file = None
@@ -42,10 +43,6 @@ class FileDecoder(Processor):
     @interfacedoc
     def samplerate(self):
         return self.file.samplerate
-
-    @interfacedoc
-    def duration(self):
-        return self.file.nframes / self.file.samplerate
 
     @interfacedoc
     def nframes(self):
@@ -101,8 +98,8 @@ class MaxLevel(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None):
-        Processor.setup(self, channels, samplerate)
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(MaxLevel, self).setup(channels, samplerate, nframes)
         self.max_value = 0
 
     @staticmethod
@@ -162,8 +159,8 @@ class WavEncoder(Processor):
             raise Exception("Streaming not supported")
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None):
-        Processor.setup(self, channels, samplerate)
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(WavEncoder, self).setup(channels, samplerate, nframes)
         if self.file:
             self.file.close()
 
@@ -245,8 +242,8 @@ class Waveform(Processor):
         self.color_scheme = scheme
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None):
-        Processor.setup(self, channels, samplerate)
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(Waveform, self).setup(channels, samplerate, nframes)
         if self.image:
             self.image.close()
         self.image = WaveformImage(self.width, self.height, self.nframes)
@@ -267,5 +264,34 @@ class Waveform(Processor):
         #if self.filename:
             #self.image.save()
         #return self.image
+
+class Duration(Processor):
+    """A rather useless duration analyzer. Its only purpose is to test the
+       nframes characteristic."""
+    implements(IValueAnalyzer)
+
+    @interfacedoc
+    def setup(self, channels, samplerate, nframes):
+        if not nframes:
+            raise Exception("nframes argument required")
+        super(Duration, self).setup(channels, samplerate, nframes)
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "test_duration"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Duration analyzer"
+
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return "seconds"
+
+    def result(self):
+        return self.input_nframes / float(self.input_samplerate)
 
 
