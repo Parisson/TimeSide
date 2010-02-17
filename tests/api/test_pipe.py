@@ -4,8 +4,8 @@ from timeside.core import *
 from timeside.api import *
 from sys import stdout
 
-import os
-source=os.path.dirname(__file__) + "../samples/guitar.wav"
+import os.path
+source = os.path.join(os.path.dirname(__file__),  "../samples/guitar.wav")
 
 print "Normalizing %s" % source
 decoder  = examples.FileDecoder(source)

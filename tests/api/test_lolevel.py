@@ -1,6 +1,6 @@
 from timeside.tests.api import examples
-import os
 
+import os.path
 source= os.path.join (os.path.dirname(__file__),  "../samples/guitar.wav")
 
 Decoder = examples.FileDecoder
