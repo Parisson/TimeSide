@@ -20,16 +20,9 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-import os
-import re
-import md5
-import string
-import subprocess
-import mutagen
-
 from timeside.decode import *
 from timeside.core import *
-
+import subprocess
 
 class SubProcessPipe:
 

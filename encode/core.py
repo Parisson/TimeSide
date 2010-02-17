@@ -20,16 +20,11 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-import os
-import re
-import md5
-import string
-import subprocess
-import mutagen
 
 from timeside.encode import *
 from timeside.core import *
 
+import subprocess
 
 class SubProcessPipe:
     """Read media and stream data through a generator.
