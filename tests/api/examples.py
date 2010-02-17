@@ -93,7 +93,7 @@ class FileDecoder(Processor):
         self.position += toread
 
         # audiolab returns a 1D array for 1 channel, need to reshape to 2D: 
-        if self.file.channels == 1:
+        if frames.ndim == 1:
             frames = frames.reshape(len(frames), 1)
 
         return frames, eod
