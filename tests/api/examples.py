@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import *
 from timeside.graph import *
@@ -17,8 +18,8 @@ class FileDecoder(Processor):
     @interfacedoc
     def __init__(self, filename):
         self.filename = filename
-        # The file has to be opened here so that nframes(), samplerate(), 
-        # etc.. work before setup() is called. 
+        # The file has to be opened here so that nframes(), samplerate(),
+        # etc.. work before setup() is called.
         self.file     = audiolab.Sndfile(self.filename, 'r')
         self.position = 0
 
@@ -37,9 +38,9 @@ class FileDecoder(Processor):
     @interfacedoc
     def channels(self):
         return self.file.channels
-        
-    @interfacedoc    
-    def samplerate(self):        
+
+    @interfacedoc
+    def samplerate(self):
         return self.file.samplerate
 
     @interfacedoc
@@ -53,7 +54,7 @@ class FileDecoder(Processor):
     @interfacedoc
     def format(self):
         return self.file.file_format
-   
+
     @interfacedoc
     def encoding(self):
         return self.file.encoding
@@ -70,7 +71,7 @@ class FileDecoder(Processor):
         elif encoding == "pcm32":
             resolution = 32
 
-        return resolution            
+        return resolution
 
     @interfacedoc
     def metadata(self):
@@ -113,14 +114,14 @@ class MaxLevel(Processor):
     @interfacedoc
     def name():
         return "Max level test analyzer"
-   
+
     @staticmethod
     @interfacedoc
     def unit():
         # power? amplitude?
         return ""
 
-    def process(self, frames, eod=False):        
+    def process(self, frames, eod=False):
         max = frames.max()
         if max > self.max_value:
             self.max_value = max
@@ -146,8 +147,8 @@ class Gain(Processor):
     @interfacedoc
     def name():
         return "Gain test effect"
-   
-    def process(self, frames, eod=False):        
+
+    def process(self, frames, eod=False):
         return numpy.multiply(frames, self.gain), eod
 
 class WavEncoder(Processor):
@@ -159,15 +160,15 @@ class WavEncoder(Processor):
             self.filename = output
         else:
             raise Exception("Streaming not supported")
-    
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None):
         Processor.setup(self, channels, samplerate)
         if self.file:
             self.file.close()
 
-        info = audiolab.formatinfo("wav", "pcm16")
-        self.file = audiolab.sndfile(self.filename, "write", format=info, channels=channels,
+        format = audiolab.Format("wav", "pcm16")
+        self.file = audiolab.Sndfile(self.filename, 'w', format=format, channels=channels,
                                      samplerate=samplerate)
 
     @staticmethod
@@ -227,7 +228,7 @@ class Waveform(Processor):
             raise Exception("Streaming not supported")
         self.bg_color = None
         self.color_scheme = None
-        
+
     @staticmethod
     @interfacedoc
     def id():
@@ -250,19 +251,19 @@ class Waveform(Processor):
             self.image.close()
         self.image = WaveformImage(self.width, self.height, self.nframes)
 
-   @interfacedoc
+    @interfacedoc
     def process(self, frames, eod=False):
         self.image.process(frames)
         if eod:
             self.image.close()
             self.image = None
         return frames, eod
-        
+
     @interfacedoc
     def render(self):
         self.image.process()
         if self.filename:
             self.image.save()
         return self.image
-        
+
 

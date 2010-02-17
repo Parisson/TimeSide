@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from timeside.tests.api import examples
 from timeside.core import *
 from timeside.api import *
