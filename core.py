@@ -136,7 +136,7 @@ class FixedSizeInputAdapter(object):
             self.len  += copylen
 
             if self.len == self.buffer_size:
-                yield self.buffer, False
+                yield self.buffer, (eod and not remaining)
                 self.len = 0
 
         if eod and self.len:
