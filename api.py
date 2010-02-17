@@ -57,7 +57,7 @@ class IProcessor(Interface):
 
     def process(self, frames=None, eod=False):
         """Process input frames and return a (output_frames, eod) tuple.
-        Both input and output frames are numpy arrays, where columns are 
+        Both input and output frames are 2D numpy arrays, where columns are 
         channels, and containing an undetermined number of frames.  eod=True 
         means that the end-of-data has been reached.
         

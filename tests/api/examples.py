@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.api import *
 from timeside.graph import *
 from timeside import Metadata
@@ -91,6 +91,10 @@ class FileDecoder(Processor):
         frames         = self.file.read_frames(toread)
         eod            = (toread < buffersize)
         self.position += toread
+
+        # audiolab returns a 1D array for 1 channel, need to reshape to 2D: 
+        if self.file.channels == 1:
+            frames = frames.reshape(len(frames), 1)
 
         return frames, eod
 
@@ -294,4 +298,42 @@ class Duration(Processor):
     def result(self):
         return self.input_nframes / float(self.input_samplerate)
 
+class FixedInputProcessor(Processor):
+    """Processor which does absolutely nothing except illustrating the use
+    of the FixedInputSizeAdapter. It also tests things a bit."""
+
+    implements(IProcessor)
+
+    BUFFER_SIZE = 1024
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "test_fixed"
+
+    @interfacedoc
+    def setup(self, channels, samplerate, nframes):
+        super(FixedInputProcessor, self).setup(channels, samplerate, nframes)
+        self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
+
+    @interfacedoc        
+    def nframes(self):
+        return self.adapter.nframes(self.input_nframes)
+
+    @interfacedoc
+    def process(self, frames, eod=False):
+        try:
+            for buffer, end in self.adapter.process(frames, eod):
+                # Test that the adapter is actually doing the job:
+                if len(buffer) != self.BUFFER_SIZE:
+                    raise Exception("Bad buffer size from adapter")
+        except ValueError:
+            print len(frames)
+            raise
+
+        return frames, eod                    
+
+
+
+            
 

@@ -24,8 +24,9 @@ print "duration: %f %s" % (duration.result(), duration.unit())
 
 gain     = examples.Gain(gain)
 encoder  = examples.WavEncoder("normalized.wav")
+fixed    = examples.FixedInputProcessor()
 
-subpipe  = gain | maxlevel
+subpipe  = gain | fixed | maxlevel
 
 (decoder | subpipe | encoder).run()
 
