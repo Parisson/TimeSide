@@ -19,7 +19,7 @@ class FileDecoder(Processor):
         self.filename = filename
         # The file has to be opened here so that nframes(), samplerate(), 
         # etc.. work before setup() is called. 
-        self.file     = audiolab.sndfile(self.filename, 'read')
+        self.file     = audiolab.Sndfile(self.filename, 'r')
         self.position = 0
 
     @interfacedoc
@@ -36,31 +36,31 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def channels(self):
-        return self.file.get_channels()
+        return self.file.channels
         
     @interfacedoc    
     def samplerate(self):        
-        return self.file.get_samplerate()
+        return self.file.samplerate
 
     @interfacedoc
     def duration(self):
-        return self.file.get_nframes() / self.file.get_samplerate()
+        return self.file.nframes / self.file.samplerate
 
     @interfacedoc
     def nframes(self):
-        return self.file.get_nframes()
+        return self.file.nframes
 
     @interfacedoc
     def format(self):
-        return self.file.get_file_format()
+        return self.file.file_format
    
     @interfacedoc
     def encoding(self):
-        return self.file.get_encoding()
+        return self.file.encoding
     @interfacedoc
     def resolution(self):
         resolution = None
-        encoding = self.file.get_encoding()
+        encoding = self.file.encoding
 
         if encoding == "pcm8":
             resolution = 8
@@ -209,7 +209,8 @@ class Waveform(Processor):
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width, height, output=None):
+    def __init__(self, width, height, nframes, output=None):
+        self.nframes = nframes
         self.filename = output
         self.image = None
         if width:
@@ -247,8 +248,16 @@ class Waveform(Processor):
         Processor.setup(self, channels, samplerate)
         if self.image:
             self.image.close()
-        self.image = WaveformImage(self.width, self.height, self.bg_color, self.color_scheme, self.filename)
-    
+        self.image = WaveformImage(self.width, self.height, self.nframes)
+
+   @interfacedoc
+    def process(self, frames, eod=False):
+        self.image.process(frames)
+        if eod:
+            self.image.close()
+            self.image = None
+        return frames, eod
+        
     @interfacedoc
     def render(self):
         self.image.process()

@@ -22,7 +22,7 @@
 from timeside.core import *
 from timeside.api import IGrapher
 from tempfile import NamedTemporaryFile
-from timeside.graph.wav2png import *
+from timeside.graph.core import *
 
 class SpectrogramGrapherAudiolab(Processor):
     """Spectrogram graph driver (python style thanks to wav2png.py and scikits.audiolab)"""
