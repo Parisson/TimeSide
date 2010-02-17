@@ -93,13 +93,13 @@ class Processor(Component):
         return ProcessPipe(self, other)
 
 class FixedSizeInputAdapter(object):
-    """Utility to make it easier to write processors which require fixed
-    size input buffers."""
+    """Utility to make it easier to write processors which require fixed-sized
+    input buffers."""
 
     def __init__(self, buffer_size, channels, pad=False):
         """Construct a new adapter: buffer_size is the desired buffer size in frames,
         channels the number of channels, and pad indicates whether the last block should 
-        be padded with zero. """
+        be padded with zeros."""
 
         self.buffer      = numpy.empty((buffer_size, channels))
         self.buffer_size = buffer_size
