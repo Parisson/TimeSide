@@ -222,10 +222,10 @@ class Waveform(Processor):
             self.height = height
         else:
             self.height = 200
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
-            raise Exception("Streaming not supported")
+        #if isinstance(output, basestring):
+            #self.filename = output
+        #else:
+            #raise Exception("Streaming not supported")
         self.bg_color = None
         self.color_scheme = None
 
@@ -253,17 +253,19 @@ class Waveform(Processor):
 
     @interfacedoc
     def process(self, frames, eod=False):
-        self.image.process(frames)
-        if eod:
-            self.image.close()
-            self.image = None
-        return frames, eod
+        pass
+        #self.image.process(frames)
+        #if eod:
+            #self.image.close()
+            #self.image = None
+        #return frames, eod
 
     @interfacedoc
     def render(self):
-        self.image.process()
-        if self.filename:
-            self.image.save()
-        return self.image
+        pass
+        #self.image.process()
+        #if self.filename:
+            #self.image.save()
+        #return self.image
 
 
