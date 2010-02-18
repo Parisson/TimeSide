@@ -106,19 +106,6 @@ class FixedSizeInputAdapter(object):
         self.len         = 0
         self.pad         = pad
 
-    def nframes(self, input_nframes):
-        """Return the total number of frames that this adapter will output according to the
-        input_nframes argument"""
-
-        nframes = input_nframes
-        if self.pad:
-            mod = input_nframes % self.buffer_size
-            if mod:
-                nframes += self.buffer_size - mod
-
-        return nframes                
-
-
     def process(self, frames, eod):
         """Returns an iterator over tuples of the form (buffer, eod) where buffer is a 
         fixed-sized block of data, and eod indicates whether this is the last block.

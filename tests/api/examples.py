@@ -316,10 +316,6 @@ class FixedInputProcessor(Processor):
         super(FixedInputProcessor, self).setup(channels, samplerate, nframes)
         self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
 
-    @interfacedoc        
-    def nframes(self):
-        return self.adapter.nframes(self.input_nframes)
-
     @interfacedoc
     def process(self, frames, eod=False):
         for buffer, end in self.adapter.process(frames, eod):
