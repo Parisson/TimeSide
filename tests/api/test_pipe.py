@@ -15,7 +15,7 @@ duration = examples.Duration()
 (decoder | maxlevel | duration).run()
 
 gain = 1
-if maxlevel.result() > 0:
+if maxlevel.result() > 1:
     gain = 0.9 / maxlevel.result()
 
 print "input maxlevel: %f" % maxlevel.result()
