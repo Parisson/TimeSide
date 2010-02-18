@@ -35,7 +35,7 @@ print "Creating encoder with id=%s for: %s" % (Encoder.id(), destination)
 encoder = Encoder(destination)
 
 gain = 1
-if max_level > 1:
+if max_level > 0:
     gain = 0.9 / max_level
 
 effect = examples.Gain(gain)
