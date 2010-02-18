@@ -1,7 +1,11 @@
 from timeside.tests.api import examples
 
-import os.path
-source= os.path.join (os.path.dirname(__file__),  "../samples/guitar.wav")
+import sys
+if len(sys.argv) > 1:
+    source = sys.argv[1]
+else:
+    import os.path
+    source= os.path.join (os.path.dirname(__file__),  "../samples/guitar.wav")
 
 Decoder = examples.FileDecoder
 print "Creating decoder with id=%s for: %s" % (Decoder.id(), source)
