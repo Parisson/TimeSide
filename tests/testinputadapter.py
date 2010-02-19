@@ -23,6 +23,11 @@ data = numpy.arange(44).reshape(2,22).transpose()
 adapter = FixedSizeInputAdapter(4, 2)
 stdout.write("%s simple test" % adapter.__class__.__name__)
 
+expected = len(data)
+actual   = adapter.nframes(len(data))
+if actual != expected:
+    raise Exception("%d != %d nframes", (actual, expected))
+
 test(adapter, data[0:1], False, [])
 test(adapter, data[1:5], False, [data[0:4]], False)
 test(adapter, data[5:12], False, [data[4:8], data[8:12]], False)
@@ -36,6 +41,11 @@ stdout.write(" OK\n")
 
 adapter = FixedSizeInputAdapter(4, 2, pad=True)
 stdout.write("%s padding test" % adapter.__class__.__name__)
+
+expected = len(data) + 2
+actual   = adapter.nframes(len(data))
+if actual != expected:
+    raise Exception("%d != %d nframes", (actual, expected))
 
 test(adapter, data[0:21], False, [data[0:4], data[4:8], data[8:12], data[12:16], data[16:20]], False)
 test(adapter, data[21:22], True, [[
