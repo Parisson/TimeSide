@@ -1,7 +1,93 @@
 
 from timeside.component import *
-from sys import stdout
+import unittest
 
+class TestComponentArchitecture(unittest.TestCase):
+    
+    def assertSameList(self, list1, list2):
+        if len(list1) != len(list2):
+            self.fail("Lists length differ : %d != %d" % (len(list1), len(list2)))
+
+        for item in list1:
+            if not item in list2:
+                self.fail("%s is not in list2" % str(item))
+
+        for item in list2:
+            if not item in list1:
+                self.fail("%s is not in list1" % str(item))
+        
+
+    def testOneInterface(self):
+        "Test a component implementing one interface"
+        self.assertSameList(implementations(I1), [C1])
+
+    def testTwoInterfaces(self):        
+        "Test a component implementing two interfaces"
+        self.assertSameList(implementations(I2), [C2])
+        self.assertSameList(implementations(I3), [C2])
+
+    def testTwoImplementations(self):
+        "Test an interface implemented by two components"
+        self.assertSameList(implementations(I4), [C3, C4])
+
+    def testInterfaceInheritance(self):
+        "Test whether a component implements an interface's parent"
+        self.assertSameList(implementations(I5), [C5])
+
+    def testImplementationInheritance(self):
+        "Test that a component doesn't implement the interface implemented by its parent" 
+        self.assertSameList(implementations(I7), [C6])
+
+    def testImplementationRedundancy(self):
+        "Test implementation redundancy across inheritance" 
+        self.assertSameList(implementations(I8), [C8, C9])
+
+    def testAbstractImplementation(self):    
+        "Test abstract implementation"
+        self.assertSameList(implementations(I11), [])
+        self.assertSameList(implementations(I11, abstract=True), [C11])
+
+    def testInterfaceDoc(self):        
+        "Test @interfacedoc decorator"
+        self.assertEquals(C10.test.__doc__, "testdoc")
+
+    def testInterfaceDocStatic(self):        
+        "Test @interfacedoc decorator on static method"
+        self.assertEquals(C10.teststatic.__doc__, "teststaticdoc")
+
+    def testIntefaceDocReversed(self):
+        "Test @interfacedoc on static method (decorators reversed)"
+
+        try:
+
+            class BogusDoc1(Component):
+                implements(I10)
+
+                @interfacedoc
+                @staticmethod        
+                def teststatic(self):
+                    pass
+
+            self.fail("No error raised with reversed decorators")
+
+        except ComponentError:
+            pass
+   
+    def testInterfaceDocBadMethod(self):
+        "Test @interfacedoc with unexistant method in interface"
+
+        try:
+            class BogusDoc2(Component):
+                implements(I10)
+
+                @interfacedoc
+                def nosuchmethod(self):
+                    pass
+
+            self.fail("No error raised when decorating an unexistant method")
+
+        except ComponentError:
+            pass
 class I1(Interface):
     pass
 
@@ -83,74 +169,6 @@ class C11(Component):
     abstract()
     implements(I11)
 
-def list_equals(list1, list2):
-    if len(list1) != len(list2):
-        return False
+if __name__ == '__main__':
+    unittest.main()
 
-    for item in list1:
-        if not item in list2:
-            return False
-
-    for item in list2:
-        if not item in list1:
-            return False
-
-    return True            
-
-def test(desc, actual, expected):
-    stdout.write(desc + ": ")
-    equals = False
-    if isinstance(actual, list) and isinstance(expected, list):
-        equals = list_equals(actual, expected)
-    else:
-        equals = (actual == expected)
-
-    if equals:
-        stdout.write("OK\n")
-    else:
-        stdout.write("FAILED\n")
-        stdout.write("actual:   " + str(actual) + "\n")
-        stdout.write("expected: " + str(expected) + "\n")
-    
-
-test("Test a component implementing one interface", implementations(I1), [C1])
-test("Test a component implementing two interfaces (1/2)", implementations(I2), [C2])
-test("Test a component implementing two interfaces (2/2)", implementations(I3), [C2])
-test("Test an interface implemented by two components", implementations(I4), [C3, C4])
-test("Test whether a component implements an interface's parent", implementations(I5), [C5])
-test("Test that a component doesn't implement the interface implemented by its parent", implementations(I7), [C6])
-test("Test implementation redundancy across inheritance", implementations(I8), [C8, C9])
-test("Test abstract implementation 1/2", implementations(I11), [])
-test("Test abstract implementation 2/2", implementations(I11, abstract=True), [C11])
-test("Test @interfacedoc", C10.test.__doc__, "testdoc")
-test("Test @interfacedoc on static method", C10.teststatic.__doc__, "teststaticdoc")
-stdout.write("Test @interfacedoc on static method (decorators reversed): ")
-
-try:
-
-    class BogusDoc1(Component):
-        implements(I10)
-
-        @interfacedoc
-        @staticmethod        
-        def teststatic(self):
-            pass
-
-    stdout.write("FAILED\n")
-
-except ComponentError:
-    stdout.write("OK\n")
-    
-stdout.write("Test @interfacedoc with unexistant method in interface: ")
-try:
-    class BogusDoc2(Component):
-        implements(I10)
-
-        @interfacedoc
-        def nosuchmethod(self):
-            pass
-
-    stdout.write("FAILED\n")
-
-except ComponentError:
-    stdout.write("OK\n")
