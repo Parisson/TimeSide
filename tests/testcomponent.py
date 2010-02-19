@@ -1,22 +1,13 @@
 
 from timeside.component import *
+from timeside.tests import TestCase, TestRunner
 import unittest
 
-class TestComponentArchitecture(unittest.TestCase):
-    
-    def assertSameList(self, list1, list2):
-        if len(list1) != len(list2):
-            self.fail("Lists length differ : %d != %d" % (len(list1), len(list2)))
+__all__ = ['TestComponentArchitecture']
 
-        for item in list1:
-            if not item in list2:
-                self.fail("%s is not in list2" % str(item))
-
-        for item in list2:
-            if not item in list1:
-                self.fail("%s is not in list1" % str(item))
-        
-
+class TestComponentArchitecture(TestCase):
+    "Test the component and interface system"
+   
     def testOneInterface(self):
         "Test a component implementing one interface"
         self.assertSameList(implementations(I1), [C1])
@@ -88,6 +79,7 @@ class TestComponentArchitecture(unittest.TestCase):
 
         except ComponentError:
             pass
+
 class I1(Interface):
     pass
 
@@ -170,5 +162,5 @@ class C11(Component):
     implements(I11)
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(testRunner=TestRunner())
 
