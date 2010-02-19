@@ -117,13 +117,20 @@ class FixedSizeInputAdapter(object):
         while remaining:
             space   = self.buffer_size - self.len
             copylen = remaining < space and remaining or space
-            self.buffer[self.len:self.len + copylen] = frames[src_index:src_index + copylen]
+            src     = frames[src_index:src_index + copylen]
+            if self.len == 0 and copylen == self.buffer_size:
+                # avoid unnecessary copy
+                buffer = src
+            else:
+                buffer = self.buffer
+                buffer[self.len:self.len + copylen] = src
+
             remaining -= copylen
             src_index += copylen
             self.len  += copylen
 
             if self.len == self.buffer_size:
-                yield self.buffer, (eod and not remaining)
+                yield buffer, (eod and not remaining)
                 self.len = 0
 
         if eod and self.len:
