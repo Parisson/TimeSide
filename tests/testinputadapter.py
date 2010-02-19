@@ -1,62 +1,71 @@
 from timeside.core import FixedSizeInputAdapter
-from sys import stdout
+from timeside.tests import TestCase, TestRunner
 import numpy
+import unittest
 
-def test(adapter, data, eod, expected, expected_eod=None):
-    expected.reverse()
-    _eod = None
-    for buffer, _eod in adapter.process(data, eod):
-        a = expected.pop()
-        if not numpy.array_equiv(buffer, a):
-            raise Exception("\n-- Actual --\n%s\n -- Expected -- \n%s\n" % (str(buffer), str(a)))
+class TestFixedSizeInputAdapter(TestCase):
+    "Test the fixed-sized input adapter"
 
-    if _eod != expected_eod:
-        raise Exception("eod do not match: %s != %s", (str(_eod), str(expected_eod)))
+    def assertIOEquals(self, adapter, input, input_eod, output, output_eod=None):
+        output = output[:]
+        output.reverse()
+        _eod = None
+        for buffer, _eod in adapter.process(input, input_eod):
+            a = output.pop()
+            if not numpy.array_equiv(buffer, a):
+                self.fail("\n-- Actual --\n%s\n -- Expected -- \n%s\n" % (str(buffer), str(a)))
 
-    if expected:
-        raise Exception("trailing expected data: %s" % expected)
+        if _eod != output_eod:
+            self.fail("eod do not match: %s != %s", (str(_eod), str(output_eod)))
 
-    stdout.write(".")            
+        if output:
+            self.fail("trailing expected data: %s" % output)
 
-data = numpy.arange(44).reshape(2,22).transpose()
+    def setUp(self):
+        self.data = numpy.arange(44).reshape(2,22).transpose()
 
-adapter = FixedSizeInputAdapter(4, 2)
-stdout.write("%s simple test" % adapter.__class__.__name__)
+    def testTwoChannels(self):
+        "Test simple stream with two channels"
+        adapter = FixedSizeInputAdapter(4, 2)
 
-expected = len(data)
-actual   = adapter.nframes(len(data))
-if actual != expected:
-    raise Exception("%d != %d nframes", (actual, expected))
+        self.assertEquals(len(self.data), adapter.nframes(len(self.data)))
 
-test(adapter, data[0:1], False, [])
-test(adapter, data[1:5], False, [data[0:4]], False)
-test(adapter, data[5:12], False, [data[4:8], data[8:12]], False)
-test(adapter, data[12:13], False, [])
-test(adapter, data[13:14], False, [])
-test(adapter, data[14:18], False, [data[12:16]], False)
-test(adapter, data[18:20], False, [data[16:20]], False)
-test(adapter, data[20:21], False, [])
-test(adapter, data[21:22], True, [data[20:22]], True)
-stdout.write(" OK\n")
+        self.assertIOEquals(adapter, self.data[0:1], False, [])
+        self.assertIOEquals(adapter, self.data[1:5], False, [self.data[0:4]], False)
+        self.assertIOEquals(adapter, self.data[5:12], False, [self.data[4:8], self.data[8:12]], False)
+        self.assertIOEquals(adapter, self.data[12:13], False, [])
+        self.assertIOEquals(adapter, self.data[13:14], False, [])
+        self.assertIOEquals(adapter, self.data[14:18], False, [self.data[12:16]], False)
+        self.assertIOEquals(adapter, self.data[18:20], False, [self.data[16:20]], False)
+        self.assertIOEquals(adapter, self.data[20:21], False, [])
+        self.assertIOEquals(adapter, self.data[21:22], True, [self.data[20:22]], True)
 
-adapter = FixedSizeInputAdapter(4, 2, pad=True)
-stdout.write("%s padding test" % adapter.__class__.__name__)
+    def testPadding(self):
+        "Test automatic padding support"
+        adapter = FixedSizeInputAdapter(4, 2, pad=True)
 
-expected = len(data) + 2
-actual   = adapter.nframes(len(data))
-if actual != expected:
-    raise Exception("%d != %d nframes", (actual, expected))
+        self.assertEquals(len(self.data) + 2, adapter.nframes(len(self.data)))
 
-test(adapter, data[0:21], False, [data[0:4], data[4:8], data[8:12], data[12:16], data[16:20]], False)
-test(adapter, data[21:22], True, [[
-    [20, 42],
-    [21, 43],
-    [0, 0],
-    [0, 0]
-]], True)
-stdout.write(" OK\n")
+        self.assertIOEquals(adapter, self.data[0:21], False, 
+            [self.data[0:4], self.data[4:8], self.data[8:12], self.data[12:16], self.data[16:20]], 
+            False)
 
-adapter = FixedSizeInputAdapter(4, 2)
-stdout.write("%s multiple test" % adapter.__class__.__name__)
-test(adapter, data[0:20], True, [data[0:4], data[4:8], data[8:12], data[12:16], data[16:20]], True)
-stdout.write(" OK\n")
+        self.assertIOEquals(adapter, self.data[21:22], True, [[
+            [20, 42],
+            [21, 43],
+            [0, 0],
+            [0, 0]
+        ]], True)
+
+    def testSizeMultiple(self):
+        "Test a stream which contain a multiple number of buffers"
+        adapter = FixedSizeInputAdapter(4, 2)
+
+        self.assertIOEquals(adapter, self.data[0:20], True, 
+            [self.data[0:4], self.data[4:8], self.data[8:12], self.data[12:16], self.data[16:20]], 
+            True)
+
+
+if __name__ == '__main__':
+    unittest.main(testRunner=TestRunner())
+
