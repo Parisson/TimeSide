@@ -4,7 +4,7 @@ from timeside.core import *
 from timeside.api import *
 from sys import stdout
 
-use_gst = 0
+use_gst = 1
 if use_gst:
     from timeside.tests.api.gstreamer import FileDecoder, WavEncoder
 else:

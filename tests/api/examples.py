@@ -92,7 +92,7 @@ class FileDecoder(Processor):
         eod            = (toread < buffersize)
         self.position += toread
 
-        # audiolab returns a 1D array for 1 channel, need to reshape to 2D: 
+        # audiolab returns a 1D array for 1 channel, need to reshape to 2D:
         if frames.ndim == 1:
             frames = frames.reshape(len(frames), 1)
 
@@ -210,11 +210,11 @@ class WavEncoder(Processor):
 class Waveform(Processor):
     implements(IGrapher)
 
+    BUFFER_SIZE = 1024
+    FFT_SIZE    = 1024
+
     @interfacedoc
-    def __init__(self, width, height, nframes, output=None):
-        self.nframes = nframes
-        self.filename = output
-        self.image = None
+    def __init__(self, width=None, height=None, output=None):
         if width:
             self.width = width
         else:
@@ -223,12 +223,10 @@ class Waveform(Processor):
             self.height = height
         else:
             self.height = 200
-        #if isinstance(output, basestring):
-            #self.filename = output
-        #else:
-            #raise Exception("Streaming not supported")
         self.bg_color = None
         self.color_scheme = None
+        self.filename = output
+        self.graph = None
 
     @staticmethod
     @interfacedoc
@@ -248,26 +246,25 @@ class Waveform(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(Waveform, self).setup(channels, samplerate, nframes)
-        if self.image:
-            self.image.close()
-        self.image = WaveformImage(self.width, self.height, self.nframes)
+        if self.graph:
+            self.graph = None
+        self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
+        self.graph = WaveformImage(self.width, self.height, self.BUFFER_SIZE, self.FFT_SIZE,
+                        self.nframes(), self.adapter.nframes(self.input_nframes),
+                        self.samplerate(), self.channels(), filename=self.filename)
 
     @interfacedoc
     def process(self, frames, eod=False):
-        pass
-        #self.image.process(frames)
-        #if eod:
-            #self.image.close()
-            #self.image = None
-        #return frames, eod
+        for buffer, end in self.adapter.process(frames, eod):
+            self.graph.process(buffer, end)
+        return frames, eod
 
     @interfacedoc
     def render(self):
-        pass
-        #self.image.process()
-        #if self.filename:
-            #self.image.save()
-        #return self.image
+        if self.filename:
+            self.graph.save()
+        return self.graph.image
+
 
 class Duration(Processor):
     """A rather useless duration analyzer. Its only purpose is to test the
@@ -323,9 +320,9 @@ class FixedInputProcessor(Processor):
             if len(buffer) != self.BUFFER_SIZE:
                 raise Exception("Bad buffer size from adapter")
 
-        return frames, eod                    
+        return frames, eod
 
 
 
-            
+
 
