@@ -1,5 +1,11 @@
 from timeside.tests.api import examples
 
+use_gst = 0
+if use_gst:
+    from timeside.tests.api.gstreamer import FileDecoder, WavEncoder
+else:
+    from timeside.tests.api.examples import FileDecoder, WavEncoder
+
 import sys
 if len(sys.argv) > 1:
     source = sys.argv[1]
@@ -7,7 +13,7 @@ else:
     import os.path
     source= os.path.join (os.path.dirname(__file__),  "../samples/guitar.wav")
 
-Decoder = examples.FileDecoder
+Decoder = FileDecoder
 print "Creating decoder with id=%s for: %s" % (Decoder.id(), source)
 decoder    = Decoder(source)
 analyzer = examples.MaxLevel()
@@ -30,7 +36,7 @@ max_level = analyzer.result()
 print "Max level: %f" % max_level
 
 destination = "normalized.wav"
-Encoder = examples.WavEncoder
+Encoder = WavEncoder
 print "Creating encoder with id=%s for: %s" % (Encoder.id(), destination)
 encoder = Encoder(destination)
 
