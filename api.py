@@ -43,6 +43,8 @@ class IProcessor(Interface):
         these arguments is passed to an output-only processor such as a decoder.
         """
 
+        # implementations should always call the parent method
+
     def channels(self):
         """Number of channels in the data returned by process(). May be different from
         the number of channels passed to setup()"""
@@ -135,7 +137,8 @@ class IDecoder(IProcessor):
         """Return a user-friendly encoding string"""
 
     def resolution():
-        """Return the sample depth"""
+        """Return the sample width (8, 16, etc..) of original audio file/stream,
+           or None if not applicable/known"""
 
     def metadata(self):
         """Return the metadata embedded into the encoded stream, if any."""
