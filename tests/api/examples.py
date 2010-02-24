@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.api import *
-from timeside.graph import *
+from timeside.grapher import *
 from timeside import Metadata
 from scikits import audiolab
 import numpy

@@ -22,10 +22,10 @@
 from timeside.core import *
 from timeside.api import IGrapher
 from tempfile import NamedTemporaryFile
-from timeside.graph.core import *
+from timeside.grapher.core import *
 
-class WaveFormGrapherAudiolab(Processor):
-    """WaveForm graph driver (python style thanks to wav2png.py and scikits.audiolab)"""
+class SpectrogramGrapherAudiolab(Processor):
+    """Spectrogram graph driver (python style thanks to wav2png.py and scikits.audiolab)"""
 
     implements(IGrapher)
 
@@ -34,17 +34,17 @@ class WaveFormGrapherAudiolab(Processor):
 
     @staticmethod
     def id():
-        return "waveform"
+        return "spectrogram"
 
     def name(self):
-        return "Waveform (audiolab)"
+        return "Spectrogram (audiolab)"
 
     def set_colors(self, background=None, scheme=None):
         self.bg_color = background
         self.color_scheme = scheme
 
     def render(self, media_item, width=None, height=None, options=None):
-        """Generator that streams the waveform as a PNG image with a python method"""
+        """Generator that streams the spectrogram as a PNG image with a python method"""
 
         wav_file = media_item
         pngFile = NamedTemporaryFile(suffix='.png')
@@ -61,7 +61,7 @@ class WaveFormGrapherAudiolab(Processor):
         fft_size = 2048
         args = (wav_file, pngFile.name, image_width, image_height, fft_size,
                 self.bg_color, self.color_scheme)
-        create_wavform_png(*args)
+        create_spectrogram_png(*args)
 
         buffer = pngFile.read(0xFFFF)
         while buffer:
@@ -69,4 +69,3 @@ class WaveFormGrapherAudiolab(Processor):
             buffer = pngFile.read(0xFFFF)
 
         pngFile.close()
-
