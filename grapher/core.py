@@ -250,22 +250,25 @@ class WaveformImage(object):
 
 
 class SpectrogramImage(object):
-    def __init__(self, image_width, image_height, fft_size, bg_color = None, color_scheme = None):
-
-        #FIXME: bg_color is ignored
-
-        if not color_scheme:
-            color_scheme = 'default'
-
-        self.image = Image.new("P", (image_height, image_width))
+    def __init__(self, image_width, image_height, nframes, samplerate, buffer_size, bg_color=None, color_scheme=None, filename=None):
 
         self.image_width = image_width
         self.image_height = image_height
-        self.fft_size = fft_size
-
+        self.nframes = nframes
+        self.samplerate = samplerate
+        self.fft_size = buffer_size
+        self.buffer_size = buffer_size
+        self.filename = filename
+        if not color_scheme:
+            color_scheme = 'default'
+        self.image = Image.new("P", (self.image_height, self.image_width))
         colors = color_schemes[color_scheme]['spectrogram']
-
         self.image.putpalette(interpolate_colors(colors, True))
+
+        self.samples_per_pixel = self.nframes / float(self.image_width)
+        self.peaks_adapter = FixedSizeInputAdapter(int(self.samples_per_pixel), 1, pad=False)
+        self.peaks_adapter_nframes = self.peaks_adapter.nframes(self.nframes)
+        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, numpy.hanning)
 
         # generate the lookup which translates y-coordinate to fft-bin
         self.y_to_bin = []
@@ -286,6 +289,7 @@ class SpectrogramImage(object):
         # a lot slower than using image.putadata and then rotating the image
         # so we store all the pixels in an array and then create the image when saving
         self.pixels = []
+        self.pixel_cursor = 0
 
     def draw_spectrum(self, x, spectrum):
         for (index, alpha) in self.y_to_bin:
@@ -294,34 +298,25 @@ class SpectrogramImage(object):
         for y in range(len(self.y_to_bin), self.image_height):
             self.pixels.append(0)
 
-    def save(self, filename):
+    def process(self, frames, eod):
+        if len(frames) == 1:
+            frames.shape = (len(frames),1)
+            buffer = frames.copy()
+        else:
+            buffer = frames[:,0].copy()
+            buffer.shape = (len(buffer),1)
+
+        for samples, end in self.peaks_adapter.process(buffer, eod):
+            if self.pixel_cursor == self.image_width:
+                break
+            # FIXME : too much repeated spectrum computation cycle
+            (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
+            self.draw_spectrum(self.pixel_cursor, db_spectrum)
+            self.pixel_cursor += 1
+
+    def save(self):
         self.image.putdata(self.pixels)
-        self.image.transpose(Image.ROTATE_90).save(filename)
-
-
-def create_spectrogram_png(input_filename, output_filename_s, image_width, image_height, fft_size,
-                           bg_color = None, color_scheme = None):
-    audio_file = audiolab.sndfile(input_filename, 'read')
-
-    samples_per_pixel = audio_file.get_nframes() / float(image_width)
-    processor = AudioProcessor(audio_file, fft_size, numpy.hanning)
-
-    spectrogram = SpectrogramImage(image_width, image_height, fft_size, bg_color, color_scheme)
-
-    for x in range(image_width):
-
-        if x % (image_width/10) == 0:
-            sys.stdout.write('.')
-            sys.stdout.flush()
-
-        seek_point = int(x * samples_per_pixel)
-        next_seek_point = int((x + 1) * samples_per_pixel)
-        (spectral_centroid, db_spectrum) = processor.spectral_centroid(seek_point)
-        spectrogram.draw_spectrum(x, db_spectrum)
-
-    spectrogram.save(output_filename_s)
-
-    print " done"
+        self.image.transpose(Image.ROTATE_90).save(self.filename)
 
 
 class Noise(object):

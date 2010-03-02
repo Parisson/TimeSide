@@ -264,6 +264,63 @@ class Waveform(Processor):
         return self.graph.image
 
 
+class Spectrogram(Processor):
+    implements(IGrapher)
+
+    BUFFER_SIZE = 512
+
+    @interfacedoc
+    def __init__(self, width=None, height=None, output=None, bg_color=None, color_scheme=None):
+        if width:
+            self.width = width
+        else:
+            self.width = 1500
+        if height:
+            self.height = height
+        else:
+            self.height = 200
+        self.bg_color = bg_color
+        self.color_scheme = color_scheme
+        self.filename = output
+        self.graph = None
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "test_spectrogram"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Spectrogram test"
+
+    @interfacedoc
+    def set_colors(self, background, scheme):
+        self.bg_color = background
+        self.color_scheme = scheme
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(Spectrogram, self).setup(channels, samplerate, nframes)
+        if self.graph:
+            self.graph = None
+        self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
+        self.graph = SpectrogramImage(self.width, self.height, self.nframes(), self.samplerate(), self.BUFFER_SIZE,
+                                    bg_color=self.bg_color, color_scheme=self.color_scheme, filename=self.filename)
+
+    @interfacedoc
+    def process(self, frames, eod=False):
+        for buffer, end in self.adapter.process(frames, eod):
+            self.graph.process(buffer, end)
+        return frames, eod
+
+    @interfacedoc
+    def render(self):
+        if self.filename:
+            self.graph.save()
+        return self.graph.image
+
+
 class Duration(Processor):
     """A rather useless duration analyzer. Its only purpose is to test the
        nframes characteristic."""
