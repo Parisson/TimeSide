@@ -67,44 +67,6 @@ class SpectralCentroid(object):
         self.samplerate = samplerate
         self.spectrum_adapter = FixedSizeInputAdapter(self.fft_size, 1, pad=True)
 
-    def trim(self, samples, start, size, resize_if_less=False):
-        """ read size samples starting at start, if resize_if_less is True and less than size
-        samples are read, resize the array to size and fill with zeros """
-
-        # number of zeros to add to start and end of the buffer
-        add_to_start = 0
-        add_to_end = 0
-
-        if start < 0:
-            # the first FFT window starts centered around zero
-            if size + start <= 0:
-                if resize_if_less:
-                    return numpy.zeros(size)
-                else:
-                    return numpy.array([])
-            else:
-                add_to_start = -start # remember: start is negative!
-                to_read = size + start
-
-                if to_read > self.buffer_size:
-                    add_to_end = to_read - self.buffer_size
-                    to_read = self.buffer_size
-        else:
-            to_read = size
-            if start + to_read >= self.buffer_size:
-                to_read = self.buffer_size - start
-                add_to_end = size - to_read
-
-        if resize_if_less and (add_to_start > 0 or add_to_end > 0):
-            if add_to_start > 0:
-                samples = numpy.concatenate((numpy.zeros(add_to_start), samples), axis=1)
-
-            if add_to_end > 0:
-                samples = numpy.resize(samples, size)
-                samples[size - add_to_end:] = 0
-
-        return samples
-
     def process(self, frames, eod, spec_range=120.0):
 
         for buffer, end in self.spectrum_adapter.process(frames, True):
@@ -182,14 +144,9 @@ class WaveformImage(object):
         if not color_scheme:
             self.color_scheme = 'default'
         colors = color_schemes[self.color_scheme]['waveform']
-        # this line gets the old "screaming" colors back...
-        # colors = [self.color_from_value(value/29.0) for value in range(0,30)]
         self.color_lookup = interpolate_colors(colors)
 
         self.samples_per_pixel = self.nframes / float(self.image_width)
-        #self.nbuffers = self.nframes / self.buffer_size
-        #self.pixel_per_buffer = self.buffer_size / self.samples_per_pixel
-
         self.peaks_adapter = FixedSizeInputAdapter(int(self.samples_per_pixel), 1, pad=False)
         self.peaks_adapter_nframes = self.peaks_adapter.nframes(self.nframes)
         self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, numpy.hanning)
