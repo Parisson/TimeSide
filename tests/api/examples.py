@@ -211,10 +211,9 @@ class Waveform(Processor):
     implements(IGrapher)
 
     BUFFER_SIZE = 1024
-    FFT_SIZE    = 1024
 
     @interfacedoc
-    def __init__(self, width=None, height=None, output=None):
+    def __init__(self, width=None, height=None, output=None, bg_color=None, color_scheme=None):
         if width:
             self.width = width
         else:
@@ -223,8 +222,8 @@ class Waveform(Processor):
             self.height = height
         else:
             self.height = 200
-        self.bg_color = None
-        self.color_scheme = None
+        self.bg_color = bg_color
+        self.color_scheme = color_scheme
         self.filename = output
         self.graph = None
 
@@ -249,9 +248,8 @@ class Waveform(Processor):
         if self.graph:
             self.graph = None
         self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
-        self.graph = WaveformImage(self.width, self.height, self.BUFFER_SIZE, self.FFT_SIZE,
-                        self.nframes(), self.adapter.nframes(self.input_nframes),
-                        self.samplerate(), self.channels(), filename=self.filename)
+        self.graph = WaveformImage(self.width, self.height, self.nframes(), self.samplerate(), self.BUFFER_SIZE,
+                                    bg_color=self.bg_color, color_scheme=self.color_scheme, filename=self.filename)
 
     @interfacedoc
     def process(self, frames, eod=False):
