@@ -233,12 +233,11 @@ class WaveformImage(object):
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
 
+        (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
         for samples, end in self.peaks_adapter.process(buffer, eod):
             if self.pixel_cursor == self.image_width:
                 break
             peaks = self.peaks(samples)
-            # FIXME : too much repeated spectrum computation cycle
-            (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
             self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
             self.pixel_cursor += 1
 
@@ -250,8 +249,8 @@ class WaveformImage(object):
 
 
 class SpectrogramImage(object):
-    def __init__(self, image_width, image_height, nframes, samplerate, buffer_size, bg_color=None, color_scheme=None, filename=None):
 
+    def __init__(self, image_width, image_height, nframes, samplerate, buffer_size, bg_color=None, color_scheme=None, filename=None):
         self.image_width = image_width
         self.image_height = image_height
         self.nframes = nframes
@@ -306,11 +305,10 @@ class SpectrogramImage(object):
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
 
+        (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
         for samples, end in self.peaks_adapter.process(buffer, eod):
             if self.pixel_cursor == self.image_width:
                 break
-            # FIXME : too much repeated spectrum computation cycle
-            (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
             self.draw_spectrum(self.pixel_cursor, db_spectrum)
             self.pixel_cursor += 1
 
