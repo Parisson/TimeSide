@@ -11,7 +11,17 @@ else:
     from timeside.tests.api.examples import FileDecoder, WavEncoder
 
 image_file = './waveform.png'
-source = os.path.join(os.path.dirname(__file__), "../samples/sweep_source.mp3")
+
+# mono
+#source = os.path.join(os.path.dirname(__file__), "../samples/sweep_source.wav")
+#source = os.path.join(os.path.dirname(__file__), "../samples/guitar.wav")
+#source = os.path.join(os.path.dirname(__file__), "../samples/sweep_source.mp3")
+
+# stereo
+source = os.path.join(os.path.dirname(__file__), "../samples/sweep.wav")
+#source = os.path.join(os.path.dirname(__file__), "../samples/guitar_stereo.wav")
+#source = os.path.join(os.path.dirname(__file__), "/home/momo/music/flac/Isabelle Aboulker/Mon imagier des instruments/16 - Isabelle Aboulker - 16 instru.flac")
+#source = os.path.join(os.path.dirname(__file__), "/home/momo/music/ogg/Emilie_Jolie/01 - Henri Salvador - Prologue.ogg")
 
 decoder  = FileDecoder(source)
 waveform = examples.Waveform(width=1024, height=256, output=image_file, bg_color=(0,0,0), color_scheme='default')

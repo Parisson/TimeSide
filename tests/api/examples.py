@@ -210,7 +210,7 @@ class WavEncoder(Processor):
 class Waveform(Processor):
     implements(IGrapher)
 
-    BUFFER_SIZE = 1024
+    FFT_SIZE = 0x400
 
     @interfacedoc
     def __init__(self, width=None, height=None, output=None, bg_color=None, color_scheme=None):
@@ -247,14 +247,12 @@ class Waveform(Processor):
         super(Waveform, self).setup(channels, samplerate, nframes)
         if self.graph:
             self.graph = None
-        self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
-        self.graph = WaveformImage(self.width, self.height, self.nframes(), self.samplerate(), self.BUFFER_SIZE,
+        self.graph = WaveformImage(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE,
                                     bg_color=self.bg_color, color_scheme=self.color_scheme, filename=self.filename)
 
     @interfacedoc
     def process(self, frames, eod=False):
-        for buffer, end in self.adapter.process(frames, eod):
-            self.graph.process(buffer, end)
+        self.graph.process(frames, eod)
         return frames, eod
 
     @interfacedoc
@@ -267,7 +265,7 @@ class Waveform(Processor):
 class Spectrogram(Processor):
     implements(IGrapher)
 
-    BUFFER_SIZE = 512
+    FFT_SIZE = 0x1000
 
     @interfacedoc
     def __init__(self, width=None, height=None, output=None, bg_color=None, color_scheme=None):
@@ -304,14 +302,12 @@ class Spectrogram(Processor):
         super(Spectrogram, self).setup(channels, samplerate, nframes)
         if self.graph:
             self.graph = None
-        self.adapter = FixedSizeInputAdapter(self.BUFFER_SIZE, channels, pad=True)
-        self.graph = SpectrogramImage(self.width, self.height, self.nframes(), self.samplerate(), self.BUFFER_SIZE,
+        self.graph = SpectrogramImage(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE,
                                     bg_color=self.bg_color, color_scheme=self.color_scheme, filename=self.filename)
 
     @interfacedoc
     def process(self, frames, eod=False):
-        for buffer, end in self.adapter.process(frames, eod):
-            self.graph.process(buffer, end)
+        self.graph.process(frames, eod)
         return frames, eod
 
     @interfacedoc
