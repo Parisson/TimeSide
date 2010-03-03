@@ -160,8 +160,9 @@ class FileDecoder(Processor):
             print "fail", path
         self.mainloop.quit()
 
-    def gst_buffer_to_numpy_array(self, buf, chan = 1):
+    def gst_buffer_to_numpy_array(self, buf):
         """ gstreamer buffer to numpy array conversion """
+        chan = self.audiochannels
         samples = frombuffer(buf.data, dtype=float32) 
         samples.resize([len(samples)/chan, chan])
         return samples
