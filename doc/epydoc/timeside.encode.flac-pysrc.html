@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>timeside.encode.flac</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="timeside-module.html">Package&nbsp;timeside</a> ::
+        <a href="timeside.encode-module.html">Package&nbsp;encode</a> ::
+        Module&nbsp;flac
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="timeside.encode.flac-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="timeside.encode.flac-module.html">Module timeside.encode.flac</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># Copyright (c) 2007-2009 Guillaume Pellerin &lt;yomguy@parisson.com&gt;</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"># This file is part of TimeSide.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"># TimeSide is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># the Free Software Foundation, either version 2 of the License, or</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># TimeSide is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># along with TimeSide.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-comment"># Author: Guillaume Pellerin &lt;yomguy@parisson.com&gt;</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">string</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">subprocess</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package timeside=timeside-module.html"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-0', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package timeside.encode=timeside.encode-module.html"><a title="timeside.encode" class="py-name" href="#" onclick="return doclink('link-1', 'encode', 'link-1');">encode</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module timeside.analyze.core=timeside.analyze.core-module.html,Module timeside.analyze.vamp.core=timeside.analyze.vamp.core-module.html,Module timeside.core=timeside.core-module.html,Module timeside.decode.core=timeside.decode.core-module.html,Module timeside.encode.core=timeside.encode.core-module.html,Module timeside.grapher.core=timeside.grapher.core-module.html"><a title="timeside.analyze.core
+timeside.analyze.vamp.core
+timeside.core
+timeside.decode.core
+timeside.encode.core
+timeside.grapher.core" class="py-name" href="#" onclick="return doclink('link-2', 'core', 'link-2');">core</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-3', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module timeside.api=timeside.api-module.html,Package timeside.tests.api=timeside.tests.api-module.html"><a title="timeside.api
+timeside.tests.api" class="py-name" href="#" onclick="return doclink('link-4', 'api', 'link-4');">api</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Class timeside.api.IEncoder=timeside.api.IEncoder-class.html"><a title="timeside.api.IEncoder" class="py-name" href="#" onclick="return doclink('link-5', 'IEncoder', 'link-5');">IEncoder</a></tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">tempfile</tt> <tt class="py-keyword">import</tt> <tt class="py-name">NamedTemporaryFile</tt> </tt>
+<a name="FlacEncoder"></a><div id="FlacEncoder-def"><a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt> <a class="py-toggle" href="#" id="FlacEncoder-toggle" onclick="return toggle('FlacEncoder');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html">FlacEncoder</a><tt class="py-op">(</tt><tt class="py-base-class">EncoderCore</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="FlacEncoder-expanded"><a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">    <tt class="py-docstring">"""Defines methods to encode to FLAC"""</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">    <tt id="link-6" class="py-name" targets="Variable timeside.component.MetaComponent.implements=timeside.component.MetaComponent-class.html#implements,Function timeside.component.implements()=timeside.component-module.html#implements"><a title="timeside.component.MetaComponent.implements
+timeside.component.implements" class="py-name" href="#" onclick="return doclink('link-6', 'implements', 'link-6');">implements</a></tt><tt class="py-op">(</tt><tt id="link-7" class="py-name"><a title="timeside.api.IEncoder" class="py-name" href="#" onclick="return doclink('link-7', 'IEncoder', 'link-5');">IEncoder</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.__init__"></a><div id="FlacEncoder.__init__-def"><a name="L35"></a><tt class="py-lineno"> 35</tt> <a class="py-toggle" href="#" id="FlacEncoder.__init__-toggle" onclick="return toggle('FlacEncoder.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.__init__-expanded"><a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">quality_default</tt> <tt class="py-op">=</tt> <tt class="py-string">'-5'</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">dub2args_dict</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'creator'</tt><tt class="py-op">:</tt> <tt class="py-string">'artist'</tt><tt class="py-op">,</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">                             <tt class="py-string">'relation'</tt><tt class="py-op">:</tt> <tt class="py-string">'album'</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">                             <tt class="py-op">}</tt> </tt>
+</div><a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">staticmethod</tt> </tt>
+<a name="FlacEncoder.id"></a><div id="FlacEncoder.id-def"><a name="L42"></a><tt class="py-lineno"> 42</tt> <a class="py-toggle" href="#" id="FlacEncoder.id-toggle" onclick="return toggle('FlacEncoder.id');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#id">id</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.id-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.id-expanded"><a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">"flacenc"</tt> </tt>
+</div><a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">     </tt>
+<a name="FlacEncoder.format"></a><div id="FlacEncoder.format-def"><a name="L45"></a><tt class="py-lineno"> 45</tt> <a class="py-toggle" href="#" id="FlacEncoder.format-toggle" onclick="return toggle('FlacEncoder.format');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#format">format</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.format-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.format-expanded"><a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">'FLAC'</tt> </tt>
+</div><a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.file_extension"></a><div id="FlacEncoder.file_extension-def"><a name="L48"></a><tt class="py-lineno"> 48</tt> <a class="py-toggle" href="#" id="FlacEncoder.file_extension-toggle" onclick="return toggle('FlacEncoder.file_extension');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#file_extension">file_extension</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.file_extension-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.file_extension-expanded"><a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">'flac'</tt> </tt>
+</div><a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.mime_type"></a><div id="FlacEncoder.mime_type-def"><a name="L51"></a><tt class="py-lineno"> 51</tt> <a class="py-toggle" href="#" id="FlacEncoder.mime_type-toggle" onclick="return toggle('FlacEncoder.mime_type');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#mime_type">mime_type</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.mime_type-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.mime_type-expanded"><a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">'audio/x-flac'</tt> </tt>
+</div><a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.description"></a><div id="FlacEncoder.description-def"><a name="L54"></a><tt class="py-lineno"> 54</tt> <a class="py-toggle" href="#" id="FlacEncoder.description-toggle" onclick="return toggle('FlacEncoder.description');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#description">description</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.description-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.description-expanded"><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">"""</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"><tt class="py-string">        Free Lossless Audio Codec (FLAC) is a file format for lossless audio</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line"><tt class="py-string">        data compression.</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"><tt class="py-string">        """</tt> </tt>
+</div><a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.get_file_info"></a><div id="FlacEncoder.get_file_info-def"><a name="L60"></a><tt class="py-lineno"> 60</tt> <a class="py-toggle" href="#" id="FlacEncoder.get_file_info-toggle" onclick="return toggle('FlacEncoder.get_file_info');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#get_file_info">get_file_info</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.get_file_info-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.get_file_info-expanded"><a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">            <tt class="py-name">file1</tt><tt class="py-op">,</tt> <tt class="py-name">file2</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">popen4</tt><tt class="py-op">(</tt><tt class="py-string">'metaflac --list "'</tt><tt class="py-op">+</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">dest</tt><tt class="py-op">+</tt><tt class="py-string">'"'</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">            <tt class="py-name">info</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">file2</tt><tt class="py-op">.</tt><tt class="py-name">readlines</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">                <tt class="py-name">info</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">clean_word</tt><tt class="py-op">(</tt><tt class="py-name">line</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">-</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">info</tt> <tt class="py-op">=</tt> <tt class="py-name">info</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">info</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt class="py-name">IOError</tt><tt class="py-op">(</tt><tt class="py-string">'EncoderError: metaflac is not installed or '</tt> <tt class="py-op">+</tt> \ </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">                           <tt class="py-string">'file does not exist.'</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.write_tags"></a><div id="FlacEncoder.write_tags-def"><a name="L72"></a><tt class="py-lineno"> 72</tt> <a class="py-toggle" href="#" id="FlacEncoder.write_tags-toggle" onclick="return toggle('FlacEncoder.write_tags');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#write_tags">write_tags</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">file</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.write_tags-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.write_tags-expanded"><a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-keyword">from</tt> <tt class="py-name">mutagen</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Module timeside.decode.flac=timeside.decode.flac-module.html,Module timeside.encode.flac=timeside.encode.flac-module.html"><a title="timeside.decode.flac
+timeside.encode.flac" class="py-name" href="#" onclick="return doclink('link-8', 'flac', 'link-8');">flac</a></tt> <tt class="py-keyword">import</tt> <tt class="py-name">FLAC</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">media</tt> <tt class="py-op">=</tt> <tt class="py-name">FLAC</tt><tt class="py-op">(</tt><tt class="py-name">file</tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">tag</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Method timeside.api.IDecoder.metadata()=timeside.api.IDecoder-class.html#metadata,Module timeside.metadata=timeside.metadata-module.html,Method timeside.tests.api.examples.FileDecoder.metadata()=timeside.tests.api.examples.FileDecoder-class.html#metadata,Method timeside.tests.api.gstreamer.FileDecoder.metadata()=timeside.tests.api.gstreamer.FileDecoder-class.html#metadata"><a title="timeside.api.IDecoder.metadata
+timeside.metadata
+timeside.tests.api.examples.FileDecoder.metadata
+timeside.tests.api.gstreamer.FileDecoder.metadata" class="py-name" href="#" onclick="return doclink('link-9', 'metadata', 'link-9');">metadata</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">            <tt id="link-10" class="py-name" targets="Method timeside.analyze.channels.ChannelAnalyser.name()=timeside.analyze.channels.ChannelAnalyser-class.html#name,Method timeside.analyze.dc.MeanDCShiftAnalyser.name()=timeside.analyze.dc.MeanDCShiftAnalyser-class.html#name,Method timeside.analyze.duration.DurationAnalyzer.name()=timeside.analyze.duration.DurationAnalyzer-class.html#name,Method timeside.analyze.encoding.EncodingAnalyser.name()=timeside.analyze.encoding.EncodingAnalyser-class.html#name,Method timeside.analyze.format.FormatAnalyser.name()=timeside.analyze.format.FormatAnalyser-class.html#name,Static Method timeside.analyze.max_level.MaxLevelAnalyzer.name()=timeside.analyze.max_level.MaxLevelAnalyzer-class.html#name,Method timeside.analyze.mean_level.MeanLevelAnalyser.name()=timeside.analyze.mean_level.MeanLevelAnalyser-class.html#name,Method timeside.analyze.resolution.ResolutionAnalyser.name()=timeside.analyze.resolution.ResolutionAnalyser-class.html#name,Method timeside.analyze.samplerate.SampleRateAnalyzer.name()=timeside.analyze.samplerate.SampleRateAnalyzer-class.html#name,Method timeside.analyze.vamp.core.VampCoreAnalyzer.name()=timeside.analyze.vamp.core.VampCoreAnalyzer-class.html#name,Static Method timeside.api.IAnalyzer.name()=timeside.api.IAnalyzer-class.html#name,Static Method timeside.api.IEffect.name()=timeside.api.IEffect-class.html#name,Static Method timeside.api.IGrapher.name()=timeside.api.IGrapher-class.html#name,Method timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name()=timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab-class.html#name,Method timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name()=timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab-class.html#name,Static Method timeside.tests.api.examples.Duration.name()=timeside.tests.api.examples.Duration-class.html#name,Static Method timeside.tests.api.examples.Gain.name()=timeside.tests.api.examples.Gain-class.html#name,Static Method timeside.tests.api.examples.MaxLevel.name()=timeside.tests.api.examples.MaxLevel-class.html#name,Static Method timeside.tests.api.examples.Spectrogram.name()=timeside.tests.api.examples.Spectrogram-class.html#name,Static Method timeside.tests.api.examples.Waveform.name()=timeside.tests.api.examples.Waveform-class.html#name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-10', 'name', 'link-10');">name</a></tt> <tt class="py-op">=</tt> <tt class="py-name">tag</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">            <tt class="py-name">value</tt> <tt class="py-op">=</tt> <tt class="py-name">clean_word</tt><tt class="py-op">(</tt><tt class="py-name">tag</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt id="link-11" class="py-name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-11', 'name', 'link-10');">name</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">dub2args_dict</tt><tt class="py-op">.</tt><tt class="py-name">keys</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">                <tt id="link-12" class="py-name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-12', 'name', 'link-10');">name</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">dub2args_dict</tt><tt class="py-op">[</tt><tt id="link-13" class="py-name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-13', 'name', 'link-10');">name</a></tt><tt class="py-op">]</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt id="link-14" class="py-name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-14', 'name', 'link-10');">name</a></tt> <tt class="py-op">==</tt> <tt class="py-string">'comment'</tt><tt class="py-op">:</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">                <tt class="py-name">media</tt><tt class="py-op">[</tt><tt class="py-string">'DESCRIPTION'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">unicode</tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">                <tt class="py-name">media</tt><tt class="py-op">[</tt><tt id="link-15" class="py-name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-15', 'name', 'link-10');">name</a></tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">unicode</tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">            <tt class="py-name">media</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name" targets="Method timeside.grapher.core.SpectrogramImage.save()=timeside.grapher.core.SpectrogramImage-class.html#save,Method timeside.grapher.core.WaveformImage.save()=timeside.grapher.core.WaveformImage-class.html#save"><a title="timeside.grapher.core.SpectrogramImage.save
+timeside.grapher.core.WaveformImage.save" class="py-name" href="#" onclick="return doclink('link-16', 'save', 'link-16');">save</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">            <tt class="py-keyword">raise</tt> <tt class="py-name">IOError</tt><tt class="py-op">(</tt><tt class="py-string">'EncoderError: cannot write tags.'</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.get_args"></a><div id="FlacEncoder.get_args-def"><a name="L90"></a><tt class="py-lineno"> 90</tt> <a class="py-toggle" href="#" id="FlacEncoder.get_args-toggle" onclick="return toggle('FlacEncoder.get_args');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#get_args">get_args</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">options</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.get_args-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.get_args-expanded"><a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-docstring">"""Get process options and return arguments for the encoder"""</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">options</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">options</tt> <tt class="py-op">=</tt> <tt class="py-name">options</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-op">(</tt><tt class="py-string">'verbose'</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">options</tt> <tt class="py-keyword">and</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">options</tt><tt class="py-op">[</tt><tt class="py-string">'verbose'</tt><tt class="py-op">]</tt> <tt class="py-op">!=</tt> <tt class="py-string">'0'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">                <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">'-s'</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-string">'flac_quality'</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">options</tt><tt class="py-op">:</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">                <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">'-f '</tt> <tt class="py-op">+</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">options</tt><tt class="py-op">[</tt><tt class="py-string">'flac_quality'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">                <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">'-f '</tt> <tt class="py-op">+</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">quality_default</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">            <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">'-s -f '</tt> <tt class="py-op">+</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">quality_default</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line"> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-comment">#for tag in self.metadata.keys():</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#value = clean_word(self.metadata[tag])</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#args.append('-c %s="%s"' % (tag, value))</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#if tag in self.dub2args_dict.keys():</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-comment"></tt>                <tt class="py-comment">#arg = self.dub2args_dict[tag]</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"><tt class="py-comment"></tt>                <tt class="py-comment">#args.append('-c %s="%s"' % (arg, value))</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">args</tt> </tt>
+</div><a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"> </tt>
+<a name="FlacEncoder.process"></a><div id="FlacEncoder.process-def"><a name="L113"></a><tt class="py-lineno">113</tt> <a class="py-toggle" href="#" id="FlacEncoder.process-toggle" onclick="return toggle('FlacEncoder.process');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.encode.flac.FlacEncoder-class.html#process">process</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">source</tt><tt class="py-op">,</tt> <tt class="py-param">metadata</tt><tt class="py-op">,</tt> <tt class="py-param">options</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FlacEncoder.process-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FlacEncoder.process-expanded"><a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt class="py-name">buffer_size</tt> <tt class="py-op">=</tt> <tt class="py-number">0xFFFF</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="timeside.api.IDecoder.metadata
+timeside.metadata
+timeside.tests.api.examples.FileDecoder.metadata
+timeside.tests.api.gstreamer.FileDecoder.metadata" class="py-name" href="#" onclick="return doclink('link-17', 'metadata', 'link-9');">metadata</a></tt><tt class="py-op">=</tt> <tt id="link-18" class="py-name"><a title="timeside.api.IDecoder.metadata
+timeside.metadata
+timeside.tests.api.examples.FileDecoder.metadata
+timeside.tests.api.gstreamer.FileDecoder.metadata" class="py-name" href="#" onclick="return doclink('link-18', 'metadata', 'link-9');">metadata</a></tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">options</tt> <tt class="py-op">=</tt> <tt class="py-name">options</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name" targets="Method timeside.encode.flac.FlacEncoder.get_args()=timeside.encode.flac.FlacEncoder-class.html#get_args,Method timeside.encode.mp3.Mp3Encoder.get_args()=timeside.encode.mp3.Mp3Encoder-class.html#get_args,Method timeside.encode.ogg.OggVorbisEncoder.get_args()=timeside.encode.ogg.OggVorbisEncoder-class.html#get_args"><a title="timeside.encode.flac.FlacEncoder.get_args
+timeside.encode.mp3.Mp3Encoder.get_args
+timeside.encode.ogg.OggVorbisEncoder.get_args" class="py-name" href="#" onclick="return doclink('link-19', 'get_args', 'link-19');">get_args</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt class="py-string">' '</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">)</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">        <tt class="py-name">ext</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name" targets="Static Method timeside.api.IEncoder.file_extension()=timeside.api.IEncoder-class.html#file_extension,Method timeside.decode.flac.FlacDecoder.file_extension()=timeside.decode.flac.FlacDecoder-class.html#file_extension,Method timeside.decode.mp3.Mp3Decoder.file_extension()=timeside.decode.mp3.Mp3Decoder-class.html#file_extension,Method timeside.decode.ogg.OggDecoder.file_extension()=timeside.decode.ogg.OggDecoder-class.html#file_extension,Method timeside.decode.wav.WavDecoder.file_extension()=timeside.decode.wav.WavDecoder-class.html#file_extension,Method timeside.encode.flac.FlacEncoder.file_extension()=timeside.encode.flac.FlacEncoder-class.html#file_extension,Method timeside.encode.mp3.Mp3Encoder.file_extension()=timeside.encode.mp3.Mp3Encoder-class.html#file_extension,Method timeside.encode.ogg.OggVorbisEncoder.file_extension()=timeside.encode.ogg.OggVorbisEncoder-class.html#file_extension,Method timeside.encode.wav.WavEncoder.file_extension()=timeside.encode.wav.WavEncoder-class.html#file_extension,Static Method timeside.tests.api.examples.WavEncoder.file_extension()=timeside.tests.api.examples.WavEncoder-class.html#file_extension,Static Method timeside.tests.api.gstreamer.WavEncoder.file_extension()=timeside.tests.api.gstreamer.WavEncoder-class.html#file_extension"><a title="timeside.api.IEncoder.file_extension
+timeside.decode.flac.FlacDecoder.file_extension
+timeside.decode.mp3.Mp3Decoder.file_extension
+timeside.decode.ogg.OggDecoder.file_extension
+timeside.decode.wav.WavDecoder.file_extension
+timeside.encode.flac.FlacEncoder.file_extension
+timeside.encode.mp3.Mp3Encoder.file_extension
+timeside.encode.ogg.OggVorbisEncoder.file_extension
+timeside.encode.wav.WavEncoder.file_extension
+timeside.tests.api.examples.WavEncoder.file_extension
+timeside.tests.api.gstreamer.WavEncoder.file_extension" class="py-name" href="#" onclick="return doclink('link-20', 'file_extension', 'link-20');">file_extension</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt class="py-name">temp_file</tt> <tt class="py-op">=</tt> <tt class="py-name">NamedTemporaryFile</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-name">command</tt> <tt class="py-op">=</tt> <tt class="py-string">'flac %s - -o %s '</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">,</tt> <tt class="py-name">temp_file</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="timeside.analyze.channels.ChannelAnalyser.name
+timeside.analyze.dc.MeanDCShiftAnalyser.name
+timeside.analyze.duration.DurationAnalyzer.name
+timeside.analyze.encoding.EncodingAnalyser.name
+timeside.analyze.format.FormatAnalyser.name
+timeside.analyze.max_level.MaxLevelAnalyzer.name
+timeside.analyze.mean_level.MeanLevelAnalyser.name
+timeside.analyze.resolution.ResolutionAnalyser.name
+timeside.analyze.samplerate.SampleRateAnalyzer.name
+timeside.analyze.vamp.core.VampCoreAnalyzer.name
+timeside.api.IAnalyzer.name
+timeside.api.IEffect.name
+timeside.api.IGrapher.name
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.name
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.name
+timeside.tests.api.examples.Duration.name
+timeside.tests.api.examples.Gain.name
+timeside.tests.api.examples.MaxLevel.name
+timeside.tests.api.examples.Spectrogram.name
+timeside.tests.api.examples.Waveform.name" class="py-name" href="#" onclick="return doclink('link-21', 'name', 'link-10');">name</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line"> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-name">stream</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Method timeside.analyze.vamp.core.VampCoreAnalyzer.core_process()=timeside.analyze.vamp.core.VampCoreAnalyzer-class.html#core_process,Method timeside.encode.core.EncoderCore.core_process()=timeside.encode.core.EncoderCore-class.html#core_process"><a title="timeside.analyze.vamp.core.VampCoreAnalyzer.core_process
+timeside.encode.core.EncoderCore.core_process" class="py-name" href="#" onclick="return doclink('link-22', 'core_process', 'link-22');">core_process</a></tt><tt class="py-op">(</tt><tt class="py-name">command</tt><tt class="py-op">,</tt> <tt id="link-23" class="py-name" targets="Variable timeside.tests.api.test_lolevel.source=timeside.tests.api.test_lolevel-module.html#source,Variable timeside.tests.api.test_pipe.source=timeside.tests.api.test_pipe-module.html#source,Variable timeside.tests.api.test_pipe_spectrogram.source=timeside.tests.api.test_pipe_spectrogram-module.html#source,Variable timeside.tests.api.test_pipe_waveform.source=timeside.tests.api.test_pipe_waveform-module.html#source"><a title="timeside.tests.api.test_lolevel.source
+timeside.tests.api.test_pipe.source
+timeside.tests.api.test_pipe_spectrogram.source
+timeside.tests.api.test_pipe_waveform.source" class="py-name" href="#" onclick="return doclink('link-23', 'source', 'link-23');">source</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">         </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">__chunk</tt> <tt class="py-keyword">in</tt> <tt class="py-name">stream</tt><tt class="py-op">:</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">            <tt class="py-comment">#temp_file.write(__chunk)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#temp_file.flush()</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-keyword">pass</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">        <tt class="py-comment">#self.write_tags(temp_file.name)</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">        <tt class="py-keyword">while</tt> <tt class="py-name">True</tt><tt class="py-op">:</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">            <tt class="py-name">__chunk</tt> <tt class="py-op">=</tt> <tt class="py-name">temp_file</tt><tt class="py-op">.</tt><tt id="link-24" class="py-name" targets="Method timeside.analyze.core.AudioProcessor.read()=timeside.analyze.core.AudioProcessor-class.html#read"><a title="timeside.analyze.core.AudioProcessor.read" class="py-name" href="#" onclick="return doclink('link-24', 'read', 'link-24');">read</a></tt><tt class="py-op">(</tt><tt class="py-name">buffer_size</tt><tt class="py-op">)</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">__chunk</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">                <tt class="py-keyword">break</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">            <tt class="py-keyword">yield</tt> <tt class="py-name">__chunk</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">        <tt class="py-name">temp_file</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Mar 11 15:38:41 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

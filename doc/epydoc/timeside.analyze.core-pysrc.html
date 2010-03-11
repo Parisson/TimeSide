@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>timeside.analyze.core</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="timeside-module.html">Package&nbsp;timeside</a> ::
+        <a href="timeside.analyze-module.html">Package&nbsp;analyze</a> ::
+        Module&nbsp;core
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="timeside.analyze.core-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="timeside.analyze.core-module.html">Module timeside.analyze.core</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># Copyright (c) 2007-2009 Guillaume Pellerin &lt;yomguy@parisson.com&gt;</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"># This file is part of TimeSide.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"># TimeSide is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># the Free Software Foundation, either version 2 of the License, or</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># TimeSide is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># along with TimeSide.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-comment"># Authors:</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#   Bram de Jong &lt;bram.dejong at domain.com where domain in gmail&gt;</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#   Guillaume Pellerin &lt;yomguy at parisson.com&gt;</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package timeside=timeside-module.html"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-0', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Module timeside.analyze.core=timeside.analyze.core-module.html,Module timeside.analyze.vamp.core=timeside.analyze.vamp.core-module.html,Module timeside.core=timeside.core-module.html,Module timeside.decode.core=timeside.decode.core-module.html,Module timeside.encode.core=timeside.encode.core-module.html,Module timeside.grapher.core=timeside.grapher.core-module.html"><a title="timeside.analyze.core
+timeside.analyze.vamp.core
+timeside.core
+timeside.decode.core
+timeside.encode.core
+timeside.grapher.core" class="py-name" href="#" onclick="return doclink('link-1', 'core', 'link-1');">core</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">optparse</tt><tt class="py-op">,</tt> <tt class="py-name">math</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">numpy</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">scikits</tt><tt class="py-op">.</tt><tt class="py-name">audiolab</tt> <tt class="py-keyword">as</tt> <tt class="py-name">audiolab</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-comment"># FIXME: AudioProcessor: wrong name, should be Analyzer or AnalyzerCore</tt> </tt>
+<a name="AudioProcessor"></a><div id="AudioProcessor-def"><a name="L30"></a><tt class="py-lineno"> 30</tt> <a class="py-toggle" href="#" id="AudioProcessor-toggle" onclick="return toggle('AudioProcessor');">-</a><tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">class</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html">AudioProcessor</a><tt class="py-op">(</tt><tt class="py-base-class">Processor</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="AudioProcessor-expanded"><a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.__init__"></a><div id="AudioProcessor.__init__-def"><a name="L32"></a><tt class="py-lineno"> 32</tt> <a class="py-toggle" href="#" id="AudioProcessor.__init__-toggle" onclick="return toggle('AudioProcessor.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.__init__-expanded"><a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">fft_size</tt> <tt class="py-op">=</tt> <tt class="py-number">2048</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">window_function</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">ones</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">window</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">window_function</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">fft_size</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">spectrum_range</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt> <tt class="py-op">=</tt> <tt class="py-number">100</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">higher</tt> <tt class="py-op">=</tt> <tt class="py-number">22050</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lower_log</tt> <tt class="py-op">=</tt> <tt class="py-name">math</tt><tt class="py-op">.</tt><tt class="py-name">log10</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">higher_log</tt> <tt class="py-op">=</tt> <tt class="py-name">math</tt><tt class="py-op">.</tt><tt class="py-name">log10</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">higher</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">clip</tt> <tt class="py-op">=</tt> <tt class="py-keyword">lambda</tt> <tt class="py-name">val</tt><tt class="py-op">,</tt> <tt class="py-name">low</tt><tt class="py-op">,</tt> <tt class="py-name">high</tt><tt class="py-op">:</tt> <tt class="py-name">min</tt><tt class="py-op">(</tt><tt class="py-name">high</tt><tt class="py-op">,</tt> <tt class="py-name">max</tt><tt class="py-op">(</tt><tt class="py-name">low</tt><tt class="py-op">,</tt> <tt class="py-name">val</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.pre_process"></a><div id="AudioProcessor.pre_process-def"><a name="L43"></a><tt class="py-lineno"> 43</tt> <a class="py-toggle" href="#" id="AudioProcessor.pre_process-toggle" onclick="return toggle('AudioProcessor.pre_process');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#pre_process">pre_process</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">media_item</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.pre_process-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.pre_process-expanded"><a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-name">wav_file</tt> <tt class="py-op">=</tt> <tt class="py-name">media_item</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt> <tt class="py-op">=</tt> <tt class="py-name">audiolab</tt><tt class="py-op">.</tt><tt class="py-name">sndfile</tt><tt class="py-op">(</tt><tt class="py-name">wav_file</tt><tt class="py-op">,</tt> <tt class="py-string">'read'</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Variable timeside.tests.api.test_lolevel.frames=timeside.tests.api.test_lolevel-module.html#frames"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-2', 'frames', 'link-2');">frames</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Method timeside.grapher.core.Noise.get_nframes()=timeside.grapher.core.Noise-class.html#get_nframes"><a title="timeside.grapher.core.Noise.get_nframes" class="py-name" href="#" onclick="return doclink('link-3', 'get_nframes', 'link-3');">get_nframes</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module timeside.analyze.samplerate=timeside.analyze.samplerate-module.html,Method timeside.api.IProcessor.samplerate()=timeside.api.IProcessor-class.html#samplerate,Method timeside.core.Processor.samplerate()=timeside.core.Processor-class.html#samplerate,Method timeside.tests.api.examples.FileDecoder.samplerate()=timeside.tests.api.examples.FileDecoder-class.html#samplerate,Method timeside.tests.api.gstreamer.FileDecoder.samplerate()=timeside.tests.api.gstreamer.FileDecoder-class.html#samplerate,Variable timeside.tests.api.test_lolevel.samplerate=timeside.tests.api.test_lolevel-module.html#samplerate"><a title="timeside.analyze.samplerate
+timeside.api.IProcessor.samplerate
+timeside.core.Processor.samplerate
+timeside.tests.api.examples.FileDecoder.samplerate
+timeside.tests.api.gstreamer.FileDecoder.samplerate
+timeside.tests.api.test_lolevel.samplerate" class="py-name" href="#" onclick="return doclink('link-4', 'samplerate', 'link-4');">samplerate</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method timeside.grapher.core.Noise.get_samplerate()=timeside.grapher.core.Noise-class.html#get_samplerate"><a title="timeside.grapher.core.Noise.get_samplerate" class="py-name" href="#" onclick="return doclink('link-5', 'get_samplerate', 'link-5');">get_samplerate</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Module timeside.analyze.channels=timeside.analyze.channels-module.html,Method timeside.api.IProcessor.channels()=timeside.api.IProcessor-class.html#channels,Method timeside.core.Processor.channels()=timeside.core.Processor-class.html#channels,Method timeside.tests.api.examples.FileDecoder.channels()=timeside.tests.api.examples.FileDecoder-class.html#channels,Method timeside.tests.api.gstreamer.FileDecoder.channels()=timeside.tests.api.gstreamer.FileDecoder-class.html#channels"><a title="timeside.analyze.channels
+timeside.api.IProcessor.channels
+timeside.core.Processor.channels
+timeside.tests.api.examples.FileDecoder.channels
+timeside.tests.api.gstreamer.FileDecoder.channels" class="py-name" href="#" onclick="return doclink('link-6', 'channels', 'link-6');">channels</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Method timeside.grapher.core.Noise.get_channels()=timeside.grapher.core.Noise-class.html#get_channels"><a title="timeside.grapher.core.Noise.get_channels" class="py-name" href="#" onclick="return doclink('link-7', 'get_channels', 'link-7');">get_channels</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Module timeside.analyze.format=timeside.analyze.format-module.html,Method timeside.api.IDecoder.format()=timeside.api.IDecoder-class.html#format,Static Method timeside.api.IEncoder.format()=timeside.api.IEncoder-class.html#format,Method timeside.decode.flac.FlacDecoder.format()=timeside.decode.flac.FlacDecoder-class.html#format,Method timeside.decode.mp3.Mp3Decoder.format()=timeside.decode.mp3.Mp3Decoder-class.html#format,Method timeside.decode.ogg.OggDecoder.format()=timeside.decode.ogg.OggDecoder-class.html#format,Method timeside.decode.wav.WavDecoder.format()=timeside.decode.wav.WavDecoder-class.html#format,Method timeside.encode.flac.FlacEncoder.format()=timeside.encode.flac.FlacEncoder-class.html#format,Method timeside.encode.mp3.Mp3Encoder.format()=timeside.encode.mp3.Mp3Encoder-class.html#format,Method timeside.encode.ogg.OggVorbisEncoder.format()=timeside.encode.ogg.OggVorbisEncoder-class.html#format,Method timeside.encode.wav.WavEncoder.format()=timeside.encode.wav.WavEncoder-class.html#format,Method timeside.tests.api.examples.FileDecoder.format()=timeside.tests.api.examples.FileDecoder-class.html#format,Method timeside.tests.api.gstreamer.FileDecoder.format()=timeside.tests.api.gstreamer.FileDecoder-class.html#format"><a title="timeside.analyze.format
+timeside.api.IDecoder.format
+timeside.api.IEncoder.format
+timeside.decode.flac.FlacDecoder.format
+timeside.decode.mp3.Mp3Decoder.format
+timeside.decode.ogg.OggDecoder.format
+timeside.decode.wav.WavDecoder.format
+timeside.encode.flac.FlacEncoder.format
+timeside.encode.mp3.Mp3Encoder.format
+timeside.encode.ogg.OggVorbisEncoder.format
+timeside.encode.wav.WavEncoder.format
+timeside.tests.api.examples.FileDecoder.format
+timeside.tests.api.gstreamer.FileDecoder.format" class="py-name" href="#" onclick="return doclink('link-8', 'format', 'link-8');">format</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt class="py-name">get_file_format</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Module timeside.analyze.encoding=timeside.analyze.encoding-module.html,Method timeside.api.IDecoder.encoding()=timeside.api.IDecoder-class.html#encoding,Method timeside.tests.api.examples.FileDecoder.encoding()=timeside.tests.api.examples.FileDecoder-class.html#encoding,Method timeside.tests.api.gstreamer.FileDecoder.encoding()=timeside.tests.api.gstreamer.FileDecoder-class.html#encoding"><a title="timeside.analyze.encoding
+timeside.api.IDecoder.encoding
+timeside.tests.api.examples.FileDecoder.encoding
+timeside.tests.api.gstreamer.FileDecoder.encoding" class="py-name" href="#" onclick="return doclink('link-9', 'encoding', 'link-9');">encoding</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt class="py-name">get_encoding</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.get_samples"></a><div id="AudioProcessor.get_samples-def"><a name="L52"></a><tt class="py-lineno"> 52</tt> <a class="py-toggle" href="#" id="AudioProcessor.get_samples-toggle" onclick="return toggle('AudioProcessor.get_samples');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#get_samples">get_samples</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.get_samples-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.get_samples-expanded"><a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Method timeside.grapher.core.Noise.read_frames()=timeside.grapher.core.Noise-class.html#read_frames"><a title="timeside.grapher.core.Noise.read_frames" class="py-name" href="#" onclick="return doclink('link-10', 'read_frames', 'link-10');">read_frames</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-11', 'frames', 'link-2');">frames</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">samples</tt> </tt>
+</div><a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.get_mono_samples"></a><div id="AudioProcessor.get_mono_samples-def"><a name="L56"></a><tt class="py-lineno"> 56</tt> <a class="py-toggle" href="#" id="AudioProcessor.get_mono_samples-toggle" onclick="return toggle('AudioProcessor.get_mono_samples');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#get_mono_samples">get_mono_samples</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.get_mono_samples-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.get_mono_samples-expanded"><a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-comment"># convert to mono by selecting left channel only</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Method timeside.analyze.core.AudioProcessor.get_samples()=timeside.analyze.core.AudioProcessor-class.html#get_samples"><a title="timeside.analyze.core.AudioProcessor.get_samples" class="py-name" href="#" onclick="return doclink('link-12', 'get_samples', 'link-12');">get_samples</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="timeside.analyze.channels
+timeside.api.IProcessor.channels
+timeside.core.Processor.channels
+timeside.tests.api.examples.FileDecoder.channels
+timeside.tests.api.gstreamer.FileDecoder.channels" class="py-name" href="#" onclick="return doclink('link-13', 'channels', 'link-6');">channels</a></tt> <tt class="py-op">&gt;</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">samples</tt> </tt>
+</div><a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.read"></a><div id="AudioProcessor.read-def"><a name="L64"></a><tt class="py-lineno"> 64</tt> <a class="py-toggle" href="#" id="AudioProcessor.read-toggle" onclick="return toggle('AudioProcessor.read');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#read">read</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">start</tt><tt class="py-op">,</tt> <tt class="py-param">size</tt><tt class="py-op">,</tt> <tt class="py-param">resize_if_less</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.read-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.read-expanded"><a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-docstring">""" read size samples starting at start, if resize_if_less is True and less than size</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"><tt class="py-docstring">        samples are read, resize the array to size and fill with zeros """</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-comment"># number of zeros to add to start and end of the buffer</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">add_to_start</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">        <tt class="py-name">add_to_end</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">start</tt> <tt class="py-op">&lt;</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">            <tt class="py-comment"># the first FFT window starts centered around zero</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-keyword">if</tt> <tt class="py-name">size</tt> <tt class="py-op">+</tt> <tt class="py-name">start</tt> <tt class="py-op">&lt;=</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">resize_if_less</tt><tt class="py-op">:</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">zeros</tt><tt class="py-op">(</tt><tt class="py-name">size</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">                <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">array</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Method timeside.grapher.core.Noise.seek()=timeside.grapher.core.Noise-class.html#seek"><a title="timeside.grapher.core.Noise.seek" class="py-name" href="#" onclick="return doclink('link-14', 'seek', 'link-14');">seek</a></tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line"> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">                <tt class="py-name">add_to_start</tt> <tt class="py-op">=</tt> <tt class="py-op">-</tt><tt class="py-name">start</tt> <tt class="py-comment"># remember: start is negative!</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">                <tt class="py-name">to_read</tt> <tt class="py-op">=</tt> <tt class="py-name">size</tt> <tt class="py-op">+</tt> <tt class="py-name">start</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line"> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">to_read</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-15', 'frames', 'link-2');">frames</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">                    <tt class="py-name">add_to_end</tt> <tt class="py-op">=</tt> <tt class="py-name">to_read</tt> <tt class="py-op">-</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-16', 'frames', 'link-2');">frames</a></tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">                    <tt class="py-name">to_read</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-17', 'frames', 'link-2');">frames</a></tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="timeside.grapher.core.Noise.seek" class="py-name" href="#" onclick="return doclink('link-18', 'seek', 'link-14');">seek</a></tt><tt class="py-op">(</tt><tt class="py-name">start</tt><tt class="py-op">)</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">            <tt class="py-name">to_read</tt> <tt class="py-op">=</tt> <tt class="py-name">size</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">start</tt> <tt class="py-op">+</tt> <tt class="py-name">to_read</tt> <tt class="py-op">&gt;=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-19', 'frames', 'link-2');">frames</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">                <tt class="py-name">to_read</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-20', 'frames', 'link-2');">frames</a></tt> <tt class="py-op">-</tt> <tt class="py-name">start</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">                <tt class="py-name">add_to_end</tt> <tt class="py-op">=</tt> <tt class="py-name">size</tt> <tt class="py-op">-</tt> <tt class="py-name">to_read</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">            <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">audio_file</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="timeside.grapher.core.Noise.read_frames" class="py-name" href="#" onclick="return doclink('link-21', 'read_frames', 'link-10');">read_frames</a></tt><tt class="py-op">(</tt><tt class="py-name">to_read</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">IOError</tt><tt class="py-op">:</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">            <tt class="py-comment"># this can happen for wave files with broken headers...</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-keyword">if</tt> <tt class="py-name">resize_if_less</tt><tt class="py-op">:</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">zeros</tt><tt class="py-op">(</tt><tt class="py-name">size</tt><tt class="py-op">)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">zeros</tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line"> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-comment"># convert to mono by selecting left channel only</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="timeside.analyze.channels
+timeside.api.IProcessor.channels
+timeside.core.Processor.channels
+timeside.tests.api.examples.FileDecoder.channels
+timeside.tests.api.gstreamer.FileDecoder.channels" class="py-name" href="#" onclick="return doclink('link-22', 'channels', 'link-6');">channels</a></tt> <tt class="py-op">&gt;</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">            <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">resize_if_less</tt> <tt class="py-keyword">and</tt> <tt class="py-op">(</tt><tt class="py-name">add_to_start</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt> <tt class="py-keyword">or</tt> <tt class="py-name">add_to_end</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">add_to_start</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">                <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">concatenate</tt><tt class="py-op">(</tt><tt class="py-op">(</tt><tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">zeros</tt><tt class="py-op">(</tt><tt class="py-name">add_to_start</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">samples</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">axis</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">add_to_end</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">                <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">resize</tt><tt class="py-op">(</tt><tt class="py-name">samples</tt><tt class="py-op">,</tt> <tt class="py-name">size</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">                <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-name">size</tt> <tt class="py-op">-</tt> <tt class="py-name">add_to_end</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line"> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">samples</tt> </tt>
+</div><a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line"> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.spectral_centroid"></a><div id="AudioProcessor.spectral_centroid-def"><a name="L120"></a><tt class="py-lineno">120</tt> <a class="py-toggle" href="#" id="AudioProcessor.spectral_centroid-toggle" onclick="return toggle('AudioProcessor.spectral_centroid');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#spectral_centroid">spectral_centroid</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">seek_point</tt><tt class="py-op">,</tt> <tt class="py-param">spec_range</tt><tt class="py-op">=</tt><tt class="py-number">120.0</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.spectral_centroid-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.spectral_centroid-expanded"><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-docstring">""" starting at seek_point read fft_size samples, and calculate the spectral centroid """</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line"> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name" targets="Method timeside.analyze.core.AudioProcessor.read()=timeside.analyze.core.AudioProcessor-class.html#read"><a title="timeside.analyze.core.AudioProcessor.read" class="py-name" href="#" onclick="return doclink('link-23', 'read', 'link-23');">read</a></tt><tt class="py-op">(</tt><tt class="py-name">seek_point</tt> <tt class="py-op">-</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">fft_size</tt><tt class="py-op">/</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">fft_size</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-name">samples</tt> <tt class="py-op">*=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">window</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-name">fft</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">fft</tt><tt class="py-op">.</tt><tt class="py-name">fft</tt><tt class="py-op">(</tt><tt class="py-name">samples</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-name">spectrum</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">abs</tt><tt class="py-op">(</tt><tt class="py-name">fft</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-name">fft</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">/</tt> <tt class="py-number">2</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> <tt class="py-op">/</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">fft_size</tt><tt class="py-op">)</tt> <tt class="py-comment"># normalized abs(FFT) between 0 and 1</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt class="py-name">length</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">float64</tt><tt class="py-op">(</tt><tt class="py-name">spectrum</tt><tt class="py-op">.</tt><tt class="py-name">shape</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">        <tt class="py-comment"># scale the db spectrum from [- spec_range db ... 0 db] &gt; [0..1]</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">db_spectrum</tt> <tt class="py-op">=</tt> <tt class="py-op">(</tt><tt class="py-op">(</tt><tt class="py-number">20</tt><tt class="py-op">*</tt><tt class="py-op">(</tt><tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">log10</tt><tt class="py-op">(</tt><tt class="py-name">spectrum</tt> <tt class="py-op">+</tt> <tt class="py-number">1e-30</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">clip</tt><tt class="py-op">(</tt><tt class="py-op">-</tt><tt class="py-name">spec_range</tt><tt class="py-op">,</tt> <tt class="py-number">0.0</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-name">spec_range</tt><tt class="py-op">)</tt><tt class="py-op">/</tt><tt class="py-name">spec_range</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">        <tt class="py-name">energy</tt> <tt class="py-op">=</tt> <tt class="py-name">spectrum</tt><tt class="py-op">.</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">        <tt id="link-24" class="py-name" targets="Method timeside.analyze.core.AudioProcessor.spectral_centroid()=timeside.analyze.core.AudioProcessor-class.html#spectral_centroid"><a title="timeside.analyze.core.AudioProcessor.spectral_centroid" class="py-name" href="#" onclick="return doclink('link-24', 'spectral_centroid', 'link-24');">spectral_centroid</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">energy</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">1e-20</tt><tt class="py-op">:</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">            <tt class="py-comment"># calculate the spectral centroid</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">spectrum_range</tt> <tt class="py-op">==</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">spectrum_range</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">arange</tt><tt class="py-op">(</tt><tt class="py-name">length</tt><tt class="py-op">)</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">            <tt id="link-25" class="py-name"><a title="timeside.analyze.core.AudioProcessor.spectral_centroid" class="py-name" href="#" onclick="return doclink('link-25', 'spectral_centroid', 'link-24');">spectral_centroid</a></tt> <tt class="py-op">=</tt> <tt class="py-op">(</tt><tt class="py-name">spectrum</tt> <tt class="py-op">*</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">spectrum_range</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">/</tt> <tt class="py-op">(</tt><tt class="py-name">energy</tt> <tt class="py-op">*</tt> <tt class="py-op">(</tt><tt class="py-name">length</tt> <tt class="py-op">-</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> <tt class="py-op">*</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-26" class="py-name"><a title="timeside.analyze.samplerate
+timeside.api.IProcessor.samplerate
+timeside.core.Processor.samplerate
+timeside.tests.api.examples.FileDecoder.samplerate
+timeside.tests.api.gstreamer.FileDecoder.samplerate
+timeside.tests.api.test_lolevel.samplerate" class="py-name" href="#" onclick="return doclink('link-26', 'samplerate', 'link-4');">samplerate</a></tt> <tt class="py-op">*</tt> <tt class="py-number">0.5</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line"> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">            <tt class="py-comment"># clip &gt; log10 &gt; scale between 0 and 1</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt id="link-27" class="py-name"><a title="timeside.analyze.core.AudioProcessor.spectral_centroid" class="py-name" href="#" onclick="return doclink('link-27', 'spectral_centroid', 'link-24');">spectral_centroid</a></tt> <tt class="py-op">=</tt> <tt class="py-op">(</tt><tt class="py-name">math</tt><tt class="py-op">.</tt><tt class="py-name">log10</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">clip</tt><tt class="py-op">(</tt><tt id="link-28" class="py-name"><a title="timeside.analyze.core.AudioProcessor.spectral_centroid" class="py-name" href="#" onclick="return doclink('link-28', 'spectral_centroid', 'link-24');">spectral_centroid</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">higher</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> <tt class="py-op">-</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lower_log</tt><tt class="py-op">)</tt> <tt class="py-op">/</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">higher_log</tt> <tt class="py-op">-</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">lower_log</tt><tt class="py-op">)</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line"> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-op">(</tt><tt id="link-29" class="py-name"><a title="timeside.analyze.core.AudioProcessor.spectral_centroid" class="py-name" href="#" onclick="return doclink('link-29', 'spectral_centroid', 'link-24');">spectral_centroid</a></tt><tt class="py-op">,</tt> <tt class="py-name">db_spectrum</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"> </tt>
+<a name="AudioProcessor.peaks"></a><div id="AudioProcessor.peaks-def"><a name="L150"></a><tt class="py-lineno">150</tt> <a class="py-toggle" href="#" id="AudioProcessor.peaks-toggle" onclick="return toggle('AudioProcessor.peaks');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.analyze.core.AudioProcessor-class.html#peaks">peaks</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">start_seek</tt><tt class="py-op">,</tt> <tt class="py-param">end_seek</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="AudioProcessor.peaks-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="AudioProcessor.peaks-expanded"><a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">        <tt class="py-docstring">""" read all samples between start_seek and end_seek, then find the minimum and maximum peak</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line"><tt class="py-docstring">        in that range. Returns that pair in the order they were found. So if min was found first,</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line"><tt class="py-docstring">        it returns (min, max) else the other way around. """</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line"> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">        <tt class="py-comment"># larger blocksizes are faster but take more mem...</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-comment"># Aha, Watson, a clue, a tradeof!</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">block_size</tt> <tt class="py-op">=</tt> <tt class="py-number">4096</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">        <tt class="py-name">max_index</tt> <tt class="py-op">=</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">        <tt class="py-name">max_value</tt> <tt class="py-op">=</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">        <tt class="py-name">min_index</tt> <tt class="py-op">=</tt> <tt class="py-op">-</tt><tt class="py-number">1</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">        <tt class="py-name">min_value</tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line"> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">end_seek</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-30', 'frames', 'link-2');">frames</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">            <tt class="py-name">end_seek</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="timeside.tests.api.test_lolevel.frames" class="py-name" href="#" onclick="return doclink('link-31', 'frames', 'link-2');">frames</a></tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line"> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">block_size</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">end_seek</tt> <tt class="py-op">-</tt> <tt class="py-name">start_seek</tt><tt class="py-op">:</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">            <tt class="py-name">block_size</tt> <tt class="py-op">=</tt> <tt class="py-name">end_seek</tt> <tt class="py-op">-</tt> <tt class="py-name">start_seek</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line"> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">block_size</tt> <tt class="py-op">&lt;=</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">            <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="timeside.analyze.core.AudioProcessor.read" class="py-name" href="#" onclick="return doclink('link-32', 'read', 'link-23');">read</a></tt><tt class="py-op">(</tt><tt class="py-name">start_seek</tt><tt class="py-op">,</tt> <tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">block_size</tt> <tt class="py-op">==</tt> <tt class="py-number">2</tt><tt class="py-op">:</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">            <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="timeside.analyze.core.AudioProcessor.read" class="py-name" href="#" onclick="return doclink('link-33', 'read', 'link-23');">read</a></tt><tt class="py-op">(</tt><tt class="py-name">start_seek</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line"> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">start_seek</tt><tt class="py-op">,</tt> <tt class="py-name">end_seek</tt><tt class="py-op">,</tt> <tt class="py-name">block_size</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line">            <tt class="py-name">samples</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-34" class="py-name"><a title="timeside.analyze.core.AudioProcessor.read" class="py-name" href="#" onclick="return doclink('link-34', 'read', 'link-23');">read</a></tt><tt class="py-op">(</tt><tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">block_size</tt><tt class="py-op">)</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line"> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">            <tt class="py-name">local_max_index</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">argmax</tt><tt class="py-op">(</tt><tt class="py-name">samples</tt><tt class="py-op">)</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">            <tt class="py-name">local_max_value</tt> <tt class="py-op">=</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-name">local_max_index</tt><tt class="py-op">]</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line"> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">local_max_value</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">max_value</tt><tt class="py-op">:</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">                <tt class="py-name">max_value</tt> <tt class="py-op">=</tt> <tt class="py-name">local_max_value</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">                <tt class="py-name">max_index</tt> <tt class="py-op">=</tt> <tt class="py-name">local_max_index</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line"> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">            <tt class="py-name">local_min_index</tt> <tt class="py-op">=</tt> <tt class="py-name">numpy</tt><tt class="py-op">.</tt><tt class="py-name">argmin</tt><tt class="py-op">(</tt><tt class="py-name">samples</tt><tt class="py-op">)</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">            <tt class="py-name">local_min_value</tt> <tt class="py-op">=</tt> <tt class="py-name">samples</tt><tt class="py-op">[</tt><tt class="py-name">local_min_index</tt><tt class="py-op">]</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line"> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">local_min_value</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">min_value</tt><tt class="py-op">:</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">                <tt class="py-name">min_value</tt> <tt class="py-op">=</tt> <tt class="py-name">local_min_value</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">                <tt class="py-name">min_index</tt> <tt class="py-op">=</tt> <tt class="py-name">local_min_index</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line"> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">min_index</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">max_index</tt><tt class="py-op">:</tt> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-op">(</tt><tt class="py-name">min_value</tt><tt class="py-op">,</tt> <tt class="py-name">max_value</tt><tt class="py-op">)</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-op">(</tt><tt class="py-name">max_value</tt><tt class="py-op">,</tt> <tt class="py-name">min_value</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Mar 11 15:38:40 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

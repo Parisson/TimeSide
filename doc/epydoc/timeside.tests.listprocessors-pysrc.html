@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>timeside.tests.listprocessors</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="timeside-module.html">Package&nbsp;timeside</a> ::
+        <a href="timeside.tests-module.html">Package&nbsp;tests</a> ::
+        Module&nbsp;listprocessors
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="timeside.tests.listprocessors-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="timeside.tests.listprocessors-module.html">Module timeside.tests.listprocessors</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Package timeside=timeside-module.html"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-0', 'timeside', 'link-0');">timeside</a></tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="list_processors"></a><div id="list_processors-def"><a name="L3"></a><tt class="py-lineno"> 3</tt> <a class="py-toggle" href="#" id="list_processors-toggle" onclick="return toggle('list_processors');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.tests.listprocessors-module.html#list_processors">list_processors</a><tt class="py-op">(</tt><tt class="py-param">interface</tt><tt class="py-op">,</tt> <tt class="py-param">prefix</tt><tt class="py-op">=</tt><tt class="py-string">""</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="list_processors-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="list_processors-expanded"><a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt> <tt class="py-name">prefix</tt> <tt class="py-op">+</tt> <tt class="py-name">interface</tt><tt class="py-op">.</tt><tt class="py-name">__name__</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line">    <tt class="py-name">subinterfaces</tt> <tt class="py-op">=</tt> <tt class="py-name">interface</tt><tt class="py-op">.</tt><tt class="py-name">__subclasses__</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">subinterfaces</tt><tt class="py-op">:</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line">        <tt id="link-1" class="py-name" targets="Function timeside.tests.listprocessors.list_processors()=timeside.tests.listprocessors-module.html#list_processors"><a title="timeside.tests.listprocessors.list_processors" class="py-name" href="#" onclick="return doclink('link-1', 'list_processors', 'link-1');">list_processors</a></tt><tt class="py-op">(</tt><tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-name">prefix</tt> <tt class="py-op">+</tt> <tt class="py-string">"  "</tt><tt class="py-op">)</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line">    <tt id="link-2" class="py-name" targets="Function timeside.core.processors()=timeside.core-module.html#processors"><a title="timeside.core.processors" class="py-name" href="#" onclick="return doclink('link-2', 'processors', 'link-2');">processors</a></tt> <tt class="py-op">=</tt> <tt id="link-3" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-3', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name"><a title="timeside.core.processors" class="py-name" href="#" onclick="return doclink('link-4', 'processors', 'link-2');">processors</a></tt><tt class="py-op">(</tt><tt class="py-name">interface</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">p</tt> <tt class="py-keyword">in</tt> <tt id="link-5" class="py-name"><a title="timeside.core.processors" class="py-name" href="#" onclick="return doclink('link-5', 'processors', 'link-2');">processors</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">prefix</tt> <tt class="py-op">+</tt> <tt class="py-string">"  %s [%s]"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">p</tt><tt class="py-op">.</tt><tt class="py-name">__name__</tt><tt class="py-op">,</tt> <tt class="py-name">p</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Static Method timeside.analyze.channels.ChannelAnalyser.id()=timeside.analyze.channels.ChannelAnalyser-class.html#id,Static Method timeside.analyze.dc.MeanDCShiftAnalyser.id()=timeside.analyze.dc.MeanDCShiftAnalyser-class.html#id,Static Method timeside.analyze.duration.DurationAnalyzer.id()=timeside.analyze.duration.DurationAnalyzer-class.html#id,Static Method timeside.analyze.encoding.EncodingAnalyser.id()=timeside.analyze.encoding.EncodingAnalyser-class.html#id,Static Method timeside.analyze.format.FormatAnalyser.id()=timeside.analyze.format.FormatAnalyser-class.html#id,Static Method timeside.analyze.max_level.MaxLevelAnalyzer.id()=timeside.analyze.max_level.MaxLevelAnalyzer-class.html#id,Static Method timeside.analyze.mean_level.MeanLevelAnalyser.id()=timeside.analyze.mean_level.MeanLevelAnalyser-class.html#id,Static Method timeside.analyze.resolution.ResolutionAnalyser.id()=timeside.analyze.resolution.ResolutionAnalyser-class.html#id,Static Method timeside.analyze.samplerate.SampleRateAnalyzer.id()=timeside.analyze.samplerate.SampleRateAnalyzer-class.html#id,Method timeside.analyze.vamp.core.VampCoreAnalyzer.id()=timeside.analyze.vamp.core.VampCoreAnalyzer-class.html#id,Static Method timeside.api.IProcessor.id()=timeside.api.IProcessor-class.html#id,Static Method timeside.decode.flac.FlacDecoder.id()=timeside.decode.flac.FlacDecoder-class.html#id,Static Method timeside.decode.mp3.Mp3Decoder.id()=timeside.decode.mp3.Mp3Decoder-class.html#id,Static Method timeside.decode.ogg.OggDecoder.id()=timeside.decode.ogg.OggDecoder-class.html#id,Static Method timeside.decode.wav.WavDecoder.id()=timeside.decode.wav.WavDecoder-class.html#id,Static Method timeside.encode.flac.FlacEncoder.id()=timeside.encode.flac.FlacEncoder-class.html#id,Static Method timeside.encode.mp3.Mp3Encoder.id()=timeside.encode.mp3.Mp3Encoder-class.html#id,Static Method timeside.encode.ogg.OggVorbisEncoder.id()=timeside.encode.ogg.OggVorbisEncoder-class.html#id,Static Method timeside.encode.wav.WavEncoder.id()=timeside.encode.wav.WavEncoder-class.html#id,Static Method timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.id()=timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab-class.html#id,Static Method timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.id()=timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab-class.html#id,Static Method timeside.tests.api.examples.Duration.id()=timeside.tests.api.examples.Duration-class.html#id,Static Method timeside.tests.api.examples.FileDecoder.id()=timeside.tests.api.examples.FileDecoder-class.html#id,Static Method timeside.tests.api.examples.FixedInputProcessor.id()=timeside.tests.api.examples.FixedInputProcessor-class.html#id,Static Method timeside.tests.api.examples.Gain.id()=timeside.tests.api.examples.Gain-class.html#id,Static Method timeside.tests.api.examples.MaxLevel.id()=timeside.tests.api.examples.MaxLevel-class.html#id,Static Method timeside.tests.api.examples.Spectrogram.id()=timeside.tests.api.examples.Spectrogram-class.html#id,Static Method timeside.tests.api.examples.WavEncoder.id()=timeside.tests.api.examples.WavEncoder-class.html#id,Static Method timeside.tests.api.examples.Waveform.id()=timeside.tests.api.examples.Waveform-class.html#id,Static Method timeside.tests.api.gstreamer.FileDecoder.id()=timeside.tests.api.gstreamer.FileDecoder-class.html#id,Static Method timeside.tests.api.gstreamer.WavEncoder.id()=timeside.tests.api.gstreamer.WavEncoder-class.html#id"><a title="timeside.analyze.channels.ChannelAnalyser.id
+timeside.analyze.dc.MeanDCShiftAnalyser.id
+timeside.analyze.duration.DurationAnalyzer.id
+timeside.analyze.encoding.EncodingAnalyser.id
+timeside.analyze.format.FormatAnalyser.id
+timeside.analyze.max_level.MaxLevelAnalyzer.id
+timeside.analyze.mean_level.MeanLevelAnalyser.id
+timeside.analyze.resolution.ResolutionAnalyser.id
+timeside.analyze.samplerate.SampleRateAnalyzer.id
+timeside.analyze.vamp.core.VampCoreAnalyzer.id
+timeside.api.IProcessor.id
+timeside.decode.flac.FlacDecoder.id
+timeside.decode.mp3.Mp3Decoder.id
+timeside.decode.ogg.OggDecoder.id
+timeside.decode.wav.WavDecoder.id
+timeside.encode.flac.FlacEncoder.id
+timeside.encode.mp3.Mp3Encoder.id
+timeside.encode.ogg.OggVorbisEncoder.id
+timeside.encode.wav.WavEncoder.id
+timeside.grapher.spectrogram_audiolab.SpectrogramGrapherAudiolab.id
+timeside.grapher.waveform_audiolab.WaveFormGrapherAudiolab.id
+timeside.tests.api.examples.Duration.id
+timeside.tests.api.examples.FileDecoder.id
+timeside.tests.api.examples.FixedInputProcessor.id
+timeside.tests.api.examples.Gain.id
+timeside.tests.api.examples.MaxLevel.id
+timeside.tests.api.examples.Spectrogram.id
+timeside.tests.api.examples.WavEncoder.id
+timeside.tests.api.examples.Waveform.id
+timeside.tests.api.gstreamer.FileDecoder.id
+timeside.tests.api.gstreamer.WavEncoder.id" class="py-name" href="#" onclick="return doclink('link-6', 'id', 'link-6');">id</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt id="link-7" class="py-name"><a title="timeside.tests.listprocessors.list_processors" class="py-name" href="#" onclick="return doclink('link-7', 'list_processors', 'link-1');">list_processors</a></tt><tt class="py-op">(</tt><tt id="link-8" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-8', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Module timeside.api=timeside.api-module.html,Package timeside.tests.api=timeside.tests.api-module.html"><a title="timeside.api
+timeside.tests.api" class="py-name" href="#" onclick="return doclink('link-9', 'api', 'link-9');">api</a></tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Class timeside.api.IProcessor=timeside.api.IProcessor-class.html"><a title="timeside.api.IProcessor" class="py-name" href="#" onclick="return doclink('link-10', 'IProcessor', 'link-10');">IProcessor</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Mar 11 15:38:41 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

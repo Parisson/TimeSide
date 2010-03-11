@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>timeside.tests.api.test_pipe</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="timeside-module.html">Package&nbsp;timeside</a> ::
+        <a href="timeside.tests-module.html">Package&nbsp;tests</a> ::
+        <a href="timeside.tests.api-module.html">Package&nbsp;api</a> ::
+        Module&nbsp;test_pipe
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="timeside.tests.api.test_pipe-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="timeside.tests.api.test_pipe-module.html">Module timeside.tests.api.test_pipe</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package timeside=timeside-module.html"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-0', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package timeside.tests=timeside.tests-module.html"><a title="timeside.tests" class="py-name" href="#" onclick="return doclink('link-1', 'tests', 'link-1');">tests</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module timeside.api=timeside.api-module.html,Package timeside.tests.api=timeside.tests.api-module.html"><a title="timeside.api
+timeside.tests.api" class="py-name" href="#" onclick="return doclink('link-2', 'api', 'link-2');">api</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Module timeside.tests.api.examples=timeside.tests.api.examples-module.html"><a title="timeside.tests.api.examples" class="py-name" href="#" onclick="return doclink('link-3', 'examples', 'link-3');">examples</a></tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-4', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Module timeside.analyze.core=timeside.analyze.core-module.html,Module timeside.analyze.vamp.core=timeside.analyze.vamp.core-module.html,Module timeside.core=timeside.core-module.html,Module timeside.decode.core=timeside.decode.core-module.html,Module timeside.encode.core=timeside.encode.core-module.html,Module timeside.grapher.core=timeside.grapher.core-module.html"><a title="timeside.analyze.core
+timeside.analyze.vamp.core
+timeside.core
+timeside.decode.core
+timeside.encode.core
+timeside.grapher.core" class="py-name" href="#" onclick="return doclink('link-5', 'core', 'link-5');">core</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-6', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-7" class="py-name"><a title="timeside.api
+timeside.tests.api" class="py-name" href="#" onclick="return doclink('link-7', 'api', 'link-2');">api</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">sys</tt> <tt class="py-keyword">import</tt> <tt class="py-name">stdout</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt id="link-8" class="py-name" targets="Variable timeside.tests.api.test_lolevel.use_gst=timeside.tests.api.test_lolevel-module.html#use_gst,Variable timeside.tests.api.test_pipe.use_gst=timeside.tests.api.test_pipe-module.html#use_gst,Variable timeside.tests.api.test_pipe_spectrogram.use_gst=timeside.tests.api.test_pipe_spectrogram-module.html#use_gst,Variable timeside.tests.api.test_pipe_waveform.use_gst=timeside.tests.api.test_pipe_waveform-module.html#use_gst"><a title="timeside.tests.api.test_lolevel.use_gst
+timeside.tests.api.test_pipe.use_gst
+timeside.tests.api.test_pipe_spectrogram.use_gst
+timeside.tests.api.test_pipe_waveform.use_gst" class="py-name" href="#" onclick="return doclink('link-8', 'use_gst', 'link-8');">use_gst</a></tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt id="link-9" class="py-name"><a title="timeside.tests.api.test_lolevel.use_gst
+timeside.tests.api.test_pipe.use_gst
+timeside.tests.api.test_pipe_spectrogram.use_gst
+timeside.tests.api.test_pipe_waveform.use_gst" class="py-name" href="#" onclick="return doclink('link-9', 'use_gst', 'link-8');">use_gst</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">    <tt class="py-keyword">from</tt> <tt id="link-10" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-10', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="timeside.tests" class="py-name" href="#" onclick="return doclink('link-11', 'tests', 'link-1');">tests</a></tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="timeside.api
+timeside.tests.api" class="py-name" href="#" onclick="return doclink('link-12', 'api', 'link-2');">api</a></tt><tt class="py-op">.</tt><tt id="link-13" class="py-name" targets="Module timeside.tests.api.gstreamer=timeside.tests.api.gstreamer-module.html"><a title="timeside.tests.api.gstreamer" class="py-name" href="#" onclick="return doclink('link-13', 'gstreamer', 'link-13');">gstreamer</a></tt> <tt class="py-keyword">import</tt> <tt id="link-14" class="py-name" targets="Class timeside.tests.api.examples.FileDecoder=timeside.tests.api.examples.FileDecoder-class.html,Class timeside.tests.api.gstreamer.FileDecoder=timeside.tests.api.gstreamer.FileDecoder-class.html"><a title="timeside.tests.api.examples.FileDecoder
+timeside.tests.api.gstreamer.FileDecoder" class="py-name" href="#" onclick="return doclink('link-14', 'FileDecoder', 'link-14');">FileDecoder</a></tt><tt class="py-op">,</tt> <tt id="link-15" class="py-name" targets="Class timeside.encode.wav.WavEncoder=timeside.encode.wav.WavEncoder-class.html,Class timeside.tests.api.examples.WavEncoder=timeside.tests.api.examples.WavEncoder-class.html,Class timeside.tests.api.gstreamer.WavEncoder=timeside.tests.api.gstreamer.WavEncoder-class.html"><a title="timeside.encode.wav.WavEncoder
+timeside.tests.api.examples.WavEncoder
+timeside.tests.api.gstreamer.WavEncoder" class="py-name" href="#" onclick="return doclink('link-15', 'WavEncoder', 'link-15');">WavEncoder</a></tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line">    <tt class="py-keyword">from</tt> <tt id="link-16" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-16', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="timeside.tests" class="py-name" href="#" onclick="return doclink('link-17', 'tests', 'link-1');">tests</a></tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="timeside.api
+timeside.tests.api" class="py-name" href="#" onclick="return doclink('link-18', 'api', 'link-2');">api</a></tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="timeside.tests.api.examples" class="py-name" href="#" onclick="return doclink('link-19', 'examples', 'link-3');">examples</a></tt> <tt class="py-keyword">import</tt> <tt id="link-20" class="py-name"><a title="timeside.tests.api.examples.FileDecoder
+timeside.tests.api.gstreamer.FileDecoder" class="py-name" href="#" onclick="return doclink('link-20', 'FileDecoder', 'link-14');">FileDecoder</a></tt><tt class="py-op">,</tt> <tt id="link-21" class="py-name"><a title="timeside.encode.wav.WavEncoder
+timeside.tests.api.examples.WavEncoder
+timeside.tests.api.gstreamer.WavEncoder" class="py-name" href="#" onclick="return doclink('link-21', 'WavEncoder', 'link-15');">WavEncoder</a></tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt id="link-22" class="py-name" targets="Variable timeside.tests.api.test_lolevel.source=timeside.tests.api.test_lolevel-module.html#source,Variable timeside.tests.api.test_pipe.source=timeside.tests.api.test_pipe-module.html#source,Variable timeside.tests.api.test_pipe_spectrogram.source=timeside.tests.api.test_pipe_spectrogram-module.html#source,Variable timeside.tests.api.test_pipe_waveform.source=timeside.tests.api.test_pipe_waveform-module.html#source"><a title="timeside.tests.api.test_lolevel.source
+timeside.tests.api.test_pipe.source
+timeside.tests.api.test_pipe_spectrogram.source
+timeside.tests.api.test_pipe_waveform.source" class="py-name" href="#" onclick="return doclink('link-22', 'source', 'link-22');">source</a></tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">dirname</tt><tt class="py-op">(</tt><tt class="py-name">__file__</tt><tt class="py-op">)</tt><tt class="py-op">,</tt>  <tt class="py-string">"../samples/guitar.wav"</tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-keyword">print</tt> <tt class="py-string">"Normalizing %s"</tt> <tt class="py-op">%</tt> <tt id="link-23" class="py-name"><a title="timeside.tests.api.test_lolevel.source
+timeside.tests.api.test_pipe.source
+timeside.tests.api.test_pipe_spectrogram.source
+timeside.tests.api.test_pipe_waveform.source" class="py-name" href="#" onclick="return doclink('link-23', 'source', 'link-22');">source</a></tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt id="link-24" class="py-name" targets="Variable timeside.tests.api.test_lolevel.decoder=timeside.tests.api.test_lolevel-module.html#decoder,Variable timeside.tests.api.test_pipe.decoder=timeside.tests.api.test_pipe-module.html#decoder,Variable timeside.tests.api.test_pipe_spectrogram.decoder=timeside.tests.api.test_pipe_spectrogram-module.html#decoder,Variable timeside.tests.api.test_pipe_waveform.decoder=timeside.tests.api.test_pipe_waveform-module.html#decoder"><a title="timeside.tests.api.test_lolevel.decoder
+timeside.tests.api.test_pipe.decoder
+timeside.tests.api.test_pipe_spectrogram.decoder
+timeside.tests.api.test_pipe_waveform.decoder" class="py-name" href="#" onclick="return doclink('link-24', 'decoder', 'link-24');">decoder</a></tt>  <tt class="py-op">=</tt> <tt id="link-25" class="py-name"><a title="timeside.tests.api.examples.FileDecoder
+timeside.tests.api.gstreamer.FileDecoder" class="py-name" href="#" onclick="return doclink('link-25', 'FileDecoder', 'link-14');">FileDecoder</a></tt><tt class="py-op">(</tt><tt id="link-26" class="py-name"><a title="timeside.tests.api.test_lolevel.source
+timeside.tests.api.test_pipe.source
+timeside.tests.api.test_pipe_spectrogram.source
+timeside.tests.api.test_pipe_waveform.source" class="py-name" href="#" onclick="return doclink('link-26', 'source', 'link-22');">source</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt id="link-27" class="py-name" targets="Variable timeside.tests.api.test_pipe.maxlevel=timeside.tests.api.test_pipe-module.html#maxlevel"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-27', 'maxlevel', 'link-27');">maxlevel</a></tt> <tt class="py-op">=</tt> <tt id="link-28" class="py-name"><a title="timeside.tests.api.examples" class="py-name" href="#" onclick="return doclink('link-28', 'examples', 'link-3');">examples</a></tt><tt class="py-op">.</tt><tt id="link-29" class="py-name" targets="Class timeside.tests.api.examples.MaxLevel=timeside.tests.api.examples.MaxLevel-class.html"><a title="timeside.tests.api.examples.MaxLevel" class="py-name" href="#" onclick="return doclink('link-29', 'MaxLevel', 'link-29');">MaxLevel</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt id="link-30" class="py-name" targets="Module timeside.analyze.duration=timeside.analyze.duration-module.html,Variable timeside.tests.api.test_pipe.duration=timeside.tests.api.test_pipe-module.html#duration"><a title="timeside.analyze.duration
+timeside.tests.api.test_pipe.duration" class="py-name" href="#" onclick="return doclink('link-30', 'duration', 'link-30');">duration</a></tt> <tt class="py-op">=</tt> <tt id="link-31" class="py-name"><a title="timeside.tests.api.examples" class="py-name" href="#" onclick="return doclink('link-31', 'examples', 'link-3');">examples</a></tt><tt class="py-op">.</tt><tt id="link-32" class="py-name" targets="Class timeside.tests.api.examples.Duration=timeside.tests.api.examples.Duration-class.html"><a title="timeside.tests.api.examples.Duration" class="py-name" href="#" onclick="return doclink('link-32', 'Duration', 'link-32');">Duration</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-op">(</tt><tt id="link-33" class="py-name"><a title="timeside.tests.api.test_lolevel.decoder
+timeside.tests.api.test_pipe.decoder
+timeside.tests.api.test_pipe_spectrogram.decoder
+timeside.tests.api.test_pipe_waveform.decoder" class="py-name" href="#" onclick="return doclink('link-33', 'decoder', 'link-24');">decoder</a></tt> <tt class="py-op">|</tt> <tt id="link-34" class="py-name"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-34', 'maxlevel', 'link-27');">maxlevel</a></tt> <tt class="py-op">|</tt> <tt id="link-35" class="py-name"><a title="timeside.analyze.duration
+timeside.tests.api.test_pipe.duration" class="py-name" href="#" onclick="return doclink('link-35', 'duration', 'link-30');">duration</a></tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name" targets="Method timeside.core.ProcessPipe.run()=timeside.core.ProcessPipe-class.html#run,Method timeside.tests.TestRunner.run()=timeside.tests.TestRunner-class.html#run,Method timeside.tests.test.TestAnalyzers.run()=timeside.tests.test.TestAnalyzers-class.html#run,Method timeside.tests.test.TestEncoders.run()=timeside.tests.test.TestEncoders-class.html#run,Method timeside.tests.test.TestGraphers.run()=timeside.tests.test.TestGraphers-class.html#run"><a title="timeside.core.ProcessPipe.run
+timeside.tests.TestRunner.run
+timeside.tests.test.TestAnalyzers.run
+timeside.tests.test.TestEncoders.run
+timeside.tests.test.TestGraphers.run" class="py-name" href="#" onclick="return doclink('link-36', 'run', 'link-36');">run</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt id="link-37" class="py-name" targets="Variable timeside.tests.api.test_lolevel.gain=timeside.tests.api.test_lolevel-module.html#gain,Variable timeside.tests.api.test_pipe.gain=timeside.tests.api.test_pipe-module.html#gain"><a title="timeside.tests.api.test_lolevel.gain
+timeside.tests.api.test_pipe.gain" class="py-name" href="#" onclick="return doclink('link-37', 'gain', 'link-37');">gain</a></tt> <tt class="py-op">=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt id="link-38" class="py-name"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-38', 'maxlevel', 'link-27');">maxlevel</a></tt><tt class="py-op">.</tt><tt id="link-39" class="py-name" targets="Method timeside.api.IValueAnalyzer.result()=timeside.api.IValueAnalyzer-class.html#result,Method timeside.tests.api.examples.Duration.result()=timeside.tests.api.examples.Duration-class.html#result,Method timeside.tests.api.examples.MaxLevel.result()=timeside.tests.api.examples.MaxLevel-class.html#result"><a title="timeside.api.IValueAnalyzer.result
+timeside.tests.api.examples.Duration.result
+timeside.tests.api.examples.MaxLevel.result" class="py-name" href="#" onclick="return doclink('link-39', 'result', 'link-39');">result</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-number">0</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">    <tt id="link-40" class="py-name"><a title="timeside.tests.api.test_lolevel.gain
+timeside.tests.api.test_pipe.gain" class="py-name" href="#" onclick="return doclink('link-40', 'gain', 'link-37');">gain</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0.9</tt> <tt class="py-op">/</tt> <tt id="link-41" class="py-name"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-41', 'maxlevel', 'link-27');">maxlevel</a></tt><tt class="py-op">.</tt><tt id="link-42" class="py-name"><a title="timeside.api.IValueAnalyzer.result
+timeside.tests.api.examples.Duration.result
+timeside.tests.api.examples.MaxLevel.result" class="py-name" href="#" onclick="return doclink('link-42', 'result', 'link-39');">result</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-keyword">print</tt> <tt class="py-string">"input maxlevel: %f"</tt> <tt class="py-op">%</tt> <tt id="link-43" class="py-name"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-43', 'maxlevel', 'link-27');">maxlevel</a></tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="timeside.api.IValueAnalyzer.result
+timeside.tests.api.examples.Duration.result
+timeside.tests.api.examples.MaxLevel.result" class="py-name" href="#" onclick="return doclink('link-44', 'result', 'link-39');">result</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-keyword">print</tt> <tt class="py-string">"gain: %f"</tt> <tt class="py-op">%</tt> <tt id="link-45" class="py-name"><a title="timeside.tests.api.test_lolevel.gain
+timeside.tests.api.test_pipe.gain" class="py-name" href="#" onclick="return doclink('link-45', 'gain', 'link-37');">gain</a></tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-keyword">print</tt> <tt class="py-string">"duration: %f %s"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-46" class="py-name"><a title="timeside.analyze.duration
+timeside.tests.api.test_pipe.duration" class="py-name" href="#" onclick="return doclink('link-46', 'duration', 'link-30');">duration</a></tt><tt class="py-op">.</tt><tt id="link-47" class="py-name"><a title="timeside.api.IValueAnalyzer.result
+timeside.tests.api.examples.Duration.result
+timeside.tests.api.examples.MaxLevel.result" class="py-name" href="#" onclick="return doclink('link-47', 'result', 'link-39');">result</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-48" class="py-name"><a title="timeside.analyze.duration
+timeside.tests.api.test_pipe.duration" class="py-name" href="#" onclick="return doclink('link-48', 'duration', 'link-30');">duration</a></tt><tt class="py-op">.</tt><tt id="link-49" class="py-name" targets="Method timeside.analyze.channels.ChannelAnalyser.unit()=timeside.analyze.channels.ChannelAnalyser-class.html#unit,Method timeside.analyze.dc.MeanDCShiftAnalyser.unit()=timeside.analyze.dc.MeanDCShiftAnalyser-class.html#unit,Method timeside.analyze.duration.DurationAnalyzer.unit()=timeside.analyze.duration.DurationAnalyzer-class.html#unit,Method timeside.analyze.encoding.EncodingAnalyser.unit()=timeside.analyze.encoding.EncodingAnalyser-class.html#unit,Method timeside.analyze.format.FormatAnalyser.unit()=timeside.analyze.format.FormatAnalyser-class.html#unit,Method timeside.analyze.max_level.MaxLevelAnalyzer.unit()=timeside.analyze.max_level.MaxLevelAnalyzer-class.html#unit,Method timeside.analyze.mean_level.MeanLevelAnalyser.unit()=timeside.analyze.mean_level.MeanLevelAnalyser-class.html#unit,Method timeside.analyze.resolution.ResolutionAnalyser.unit()=timeside.analyze.resolution.ResolutionAnalyser-class.html#unit,Method timeside.analyze.samplerate.SampleRateAnalyzer.unit()=timeside.analyze.samplerate.SampleRateAnalyzer-class.html#unit,Method timeside.analyze.vamp.core.VampCoreAnalyzer.unit()=timeside.analyze.vamp.core.VampCoreAnalyzer-class.html#unit,Static Method timeside.api.IAnalyzer.unit()=timeside.api.IAnalyzer-class.html#unit,Static Method timeside.tests.api.examples.Duration.unit()=timeside.tests.api.examples.Duration-class.html#unit,Static Method timeside.tests.api.examples.MaxLevel.unit()=timeside.tests.api.examples.MaxLevel-class.html#unit"><a title="timeside.analyze.channels.ChannelAnalyser.unit
+timeside.analyze.dc.MeanDCShiftAnalyser.unit
+timeside.analyze.duration.DurationAnalyzer.unit
+timeside.analyze.encoding.EncodingAnalyser.unit
+timeside.analyze.format.FormatAnalyser.unit
+timeside.analyze.max_level.MaxLevelAnalyzer.unit
+timeside.analyze.mean_level.MeanLevelAnalyser.unit
+timeside.analyze.resolution.ResolutionAnalyser.unit
+timeside.analyze.samplerate.SampleRateAnalyzer.unit
+timeside.analyze.vamp.core.VampCoreAnalyzer.unit
+timeside.api.IAnalyzer.unit
+timeside.tests.api.examples.Duration.unit
+timeside.tests.api.examples.MaxLevel.unit" class="py-name" href="#" onclick="return doclink('link-49', 'unit', 'link-49');">unit</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt id="link-50" class="py-name"><a title="timeside.tests.api.test_lolevel.gain
+timeside.tests.api.test_pipe.gain" class="py-name" href="#" onclick="return doclink('link-50', 'gain', 'link-37');">gain</a></tt>     <tt class="py-op">=</tt> <tt id="link-51" class="py-name"><a title="timeside.tests.api.examples" class="py-name" href="#" onclick="return doclink('link-51', 'examples', 'link-3');">examples</a></tt><tt class="py-op">.</tt><tt id="link-52" class="py-name" targets="Class timeside.tests.api.examples.Gain=timeside.tests.api.examples.Gain-class.html"><a title="timeside.tests.api.examples.Gain" class="py-name" href="#" onclick="return doclink('link-52', 'Gain', 'link-52');">Gain</a></tt><tt class="py-op">(</tt><tt id="link-53" class="py-name"><a title="timeside.tests.api.test_lolevel.gain
+timeside.tests.api.test_pipe.gain" class="py-name" href="#" onclick="return doclink('link-53', 'gain', 'link-37');">gain</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"><tt id="link-54" class="py-name" targets="Variable timeside.tests.api.test_lolevel.encoder=timeside.tests.api.test_lolevel-module.html#encoder,Variable timeside.tests.api.test_pipe.encoder=timeside.tests.api.test_pipe-module.html#encoder"><a title="timeside.tests.api.test_lolevel.encoder
+timeside.tests.api.test_pipe.encoder" class="py-name" href="#" onclick="return doclink('link-54', 'encoder', 'link-54');">encoder</a></tt>  <tt class="py-op">=</tt> <tt id="link-55" class="py-name"><a title="timeside.encode.wav.WavEncoder
+timeside.tests.api.examples.WavEncoder
+timeside.tests.api.gstreamer.WavEncoder" class="py-name" href="#" onclick="return doclink('link-55', 'WavEncoder', 'link-15');">WavEncoder</a></tt><tt class="py-op">(</tt><tt class="py-string">"normalized.wav"</tt><tt class="py-op">)</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt id="link-56" class="py-name" targets="Variable timeside.tests.api.test_pipe.fixed=timeside.tests.api.test_pipe-module.html#fixed"><a title="timeside.tests.api.test_pipe.fixed" class="py-name" href="#" onclick="return doclink('link-56', 'fixed', 'link-56');">fixed</a></tt>    <tt class="py-op">=</tt> <tt id="link-57" class="py-name"><a title="timeside.tests.api.examples" class="py-name" href="#" onclick="return doclink('link-57', 'examples', 'link-3');">examples</a></tt><tt class="py-op">.</tt><tt id="link-58" class="py-name" targets="Class timeside.tests.api.examples.FixedInputProcessor=timeside.tests.api.examples.FixedInputProcessor-class.html"><a title="timeside.tests.api.examples.FixedInputProcessor" class="py-name" href="#" onclick="return doclink('link-58', 'FixedInputProcessor', 'link-58');">FixedInputProcessor</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt id="link-59" class="py-name" targets="Variable timeside.tests.api.test_pipe.subpipe=timeside.tests.api.test_pipe-module.html#subpipe"><a title="timeside.tests.api.test_pipe.subpipe" class="py-name" href="#" onclick="return doclink('link-59', 'subpipe', 'link-59');">subpipe</a></tt>  <tt class="py-op">=</tt> <tt id="link-60" class="py-name"><a title="timeside.tests.api.test_lolevel.gain
+timeside.tests.api.test_pipe.gain" class="py-name" href="#" onclick="return doclink('link-60', 'gain', 'link-37');">gain</a></tt> <tt class="py-op">|</tt> <tt id="link-61" class="py-name"><a title="timeside.tests.api.test_pipe.fixed" class="py-name" href="#" onclick="return doclink('link-61', 'fixed', 'link-56');">fixed</a></tt> <tt class="py-op">|</tt> <tt id="link-62" class="py-name"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-62', 'maxlevel', 'link-27');">maxlevel</a></tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt class="py-op">(</tt><tt id="link-63" class="py-name"><a title="timeside.tests.api.test_lolevel.decoder
+timeside.tests.api.test_pipe.decoder
+timeside.tests.api.test_pipe_spectrogram.decoder
+timeside.tests.api.test_pipe_waveform.decoder" class="py-name" href="#" onclick="return doclink('link-63', 'decoder', 'link-24');">decoder</a></tt> <tt class="py-op">|</tt> <tt id="link-64" class="py-name"><a title="timeside.tests.api.test_pipe.subpipe" class="py-name" href="#" onclick="return doclink('link-64', 'subpipe', 'link-59');">subpipe</a></tt> <tt class="py-op">|</tt> <tt id="link-65" class="py-name"><a title="timeside.tests.api.test_lolevel.encoder
+timeside.tests.api.test_pipe.encoder" class="py-name" href="#" onclick="return doclink('link-65', 'encoder', 'link-54');">encoder</a></tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-66" class="py-name"><a title="timeside.core.ProcessPipe.run
+timeside.tests.TestRunner.run
+timeside.tests.test.TestAnalyzers.run
+timeside.tests.test.TestEncoders.run
+timeside.tests.test.TestGraphers.run" class="py-name" href="#" onclick="return doclink('link-66', 'run', 'link-36');">run</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt class="py-keyword">print</tt> <tt class="py-string">"output maxlevel: %f"</tt> <tt class="py-op">%</tt> <tt id="link-67" class="py-name"><a title="timeside.tests.api.test_pipe.maxlevel" class="py-name" href="#" onclick="return doclink('link-67', 'maxlevel', 'link-27');">maxlevel</a></tt><tt class="py-op">.</tt><tt id="link-68" class="py-name"><a title="timeside.api.IValueAnalyzer.result
+timeside.tests.api.examples.Duration.result
+timeside.tests.api.examples.MaxLevel.result" class="py-name" href="#" onclick="return doclink('link-68', 'result', 'link-39');">result</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Mar 11 15:38:42 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

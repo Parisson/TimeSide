@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>timeside.decode.core</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="timeside-module.html">Package&nbsp;timeside</a> ::
+        <a href="timeside.decode-module.html">Package&nbsp;decode</a> ::
+        Module&nbsp;core
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="timeside.decode.core-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="timeside.decode.core-module.html">Module timeside.decode.core</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># Copyright (c) 2007-2009 Guillaume Pellerin &lt;yomguy@parisson.com&gt;</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-comment"># This file is part of TimeSide.</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-comment"># TimeSide is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># the Free Software Foundation, either version 2 of the License, or</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-comment"># TimeSide is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment"># along with TimeSide.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-comment"># Author: Guillaume Pellerin &lt;yomguy@parisson.com&gt;</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package timeside=timeside-module.html"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-0', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package timeside.decode=timeside.decode-module.html"><a title="timeside.decode" class="py-name" href="#" onclick="return doclink('link-1', 'decode', 'link-1');">decode</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-2" class="py-name"><a title="timeside" class="py-name" href="#" onclick="return doclink('link-2', 'timeside', 'link-0');">timeside</a></tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Module timeside.analyze.core=timeside.analyze.core-module.html,Module timeside.analyze.vamp.core=timeside.analyze.vamp.core-module.html,Module timeside.core=timeside.core-module.html,Module timeside.decode.core=timeside.decode.core-module.html,Module timeside.encode.core=timeside.encode.core-module.html,Module timeside.grapher.core=timeside.grapher.core-module.html"><a title="timeside.analyze.core
+timeside.analyze.vamp.core
+timeside.core
+timeside.decode.core
+timeside.encode.core
+timeside.grapher.core" class="py-name" href="#" onclick="return doclink('link-3', 'core', 'link-3');">core</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">subprocess</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"> </tt>
+<a name="SubProcessPipe"></a><div id="SubProcessPipe-def"><a name="L27"></a><tt class="py-lineno">27</tt> <a class="py-toggle" href="#" id="SubProcessPipe-toggle" onclick="return toggle('SubProcessPipe');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="timeside.decode.core.SubProcessPipe-class.html">SubProcessPipe</a><tt class="py-op">:</tt> </tt>
+</div><div id="SubProcessPipe-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="SubProcessPipe-expanded"><a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"> </tt>
+<a name="SubProcessPipe.__init__"></a><div id="SubProcessPipe.__init__-def"><a name="L29"></a><tt class="py-lineno">29</tt> <a class="py-toggle" href="#" id="SubProcessPipe.__init__-toggle" onclick="return toggle('SubProcessPipe.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.decode.core.SubProcessPipe-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">command</tt><tt class="py-op">,</tt> <tt class="py-param">stdin</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SubProcessPipe.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="SubProcessPipe.__init__-expanded"><a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">        <tt class="py-docstring">"""Read media and stream data through a generator.</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-docstring">        Taken from Telemeta (see http://telemeta.org)"""</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">buffer_size</tt> <tt class="py-op">=</tt> <tt class="py-number">0xFFFF</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">stdin</tt><tt class="py-op">:</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">            <tt class="py-name">stdin</tt> <tt class="py-op">=</tt>  <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">PIPE</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">proc</tt> <tt class="py-op">=</tt> <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-name">command</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Package timeside.encode=timeside.encode-module.html"><a title="timeside.encode" class="py-name" href="#" onclick="return doclink('link-4', 'encode', 'link-4');">encode</a></tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">                    <tt class="py-name">shell</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">                    <tt class="py-name">bufsize</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">buffer_size</tt><tt class="py-op">,</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">                    <tt class="py-name">stdin</tt> <tt class="py-op">=</tt> <tt class="py-name">stdin</tt><tt class="py-op">,</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">                    <tt class="py-name">stdout</tt> <tt class="py-op">=</tt> <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">                    <tt class="py-name">close_fds</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">input</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">proc</tt><tt class="py-op">.</tt><tt class="py-name">stdin</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">output</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">proc</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt> </tt>
+</div></div><a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"> </tt>
+<a name="DecoderCore"></a><div id="DecoderCore-def"><a name="L49"></a><tt class="py-lineno">49</tt> <a class="py-toggle" href="#" id="DecoderCore-toggle" onclick="return toggle('DecoderCore');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="timeside.decode.core.DecoderCore-class.html">DecoderCore</a><tt class="py-op">(</tt><tt class="py-base-class">Processor</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DecoderCore-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="DecoderCore-expanded"><a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">    <tt class="py-docstring">"""Defines the main parts of the decoding tools :</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"><tt class="py-docstring">    paths, metadata parsing, data streaming thru system command"""</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"> </tt>
+<a name="DecoderCore.__init__"></a><div id="DecoderCore.__init__-def"><a name="L53"></a><tt class="py-lineno">53</tt> <a class="py-toggle" href="#" id="DecoderCore.__init__-toggle" onclick="return toggle('DecoderCore.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.decode.core.DecoderCore-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DecoderCore.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="DecoderCore.__init__-expanded"><a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">command</tt> <tt class="py-op">=</tt> <tt class="py-string">'ffmpeg -i "%s" -f wav - '</tt> </tt>
+</div><a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line"> </tt>
+<a name="DecoderCore.process"></a><div id="DecoderCore.process-def"><a name="L56"></a><tt class="py-lineno">56</tt> <a class="py-toggle" href="#" id="DecoderCore.process-toggle" onclick="return toggle('DecoderCore.process');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="timeside.decode.core.DecoderCore-class.html#process">process</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">source</tt><tt class="py-op">,</tt> <tt class="py-param">options</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="DecoderCore.process-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="DecoderCore.process-expanded"><a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">        <tt class="py-docstring">"""Encode and stream audio data through a generator"""</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line"> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">        <tt class="py-name">command</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">command</tt> <tt class="py-op">%</tt> <tt id="link-5" class="py-name" targets="Variable timeside.tests.api.test_lolevel.source=timeside.tests.api.test_lolevel-module.html#source,Variable timeside.tests.api.test_pipe.source=timeside.tests.api.test_pipe-module.html#source,Variable timeside.tests.api.test_pipe_spectrogram.source=timeside.tests.api.test_pipe_spectrogram-module.html#source,Variable timeside.tests.api.test_pipe_waveform.source=timeside.tests.api.test_pipe_waveform-module.html#source"><a title="timeside.tests.api.test_lolevel.source
+timeside.tests.api.test_pipe.source
+timeside.tests.api.test_pipe_spectrogram.source
+timeside.tests.api.test_pipe_waveform.source" class="py-name" href="#" onclick="return doclink('link-5', 'source', 'link-5');">source</a></tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">        <tt class="py-name">proc</tt> <tt class="py-op">=</tt> <tt id="link-6" class="py-name" targets="Class timeside.decode.core.SubProcessPipe=timeside.decode.core.SubProcessPipe-class.html,Class timeside.encode.core.SubProcessPipe=timeside.encode.core.SubProcessPipe-class.html"><a title="timeside.decode.core.SubProcessPipe
+timeside.encode.core.SubProcessPipe" class="py-name" href="#" onclick="return doclink('link-6', 'SubProcessPipe', 'link-6');">SubProcessPipe</a></tt><tt class="py-op">(</tt><tt class="py-name">command</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">proc</tt><tt class="py-op">.</tt><tt class="py-name">output</tt> </tt>
+</div></div><a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line"> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-comment">#while True:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#__chunk = proc.output.read(self.proc.buffer_size)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#status = proc.poll()</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#if status != None and status != 0:</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line"><tt class="py-comment"></tt>                <tt class="py-comment">#raise ExportProcessError('Command failure:', command, proc)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#if len(__chunk) == 0:</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line"><tt class="py-comment"></tt>                <tt class="py-comment">#break</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line"><tt class="py-comment"></tt>            <tt class="py-comment">#yield __chunk</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="timeside-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Mar 11 15:38:41 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
