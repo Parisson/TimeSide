@@ -2,6 +2,7 @@
 from timeside.tests.api import examples
 from timeside.core import *
 from timeside.api import *
+import os.path
 
 use_gst = 1
 if use_gst:
@@ -10,7 +11,7 @@ else:
     from timeside.tests.api.examples import FileDecoder, WavEncoder
 
 image_file = './spectrogram.png'
-source = '../samples/sweep.wav'
+source = os.path.join(os.path.dirname(__file__), "../samples/sweep.wav")
 
 decoder  = FileDecoder(source)
 spectrogram = examples.Spectrogram(width=1024, height=256, output=image_file, bg_color=(0,0,0), color_scheme='default')

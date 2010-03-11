@@ -26,9 +26,7 @@
 import optparse, math, sys
 import ImageFilter, ImageChops, Image, ImageDraw, ImageColor
 import numpy
-import scikits.audiolab as audiolab
 from timeside.core import FixedSizeInputAdapter
-import Queue
 
 
 color_schemes = {
@@ -52,17 +50,15 @@ color_schemes = {
 
 class SpectralCentroid(object):
 
-    def __init__(self, fft_size, nframes, samplerate, window_function=numpy.ones):
+    def __init__(self, fft_size, nframes, samplerate, lower, higher, window_function=numpy.ones):
         self.fft_size = fft_size
-        self.buffer_size = self.fft_size
         self.window = window_function(self.fft_size)
         self.spectrum_range = None
-        self.lower = 100
-        self.higher = 22050
+        self.lower = lower
+        self.higher = higher
         self.lower_log = math.log10(self.lower)
         self.higher_log = math.log10(self.higher)
         self.clip = lambda val, low, high: min(high, max(low, val))
-        self.q = Queue.Queue()
         self.nframes = nframes
         self.samplerate = samplerate
         self.spectrum_adapter = FixedSizeInputAdapter(self.fft_size, 1, pad=True)
@@ -127,14 +123,13 @@ def interpolate_colors(colors, flat=False, num_colors=256):
 
 class WaveformImage(object):
 
-    def __init__(self, image_width, image_height, nframes, samplerate, buffer_size, bg_color=None, color_scheme=None, filename=None):
+    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color=None, color_scheme=None, filename=None):
 
         self.image_width = image_width
         self.image_height = image_height
         self.nframes = nframes
         self.samplerate = samplerate
-        self.fft_size = buffer_size
-        self.buffer_size = buffer_size
+        self.fft_size = fft_size
         self.filename = filename
 
         self.bg_color = bg_color
@@ -147,9 +142,13 @@ class WaveformImage(object):
         self.color_lookup = interpolate_colors(colors)
 
         self.samples_per_pixel = self.nframes / float(self.image_width)
-        self.peaks_adapter = FixedSizeInputAdapter(int(self.samples_per_pixel), 1, pad=False)
-        self.peaks_adapter_nframes = self.peaks_adapter.nframes(self.nframes)
-        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, numpy.hanning)
+        self.buffer_size = int(round(self.samples_per_pixel, 0))
+        self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
+        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
+
+        self.lower = 500
+        self.higher = 16000
+        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
         self.image = Image.new("RGB", (self.image_width, self.image_height), self.bg_color)
         self.pixel = self.image.load()
@@ -231,15 +230,14 @@ class WaveformImage(object):
             buffer = frames.copy()
         else:
             buffer = frames[:,0].copy()
-            buffer.shape = (len(buffer),1)
+            buffer.shape = (len(frames),1)
 
         (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
-        for samples, end in self.peaks_adapter.process(buffer, eod):
-            if self.pixel_cursor == self.image_width:
-                break
-            peaks = self.peaks(samples)
-            self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
-            self.pixel_cursor += 1
+        for samples, end in self.pixels_adapter.process(buffer, eod):
+            if self.pixel_cursor < self.image_width:
+                peaks = self.peaks(samples)
+                self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
+                self.pixel_cursor += 1
 
     def save(self):
         a = 25
@@ -250,29 +248,32 @@ class WaveformImage(object):
 
 class SpectrogramImage(object):
 
-    def __init__(self, image_width, image_height, nframes, samplerate, buffer_size, bg_color=None, color_scheme=None, filename=None):
+    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color=None, color_scheme='default', filename=None):
         self.image_width = image_width
         self.image_height = image_height
         self.nframes = nframes
         self.samplerate = samplerate
-        self.fft_size = buffer_size
-        self.buffer_size = buffer_size
+        self.fft_size = fft_size
         self.filename = filename
-        if not color_scheme:
-            color_scheme = 'default'
+        self.color_scheme = color_scheme
+
         self.image = Image.new("P", (self.image_height, self.image_width))
-        colors = color_schemes[color_scheme]['spectrogram']
+        colors = color_schemes[self.color_scheme]['spectrogram']
         self.image.putpalette(interpolate_colors(colors, True))
 
         self.samples_per_pixel = self.nframes / float(self.image_width)
-        self.peaks_adapter = FixedSizeInputAdapter(int(self.samples_per_pixel), 1, pad=False)
-        self.peaks_adapter_nframes = self.peaks_adapter.nframes(self.nframes)
-        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, numpy.hanning)
+        self.buffer_size = int(round(self.samples_per_pixel, 0))
+        self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
+        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
+
+        self.lower = 20
+        self.higher = 16000
+        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
         # generate the lookup which translates y-coordinate to fft-bin
         self.y_to_bin = []
-        f_min = 100.0
-        f_max = 22050.0
+        f_min = float(self.lower)
+        f_max = float(self.higher)
         y_min = math.log10(f_min)
         y_max = math.log10(f_max)
         for y in range(self.image_height):
@@ -305,12 +306,12 @@ class SpectrogramImage(object):
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
 
-        (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
-        for samples, end in self.peaks_adapter.process(buffer, eod):
-            if self.pixel_cursor == self.image_width:
-                break
-            self.draw_spectrum(self.pixel_cursor, db_spectrum)
-            self.pixel_cursor += 1
+        # FIXME : breaks spectrum linearity
+        for samples, end in self.pixels_adapter.process(buffer, eod):
+            if self.pixel_cursor < self.image_width:
+                (spectral_centroid, db_spectrum) = self.spectral_centroid.process(samples, False)
+                self.draw_spectrum(self.pixel_cursor, db_spectrum)
+                self.pixel_cursor += 1
 
     def save(self):
         self.image.putdata(self.pixels)
