@@ -17,27 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Guillaume Pellerin <yomguy@parisson.com>
+# Authors:
+#   Guillaume Pellerin <yomguy at parisson.com>
 
-from timeside.analyze.core import *
-from timeside.api import IAnalyzer
+from timeside.core import *
+from timeside.grapher.core import *
 import numpy
 
-class EncodingAnalyser(AudioProcessor):
-    """Media item analyzer driver interface"""
-
-    implements(IAnalyzer)
-
-    @staticmethod
-    def id():
-        return "encoding"
-
-    def name(self):
-        return "Encoding format"
-
-    def unit(self):
-        return ""
-
-    def render(self, media_item, options=None):
-        self.pre_process(media_item)
-        return self.encoding

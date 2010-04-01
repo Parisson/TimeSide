@@ -48,7 +48,8 @@ color_schemes = {
 }
 
 
-class SpectralCentroid(object):
+class Spectrum(object):
+    """ FFT based frequency analysis of audio frames."""
 
     def __init__(self, fft_size, nframes, samplerate, lower, higher, window_function=numpy.ones):
         self.fft_size = fft_size
@@ -64,6 +65,8 @@ class SpectralCentroid(object):
         self.spectrum_adapter = FixedSizeInputAdapter(self.fft_size, 1, pad=True)
 
     def process(self, frames, eod, spec_range=120.0):
+        """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
+            An adapter is used to fix the buffer length and then provide fixed FFT window sizes."""
 
         for buffer, end in self.spectrum_adapter.process(frames, True):
             samples = buffer[:,0].copy()
@@ -92,7 +95,7 @@ class SpectralCentroid(object):
 
 
 def interpolate_colors(colors, flat=False, num_colors=256):
-    """ given a list of colors, create a larger list of colors interpolating
+    """ Given a list of colors, create a larger list of colors interpolating
     the first one. If flatten is True a list of numers will be returned. If
     False, a list of (r,g,b) tuples. num_colors is the number of colors wanted
     in the final list """
@@ -122,9 +125,11 @@ def interpolate_colors(colors, flat=False, num_colors=256):
 
 
 class WaveformImage(object):
+    """ Builds a PIL image representing a waveform of the audio stream.
+    Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
+    Peaks are colored relative to the spectral centroids of each frame packet. """
 
     def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color=None, color_scheme=None, filename=None):
-
         self.image_width = image_width
         self.image_height = image_height
         self.nframes = nframes
@@ -148,7 +153,7 @@ class WaveformImage(object):
 
         self.lower = 500
         self.higher = 16000
-        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
+        self.spectrum = Spectrum(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
         self.image = Image.new("RGB", (self.image_width, self.image_height), self.bg_color)
         self.pixel = self.image.load()
@@ -158,9 +163,9 @@ class WaveformImage(object):
         self.pixel_cursor = 0
 
     def peaks(self, samples):
-        """ read all samples between start_seek and end_seek, then find the minimum and maximum peak
-        in that range. Returns that pair in the order they were found. So if min was found first,
-        it returns (min, max) else the other way around. """
+        """ Find the minimum and maximum peak of the samples.
+        Returns that pair in the order they were found.
+        So if min was found first, it returns (min, max) else the other way around. """
 
         max_index = numpy.argmax(samples)
         max_value = samples[max_index]
@@ -232,7 +237,7 @@ class WaveformImage(object):
             buffer = frames[:,0].copy()
             buffer.shape = (len(frames),1)
 
-        (spectral_centroid, db_spectrum) = self.spectral_centroid.process(buffer, True)
+        (spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
         for samples, end in self.pixels_adapter.process(buffer, eod):
             if self.pixel_cursor < self.image_width:
                 peaks = self.peaks(samples)
@@ -240,6 +245,7 @@ class WaveformImage(object):
                 self.pixel_cursor += 1
 
     def save(self):
+        """ Apply last 2D transforms and write all pixels to the file. """
         a = 25
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
@@ -247,6 +253,8 @@ class WaveformImage(object):
 
 
 class SpectrogramImage(object):
+    """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
+    Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
 
     def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color=None, color_scheme='default', filename=None):
         self.image_width = image_width
@@ -268,7 +276,7 @@ class SpectrogramImage(object):
 
         self.lower = 20
         self.higher = 16000
-        self.spectral_centroid = SpectralCentroid(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
+        self.spectrum = Spectrum(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
         # generate the lookup which translates y-coordinate to fft-bin
         self.y_to_bin = []
@@ -309,11 +317,12 @@ class SpectrogramImage(object):
         # FIXME : breaks spectrum linearity
         for samples, end in self.pixels_adapter.process(buffer, eod):
             if self.pixel_cursor < self.image_width:
-                (spectral_centroid, db_spectrum) = self.spectral_centroid.process(samples, False)
+                (spectral_centroid, db_spectrum) = self.spectrum.process(samples, False)
                 self.draw_spectrum(self.pixel_cursor, db_spectrum)
                 self.pixel_cursor += 1
 
     def save(self):
+        """ Apply last 2D transforms and write all pixels to the file. """
         self.image.putdata(self.pixels)
         self.image.transpose(Image.ROTATE_90).save(self.filename)
 
@@ -322,6 +331,7 @@ class Noise(object):
     """A class that mimics audiolab.sndfile but generates noise instead of reading
     a wave file. Additionally it can be told to have a "broken" header and thus crashing
     in the middle of the file. Also useful for testing ultra-short files of 20 samples."""
+
     def __init__(self, num_frames, has_broken_header=False):
         self.seekpoint = 0
         self.num_frames = num_frames

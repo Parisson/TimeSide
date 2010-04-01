@@ -20,18 +20,17 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-
-from timeside.encode import *
 from timeside.core import *
-
 import subprocess
 
 class SubProcessPipe:
-    """Read media and stream data through a generator.
-    Taken from Telemeta (see http://telemeta.org)"""
 
     def __init__(self, command, stdin=None):
+        """Read media and stream data through a generator.
+        Taken from Telemeta (see http://telemeta.org)"""
+
         self.buffer_size = 0xFFFF
+
         if not stdin:
             stdin =  subprocess.PIPE
 
@@ -45,23 +44,29 @@ class SubProcessPipe:
         self.input = self.proc.stdin
         self.output = self.proc.stdout
 
-class EncoderCore(Processor):
-    """Defines the main parts of the encoding tools :
+
+class DecoderCore(Processor):
+    """Defines the main parts of the decoding tools :
     paths, metadata parsing, data streaming thru system command"""
 
-    def core_process(self, command, stdin):
+    def __init__(self):
+        self.command = 'ffmpeg -i "%s" -f wav - '
+
+    def process(self, source, options=None):
         """Encode and stream audio data through a generator"""
 
-        proc = SubProcessPipe(command, stdin)
+        command = self.command % source
+        proc = SubProcessPipe(command)
+        return proc.output
 
-        while True:
-            __chunk = proc.output.read(proc.buffer_size)
+        #while True:
+            #__chunk = proc.output.read(self.proc.buffer_size)
             #status = proc.poll()
             #if status != None and status != 0:
-                #raise EncodeProcessError('Command failure:', command, proc)
-            if len(__chunk) == 0:
-                break
-            yield __chunk
+                #raise ExportProcessError('Command failure:', command, proc)
+            #if len(__chunk) == 0:
+                #break
+            #yield __chunk
 
 
 

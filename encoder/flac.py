@@ -23,7 +23,7 @@ import os
 import string
 import subprocess
 
-from timeside.encode.core import *
+from timeside.encoder.core import *
 from timeside.api import IEncoder
 from tempfile import NamedTemporaryFile
 
@@ -41,7 +41,7 @@ class FlacEncoder(EncoderCore):
     @staticmethod
     def id():
         return "flacenc"
-    
+
     def format(self):
         return 'FLAC'
 
@@ -121,7 +121,7 @@ class FlacEncoder(EncoderCore):
         command = 'flac %s - -o %s ' % (args, temp_file.name)
 
         stream = self.core_process(command, source)
-        
+
         for __chunk in stream:
             #temp_file.write(__chunk)
             #temp_file.flush()

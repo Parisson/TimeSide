@@ -24,7 +24,7 @@ import os
 import string
 import subprocess
 
-from timeside.encode.core import *
+from timeside.encoder.core import *
 from timeside.api import IEncoder
 
 
@@ -55,7 +55,7 @@ class Mp3Encoder(EncoderCore):
     @staticmethod
     def id():
         return "mp3enc"
-    
+
     def format(self):
         return 'MP3'
 

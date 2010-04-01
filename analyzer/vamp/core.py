@@ -36,7 +36,7 @@ class VampCoreAnalyzer:
         # needs vamp-examples package
         self.host = 'vamp-simple-host'
         self.buffer_size = 0xFFFF
-               
+
     def id(self):
         return "vamp_plugins"
 
@@ -69,7 +69,7 @@ class VampCoreAnalyzer:
     def get_wav_path(self, media_item):
         return settings.MEDIA_ROOT + '/' + media_item.file
         #return media_item
-        
+
     def render(self, plugin, media_item):
         self.wavFile = self.get_wav_path(media_item)
         args = ' -s ' + ':'.join(plugin) + ' ' + str(self.wavFile)
@@ -88,7 +88,7 @@ class VampCoreAnalyzer:
 
     def core_process(self, command, buffer_size):
         """Encode and stream audio data through a generator"""
-        
+
         __chunk = 0
 
         try:
@@ -100,7 +100,7 @@ class VampCoreAnalyzer:
                     close_fds = True)
         except:
             raise SubProcessError('Command failure:', command, proc)
-            
+
         # Core processing
         while True:
             __chunk = proc.stdout.read(buffer_size)
@@ -110,5 +110,5 @@ class VampCoreAnalyzer:
             if len(__chunk) == 0:
                 break
             yield __chunk
-        
+
 

@@ -19,26 +19,44 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.analyze.core import *
+from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
 import numpy
 
-class MeanDCShiftAnalyser(AudioProcessor):
-    """Media item analyzer driver interface"""
 
+class MeanLevel(Processor):
     implements(IValueAnalyzer)
 
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(MeanLevel, self).setup(channels, samplerate, nframes)
+        self.value = -140
+
     @staticmethod
+    @interfacedoc
     def id():
-        return "dc"
+        return "meanlevel"
 
-    def name(self):
-        return "Mean DC shift"
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Mean RMS level"
 
-    def unit(self):
-        return "%"
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return "dB"
 
-    def render(self, media_item, options=None):
-        self.pre_process(media_item)
-        samples = self.get_mono_samples()
-        return numpy.round(100*numpy.mean(samples),4)
+    def __str__(self):
+        return "%s %s" % (str(self.value), unit())
+
+    def process(self, frames, eod=False):
+        max = numpy.round(20*numpy.log10(numpy.mean(numpy.sqrt(numpy.square(frames.max())))), 2)
+        if max > self.value:
+            self.value = max
+
+        return frames, eod
+
+    def result(self):
+        return self.value
+

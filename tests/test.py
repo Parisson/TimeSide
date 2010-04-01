@@ -12,13 +12,7 @@ class TestAnalyzers:
 
     def list(self):
         analyzers = []
-        for analyzer_class in self.analyzers:
-            # FIXME: should access the name, id and unit member statically
-            # there should be no need to instantiate analyzer_class
-            # eg: access directly analyzer_class.name(), etc...
-            #
-            # This remark is true at many places in this file
-            analyzer = analyzer_class()
+        for analyzer in self.analyzers:
             analyzers.append({'name':analyzer.name(),
                             'id':analyzer.id(),
                             'unit':analyzer.unit(),
@@ -27,8 +21,7 @@ class TestAnalyzers:
 
     def run(self, media):
         print '\n=== Analyzer testing ===\n'
-        for analyzer_class in self.analyzers:
-            analyzer = analyzer_class()
+        for analyzer in self.analyzers:
             id = analyzer.id()
             value = analyzer.render(media)
             print id + ' = ' + str(value) + ' ' + analyzer.unit()
@@ -39,8 +32,7 @@ class TestDecoders:
 
     def list(self):
         decoders_list = []
-        for decoder_class in self.decoders:
-            decoder = decoder_class()
+        for decoder in self.decoders:
             decoders_list.append({'format': decoder.format(),
                             'mime_type': decoder.mime_type(),
                             'file_extension': decoder.file_extension(),
@@ -48,8 +40,7 @@ class TestDecoders:
         print decoders_list
 
     def get_decoder(self, mime_type):
-        for decoder_class in self.decoders:
-            decoder = decoder_class()
+        for decoder in self.decoders:
             if decoder.mime_type() == mime_type:
                 return decoder
 
@@ -76,24 +67,21 @@ class TestEncoders:
 
     def list(self):
         encoders = []
-        for encoder_class in self.encoders:
-            encoder = encoder_class()
+        for encoder in self.encoders:
             encoders.append({'format': encoder.format(),
                             'mime_type': encoder.mime_type(),
                             })
         print encoders
 
     def get_encoder(self, mime_type):
-        for encoder_class in self.encoders:
-            encoder = encoder_class()
+        for encoder in self.encoders:
             if encoder.mime_type() == mime_type:
                 return encoder
 
     def run(self, source, metadata):
         print '\n=== Encoder testing ===\n'
-        for encoder_class in self.encoders:
+        for encoder in self.encoders:
             print '=================================='
-            encoder = encoder_class()
             mime = mimetype(source)
             format = encoder.format()
             decoders = TestDecoders()
@@ -115,8 +103,7 @@ class TestGraphers:
 
     def list(self):
         graphers = []
-        for grapher_class in self.graphers:
-            grapher = grapher_class()
+        for grapher in self.graphers:
             graphers.append({'id':grapher.id(),
                             'name':grapher.name(),
                             })
@@ -124,8 +111,7 @@ class TestGraphers:
 
     def run(self, media):
         print '\n=== Grapher testing ===\n'
-        for grapher_class in self.graphers:
-            grapher = grapher_class()
+        for grapher in self.graphers:
             id = grapher.id()
             image = grapher.render(media)
             file_path = 'results/'+id+'.png'
@@ -134,6 +120,7 @@ class TestGraphers:
                 file.write(chunk)
             print 'Image exported to :' + file_path
             file.close()
+
 
 def mimetype(path):
     if hasattr(magic, "Magic"):
@@ -155,13 +142,13 @@ if __name__ == '__main__':
     a = TestAnalyzers()
     d = TestDecoders()
     e = TestEncoders()
-    #g = TestGraphers()
+    g = TestGraphers()
     a.list()
     d.list()
     e.list()
-    #g.list()
+    g.list()
     a.run(sample)
-    #g.run(sample)
+    g.run(sample)
     e.run(sample, metadata)
     d.export('samples/')
 

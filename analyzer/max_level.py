@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007-2009 Guillaume Pellerin <yomguy@parisson.com>
+# Copyright (c) 2009 Olivier Guilyardi <olivier@samalyse.com>
 
 # This file is part of TimeSide.
 
@@ -19,27 +20,44 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.analyze.core import *
+from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
 import numpy
 
-class MaxLevelAnalyzer(AudioProcessor):
-    """Media item analyzer driver interface"""
 
+class MaxLevel(Processor):
     implements(IValueAnalyzer)
 
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(MaxLevel, self).setup(channels, samplerate, nframes)
+        self.value = -140
+
     @staticmethod
+    @interfacedoc
     def id():
-        return "max_level"
+        return "maxlevel"
 
     @staticmethod
+    @interfacedoc
     def name():
-        return "Maximum peak level"
+        return "Max level"
 
-    def unit(self):
+    @staticmethod
+    @interfacedoc
+    def unit():
         return "dB"
 
-    def render(self, media_item, options=None):
-        self.pre_process(media_item)
-        samples = self.get_samples()
-        return numpy.round(20*numpy.log10(numpy.max(samples)),2)
+    def __str__(self):
+        return "%s %s" % (str(self.value), unit())
+
+    def process(self, frames, eod=False):
+        max = numpy.round(20*numpy.log10(frames.max()), 2)
+        if max > self.value:
+            self.value = max
+
+        return frames, eod
+
+    def result(self):
+        return self.value
+

@@ -19,25 +19,41 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.analyze.core import *
-from timeside.api import IAnalyzer
+from timeside.analyzer.core import *
+from timeside.api import IValueAnalyzer
 import numpy
 
-class FormatAnalyser(AudioProcessor):
-    """Media item analyzer driver interface"""
 
-    implements(IAnalyzer)
+class MeanDCShift(Processor):
+    implements(IValueAnalyzer)
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(MeanDCShift, self).setup(channels, samplerate, nframes)
+        self.value = 0
 
     @staticmethod
+    @interfacedoc
     def id():
-        return "format"
+        return "dc"
 
-    def name(self):
-        return "File format"
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Mean DC shift"
 
-    def unit(self):
-        return ""
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return "%"
 
-    def render(self, media_item, options=None):
-        self.pre_process(media_item)
-        return self.format
+    def __str__(self):
+        return "%s %s" % (str(self.value), unit())
+
+    def process(self, frames, eod=False):
+        self.value = numpy.round(100*numpy.mean(samples),4)
+        return frames, eod
+
+    def result(self):
+        return self.value
+

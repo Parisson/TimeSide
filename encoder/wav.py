@@ -21,20 +21,22 @@
 
 import os
 import string
-import subprocess
 
-from timeside.decode.core import *
-from timeside.api import IDecoder
+from timeside.encoder.core import *
+from timeside.api import IEncoder
 
-class WavDecoder(DecoderCore):
-    """Defines methods to decode from WAV"""
+class WavEncoder(EncoderCore):
+    """Defines methods to encode to WAV"""
 
-    implements(IDecoder)
+    implements(IEncoder)
+
+    def __init__(self):
+        pass
 
     @staticmethod
     def id():
-        return "wavdec"
-    
+        return "wavenc"
+
     def format(self):
         return 'WAV'
 
@@ -65,5 +67,13 @@ class WavDecoder(DecoderCore):
             self.info = info
             return self.info
         except:
-            raise IOError('DecoderError: wavinfo id not installed or file does not exist.')
+            raise IOError('EncoderError: wavinfo id not installed or file does not exist.')
 
+    def process(self, source, metadata, options=None):
+        self.metadata = metadata
+        self.options = options
+        command = 'sox -t wav - -s -q -b 16 -r 44100 -t wav -c2 -'
+
+        stream = self.core_process(command, source)
+        for __chunk in stream:
+            yield __chunk
