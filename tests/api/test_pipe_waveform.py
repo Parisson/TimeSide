@@ -11,7 +11,7 @@ else:
     from timeside.tests.api.examples import FileDecoder
 
 sample_dir = '../samples'
-img_dir = './img'
+img_dir = '../results/img'
 if not os.path.exists(img_dir):
     os.mkdir(img_dir)
 
@@ -22,10 +22,10 @@ test_dict = {'sweep.wav': 'waveform_wav.png',
             }
 
 for source, image in test_dict.iteritems():
-    source = os.path.join(os.path.dirname(__file__), sample_dir + os.sep + source)
+    audio = os.path.join(os.path.dirname(__file__), sample_dir + os.sep + source)
     image = img_dir + os.sep + image
     print 'Test : decoder(%s) | waveform (%s)' % (source, image)
-    decoder  = FileDecoder(source)
+    decoder  = FileDecoder(audio)
     waveform = examples.Waveform(width=1024, height=256, output=image, bg_color=(0,0,0), color_scheme='default')
     (decoder | waveform).run()
     print 'frames per pixel = ', waveform.graph.samples_per_pixel
