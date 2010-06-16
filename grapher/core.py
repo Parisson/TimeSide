@@ -72,6 +72,7 @@ class Spectrum(object):
             samples = buffer[:,0].copy()
             if end:
                 break
+
         samples *= self.window
         fft = numpy.fft.fft(samples)
         spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(self.fft_size) # normalized abs(FFT) between 0 and 1
@@ -143,7 +144,9 @@ class WaveformImage(object):
         self.color_scheme = color_scheme
         if not color_scheme:
             self.color_scheme = 'default'
-        colors = color_schemes[self.color_scheme]['waveform']
+            colors = color_schemes[self.color_scheme]['waveform']
+        if isinstance(color_scheme, dict):
+            colors = color_scheme['waveform']
         self.color_lookup = interpolate_colors(colors)
 
         self.samples_per_pixel = self.nframes / float(self.image_width)
@@ -151,8 +154,8 @@ class WaveformImage(object):
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
         self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
 
-        self.lower = 500
-        self.higher = 16000
+        self.lower = 800
+        self.higher = 12000
         self.spectrum = Spectrum(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
         self.image = Image.new("RGB", (self.image_width, self.image_height), self.bg_color)
@@ -246,7 +249,7 @@ class WaveformImage(object):
 
     def save(self):
         """ Apply last 2D transforms and write all pixels to the file. """
-        a = 25
+        a = 0
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(self.filename)
@@ -274,8 +277,8 @@ class SpectrogramImage(object):
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
         self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
 
-        self.lower = 20
-        self.higher = 16000
+        self.lower = 100
+        self.higher = 22050
         self.spectrum = Spectrum(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
         # generate the lookup which translates y-coordinate to fft-bin
@@ -314,6 +317,7 @@ class SpectrogramImage(object):
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
 
+        print len(buffer)
         # FIXME : breaks spectrum linearity
         for samples, end in self.pixels_adapter.process(buffer, eod):
             if self.pixel_cursor < self.image_width:

@@ -265,7 +265,7 @@ class Waveform(Processor):
 class Spectrogram(Processor):
     implements(IGrapher)
 
-    FFT_SIZE = 0x1000
+    FFT_SIZE = 0x400
 
     @interfacedoc
     def __init__(self, width=None, height=None, output=None, bg_color=None, color_scheme=None):
