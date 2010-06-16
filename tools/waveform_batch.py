@@ -20,6 +20,8 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
+version = '0.1.beta'
+
 import os
 import sys
 from timeside.tests.api import examples
@@ -82,7 +84,7 @@ if __name__ == '__main__':
         print """
         Usage : python waveform_batch.py /path/to/media_dir /path/to/img_dir
 
-        Dependencies : python, python-numpy, python-gst0.10, gstreamer0.10-plugins-base
+        Dependencies : timeside, python, python-numpy, python-gst0.10, gstreamer0.10-plugins-base
         See http://code.google.com/p/timeside/ for more information.
         """
     else:
@@ -90,5 +92,3 @@ if __name__ == '__main__':
         img_dir = sys.argv[-1]
         m = Media2Waveform(media_dir, img_dir)
         m.process()
-
-

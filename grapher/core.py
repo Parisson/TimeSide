@@ -144,7 +144,7 @@ class WaveformImage(object):
         self.color_scheme = color_scheme
         if not color_scheme:
             self.color_scheme = 'default'
-            colors = color_schemes[self.color_scheme]['waveform']
+        colors = color_schemes[self.color_scheme]['waveform']
         if isinstance(color_scheme, dict):
             colors = color_scheme['waveform']
         self.color_lookup = interpolate_colors(colors)
