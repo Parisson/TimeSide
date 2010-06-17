@@ -20,7 +20,6 @@
 # Authors:
 #   Guillaume Pellerin <yomguy at parisson.com>
 
-from timeside.core import *
-from timeside.grapher.core import *
-import numpy
+pass
+
 

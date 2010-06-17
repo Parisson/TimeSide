@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-from timeside.tests.api import examples
+from timeside.tests.api.examples import Gain
 from timeside.core import *
+from timeside.decoder import *
+from timeside.analyzer import *
+from timeside.encoder import *
 from timeside.api import *
 from sys import stdout
-
-use_gst = 1
-if use_gst:
-    from timeside.tests.api.gstreamer import FileDecoder, WavEncoder
-else:
-    from timeside.tests.api.examples import FileDecoder, WavEncoder
 
 import os.path
 source = os.path.join(os.path.dirname(__file__),  "../samples/guitar.wav")
 
 print "Normalizing %s" % source
 decoder  = FileDecoder(source)
-maxlevel = examples.MaxLevel()
-duration = examples.Duration()
+maxlevel = MaxLevel()
+duration = Duration()
 
 (decoder | maxlevel | duration).run()
 
@@ -28,11 +25,10 @@ print "input maxlevel: %f" % maxlevel.result()
 print "gain: %f" % gain
 print "duration: %f %s" % (duration.result(), duration.unit())
 
-gain     = examples.Gain(gain)
+gain     = Gain(gain)
 encoder  = WavEncoder("normalized.wav")
-fixed    = examples.FixedInputProcessor()
 
-subpipe  = gain | fixed | maxlevel
+subpipe  = gain | maxlevel
 
 (decoder | subpipe | encoder).run()
 

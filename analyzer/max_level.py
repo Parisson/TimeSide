@@ -20,9 +20,9 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
-import numpy
 
 
 class MaxLevel(Processor):
@@ -31,7 +31,7 @@ class MaxLevel(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(MaxLevel, self).setup(channels, samplerate, nframes)
-        self.value = -140
+        self.max_value = 0
 
     @staticmethod
     @interfacedoc
@@ -46,18 +46,17 @@ class MaxLevel(Processor):
     @staticmethod
     @interfacedoc
     def unit():
-        return "dB"
-
-    def __str__(self):
-        return "%s %s" % (str(self.value), unit())
+        # power? amplitude?
+        return ""
 
     def process(self, frames, eod=False):
-        max = numpy.round(20*numpy.log10(frames.max()), 2)
-        if max > self.value:
-            self.value = max
+        max = frames.max()
+        if max > self.max_value:
+            self.max_value = max
 
         return frames, eod
 
     def result(self):
-        return self.value
+        return self.max_value
+
 

@@ -1,13 +1,37 @@
-==============
-README (draft)
-==============
+======
+README
+======
 
-# Dependencies
-# ============
+TimeSide is a set of client and server side components for audio-enabling web sites and applications. It includes a powerful DHTML-based interactive player, with support for time-marking. The server side components provide generic APIs for easy transcoding, metadata embedding, sound visualization and audio analysis.
 
-python (>= 2.3.5-7), python-xml, python-mutagen, python-imaging (>= 1.1.6),
-python-numpy, python-scipy, python-scikits-audiolab (>= 0.10),
-python-setuptools (>= 0.6b3), python-support (>= 0.3), python-ctypes (>= 1.0.1),
-libsndfile1 (>= 1.0.17), sox (>= 14.2), vorbis-tools, flac, libgd2-xpm,
-lame (>= 3.98.2)
+Platforms
+=========
 
+TimeSide is intended to work on all Unix / Linux platforms.
+MacOS X and Windows versions will soon be explorated.
+
+Dependencies
+============
+
+python (>= 2.4), python-xml, python-mutagen, python-imaging (>= 1.1.6),
+python-numpy, python-setuptools (>= 0.6b3), libsndfile1 (>= 1.0.17), 
+python-gst0.10, gstreamer0.10-plugins-base
+
+License
+=======
+
+TimeSide is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+TimeSide is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+
+Contact and Informations
+========================
+
+See http://code.google.com/p/timeside/

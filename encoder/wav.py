@@ -19,61 +19,106 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-import os
-import string
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2007-2009 Parisson
+# Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
+# Copyright (c) 2007-2009 Guillaume Pellerin <pellerin@parisson.com>
+#
+# This file is part of TimeSide.
 
-from timeside.encoder.core import *
+# TimeSide is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
+# Author: Paul Brossier <piem@piem.org>
+
+from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
+from numpy import array, frombuffer, getbuffer, float32
 
-class WavEncoder(EncoderCore):
-    """Defines methods to encode to WAV"""
+import pygst
+pygst.require('0.10')
+import gst
+import gobject
+gobject.threads_init ()
 
+
+class WavEncoder(Processor):
+    """ gstreamer-based encoder """
     implements(IEncoder)
 
-    def __init__(self):
-        pass
+    def __init__(self, output):
+        self.file = None
+        if isinstance(output, basestring):
+            self.filename = output
+        else:
+            raise Exception("Streaming not supported")
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(WavEncoder, self).setup(channels, samplerate, nframes)
+        # TODO open file for writing
+        # the output data format we want
+        pipeline = gst.parse_launch(''' appsrc name=src
+            ! audioconvert
+            ! wavenc
+            ! filesink location=%s ''' % self.filename)
+        # store a pointer to appsink in our encoder object 
+        self.src = pipeline.get_by_name('src')
+        srccaps = gst.Caps("""audio/x-raw-float,
+            endianness=(int)1234,
+            channels=(int)%s,
+            width=(int)32,
+            rate=(int)%d""" % (int(channels), int(samplerate)))
+        self.src.set_property("caps", srccaps)
+
+        # start pipeline
+        pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline = pipeline
 
     @staticmethod
+    @interfacedoc
     def id():
-        return "wavenc"
+        return "gstreamerenc"
 
-    def format(self):
-        return 'WAV'
+    @staticmethod
+    @interfacedoc
+    def description():
+        return "Gstreamer based encoder"
 
-    def file_extension(self):
-        return 'wav'
+    @staticmethod
+    @interfacedoc
+    def file_extension():
+        return "wav"
 
-    def mime_type(self):
-        return 'audio/x-wav'
+    @staticmethod
+    @interfacedoc
+    def mime_type():
+        return "audio/x-wav"
 
-    def description(self):
-        return """
-        WAV (or WAVE), short for Waveform audio format, also known as Audio for
-        Windows, is a Microsoft and IBM audio file format standard for storing
-        an audio bitstream on PCs. It is an application of the RIFF bitstream
-        format method for storing data in “chunks”, and thus is also close to
-        the 8SVX and the AIFF format used on Amiga and Macintosh computers,
-        respectively. It is the main format used on Windows systems for raw and
-        typically uncompressed audio. The usual bitstream encoding is the Pulse
-        Code Modulation (PCM) format.
-        """
+    @interfacedoc
+    def set_metadata(self, metadata):
+        #TODO
+        pass
 
-    def get_file_info(self):
-        try:
-            file1, file2 = os.popen4('wavinfo "'+self.dest+'"')
-            info = []
-            for line in file2.readlines():
-                info.append(clean_word(line[:-1]))
-            self.info = info
-            return self.info
-        except:
-            raise IOError('EncoderError: wavinfo id not installed or file does not exist.')
+    @interfacedoc
+    def process(self, frames, eod=False):
+        buf = self.numpy_array_to_gst_buffer(frames)
+        self.src.emit('push-buffer', buf)
+        if eod: self.src.emit('end-of-stream')
+        return frames, eod
 
-    def process(self, source, metadata, options=None):
-        self.metadata = metadata
-        self.options = options
-        command = 'sox -t wav - -s -q -b 16 -r 44100 -t wav -c2 -'
-
-        stream = self.core_process(command, source)
-        for __chunk in stream:
-            yield __chunk
+    def numpy_array_to_gst_buffer(self, frames):
+        """ gstreamer buffer to numpy array conversion """
+        buf = gst.Buffer(getbuffer(frames))
+        return buf

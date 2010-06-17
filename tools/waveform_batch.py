@@ -20,15 +20,14 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-version = '0.1.beta'
+version = '0.1-beta'
 
 import os
 import sys
-from timeside.tests.api import examples
 from timeside.core import *
-from timeside.api import *
+from timeside.decoder import *
+from timeside.grapher import *
 from grapher_scheme import *
-from timeside.tests.api.gstreamer import FileDecoder
 
 
 class Media2Waveform(object):
@@ -72,7 +71,7 @@ class Media2Waveform(object):
                 print 'Rendering ', source, ' to ', image, '...'
                 audio = os.path.join(os.path.dirname(__file__), source)
                 decoder  = FileDecoder(audio)
-                waveform = examples.Waveform(width=self.width, height=self.height, output=image,
+                waveform = Waveform(width=self.width, height=self.height, output=image,
                                             bg_color=self.bg_color, color_scheme=self.color_scheme)
                 (decoder | waveform).run()
                 print 'frames per pixel = ', waveform.graph.samples_per_pixel

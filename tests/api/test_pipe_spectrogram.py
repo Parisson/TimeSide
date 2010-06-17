@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
-from timeside.tests.api import examples
+
+import os
 from timeside.core import *
 from timeside.api import *
-import os.path
-
-use_gst = 1
-if use_gst:
-    from timeside.tests.api.gstreamer import FileDecoder, WavEncoder
-else:
-    from timeside.tests.api.examples import FileDecoder, WavEncoder
+from timeside.decoder import *
+from timeside.grapher import *
 
 image_file = '../results/img/spectrogram.png'
 source = os.path.join(os.path.dirname(__file__), "../samples/sweep.wav")
 
 decoder  = FileDecoder(source)
-spectrogram = examples.Spectrogram(width=1024, height=256, output=image_file, bg_color=(0,0,0), color_scheme='default')
+spectrogram = Spectrogram(width=1024, height=256, output=image_file, bg_color=(0,0,0), color_scheme='default')
 
 (decoder | spectrogram).run()
 

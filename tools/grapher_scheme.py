@@ -12,7 +12,7 @@ class GrapherScheme:
                         (0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100), (224,224,44), (255,60,30), (255,255,255)
                            ]}
 
-        self.width = 512
+        self.width = 2048
         self.height = 128
         self.bg_color = (255,255,255)
         self.force = True

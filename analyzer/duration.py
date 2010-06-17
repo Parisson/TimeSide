@@ -19,18 +19,21 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
-import datetime
 
 
 class Duration(Processor):
+    """A rather useless duration analyzer. Its only purpose is to test the
+       nframes characteristic."""
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
+    def setup(self, channels, samplerate, nframes):
+        if not nframes:
+            raise Exception("nframes argument required")
         super(Duration, self).setup(channels, samplerate, nframes)
-        self.value = 0
 
     @staticmethod
     @interfacedoc
@@ -45,14 +48,8 @@ class Duration(Processor):
     @staticmethod
     @interfacedoc
     def unit():
-        return "h:m:s"
-
-    def __str__(self):
-        return "%s %s" % (str(self.value), unit())
-
-    def process(self, frames, eod=False):
-        return frames, eod
+        return "seconds"
 
     def result(self):
-        return datetime.timedelta(0,numpy.round(self.nframes / float(self.samplerate), 0))
-
+        return self.input_nframes / float(self.input_samplerate)
+    
