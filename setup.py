@@ -18,7 +18,7 @@ METADATA = dict(
   url='http://code.google.com/p/timeside',
   packages=['timeside'],
   keywords='audio analyze transcode graph',
-  install_requires = ['setuptools',]
+  install_requires = ['setuptools',],
   include_package_data = True,
 )
 
