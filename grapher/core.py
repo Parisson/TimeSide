@@ -68,11 +68,12 @@ class Spectrum(object):
         """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
             An adapter is used to fix the buffer length and then provide fixed FFT window sizes."""
 
-        for buffer, end in self.spectrum_adapter.process(frames, True):
+        for buffer, end in self.spectrum_adapter.process(frames, eod):
             samples = buffer[:,0].copy()
             if end:
                 break
 
+        #samples = numpy.concatenate((numpy.zeros(self.fft_size/2), samples), axis=1)
         samples *= self.window
         fft = numpy.fft.fft(samples)
         spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(self.fft_size) # normalized abs(FFT) between 0 and 1
@@ -130,7 +131,7 @@ class WaveformImage(object):
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
     Peaks are colored relative to the spectral centroids of each frame packet. """
 
-    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color=None, color_scheme=None, filename=None):
+    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color=(0,0,0), color_scheme='default', filename=None):
         self.image_width = image_width
         self.image_height = image_height
         self.nframes = nframes
@@ -139,14 +140,13 @@ class WaveformImage(object):
         self.filename = filename
 
         self.bg_color = bg_color
-        if not bg_color:
-            self.bg_color = (0,0,0)
         self.color_scheme = color_scheme
-        if not color_scheme:
-            self.color_scheme = 'default'
-        colors = color_schemes[self.color_scheme]['waveform']
+
         if isinstance(color_scheme, dict):
             colors = color_scheme['waveform']
+        else:
+            colors = color_schemes[self.color_scheme]['waveform']
+
         self.color_lookup = interpolate_colors(colors)
 
         self.samples_per_pixel = self.nframes / float(self.image_width)
@@ -233,23 +233,22 @@ class WaveformImage(object):
             self.pixel[x, y_min_int - 1] = (r,g,b)
 
     def process(self, frames, eod):
-        if len(frames) == 1:
-            frames.shape = (len(frames),1)
-            buffer = frames.copy()
-        else:
+        if len(frames) != 1:
             buffer = frames[:,0].copy()
-            buffer.shape = (len(frames),1)
-
-        (spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
-        for samples, end in self.pixels_adapter.process(buffer, eod):
-            if self.pixel_cursor < self.image_width:
-                peaks = self.peaks(samples)
-                self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
-                self.pixel_cursor += 1
+            buffer.shape = (len(buffer),1)
+            (spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width:
+                    peaks = self.peaks(samples)
+                    self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
+                    self.pixel_cursor += 1
 
     def save(self):
         """ Apply last 2D transforms and write all pixels to the file. """
-        a = 0
+
+        # middle line (0 for none)
+        a = 1
+
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(self.filename)
@@ -310,20 +309,16 @@ class SpectrogramImage(object):
             self.pixels.append(0)
 
     def process(self, frames, eod):
-        if len(frames) == 1:
-            frames.shape = (len(frames),1)
-            buffer = frames.copy()
-        else:
+        if len(frames) != 1:
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
 
-        print len(buffer)
-        # FIXME : breaks spectrum linearity
-        for samples, end in self.pixels_adapter.process(buffer, eod):
-            if self.pixel_cursor < self.image_width:
-                (spectral_centroid, db_spectrum) = self.spectrum.process(samples, False)
-                self.draw_spectrum(self.pixel_cursor, db_spectrum)
-                self.pixel_cursor += 1
+            # FIXME : breaks spectrum linearity
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width:
+                    (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
+                    self.draw_spectrum(self.pixel_cursor, db_spectrum)
+                    self.pixel_cursor += 1
 
     def save(self):
         """ Apply last 2D transforms and write all pixels to the file. """

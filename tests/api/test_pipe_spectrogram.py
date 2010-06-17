@@ -10,7 +10,7 @@ if use_gst:
 else:
     from timeside.tests.api.examples import FileDecoder, WavEncoder
 
-image_file = './spectrogram.png'
+image_file = '../results/img/spectrogram.png'
 source = os.path.join(os.path.dirname(__file__), "../samples/sweep.wav")
 
 decoder  = FileDecoder(source)
