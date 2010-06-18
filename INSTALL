@@ -114,7 +114,13 @@ For example, a normalization and a waveform, from a python shell::
 >>> print 'Level:', analyzer.result()
 
 
-4. More informations
+4. TimeSide UI
+--------------
+
+See http://code.google.com/p/timeside/wiki/UiGuide
+
+
+5. More informations
 ====================
 
 See the website for more examples and information about the TimeSide API:
@@ -124,4 +130,3 @@ http://code.google.com/p/timeside/
 http://code.google.com/p/timeside/wiki/PythonApi
 
 http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
-
