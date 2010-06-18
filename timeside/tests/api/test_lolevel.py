@@ -36,7 +36,7 @@ while True:
 max_level = analyzer.result()
 print "Max level: %f" % max_level
 
-destination = "normalized.wav"
+destination = "../results/guitar_normalized.wav"
 Encoder = WavEncoder
 print "Creating encoder with id=%s for: %s" % (Encoder.id(), destination)
 encoder = Encoder(destination)

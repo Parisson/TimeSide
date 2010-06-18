@@ -27,7 +27,7 @@ print "gain: %f" % gain
 print "duration: %f %s" % (duration.result(), duration.unit())
 
 gain     = Gain(gain)
-encoder  = WavEncoder("normalized.wav")
+encoder  = WavEncoder("../results/guitar_normalized.wav")
 
 subpipe  = gain | maxlevel
 
