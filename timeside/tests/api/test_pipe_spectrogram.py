@@ -6,16 +6,27 @@ from timeside.api import *
 from timeside.decoder import *
 from timeside.grapher import *
 
-image_file = '../results/img/spectrogram.png'
-source = os.path.join(os.path.dirname(__file__), "../samples/sweep.wav")
+sample_dir = '../samples'
+img_dir = '../results/img'
+if not os.path.exists(img_dir):
+    os.mkdir(img_dir)
 
-decoder  = FileDecoder(source)
-spectrogram = Spectrogram(width=1024, height=256, output=image_file, bg_color=(0,0,0), color_scheme='default')
+test_dict = {'sweep.wav': 'spec_wav.png',
+            'sweep.flac': 'spec_flac.png',
+            'sweep.ogg': 'spec_ogg.png',
+            'sweep.mp3': 'spec_mp3.png',
+            }
 
-(decoder | spectrogram).run()
+for source, image in test_dict.iteritems():
+    audio = os.path.join(os.path.dirname(__file__), sample_dir + os.sep + source)
+    image = img_dir + os.sep + image
+    print 'Test : decoder(%s) | waveform (%s)' % (source, image)
+    decoder  = FileDecoder(audio)
+    spectrogram = Spectrogram(width=1024, height=256, output=image, bg_color=(0,0,0), color_scheme='default')
+    (decoder | spectrogram).run()
+    print 'frames per pixel = ', spectrogram.graph.samples_per_pixel
+    print "render spectrogram to: %s" %  image
+    spectrogram.render()
 
-print 'frames per pixel = ', spectrogram.graph.samples_per_pixel
-print "render spectrogram to: %s" % image_file
-spectrogram.render()
 
 
