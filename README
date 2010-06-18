@@ -14,8 +14,9 @@ Dependencies
 ============
 
 python (>= 2.4), python-xml, python-mutagen, python-imaging (>= 1.1.6),
-python-numpy, python-setuptools (>= 0.6b3), libsndfile1 (>= 1.0.17), 
-python-gst0.10, gstreamer0.10-plugins-base
+python-numpy, python-setuptools (>= 0.6b3), libsndfile1 (>= 1.0.17),
+python-gst0.10, gstreamer0.10-plugins-base, gstreamer0.10-plugins-fluendo-mp3,
+gstreamer0.10-plugins-good
 
 License
 =======

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from core import *
-from metadata import Metadata
-import decoder
-import encoder
-import grapher
-import analyzer
+
+import timeside.exceptions
+import timeside.core
+import timeside.component
+import timeside.metadata
+import timeside.decoder
+import timeside.encoder
+import timeside.grapher
+import timeside.analyzer
+

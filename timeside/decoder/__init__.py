@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from timeside.decoder.core import *
+import timeside.core
+from core import *

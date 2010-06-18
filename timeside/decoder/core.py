@@ -60,7 +60,7 @@ class FileDecoder(Processor):
             ! audioconvert
             ! %s
             ! appsink name=sink sync=False ''' % (self.uri, caps))
-        # store a pointer to appsink in our decoder object 
+        # store a pointer to appsink in our decoder object
         self.sink = pipeline.get_by_name('sink')
         # adjust length of emitted buffers
         # self.sink.set_property('blocksize', 0x10000)
@@ -73,7 +73,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def samplerate(self):
-        return self.audiorate 
+        return self.audiorate
 
     @interfacedoc
     def nframes(self):
@@ -93,7 +93,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def release(self):
-        # nothing to do for now 
+        # nothing to do for now
         pass
 
     ## IDecoder methods
@@ -101,7 +101,7 @@ class FileDecoder(Processor):
     @interfacedoc
     def __init__(self, uri):
 
-        # is this a file? 
+        # is this a file?
         import os.path
         if os.path.exists(uri):
             # get the absolute path
@@ -111,6 +111,8 @@ class FileDecoder(Processor):
             # and make a uri of it
             from urllib import quote
             self.uri = 'file://'+quote(uri)
+        else:
+            self.uri = uri
 
     @interfacedoc
     def format(self):
@@ -125,7 +127,7 @@ class FileDecoder(Processor):
     @interfacedoc
     def resolution(self):
         # TODO check: width or depth?
-        return self.audiowidth 
+        return self.audiowidth
 
     @interfacedoc
     def metadata(self):
@@ -151,7 +153,7 @@ class FileDecoder(Processor):
             self.mimetype= d.mimetype
             self.audiochannels = d.audiochannels
             self.audiowidth = d.audiowidth
-            # conversion from time in nanoseconds to frames 
+            # conversion from time in nanoseconds to frames
             from math import ceil
             duration = d.audiorate * d.audiolength * 1.e-9
             self.audionframes = int (ceil ( duration ) )
@@ -165,7 +167,7 @@ class FileDecoder(Processor):
     def gst_buffer_to_numpy_array(self, buf):
         """ gstreamer buffer to numpy array conversion """
         chan = self.audiochannels
-        samples = frombuffer(buf.data, dtype=float32) 
+        samples = frombuffer(buf.data, dtype=float32)
         samples.resize([len(samples)/chan, chan])
         return samples
 
