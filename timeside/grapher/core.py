@@ -266,8 +266,12 @@ class SpectrogramImage(object):
         self.filename = filename
         self.color_scheme = color_scheme
 
+        if isinstance(color_scheme, dict):
+            colors = color_scheme['spectrogram']
+        else:
+            colors = default_color_schemes[color_scheme]['spectrogram']
+
         self.image = Image.new("P", (self.image_height, self.image_width))
-        colors = color_schemes[self.color_scheme]['spectrogram']
         self.image.putpalette(interpolate_colors(colors, True))
 
         self.samples_per_pixel = self.nframes / float(self.image_width)

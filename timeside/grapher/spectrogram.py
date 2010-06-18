@@ -21,7 +21,7 @@
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.api import IGrapher
-from timeside.grapher import *
+from timeside.grapher.core import *
 
 
 class Spectrogram(Processor):
@@ -30,15 +30,9 @@ class Spectrogram(Processor):
     FFT_SIZE = 0x400
 
     @interfacedoc
-    def __init__(self, width=None, height=None, output=None, bg_color=None, color_scheme=None):
-        if width:
-            self.width = width
-        else:
-            self.width = 1500
-        if height:
-            self.height = height
-        else:
-            self.height = 200
+    def __init__(self, width=1024, height=256, output=None, bg_color=(0,0,0), color_scheme='default'):
+        self.width = width
+        self.height = height
         self.bg_color = bg_color
         self.color_scheme = color_scheme
         self.filename = output
