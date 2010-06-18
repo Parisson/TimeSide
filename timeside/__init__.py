@@ -2,7 +2,3 @@
 
 from core import *
 from metadata import Metadata
-import decoder
-import encoder
-import analyzer
-import grapher
