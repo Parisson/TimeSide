@@ -31,17 +31,24 @@ class GrapherScheme:
     def __init__(self):
 
         self.color_scheme = {
-            'waveform': [
+            'waveform': [ # Four (R,G,B) tuples for three main color channels for the spectral centroid method
                         (50,0,200), (0,220,80), (255,224,0), (255,0,0)
                         ],
             'spectrogram': [
                         (0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100), (224,224,44), (255,60,30), (255,255,255)
-                           ]}
+                        ]}
 
+        # Width of the image
         self.width = 2048
+
+        # Height of the image
         self.height = 128
+
+        # Background color
         self.bg_color = (255,255,255)
-        self.force = True
+
+        # Force computation. By default, the class doesn't overwrite existing image files.
+        self.force = False
 
 
 class Media2Waveform(object):
