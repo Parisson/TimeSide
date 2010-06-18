@@ -3,7 +3,7 @@ from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAda
 from timeside.api import *
 from timeside.grapher import *
 from timeside import Metadata
-from scikits import audiolab
+#from scikits import audiolab
 import numpy
 
 class FileDecoder(Processor):
