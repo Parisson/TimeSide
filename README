@@ -22,10 +22,18 @@ python-setuptools (>= 0.6b3), python-gst0.10, gstreamer0.10-plugins-base,
 gstreamer0.10-plugins-fluendo-mp3, gstreamer0.10-plugins-good
 
 
-Install
-=======
+Copyright
+=========
 
-See INSTALL.
+Copyright (c) 2006, 2010 Parisson SARL (parisson.com),
+Copyright (c) 2006, 2010 Samalyse SARL (samalyse.com),
+All rights reserved.
+
+Authors::
+
+    Guillaume Pellerin <yomguy@parisson.com>
+    Olivier Guilyardi  <olivier@samalyse.com>
+    Paul Brossier      <piem@piem.org>
 
 
 License
@@ -40,6 +48,14 @@ TimeSide is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
+
+See LICENSE for more details.
+
+
+Install
+=======
+
+See INSTALL for full details.
 
 
 Contact and Informations
