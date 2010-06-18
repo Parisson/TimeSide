@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from timeside.tests.api.examples import Gain
 from timeside.core import *
 from timeside.decoder import *

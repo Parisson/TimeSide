@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import unittest
 import sys
@@ -17,7 +18,7 @@ class TestCase(unittest.TestCase):
         for item in list2:
             if not item in list1:
                 self.fail("%s is not in list1" % str(item))
-        
+
 class _TextTestResult(unittest.TestResult):
     """A test result class that can print formatted text results to a stream.
 
