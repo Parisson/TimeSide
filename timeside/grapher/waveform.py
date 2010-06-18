@@ -34,11 +34,11 @@ class Waveform(Processor):
         if width:
             self.width = width
         else:
-            self.width = 1500
+            self.width = 1024
         if height:
             self.height = height
         else:
-            self.height = 200
+            self.height = 256
         self.bg_color = bg_color
         self.color_scheme = color_scheme
         self.filename = output
