@@ -29,7 +29,7 @@ import numpy
 from timeside.core import FixedSizeInputAdapter
 
 
-color_schemes = {
+default_color_schemes = {
     'default': {
         'waveform': [(50,0,200), (0,220,80), (255,224,0), (255,0,0)],
         'spectrogram': [(0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100),
@@ -145,7 +145,7 @@ class WaveformImage(object):
         if isinstance(color_scheme, dict):
             colors = color_scheme['waveform']
         else:
-            colors = color_schemes[self.color_scheme]['waveform']
+            colors = default_color_schemes[self.color_scheme]['waveform']
 
         self.color_lookup = interpolate_colors(colors)
 

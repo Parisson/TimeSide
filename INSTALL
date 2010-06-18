@@ -22,7 +22,7 @@ Write your root password.
 
 Add backports repository to the apt sources.list::
 
-    $ echo "deb http://www.backports.org/debian lenny-backports main contrib non-free" | tee -a /etc/apt/sources.list
+        $ echo "deb http://www.backports.org/debian lenny-backports main contrib non-free" | tee -a /etc/apt/sources.list
 
 Note : you can paste the full command but without the shell character '$'.
 Then :
@@ -33,8 +33,8 @@ Then :
 Say 'YES' to all questions. Then::
 
     $ apt-get install -t lenny-backports vim subversion python python-setuptools python-xml python-mutagen \
-                            python-imaging python-numpy python-gst0.10, gstreamer0.10-plugins-base \
-                            gstreamer0.10-plugins-fluendo-mp3 gstreamer0.10-plugins-good
+                            python-imaging python-numpy python-gst0.10 gstreamer0.10-plugins-base \
+                            gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good
 
 
 Install TimeSide
@@ -104,11 +104,8 @@ For example, a normalization and a waveform, from a python shell::
 
 >>> decoder  =  timeside.decoder.FileDecoder('source.wav')
 >>> grapher  =  timeside.grapher.Waveform('image.png')
->>> max      =  timeside.analyzer.MaxLevel()
 >>> encoder  =  timeside.encoder.WavEncoder('normalized.wav')
->>> (decoder | max).run()
->>> gain = max.result() > 0 and (1 / max.result()) or 1
->>> (decoder | Gain(gain) | grapher | encoder).run()
+>>> (decoder | grapher | encoder).run()
 
 
 See the website for more examples and information about the TimeSide API:
