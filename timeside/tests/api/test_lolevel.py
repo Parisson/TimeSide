@@ -1,10 +1,11 @@
-from timeside.tests.api import examples
+# -*- coding: utf-8 -*-
 
-use_gst = 0
-if use_gst:
-    from timeside.tests.api.gstreamer import FileDecoder, WavEncoder
-else:
-    from timeside.tests.api.examples import FileDecoder, WavEncoder
+from timeside.tests.api.examples import Gain
+from timeside.core import *
+from timeside.decoder import *
+from timeside.analyzer import *
+from timeside.encoder import *
+from timeside.api import *
 
 import sys
 if len(sys.argv) > 1:
@@ -15,8 +16,8 @@ else:
 
 Decoder = FileDecoder
 print "Creating decoder with id=%s for: %s" % (Decoder.id(), source)
-decoder    = Decoder(source)
-analyzer = examples.MaxLevel()
+decoder = Decoder(source)
+analyzer = MaxLevel()
 decoder.setup()
 nchannels  = decoder.channels()
 samplerate = decoder.samplerate()
@@ -44,7 +45,7 @@ gain = 1
 if max_level > 0:
     gain = 0.9 / max_level
 
-effect = examples.Gain(gain)
+effect = Gain(gain)
 
 decoder.setup()
 effect.setup(decoder.channels(), decoder.samplerate())
