@@ -106,6 +106,7 @@ For example, a normalization and a waveform, from a python shell::
 >>> grapher  =  timeside.grapher.Waveform('image.png')
 >>> encoder  =  timeside.encoder.WavEncoder('normalized.wav')
 >>> (decoder | grapher | encoder).run()
+>>> grapher.render()
 
 
 See the website for more examples and information about the TimeSide API:
