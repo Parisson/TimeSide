@@ -6,7 +6,7 @@ from timeside import Metadata
 #from scikits import audiolab
 import numpy
 
-class FileDecoder(Processor):
+class FileAudiolabDecoder(Processor):
     """A simple audiolab-based example decoder"""
     implements(IDecoder)
 
