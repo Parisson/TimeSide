@@ -98,7 +98,7 @@ class Media2Waveform(object):
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
         print """
-        Usage : python waveform_batch.py /path/to/media_dir /path/to/img_dir
+        Usage : python waveform_batch /path/to/media_dir /path/to/img_dir
 
         Dependencies : timeside, python, python-numpy, python-gst0.10, gstreamer0.10-plugins-base
         See http://code.google.com/p/timeside/ for more information.
