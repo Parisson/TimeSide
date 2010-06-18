@@ -1,12 +1,12 @@
-=======
-INSTALL
-=======
+================
+Install TimeSide
+================
 
 This file describe how to install the TimeSide python package from source.
 
 
-Install dependencies
-====================
+1. Install dependencies
+=======================
 
 TimeSide needs some other python modules to run.
 See README for the full dependency list.
@@ -22,12 +22,13 @@ Write your root password.
 
 Add backports repository to the apt sources.list::
 
-        $ echo "deb http://www.backports.org/debian lenny-backports main contrib non-free" | tee -a /etc/apt/sources.list
+    $ echo "deb http://www.backports.org/debian lenny-backports main contrib non-free" | tee -a /etc/apt/sources.list
 
 Note : you can paste the full command but without the shell character '$'.
 Then :
 
     $ apt-get update
+
     $ apt-get -t lenny-backports upgrade
 
 Say 'YES' to all questions. Then::
@@ -37,8 +38,8 @@ Say 'YES' to all questions. Then::
                             gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good
 
 
-Install TimeSide
-================
+2. Install TimeSide
+===================
 
 Get the code and install::
 
@@ -50,11 +51,12 @@ This installs all timeside sub modules as decoders, encoders, analyzers, grapher
 a few scripts.
 
 
-Use TimeSide
-============
+3. Use TimeSide
+===============
 
-Waveform batching
------------------
+3.1. Waveform batching
+----------------------
+
 You can use waveform_batch to create some waveforms from a media (audio) directory, type::
 
     $ waveform_batch /path/to/media_dir /path/to/img_dir
@@ -96,8 +98,8 @@ Save the script and re-run setup::
     $ python setup.py install
 
 
-Any other pipe processing !
----------------------------
+3.2. Any other pipe processing !
+--------------------------------
 
 For example, a normalization and a waveform, from a python shell::
 
@@ -112,9 +114,14 @@ For example, a normalization and a waveform, from a python shell::
 >>> print 'Level:', analyzer.result()
 
 
+4. More informations
+====================
+
 See the website for more examples and information about the TimeSide API:
 
 http://code.google.com/p/timeside/
+
 http://code.google.com/p/timeside/wiki/PythonApi
+
 http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
 

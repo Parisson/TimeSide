@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Install TimeSide</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="install-timeside">
+<h1 class="title">Install TimeSide</h1>
+
+<p>This file describe how to install the TimeSide python package from source.</p>
+<div class="section" id="install-dependencies">
+<h1>1. Install dependencies</h1>
+<p>TimeSide needs some other python modules to run.
+See README for the full dependency list.</p>
+<p>The following methods explain how to install all dependencies on a Debian based system
+and espacially on Debian Lenny 5.x Stable. Is it now considered you have install this system correctly.</p>
+<p>Become root. In a terminal or console, run:</p>
+<pre class="literal-block">
+$ su
+</pre>
+<p>Write your root password.</p>
+<p>Add backports repository to the apt sources.list:</p>
+<pre class="literal-block">
+$ echo &quot;deb http://www.backports.org/debian lenny-backports main contrib non-free&quot; | tee -a /etc/apt/sources.list
+</pre>
+<p>Note : you can paste the full command but without the shell character '$'.
+Then :</p>
+<blockquote>
+<p>$ apt-get update</p>
+<p>$ apt-get -t lenny-backports upgrade</p>
+</blockquote>
+<p>Say 'YES' to all questions. Then:</p>
+<pre class="literal-block">
+$ apt-get install -t lenny-backports vim subversion python python-setuptools python-xml python-mutagen \
+                        python-imaging python-numpy python-gst0.10 gstreamer0.10-plugins-base \
+                        gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good
+</pre>
+</div>
+<div class="section" id="id1">
+<h1>2. Install TimeSide</h1>
+<p>Get the code and install:</p>
+<pre class="literal-block">
+$ svn export http://timeside.googlecode.com/svn/trunk/ timeside
+$ cd timeside
+$ python setup.py install
+</pre>
+<p>This installs all timeside sub modules as decoders, encoders, analyzers, graphers and
+a few scripts.</p>
+</div>
+<div class="section" id="use-timeside">
+<h1>3. Use TimeSide</h1>
+<div class="section" id="waveform-batching">
+<h2>3.1. Waveform batching</h2>
+<p>You can use waveform_batch to create some waveforms from a media (audio) directory, type:</p>
+<pre class="literal-block">
+$ waveform_batch /path/to/media_dir /path/to/img_dir
+</pre>
+<p>Please use absolute paths. For example:</p>
+<pre class="literal-block">
+$ waveform_batch /home/$user/music/mp3/ /home/$USER/images/
+</pre>
+<p>To change the color scheme or the size of the waveforms, edit the waveform_batch script:</p>
+<pre class="literal-block">
+$ vi timeside/tools/waveform_batch
+</pre>
+<p>And change only the following variables of the GrapherScheme object:</p>
+<pre class="literal-block">
+self.color_scheme = {
+    'waveform': [ # Four (R,G,B) tuples for three main color channels for the spectral centroid method
+                (173,173,173), (147,149,196), (77,80,138), (108,66,0)
+                # this is a purple one
+                ],
+    'spectrogram': [
+                (0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100), (224,224,44), (255,60,30), (255,255,255)
+                ]}
+
+# Width of the image
+self.width = 2048
+
+# Height of the image
+self.height = 128
+
+# Background color
+self.bg_color = (255,255,255)
+
+# Force computation. By default, the class doesn't overwrite existing image files.
+self.force = False
+</pre>
+<p>Save the script and re-run setup:</p>
+<pre class="literal-block">
+$ python setup.py install
+</pre>
+</div>
+<div class="section" id="any-other-pipe-processing">
+<h2>3.2. Any other pipe processing !</h2>
+<p>For example, a normalization and a waveform, from a python shell:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; import timeside
+</pre>
+<pre class="doctest-block">
+&gt;&gt;&gt; decoder  =  timeside.decoder.FileDecoder('source.wav')
+&gt;&gt;&gt; grapher  =  timeside.grapher.Waveform('image.png')
+&gt;&gt;&gt; analyzer =  timeside.analyzer.MaxLevel()
+&gt;&gt;&gt; encoder  =  timeside.encoder.WavEncoder('output.wav')
+&gt;&gt;&gt; (decoder | grapher | analyzer | encoder).run()
+&gt;&gt;&gt; grapher.render()
+&gt;&gt;&gt; print 'Level:', analyzer.result()
+</pre>
+</div>
+</div>
+<div class="section" id="more-informations">
+<h1>4. More informations</h1>
+<p>See the website for more examples and information about the TimeSide API:</p>
+<p><a class="reference external" href="http://code.google.com/p/timeside/">http://code.google.com/p/timeside/</a></p>
+<p><a class="reference external" href="http://code.google.com/p/timeside/wiki/PythonApi">http://code.google.com/p/timeside/wiki/PythonApi</a></p>
+<p><a class="reference external" href="http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py">http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py</a></p>
+</div>
+</div>
+<div class="footer">
+<hr class="footer" />
+<a class="reference external" href="INSTALL">View document source</a>.
+Generated on: 2010-06-18 23:05 UTC.
+Generated by <a class="reference external" href="http://docutils.sourceforge.net/">Docutils</a> from <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> source.
+
+</div>
+</body>
+</html>
