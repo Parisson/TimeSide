@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2007-2009 Guillaume Pellerin <yomguy@parisson.com>
+# Copyright (c) 2010 Paul Brossier <piem@piem.org>
+# Copyright (c) 2010 Guillaume Pellerin <yomguy@parisson.com>
 
 # This file is part of TimeSide.
 
@@ -17,100 +18,88 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Guillaume Pellerin <yomguy@parisson.com>
 
-import os
-import string
-import subprocess
-
-from timeside.encoder.core import *
+from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
+from numpy import array, frombuffer, getbuffer, float32
 
-class OggVorbisEncoder(EncoderCore):
-    """Defines methods to encode to OGG Vorbis"""
+import pygst
+pygst.require('0.10')
+import gst
+import gobject
+gobject.threads_init ()
 
+
+class VorbisEncoder(Processor):
+    """ gstreamer-based vorbis encoder """
     implements(IEncoder)
 
-    def __init__(self):
-        self.bitrate_default = '192'
-        self.dub2args_dict = {'creator': 'artist',
-                             'relation': 'album'
-                             }
+    def __init__(self, output):
+        self.file = None
+        if isinstance(output, basestring):
+            self.filename = output
+        else:
+            raise Exception("Streaming not supported")
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(VorbisEncoder, self).setup(channels, samplerate, nframes)
+        # TODO open file for writing
+        # the output data format we want
+        pipeline = gst.parse_launch(''' appsrc name=src
+            ! audioconvert
+            ! vorbisenc
+            ! oggmux
+            ! filesink location=%s ''' % self.filename)
+        # store a pointer to appsink in our encoder object 
+        self.src = pipeline.get_by_name('src')
+        srccaps = gst.Caps("""audio/x-raw-float,
+            endianness=(int)1234,
+            channels=(int)%s,
+            width=(int)32,
+            rate=(int)%d""" % (int(channels), int(samplerate)))
+        self.src.set_property("caps", srccaps)
+
+        # start pipeline
+        pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline = pipeline
 
     @staticmethod
+    @interfacedoc
     def id():
-        return "oggenc"
+        return "gst_vorbis_enc"
 
-    def format(self):
-        return 'OggVorbis'
+    @staticmethod
+    @interfacedoc
+    def description():
+        return "Vorbis GStreamer based encoder"
 
-    def file_extension(self):
-        return 'ogg'
+    @staticmethod
+    @interfacedoc
+    def file_extension():
+        return "ogg"
 
-    def mime_type(self):
-        return 'application/ogg'
+    @staticmethod
+    @interfacedoc
+    def mime_type():
+        return "audio/ogg"
 
-    def description(self):
-        return """
-        Vorbis is a free software / open source project headed by the Xiph.Org
-        Foundation (formerly Xiphophorus company). The project produces an audio
-        format specification and software implementation (codec) for lossy audio
-        compression. Vorbis is most commonly used in conjunction with the Ogg
-        container format and it is therefore often referred to as Ogg Vorbis.
-        (source Wikipedia)
-        """
+    @interfacedoc
+    def set_metadata(self, metadata):
+        #TODO
+        pass
 
-    def get_file_info(self, file):
-        try:
-            file_out1, file_out2 = os.popen4('ogginfo "' + file + '"')
-            info = []
-            for line in file_out2.readlines():
-                info.append(clean_word(line[:-1]))
-            self.info = info
-            return self.info
-        except:
-            raise IOError('EncoderError: file does not exist.')
+    @interfacedoc
+    def process(self, frames, eod=False):
+        buf = self.numpy_array_to_gst_buffer(frames)
+        self.src.emit('push-buffer', buf)
+        if eod: self.src.emit('end-of-stream')
+        return frames, eod
 
-    def write_tags(self, file):
-        from mutagen.oggvorbis import OggVorbis
-        media = OggVorbis(file)
-        for tag in self.metadata.keys():
-            media[tag] = str(self.metadata[tag])
-        media.save()
+    def numpy_array_to_gst_buffer(self, frames):
+        """ gstreamer buffer to numpy array conversion """
+        buf = gst.Buffer(getbuffer(frames))
+        return buf
 
-    def get_args(self):
-        """Get process options and return arguments for the encoder"""
-        args = []
-        if not self.options is None:
-            if not ('verbose' in self.options and self.options['verbose'] != '0'):
-                args.append('-Q ')
-            if 'ogg_bitrate' in self.options:
-                args.append('-b '+self.options['ogg_bitrate'])
-            elif 'ogg_quality' in self.options:
-                args.append('-q '+self.options['ogg_quality'])
-            else:
-                args.append('-b '+self.bitrate_default)
-        else:
-            args.append('-Q -b '+self.bitrate_default)
-
-        for tag in self.metadata:
-            name = tag[0]
-            value = clean_word(tag[1])
-            args.append('-c %s="%s"' % (name, value))
-            if name in self.dub2args_dict.keys():
-                arg = self.dub2args_dict[name]
-                args.append('-c %s="%s"' % (arg, value))
-        return args
-
-    def process(self, source, metadata, options=None):
-        self.metadata = metadata
-        self.options = options
-        args = self.get_args()
-        args = ' '.join(args)
-        command = 'oggenc %s -' % args
-
-        stream = self.core_process(command, source)
-        for __chunk in stream:
-            yield __chunk
 
 
