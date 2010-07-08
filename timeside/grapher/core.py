@@ -157,7 +157,7 @@ class WaveformImage(object):
         self.higher = 12000
         self.spectrum = Spectrum(self.fft_size, self.nframes, self.samplerate, self.lower, self.higher, numpy.hanning)
 
-        self.image = Image.new("RGB", (self.image_width, self.image_height), self.bg_color)
+        self.image = Image.new("RGBA", (self.image_width, self.image_height), self.bg_color)
         self.pixel = self.image.load()
         self.draw = ImageDraw.Draw(self.image)
         self.previous_x, self.previous_y = None, None
