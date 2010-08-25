@@ -255,57 +255,54 @@ class WaveformImage(object):
 
 
 class WaveformImageJoyContour(WaveformImage):
-    
+
     def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, filename=None):
         WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, filename=filename)
         self.contour = numpy.zeros(self.image_width)
         self.centroids = numpy.zeros(self.image_width)
         self.ndiv = 6
         self.x = numpy.r_[0:self.image_width-1:1]
-        #self.dx1 = self.x[1]-self.x[0]
-        self.dx2 = self.x[self.samples_per_pixel/(self.ndiv*10)]-self.x[0]
+        self.dx1 = self.x[1]-self.x[0]
 
     def get_peaks_contour(self, x, peaks, spectral_centroid=None):
-        """ draw 2 peaks at x using the spectral_centroid for color """
         self.contour[x] = numpy.max(peaks)
         self.centroids[x] = spectral_centroid
-        
-    def draw_peaks_contour(self):
-        contour = cspline1d(self.contour.copy())
-        #contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
-        contour = cspline1d_eval(contour, self.x, dx=self.dx2, x0=self.x[0])
-        #print len(contour)
-        
-        l_min = min(self.contour)
-        l_max = max(self.contour)
-        l_range= l_max - l_min
 
-        self.contour = (contour-l_min)/l_range
-        #print contour
+    def draw_peaks_contour(self):
+        #contour = self.contour.copy()
+        contour = smooth(self.contour, window_len=13)
+
+        l_min = min(contour)
+        contour = (contour-l_min)
+        l_max = max(contour)
+        l_range= l_max - l_min
+        contour = contour/l_max
+        contour = cspline1d(contour)
+        contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
 
         # Multispline scales
         for i in range(0,self.ndiv):
             self.previous_x, self.previous_y = None, None
-            bright_color = int(255*(1-float(i)/self.ndiv))
+
+            #bright_color = 255
+            bright_color = int(255*(1-float(i)/(self.ndiv*2)))
             line_color = (bright_color,bright_color,bright_color)
-            print line_color
-            
+
             # Linear
             #contour = contour*(1.0-float(i)/self.ndiv)
             #contour = contour*(1-float(i)/self.ndiv)
-            
+
             # Cosine
             contour = contour*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi
             #contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)
-            
+
             # Negative Sine
             #contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))
 
             for j in range(0,self.image_width-1):
                 #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
                 x = self.x[j]
-                y = contour[j]*self.image_height
-                #print y
+                y = contour[j]*(self.image_height-1)
                 if self.previous_y:
                     self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
                     self.draw_anti_aliased_pixels(x, y, y, line_color)
@@ -447,4 +444,73 @@ class Noise(object):
             will_read = frames_to_read
         self.seekpoint += will_read
         return numpy.random.random(will_read)*2 - 1
+
+
+# TOOLS
+
+def downsample(vector, factor):
+    """
+    downsample(vector, factor):
+        Downsample (by averaging) a vector by an integer factor.
+    """
+    if (len(vector) % factor):
+        print "Length of 'vector' is not divisible by 'factor'=%d!" % factor
+        return 0
+    vector.shape = (len(vector)/factor, factor)
+    return numpy.mean(vector, axis=1)
+
+
+def smooth(x, window_len=10, window='hanning'):
+    """smooth the data using a window with requested size.
+
+    This method is based on the convolution of a scaled window with the signal.
+    The signal is prepared by introducing reflected copies of the signal
+    (with the window size) in both ends so that transient parts are minimized
+    in the begining and end part of the output signal.
+
+    input:
+        x: the input signal
+        window_len: the dimension of the smoothing window
+        window: the type of window from 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'
+            flat window will produce a moving average smoothing.
+
+    output:
+        the smoothed signal
+
+    example:
+
+    import numpy as np
+    t = numpy.linspace(-2,2,0.1)
+    x = numpy.sin(t)+numpy.random.randn(len(t))*0.1
+    y = smooth(x)
+
+    see also:
+
+    numpy.hanning, numpy.hamming, numpy.bartlett, numpy.blackman, numpy.convolve
+    scipy.signal.lfilter
+
+    TODO: the window parameter could be the window itself if an array instead of a string
+    """
+
+    if x.ndim != 1:
+        raise ValueError, "smooth only accepts 1 dimension arrays."
+
+    if x.size < window_len:
+        raise ValueError, "Input vector needs to be bigger than window size."
+
+    if window_len < 3:
+        return x
+
+    if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+        raise ValueError, "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
+
+    s=numpy.r_[2*x[0]-x[window_len:1:-1], x, 2*x[-1]-x[-1:-window_len:-1]]
+    #print(len(s))
+
+    if window == 'flat': #moving average
+        w = numpy.ones(window_len,'d')
+    else:
+        w = getattr(numpy, window)(window_len)
+    y = numpy.convolve(w/w.sum(), s, mode='same')
+    return y[window_len-1:-window_len+1]
 

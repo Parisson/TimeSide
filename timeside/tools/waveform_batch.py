@@ -74,16 +74,15 @@ class Media2Waveform(object):
             if root:
                 for file in files:
                     ext = file.split('.')[-1]
-                    if ext == 'wav' or ext == 'WAV':
-                        media_list.append(root+os.sep+file)
+                    media_list.append(root+os.sep+file)
         return media_list
 
     def get_path_dict(self):
         path_dict = {}
         for media in self.media_list:
-            name = os.path.splitext(media)
-            name = name[0].split(os.sep)[-1]
-            path_dict[media] = unicode(self.img_dir + os.sep + name + '.png')
+            filename = media.split(os.sep)[-1]
+            name, ext = os.path.splitext(filename)
+            path_dict[media] = self.img_dir + os.sep + filename + '.png'
         return path_dict
 
     def process(self):
@@ -92,8 +91,10 @@ class Media2Waveform(object):
                 print 'Rendering ', source, ' to ', image, '...'
                 audio = os.path.join(os.path.dirname(__file__), source)
                 decoder  = timeside.decoder.FileDecoder(audio)
+
                 waveform = timeside.grapher.WaveformJoyDiv(width=self.width, height=self.height, output=image,
                                             bg_color=self.bg_color, color_scheme=self.color_scheme)
+
                 (decoder | waveform).run()
                 print 'frames per pixel = ', waveform.graph.samples_per_pixel
                 waveform.render()
