@@ -22,7 +22,7 @@ METADATA = dict(
   keywords='audio analyze transcode graph',
   install_requires = ['setuptools',],
   include_package_data = True,
-  scripts=['timeside/tools/waveform_batch'],
+  scripts=['timeside/tools/waveform_batch.py'],
 )
 
 
