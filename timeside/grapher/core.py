@@ -268,6 +268,8 @@ class WaveformImageJoyContour(WaveformImage):
         self.contour[x] = numpy.max(peaks)
         self.centroids[x] = spectral_centroid
 
+    def mean(self, samples):
+        return numpy.mean(samples)
 
     def normalize(self, contour):
         contour = contour-min(contour)
@@ -283,14 +285,15 @@ class WaveformImageJoyContour(WaveformImage):
         contour = self.normalize(contour)
 
         # Scaling
-        ratio = 0.1
-        contour = self.normalize(numpy.expm1(ratio*contour))
-        print min(contour), max(contour)
+        #ratio = numpy.mean(contour)/numpy.sqrt(2)
+        ratio = 1
+        contour = self.normalize(numpy.expm1(contour/ratio))
 
+        # Spline
         #contour = cspline1d(contour)
         #contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
 
-        # Multispline scales
+        # Multicurve rotating
         for i in range(0,self.ndiv):
             self.previous_x, self.previous_y = None, None
 
@@ -315,9 +318,9 @@ class WaveformImageJoyContour(WaveformImage):
                 y = contour[j]*(self.image_height-1)
                 if self.previous_y:
                     self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
-                    self.draw_anti_aliased_pixels(x, y, y, line_color)
                 else:
                     self.draw.point((x, y), line_color)
+                self.draw_anti_aliased_pixels(x, y, y, line_color)
                 self.previous_x, self.previous_y = x, y
 
     def process(self, frames, eod):
