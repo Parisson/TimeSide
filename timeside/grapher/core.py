@@ -268,17 +268,27 @@ class WaveformImageJoyContour(WaveformImage):
         self.contour[x] = numpy.max(peaks)
         self.centroids[x] = spectral_centroid
 
-    def draw_peaks_contour(self):
-        #contour = self.contour.copy()
-        contour = smooth(self.contour, window_len=13)
 
-        l_min = min(contour)
-        contour = (contour-l_min)
-        l_max = max(contour)
-        l_range= l_max - l_min
-        contour = contour/l_max
-        contour = cspline1d(contour)
-        contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
+    def normalize(self, contour):
+        contour = contour-min(contour)
+        return contour/max(contour)
+
+    def draw_peaks_contour(self):
+        contour = self.contour.copy()
+
+        # Smoothing
+        contour = smooth(contour, window_len=16)
+
+        # Normalize
+        contour = self.normalize(contour)
+
+        # Scaling
+        ratio = 0.1
+        contour = self.normalize(numpy.expm1(ratio*contour))
+        print min(contour), max(contour)
+
+        #contour = cspline1d(contour)
+        #contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
 
         # Multispline scales
         for i in range(0,self.ndiv):
