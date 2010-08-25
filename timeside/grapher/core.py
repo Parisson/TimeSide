@@ -26,6 +26,7 @@
 import optparse, math, sys
 import ImageFilter, ImageChops, Image, ImageDraw, ImageColor
 import numpy
+from scipy.signal import cspline1d, cspline1d_eval
 from timeside.core import FixedSizeInputAdapter
 
 
@@ -193,7 +194,7 @@ class WaveformImage(object):
 
         line_color = self.color_lookup[int(spectral_centroid*255.0)]
 
-        if self.previous_y != None:
+        if self.previous_y:
             self.draw.line([self.previous_x, self.previous_y, x, y1, x, y2], line_color)
         else:
             self.draw.line([x, y1, x, y2], line_color)
@@ -250,6 +251,90 @@ class WaveformImage(object):
 
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
+        self.image.save(self.filename)
+
+
+class WaveformImageJoyContour(WaveformImage):
+    
+    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, filename=None):
+        WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, filename=filename)
+        self.contour = numpy.zeros(self.image_width)
+        self.centroids = numpy.zeros(self.image_width)
+        self.ndiv = 6
+        self.x = numpy.r_[0:self.image_width-1:1]
+        #self.dx1 = self.x[1]-self.x[0]
+        self.dx2 = self.x[self.samples_per_pixel/(self.ndiv*10)]-self.x[0]
+
+    def get_peaks_contour(self, x, peaks, spectral_centroid=None):
+        """ draw 2 peaks at x using the spectral_centroid for color """
+        self.contour[x] = numpy.max(peaks)
+        self.centroids[x] = spectral_centroid
+        
+    def draw_peaks_contour(self):
+        contour = cspline1d(self.contour.copy())
+        #contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
+        contour = cspline1d_eval(contour, self.x, dx=self.dx2, x0=self.x[0])
+        #print len(contour)
+        
+        l_min = min(self.contour)
+        l_max = max(self.contour)
+        l_range= l_max - l_min
+
+        self.contour = (contour-l_min)/l_range
+        #print contour
+
+        # Multispline scales
+        for i in range(0,self.ndiv):
+            self.previous_x, self.previous_y = None, None
+            bright_color = int(255*(1-float(i)/self.ndiv))
+            line_color = (bright_color,bright_color,bright_color)
+            print line_color
+            
+            # Linear
+            #contour = contour*(1.0-float(i)/self.ndiv)
+            #contour = contour*(1-float(i)/self.ndiv)
+            
+            # Cosine
+            contour = contour*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi
+            #contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)
+            
+            # Negative Sine
+            #contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))
+
+            for j in range(0,self.image_width-1):
+                #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
+                x = self.x[j]
+                y = contour[j]*self.image_height
+                #print y
+                if self.previous_y:
+                    self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
+                    self.draw_anti_aliased_pixels(x, y, y, line_color)
+                else:
+                    self.draw.point((x, y), line_color)
+                self.previous_x, self.previous_y = x, y
+
+    def process(self, frames, eod):
+        if len(frames) != 1:
+            buffer = frames[:,0].copy()
+            buffer.shape = (len(buffer),1)
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width:
+                    #(spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
+                    peaks = self.peaks(samples)
+                    self.get_peaks_contour(self.pixel_cursor, peaks)
+                    self.pixel_cursor += 1
+        if eod:
+            self.draw_peaks_contour()
+
+    def save(self):
+        """ Apply last 2D transforms and write all pixels to the file. """
+
+        # middle line (0 for none)
+        a = 1
+
+        for x in range(self.image_width):
+            self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
+        self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
         self.image.save(self.filename)
 
 

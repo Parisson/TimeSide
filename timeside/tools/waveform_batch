@@ -39,16 +39,16 @@ class GrapherScheme:
                         ]}
 
         # Width of the image
-        self.width = 2048
+        self.width = 1024
 
         # Height of the image
-        self.height = 128
+        self.height = 320
 
         # Background color
-        self.bg_color = (255,255,255)
+        self.bg_color = (25,25,25)
 
         # Force computation. By default, the class doesn't overwrite existing image files.
-        self.force = False
+        self.force = True
 
 
 class Media2Waveform(object):
@@ -74,7 +74,7 @@ class Media2Waveform(object):
             if root:
                 for file in files:
                     ext = file.split('.')[-1]
-                    if ext == 'mp3' or ext == 'MP3':
+                    if ext == 'wav' or ext == 'WAV':
                         media_list.append(root+os.sep+file)
         return media_list
 
@@ -83,7 +83,7 @@ class Media2Waveform(object):
         for media in self.media_list:
             name = os.path.splitext(media)
             name = name[0].split(os.sep)[-1]
-            path_dict[media] = self.img_dir + os.sep + name + '.png'
+            path_dict[media] = unicode(self.img_dir + os.sep + name + '.png')
         return path_dict
 
     def process(self):
@@ -92,7 +92,7 @@ class Media2Waveform(object):
                 print 'Rendering ', source, ' to ', image, '...'
                 audio = os.path.join(os.path.dirname(__file__), source)
                 decoder  = timeside.decoder.FileDecoder(audio)
-                waveform = timeside.grapher.Waveform(width=self.width, height=self.height, output=image,
+                waveform = timeside.grapher.WaveformJoyDiv(width=self.width, height=self.height, output=image,
                                             bg_color=self.bg_color, color_scheme=self.color_scheme)
                 (decoder | waveform).run()
                 print 'frames per pixel = ', waveform.graph.samples_per_pixel
