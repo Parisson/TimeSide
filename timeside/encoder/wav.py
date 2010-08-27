@@ -51,7 +51,7 @@ class WavEncoder(Processor):
             ! audioconvert
             ! wavenc
             ! filesink location=%s ''' % self.filename)
-        # store a pointer to appsink in our encoder object 
+        # store a pointer to appsink in our encoder object
         self.src = pipeline.get_by_name('src')
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
@@ -73,6 +73,11 @@ class WavEncoder(Processor):
     @interfacedoc
     def description():
         return "Wav GStreamer based encoder"
+
+    @staticmethod
+    @interfacedoc
+    def format():
+        return "WAV"
 
     @staticmethod
     @interfacedoc

@@ -82,23 +82,27 @@ class Media2Waveform(object):
         for media in self.media_list:
             filename = media.split(os.sep)[-1]
             name, ext = os.path.splitext(filename)
-            path_dict[media] = self.img_dir + os.sep + filename + '.png'
+            path_dict[media] = self.img_dir + os.sep + filename.replace('.',  '_') + '.png'
         return path_dict
 
     def process(self):
         for source, image in self.path_dict.iteritems():
             if not os.path.exists(image) or self.force:
-                print 'Rendering ', source, ' to ', image, '...'
+                print 'Processing ', source
                 audio = os.path.join(os.path.dirname(__file__), source)
                 decoder  = timeside.decoder.FileDecoder(audio)
-
+                analyzer = timeside.analyzer.Duration()
                 waveform = timeside.grapher.WaveformJoyDiv(width=self.width, height=self.height, output=image,
                                             bg_color=self.bg_color, color_scheme=self.color_scheme)
-
-                (decoder | waveform).run()
+                (decoder | analyzer | waveform).run()
+                duration = analyzer.result()
+                img_name = os.path.split(image)[1]
+                image = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0]+'_'+str(int(duration))+os.path.splitext(img_name)[1]
+                waveform.graph.filename = image
+                print 'Rendering ', source, ' to ', waveform.graph.filename, '...'
                 print 'frames per pixel = ', waveform.graph.samples_per_pixel
                 waveform.render()
-
+                
 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:

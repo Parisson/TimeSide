@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007 Parisson SARL
 # Copyright (c) 2006-2007 Guillaume Pellerin <pellerin@parisson.com>
@@ -18,22 +18,105 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Guillaume Pellerin <yomguy@parisson.com>
+# Authors: Guillaume Pellerin <yomguy@parisson.com>
+#          Paul Brossier <piem@piem.org>
 
-import os
-import string
-import subprocess
-
-from timeside.encoder.core import *
+from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
+from numpy import array, frombuffer, getbuffer, float32
+
+import pygst
+pygst.require('0.10')
+import gst
+import gobject
+gobject.threads_init ()
 
 
-class Mp3Encoder(EncoderCore):
-    """Defines methods to encode to MP3"""
-
+class Mp3Encoder(Processor):
+    """ gstreamer-based mp3 encoder """
     implements(IEncoder)
 
+    def __init__(self, output):
+        self.file = None
+        if isinstance(output, basestring):
+            self.filename = output
+        else:
+            raise Exception("Streaming not supported")
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(Mp3Encoder, self).setup(channels, samplerate, nframes)
+        #TODO: open file for writing
+        # the output data format we want
+        pipeline = gst.parse_launch(''' appsrc name=src
+            ! audioconvert
+            ! lame
+            ! filesink location=%s ''' % self.filename)
+        # store a pointer to appsink in our encoder object
+        self.src = pipeline.get_by_name('src')
+        srccaps = gst.Caps("""audio/x-raw-float,
+            endianness=(int)1234,
+            channels=(int)%s,
+            width=(int)32,
+            rate=(int)%d""" % (int(channels), int(samplerate)))
+        self.src.set_property("caps", srccaps)
+
+        # start pipeline
+        pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline = pipeline
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "gst_mp3_enc"
+
+    @staticmethod
+    @interfacedoc
+    def description():
+        return "MP3 GStreamer based encoder"
+
+    @staticmethod
+    @interfacedoc
+    def format():
+        return "MP3"
+
+    @staticmethod
+    @interfacedoc
+    def file_extension():
+        return "mp3"
+
+    @staticmethod
+    @interfacedoc
+    def mime_type():
+        return "audio/mpeg"
+
+    @interfacedoc
+    def set_metadata(self, metadata):
+        #TODO: 
+        pass
+
+    @interfacedoc
+    def process(self, frames, eod=False):
+        buf = self.numpy_array_to_gst_buffer(frames)
+        self.src.emit('push-buffer', buf)
+        if eod: self.src.emit('end-of-stream')
+        return frames, eod
+
+    def numpy_array_to_gst_buffer(self, frames):
+        """ gstreamer buffer to numpy array conversion """
+        buf = gst.Buffer(getbuffer(frames))
+        return buf
+
+
+class Mp3EncoderOld:
+    """Defines methods to encode to MP3"""
+
+#    implements(IEncoder)
+    
     def __init__(self):
+        import os
+        import string
+        import subprocess
         self.bitrate_default = '192'
         self.dub2id3_dict = {'title': 'TIT2', #title2
                              'creator': 'TCOM', #composer
