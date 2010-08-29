@@ -19,6 +19,7 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
 import numpy
@@ -51,12 +52,10 @@ class MeanLevel(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        max = numpy.round(20*numpy.log10(numpy.mean(numpy.sqrt(numpy.square(frames.max())))), 2)
-        if max > self.value:
-            self.value = max
-
+        value = numpy.round(20*numpy.log10(numpy.mean(numpy.sqrt(numpy.square(frames)))), 3)
+        if value > self.value:
+            self.value = value
         return frames, eod
 
     def result(self):
         return self.value
-

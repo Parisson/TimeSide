@@ -49,7 +49,13 @@ class Duration(Processor):
     @interfacedoc
     def unit():
         return "seconds"
+    
+    def __str__(self):
+        return "%s %s" % (str(self.value), unit())
 
+    def process(self, frames, eod=False):
+        return frames, eod
+    
     def result(self):
         return self.input_nframes / float(self.input_samplerate)
     

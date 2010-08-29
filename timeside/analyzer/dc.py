@@ -19,10 +19,10 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
 import numpy
-
 
 class MeanDCShift(Processor):
     implements(IValueAnalyzer)
@@ -51,7 +51,7 @@ class MeanDCShift(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        self.value = numpy.round(100*numpy.mean(samples),4)
+        self.value = numpy.round(100*numpy.mean(frames),3)
         return frames, eod
 
     def result(self):
