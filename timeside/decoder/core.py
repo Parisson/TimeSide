@@ -117,6 +117,8 @@ class FileDecoder(Processor):
     @interfacedoc
     def format(self):
         # TODO check
+        if self.mimetype == 'application/x-id3':
+            self.mimetype = 'audio/mpeg'
         return self.mimetype
 
     @interfacedoc
