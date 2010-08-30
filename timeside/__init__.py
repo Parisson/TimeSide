@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+import timeside.api
 import timeside.exceptions
 import timeside.core
 import timeside.component
