@@ -260,7 +260,7 @@ class WaveformImageJoyContour(WaveformImage):
         WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, filename=filename)
         self.contour = numpy.zeros(self.image_width)
         self.centroids = numpy.zeros(self.image_width)
-        self.ndiv = 6
+        self.ndiv = 4
         self.x = numpy.r_[0:self.image_width-1:1]
         self.dx1 = self.x[1]-self.x[0]
 
@@ -315,12 +315,14 @@ class WaveformImageJoyContour(WaveformImage):
             for j in range(0,self.image_width-1):
                 #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
                 x = self.x[j]
-                y = contour[j]*(self.image_height-1)
+                y = contour[j]*(self.image_height-2)/2+self.image_height/2
                 if self.previous_y:
                     self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
+                    self.draw.line([self.previous_x, -self.previous_y+self.image_height, x, -y+self.image_height], line_color)
                 else:
                     self.draw.point((x, y), line_color)
                 self.draw_anti_aliased_pixels(x, y, y, line_color)
+                self.draw_anti_aliased_pixels(x, -y+self.image_height, -y+self.image_height, line_color)
                 self.previous_x, self.previous_y = x, y
 
     def process(self, frames, eod):
@@ -338,13 +340,12 @@ class WaveformImageJoyContour(WaveformImage):
 
     def save(self):
         """ Apply last 2D transforms and write all pixels to the file. """
-
         # middle line (0 for none)
         a = 1
 
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
-        self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
+#        self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
         self.image.save(self.filename)
 
 

@@ -39,13 +39,13 @@ class GrapherScheme:
                         ]}
 
         # Width of the image
-        self.width = 1024
+        self.width = 655
 
         # Height of the image
-        self.height = 320
+        self.height = 95
 
         # Background color
-        self.bg_color = (25,25,25)
+        self.bg_color = (136,136,136)
 
         # Force computation. By default, the class doesn't overwrite existing image files.
         self.force = True
@@ -97,7 +97,8 @@ class Media2Waveform(object):
                 (decoder | analyzer | waveform).run()
                 duration = analyzer.result()
                 img_name = os.path.split(image)[1]
-                image = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0]+'_'+str(int(duration))+os.path.splitext(img_name)[1]
+                image = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0] + '_' +\
+                        '_'.join([str(self.width),  str(self.height),  str(int(duration))])+os.path.splitext(img_name)[1]
                 waveform.graph.filename = image
                 print 'Rendering ', source, ' to ', waveform.graph.filename, '...'
                 print 'frames per pixel = ', waveform.graph.samples_per_pixel
