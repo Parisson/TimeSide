@@ -164,9 +164,9 @@ class IGrapher(IProcessor):
         """Set the colors used for image generation. background is a RGB tuple,
         and scheme a a predefined color theme name"""
 
-    def render(self):
+    def render(self, output=None):
         """Return a PIL Image object visually representing all of the data passed
-        by repeatedly calling process()"""
+        by repeatedly calling process() and write the image to the output if specified"""
 
 class IAnalyzer(IProcessor):
     """Media item analyzer driver interface. This interface is abstract, it doesn't

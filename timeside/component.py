@@ -18,7 +18,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# This file defines a generic object interface mechanism and 
+# This file defines a generic object interface mechanism and
 # a way to determine which components implements a given interface.
 #
 # For example, the following defines the Music class as implementing the
@@ -30,19 +30,19 @@
 # class Music(Component):
 #    implements(Listenable)
 #
-# Several class can implements a such interface, and it is possible to 
+# Several class can implements a such interface, and it is possible to
 # discover which class implements it with implementations():
 #
 # list_of_classes = implementations(Listenable)
 #
-# This mechanism support inheritance of interfaces: a class implementing a given 
+# This mechanism support inheritance of interfaces: a class implementing a given
 # interface is also considered to implement all the ascendants of this interface.
 #
-# However, inheritance is not supported for components. The descendants of a class 
-# implementing a given interface are not automatically considered to implement this 
-# interface too. 
+# However, inheritance is not supported for components. The descendants of a class
+# implementing a given interface are not automatically considered to implement this
+# interface too.
 
-__all__ = ['Component', 'MetaComponent', 'implements', 'abstract', 
+__all__ = ['Component', 'MetaComponent', 'implements', 'abstract',
            'interfacedoc', 'Interface', 'implementations', 'ComponentError']
 
 class Interface(object):
@@ -58,8 +58,8 @@ def abstract():
     MetaComponent.abstract = True
 
 def implementations(interface, recurse=True, abstract=False):
-    """Returns the components implementing interface, and if recurse, any of 
-    the descendants of interface. If abstract is True, also return the 
+    """Returns the components implementing interface, and if recurse, any of
+    the descendants of interface. If abstract is True, also return the
     abstract implementations."""
     result = []
     find_implementations(interface, recurse, abstract, result)
@@ -89,7 +89,7 @@ class MetaComponent(type):
         if MetaComponent.implements:
             for i in MetaComponent.implements:
                 MetaComponent.implementations.append({
-                    'interface': i, 
+                    'interface': i,
                     'class':     new_class,
                     'abstract':  MetaComponent.abstract})
 
@@ -108,7 +108,7 @@ class MetaComponent(type):
                     raise ComponentError("@interfacedoc: %s.%s: no such member in implemented interfaces: %s"
                                          % (new_class.__name__, name, str(MetaComponent.implements)))
                 member.__doc__ = if_member.__doc__
-                
+
         MetaComponent.implements = []
         MetaComponent.abstract   = False
 

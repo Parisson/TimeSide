@@ -30,12 +30,11 @@ class Spectrogram(Processor):
     FFT_SIZE = 0x400
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, output=None, bg_color=(0,0,0), color_scheme='default'):
+    def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
         self.width = width
         self.height = height
         self.bg_color = bg_color
         self.color_scheme = color_scheme
-        self.filename = output
         self.graph = None
 
     @staticmethod
@@ -59,7 +58,7 @@ class Spectrogram(Processor):
         if self.graph:
             self.graph = None
         self.graph = SpectrogramImage(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE,
-                                    bg_color=self.bg_color, color_scheme=self.color_scheme, filename=self.filename)
+                                    bg_color=self.bg_color, color_scheme=self.color_scheme)
 
     @interfacedoc
     def process(self, frames, eod=False):
@@ -67,8 +66,8 @@ class Spectrogram(Processor):
         return frames, eod
 
     @interfacedoc
-    def render(self):
-        if self.filename:
-            self.graph.save()
+    def render(self, output=None):
+        if output:
+            self.graph.save(output)
         return self.graph.image
-
+        

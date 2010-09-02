@@ -42,7 +42,7 @@ class GrapherScheme:
         self.width = 655
 
         # Height of the image
-        self.height = 95
+        self.height = 96
 
         # Background color
         self.bg_color = (136,136,136)
@@ -65,7 +65,7 @@ class Media2Waveform(object):
 
         self.media_list = self.get_media_list()
         if not os.path.exists(self.img_dir):
-            os.mkdir(self.img_dir)
+            os.makedirs(self.img_dir)
         self.path_dict = self.get_path_dict()
 
     def get_media_list(self):
@@ -92,7 +92,7 @@ class Media2Waveform(object):
                 audio = os.path.join(os.path.dirname(__file__), source)
                 decoder  = timeside.decoder.FileDecoder(audio)
                 analyzer = timeside.analyzer.Duration()
-                waveform = timeside.grapher.WaveformJoyDiv(width=self.width, height=self.height, output=image,
+                waveform = timeside.grapher.WaveformJoyDiv(width=self.width, height=self.height,
                                             bg_color=self.bg_color, color_scheme=self.color_scheme)
                 (decoder | analyzer | waveform).run()
                 duration = analyzer.result()
@@ -102,7 +102,7 @@ class Media2Waveform(object):
                 waveform.graph.filename = image
                 print 'Rendering ', source, ' to ', waveform.graph.filename, '...'
                 print 'frames per pixel = ', waveform.graph.samples_per_pixel
-                waveform.render()
+                waveform.render(output=image)
                 
 
 if __name__ == '__main__':
