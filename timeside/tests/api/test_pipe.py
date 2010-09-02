@@ -7,8 +7,9 @@ from timeside.analyzer import *
 from timeside.encoder import *
 from timeside.api import *
 from sys import stdout
-
 import os.path
+import numpy
+
 source = os.path.join(os.path.dirname(__file__),  "../samples/guitar.wav")
 
 print "Normalizing %s" % source
@@ -19,8 +20,8 @@ duration = Duration()
 (decoder | maxlevel | duration).run()
 
 gain = 1
-if maxlevel.result() > 0:
-    gain = 0.9 / maxlevel.result()
+if maxlevel.result() < 0:
+    gain = 0.9 / numpy.exp(maxlevel.result()/20)
 
 print "input maxlevel: %f" % maxlevel.result()
 print "gain: %f" % gain

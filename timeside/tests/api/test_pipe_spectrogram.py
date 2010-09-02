@@ -22,11 +22,11 @@ for source, image in test_dict.iteritems():
     image = img_dir + os.sep + image
     print 'Test : decoder(%s) | waveform (%s)' % (source, image)
     decoder  = FileDecoder(audio)
-    spectrogram = Spectrogram(width=1024, height=256, output=image, bg_color=(0,0,0), color_scheme='default')
+    spectrogram = Spectrogram(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
     (decoder | spectrogram).run()
     print 'frames per pixel = ', spectrogram.graph.samples_per_pixel
     print "render spectrogram to: %s" %  image
-    spectrogram.render()
+    spectrogram.render(image)
 
 
 
