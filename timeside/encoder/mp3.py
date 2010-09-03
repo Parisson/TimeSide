@@ -50,7 +50,7 @@ class Mp3Encoder(Processor):
         # the output data format we want
         pipeline = gst.parse_launch(''' appsrc name=src
             ! audioconvert
-            ! lame
+            ! lame name=enc vbr=0 bitrate=256 ! id3v2mux
             ! filesink location=%s ''' % self.filename)
         # store a pointer to appsink in our encoder object
         self.src = pipeline.get_by_name('src')
