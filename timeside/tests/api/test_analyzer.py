@@ -7,12 +7,12 @@ import numpy
 
 
 class TestAnalyzer:
-    
+
     graphers = timeside.core.processors(timeside.api.IGrapher)
     decoders = timeside.core.processors(timeside.api.IDecoder)
     encoders= timeside.core.processors(timeside.api.IEncoder)
     analyzers = timeside.core.processors(timeside.api.IAnalyzer)
-    
+
     def __init__(self, path):
         self.source = os.path.join(os.path.dirname(__file__), path)
         print "Processing %s" % self.source
@@ -27,7 +27,7 @@ class TestAnalyzer:
             self.analyzers_sub_pipe.append(sub_pipe)
             self.pipe = self.pipe | sub_pipe
         self.pipe.run()
-    
+
     def results(self):
         analyzers = []
         for analyzer in self.analyzers_sub_pipe:
@@ -40,7 +40,7 @@ class TestAnalyzer:
 
 
 test = TestAnalyzer('../samples/guitar.wav')
-#test = TestAnalyzer('/mnt/data4/Music1/Cellar_playlist_tmp/JanoB/VirulentAcidMix.wav')
+#test = TestAnalyzer('/home/momo/music/wav/Cellar/Cellar-FinallyMix_01.wav')
 test.process()
 test.results()
 

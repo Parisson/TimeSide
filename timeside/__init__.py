@@ -10,7 +10,3 @@ import timeside.encoder
 import timeside.grapher
 import timeside.analyzer
 from timeside.core import *
-
-
-
-

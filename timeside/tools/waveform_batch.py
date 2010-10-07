@@ -45,7 +45,7 @@ class GrapherScheme:
         self.height = 96
 
         # Background color
-        self.bg_color = (136,136,136)
+        self.bg_color = (0,0,0)
 
         # Force computation. By default, the class doesn't overwrite existing image files.
         self.force = True

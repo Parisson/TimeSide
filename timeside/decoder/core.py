@@ -56,7 +56,7 @@ class FileDecoder(Processor):
     def setup(self, channels = None, samplerate = None, nframes = None):
         # the output data format we want
         caps = "audio/x-raw-float, width=32"
-        pipeline = gst.parse_launch('''uridecodebin uri=%s
+        pipeline = gst.parse_launch('''uridecodebin uri="%s"
             ! audioconvert
             ! %s
             ! appsink name=sink sync=False ''' % (self.uri, caps))

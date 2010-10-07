@@ -98,12 +98,12 @@ class WaveformImageJoyContour(WaveformImage):
                 if not x == 0:
                     if not self.symetry:
                         self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
-                        #self.draw_anti_aliased_pixels(x, y, y, line_color)
+                        self.draw_anti_aliased_pixels(x, y, y, line_color)
                     else:
                         self.draw.line([self.previous_x, self.previous_y+height, x, y+height], line_color)
-                        #self.draw_anti_aliased_pixels(x, y+height, y+height, line_color)
+                        self.draw_anti_aliased_pixels(x, y+height, y+height, line_color)
                         self.draw.line([self.previous_x, -self.previous_y+height, x, -y+height], line_color)
-                        #self.draw_anti_aliased_pixels(x, -y+height, -y+height, line_color)
+                        self.draw_anti_aliased_pixels(x, -y+height, -y+height, line_color)
                 else:
                     if not self.symetry:
                         self.draw.point((x, y), line_color)
