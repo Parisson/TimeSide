@@ -35,7 +35,7 @@ Say 'YES' to all questions. Then::
 
     $ apt-get install -t lenny-backports vim subversion python python-setuptools python-xml python-mutagen \
                             python-imaging python-numpy python-gst0.10 gstreamer0.10-plugins-base \
-                            gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good
+                            gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good gstreamer0.10-plugins-bad
 
 
 2. Install TimeSide
