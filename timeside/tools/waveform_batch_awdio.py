@@ -25,7 +25,7 @@ version = '0.2'
 import os
 import sys
 import timeside
-from logger import *
+from logger import Logger
 
 class GrapherScheme:
 
@@ -51,7 +51,7 @@ class GrapherScheme:
 #        self.bg_color = None
 
         # Force computation. By default, the class doesn't overwrite existing image files.
-        self.force = True
+        self.force = False
 
 
 class Media2Waveform:
