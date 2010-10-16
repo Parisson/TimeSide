@@ -54,8 +54,8 @@ class GrapherScheme:
 class Media2Waveform(object):
 
     def __init__(self, media_dir, img_dir):
-        self.root_dir = media_dir
-        self.img_dir = img_dir
+        self.root_dir = os.path.join(os.path.dirname(__file__), media_dir)
+        self.img_dir = os.path.join(os.path.dirname(__file__), img_dir)
         self.scheme = GrapherScheme()
         self.width = self.scheme.width
         self.height = self.scheme.height

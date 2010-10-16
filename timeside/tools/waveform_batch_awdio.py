@@ -25,6 +25,7 @@ version = '0.2'
 import os
 import sys
 import timeside
+from logger import *
 
 class GrapherScheme:
 
@@ -53,23 +54,24 @@ class GrapherScheme:
         self.force = True
 
 
-class Media2Waveform(object):
+class Media2Waveform:
 
-    def __init__(self, media_dir, img_dir):
-        self.root_dir = media_dir
-        self.img_dir = img_dir
+    def __init__(self, media_dir, img_dir,  log_file):
+        self.root_dir = os.path.join(os.path.dirname(__file__), media_dir)
+        self.img_dir = os.path.join(os.path.dirname(__file__), img_dir)
         self.scheme = GrapherScheme()
         self.width = self.scheme.width
         self.height = self.scheme.height
         self.bg_color = self.scheme.bg_color
         self.color_scheme = self.scheme.color_scheme
         self.force = self.scheme.force
-
+        self.logger = Logger(log_file)
+        
         self.media_list = self.get_media_list()
         if not os.path.exists(self.img_dir):
             os.makedirs(self.img_dir)
         self.path_dict = self.get_path_dict()
-
+                                   
     def get_media_list(self):
         media_list = []
         for root, dirs, files in os.walk(self.root_dir):
@@ -84,30 +86,34 @@ class Media2Waveform(object):
         for media in self.media_list:
             filename = media.split(os.sep)[-1]
             name, ext = os.path.splitext(filename)
-            path_dict[media] = self.img_dir + os.sep + filename.replace('.',  '_') + '.png'
+            path_dict[media] = self.img_dir + os.sep + name + '.png'
         return path_dict
 
     def process(self):
-        for source, image in self.path_dict.iteritems():
+        for audio, image in self.path_dict.iteritems():
             if not os.path.exists(image) or self.force:
-                print 'Processing ', source
-                audio = os.path.join(os.path.dirname(__file__), source)
-                decoder  = timeside.decoder.FileDecoder(audio)
-                analyzer = timeside.analyzer.Duration()
-                waveform = timeside.grapher.WaveformAwdio(width=self.width, height=self.height,
-                                            bg_color=self.bg_color, color_scheme=self.color_scheme)
-                (decoder | analyzer | waveform).run()
-                duration = analyzer.result()
-                img_name = os.path.split(image)[1]
-                image = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0] + '_' +\
-                        '_'.join([str(self.width),  str(self.height),  str(int(duration))])+os.path.splitext(img_name)[1]
-                waveform.graph.filename = image
-                print 'Rendering ', source, ' to ', waveform.graph.filename, '...'
-                print 'frames per pixel = ', waveform.graph.samples_per_pixel
+                mess = 'Processing ' + audio
+                self.logger.write_info(mess)
+                pipe = PipeWaveform()
+                waveform = pipe.process(audio, self.width, self.height, self.bg_color, self.color_scheme)
                 if os.path.exists(image):
                     os.remove(image)
+                mess = 'Rendering ' + image
+                self.logger.write_info(mess)
                 waveform.render(output=image)
-                
+                mess = 'frames per pixel = ' + str(waveform.graph.samples_per_pixel)
+                self.logger.write_info(mess)
+
+
+class PipeWaveform:
+    
+    def process(self, audio, width, height, bg_color, color_scheme):
+        decoder  = timeside.decoder.FileDecoder(audio)
+        waveform = timeside.grapher.WaveformAwdio(width=width, height=height,
+                                   bg_color=bg_color, color_scheme=color_scheme)
+        (decoder | waveform).run()
+        return waveform
+
 
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
@@ -118,7 +124,8 @@ if __name__ == '__main__':
         See http://code.google.com/p/timeside/ for more information.
         """
     else:
-        media_dir = sys.argv[-2]
-        img_dir = sys.argv[-1]
-        m = Media2Waveform(media_dir, img_dir)
+        media_dir = sys.argv[-3]
+        img_dir = sys.argv[-2]
+        log_file = sys.argv[-1]
+        m = Media2Waveform(media_dir, img_dir, log_file)
         m.process()

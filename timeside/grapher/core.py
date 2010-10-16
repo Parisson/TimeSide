@@ -28,7 +28,6 @@ import ImageFilter, ImageChops, Image, ImageDraw, ImageColor
 import numpy
 from timeside.core import FixedSizeInputAdapter
 
-
 default_color_schemes = {
     'default': {
         'waveform': [(50,0,200), (0,220,80), (255,224,0), (255,0,0)],
@@ -251,6 +250,117 @@ class WaveformImage(object):
         self.image.save(filename)
 
 
+class WaveformImageJoyContour(WaveformImage):
+
+    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, ndiv=1, symetry=None):
+        WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme)
+        self.contour = numpy.zeros(self.image_width)
+        self.centroids = numpy.zeros(self.image_width)
+        self.ndiv = ndiv
+        self.x = numpy.r_[0:self.image_width-1:1]
+        self.dx1 = self.x[1]-self.x[0]
+        self.symetry = symetry
+
+    def get_peaks_contour(self, x, peaks, spectral_centroid=None):
+        self.contour[x] = numpy.max(peaks)
+        self.centroids[x] = spectral_centroid
+
+    def mean(self, samples):
+        return numpy.mean(samples)
+
+    def normalize(self, contour):
+        contour = contour-min(contour)
+        return contour/max(contour)
+
+    def draw_peaks_contour(self):
+        contour = self.contour.copy()
+
+        # Smoothing
+        contour = smooth(contour, window_len=16)
+
+        # Normalize
+        contour = self.normalize(contour)
+
+        # Scaling
+        #ratio = numpy.mean(contour)/numpy.sqrt(2)
+        ratio = 1
+        contour = self.normalize(numpy.expm1(contour/ratio))*(1-10**-6)
+
+        # Spline
+        #contour = cspline1d(contour)
+        #contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
+
+        if self.symetry:
+            height = int(self.image_height/2)
+        else:
+            height = self.image_height
+        
+        # Multicurve rotating
+        for i in range(0,self.ndiv):
+            self.previous_x, self.previous_y = None, None
+
+            #bright_color = 255
+            bright_color = int(255*(1-float(i)/(self.ndiv*2)))
+            bright_color = 255-bright_color+160
+            #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
+            line_color = (bright_color,bright_color,bright_color)
+
+            # Linear
+            #contour = contour*(1.0-float(i)/self.ndiv)
+            #contour = contour*(1-float(i)/self.ndiv)
+
+            # Cosine
+            contour = contour*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi
+            #contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)
+
+            # Negative Sine
+            #contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))
+
+            curve = (height-1)*contour
+            #curve = contour*(height-2)/2+height/2
+            
+            for x in self.x:
+                x = int(x)
+                y = curve[x]
+                if not x == 0:
+                    if not self.symetry:
+                        self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
+                        self.draw_anti_aliased_pixels(x, y, y, line_color)
+                    else:
+                        self.draw.line([self.previous_x, self.previous_y+height, x, y+height], line_color)
+                        self.draw_anti_aliased_pixels(x, y+height, y+height, line_color)
+                        self.draw.line([self.previous_x, -self.previous_y+height, x, -y+height], line_color)
+                        self.draw_anti_aliased_pixels(x, -y+height, -y+height, line_color)
+                else:
+                    if not self.symetry:
+                        self.draw.point((x, y), line_color)
+                    else:
+                        self.draw.point((x, y+height), line_color)
+                self.previous_x, self.previous_y = x, y
+
+    def process(self, frames, eod):
+        if len(frames) != 1:
+            buffer = frames[:,0].copy()
+            buffer.shape = (len(buffer),1)
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width:
+                    #(spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
+                    peaks = self.peaks(samples)
+                    self.get_peaks_contour(self.pixel_cursor, peaks)
+                    self.pixel_cursor += 1
+        if eod:
+            self.draw_peaks_contour()
+
+    def save(self, filename):
+        """ Apply last 2D transforms and write all pixels to the file. """
+        # middle line (0 for none)
+        a = 1
+        for x in range(self.image_width):
+            self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
+        #self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
+        self.image.save(filename)
+
+
 class WaveformImageSimple(object):
     """ Builds a PIL image representing a waveform of the audio stream.
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
@@ -283,6 +393,10 @@ class WaveformImageSimple(object):
         self.frame_cursor = 0
         self.pixel_cursor = 0
 
+    def normalize(self, contour):
+        contour = contour-min(contour)
+        return contour/max(contour)
+        
     def peaks(self, samples):
         """ Find the minimum and maximum peak of the samples.
         Returns that pair in the order they were found.
@@ -305,7 +419,7 @@ class WaveformImageSimple(object):
         y1 = self.image_height * 0.5 - peaks[0] * (self.image_height - 4) * 0.5
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
         
-        if self.previous_y and x < self.image_width-2 and self.pixel_cursor % 2:
+        if self.previous_y and x < self.image_width-1 and self.pixel_cursor % 2:
             if y1 < y2:
                 self.draw.line((x, 0, x, y1), self.line_color)
                 self.draw.line((x, self.image_height , x, y2), self.line_color)
@@ -316,8 +430,6 @@ class WaveformImageSimple(object):
             self.draw.line((x, 0, x, self.image_height), self.line_color)
 
         self.previous_x, self.previous_y = x, y1
-
-#        self.draw_anti_aliased_pixels(x, y1, y2, self.line_color)
 
     def draw_anti_aliased_pixels(self, x, y1, y2, color):
         """ vertical anti-aliasing at y1 and y2 """
@@ -353,14 +465,14 @@ class WaveformImageSimple(object):
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
-                if self.pixel_cursor < self.image_width:
+                if self.pixel_cursor < self.image_width-1:
                     self.draw_peaks(self.pixel_cursor, self.peaks(samples))
                     self.pixel_cursor += 1
-            if self.pixel_cursor == self.image_width-2:
+            if self.pixel_cursor == self.image_width-1:
                 self.draw_peaks(self.pixel_cursor, (0, 0))
                 self.pixel_cursor += 1
-            else:
-                pass
+#            else:
+#                pass
 
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
@@ -370,7 +482,7 @@ class WaveformImageSimple(object):
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(filename)
-        
+
         
 class SpectrogramImage(object):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
