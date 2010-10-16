@@ -50,8 +50,8 @@ class GrapherScheme:
         self.bg_color = None
 
         # Force computation. By default, the class doesn't overwrite existing image files.
-        self.force = True
-        
+        self.force = False
+
 
 class Media2Waveform:
 
