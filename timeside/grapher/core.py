@@ -373,6 +373,9 @@ class WaveformImageSimple(WaveformImage):
         else:
             colors = default_color_schemes[color_scheme]['waveform']
         self.line_color = colors[0]
+        self.image = Image.new("RGBA", (self.image_width, self.image_height))
+        self.pixel = self.image.load()
+        self.draw = ImageDraw.Draw(self.image)
 
     def normalize(self, contour):
         contour = contour-min(contour)

@@ -48,11 +48,10 @@ class GrapherScheme:
 
         # Background color
         self.bg_color = None
-#        self.bg_color = None
 
         # Force computation. By default, the class doesn't overwrite existing image files.
-        self.force = False
-
+        self.force = True
+        
 
 class Media2Waveform:
 
@@ -103,7 +102,7 @@ class Media2Waveform:
                 waveform.render(output=image)
                 mess = 'frames per pixel = ' + str(waveform.graph.samples_per_pixel)
                 self.logger.write_info(mess)
-                
+                waveform.release()
 
 class PipeWaveform:
     

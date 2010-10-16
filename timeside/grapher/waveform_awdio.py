@@ -56,7 +56,11 @@ class WaveformAwdio(Processor):
         super(WaveformAwdio, self).setup(channels, samplerate, nframes)
         self.graph = WaveformImageSimple(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE, 
                                     bg_color=self.bg_color, color_scheme=self.color_scheme)
-        
+    
+    @interfacedoc
+    def release(self):
+        pass
+    
     @interfacedoc
     def process(self, frames, eod=False):
         self.graph.process(frames, eod)
