@@ -26,6 +26,8 @@ from timeside.grapher.core import *
 
 class WaveformAwdio(Processor):
     implements(IGrapher)
+    
+    FFT_SIZE = 0x400
 
     @interfacedoc
     def __init__(self, width=572, height=74, bg_color=None, color_scheme='iso'):
@@ -55,7 +57,7 @@ class WaveformAwdio(Processor):
         super(WaveformAwdio, self).setup(channels, samplerate, nframes)
         if self.graph:
             self.graph = None
-        self.graph = WaveformImageSimple(self.width, self.height, self.nframes(), self.samplerate(), 
+        self.graph = WaveformImageSimple(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE, 
                                     bg_color=self.bg_color, color_scheme=self.color_scheme)
 
     @interfacedoc

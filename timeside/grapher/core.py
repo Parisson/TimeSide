@@ -361,58 +361,23 @@ class WaveformImageJoyContour(WaveformImage):
         self.image.save(filename)
 
 
-class WaveformImageSimple(object):
+class WaveformImageSimple(WaveformImage):
     """ Builds a PIL image representing a waveform of the audio stream.
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
     Peaks are colored relative to the spectral centroids of each frame packet. """
 
-    def __init__(self, image_width, image_height, nframes, samplerate, bg_color, color_scheme):
-        self.image_width = image_width
-        self.image_height = image_height
-        self.nframes = nframes
-        self.samplerate = samplerate
-        self.bg_color = bg_color
-        self.color_scheme = color_scheme
-
+    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme):
+        WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme)
         if isinstance(color_scheme, dict):
             colors = color_scheme['waveform']
         else:
             colors = default_color_schemes[color_scheme]['waveform']
-
         self.line_color = colors[0]
-
-        self.samples_per_pixel = self.nframes / float(self.image_width)
-        self.buffer_size = int(round(self.samples_per_pixel, 0))
-        self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
-
-        self.image = Image.new("RGBA", (self.image_width, self.image_height), self.bg_color)
-        self.pixel = self.image.load()
-        self.draw = ImageDraw.Draw(self.image)
-        self.previous_x, self.previous_y = None, None
-        self.frame_cursor = 0
-        self.pixel_cursor = 0
 
     def normalize(self, contour):
         contour = contour-min(contour)
         return contour/max(contour)
         
-    def peaks(self, samples):
-        """ Find the minimum and maximum peak of the samples.
-        Returns that pair in the order they were found.
-        So if min was found first, it returns (min, max) else the other way around. """
-
-        max_index = numpy.argmax(samples)
-        max_value = samples[max_index]
-
-        min_index = numpy.argmin(samples)
-        min_value = samples[min_index]
-
-        if min_index < max_index:
-            return (min_value, max_value)
-        else:
-            return (max_value, min_value)
-
     def draw_peaks(self, x, peaks):
         """ draw 2 peaks at x using the spectral_centroid for color """
 
@@ -431,35 +396,6 @@ class WaveformImageSimple(object):
 
         self.previous_x, self.previous_y = x, y1
 
-    def draw_anti_aliased_pixels(self, x, y1, y2, color):
-        """ vertical anti-aliasing at y1 and y2 """
-        
-        y_max = max(y1, y2)
-        y_max_int = int(y_max)
-        alpha = y_max - y_max_int
-
-        if alpha > 0.0 and alpha < 1.0 and y_max_int + 1 < self.image_height:
-            current_pix = self.pixel[int(x), y_max_int + 1]
-
-            r = int((1-alpha)*current_pix[0] + alpha*color[0])
-            g = int((1-alpha)*current_pix[1] + alpha*color[1])
-            b = int((1-alpha)*current_pix[2] + alpha*color[2])
-
-            self.pixel[x, y_max_int + 1] = (r,g,b)
-
-        y_min = min(y1, y2)
-        y_min_int = int(y_min)
-        alpha = 1.0 - (y_min - y_min_int)
-
-        if alpha > 0.0 and alpha < 1.0 and y_min_int - 1 >= 0:
-            current_pix = self.pixel[x, y_min_int - 1]
-
-            r = int((1-alpha)*current_pix[0] + alpha*color[0])
-            g = int((1-alpha)*current_pix[1] + alpha*color[1])
-            b = int((1-alpha)*current_pix[2] + alpha*color[2])
-
-            self.pixel[x, y_min_int - 1] = (r,g,b)
-
     def process(self, frames, eod):
         if len(frames) != 1:
             buffer = frames[:,0].copy()
@@ -471,14 +407,12 @@ class WaveformImageSimple(object):
             if self.pixel_cursor == self.image_width-1:
                 self.draw_peaks(self.pixel_cursor, (0, 0))
                 self.pixel_cursor += 1
-#            else:
-#                pass
 
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
-
+        
         # middle line (0 for none)
-        a = 1
+        a = 0
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(filename)

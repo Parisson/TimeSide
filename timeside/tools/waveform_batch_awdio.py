@@ -103,7 +103,7 @@ class Media2Waveform:
                 waveform.render(output=image)
                 mess = 'frames per pixel = ' + str(waveform.graph.samples_per_pixel)
                 self.logger.write_info(mess)
-
+                
 
 class PipeWaveform:
     
