@@ -35,7 +35,6 @@ class WaveformAwdio(Processor):
         self.height = height
         self.bg_color = bg_color
         self.color_scheme = color_scheme
-        self.graph = None
 
     @staticmethod
     @interfacedoc
@@ -55,11 +54,9 @@ class WaveformAwdio(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(WaveformAwdio, self).setup(channels, samplerate, nframes)
-        if self.graph:
-            self.graph = None
         self.graph = WaveformImageSimple(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE, 
                                     bg_color=self.bg_color, color_scheme=self.color_scheme)
-
+        
     @interfacedoc
     def process(self, frames, eod=False):
         self.graph.process(frames, eod)
