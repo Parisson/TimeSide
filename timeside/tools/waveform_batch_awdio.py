@@ -20,12 +20,15 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-version = '0.2'
+version = '0.3'
 
 import os
 import sys
+import time
 import timeside
 from logger import Logger
+import Queue
+from threading import Thread
 
 class GrapherScheme:
 
@@ -51,6 +54,9 @@ class GrapherScheme:
 
         # Force computation. By default, the class doesn't overwrite existing image files.
         self.force = False
+        
+        # Nb of threads
+        self.threads = 4
 
 
 class Media2Waveform:
@@ -64,7 +70,10 @@ class Media2Waveform:
         self.bg_color = self.scheme.bg_color
         self.color_scheme = self.scheme.color_scheme
         self.force = self.scheme.force
+        self.threads = self.scheme.threads
         self.logger = Logger(log_file)
+        self.counter = 0
+        self.workers = []
         
         self.media_list = self.get_media_list()
         if not os.path.exists(self.img_dir):
@@ -85,29 +94,92 @@ class Media2Waveform:
         for media in self.media_list:
             filename = media.split(os.sep)[-1]
             name, ext = os.path.splitext(filename)
-            path_dict[media] = self.img_dir + os.sep + name + '.png'
+            image = self.img_dir + os.sep + name + '.png'
+            if not os.path.exists(image) or self.force:
+                path_dict[media] = image
         return path_dict
 
-    def process(self):
-        for audio, image in self.path_dict.iteritems():
-            if not os.path.exists(image) or self.force:
-                mess = 'Processing ' + audio
-                self.logger.write_info(mess)
-                decoder  = timeside.decoder.FileDecoder(audio)
-                waveform = timeside.grapher.WaveformAwdio(width=self.width, height=self.height,
-                                   bg_color=self.bg_color, color_scheme=self.color_scheme)
-                (decoder | waveform).run()
-                if os.path.exists(image):
-                    os.remove(image)
-                mess = 'Rendering ' + image
-                self.logger.write_info(mess)
-                waveform.render(output=image)
-                mess = 'frames per pixel = ' + str(waveform.graph.samples_per_pixel)
-                self.logger.write_info(mess)
-                waveform.release()
-                decoder.release()
-
+    def processing_workers(self):
+        processing = 0
+        for worker in self.workers:
+            if worker.processing:
+                processing += 1
+        print 'procs : ', processing
+        return processing
         
+    def process(self):
+        q = Queue.Queue(1)            
+        p = Producer(q)
+        p.start()
+        
+        for media, image in self.path_dict.iteritems():
+            self.workers.append(Worker(media, image, self.width, self.height, 
+                                        self.bg_color, self.color_scheme, q, self.logger))
+        print self.workers
+        for worker in self.workers:
+            if self.counter != 0:
+                while not self.processing_workers() % self.threads:
+                    time.sleep(10)
+            worker.start()
+            time.sleep(1)
+            print self.counter
+            self.counter += 1
+         
+        
+class Worker(Thread):
+    
+    def __init__(self, media, image, width, height,  bg_color, color_scheme, q, logger):
+        Thread.__init__(self)
+        self.media = media
+        self.image = image
+        self.q = q
+        self.logger = logger
+        self.width = width
+        self.height = height
+        self.bg_color = bg_color
+        self.color_scheme = color_scheme
+        self.decoder  = timeside.decoder.FileDecoder(self.media)
+        self.waveform = timeside.grapher.WaveformAwdio(width=self.width, height=self.height,
+                                   bg_color=self.bg_color, color_scheme=self.color_scheme)
+        self.processing = 0
+        
+    def run(self):
+        self.q.get(1)
+        mess = 'Processing ' + self.media
+        self.logger.write_info(mess)
+        self.processing = 1
+        (self.decoder | self.waveform).run()
+        self.q.task_done()
+        
+        self.q.get(1)
+        if os.path.exists(self.image):
+            os.remove(self.image)
+        mess = 'Rendering ' + self.image
+        self.logger.write_info(mess)
+        self.waveform.render(output=self.image)
+        mess = 'frames per pixel = ' + str(self.waveform.graph.samples_per_pixel)
+        self.logger.write_info(mess)
+        self.waveform.release()
+        self.decoder.release()
+        self.processing = 0
+        self.q.task_done()
+
+
+class Producer(Thread):
+    """a Producer master thread"""
+
+    def __init__(self, q):
+        Thread.__init__(self)
+        self.q = q
+
+    def run(self):
+        i=0
+        q = self.q
+        while True:
+            q.put(i,1)
+            i+=1
+          
+          
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
         print """
