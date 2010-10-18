@@ -58,16 +58,15 @@ class WaveformAwdio(Processor):
                                     bg_color=self.bg_color, color_scheme=self.color_scheme)
     
     @interfacedoc
-    def release(self):
-        pass
-    
-    @interfacedoc
     def process(self, frames, eod=False):
         self.graph.process(frames, eod)
         return frames, eod
+#
+#    def release(self):
+#        self.graph.release()
 
     @interfacedoc
     def render(self, output):
         if output:
             self.graph.save(output)
-        return self.graph.image
+#        return self.graph.image

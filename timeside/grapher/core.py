@@ -249,6 +249,11 @@ class WaveformImage(object):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(filename)
 
+    def release(self):
+        self.pixel = 0
+        self.image = 0
+        self.draw = 0
+        self.spectrum = 0
 
 class WaveformImageJoyContour(WaveformImage):
 
@@ -359,24 +364,40 @@ class WaveformImageJoyContour(WaveformImage):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         #self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
         self.image.save(filename)
-
-
+        
+        
 class WaveformImageSimple(WaveformImage):
     """ Builds a PIL image representing a waveform of the audio stream.
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
     Peaks are colored relative to the spectral centroids of each frame packet. """
 
     def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme):
-        WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme)
+        self.image_width = image_width
+        self.image_height = image_height
+        self.nframes = nframes
+        self.samplerate = samplerate
+        self.fft_size = fft_size
+        self.bg_color = bg_color
+        self.color_scheme = color_scheme
+
         if isinstance(color_scheme, dict):
             colors = color_scheme['waveform']
         else:
             colors = default_color_schemes[color_scheme]['waveform']
         self.line_color = colors[0]
+
+        self.samples_per_pixel = self.nframes / float(self.image_width)
+        self.buffer_size = int(round(self.samples_per_pixel, 0))
+        self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
+        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
+
         self.image = Image.new("RGBA", (self.image_width, self.image_height))
         self.pixel = self.image.load()
         self.draw = ImageDraw.Draw(self.image)
-
+        self.previous_x, self.previous_y = None, None
+        self.frame_cursor = 0
+        self.pixel_cursor = 0
+        
     def normalize(self, contour):
         contour = contour-min(contour)
         return contour/max(contour)
@@ -401,12 +422,16 @@ class WaveformImageSimple(WaveformImage):
 
     def process(self, frames, eod):
         if len(frames) != 1:
-            buffer = frames[:,0].copy()
+            buffer = frames[:,0]
             buffer.shape = (len(buffer),1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width-1:
                     self.draw_peaks(self.pixel_cursor, self.peaks(samples))
                     self.pixel_cursor += 1
+                if end:
+                    samples = 0
+                    buffer = 0
+                    break
             if self.pixel_cursor == self.image_width-1:
                 self.draw_peaks(self.pixel_cursor, (0, 0))
                 self.pixel_cursor += 1
@@ -415,11 +440,17 @@ class WaveformImageSimple(WaveformImage):
         """ Apply last 2D transforms and write all pixels to the file. """
         
         # middle line (0 for none)
-        a = 0
+        a = 1
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(filename)
-
+    
+    def release(self):
+        self.pixels_adapter.process = 0
+        self.pixel = 0
+        self.image = 0
+        self.draw = 0
+        self.spectrum = 0
         
 class SpectrogramImage(object):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
