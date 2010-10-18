@@ -93,8 +93,10 @@ class Media2Waveform:
             if not os.path.exists(image) or self.force:
                 mess = 'Processing ' + audio
                 self.logger.write_info(mess)
-                pipe = PipeWaveform()
-                waveform = pipe.process(audio, self.width, self.height, self.bg_color, self.color_scheme)
+                decoder  = timeside.decoder.FileDecoder(audio)
+                waveform = timeside.grapher.WaveformAwdio(width=self.width, height=self.height,
+                                   bg_color=self.bg_color, color_scheme=self.color_scheme)
+                (decoder | waveform).run()
                 if os.path.exists(image):
                     os.remove(image)
                 mess = 'Rendering ' + image
@@ -103,16 +105,9 @@ class Media2Waveform:
                 mess = 'frames per pixel = ' + str(waveform.graph.samples_per_pixel)
                 self.logger.write_info(mess)
                 waveform.release()
+                decoder.release()
 
-class PipeWaveform:
-    
-    def process(self, audio, width, height, bg_color, color_scheme):
-        decoder  = timeside.decoder.FileDecoder(audio)
-        waveform = timeside.grapher.WaveformAwdio(width=width, height=height,
-                                   bg_color=bg_color, color_scheme=color_scheme)
-        (decoder | waveform).run()
-        return waveform
-
+        
 if __name__ == '__main__':
     if len(sys.argv) <= 2:
         print """
