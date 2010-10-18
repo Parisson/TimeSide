@@ -56,7 +56,7 @@ class GrapherScheme:
         self.force = False
         
         # Nb of threads
-        self.threads = 4
+        self.threads = 2
 
 
 class Media2Waveform:
