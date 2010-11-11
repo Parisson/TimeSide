@@ -30,7 +30,7 @@ class WaveformAwdio(Processor):
     FFT_SIZE = 0x400
 
     @interfacedoc
-    def __init__(self, width=572, height=74, bg_color=None, color_scheme='iso'):
+    def __init__(self, width=572, height=74, bg_color=None, color_scheme='awdio'):
         self.width = width
         self.height = height
         self.bg_color = bg_color
