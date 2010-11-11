@@ -57,7 +57,7 @@ class GrapherScheme:
         
         # Nb of threads
         # FIXME: memory leak for > 1 !
-        self.threads = 1
+        self.threads = 2
 
 
 class Media2Waveform(object):
@@ -112,8 +112,6 @@ class Media2Waveform(object):
             
         for media, image in self.path_dict.iteritems():
             q.put((media, image))
-            print media, image
-        
         q.join()
             
         
@@ -132,7 +130,6 @@ def Worker(width, height, bg_color, color_scheme, q, logger):
         logger.write_info(mess)
         grapher.release()
         q.task_done()
-        return
       
 if __name__ == '__main__':
     if len(sys.argv) <= 2:

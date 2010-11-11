@@ -366,10 +366,10 @@ class WaveformImageJoyContour(WaveformImage):
         self.image.save(filename)
         
         
-class WaveformImageSimple(WaveformImage):
+class WaveformImageSimple(object):
     """ Builds a PIL image representing a waveform of the audio stream.
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
-    Peaks are colored relative to the spectral centroids of each frame packet. """
+    """
 
     def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme):
         self.image_width = image_width
@@ -408,7 +408,7 @@ class WaveformImageSimple(WaveformImage):
         y1 = self.image_height * 0.5 - peaks[0] * (self.image_height - 4) * 0.5
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
         
-        if self.previous_y and x < self.image_width-1 and self.pixel_cursor % 2:
+        if self.previous_y and x < self.image_width-1:
             if y1 < y2:
                 self.draw.line((x, 0, x, y1), self.line_color)
                 self.draw.line((x, self.image_height , x, y2), self.line_color)

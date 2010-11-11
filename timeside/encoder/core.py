@@ -23,7 +23,7 @@
 from timeside.core import *
 import subprocess
 
-class SubProcessPipe:
+class SubProcessPipe(object):
     """Read media and stream data through a generator.
     Taken from Telemeta (see http://telemeta.org)"""
 
@@ -42,6 +42,7 @@ class SubProcessPipe:
         self.input = self.proc.stdin
         self.output = self.proc.stdout
 
+
 class EncoderSubProcessCore(Processor):
     """Defines the main parts of the encoding tools :
     paths, metadata parsing, data streaming thru system command"""
@@ -59,6 +60,3 @@ class EncoderSubProcessCore(Processor):
             if len(__chunk) == 0:
                 break
             yield __chunk
-
-
-
