@@ -402,6 +402,22 @@ class WaveformImageSimple(object):
         contour = contour-min(contour)
         return contour/max(contour)
         
+    def peaks(self, samples):
+        """ Find the minimum and maximum peak of the samples.
+        Returns that pair in the order they were found.
+        So if min was found first, it returns (min, max) else the other way around. """
+
+        max_index = numpy.argmax(samples)
+        max_value = samples[max_index]
+
+        min_index = numpy.argmin(samples)
+        min_value = samples[min_index]
+
+        if min_index < max_index:
+            return (min_value, max_value)
+        else:
+            return (max_value, min_value)
+            
     def draw_peaks(self, x, peaks):
         """ draw 2 peaks at x using the spectral_centroid for color """
 
