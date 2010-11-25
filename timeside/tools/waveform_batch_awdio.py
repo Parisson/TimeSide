@@ -43,11 +43,14 @@ class GrapherScheme:
                         (0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100), (224,224,44), (255,60,30), (255,255,255)
                         ]}
 
+        # Grapher id
+        self.id = 'waveform_awdio'
+
         # Width of the image
-        self.width = 572
+        self.width = 1800
 
         # Height of the image
-        self.height = 74
+        self.height = 233
 
         # Background color
         self.bg_color = None
@@ -57,7 +60,7 @@ class GrapherScheme:
         
         # Nb of threads
         # FIXME: memory leak for > 1 !
-        self.threads = 2
+        self.threads = 1
 
 
 class Media2Waveform(object):
@@ -95,7 +98,8 @@ class Media2Waveform(object):
         for media in self.media_list:
             filename = media.split(os.sep)[-1]
             name, ext = os.path.splitext(filename)
-            image = self.img_dir + os.sep + name + '.png'
+            size = str(self.width) + '_' + str(self.height)
+            image = self.img_dir + os.sep + name + '.' + self.scheme.id + '.' + size + '.png'
             if not os.path.exists(image) or self.force:
                 path_dict[media] = image
         return path_dict
