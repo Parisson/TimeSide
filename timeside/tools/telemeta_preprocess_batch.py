@@ -195,5 +195,5 @@ if __name__ == '__main__':
         setup_environ(settings)
         media_dir = settings.MEDIA_ROOT
         data_dir = settings.TELEMETA_DATA_CACHE_DIR
-        t = TelemetaPreprocessImport(media_dir, cache_dir, log_file)
+        t = TelemetaPreprocessImport(media_dir, data_dir, log_file)
         t.process()
