@@ -30,7 +30,7 @@ class WaveformJoyDiv(Processor):
     FFT_SIZE = 0x400
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(136,136,136), color_scheme='default'):
+    def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
         self.width = width
         self.height = height
         self.bg_color = bg_color

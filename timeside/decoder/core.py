@@ -30,8 +30,7 @@ import pygst
 pygst.require('0.10')
 import gst
 import gobject
-gobject.threads_init ()
-
+gobject.threads_init()
 
 class FileDecoder(Processor):
     """ gstreamer-based decoder """
@@ -100,7 +99,6 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def __init__(self, uri):
-
         # is this a file?
         import os.path
         if os.path.exists(uri):
