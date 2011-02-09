@@ -57,8 +57,8 @@ class WaveformJoyDiv(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(WaveformJoyDiv, self).setup(channels, samplerate, nframes)
-        if self.graph:
-            self.graph = None
+#        if self.graph:
+#            self.graph = None
         self.graph = WaveformImageJoyContour(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE,
                                     bg_color=self.bg_color, color_scheme=self.color_scheme,  ndiv=self.ndiv, symetry=self.symetry)
 
@@ -72,3 +72,6 @@ class WaveformJoyDiv(Processor):
         if output:
             self.graph.save(output)
         return self.graph.image
+
+    def release(self):
+        self.graph.release()

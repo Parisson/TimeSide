@@ -29,7 +29,7 @@ import pygst
 pygst.require('0.10')
 import gst
 import gobject
-gobject.threads_init ()
+gobject.threads_init()
 
 
 class Mp3Encoder(Processor):
@@ -101,7 +101,7 @@ class Mp3Encoder(Processor):
         self.src.emit('push-buffer', buf)
         if eod: self.src.emit('end-of-stream')
         return frames, eod
-
+        
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """
         buf = gst.Buffer(getbuffer(frames))

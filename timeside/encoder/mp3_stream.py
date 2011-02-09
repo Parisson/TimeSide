@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2007-2010 Parisson
-# Copyright (c) 2010 Paul Brossier <piem@piem.org>
-#
+# Copyright (C) 2007 Parisson SARL
+# Copyright (c) 2006-2007 Guillaume Pellerin <pellerin@parisson.com>
+
 # This file is part of TimeSide.
 
 # TimeSide is free software: you can redistribute it and/or modify
@@ -18,7 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Authors: Guillaume Pellerin <yomguy@parisson.com>
+#          Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
@@ -31,28 +32,38 @@ import gobject
 gobject.threads_init()
 
 
-class WavEncoder(Processor):
-    """ gstreamer-based encoder """
+class Mp3EncoderStream(Processor):
+    """ gstreamer-based streaming mp3 encoder with an appsink tee"""
     implements(IEncoder)
 
-    def __init__(self, output):
-        self.file = None
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
-            raise Exception("Streaming not supported")
-
+    def __init__(self, output=None):
+#        self.file = None
+        self.filename = output
+        
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WavEncoder, self).setup(channels, samplerate, nframes)
-        # TODO open file for writing
+        super(Mp3EncoderStream, self).setup(channels, samplerate, nframes)
+        #TODO: open file for writing
         # the output data format we want
-        pipeline = gst.parse_launch(''' appsrc name=src
-            ! audioconvert
-            ! wavenc
-            ! filesink location=%s ''' % self.filename)
-        # store a pointer to appsink in our encoder object
+        
+        pipe = '''appsrc name=src ! audioconvert 
+                  ! lame name=enc vbr=0 bitrate=256 ! id3v2mux 
+                  '''
+        if self.filename:
+            pipe += '''
+            ! queue2 name=q0 ! tee name=tee
+            tee. ! queue name=q1 ! appsink name=app
+            tee. ! queue name=q2 ! filesink location=%s
+            ''' % self.filename
+        else:
+            pipe += '! appsink name=app'
+            
+        pipeline = gst.parse_launch(pipe)
+        # store a pointer to appsrc in our encoder object
         self.src = pipeline.get_by_name('src')
+        # store a pointer to appsink in our encoder object
+        self.app = pipeline.get_by_name('app')
+        
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
@@ -67,41 +78,43 @@ class WavEncoder(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_wav_enc"
+        return "gst_mp3_enc_stream"
 
     @staticmethod
     @interfacedoc
     def description():
-        return "Wav GStreamer based encoder"
+        return "MP3 GStreamer based encoder and streamer"
 
     @staticmethod
     @interfacedoc
     def format():
-        return "WAV"
+        return "MP3"
 
     @staticmethod
     @interfacedoc
     def file_extension():
-        return "wav"
+        return "mp3"
 
     @staticmethod
     @interfacedoc
     def mime_type():
-        return "audio/x-wav"
+        return "audio/mpeg"
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO
+        #TODO: 
         pass
 
     @interfacedoc
     def process(self, frames, eod=False):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
+        appbuffer = self.app.emit('pull-buffer')
         if eod: self.src.emit('end-of-stream')
-        return frames, eod
-
+        return appbuffer, eod
+        
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """
         buf = gst.Buffer(getbuffer(frames))
         return buf
+

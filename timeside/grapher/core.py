@@ -255,10 +255,7 @@ class WaveformImage(object):
         self.image.save(filename)
 
     def release(self):
-        self.pixel = 0
-        self.image = 0
-        self.draw = 0
-        self.spectrum = 0
+        pass
 
 class WaveformImageJoyContour(WaveformImage):
 
@@ -370,6 +367,8 @@ class WaveformImageJoyContour(WaveformImage):
         #self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
         self.image.save(filename)
         
+    def release(self):
+        pass
         
 class WaveformImageSimple(object):
     """ Builds a PIL image representing a waveform of the audio stream.
@@ -467,11 +466,7 @@ class WaveformImageSimple(object):
         self.image.save(filename)
     
     def release(self):
-        self.pixels_adapter.process = 0
-        self.pixel = 0
-        self.image = 0
-        self.draw = 0
-        self.spectrum = 0
+        pass
         
 class SpectrogramImage(object):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
@@ -547,7 +542,9 @@ class SpectrogramImage(object):
         self.image.putdata(self.pixels)
         self.image.transpose(Image.ROTATE_90).save(filename)
 
-
+    def release(self):
+        pass
+        
 class Noise(object):
     """A class that mimics audiolab.sndfile but generates noise instead of reading
     a wave file. Additionally it can be told to have a "broken" header and thus crashing
