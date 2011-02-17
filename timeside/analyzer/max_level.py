@@ -32,7 +32,7 @@ class MaxLevel(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(MaxLevel, self).setup(channels, samplerate, nframes)
-        self.value = 0
+        self.value = -120
 
     @staticmethod
     @interfacedoc

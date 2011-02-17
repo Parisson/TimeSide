@@ -1,7 +1,7 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007 Parisson SARL
-# Copyright (c) 2006-2007 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2010 Paul Brossier <piem@piem.org>
+# Copyright (c) 2010 Guillaume Pellerin <yomguy@parisson.com>
 
 # This file is part of TimeSide.
 
@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Authors: Guillaume Pellerin <yomguy@parisson.com>
-#          Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
@@ -32,8 +30,8 @@ import gobject
 gobject.threads_init()
 
 
-class Mp3EncoderStream(Processor):
-    """ gstreamer-based streaming mp3 encoder with an appsink tee"""
+class VorbisEncoderStream(Processor):
+    """ gstreamer-based vorbis encoder """
     implements(IEncoder)
 
     def __init__(self, output=None):
@@ -41,12 +39,12 @@ class Mp3EncoderStream(Processor):
         
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
-        super(Mp3EncoderStream, self).setup(channels, samplerate, nframes)
-        #TODO: open file for writing
-        # the output data format we want        
-        pipe = '''appsrc name=src ! audioconvert 
-                  ! lame name=enc vbr=0 bitrate=256 ! id3v2mux 
-                  '''
+        super(VorbisEncoderStream, self).setup(channels, samplerate, nframes)
+        # TODO open file for writing
+        # the output data format we want
+        pipe = '''appsrc name=src ! audioconvert
+                ! vorbisenc ! oggmux
+                '''
         if self.filename:
             pipe += '''
             ! queue2 name=q0 ! tee name=tee
@@ -76,31 +74,31 @@ class Mp3EncoderStream(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_mp3_enc_stream"
+        return "gst_vorbis_enc_stream"
 
     @staticmethod
     @interfacedoc
     def description():
-        return "MP3 GStreamer based encoder and streamer"
+        return "Vorbis GStreamer based encoder and streamer"
 
     @staticmethod
     @interfacedoc
     def format():
-        return "MP3"
+        return "OGG"
 
     @staticmethod
     @interfacedoc
     def file_extension():
-        return "mp3"
+        return "ogg"
 
     @staticmethod
     @interfacedoc
     def mime_type():
-        return "audio/mpeg"
+        return "application/ogg"
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO: 
+        #TODO:
         pass
 
     @interfacedoc
@@ -110,7 +108,7 @@ class Mp3EncoderStream(Processor):
         appbuffer = self.app.emit('pull-buffer')
         if eod: self.src.emit('end-of-stream')
         return appbuffer, eod
-        
+
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """
         buf = gst.Buffer(getbuffer(frames))
