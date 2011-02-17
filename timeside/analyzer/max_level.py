@@ -52,10 +52,8 @@ class MaxLevel(Processor):
     def process(self, frames, eod=False):
         max = round(20*numpy.log(frames.max()), 3)
         if max > self.value:
-            self.max_value = max
+            self.value = max
         return frames, eod
 
     def result(self):
         return self.value
-
-
