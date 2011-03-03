@@ -19,122 +19,111 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-import os
-import string
-import subprocess
-
-from timeside.encoder.core import *
+from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
-from tempfile import NamedTemporaryFile
+from numpy import array, frombuffer, getbuffer, float32
 
-class FlacEncoder(EncoderCore):
-    """Defines methods to encode to FLAC"""
+import pygst
+pygst.require('0.10')
+import gst
+import gobject
+gobject.threads_init()
 
+class FlacEncoder(Processor):
+    """ gstreamer-based FLAC encoder """
     implements(IEncoder)
 
-    def __init__(self):
-        self.quality_default = '-5'
-        self.dub2args_dict = {'creator': 'artist',
-                             'relation': 'album'
-                             }
+    def __init__(self, output,  streaming=False):
+        if isinstance(output, basestring):
+            self.filename = output
+        else:
+            self.filename = None
+        self.streaming = streaming
+        
+        if not self.filename and self.streaming:
+            raise Exception('Must give an output')
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        super(FlacEncoder, self).setup(channels, samplerate, nframes)
+        # TODO open file for writing
+        # the output data format we want        
+        pipe = ''' appsrc name=src max-bytes=32768 block=true
+                  ! audioconvert 
+                  ! flacenc
+                  '''
+        if self.filename and self.streaming:
+            pipe += '''
+            ! queue2 name=q0 ! tee name=tee
+            tee. ! queue name=q1 ! appsink name=app sync=false
+            tee. ! queue name=q2 ! filesink location=%s
+            ''' % self.filename
+            
+        elif self.filename :
+            pipe += '! filesink location=%s ' % self.filename
+        else:
+            pipe += '! appsink name=app sync=false '
+            
+        self.pipeline = gst.parse_launch(pipe)
+        # store a pointer to appsrc in our encoder object
+        self.src = self.pipeline.get_by_name('src')
+        # store a pointer to appsink in our encoder object
+        self.app = self.pipeline.get_by_name('app')
+        
+        srccaps = gst.Caps("""audio/x-raw-float,
+            endianness=(int)1234,
+            channels=(int)%s,
+            width=(int)32,
+            rate=(int)%d""" % (int(channels), int(samplerate)))
+        self.src.set_property("caps", srccaps)
+
+        # start pipeline
+        self.pipeline.set_state(gst.STATE_PLAYING)
 
     @staticmethod
+    @interfacedoc
     def id():
-        return "flacenc"
+        return "gst_flac_enc"
 
-    def format(self):
-        return 'FLAC'
+    @staticmethod
+    @interfacedoc
+    def description():
+        return "FLAC GStreamer based encoder"
 
-    def file_extension(self):
-        return 'flac'
+    @staticmethod
+    @interfacedoc
+    def format():
+        return "FLAC"
 
-    def mime_type(self):
+    @staticmethod
+    @interfacedoc
+    def file_extension():
+        return "flac"
+
+    @staticmethod
+    @interfacedoc
+    def mime_type():
         return 'audio/x-flac'
 
-    def description(self):
-        return """
-        Free Lossless Audio Codec (FLAC) is a file format for lossless audio
-        data compression.
-        """
+    @interfacedoc
+    def set_metadata(self, metadata):
+        #TODO:
+        pass
 
-    def get_file_info(self):
-        try:
-            file1, file2 = os.popen4('metaflac --list "'+self.dest+'"')
-            info = []
-            for line in file2.readlines():
-                info.append(clean_word(line[:-1]))
-            self.info = info
-            return self.info
-        except:
-            raise IOError('EncoderError: metaflac is not installed or ' + \
-                           'file does not exist.')
-
-    def write_tags(self, file):
-        from mutagen.flac import FLAC
-        media = FLAC(file)
-        for tag in self.metadata:
-            name = tag[0]
-            value = clean_word(tag[1])
-            if name in self.dub2args_dict.keys():
-                name = self.dub2args_dict[name]
-            if name == 'comment':
-                media['DESCRIPTION'] = unicode(value)
-            else:
-                media[name] = unicode(value)
-        try:
-            media.save()
-        except:
-            raise IOError('EncoderError: cannot write tags.')
-
-
-    def get_args(self,options=None):
-        """Get process options and return arguments for the encoder"""
-        args = []
-        if not options is None:
-            self.options = options
-            if not ('verbose' in self.options and self.options['verbose'] != '0'):
-                args.append('-s')
-            if 'flac_quality' in self.options:
-                args.append('-f ' + self.options['flac_quality'])
-            else:
-                args.append('-f ' + self.quality_default)
+    @interfacedoc
+    def process(self, frames, eod=False):
+        buf = self.numpy_array_to_gst_buffer(frames)
+        self.src.emit('push-buffer', buf)
+        if self.streaming:
+            pull = self.app.emit('pull-buffer')
+        if eod: self.src.emit('end-of-stream')
+        if not self.streaming:
+            return frames, eod
         else:
-            args.append('-s -f ' + self.quality_default)
+            return pull, eod
 
-        #for tag in self.metadata.keys():
-            #value = clean_word(self.metadata[tag])
-            #args.append('-c %s="%s"' % (tag, value))
-            #if tag in self.dub2args_dict.keys():
-                #arg = self.dub2args_dict[tag]
-                #args.append('-c %s="%s"' % (arg, value))
-
-        return args
-
-    def process(self, source, metadata, options=None):
-        buffer_size = 0xFFFF
-        self.metadata= metadata
-        self.options = options
-        args = self.get_args()
-        args = ' '.join(args)
-        ext = self.file_extension()
-        temp_file = NamedTemporaryFile()
-        command = 'flac %s - -o %s ' % (args, temp_file.name)
-
-        stream = self.core_process(command, source)
-
-        for __chunk in stream:
-            #temp_file.write(__chunk)
-            #temp_file.flush()
-            pass
-
-        #self.write_tags(temp_file.name)
-
-        while True:
-            __chunk = temp_file.read(buffer_size)
-            if len(__chunk) == 0:
-                break
-            yield __chunk
-
-        temp_file.close()
-
+    def numpy_array_to_gst_buffer(self, frames):
+        """ gstreamer buffer to numpy array conversion """
+        buf = gst.Buffer(getbuffer(frames))
+        return buf
 

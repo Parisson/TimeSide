@@ -35,24 +35,43 @@ class WavEncoder(Processor):
     """ gstreamer-based encoder """
     implements(IEncoder)
 
-    def __init__(self, output):
-        self.file = None
+    def __init__(self, output,  streaming=False):
         if isinstance(output, basestring):
             self.filename = output
         else:
-            raise Exception("Streaming not supported")
+            self.filename = None
+        self.streaming = streaming
+        
+        if not self.filename and self.streaming:
+            raise Exception('Must give an output')
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(WavEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
         # the output data format we want
-        self.pipeline = gst.parse_launch(''' appsrc name=src
-            ! audioconvert
-            ! wavenc
-            ! filesink location=%s ''' % self.filename)
-        # store a pointer to appsink in our encoder object
+        pipe = ''' appsrc name=src
+                  ! audioconvert 
+                  ! wavenc
+                  '''
+        if self.filename and self.streaming:
+            pipe += '''
+            ! queue2 name=q0 ! tee name=tee
+            tee. ! queue name=q1 ! appsink name=app sync=false
+            tee. ! queue name=q2 ! filesink location=%s
+            ''' % self.filename
+            
+        elif self.filename :
+            pipe += '! filesink location=%s ' % self.filename
+        else:
+            pipe += '! appsink name=app sync=false '
+            
+        self.pipeline = gst.parse_launch(pipe)
+        # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
+        # store a pointer to appsink in our encoder object
+        self.app = self.pipeline.get_by_name('app')
+        
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
@@ -62,7 +81,7 @@ class WavEncoder(Processor):
 
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
-
+        
     @staticmethod
     @interfacedoc
     def id():
@@ -97,8 +116,13 @@ class WavEncoder(Processor):
     def process(self, frames, eod=False):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
+        if self.streaming:
+            pull = self.app.emit('pull-buffer')
         if eod: self.src.emit('end-of-stream')
-        return frames, eod
+        if not self.streaming:
+            return frames, eod
+        else:
+            return pull, eod
 
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """

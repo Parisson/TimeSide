@@ -57,14 +57,14 @@ class VorbisEncoder(Processor):
         if self.filename and self.streaming:
             pipe += '''
             ! queue2 name=q0 ! tee name=tee
-            tee. ! queue name=q1 ! appsink name=app 
+            tee. ! queue name=q1 ! appsink name=app sync=false
             tee. ! queue name=q2 ! filesink location=%s
             ''' % self.filename
             
         elif self.filename :
-            pipe += '! filesink location=%s' % self.filename
+            pipe += '! filesink location=%s ' % self.filename
         else:
-            pipe += '! appsink name=app'
+            pipe += '! appsink name=app sync=false '
             
         self.pipeline = gst.parse_launch(pipe)
         # store a pointer to appsrc in our encoder object
@@ -117,9 +117,12 @@ class VorbisEncoder(Processor):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
-            frames = self.app.emit('pull-buffer')
+            pull = self.app.emit('pull-buffer')
         if eod: self.src.emit('end-of-stream')
-        return frames, eod
+        if not self.streaming:
+            return frames, eod
+        else:
+            return pull, eod
 
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """
