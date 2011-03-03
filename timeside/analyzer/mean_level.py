@@ -52,7 +52,7 @@ class MeanLevel(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        value = numpy.round(20*numpy.log10(numpy.mean(numpy.sqrt(numpy.square(frames)))), 3)
+        value = numpy.round(20*numpy.log10(numpy.mean(numpy.sqrt(numpy.square(frames)))), 2)
         if value > self.value:
             self.value = value
         return frames, eod

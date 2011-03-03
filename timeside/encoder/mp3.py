@@ -36,24 +36,43 @@ class Mp3Encoder(Processor):
     """ gstreamer-based mp3 encoder """
     implements(IEncoder)
 
-    def __init__(self, output):
-        self.file = None
+    def __init__(self, output,  streaming=False):
         if isinstance(output, basestring):
             self.filename = output
         else:
-            raise Exception("Streaming not supported")
+            self.filename = None
+        self.streaming = streaming
+        
+        if not self.filename and self.streaming:
+            raise Exception('Must give an output')
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(Mp3Encoder, self).setup(channels, samplerate, nframes)
         #TODO: open file for writing
-        # the output data format we want
-        pipeline = gst.parse_launch(''' appsrc name=src
-            ! audioconvert
-            ! lame name=enc vbr=0 bitrate=256 ! id3v2mux
-            ! filesink location=%s ''' % self.filename)
+        # the output data format we want        
+        pipe = ''' appsrc name=src max-bytes=32768 block=true
+                  ! audioconvert 
+                  ! lame name=enc vbr=0 bitrate=256 ! id3v2mux 
+                  '''
+        if self.filename and self.streaming:
+            pipe += '''
+            ! queue2 name=q0 ! tee name=tee
+            tee. ! queue name=q1 ! appsink name=app 
+            tee. ! queue name=q2 ! filesink location=%s
+            ''' % self.filename
+            
+        elif self.filename :
+            pipe += '! filesink location=%s' % self.filename
+        else:
+            pipe += '! appsink name=app'
+            
+        self.pipeline = gst.parse_launch(pipe)
+        # store a pointer to appsrc in our encoder object
+        self.src = self.pipeline.get_by_name('src')
         # store a pointer to appsink in our encoder object
-        self.src = pipeline.get_by_name('src')
+        self.app = self.pipeline.get_by_name('app')
+        
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
@@ -62,8 +81,7 @@ class Mp3Encoder(Processor):
         self.src.set_property("caps", srccaps)
 
         # start pipeline
-        pipeline.set_state(gst.STATE_PLAYING)
-        self.pipeline = pipeline
+        self.pipeline.set_state(gst.STATE_PLAYING)
 
     @staticmethod
     @interfacedoc
@@ -99,6 +117,8 @@ class Mp3Encoder(Processor):
     def process(self, frames, eod=False):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
+        if self.streaming:
+            frames = self.app.emit('pull-buffer')
         if eod: self.src.emit('end-of-stream')
         return frames, eod
         

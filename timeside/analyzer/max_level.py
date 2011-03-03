@@ -50,7 +50,7 @@ class MaxLevel(Processor):
         return "dB"
 
     def process(self, frames, eod=False):
-        max = numpy.round(20*numpy.log(frames.max()), 3)
+        max = numpy.round(20*numpy.log(frames.max()), 2)
         if max > self.value:
             self.value = max
         return frames, eod

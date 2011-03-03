@@ -47,12 +47,12 @@ class WavEncoder(Processor):
         super(WavEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
         # the output data format we want
-        pipeline = gst.parse_launch(''' appsrc name=src
+        self.pipeline = gst.parse_launch(''' appsrc name=src
             ! audioconvert
             ! wavenc
             ! filesink location=%s ''' % self.filename)
         # store a pointer to appsink in our encoder object
-        self.src = pipeline.get_by_name('src')
+        self.src = self.pipeline.get_by_name('src')
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
@@ -61,8 +61,7 @@ class WavEncoder(Processor):
         self.src.set_property("caps", srccaps)
 
         # start pipeline
-        pipeline.set_state(gst.STATE_PLAYING)
-        self.pipeline = pipeline
+        self.pipeline.set_state(gst.STATE_PLAYING)
 
     @staticmethod
     @interfacedoc

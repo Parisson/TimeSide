@@ -55,16 +55,16 @@ class FileDecoder(Processor):
     def setup(self, channels = None, samplerate = None, nframes = None):
         # the output data format we want
         caps = "audio/x-raw-float, width=32"
-        pipeline = gst.parse_launch('''uridecodebin uri="%s"
+        self.pipeline = gst.parse_launch('''uridecodebin uri="%s"
             ! audioconvert
             ! %s
             ! appsink name=sink sync=False ''' % (self.uri, caps))
         # store a pointer to appsink in our decoder object
-        self.sink = pipeline.get_by_name('sink')
+        self.sink = self.pipeline.get_by_name('sink')
         # adjust length of emitted buffers
         # self.sink.set_property('blocksize', 0x10000)
         # start pipeline
-        pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(gst.STATE_PLAYING)
 
     @interfacedoc
     def channels(self):
@@ -181,7 +181,7 @@ class SubProcessPipe:
         self.buffer_size = 0xFFFF
 
         if not stdin:
-            stdin =  subprocess.PIPE
+            stdin = subprocess.PIPE
 
         self.proc = subprocess.Popen(command.encode('utf-8'),
                     shell = True,

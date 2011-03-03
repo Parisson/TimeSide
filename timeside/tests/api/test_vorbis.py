@@ -2,9 +2,10 @@
 
 from timeside.decoder import *
 from timeside.encoder import *
+import os.path
 
-source = "../samples/sweep.wav"
-dest = "../results/sweep_wav.ogg"
+source = os.path.join(os.path.dirname(__file__), "../samples/sweep.wav")
+dest = os.path.join(os.path.dirname(__file__), "../results/sweep_wav.ogg")
 
 decoder  = FileDecoder(source)
 encoder  = VorbisEncoder(dest)
