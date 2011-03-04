@@ -56,9 +56,9 @@ class Mp3Encoder(Processor):
                   '''
         if self.filename and self.streaming:
             self.pipe += '''
-            ! tee name=t 
-            ! queue ! appsink name=app
-            t. ! queue ! filesink location=%s
+            ! queue ! tee name=t 
+            t. ! queue ! appsink name=app sync=false
+            t. ! queue ! filesink sync=false location=%s
             ''' % self.filename
             
         elif self.filename :
