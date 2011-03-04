@@ -42,8 +42,7 @@ class Mp3Encoder(Processor):
         else:
             self.filename = None
         self.streaming = streaming
-        
-        if not self.filename and self.streaming:
+        if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
     @interfacedoc
@@ -51,23 +50,23 @@ class Mp3Encoder(Processor):
         super(Mp3Encoder, self).setup(channels, samplerate, nframes)
         #TODO: open file for writing
         # the output data format we want        
-        pipe = ''' appsrc name=src max-bytes=32768 block=true
+        self.pipe = ''' appsrc name=src max-bytes=32768 block=true
                   ! audioconvert 
-                  ! lame name=enc vbr=0 bitrate=256 ! id3v2mux 
+                  ! lamemp3enc bitrate=192 quality=2 ! id3v2mux
                   '''
         if self.filename and self.streaming:
-            pipe += '''
-            ! queue2 name=q0 ! tee name=tee
-            tee. ! queue name=q1 ! appsink name=app sync=false
-            tee. ! queue name=q2 ! filesink location=%s
+            self.pipe += '''
+            ! tee name=t 
+            ! queue ! appsink name=app
+            t. ! queue ! filesink location=%s
             ''' % self.filename
             
         elif self.filename :
-            pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s ' % self.filename
         else:
-            pipe += '! appsink name=app sync=false '
+            self.pipe += '! appsink name=app '
             
-        self.pipeline = gst.parse_launch(pipe)
+        self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
         # store a pointer to appsink in our encoder object
@@ -119,11 +118,11 @@ class Mp3Encoder(Processor):
         self.src.emit('push-buffer', buf)
         if self.streaming:
             pull = self.app.emit('pull-buffer')
-        if eod: self.src.emit('end-of-stream')
-        if not self.streaming:
-            return frames, eod
-        else:
+#        if eod: self.app.emit('end-of-stream')
+        if self.streaming:
             return pull, eod
+        else:
+            return frames, eod
         
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """

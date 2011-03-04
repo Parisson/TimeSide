@@ -41,7 +41,7 @@ class VorbisEncoder(Processor):
             self.filename = None
         self.streaming = streaming
         
-        if not self.filename and self.streaming:
+        if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
     @interfacedoc
@@ -58,7 +58,7 @@ class VorbisEncoder(Processor):
             pipe += '''
             ! queue2 name=q0 ! tee name=tee
             tee. ! queue name=q1 ! appsink name=app sync=false
-            tee. ! queue name=q2 ! filesink location=%s
+            tee. ! queue name=q2 ! filesink location=%s 
             ''' % self.filename
             
         elif self.filename :

@@ -40,7 +40,7 @@ class FlacEncoder(Processor):
             self.filename = None
         self.streaming = streaming
         
-        if not self.filename and self.streaming:
+        if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
     @interfacedoc
