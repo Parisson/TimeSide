@@ -48,27 +48,25 @@ class FlacEncoder(Processor):
         super(FlacEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
         # the output data format we want        
-        pipe = ''' appsrc name=src max-bytes=32768 block=true
-                  ! audioconvert 
-                  ! flacenc
-                  '''
-        if self.filename and self.streaming:
-            pipe += '''
-            ! queue2 name=q0 ! tee name=tee
-            tee. ! queue name=q1 ! appsink name=app sync=false
-            tee. ! queue name=q2 ! filesink location=%s
-            ''' % self.filename
+        self.pipe = ''' appsrc name=src ! audioconvert 
+                        ! flacenc '''
+                        
+        if self.filename and self.streaming:            
+            self.pipe += '''
+            ! tee name=t
+            ! queue ! appsink name=sink sync=False
+            t. ! queue ! filesink location=%s ''' % self.filename
             
         elif self.filename :
-            pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s ' % self.filename
         else:
-            pipe += '! appsink name=app sync=false '
+            self.pipe += '! appsink name=sink blocksize=16384 sync=False '
             
-        self.pipeline = gst.parse_launch(pipe)
+        self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
         # store a pointer to appsink in our encoder object
-        self.app = self.pipeline.get_by_name('app')
+        self.sink = self.pipeline.get_by_name('sink')
         
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
@@ -115,8 +113,8 @@ class FlacEncoder(Processor):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
-            pull = self.app.emit('pull-buffer')
-        if eod: self.src.emit('end-of-stream')
+            pull = self.sink.emit('pull-buffer')
+#        if eod: self.src.emit('end-of-stream')
         if not self.streaming:
             return frames, eod
         else:

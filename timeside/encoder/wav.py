@@ -50,23 +50,23 @@ class WavEncoder(Processor):
         super(WavEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
         # the output data format we want
-        pipe = ''' appsrc name=src
+        self.pipe = ''' appsrc name=src
                   ! audioconvert 
                   ! wavenc
                   '''
         if self.filename and self.streaming:
-            pipe += '''
-            ! queue2 name=q0 ! tee name=tee
-            tee. ! queue name=q1 ! appsink name=app sync=false
-            tee. ! queue name=q2 ! filesink location=%s
+            self.pipe += '''
+            ! tee name=t 
+            t. ! queue ! appsink name=app sync=false
+            t. ! queue ! filesink sync=false location=%s
             ''' % self.filename
             
         elif self.filename :
-            pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s ' % self.filename
         else:
-            pipe += '! appsink name=app sync=false '
+            self.pipe += '! appsink name=app sync=false'
             
-        self.pipeline = gst.parse_launch(pipe)
+        self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
         # store a pointer to appsink in our encoder object
