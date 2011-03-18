@@ -118,7 +118,7 @@ class VorbisEncoder(Processor):
         self.src.emit('push-buffer', buf)
         if self.streaming:
             pull = self.app.emit('pull-buffer')
-        if eod: self.src.emit('end-of-stream')
+#        if eod: self.src.emit('end-of-stream')
         if not self.streaming:
             return frames, eod
         else:

@@ -60,7 +60,7 @@ class FlacEncoder(Processor):
         elif self.filename :
             self.pipe += '! filesink location=%s ' % self.filename
         else:
-            self.pipe += '! appsink name=sink blocksize=16384 sync=False '
+            self.pipe += '! appsink name=sink sync=False '
             
         self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object

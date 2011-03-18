@@ -61,8 +61,9 @@ class FileDecoder(Processor):
             ! appsink name=sink sync=False ''' % (self.uri, caps))
         # store a pointer to appsink in our decoder object
         self.sink = self.pipeline.get_by_name('sink')
+        self.sink.set_property('emit-signals', True)
         # adjust length of emitted buffers
-        # self.sink.set_property('blocksize', 0x10000)
+        self.sink.set_property('blocksize', 0x8000)
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 

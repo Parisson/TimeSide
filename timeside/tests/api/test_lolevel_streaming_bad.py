@@ -11,7 +11,7 @@ if len(sys.argv) > 1:
     source = sys.argv[1]
 else:
     import os.path
-    source= os.path.join (os.path.dirname(__file__),  "../samples/sweep_source.wav")
+    source= os.path.join (os.path.dirname(__file__),  "../samples/sweep.wav")
 
 decoder = FileDecoder(source)
 print "Creating decoder with id=%s for: %s" % (decoder.id(), source)
@@ -28,6 +28,8 @@ f = open(dest2,'w')
 streaming=True
 encoder = Mp3Encoder(dest1, streaming=True)
 encoder.setup(channels=channels, samplerate=samplerate)
+
+print encoder.pipe
 
 while True:
     encoder.process(*decoder.process())

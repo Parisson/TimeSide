@@ -31,6 +31,7 @@ import pygst
 pygst.require('0.10')
 import gst
 import gobject
+import Queue
 gobject.threads_init()
 
 
@@ -48,8 +49,10 @@ class Mp3Encoder(Processor):
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
         
-        self.max_bytes = 65536
-        self.size_adapter = self.max_bytes
+        self.eod = False
+        self.buffer_size = 8192
+        self.max_bytes = 4096
+        self.adapter_size = self.max_bytes
         
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
@@ -57,12 +60,12 @@ class Mp3Encoder(Processor):
         super(Mp3Encoder, self).setup(channels, samplerate, nframes)
         #TODO: open file for writing
         # the output data format we want        
-        self.pipe = '''appsrc name=src max-bytes=%s
+        self.pipe = '''appsrc name=src
                   ! audioconvert 
                   ! lamemp3enc bitrate=256 ! id3v2mux
-                  ''' % self.max_bytes
+                  '''
         if self.filename and self.streaming:
-            self.pipe += ''' ! queue ! tee name=t
+            self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
@@ -87,9 +90,16 @@ class Mp3Encoder(Processor):
 
         # start pipeline
         if self.streaming:
+            self.queue = Queue.Queue(self.buffer_size)
             self.app.set_property('emit-signals', True)
+            self.app.connect("new-buffer", self.buffer)
+            
         self.pipeline.set_state(gst.STATE_PLAYING)
-        self.adapter = FixedSizeInputAdapter(self.size_adapter, channels, pad=True)
+        self.adapter = FixedSizeInputAdapter(self.adapter_size, channels, pad=True)
+    
+    def buffer(self, appsink):
+        data = appsink.props.last_buffer.data
+        self.queue.put_nowait(data)
         
     @staticmethod
     @interfacedoc
@@ -123,22 +133,21 @@ class Mp3Encoder(Processor):
 
     @interfacedoc
     def process(self, frames, eod=False):
+        self.eod = eod
         print frames.shape
-        emit = 0
-        for samples, end in self.adapter.process(frames, eod):
-            print 'push: ', samples.shape
-            buf = self.numpy_array_to_gst_buffer(samples)
-            self.src.emit('push-buffer', buf)
-            if self.streaming:
-                pull = self.app.emit('pull-buffer')
-                emit = 1
+        
+        buf = self.numpy_array_to_gst_buffer(frames)
+        self.src.emit('push-buffer', buf)
+
+#        for samples, end in self.adapter.process(frames, eod):
+#            print 'push: ', samples.shape
+#            buf = self.numpy_array_to_gst_buffer(samples)
+#            self.src.emit('push-buffer', buf)
+        
         if self.streaming:
-            if emit:
-                return pull, eod
-            else:
-                return None, eod
-        else:
-            return frames, eod
+            self.chunk = self.queue.get(self.buffer_size)
+            
+        return frames, eod
         
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """
@@ -146,8 +155,8 @@ class Mp3Encoder(Processor):
         return buf
 
 
-class Mp3EncoderOld:
-    """Defines methods to encode to MP3"""
+class Mp3EncoderSubprocess(object):
+    """MP3 encoder in a subprocess pipe"""
 
 #    implements(IEncoder)
     
@@ -172,26 +181,42 @@ class Mp3EncoderOld:
                              'publisher': 'tc', #comment
                              'date': 'ty', #year
                              }
+    
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, nframes=None):
+        self.channels = channels
+        super(Mp3EncoderSubprocess, self).setup(channels, samplerate, nframes)
+        
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "subprocess_mp3_enc"
 
     @staticmethod
-    def id():
-        return "mp3enc"
+    @interfacedoc
+    def description():
+        return "MP3 subprocess based encoder"
 
-    def format(self):
-        return 'MP3'
+    @staticmethod
+    @interfacedoc
+    def format():
+        return "MP3"
 
-    def file_extension(self):
-        return 'mp3'
+    @staticmethod
+    @interfacedoc
+    def file_extension():
+        return "mp3"
 
-    def mime_type(self):
-        return 'audio/mpeg'
+    @staticmethod
+    @interfacedoc
+    def mime_type():
+        return "audio/mpeg"
 
-    def description(self):
-        return """
-        MPEG-1 Audio Layer 3, more commonly referred to as MP3, is a patented
-        digital audio encoding format using a form of lossy data compression.
-        """
-
+    @interfacedoc
+    def set_metadata(self, metadata):
+        #TODO: 
+        pass
+  
     def get_file_info(self):
         try:
             file_out1, file_out2 = os.popen4('mp3info "'+self.dest+'"')
