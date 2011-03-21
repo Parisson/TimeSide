@@ -11,7 +11,7 @@ if len(sys.argv) > 1:
     source = sys.argv[1]
 else:
     import os.path
-    source= os.path.join (os.path.dirname(__file__),  "../samples/sweep_source.wav")
+    source= os.path.join (os.path.dirname(__file__),  "../samples/sweep.flac")
 
 decoder = FileDecoder(source)
 print "Creating decoder with id=%s for: %s" % (decoder.id(), source)
