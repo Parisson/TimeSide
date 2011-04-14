@@ -57,10 +57,9 @@ class VorbisEncoder(Processor):
                   ! oggmux
                   '''
         if self.filename and self.streaming:
-            self.pipe += '''
-            ! tee name=t
-            ! queue ! appsink name=app sync=False
-            t. ! queue ! filesink location=%s 
+            self.pipe += ''' ! tee name=t
+            ! queue ! filesink location=%s
+            t. ! queue ! appsink name=app sync=False
             ''' % self.filename
             
         elif self.filename :

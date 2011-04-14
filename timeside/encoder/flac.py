@@ -54,10 +54,10 @@ class FlacEncoder(Processor):
                         ! flacenc '''
                         
         if self.filename and self.streaming:            
-            self.pipe += '''
-            ! tee name=t
-            ! queue ! appsink name=sink sync=False
-            t. ! queue ! filesink location=%s ''' % self.filename
+            self.pipe += ''' ! tee name=t
+            ! queue ! filesink location=%s
+            t. ! queue ! appsink name=app sync=False
+            ''' % self.filename
             
         elif self.filename :
             self.pipe += '! filesink location=%s ' % self.filename
