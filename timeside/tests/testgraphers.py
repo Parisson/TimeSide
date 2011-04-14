@@ -45,6 +45,31 @@ class TestGraphers(TestCase):
         self.image = "/tmp/test_waveform_sweep_ogg.png"
         self.grapher = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
     
+    # WAVEFORMS JOYDIV
+    def testWav2WaveformJoyDiv(self):
+        "Test WAV to WaveformJoyDiv"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
+        self.image = "/tmp/test_waveformjoydiv_sweep_wav.png"
+        self.grapher = WaveformJoyDiv(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+
+    def testFlac2WaveformJoyDiv(self):
+        "Test FLAC to WaveformJoyDiv"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
+        self.image = "/tmp/test_waveformjoydiv_sweep_flac.png"
+        self.grapher = WaveformJoyDiv(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+    
+    def testMp32WaveformJoyDiv(self):
+        "Test MP3 to WaveformJoyDiv"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
+        self.image = "/tmp/test_waveformjoydiv_sweep_mp3.png"
+        self.grapher = WaveformJoyDiv(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+    
+    def testOgg2WaveformJoyDiv(self):
+        "Test OGG to WaveformJoyDiv"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
+        self.image = "/tmp/test_waveformjoydiv_sweep_ogg.png"
+        self.grapher = WaveformJoyDiv(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        
     # SPECTROGRAMS
     def testWav2Spectrogram(self):
         "Test WAV to Spectrogram"
