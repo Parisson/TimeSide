@@ -29,6 +29,8 @@ streaming=True
 encoder = VorbisEncoder(dest1, streaming=True)
 encoder.setup(channels=channels, samplerate=samplerate)
 
+print encoder.pipe
+
 while True:
     encoder.process(*decoder.process())
     if streaming:

@@ -24,7 +24,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
-from numpy import array, frombuffer, getbuffer, float32
+from numpy import array, frombuffer, getbuffer, float32, append
 import Queue
 
 import pygst
@@ -59,7 +59,7 @@ class FileDecoder(Processor):
         
         # the output data format we want
         caps = "audio/x-raw-float, width=32"
-        self.pipeline = gst.parse_launch('''uridecodebin uri="%s" 
+        self.pipeline = gst.parse_launch('''uridecodebin uri="%s" name=src
             ! audioconvert
             ! %s
             ! appsink name=sink sync=False ''' % (self.uri, caps))
@@ -67,7 +67,10 @@ class FileDecoder(Processor):
         self.sink = self.pipeline.get_by_name('sink')
         self.sink.set_property('emit-signals', True)
         # adjust length of emitted buffers
-        self.sink.set_property('blocksize', 16384)
+#        self.sink.set_property('blocksize', self.buffer_size)
+        self.src = self.pipeline.get_by_name('src')
+#        self.src.set_property('use-buffering', True)
+#        self.src.set_property('buffer_size', self.buffer_size)
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
@@ -86,7 +89,7 @@ class FileDecoder(Processor):
     @interfacedoc
     def process(self, frames = None, eod = False):
         try:
-            buf = self.sink.emit('pull-buffer')
+            buf = self.sink.emit('pull-buffer')                
         except SystemError, e:
             # should never happen
             print 'SystemError', e

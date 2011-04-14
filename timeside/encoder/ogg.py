@@ -53,24 +53,24 @@ class VorbisEncoder(Processor):
         super(VorbisEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
         # the output data format we want        
-        pipe = ''' appsrc name=src
+        self.pipe = ''' appsrc name=src
                   ! audioconvert 
                   ! vorbisenc
                   ! oggmux
                   '''
         if self.filename and self.streaming:
-            pipe += '''
+            self.pipe += '''
             ! tee name=t
             ! queue ! appsink name=app sync=False
             t. ! queue ! filesink location=%s 
             ''' % self.filename
             
         elif self.filename :
-            pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s ' % self.filename
         else:
-            pipe += '! appsink name=app sync=False '
+            self.pipe += '! appsink name=app sync=False '
             
-        self.pipeline = gst.parse_launch(pipe)
+        self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
         # store a pointer to appsink in our encoder object
