@@ -174,7 +174,8 @@ class FileDecoder(Processor):
             return array([0.]), True
         if buf == None:
             return array([0.]), True
-        return self.gst_buffer_to_numpy_array(buf), False
+        samples = self.gst_buffer_to_numpy_array(buf)
+        return samples, False
 
     @interfacedoc
     def release(self):

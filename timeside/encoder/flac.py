@@ -62,13 +62,13 @@ class FlacEncoder(Processor):
         elif self.filename :
             self.pipe += '! filesink location=%s ' % self.filename
         else:
-            self.pipe += '! appsink name=sink sync=False '
+            self.pipe += '! appsink name=app sync=False '
             
         self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
         # store a pointer to appsink in our encoder object
-        self.sink = self.pipeline.get_by_name('sink')
+        self.app = self.pipeline.get_by_name('app')
         
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
@@ -116,7 +116,7 @@ class FlacEncoder(Processor):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
-            self.chunk = pull = self.sink.emit('pull-buffer')
+            self.chunk = self.app.emit('pull-buffer')
         return frames, eod
 
     def numpy_array_to_gst_buffer(self, frames):

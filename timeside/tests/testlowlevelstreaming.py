@@ -23,8 +23,8 @@ class TestLowLevel(TestCase):
         "Test wav to mp3 conversion"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
-        dest1 = "/tmp/test_filesink.mp3"
-        dest2 = "/tmp/test_appsink.mp3"
+        dest1 = "/tmp/test_wav_filesink.mp3"
+        dest2 = "/tmp/test_wav_appsink.mp3"
         self.f = open(dest2,'w')
 
         self.streaming=True
@@ -36,8 +36,8 @@ class TestLowLevel(TestCase):
         "Test flac to mp3 conversion"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
 
-        dest1 = "/tmp/test_filesink.mp3"
-        dest2 = "/tmp/test_appsink.mp3"
+        dest1 = "/tmp/test_flac_filesink.mp3"
+        dest2 = "/tmp/test_flac_appsink.mp3"
         self.f = open(dest2,'w')
 
         self.streaming=True
@@ -50,8 +50,8 @@ class TestLowLevel(TestCase):
         return False
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
 
-        dest1 = "/tmp/test_filesink.ogg"
-        dest2 = "/tmp/test_appsink.ogg"
+        dest1 = "/tmp/test_flac_filesink.ogg"
+        dest2 = "/tmp/test_flac_appsink.ogg"
         self.f = open(dest2,'w')
 
         self.streaming=True
@@ -64,13 +64,27 @@ class TestLowLevel(TestCase):
         return False
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
-        dest1 = "/tmp/test_filesink.ogg"
-        dest2 = "/tmp/test_appsink.ogg"
+        dest1 = "/tmp/test_wav_filesink.ogg"
+        dest2 = "/tmp/test_wav_appsink.ogg"
         self.f = open(dest2,'w')
 
         self.streaming=True
 
         encoder = VorbisEncoder(dest1, streaming=True)
+        self.encoder = encoder
+
+    def testWav2Flac(self):
+        "Test wav to flac conversion"
+        return False
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
+
+        dest1 = "/tmp/test_wav_filesink.flac"
+        dest2 = "/tmp/test_wav_appsink.flac"
+        self.f = open(dest2,'w')
+
+        self.streaming=True
+
+        encoder = FlacEncoder(dest1, streaming=True)
         self.encoder = encoder
 
     def setUpDecoder(self):
