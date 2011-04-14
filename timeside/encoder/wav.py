@@ -45,6 +45,8 @@ class WavEncoder(Processor):
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
+        self.eod = False
+        
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(WavEncoder, self).setup(channels, samplerate, nframes)
