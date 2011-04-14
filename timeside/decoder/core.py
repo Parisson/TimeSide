@@ -33,6 +33,54 @@ import gst
 import gobject
 gobject.threads_init()
 
+class TimesideSink(gst.BaseSink):
+    """
+    a simple sink element with a hopsize property to adjust the size of the buffer emitted
+    """
+    _caps = gst.caps_from_string('audio/x-raw-float, \
+                    rate=[ 1, 2147483647 ], \
+                    channels=[ 1, 2147483647 ], \
+                    endianness={ 1234, 4321 }, \
+                    width=32')
+
+    __gsttemplates__ = ( 
+            gst.PadTemplate ("sink",
+                gst.PAD_SINK,
+                gst.PAD_ALWAYS,
+                _caps),
+            )
+
+    def __init__(self, name):
+        self.__gobject_init__()
+        self.set_name(name)
+        self.adapter = gst.Adapter()
+        self.set_property('sync', False)
+
+    def set_property(self, name, value): 
+        if name == 'hopsize':
+            # blocksize is in byte, convert from hopsize 
+            from struct import calcsize
+            self.set_property('blocksize', value * calcsize('f'))
+        else:
+            super(gst.BaseSink, self).set_property(name, value)
+
+    def do_render(self, buffer):
+        self.adapter.push(buffer)
+        return gst.FLOW_OK
+
+    def pull(self):
+        # TODO use signals
+        blocksize = self.get_property('blocksize')
+        remaining = self.adapter.available()
+        if remaining == 0:
+            return None
+        if remaining >= blocksize:
+            return self.adapter.take_buffer(blocksize)
+        if remaining < blocksize and remaining > 0:
+            return self.adapter.take_buffer(remaining)
+
+gobject.type_register(TimesideSink)
+
 class FileDecoder(Processor):
     """ gstreamer-based decoder """
     implements(IDecoder)
@@ -59,21 +107,49 @@ class FileDecoder(Processor):
         
         # the output data format we want
         caps = "audio/x-raw-float, width=32"
+
+        src = gst.element_factory_make('uridecodebin')
+        src.set_property('uri', self.uri)
+        src.connect('pad-added', self.source_pad_added_cb)
+        src.connect('pad-removed', self.source_pad_removed_cb)
+
+        conv = gst.element_factory_make('audioconvert')
+        self.conv = conv
+
+        capsfilter = gst.element_factory_make('capsfilter')
+        capsfilter.set_property('caps', gst.caps_from_string(caps))
+
+        sink = TimesideSink("sink")
+        sink.set_property("sync", False)
+        sink.set_property("hopsize", 8*1024)
+        
         self.pipe = '''uridecodebin uri="%s" name=src
             ! audioconvert
             ! %s
-            ! appsink name=sink sync=False ''' % (self.uri, caps)
-        self.pipeline = gst.parse_launch(self.pipe)
-        # store a pointer to appsink in our decoder object
-        self.sink = self.pipeline.get_by_name('sink')
-        self.sink.set_property('emit-signals', True)
+            ! timesidesink name=sink sync=False ''' % (self.uri, caps)
+
+        self.sink = sink
+        # TODO
+        #self.sink.set_property('emit-signals', True)
         # adjust length of emitted buffers
-#        self.sink.set_property('blocksize', self.buffer_size)
-        self.src = self.pipeline.get_by_name('src')
-#        self.src.set_property('use-buffering', True)
-#        self.src.set_property('buffer_size', self.buffer_size)
+        self.src = src #self.pipeline.get_by_name('src')
+
+        self.pipeline = gst.Pipeline()
+        self.pipeline.add(src, conv, capsfilter, sink)
+
+        gst.element_link_many(conv, capsfilter, sink)
+
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
+
+    def source_pad_added_cb(self, src, pad):
+        name = pad.get_caps()[0].get_name()
+        if name == 'audio/x-raw-float' or name == 'audio/x-raw-int':
+            pad.link(self.conv.get_pad("sink"))
+
+    def source_pad_removed_cb(self, src, pad):
+        pad.unlink(self.conv.get_pad("sink"))
+
 
     @interfacedoc
     def channels(self):
@@ -90,7 +166,8 @@ class FileDecoder(Processor):
     @interfacedoc
     def process(self, frames = None, eod = False):
         try:
-            buf = self.sink.emit('pull-buffer')                
+            #buf = self.sink.emit('pull-buffer')                
+            buf = self.sink.pull()
         except SystemError, e:
             # should never happen
             print 'SystemError', e
