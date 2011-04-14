@@ -25,7 +25,6 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
 from numpy import array, frombuffer, getbuffer, float32, append
-import Queue
 
 import pygst
 pygst.require('0.10')
@@ -93,7 +92,6 @@ class FileDecoder(Processor):
     audiorate = None
     audionframes = None
     mimetype = ''
-    buffer_size = 0x2000
     
     # IProcessor methods
 
@@ -103,7 +101,6 @@ class FileDecoder(Processor):
         return "gstreamerdec"
 
     def setup(self, channels = None, samplerate = None, nframes = None):
-        self.queue = Queue.Queue(self.buffer_size)
         
         # the output data format we want
         caps = "audio/x-raw-float, width=32"
