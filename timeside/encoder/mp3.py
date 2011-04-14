@@ -31,7 +31,6 @@ import pygst
 pygst.require('0.10')
 import gst
 import gobject
-import Queue
 gobject.threads_init()
 
 
@@ -50,9 +49,6 @@ class Mp3Encoder(Processor):
             raise Exception('Must give an output')
         
         self.eod = False
-        self.buffer_size = 8192
-        self.max_bytes = 4096
-        self.adapter_size = self.max_bytes
         
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
@@ -87,20 +83,9 @@ class Mp3Encoder(Processor):
             width=(int)32,
             rate=(int)%d""" % (int(channels), int(samplerate)))
         self.src.set_property("caps", srccaps)
-
-        # start pipeline
-        if self.streaming:
-            self.queue = Queue.Queue(self.buffer_size)
-            self.app.set_property('emit-signals', True)
-            self.app.connect("new-buffer", self.buffer)
-            
-        self.pipeline.set_state(gst.STATE_PLAYING)
-        self.adapter = FixedSizeInputAdapter(self.adapter_size, channels, pad=True)
-    
-    def buffer(self, appsink):
-        data = appsink.props.last_buffer.data
-        self.queue.put_nowait(data)
         
+        self.pipeline.set_state(gst.STATE_PLAYING)
+    
     @staticmethod
     @interfacedoc
     def id():
@@ -139,13 +124,8 @@ class Mp3Encoder(Processor):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
 
-#        for samples, end in self.adapter.process(frames, eod):
-#            print 'push: ', samples.shape
-#            buf = self.numpy_array_to_gst_buffer(samples)
-#            self.src.emit('push-buffer', buf)
-        
         if self.streaming:
-            self.chunk = self.queue.get(self.buffer_size)
+            self.chunk = self.app.emit('pull-buffer')  
             
         return frames, eod
         
