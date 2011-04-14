@@ -59,10 +59,11 @@ class FileDecoder(Processor):
         
         # the output data format we want
         caps = "audio/x-raw-float, width=32"
-        self.pipeline = gst.parse_launch('''uridecodebin uri="%s" name=src
+        self.pipe = '''uridecodebin uri="%s" name=src
             ! audioconvert
             ! %s
-            ! appsink name=sink sync=False ''' % (self.uri, caps))
+            ! appsink name=sink sync=False ''' % (self.uri, caps)
+        self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsink in our decoder object
         self.sink = self.pipeline.get_by_name('sink')
         self.sink.set_property('emit-signals', True)
