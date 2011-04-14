@@ -42,6 +42,8 @@ class FlacEncoder(Processor):
         
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
+        
+        self.eod = False
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
@@ -110,15 +112,12 @@ class FlacEncoder(Processor):
 
     @interfacedoc
     def process(self, frames, eod=False):
+        self.eod = eod
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
-            pull = self.sink.emit('pull-buffer')
-#        if eod: self.src.emit('end-of-stream')
-        if not self.streaming:
-            return frames, eod
-        else:
-            return pull, eod
+            self.chunk = pull = self.sink.emit('pull-buffer')
+        return frames, eod
 
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """

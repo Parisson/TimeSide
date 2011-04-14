@@ -119,7 +119,6 @@ class Mp3Encoder(Processor):
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
-        print frames.shape
         
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)

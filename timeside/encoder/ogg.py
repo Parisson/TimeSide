@@ -117,10 +117,9 @@ class VorbisEncoder(Processor):
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
-        print frames.shape
+        
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
-#        if eod: self.src.emit('end-of-stream')
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
         return frames, eod

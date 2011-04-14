@@ -114,16 +114,13 @@ class WavEncoder(Processor):
 
     @interfacedoc
     def process(self, frames, eod=False):
+        self.eod = eod
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
-            pull = self.app.emit('pull-buffer')
-        if eod: self.src.emit('end-of-stream')
-        if not self.streaming:
-            return frames, eod
-        else:
-            return pull, eod
-
+            self.chunk = self.app.emit('pull-buffer')
+        return frames, eod
+        
     def numpy_array_to_gst_buffer(self, frames):
         """ gstreamer buffer to numpy array conversion """
         buf = gst.Buffer(getbuffer(frames))
