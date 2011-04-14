@@ -22,7 +22,6 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
 from numpy import array, frombuffer, getbuffer, float32
-import Queue
 
 import pygst
 pygst.require('0.10')
@@ -46,7 +45,6 @@ class VorbisEncoder(Processor):
             raise Exception('Must give an output')
         
         self.eod = False
-        self.buffer_size = 8192
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
@@ -82,18 +80,9 @@ class VorbisEncoder(Processor):
             width=(int)32,
             rate=(int)%d""" % (int(channels), int(samplerate)))
         self.src.set_property("caps", srccaps)
-
-        if self.streaming:
-            self.queue = Queue.Queue(self.buffer_size)
-            self.app.set_property('emit-signals', True)
-            self.app.connect("new-buffer", self.buffer)
             
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
-
-    def buffer(self, appsink):
-        data = appsink.props.last_buffer.data
-        self.queue.put_nowait(data)
         
     @staticmethod
     @interfacedoc
@@ -131,11 +120,9 @@ class VorbisEncoder(Processor):
         print frames.shape
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
-        if self.streaming:
-            pull = self.app.emit('pull-buffer')
 #        if eod: self.src.emit('end-of-stream')
         if self.streaming:
-            self.chunk = self.queue.get(self.buffer_size)
+            self.chunk = self.app.emit('pull-buffer')
         return frames, eod
 
     def numpy_array_to_gst_buffer(self, frames):
