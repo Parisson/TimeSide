@@ -1,4 +1,3 @@
-
 from timeside.core import *
 from timeside.decoder import *
 from timeside.analyzer import *
@@ -11,7 +10,7 @@ import unittest
 
 import os.path
 
-__all__ = ['TestComponentArchitecture']
+__all__ = ['TestTranscoding']
 
 class TestLowLevel(TestCase):
     "Test the low level streaming features"
