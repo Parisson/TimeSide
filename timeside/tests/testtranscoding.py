@@ -12,7 +12,7 @@ import os.path
 
 __all__ = ['TestTranscoding']
 
-class TestLowLevel(TestCase):
+class TestTranscoding(TestCase):
     "Test the low level streaming features"
 
     def setUp(self):

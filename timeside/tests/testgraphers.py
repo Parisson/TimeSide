@@ -12,7 +12,7 @@ import unittest
 
 import os.path
 
-__all__ = ['TestComponentArchitecture']
+__all__ = ['TestGraphers']
 
 class TestGraphers(TestCase):
     "Test all graphers with various input media formats"
