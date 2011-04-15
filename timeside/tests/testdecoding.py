@@ -1,8 +1,4 @@
-from timeside.core import *
 from timeside.decoder import *
-from timeside.api import *
-
-from timeside.component import *
 from timeside.tests import TestCase, TestRunner
 import unittest
 
@@ -10,7 +6,7 @@ import os.path
 
 __all__ = ['TestDecoding']
 
-class TestLowLevel(TestCase):
+class TestDecoding(TestCase):
     "Test the low level streaming features"
 
     def setUp(self):
