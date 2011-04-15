@@ -45,9 +45,9 @@ class TestLowLevel(TestCase):
         encoder = Mp3Encoder(dest1, streaming=True)
         self.encoder = encoder
 
+    """
     def testFlac2Ogg(self):
         "Test flac to ogg conversion"
-        return False
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
 
         dest1 = "/tmp/test_flac_filesink.ogg"
@@ -61,7 +61,6 @@ class TestLowLevel(TestCase):
 
     def testWav2Ogg(self):
         "Test wav to ogg conversion"
-        return False
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
         dest1 = "/tmp/test_wav_filesink.ogg"
@@ -72,6 +71,7 @@ class TestLowLevel(TestCase):
 
         encoder = VorbisEncoder(dest1, streaming=True)
         self.encoder = encoder
+    """
 
     def testWav2Flac(self):
         "Test wav to flac conversion"
