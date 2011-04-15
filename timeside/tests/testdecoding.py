@@ -44,7 +44,12 @@ class TestLowLevel(TestCase):
             if eod: break
 
         # FIXME compute actual number of frames from file
-        self.assertEquals(totalframes, 352801)
+        if os.path.splitext(self.source)[-1].lower() == '.mp3':
+            self.assertEquals(totalframes, 355969)
+        elif os.path.splitext(self.source)[-1].lower() == '.ogg':
+            self.assertEquals(totalframes, 352833)
+        else:
+            self.assertEquals(totalframes, 352801)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
