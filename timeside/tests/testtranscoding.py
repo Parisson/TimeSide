@@ -103,10 +103,12 @@ class TestLowLevel(TestCase):
 
         #print "decoder pipe:\n", decoder.pipe
         #print "encoder pipe:\n", encoder.pipe
+        totalframes = 0.
 
         while True:
             frames, eod = self.decoder.process()
-            print frames.shape
+            #print frames.shape[0]
+            totalframes += frames.shape[0]
             encoder.process(frames, eod)
             if self.streaming:
                 f.write(encoder.chunk)
@@ -115,6 +117,9 @@ class TestLowLevel(TestCase):
             if encoder.eod :
                 break
         f.close()
+
+        # FIXME compute actual number of frames from file
+        self.assertEquals(totalframes, 352801)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
