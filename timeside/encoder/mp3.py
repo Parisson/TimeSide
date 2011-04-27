@@ -27,6 +27,7 @@ from numpy import array, frombuffer, getbuffer, float32
 from timeside.core import FixedSizeInputAdapter
 
 import numpy
+import mutagen
 import pygst
 pygst.require('0.10')
 import gst
@@ -58,7 +59,7 @@ class Mp3Encoder(Processor):
         # the output data format we want        
         self.pipe = '''appsrc name=src
                   ! audioconvert 
-                  ! lamemp3enc bitrate=256 ! id3v2mux
+                  ! lamemp3enc bitrate=256 ! id3v2mux 
                   '''
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
@@ -113,9 +114,24 @@ class Mp3Encoder(Processor):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO: 
-        pass
-
+        self.metadata = metadata
+  
+    def write_metadata(self, file):
+        """Write all ID3v2.4 tags to file from self.metadata"""
+        from mutagen import id3
+        id3 = id3.ID3(file)
+        for tag in self.metadata.keys():
+            value = self.metadata[tag]
+            frame = mutagen.id3.Frames[tag](3,value)
+            try:
+                id3.add(frame)
+            except:
+                raise IOError('EncoderError: cannot tag "'+tag+'"')
+        try:
+            id3.save()
+        except:
+            raise IOError('EncoderError: cannot write tags')
+    
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
@@ -193,8 +209,7 @@ class Mp3EncoderSubprocess(object):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO: 
-        pass
+        self.metadata = metadata
   
     def get_file_info(self):
         try:

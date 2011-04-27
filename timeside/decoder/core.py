@@ -25,8 +25,6 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
 from numpy import array, frombuffer, getbuffer, float32, append
-from timeside.decoder.old import *
-
 from timeside.decoder.sink import *
 
 import pygst

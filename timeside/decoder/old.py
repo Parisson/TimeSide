@@ -34,7 +34,7 @@ gobject.threads_init()
 
 class FileDecoderOld(Processor):
     """ gstreamer-based decoder """
-    implements(IDecoder)
+    #implements(IDecoder)
 
     # duration ms, before discovery process times out
     MAX_DISCOVERY_TIME = 3000
