@@ -70,7 +70,7 @@ class TestTranscoding(TestCase):
 
         encoder = VorbisEncoder(dest1, streaming=True)
         self.encoder = encoder
-
+    
     def testWav2Flac(self):
         "Test wav to flac conversion"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
@@ -83,7 +83,7 @@ class TestTranscoding(TestCase):
 
         encoder = FlacEncoder(dest1, streaming=True)
         self.encoder = encoder
-    """
+    """    
 
     def setUpDecoder(self):
         self.decoder = FileDecoder(self.source)

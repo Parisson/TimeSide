@@ -12,38 +12,33 @@ TimeSide needs some other python modules to run.
 See README for the full dependency list.
 
 The following methods explain how to install all dependencies on a Debian based system
-and espacially on Debian Lenny 5.x Stable. Is it now considered you have install this system correctly.
+and espacially on Debian Squeeze 6.0 (stable). Is it now considered you have install this system correctly.
 
 Become root. In a terminal or console, run::
 
     $ su
 
 Write your root password.
+Note : you can paste the full command but without the shell character '$'. 
+Then::
 
-Add backports repository to the apt sources.list::
-
-    $ echo "deb http://www.backports.org/debian lenny-backports main contrib non-free" | tee -a /etc/apt/sources.list
-
-Note : you can paste the full command but without the shell character '$'.
-Then :
-
-    $ apt-get update
-
-    $ apt-get -t lenny-backports upgrade
-
-Say 'YES' to all questions. Then::
-
-    $ sudo aptitude install -t lenny-backports vim subversion python python-setuptools python-xml python-mutagen \
-           python-imaging python-numpy python-gst0.10 gstreamer0.10-plugins-base \
+    $ aptitude update
+    $ aptitude install python python-gobject gobject-introspection python-setuptools python-xml python-mutagen \
+           python-imaging python-numpy python-scipy python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
            gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good gstreamer0.10-plugins-bad
+
+Add Debian multimedia repository to the apt sources.list and install Gstreamer MP3 modules::
+
+    $ echo "deb deb http://www.debian-multimedia.org stable main" | tee -a /etc/apt/sources.list
+    $ aptitude update
+    $ aptitude install gstreamer0.10-fluendo-mp3 gstreamer0.10-lame
 
 
 2. Install TimeSide
 ===================
 
-Get the code and install::
-
-    $ svn export http://timeside.googlecode.com/svn/trunk/ timeside
+Go into the module directory and then install::
+    
     $ cd timeside
     $ python setup.py install
 

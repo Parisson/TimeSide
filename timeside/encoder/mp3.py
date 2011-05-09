@@ -59,7 +59,7 @@ class Mp3Encoder(Processor):
         # the output data format we want        
         self.pipe = '''appsrc name=src
                   ! audioconvert 
-                  ! lamemp3enc bitrate=256 ! id3v2mux 
+                  ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard ! id3v2mux 
                   '''
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
@@ -68,7 +68,7 @@ class Mp3Encoder(Processor):
             ''' % self.filename
             
         elif self.filename :
-            self.pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s sync=False ' % self.filename
         else:
             self.pipe += '! queue ! appsink name=app sync=False '
             
@@ -135,13 +135,10 @@ class Mp3Encoder(Processor):
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
-        
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
-
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')  
-            
         return frames, eod
         
     def numpy_array_to_gst_buffer(self, frames):
