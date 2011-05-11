@@ -68,4 +68,7 @@ class Spectrogram(Processor):
         if output:
             self.graph.save(output)
         return self.graph.image
-        
+    
+    def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
+        self.graph.watermark(text, color=color, opacity=opacity, margin=margin)
+

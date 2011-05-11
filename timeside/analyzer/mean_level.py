@@ -31,7 +31,7 @@ class MeanLevel(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(MeanLevel, self).setup(channels, samplerate, nframes)
-        self.value = -140
+        self.values = numpy.array([0])
 
     @staticmethod
     @interfacedoc
@@ -52,10 +52,8 @@ class MeanLevel(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        value = numpy.round(20*numpy.log10(numpy.mean(numpy.sqrt(numpy.square(frames)))), 2)
-        if value > self.value:
-            self.value = value
+        self.values = numpy.append(self.values, numpy.mean(numpy.sqrt(numpy.square(frames))))
         return frames, eod
 
     def result(self):
-        return self.value
+        return numpy.round(20*numpy.log10(numpy.mean(self.values)), 2)

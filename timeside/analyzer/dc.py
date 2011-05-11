@@ -30,7 +30,7 @@ class MeanDCShift(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(MeanDCShift, self).setup(channels, samplerate, nframes)
-        self.value = 0
+        self.values = numpy.array([0])
 
     @staticmethod
     @interfacedoc
@@ -51,9 +51,9 @@ class MeanDCShift(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        self.value = numpy.round(100*numpy.mean(frames),3)
+        self.values = numpy.append(self.values, numpy.mean(frames))
         return frames, eod
 
     def result(self):
-        return self.value
+        return numpy.round(100*numpy.mean(self.values),3)
 

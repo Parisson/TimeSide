@@ -24,7 +24,7 @@
 
 
 import optparse, math, sys
-import ImageFilter, ImageChops, Image, ImageDraw, ImageColor
+import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
 import numpy
 from timeside.core import FixedSizeInputAdapter
 
@@ -245,6 +245,9 @@ class WaveformImage(object):
                     self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
                     self.pixel_cursor += 1
 
+    def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
+        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
+        
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
 
@@ -358,6 +361,9 @@ class WaveformImageJoyContour(WaveformImage):
         if eod:
             self.draw_peaks_contour()
 
+    def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
+        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
+    
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
         # middle line (0 for none)
@@ -456,6 +462,9 @@ class WaveformImageSimple(object):
                 self.draw_peaks(self.pixel_cursor, (0, 0))
                 self.pixel_cursor += 1
 
+    def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
+        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
+        
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
         
@@ -536,6 +545,9 @@ class SpectrogramImage(object):
                     (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
                     self.draw_spectrum(self.pixel_cursor, db_spectrum)
                     self.pixel_cursor += 1
+    
+    def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
+        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
 
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
@@ -648,3 +660,29 @@ def smooth(x, window_len=10, window='hanning'):
     y = numpy.convolve(w/w.sum(), s, mode='same')
     return y[window_len-1:-window_len+1]
 
+def reduce_opacity(im, opacity):
+    """Returns an image with reduced opacity."""
+    assert opacity >= 0 and opacity <= 1
+    if im.mode != 'RGBA':
+        im = im.convert('RGBA')
+    else:
+        im = im.copy()
+    alpha = im.split()[3]
+    alpha = ImageEnhance.Brightness(alpha).enhance(opacity)
+    im.putalpha(alpha)
+    return im
+
+def im_watermark(im, inputtext, font=None, color=None, opacity=.6, margin=(30,30)):
+    """
+    imprints a PIL image with the indicated text in lower-right corner
+    """
+    if im.mode != "RGBA":
+        im = im.convert("RGBA")
+    textlayer = Image.new("RGBA", im.size, (0,0,0,0))
+    textdraw = ImageDraw.Draw(textlayer)
+    textsize = textdraw.textsize(inputtext, font=font)
+    textpos = [im.size[i]-textsize[i]-margin[i] for i in [0,1]]
+    textdraw.text(textpos, inputtext, font=font, fill=color)
+    if opacity != 1:
+        textlayer = reduce_opacity(textlayer,opacity)
+    return Image.composite(textlayer, im, textlayer)
