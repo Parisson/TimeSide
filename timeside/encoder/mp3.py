@@ -49,6 +49,7 @@ class Mp3Encoder(Processor):
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
         
+        self.metadata = None
         self.eod = False
         
     @interfacedoc
@@ -138,7 +139,9 @@ class Mp3Encoder(Processor):
         buf = self.numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
-            self.chunk = self.app.emit('pull-buffer')  
+            self.chunk = self.app.emit('pull-buffer')
+        if self.eod and self.metadata and self.filename:
+            self.write_metadata(self.filename)
         return frames, eod
         
     def numpy_array_to_gst_buffer(self, frames):

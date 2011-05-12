@@ -18,8 +18,8 @@ metadata = {'TIT2': 'title',  #title2
              'UFID': 'identifier',  #Unique ID...
              'TALB': 'album',  #album
              'TCON': 'genre',  #genre
-             'TXXX': 'comment',  #comment
-             #'date': 'TYER', #year
+             'TDRC': '2011', #year
+#             'COMM': 'blabla',  #comment
              }
 
 encoder.set_metadata(metadata)
