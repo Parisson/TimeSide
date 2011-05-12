@@ -117,10 +117,10 @@ class Mp3Encoder(Processor):
     def set_metadata(self, metadata):
         self.metadata = metadata
   
-    def write_metadata(self, file):
+    def write_metadata(self):
         """Write all ID3v2.4 tags to file from self.metadata"""
         from mutagen import id3
-        id3 = id3.ID3(file)
+        id3 = id3.ID3(self.filename)
         for tag in self.metadata.keys():
             value = self.metadata[tag]
             frame = mutagen.id3.Frames[tag](3,value)
@@ -141,7 +141,7 @@ class Mp3Encoder(Processor):
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
         if self.eod and self.metadata and self.filename:
-            self.write_metadata(self.filename)
+            self.write_metadata()
         return frames, eod
         
     def numpy_array_to_gst_buffer(self, frames):
