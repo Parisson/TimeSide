@@ -547,7 +547,8 @@ class SpectrogramImage(object):
                     self.pixel_cursor += 1
     
     def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
-        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
+        #self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
+        pass
 
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
