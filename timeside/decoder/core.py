@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2007-2009 Parisson
+# Copyright (c) 2007-2011 Parisson
 # Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
-# Copyright (c) 2007-2009 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2007-2011 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2010-2011 Paul Brossier <piem@piem.org> 
 #
 # This file is part of TimeSide.
 
@@ -20,7 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Authors: Paul Brossier <piem@piem.org>
+#          Guilaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
