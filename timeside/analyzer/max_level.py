@@ -32,7 +32,7 @@ class MaxLevel(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(MaxLevel, self).setup(channels, samplerate, nframes)
-        self.value = -140
+        self.value = 0
 
     @staticmethod
     @interfacedoc
@@ -47,13 +47,13 @@ class MaxLevel(Processor):
     @staticmethod
     @interfacedoc
     def unit():
-        return "dB"
+        return "dBFS"
 
     def process(self, frames, eod=False):
-        max = numpy.round(20*numpy.log(frames.max()), 2)
+        max = frames.max()
         if max > self.value:
             self.value = max
         return frames, eod
 
     def result(self):
-        return self.value
+        return numpy.round(20*numpy.log10(self.value), 3)

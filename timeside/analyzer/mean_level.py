@@ -31,29 +31,29 @@ class MeanLevel(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(MeanLevel, self).setup(channels, samplerate, nframes)
-        self.values = numpy.array([0])
+        self.values = numpy.array([])
 
     @staticmethod
     @interfacedoc
     def id():
-        return "meanlevel"
+        return "rmslevel"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Mean RMS level"
+        return "RMS level"
 
     @staticmethod
     @interfacedoc
     def unit():
-        return "dB"
+        return "dBFS"
 
     def __str__(self):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        self.values = numpy.append(self.values, numpy.mean(numpy.sqrt(numpy.square(frames))))
+        self.values = numpy.append(self.values, numpy.mean(numpy.square(frames)))
         return frames, eod
 
     def result(self):
-        return numpy.round(20*numpy.log10(numpy.mean(self.values)), 2)
+        return numpy.round(20*numpy.log10(numpy.sqrt(numpy.mean(self.values))), 3)

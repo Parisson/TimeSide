@@ -56,4 +56,3 @@ class MeanDCShift(Processor):
 
     def result(self):
         return numpy.round(100*numpy.mean(self.values),3)
-
