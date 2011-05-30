@@ -34,7 +34,7 @@ For TimeSide UI (optional)::
 Copyright
 =========
 
-Copyright (c) 2006, 2010 Parisson SARL (parisson.com),
+Copyright (c) 2006, 2011 Parisson SARL (parisson.com),
 Copyright (c) 2006, 2010 Samalyse SARL (samalyse.com),
 All rights reserved.
 

@@ -9,20 +9,21 @@ __version__ = '0.3'
 
 # The base package metadata to be used by both distutils and setuptools
 METADATA = dict(
-  name = "timeside",
+  name = "TimeSide",
   version = __version__,
   py_modules = ['timeside'],
   description='Web Audio Components',
-  author='Olivier Guilyardi, Paul Brossier, Guillaume Pellerin',
+  author='Olivier Guilyardi, Paul Brossier, Guillaume Pellerin, Riccardo Zaccarelli',
   author_email='yomguy@parisson.com',
   license='Gnu Public License V2',
   url='http://code.google.com/p/timeside',
   packages=['timeside','timeside.decoder','timeside.encoder','timeside.grapher',
             'timeside.analyzer','timeside.tests','timeside.tests.api'],
-  keywords='audio analyze transcode graph',
+  keywords='audio analyze transcode graph player metadata',
   install_requires = ['setuptools',],
   include_package_data = True,
-  scripts=['timeside/tools/waveform_batch.py'],
+  classifiers = ['Intended Audience :: Science/Research', 'Programming Language :: Python', 'Programming Language :: JavaScript', 'Topic :: Internet :: WWW/HTTP :: Dynamic Content', 'Topic :: Multimedia :: Sound/Audio', 'Topic :: Multimedia :: Sound/Audio :: Analysis', 'Topic :: Multimedia :: Sound/Audio :: Players', 'Topic :: Scientific/Engineering :: Information Analysis', ],
+  
 )
 
 
