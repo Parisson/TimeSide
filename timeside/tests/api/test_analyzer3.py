@@ -27,7 +27,7 @@ class TestAnalyzer:
         print {'name':self.analyzer.name(),
                             'id':self.analyzer.id(),
                             'unit':self.analyzer.unit(),
-                            'value':str(value)}
+                            'value':str(analyzer.value())}
 
 test = TestAnalyzer(sys.argv[-1])
 test.process()
