@@ -1,5 +1,5 @@
 from timeside.decoder import *
-from unit_timeside import TestCase, TestRunner
+from unit_timeside import *
 
 import os.path
 

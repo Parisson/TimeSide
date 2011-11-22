@@ -1,14 +1,12 @@
-
 from timeside.core import *
 from timeside.decoder import *
 from timeside.analyzer import *
 from timeside.encoder import *
 from timeside.grapher import *
 from timeside.api import *
-
 from timeside.component import *
 
-from unit_timeside import TestCase, TestRunner
+from unit_timeside import *
 
 import os.path
 
