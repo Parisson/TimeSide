@@ -9,4 +9,7 @@ import timeside.decoder
 import timeside.encoder
 import timeside.grapher
 import timeside.analyzer
+import timeside.tests
 from timeside.core import *
+
+__version__ = '0.3.2'

@@ -1,41 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from setuptools import setup, find_packages
+import os
+import timeside
 
-'''The setup and build script for the python-twitter library.'''
+CLASSIFIERS = ['Intended Audience :: Science/Research', 'Programming Language :: Python', 'Programming Language :: JavaScript', 'Topic :: Internet :: WWW/HTTP :: Dynamic Content', 'Topic :: Multimedia :: Sound/Audio', 'Topic :: Multimedia :: Sound/Audio :: Analysis', 'Topic :: Multimedia :: Sound/Audio :: Players', 'Topic :: Scientific/Engineering :: Information Analysis', ],
 
-__author__ = 'yomguy@parisson.com'
-__version__ = '0.3.1'
+KEYWORDS = 'audio analyze transcode graph player metadata'
 
-
-# The base package metadata to be used by both distutils and setuptools
-METADATA = dict(
+setup(
   name = "TimeSide",
-  version = __version__,
-  py_modules = ['timeside'],
-  description='Web Audio Components',
-  author='Olivier Guilyardi, Paul Brossier, Guillaume Pellerin, Riccardo Zaccarelli',
-  author_email='yomguy@parisson.com',
-  license='Gnu Public License V2',
   url='http://code.google.com/p/timeside',
-  packages=['timeside','timeside.decoder','timeside.encoder','timeside.grapher',
-            'timeside.analyzer','timeside.tests','timeside.tests.api'],
-  keywords='audio analyze transcode graph player metadata',
-  install_requires = ['setuptools',],
+  description = "open web audio components",
+  long_description = open('README.rst').read(),
+  author = ["Guillaume Pellerin", "Olivier Guilyardi", "Riccardo Zaccarelli", "Paul Brossier"],
+  author_email = ["yomguy@parisson.com","olivier@samalyse.com", "riccardo.zaccarelli@gmail.com", "piem@piem.org"],
+  version = timeside.__version__,
+  install_requires = [
+	    'setuptools',
+		'numpy',
+		'gst',
+  ],
+  platforms=['OS Independent'],
+  license='Gnu Public License V2',
+  py_modules = ['timeside'],
+  classifiers = CLASSIFIERS,
+  keywords = KEYWORDS, 
+  packages = find_packages(),
   include_package_data = True,
-  classifiers = ['Intended Audience :: Science/Research', 'Programming Language :: Python', 'Programming Language :: JavaScript', 'Topic :: Internet :: WWW/HTTP :: Dynamic Content', 'Topic :: Multimedia :: Sound/Audio', 'Topic :: Multimedia :: Sound/Audio :: Analysis', 'Topic :: Multimedia :: Sound/Audio :: Players', 'Topic :: Scientific/Engineering :: Information Analysis', ],
-  
+  zip_safe = False,
 )
-
-
-def Main():
-  # Use setuptools if available, otherwise fallback and use distutils
-  try:
-    import setuptools
-    setuptools.setup(**METADATA)
-  except ImportError:
-    import distutils.core
-    distutils.core.setup(**METADATA)
-
-
-if __name__ == '__main__':
-  Main()
