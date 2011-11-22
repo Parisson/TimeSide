@@ -23,7 +23,6 @@ setup(
   ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
-  py_modules = ['timeside'],
   classifiers = CLASSIFIERS,
   keywords = KEYWORDS, 
   packages = find_packages(),
