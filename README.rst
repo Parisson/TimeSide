@@ -8,14 +8,14 @@ It includes a powerful DHTML-based interactive player, with support for time-mar
 The server side components provide generic APIs for easy transcoding, metadata embedding,
 sound visualization and audio analysis.
 
-This library is mostly written in Python and JavaScrip / CSS
-
 
 Platforms
 =========
 
 TimeSide is intended to work on all Unix / Linux platforms.
 MacOS X and Windows versions will soon be explorated.
+
+This library is mostly written in Python and JavaScrip / CSS
 
 
 Install and usage
