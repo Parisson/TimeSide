@@ -27,8 +27,6 @@ See INSTALL.rst
 Dependencies
 ============
 
-For TimeSide core:
-
   * python (>= 2.4)
   * python-xml
   * python-mutagen
@@ -40,14 +38,35 @@ For TimeSide core:
   * gstreamer0.10-plugins-fluendo-mp3
   * gstreamer0.10-plugins-good
 
-For TimeSide UI (optional):
+
+Provides
+==========
 
  * SoundManager 2 >= 2.91 (http://www.schillmania.com/projects/soundmanager2)
  * jQuery => 1.2.6 (http://www.jquery.com)
  * jsGraphics => 3.03 (http://www.walterzorn.com/jsgraphics/jsgraphics_e.htm)
- 
- * See TimeSide UI integration guide (http://code.google.com/p/timeside/wiki/UiGuide)
- * See timeside/ui/README
+
+
+High level audio process pipes
+===============================
+
+For example::
+
+>>> import timeside
+
+>>> decoder  =  timeside.decoder.FileDecoder('source.wav')
+>>> grapher  =  timeside.grapher.Waveform()
+>>> analyzer =  timeside.analyzer.MaxLevel()
+>>> encoder  =  timeside.encoder.Mp3Encoder('output.mp3')
+>>> (decoder | grapher | analyzer | encoder).run()
+>>> grapher.render(output='image.png')
+>>> print 'Level:', analyzer.result()
+
+
+UI Integration
+===============
+
+See TimeSide UI integration guide: http://code.google.com/p/timeside/wiki/UiGuide
 
 
 Examples
@@ -86,7 +105,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-See /LICENSE for more details.
+See LICENSE for more details.
 
 
 Contact and Informations
