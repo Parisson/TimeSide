@@ -42,8 +42,9 @@ Go into the module directory and then install::
     $ cd timeside
     $ python setup.py install
 
-This installs all timeside sub modules as decoders, encoders, analyzers, graphers and
-a few scripts.
+Or, directly from python package directory::
+
+	$ sudo pip install timeside
 
 
 3. Use TimeSide
@@ -103,7 +104,7 @@ For example, a normalization and a waveform, from a python shell::
 >>> decoder  =  timeside.decoder.FileDecoder('source.wav')
 >>> grapher  =  timeside.grapher.Waveform()
 >>> analyzer =  timeside.analyzer.MaxLevel()
->>> encoder  =  timeside.encoder.WavEncoder('output.wav')
+>>> encoder  =  timeside.encoder.Mp3Encoder('output.mp3')
 >>> (decoder | grapher | analyzer | encoder).run()
 >>> grapher.render(output='image.png')
 >>> print 'Level:', analyzer.result()
