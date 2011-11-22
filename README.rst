@@ -15,7 +15,7 @@ Platforms
 TimeSide is intended to work on all Unix / Linux platforms.
 MacOS X and Windows versions will soon be explorated.
 
-This library is mostly written in Python and JavaScrip / CSS
+It is mostly written in Python and JavaScript / CSS / HTML
 
 
 Install and usage
@@ -27,7 +27,7 @@ See INSTALL.rst
 Dependencies
 ============
 
-For TimeSide Core:
+For TimeSide core:
 
   * python (>= 2.4)
   * python-xml
@@ -42,16 +42,26 @@ For TimeSide Core:
 
 For TimeSide UI (optional):
 
- * SoundManager 2 >= 2.91 : http://www.schillmania.com/projects/soundmanager2
- * jQuery => 1.2.6 : http://www.jquery.com
- * jsGraphics => 3.03 http://www.walterzorn.com/jsgraphics/jsgraphics_e.htm
+ * SoundManager 2 >= 2.91 (http://www.schillmania.com/projects/soundmanager2)
+ * jQuery => 1.2.6 (http://www.jquery.com)
+ * jsGraphics => 3.03 (http://www.walterzorn.com/jsgraphics/jsgraphics_e.htm)
+ 
+ * See TimeSide UI integration guide (http://code.google.com/p/timeside/wiki/UiGuide)
  * See timeside/ui/README
 
 
 Examples
 ========
 
-See http://code.google.com/p/timeside/
+http://code.google.com/p/timeside/
+http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
+http://demo.telemeta.org
+
+
+Related projects
+=================
+
+Telemeta : open web audio CMS (http://telemeta.org)
 
 
 Copyright
