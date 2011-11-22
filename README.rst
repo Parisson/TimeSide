@@ -1,12 +1,14 @@
-=====================================
-TimeSide : open web audio components
-=====================================
+==============================================
+TimeSide : open and fast web audio components
+==============================================
 
 TimeSide is a set of client and server side components for audio-enabling web sites and applications.
 
 It includes a powerful DHTML-based interactive player, with support for time-marking.
 The server side components provide generic APIs for easy transcoding, metadata embedding,
 sound visualization and audio analysis.
+
+This library is mostly written in Python and JavaScrip / CSS
 
 
 Platforms

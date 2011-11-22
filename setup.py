@@ -11,7 +11,7 @@ KEYWORDS = 'audio analyze transcode graph player metadata'
 setup(
   name = "TimeSide",
   url='http://code.google.com/p/timeside',
-  description = "open web audio components",
+  description = "open and fast web audio components",
   long_description = open('README.rst').read(),
   author = ["Guillaume Pellerin", "Olivier Guilyardi", "Riccardo Zaccarelli", "Paul Brossier"],
   author_email = ["yomguy@parisson.com","olivier@samalyse.com", "riccardo.zaccarelli@gmail.com", "piem@piem.org"],

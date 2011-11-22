@@ -1,6 +1,6 @@
-================
-Install TimeSide
-================
+=======================
+Howto Install TimeSide
+=======================
 
 This file describe how to install the TimeSide python package from source.
 
