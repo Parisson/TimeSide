@@ -53,9 +53,9 @@ For TimeSide UI (optional):
 Examples
 ========
 
-http://code.google.com/p/timeside/
-http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
-http://demo.telemeta.org
+ * http://code.google.com/p/timeside/
+ * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
+ * http://demo.telemeta.org (login: demo , pass: demo) 
 
 
 Related projects
