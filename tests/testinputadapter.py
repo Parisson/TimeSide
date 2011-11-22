@@ -1,7 +1,6 @@
 from timeside.core import FixedSizeInputAdapter
-from timeside.tests import TestCase, TestRunner
+from unit_timeside import TestCase, TestRunner
 import numpy
-import unittest
 
 class TestFixedSizeInputAdapter(TestCase):
     "Test the fixed-sized input adapter"

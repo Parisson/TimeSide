@@ -1,7 +1,6 @@
 
 from timeside.component import *
-from timeside.tests import TestCase, TestRunner
-import unittest
+from unit_timeside import TestCase, TestRunner
 
 __all__ = ['TestComponentArchitecture']
 

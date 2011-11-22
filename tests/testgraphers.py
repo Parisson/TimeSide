@@ -7,8 +7,8 @@ from timeside.grapher import *
 from timeside.api import *
 
 from timeside.component import *
-from timeside.tests import TestCase, TestRunner
-import unittest
+
+from unit_timeside import TestCase, TestRunner
 
 import os.path
 
