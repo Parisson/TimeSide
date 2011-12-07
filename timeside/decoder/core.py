@@ -98,7 +98,22 @@ class FileDecoder(Processor):
 
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
-        self.mainloop.run()
+
+        # self.mainloop.run()
+        # NOTE: instead of running the mainloop on the main thread, put it in a
+        # thread so that the main thread start calling process and pull from
+        # buffers from timesidesink
+
+        import threading
+        class MainloopThread(threading.Thread):
+            def __init__(self, mainloop):
+                threading.Thread.__init__(self)
+                self.mainloop = mainloop
+
+            def run(self):
+                self.mainloop.run()
+        self.mainloopthread = MainloopThread(self.mainloop)
+        self.mainloopthread.start()
 
     def source_pad_added_cb(self, src, pad):
         name = pad.get_caps()[0].get_name()
@@ -108,6 +123,7 @@ class FileDecoder(Processor):
 
     def on_eos(self, bus, msg):
         #print 'on_eos'
+        self.sink.on_eos()
         self.pipeline.set_state(gst.STATE_NULL)
         self.mainloop.quit()
 
@@ -151,7 +167,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def release(self):
-        # nothing to do for now
+        self.mainloopthread.join()
         pass
 
     ## IDecoder methods
