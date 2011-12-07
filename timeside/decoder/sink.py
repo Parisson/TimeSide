@@ -22,6 +22,9 @@ class TimesideSink(gst.BaseSink):
             )
 
     def __init__(self, name):
+        import threading
+        self.cv = threading.Condition(threading.Lock())
+        self.eos = 0
         self.__gobject_init__()
         self.set_name(name)
         self.adapter = gst.Adapter()
@@ -36,19 +39,35 @@ class TimesideSink(gst.BaseSink):
             super(gst.BaseSink, self).set_property(name, value)
 
     def do_render(self, buffer):
+        self.cv.acquire()
         self.adapter.push(buffer)
+        if self.adapter.available() == 0: self.eos = 1
+        self.cv.notify()
+        self.cv.release()
         return gst.FLOW_OK
 
+    def on_eos(self):
+        self.cv.acquire()
+        self.eos = 1
+        self.cv.notify()
+        self.cv.release()
+
     def pull(self):
+        self.cv.acquire()
+        while not self.adapter.available():
+            if self.eos: break
+            self.cv.wait()
         # TODO use signals
         blocksize = self.get_property('blocksize')
         remaining = self.adapter.available()
         if remaining == 0:
-            return None
+            ret = None
         if remaining >= blocksize:
-            return self.adapter.take_buffer(blocksize)
+            ret = self.adapter.take_buffer(blocksize)
         if remaining < blocksize and remaining > 0:
-            return self.adapter.take_buffer(remaining)
+            ret = self.adapter.take_buffer(remaining)
+        self.cv.release()
+        return ret
 
 gobject.type_register(TimesideSink)
 
