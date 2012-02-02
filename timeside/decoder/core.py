@@ -4,7 +4,7 @@
 # Copyright (c) 2007-2011 Parisson
 # Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
 # Copyright (c) 2007-2011 Guillaume Pellerin <pellerin@parisson.com>
-# Copyright (c) 2010-2011 Paul Brossier <piem@piem.org> 
+# Copyright (c) 2010-2011 Paul Brossier <piem@piem.org>
 #
 # This file is part of TimeSide.
 
@@ -29,6 +29,7 @@ from timeside.api import IDecoder
 from numpy import array, frombuffer, getbuffer, float32, append
 from timeside.decoder.sink import *
 
+import time
 import pygst
 pygst.require('0.10')
 import gst
@@ -73,7 +74,7 @@ class FileDecoder(Processor):
         sink = TimesideSink("sink")
         sink.set_property("hopsize", 8*1024)
         sink.set_property("sync", False)
-        
+
         self.pipe = '''uridecodebin uri="%s" name=src
             ! audioconvert
             ! %s
@@ -115,6 +116,9 @@ class FileDecoder(Processor):
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
 
+        #FIXME: prevent mp3 encoder from hanging
+        time.sleep(0.1)
+
     def source_pad_added_cb(self, src, pad):
         name = pad.get_caps()[0].get_name()
         if name == 'audio/x-raw-float' or name == 'audio/x-raw-int':
@@ -155,7 +159,7 @@ class FileDecoder(Processor):
     @interfacedoc
     def process(self, frames = None, eod = False):
         try:
-            #buf = self.sink.emit('pull-buffer')                
+            #buf = self.sink.emit('pull-buffer')
             buf = self.sink.pull()
         except SystemError, e:
             # should never happen

@@ -24,5 +24,5 @@ metadata = {'TIT2': 'title',  #title2
              }
 
 encoder.set_metadata(metadata)
-encoder.write_metadata(dest)
+encoder.write_metadata()
 
