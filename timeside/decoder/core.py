@@ -213,6 +213,9 @@ class FileDecoder(Processor):
         # TODO check
         return self.tags
 
+    def duration(self):
+        return self.duration
+
     ## gst.extend discoverer
 
     def discover(self, path):
@@ -232,6 +235,8 @@ class FileDecoder(Processor):
             self.mimetype= d.mimetype
             self.audiochannels = d.audiochannels
             self.audiowidth = d.audiowidth
+            # conversion from time in nanoseconds to seconds
+            self.duration = d.audiolength * 1.e-9
             # conversion from time in nanoseconds to frames
             from math import ceil
             duration = d.audiorate * d.audiolength * 1.e-9
