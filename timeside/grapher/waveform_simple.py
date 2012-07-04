@@ -24,30 +24,27 @@ from timeside.api import IGrapher
 from timeside.grapher.core import *
 
 
-class WaveformJoyDiv(Processor):
+class WaveformAwdio(Processor):
     implements(IGrapher)
 
     FFT_SIZE = 0x400
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
+    def __init__(self, width=572, height=74, bg_color=None, color_scheme='awdio'):
         self.width = width
         self.height = height
         self.bg_color = bg_color
         self.color_scheme = color_scheme
-        self.graph = None
-        self.ndiv = 4
-        self.symetry = True
 
     @staticmethod
     @interfacedoc
     def id():
-        return "waveform_joydiv"
+        return "waveform_simple"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Waveform JoyDiv"
+        return "Waveform simple"
 
     @interfacedoc
     def set_colors(self, background, scheme):
@@ -56,9 +53,11 @@ class WaveformJoyDiv(Processor):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WaveformJoyDiv, self).setup(channels, samplerate, nframes)
-        self.graph = WaveformImageJoyContour(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE,
-                                    bg_color=self.bg_color, color_scheme=self.color_scheme,  ndiv=self.ndiv, symetry=self.symetry)
+        super(WaveformAwdio, self).setup(channels, samplerate, nframes)
+        self.graph = WaveformImageSimple(self.width, self.height, self.nframes(),
+                                         self.samplerate(), self.FFT_SIZE,
+                                         bg_color=self.bg_color,
+                                         color_scheme=self.color_scheme)
 
     @interfacedoc
     def process(self, frames, eod=False):
@@ -70,9 +69,6 @@ class WaveformJoyDiv(Processor):
         if output:
             self.graph.save(output)
         return self.graph.image
-
-    def release(self):
-        self.graph.release()
 
     def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
         self.graph.watermark(text, color=color, opacity=opacity, margin=margin)
