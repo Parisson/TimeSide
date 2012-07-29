@@ -43,12 +43,12 @@ default_color_schemes = {
         'waveform': [(173,173,173), (147,149,196), (77,80,138), (108,66,0)],
         'spectrogram': [(0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100),
                       (224,224,44), (255,60,30), (255,255,255)]
-    }, 
+    },
     'awdio': {
         'waveform': [(255,255,255), (255,255,255), (255,255,255), (255,255,255)],
         'spectrogram': [(0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100),
                       (224,224,44), (255,60,30), (255,255,255)]
-    }, 
+    },
 }
 
 
@@ -207,7 +207,7 @@ class WaveformImage(object):
 
     def draw_anti_aliased_pixels(self, x, y1, y2, color):
         """ vertical anti-aliasing at y1 and y2 """
-        
+
         y_max = max(y1, y2)
         y_max_int = int(y_max)
         alpha = y_max - y_max_int
@@ -247,7 +247,7 @@ class WaveformImage(object):
 
     def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
         self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
-        
+
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
 
@@ -262,14 +262,17 @@ class WaveformImage(object):
 
 class WaveformImageJoyContour(WaveformImage):
 
-    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme, ndiv=1, symetry=None):
-        WaveformImage.__init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme)
+    def __init__(self, image_width, image_height, nframes, samplerate,
+                 fft_size, bg_color, color_scheme, ndiv=1, symetry=None, color_offset=160):
+        WaveformImage.__init__(self, image_width, image_height, nframes, samplerate,
+                               fft_size, bg_color, color_scheme)
         self.contour = numpy.zeros(self.image_width)
         self.centroids = numpy.zeros(self.image_width)
         self.ndiv = ndiv
         self.x = numpy.r_[0:self.image_width-1:1]
         self.dx1 = self.x[1]-self.x[0]
         self.symetry = symetry
+        self.color_offset = color_offset
 
     def get_peaks_contour(self, x, peaks, spectral_centroid=None):
         self.contour[x] = numpy.max(peaks)
@@ -304,14 +307,14 @@ class WaveformImageJoyContour(WaveformImage):
             height = int(self.image_height/2)
         else:
             height = self.image_height
-        
+
         # Multicurve rotating
         for i in range(0,self.ndiv):
             self.previous_x, self.previous_y = None, None
 
             #bright_color = 255
             bright_color = int(255*(1-float(i)/(self.ndiv*2)))
-            bright_color = 255-bright_color+160
+            bright_color = 255-bright_color+self.color_offset
             #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
             line_color = (bright_color,bright_color,bright_color)
 
@@ -328,7 +331,7 @@ class WaveformImageJoyContour(WaveformImage):
 
             curve = (height-1)*contour
             #curve = contour*(height-2)/2+height/2
-            
+
             for x in self.x:
                 x = int(x)
                 y = curve[x]
@@ -363,7 +366,7 @@ class WaveformImageJoyContour(WaveformImage):
 
     def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
         self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
-    
+
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
         # middle line (0 for none)
@@ -372,10 +375,10 @@ class WaveformImageJoyContour(WaveformImage):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         #self.image = self.image.transpose(Image.FLIP_TOP_BOTTOM)
         self.image.save(filename)
-        
+
     def release(self):
         pass
-        
+
 class WaveformImageSimple(object):
     """ Builds a PIL image representing a waveform of the audio stream.
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
@@ -407,11 +410,11 @@ class WaveformImageSimple(object):
         self.previous_x, self.previous_y = None, None
         self.frame_cursor = 0
         self.pixel_cursor = 0
-        
+
     def normalize(self, contour):
         contour = contour-min(contour)
         return contour/max(contour)
-        
+
     def peaks(self, samples):
         """ Find the minimum and maximum peak of the samples.
         Returns that pair in the order they were found.
@@ -427,13 +430,13 @@ class WaveformImageSimple(object):
             return (min_value, max_value)
         else:
             return (max_value, min_value)
-            
+
     def draw_peaks(self, x, peaks):
         """ draw 2 peaks at x using the spectral_centroid for color """
 
         y1 = self.image_height * 0.5 - peaks[0] * (self.image_height - 4) * 0.5
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
-        
+
         if self.previous_y and x < self.image_width-1:
             if y1 < y2:
                 self.draw.line((x, 0, x, y1), self.line_color)
@@ -464,19 +467,19 @@ class WaveformImageSimple(object):
 
     def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
         self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
-        
+
     def save(self, filename):
         """ Apply last 2D transforms and write all pixels to the file. """
-        
+
         # middle line (0 for none)
         a = 1
         for x in range(self.image_width):
             self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
         self.image.save(filename)
-    
+
     def release(self):
         pass
-        
+
 class SpectrogramImage(object):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
@@ -545,7 +548,7 @@ class SpectrogramImage(object):
                     (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
                     self.draw_spectrum(self.pixel_cursor, db_spectrum)
                     self.pixel_cursor += 1
-    
+
     def watermark(self, text, color=None, opacity=.6, margin=(10,10)):
         #self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
         pass
@@ -557,7 +560,7 @@ class SpectrogramImage(object):
 
     def release(self):
         pass
-        
+
 class Noise(object):
     """A class that mimics audiolab.sndfile but generates noise instead of reading
     a wave file. Additionally it can be told to have a "broken" header and thus crashing
