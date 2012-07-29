@@ -8,6 +8,17 @@ It includes a powerful DHTML-based interactive player, with support for time-mar
 The server side components provide generic APIs for easy transcoding, metadata embedding,
 sound visualization and audio analysis.
 
+News
+=====
+
+0.3.2
+
+ * move mainloop to its own thread to avoid memory hogging on large files
+ * add condition values to prepare running gst mainloop in a thread
+ * add experimental WebM encoder
+ * duration analysis goes to decoder.duration property
+ * bugfixes
+
 
 Platforms
 =========
@@ -47,20 +58,19 @@ Provides
  * jsGraphics => 3.03 (http://www.walterzorn.com/jsgraphics/jsgraphics_e.htm)
 
 
-High level audio process pipes
-===============================
+High level process example
+===========================
 
 For example::
 
->>> import timeside
-
->>> decoder  =  timeside.decoder.FileDecoder('source.wav')
->>> grapher  =  timeside.grapher.Waveform()
->>> analyzer =  timeside.analyzer.MaxLevel()
->>> encoder  =  timeside.encoder.Mp3Encoder('output.mp3')
->>> (decoder | grapher | analyzer | encoder).run()
->>> grapher.render(output='image.png')
->>> print 'Level:', analyzer.result()
+ >>> import timeside
+ >>> decoder  =  timeside.decoder.FileDecoder('source.wav')
+ >>> grapher  =  timeside.grapher.Waveform()
+ >>> analyzer =  timeside.analyzer.MaxLevel()
+ >>> encoder  =  timeside.encoder.Mp3Encoder('output.mp3')
+ >>> (decoder | grapher | analyzer | encoder).run()
+ >>> grapher.render(output='image.png')
+ >>> print 'Level:', analyzer.result()
 
 
 UI Integration
@@ -69,12 +79,12 @@ UI Integration
 See TimeSide UI integration guide: http://code.google.com/p/timeside/wiki/UiGuide
 
 
-Examples
-========
+More examples
+==============
 
  * http://code.google.com/p/timeside/
  * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
- * http://demo.telemeta.org (login: demo , pass: demo) 
+ * http://demo.telemeta.org (login: demo , pass: demo)
 
 
 Related projects
@@ -83,13 +93,12 @@ Related projects
 Telemeta : open web audio CMS (http://telemeta.org)
 
 
-Copyright
-=========
+Copyrights
+==========
 
-Copyright (c) 2006, 2011 Parisson SARL (parisson.com),
-All rights reserved.
-
-Copyright (c) 2006, 2010 Samalyse SARL (samalyse.com)
+Copyright (c) 2006, 2011 Parisson SARL. All rights reserved.
+Copyright (c) 2006, 2010 Samalyse SARL.
+Copyright (c) 2010, 2012, Paul Brossier.
 
 
 License
