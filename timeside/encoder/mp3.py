@@ -23,17 +23,9 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
-from numpy import array, frombuffer, getbuffer, float32
-from timeside.core import FixedSizeInputAdapter
+from timeside.encoder.gstutils import *
 
-import numpy
 import mutagen
-import pygst
-pygst.require('0.10')
-import gst
-import gobject
-gobject.threads_init()
-
 
 class Mp3Encoder(Processor):
     """ gstreamer-based mp3 encoder """
@@ -136,7 +128,7 @@ class Mp3Encoder(Processor):
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
-        buf = self.numpy_array_to_gst_buffer(frames)
+        buf = numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
@@ -144,12 +136,6 @@ class Mp3Encoder(Processor):
             self.write_metadata()
         return frames, eod
         
-    def numpy_array_to_gst_buffer(self, frames):
-        """ gstreamer buffer to numpy array conversion """
-        buf = gst.Buffer(getbuffer(frames))
-        return buf
-
-
 class Mp3EncoderSubprocess(object):
     """MP3 encoder in a subprocess pipe"""
 

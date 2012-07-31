@@ -21,13 +21,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
-from numpy import array, frombuffer, getbuffer, float32
-
-import pygst
-pygst.require('0.10')
-import gst
-import gobject
-gobject.threads_init()
+from timeside.encoder.gstutils import *
 
 class FlacEncoder(Processor):
     """ gstreamer-based FLAC encoder """
@@ -113,14 +107,8 @@ class FlacEncoder(Processor):
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
-        buf = self.numpy_array_to_gst_buffer(frames)
+        buf = numpy_array_to_gst_buffer(frames)
         self.src.emit('push-buffer', buf)
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
         return frames, eod
-
-    def numpy_array_to_gst_buffer(self, frames):
-        """ gstreamer buffer to numpy array conversion """
-        buf = gst.Buffer(getbuffer(frames))
-        return buf
-
