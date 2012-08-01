@@ -35,11 +35,12 @@ class FileDecoder(Processor):
     # duration ms, before discovery process times out
     MAX_DISCOVERY_TIME = 3000
 
-    audioformat = None
-    audiochannels = None
-    audiorate = None
-    audionframes = None
     mimetype = ''
+    output_nframes    = 8*1024
+    output_samplerate = 44100
+    output_channels   = 1
+
+    was_discovered    = False
 
     # IProcessor methods
 
@@ -48,12 +49,32 @@ class FileDecoder(Processor):
     def id():
         return "gstreamerdec"
 
+    def __init__(self, uri):
+        # is this a file?
+        import os.path
+        if os.path.exists(uri):
+            # get the absolute path
+            uri = os.path.abspath(uri)
+            # and make a uri of it
+            from urllib import quote
+            self.uri = 'file://'+quote(uri)
+        else:
+            self.uri = uri
+        # first run the file/uri through the discover pipeline
+        self.discover(uri)
+        if not self.was_discovered:
+            raise Exception('discovered was not run')
+
     def setup(self, channels = None, samplerate = None, nframes = None):
         # the output data format we want
-        blocksize = 8*1024
+        if nframes:    self.output_nframes    = nframes
+        if samplerate: self.output_samplerate = int(samplerate)
+        if channels:   self.output_channels   = int(channels)
         uri = self.uri
+        blocksize = self.output_nframes
         self.pipe = ''' uridecodebin uri=%(uri)s
                   ! audioconvert
+                  ! audioresample
                   ! appsink name=sink blocksize=%(blocksize)s sync=False async=True emit-signals=True
                   ''' % locals()
         self.pipeline = gst.parse_launch(self.pipe)
@@ -62,7 +83,7 @@ class FileDecoder(Processor):
             endianness=(int)1234,
             channels=(int)%s,
             width=(int)32,
-            rate=(int)%d""" % (int(self.audiochannels), int(self.audiorate)))
+            rate=(int)%d""" % (int(self.output_channels), int(self.output_samplerate)))
 
         self.sink = self.pipeline.get_by_name('sink')
         self.sink.set_property("caps", sink_caps)
@@ -101,19 +122,19 @@ class FileDecoder(Processor):
             return array([0.]), True
         if buf == None:
             return array([0.]), True
-        return gst_buffer_to_numpy_array(buf, self.audiochannels), self.eod
+        return gst_buffer_to_numpy_array(buf, self.output_channels), self.eod
 
     @interfacedoc
     def channels(self):
-        return  self.audiochannels
+        return  self.output_channels
 
     @interfacedoc
     def samplerate(self):
-        return self.audiorate
+        return self.output_samplerate
 
     @interfacedoc
     def nframes(self):
-        return self.audionframes
+        return self.output_nframes
 
     @interfacedoc
     def release(self):
@@ -126,20 +147,6 @@ class FileDecoder(Processor):
     ## IDecoder methods
 
     @interfacedoc
-    def __init__(self, uri):
-        # is this a file?
-        import os.path
-        if os.path.exists(uri):
-            # get the absolute path
-            uri = os.path.abspath(uri)
-            # first run the file/uri through the discover pipeline
-            self.discover(uri)
-            # and make a uri of it
-            from urllib import quote
-            self.uri = 'file://'+quote(uri)
-        else:
-            self.uri = uri
-
     @interfacedoc
     def format(self):
         # TODO check
@@ -178,25 +185,27 @@ class FileDecoder(Processor):
         self.bus.connect("message", self.on_message)
 
         # start pipeline
+        self.mainloop = gobject.MainLoop()
         d.discover()
+        self.mainloop.run()
         self.pipeline.set_state(gst.STATE_PLAYING)
         while self.bus.have_pending():
             self.bus.pop()
-        d.print_info()
+        #d.print_info()
 
     def discovered(self, d, is_media):
         """ gstreamer based helper executed upon discover() completion """
         from math import ceil
         if is_media and d.is_audio:
             # copy the discoverer attributes to self
-            self.audiorate = d.audiorate
             self.mimetype= d.mimetype
-            self.audiochannels = d.audiochannels
-            self.audiowidth = d.audiowidth
+            self.input_samplerate = d.audiorate
+            self.input_channels = d.audiochannels
+            self.input_width = d.audiowidth
             # conversion from time in nanoseconds to seconds
-            self.duration = d.audiolength * 1.e-9
+            self.input_duration = d.audiolength * 1.e-9
             # conversion from time in nanoseconds to frames
-            self.audionframes = int ( ceil (d.audiorate * d.audiolength * 1.e-9) )
+            self.input_total_frames = int ( ceil (d.audiorate * d.audiolength * 1.e-9) )
             # copy tags
             self.tags = d.tags
         elif not d.is_audio:
@@ -204,3 +213,5 @@ class FileDecoder(Processor):
         else:
             print "fail", path
         self.pipeline.set_state(gst.STATE_NULL)
+        self.mainloop.quit()
+        self.was_discovered = True
