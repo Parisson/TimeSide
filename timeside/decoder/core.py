@@ -26,15 +26,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
-from numpy import array, frombuffer, getbuffer, float32, append
-from timeside.decoder.sink import *
-
-import time
-import pygst
-pygst.require('0.10')
-import gst
-import gobject
-gobject.threads_init()
+from timeside.encoder.gstutils import *
 
 class FileDecoder(Processor):
     """ gstreamer-based decoder """
@@ -58,91 +50,58 @@ class FileDecoder(Processor):
 
     def setup(self, channels = None, samplerate = None, nframes = None):
         # the output data format we want
-        caps = "audio/x-raw-float, width=32"
+        blocksize = 8*1024
+        uri = self.uri
+        self.pipe = ''' uridecodebin uri=%(uri)s
+                  ! audioconvert
+                  ! appsink name=sink blocksize=%(blocksize)s sync=False async=True emit-signals=True
+                  ''' % locals()
+        self.pipeline = gst.parse_launch(self.pipe)
 
-        src = gst.element_factory_make('uridecodebin')
-        src.set_property('uri', self.uri)
-        src.connect('pad-added', self.source_pad_added_cb)
+        sink_caps = gst.Caps("""audio/x-raw-float,
+            endianness=(int)1234,
+            channels=(int)%s,
+            width=(int)32,
+            rate=(int)%d""" % (int(self.audiochannels), int(self.audiorate)))
 
-        conv = gst.element_factory_make('audioconvert')
-        self.conv = conv
-        self.apad = self.conv.get_pad('sink')
-
-        capsfilter = gst.element_factory_make('capsfilter')
-        capsfilter.set_property('caps', gst.caps_from_string(caps))
-
-        sink = TimesideSink("sink")
-        sink.set_property("hopsize", 8*1024)
-        sink.set_property("sync", False)
-
-        self.pipe = '''uridecodebin uri="%s" name=src
-            ! audioconvert
-            ! %s
-            ! timesidesink name=sink sync=False ''' % (self.uri, caps)
-
-        self.sink = sink
-        # TODO
-        #self.sink.set_property('emit-signals', True)
-
-        self.pipeline = gst.Pipeline()
-        self.pipeline.add(src, conv, capsfilter, sink)
+        self.sink = self.pipeline.get_by_name('sink')
+        self.sink.set_property("caps", sink_caps)
+        self.sink.set_property('emit-signals', True)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
-        self.bus.connect('message::eos', self.on_eos)
-        self.bus.connect('message::tag', self.on_tag)
-        self.bus.connect('message::error', self.on_error)
-
-        gst.element_link_many(conv, capsfilter, sink)
-
-        self.mainloop = gobject.MainLoop()
+        self.bus.connect('message', self.on_message)
 
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
-        # self.mainloop.run()
-        # NOTE: instead of running the mainloop on the main thread, put it in a
-        # thread so that the main thread start calling process and pull from
-        # buffers from timesidesink
+    def on_message(self, bus, message):
+        t = message.type
+        if t == gst.MESSAGE_EOS:
+            self.pipeline.set_state(gst.STATE_NULL)
+        elif t == gst.MESSAGE_ERROR:
+            self.pipeline.set_state(gst.STATE_NULL)
+            err, debug = message.parse_error()
+            print "Error: %s" % err, debug
+        elif t == gst.MESSAGE_TAG:
+            # TODO
+            # msg.parse_tags()
+            pass
 
-        import threading
-        class MainloopThread(threading.Thread):
-            def __init__(self, mainloop):
-                threading.Thread.__init__(self)
-                self.mainloop = mainloop
-
-            def run(self):
-                self.mainloop.run()
-        self.mainloopthread = MainloopThread(self.mainloop)
-        self.mainloopthread.start()
-
-        #FIXME: prevent mp3 encoder from hanging
-        time.sleep(0.1)
-
-    def source_pad_added_cb(self, src, pad):
-        name = pad.get_caps()[0].get_name()
-        if name == 'audio/x-raw-float' or name == 'audio/x-raw-int':
-            if not self.apad.is_linked():
-                pad.link(self.conv.get_pad("sink"))
-
-    def on_eos(self, bus, msg):
-        #print 'on_eos'
-        self.sink.on_eos()
-        self.pipeline.set_state(gst.STATE_NULL)
-        self.mainloop.quit()
-
-    def on_tag(self, bus, msg):
-        taglist = msg.parse_tag()
-        """
-        print 'on_tag:'
-        for key in taglist.keys():
-            print '\t%s = %s' % (key, taglist[key])
-        """
-
-    def on_error(self, bus, msg):
-        error = msg.parse_error()
-        print 'on_error:', error[1]
-        self.mainloop.quit()
+    @interfacedoc
+    def process(self, frames = None, eod = False):
+        self.eod = eod
+        if self.eod:
+            self.src.emit('end-of-stream')
+        try:
+            buf = self.sink.emit('pull-buffer')
+        except SystemError, e:
+            # should never happen
+            print 'SystemError', e
+            return array([0.]), True
+        if buf == None:
+            return array([0.]), True
+        return gst_buffer_to_numpy_array(buf, self.audiochannels), self.eod
 
     @interfacedoc
     def channels(self):
@@ -157,22 +116,12 @@ class FileDecoder(Processor):
         return self.audionframes
 
     @interfacedoc
-    def process(self, frames = None, eod = False):
-        try:
-            #buf = self.sink.emit('pull-buffer')
-            buf = self.sink.pull()
-        except SystemError, e:
-            # should never happen
-            print 'SystemError', e
-            return array([0.]), True
-        if buf == None:
-            return array([0.]), True
-        return self.gst_buffer_to_numpy_array(buf), False
-
-    @interfacedoc
     def release(self):
-        self.mainloopthread.join()
-        pass
+        while self.bus.have_pending():
+          self.bus.pop()
+
+    def __del__(self):
+        self.release()
 
     ## IDecoder methods
 
@@ -223,12 +172,21 @@ class FileDecoder(Processor):
         from gst.extend import discoverer
         d = discoverer.Discoverer(path, timeout = self.MAX_DISCOVERY_TIME)
         d.connect('discovered', self.discovered)
-        self.mainloop = gobject.MainLoop()
+        self.bus = d.get_bus()
+        self.bus.add_signal_watch()
+        self.pipeline = d
+        self.bus.connect("message", self.on_message)
+
+        # start pipeline
         d.discover()
-        self.mainloop.run()
+        self.pipeline.set_state(gst.STATE_PLAYING)
+        while self.bus.have_pending():
+            self.bus.pop()
+        d.print_info()
 
     def discovered(self, d, is_media):
         """ gstreamer based helper executed upon discover() completion """
+        from math import ceil
         if is_media and d.is_audio:
             # copy the discoverer attributes to self
             self.audiorate = d.audiorate
@@ -238,19 +196,11 @@ class FileDecoder(Processor):
             # conversion from time in nanoseconds to seconds
             self.duration = d.audiolength * 1.e-9
             # conversion from time in nanoseconds to frames
-            from math import ceil
-            duration = d.audiorate * d.audiolength * 1.e-9
-            self.audionframes = int (ceil ( duration ) )
+            self.audionframes = int ( ceil (d.audiorate * d.audiolength * 1.e-9) )
+            # copy tags
             self.tags = d.tags
         elif not d.is_audio:
             print "error, no audio found!"
         else:
             print "fail", path
-        self.mainloop.quit()
-
-    def gst_buffer_to_numpy_array(self, buf):
-        """ gstreamer buffer to numpy array conversion """
-        chan = self.audiochannels
-        samples = frombuffer(buf.data, dtype=float32)
-        samples.resize([len(samples)/chan, chan])
-        return samples
+        self.pipeline.set_state(gst.STATE_NULL)

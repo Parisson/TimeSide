@@ -2,5 +2,3 @@
 
 import timeside.core
 from core import *
-from sink import *
-#from old import *
