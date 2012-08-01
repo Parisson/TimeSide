@@ -23,7 +23,7 @@ from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
 from timeside.encoder.gstutils import *
 
-class AacEncoder(Processor):
+class AacEncoder(GstEncoder):
     """ gstreamer-based AAC encoder """
     implements(IEncoder)
 
@@ -39,22 +39,14 @@ class AacEncoder(Processor):
         super(AacEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
         # the output data format we want
-        pipeline = gst.parse_launch(''' appsrc name=src
+        self.streaming = False
+        self.pipe = ''' appsrc name=src
             ! audioconvert
             ! faac
-            ! filesink location=%s ''' % self.filename)
-        # store a pointer to appsink in our encoder object
-        self.src = pipeline.get_by_name('src')
-        srccaps = gst.Caps("""audio/x-raw-float,
-            endianness=(int)1234,
-            channels=(int)%s,
-            width=(int)32,
-            rate=(int)%d""" % (int(channels), int(samplerate)))
-        self.src.set_property("caps", srccaps)
+            ! filesink location=%s ''' % self.filename
 
         # start pipeline
-        pipeline.set_state(gst.STATE_PLAYING)
-        self.pipeline = pipeline
+        self.start_pipeline(channels, samplerate)
 
     @staticmethod
     @interfacedoc
@@ -85,10 +77,3 @@ class AacEncoder(Processor):
     def set_metadata(self, metadata):
         #TODO
         pass
-
-    @interfacedoc
-    def process(self, frames, eod=False):
-        buf = numpy_array_to_gst_buffer(frames)
-        self.src.emit('push-buffer', buf)
-        if eod: self.src.emit('end-of-stream')
-        return frames, eod
