@@ -3,8 +3,6 @@ from unit_timeside import *
 
 import os.path
 
-__all__ = ['TestDecoding']
-
 class TestDecoding(TestCase):
     "Test the low level streaming features"
 
@@ -36,7 +34,9 @@ class TestDecoding(TestCase):
         while True:
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
-            if eod: break
+            if eod or decoder.eod: break
+
+        decoder.release()
 
         # FIXME compute actual number of frames from file
         if os.path.splitext(self.source)[-1].lower() == '.mp3':
@@ -48,5 +48,3 @@ class TestDecoding(TestCase):
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
-
-
