@@ -28,6 +28,8 @@ from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
 from timeside.encoder.gstutils import *
 
+GST_APPSINK_MAX_BUFFERS = 10
+
 class FileDecoder(Processor):
     """ gstreamer-based decoder """
     implements(IDecoder)
@@ -75,7 +77,7 @@ class FileDecoder(Processor):
         self.pipe = ''' uridecodebin uri=%(uri)s
                   ! audioconvert
                   ! audioresample
-                  ! appsink name=sink blocksize=%(blocksize)s sync=False async=True emit-signals=True
+                  ! appsink name=sink blocksize=%(blocksize)s sync=False async=True
                   ''' % locals()
         self.pipeline = gst.parse_launch(self.pipe)
 
@@ -87,7 +89,9 @@ class FileDecoder(Processor):
 
         self.sink = self.pipeline.get_by_name('sink')
         self.sink.set_property("caps", sink_caps)
+        self.sink.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
         self.sink.set_property('emit-signals', True)
+        self.sink.set_property("drop", False)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
@@ -112,8 +116,6 @@ class FileDecoder(Processor):
     @interfacedoc
     def process(self, frames = None, eod = False):
         self.eod = eod
-        if self.eod:
-            self.src.emit('end-of-stream')
         try:
             buf = self.sink.emit('pull-buffer')
         except SystemError, e:
@@ -122,7 +124,8 @@ class FileDecoder(Processor):
             return array([0.]), True
         if buf == None:
             return array([0.]), True
-        return gst_buffer_to_numpy_array(buf, self.output_channels), self.eod
+        #print 'found something'
+        return gst_buffer_to_numpy_array(buf, self.output_channels), False #self.eod
 
     @interfacedoc
     def channels(self):
@@ -138,8 +141,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def release(self):
-        while self.bus.have_pending():
-          self.bus.pop()
+        pass
 
     def __del__(self):
         self.release()
@@ -199,6 +201,7 @@ class FileDecoder(Processor):
             self.input_duration = d.audiolength * 1.e-9
             # conversion from time in nanoseconds to frames
             self.input_total_frames = int ( ceil (d.audiorate * d.audiolength * 1.e-9) )
+            self.input_total_frames = d.audiorate * d.audiolength * 1.e-9
             # copy tags
             self.tags = d.tags
         elif not d.is_audio:
