@@ -179,18 +179,11 @@ class FileDecoder(Processor):
         from gst.extend import discoverer
         d = discoverer.Discoverer(path, timeout = self.MAX_DISCOVERY_TIME)
         d.connect('discovered', self.discovered)
-        self.bus = d.get_bus()
-        self.bus.add_signal_watch()
-        self.pipeline = d
-        self.bus.connect("message", self.on_message)
 
-        # start pipeline
+        # start discover pipeline
         self.mainloop = gobject.MainLoop()
         d.discover()
         self.mainloop.run()
-        self.pipeline.set_state(gst.STATE_PLAYING)
-        while self.bus.have_pending():
-            self.bus.pop()
         #d.print_info()
 
     def discovered(self, d, is_media):
@@ -212,6 +205,5 @@ class FileDecoder(Processor):
             print "error, no audio found!"
         else:
             print "fail", path
-        self.pipeline.set_state(gst.STATE_NULL)
         self.mainloop.quit()
         self.was_discovered = True
