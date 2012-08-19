@@ -55,15 +55,15 @@ class FileDecoder(Processor):
         if os.path.exists(uri):
             # get the absolute path
             uri = os.path.abspath(uri)
+            # first run the file/uri through the discover pipeline
+            self.discover(uri)
+            if not self.was_discovered:
+                raise Exception('discovered was not run')
             # and make a uri of it
             from urllib import quote
             self.uri = 'file://'+quote(uri)
         else:
             self.uri = uri
-        # first run the file/uri through the discover pipeline
-        self.discover(uri)
-        if not self.was_discovered:
-            raise Exception('discovered was not run')
 
     def setup(self, channels = None, samplerate = None, nframes = None):
         # the output data format we want
