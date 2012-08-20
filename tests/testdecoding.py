@@ -36,38 +36,42 @@ class TestDecoding(TestCase):
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
             if eod or decoder.eod: break
+            self.assertEquals(frames.shape[0], decoder.nframes() )
+            self.assertEquals(frames.shape[1], decoder.channels() )
 
-        decoder.release()
-
+        ratio = decoder.output_samplerate / float(decoder.input_samplerate)
         if 0:
-          print "input / output_samplerate:",   decoder.input_samplerate, '/', decoder.output_samplerate,
-          ratio = decoder.output_samplerate / float(decoder.input_samplerate)
-          print "ratio:",             ratio
-          print "input / output_channels:",   decoder.input_channels, decoder.output_channels
-          print "input_duration:",     decoder.input_duration
-          print "input_total_frames:", decoder.input_total_frames
+            print "input / output_samplerate:",   decoder.input_samplerate, '/', decoder.output_samplerate,
+            print "ratio:",             ratio
+            print "input / output_channels:",   decoder.input_channels, decoder.output_channels
+            print "input_duration:",     decoder.input_duration
+            print "input_total_frames:", decoder.input_total_frames
 
-        """
         # FIXME compute actual number of frames from file
-        if os.path.splitext(self.source)[-1].lower() == '.mp3':
-            self.assertEquals(totalframes, ratio * 355969 )
-        elif os.path.splitext(self.source)[-1].lower() == '.ogg':
-            self.assertEquals(totalframes, ratio * 352833)
-        else:
-            self.assertEquals(totalframes, ratio * 352801)
-        """
+        if ratio == 1:
+            if os.path.splitext(self.source)[-1].lower() == '.mp3':
+                self.assertEquals(totalframes, 353664)
+            elif os.path.splitext(self.source)[-1].lower() == '.ogg':
+                self.assertEquals(totalframes, 352832)
+            else:
+                self.assertEquals(totalframes, 352800)
 
 class TestDecodingStereo(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.nframes = None, 2, None
 
-class TestDecodingResampling(TestDecoding):
+class TestDecodingMonoUpsampling(TestDecoding):
+
+    def setUp(self):
+        self.samplerate, self.channels, self.nframes = 48000, None, None
+
+class TestDecodingMonoDownsampling(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.nframes = 16000, None, None
 
-class TestDecodingStereoResampling(TestDecoding):
+class TestDecodingStereoDownsampling(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.nframes = 32000, 2, None
@@ -76,6 +80,11 @@ class TestDecodingStereoUpsampling(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.nframes = 96000, 2, None
+
+class TestDecodingShortframes(TestDecoding):
+
+    def setUp(self):
+        self.samplerate, self.channels, self.nframes = None, None, 256
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
