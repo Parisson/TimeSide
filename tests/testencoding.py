@@ -2,6 +2,8 @@ from math import pi
 from numpy import arange, sin, zeros
 from unit_timeside import *
 
+from timeside.encoder.gstutils import get_loop_thread
+
 import os.path
 
 class TestEncoding(TestCase):
@@ -13,7 +15,6 @@ class TestEncoding(TestCase):
         import tempfile
         self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
         self.sink = self.tmpfile.name
-        self.sink = '/tmp/foo.foo'
    
     def testWav(self):
         "Test wav encoding"
@@ -71,12 +72,6 @@ class TestEncoding(TestCase):
                 break
             if self.encoder.eod :
                 break
-
-        self.encoder.release()
-
-        import commands
-        (exitstatus, outtext) = commands.getstatusoutput('sndfile-info %s' % self.sink)
-        #print outtext
 
         self.tmpfile.close()
 
