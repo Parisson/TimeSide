@@ -36,7 +36,7 @@ class TestDecoding(TestCase):
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
             if eod or decoder.eod: break
-            self.assertEquals(frames.shape[0], decoder.nframes() )
+            self.assertEquals(frames.shape[0], decoder.output_nframes )
             self.assertEquals(frames.shape[1], decoder.channels() )
 
         ratio = decoder.output_samplerate / float(decoder.input_samplerate)
@@ -85,6 +85,11 @@ class TestDecodingShortframes(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.nframes = None, None, 256
+
+class TestDecodingLongframes(TestDecoding):
+
+    def setUp(self):
+        self.samplerate, self.channels, self.nframes = None, None, 1024*8*2
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
