@@ -37,15 +37,11 @@ class FileDecoder(Processor):
     """ gstreamer-based decoder """
     implements(IDecoder)
 
-    # duration ms, before discovery process times out
-    MAX_DISCOVERY_TIME = 3000
-
     mimetype = ''
     output_nframes    = 8*1024
     output_samplerate = 44100
     output_channels   = 1
 
-    was_discovered    = False
     pipeline          = None
     mainloopthread    = None
     read_error        = None
@@ -63,10 +59,6 @@ class FileDecoder(Processor):
         if os.path.exists(uri):
             # get the absolute path
             uri = os.path.abspath(uri)
-            # first run the file/uri through the discover pipeline
-            self.discover(uri)
-            if not self.was_discovered:
-                raise Exception('discovered was not run')
             # and make a uri of it
             from urllib import quote
             self.uri = 'file://'+quote(uri)
@@ -122,6 +114,7 @@ class FileDecoder(Processor):
 
             def run(self):
                 self.mainloop.run()
+        self.mainloop = gobject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
         #self.mainloopthread = get_loop_thread()
@@ -274,40 +267,3 @@ class FileDecoder(Processor):
 
     def duration(self):
         return self.duration
-
-    ## gst.extend discoverer
-
-    def discover(self, path):
-        """ gstreamer based helper function to get file attributes """
-        from gst.extend import discoverer
-        d = discoverer.Discoverer(path, timeout = self.MAX_DISCOVERY_TIME)
-        d.connect('discovered', self.discovered)
-
-        # start discover pipeline
-        self.mainloop = gobject.MainLoop()
-        d.discover()
-        self.mainloop.run()
-        #d.print_info()
-
-    def discovered(self, d, is_media):
-        """ gstreamer based helper executed upon discover() completion """
-        from math import ceil
-        if is_media and d.is_audio:
-            # copy the discoverer attributes to self
-            self.mimetype= d.mimetype
-            self.input_samplerate = d.audiorate
-            self.input_channels = d.audiochannels
-            self.input_width = d.audiowidth
-            # conversion from time in nanoseconds to seconds
-            self.input_duration = d.audiolength * 1.e-9
-            # conversion from time in nanoseconds to frames
-            self.input_total_frames = int ( ceil (d.audiorate * d.audiolength * 1.e-9) )
-            self.input_total_frames = d.audiorate * d.audiolength * 1.e-9
-            # copy tags
-            self.tags = d.tags
-        elif not d.is_audio:
-            print "error, no audio found!"
-        else:
-            print "fail", path
-        self.mainloop.quit()
-        self.was_discovered = True
