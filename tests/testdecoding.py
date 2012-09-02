@@ -7,7 +7,7 @@ class TestDecoding(TestCase):
     "Test the low level streaming features"
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = None, None, None
+        self.samplerate, self.channels, self.blocksize = None, None, None
    
     def testWav(self):
         "Test wav decoding"
@@ -28,7 +28,7 @@ class TestDecoding(TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
 
-        decoder.setup(samplerate = self.samplerate, channels = self.channels, nframes = self.nframes)
+        decoder.setup(samplerate = self.samplerate, channels = self.channels, blocksize = self.blocksize)
 
         totalframes = 0.
 
@@ -36,16 +36,16 @@ class TestDecoding(TestCase):
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
             if eod or decoder.eod: break
-            self.assertEquals(frames.shape[0], decoder.output_nframes )
+            self.assertEquals(frames.shape[0], decoder.output_blocksize )
             self.assertEquals(frames.shape[1], decoder.channels() )
 
         ratio = decoder.output_samplerate / float(decoder.input_samplerate)
         if 0:
-            print "input / output_samplerate:",   decoder.input_samplerate, '/', decoder.output_samplerate,
-            print "ratio:",             ratio
-            print "input / output_channels:",   decoder.input_channels, decoder.output_channels
-            print "input_duration:",     decoder.input_duration
-            print "input_total_frames:", decoder.input_total_frames
+            print "input / output_samplerate:", decoder.input_samplerate, '/', decoder.output_samplerate,
+            print "ratio:", ratio
+            print "input / output_channels:", decoder.input_channels, decoder.output_channels
+            print "input_duration:", decoder.input_duration
+            print "input_totalframes:", decoder.input_totalframes
 
         # FIXME compute actual number of frames from file
         if ratio == 1:
@@ -59,37 +59,37 @@ class TestDecoding(TestCase):
 class TestDecodingStereo(TestDecoding):
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = None, 2, None
+        self.samplerate, self.channels, self.blocksize = None, 2, None
 
 class TestDecodingMonoUpsampling(TestDecoding):
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = 48000, None, None
+        self.samplerate, self.channels, self.blocksize = 48000, None, None
 
 class TestDecodingMonoDownsampling(TestDecoding):
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = 16000, None, None
+        self.samplerate, self.channels, self.blocksize = 16000, None, None
 
 class TestDecodingStereoDownsampling(TestDecoding):
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = 32000, 2, None
+        self.samplerate, self.channels, self.blocksize = 32000, 2, None
 
 class TestDecodingStereoUpsampling(TestDecoding):
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = 96000, 2, None
+        self.samplerate, self.channels, self.blocksize = 96000, 2, None
 
-class TestDecodingShortframes(TestDecoding):
-
-    def setUp(self):
-        self.samplerate, self.channels, self.nframes = None, None, 256
-
-class TestDecodingLongframes(TestDecoding):
+class TestDecodingShortBlock(TestDecoding):
 
     def setUp(self):
-        self.samplerate, self.channels, self.nframes = None, None, 1024*8*2
+        self.samplerate, self.channels, self.blocksize = None, None, 256
+
+class TestDecodingLongBlock(TestDecoding):
+
+    def setUp(self):
+        self.samplerate, self.channels, self.blocksize = None, None, 1024*8*2
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

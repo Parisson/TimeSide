@@ -38,7 +38,7 @@ class FileDecoder(Processor):
     implements(IDecoder)
 
     mimetype = ''
-    output_nframes    = 8*1024
+    output_blocksize  = 8*1024
     output_samplerate = 44100
     output_channels   = 1
 
@@ -65,9 +65,9 @@ class FileDecoder(Processor):
         else:
             self.uri = uri
 
-    def setup(self, channels = None, samplerate = None, nframes = None):
+    def setup(self, channels = None, samplerate = None, blocksize = None):
         # the output data format we want
-        if nframes:    self.output_nframes    = nframes
+        if blocksize:  self.output_blocksize  = blocksize
         if samplerate: self.output_samplerate = int(samplerate)
         if channels:   self.output_channels   = int(channels)
         uri = self.uri
@@ -175,7 +175,7 @@ class FileDecoder(Processor):
             self.input_samplerate = caps[0]["rate"]
             self.input_channels = caps[0]["channels"]
             self.input_duration = length / 1.e9
-            self.input_total_frames = int(self.input_duration * self.input_samplerate)
+            self.input_totalframes = int(self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
                 self.input_width = caps[0]["width"]
             else:
@@ -206,9 +206,9 @@ class FileDecoder(Processor):
             self.last_buffer = new_array
         else:
             self.last_buffer = concatenate((self.last_buffer, new_array), axis=0)
-        while self.last_buffer.shape[0] >= self.output_nframes:
-            new_block = self.last_buffer[:self.output_nframes]
-            self.last_buffer = self.last_buffer[self.output_nframes:]
+        while self.last_buffer.shape[0] >= self.output_blocksize:
+            new_block = self.last_buffer[:self.output_blocksize]
+            self.last_buffer = self.last_buffer[self.output_blocksize:]
             #print 'queueing', new_block.shape, 'remaining', self.last_buffer.shape
             self.queue.put( [new_block, False ] )
 
@@ -229,8 +229,15 @@ class FileDecoder(Processor):
         return self.output_samplerate
 
     @interfacedoc
-    def nframes(self):
-        return self.input_total_frames
+    def blocksize(self):
+        return self.output_blocksize
+
+    def totalframes(self):
+        if self.input_samplerate == self.output_samplerate:
+            return self.input_totalframes
+        else:
+            ratio = self.input_totalframes / self.output_samplerate
+            return self.input_totalframes * ratio
 
     @interfacedoc
     def release(self):
@@ -242,7 +249,6 @@ class FileDecoder(Processor):
 
     ## IDecoder methods
 
-    @interfacedoc
     @interfacedoc
     def format(self):
         # TODO check
@@ -266,4 +272,8 @@ class FileDecoder(Processor):
         return self.tags
 
     def duration(self):
-        return self.duration
+        if self.input_samplerate == self.output_samplerate:
+            return self.input_duration
+        else:
+            ratio = self.input_totalframes / self.output_samplerate
+            return self.input_duration * ratio

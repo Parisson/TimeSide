@@ -34,11 +34,11 @@ class IProcessor(Interface):
         # be raised by MetaProcessor if the id is malformed or not unique amongst
         # registered processors.
 
-    def setup(self, channels=None, samplerate=None, nframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None):
         """Allocate internal resources and reset state, so that this processor is
         ready for a new run. 
         
-        The channels, samplerate and/or nframes arguments may be required by 
+        The channels, samplerate and/or blocksize arguments may be required by
         processors which accept input. An error will occur if any of
         these arguments is passed to an output-only processor such as a decoder.
         """
@@ -53,7 +53,7 @@ class IProcessor(Interface):
         """Samplerate of the data returned by process(). May be different from
         the samplerate passed to setup()"""
 
-    def nframes():
+    def blocksize():
         """The total number of frames that this processor can output, or None if
         the duration is unknown."""
 
@@ -147,7 +147,7 @@ class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
     # implementation: graphers which need to know the total number of frames
-    # should raise an exception in setup() if the nframes argument is None 
+    # should raise an exception in setup() if the totalframes argument is None
 
     def __init__(self, width, height):
         """Create a new grapher. width and height are generally

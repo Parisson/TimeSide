@@ -23,7 +23,7 @@ from timeside.exceptions import Error, ApiError
 import re
 import numpy
 
-__all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract', 
+__all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
            'FixedSizeInputAdapter']
 
@@ -58,13 +58,13 @@ class Processor(Component):
     implements(IProcessor)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None):
         self.input_channels   = channels
         self.input_samplerate = samplerate
-        self.input_nframes    = nframes
+        self.input_blocksize  = blocksize
 
-    # default channels(), samplerate() and nframes() implementations returns 
-    # the input characteristics, but processors may change this behaviour by 
+    # default channels(), samplerate() and blocksize() implementations returns
+    # the input characteristics, but processors may change this behaviour by
     # overloading those methods
     @interfacedoc
     def channels(self):
@@ -75,8 +75,8 @@ class Processor(Component):
         return self.input_samplerate
 
     @interfacedoc
-    def nframes(self):
-        return self.input_nframes
+    def blocksize(self):
+        return self.input_blocksize
 
     @interfacedoc
     def process(self, frames, eod):
@@ -98,7 +98,7 @@ class FixedSizeInputAdapter(object):
 
     def __init__(self, buffer_size, channels, pad=False):
         """Construct a new adapter: buffer_size is the desired buffer size in frames,
-        channels the number of channels, and pad indicates whether the last block should 
+        channels the number of channels, and pad indicates whether the last block should
         be padded with zeros."""
 
         self.buffer      = numpy.empty((buffer_size, channels))
@@ -106,21 +106,21 @@ class FixedSizeInputAdapter(object):
         self.len         = 0
         self.pad         = pad
 
-    def nframes(self, input_nframes):
+    def blocksize(self, input_blocksize):
         """Return the total number of frames that this adapter will output according to the
-        input_nframes argument"""
+        input_blocksize argument"""
 
-        nframes = input_nframes
+        blocksize = input_blocksize
         if self.pad:
-            mod = input_nframes % self.buffer_size
+            mod = input_blocksize % self.buffer_size
             if mod:
-                nframes += self.buffer_size - mod
+                blocksize += self.buffer_size - mod
 
-        return nframes                
+        return blocksize
 
 
     def process(self, frames, eod):
-        """Returns an iterator over tuples of the form (buffer, eod) where buffer is a 
+        """Returns an iterator over tuples of the form (buffer, eod) where buffer is a
         fixed-sized block of data, and eod indicates whether this is the last block.
         In case padding is deactivated the last block may be smaller than the buffer size.
         """
@@ -155,17 +155,16 @@ class FixedSizeInputAdapter(object):
 
             yield block, True
             self.len = 0
-                            
+
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
     any of the descendants of this interface."""
     return implementations(interface, recurse)
-    
 
 def get_processor(processor_id):
     """Return a processor by its id"""
     if not _processors.has_key(processor_id):
-        raise Error("No processor registered with id: '%s'" 
+        raise Error("No processor registered with id: '%s'"
               % processor_id)
 
     return _processors[processor_id]
@@ -194,7 +193,7 @@ class ProcessPipe(object):
             for item in other:
                 self |= item
 
-        return self            
+        return self
 
     def run(self):
         """Setup/reset all processors in cascade and stream audio data along
@@ -207,7 +206,7 @@ class ProcessPipe(object):
         source.setup()
         last = source
         for item in items:
-            item.setup(last.channels(), last.samplerate(), last.nframes())
+            item.setup(last.channels(), last.samplerate(), last.blocksize())
             last = item
 
         # now stream audio data along the pipe
@@ -217,5 +216,4 @@ class ProcessPipe(object):
             for item in items:
                 frames, eod = item.process(frames, eod)
 
-        return self                
-       
+        return self
