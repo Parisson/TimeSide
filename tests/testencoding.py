@@ -2,8 +2,6 @@ from math import pi
 from numpy import arange, sin, zeros
 from unit_timeside import *
 
-from timeside.encoder.gstutils import get_loop_thread
-
 import os.path
 
 class TestEncoding(TestCase):
