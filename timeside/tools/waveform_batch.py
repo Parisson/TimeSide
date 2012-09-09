@@ -20,32 +20,35 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-version = '0.1-beta'
+version = '0.2'
 
 import os
 import sys
 import timeside
+
 
 class GrapherScheme:
 
     def __init__(self):
 
         self.color_scheme = {
-            'waveform': [ # Four (R,G,B) tuples for three main color channels for the spectral centroid method
-                        (50,0,200), (0,220,80), (255,224,0), (255,0,0)
+            'waveform': [
+            # Four (R,G,B) tuples for three main color channels for the spectral centroid method
+                        (30,144,255), (30,144,255), (30,144,255), (30,144,255)
                         ],
             'spectrogram': [
-                        (0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2), (90,180,100), (224,224,44), (255,60,30), (255,255,255)
+                        (0, 0, 0), (58/4,68/4,65/4), (80/2,100/2,153/2),
+                        (90,180,100), (224,224,44), (255,60,30), (255,255,255)
                         ]}
 
         # Width of the image
-        self.width = 655
+        self.width = 925
 
         # Height of the image
-        self.height = 96
+        self.height = 67
 
         # Background color
-        self.bg_color = (0,0,0)
+        self.bg_color = (-1, -1, -1, -1)
 
         # Force computation. By default, the class doesn't overwrite existing image files.
         self.force = True
@@ -74,7 +77,8 @@ class Media2Waveform(object):
             if root:
                 for file in files:
                     ext = file.split('.')[-1]
-                    media_list.append(root+os.sep+file)
+                    if not file[0] == '.':
+                        media_list.append(root+os.sep+file)
         return media_list
 
     def get_path_dict(self):
@@ -86,29 +90,31 @@ class Media2Waveform(object):
         return path_dict
 
     def process(self):
+        waveform = timeside.grapher.Waveform(width=self.width, height=self.height,
+                            bg_color=self.bg_color, color_scheme=self.color_scheme)
         for source, image in self.path_dict.iteritems():
             if not os.path.exists(image) or self.force:
                 print 'Processing ', source
                 audio = os.path.join(os.path.dirname(__file__), source)
                 decoder  = timeside.decoder.FileDecoder(audio)
-                analyzer = timeside.analyzer.Duration()
-                waveform = timeside.grapher.WaveformJoyDiv(width=self.width, height=self.height,
-                                            bg_color=self.bg_color, color_scheme=self.color_scheme)
-                (decoder | analyzer | waveform).run()
-                duration = analyzer.result()
+                duration = decoder.duration
+                (decoder | waveform).run()
                 img_name = os.path.split(image)[1]
                 image = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0] + '_' +\
-                        '_'.join([str(self.width),  str(self.height),  str(int(duration))])+os.path.splitext(img_name)[1]
+                        '_'.join([str(self.width),  str(self.height),
+                                  str(int(duration))])+os.path.splitext(img_name)[1]
                 waveform.graph.filename = image
-                print 'Rendering ', source, ' to ', waveform.graph.filename, '...'
-                print 'frames per pixel = ', waveform.graph.samples_per_pixel
+                print 'Rendering ', waveform.graph.filename
+                #print 'frames per pixel = ', waveform.graph.samples_per_pixel
                 waveform.render(output=image)
-                
+
 
 if __name__ == '__main__':
-    if len(sys.argv) <= 2:
+    if len(sys.argv) <= 1:
         print """
-        Usage : python waveform_batch /path/to/media_dir /path/to/img_dir
+        TimeSide simple waveform generator
+
+        Usage : python waveform_batch.py /path/to/media_dir /path/to/img_dir
 
         Dependencies : timeside, python, python-numpy, python-gst0.10, gstreamer0.10-plugins-base
         See http://code.google.com/p/timeside/ for more information.
