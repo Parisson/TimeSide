@@ -58,10 +58,11 @@ class Processor(Component):
     implements(IProcessor)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None):
-        self.input_channels   = channels
-        self.input_samplerate = samplerate
-        self.input_blocksize  = blocksize
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        self.input_channels     = channels
+        self.input_samplerate   = samplerate
+        self.input_blocksize    = blocksize
+        self.input_totalframes  = totalframes
 
     # default channels(), samplerate() and blocksize() implementations returns
     # the input characteristics, but processors may change this behaviour by
@@ -77,6 +78,10 @@ class Processor(Component):
     @interfacedoc
     def blocksize(self):
         return self.input_blocksize
+
+    @interfacedoc
+    def totalframes(self):
+        return self.input_totalframes
 
     @interfacedoc
     def process(self, frames, eod):
@@ -118,6 +123,18 @@ class FixedSizeInputAdapter(object):
 
         return blocksize
 
+
+    def totalframes(self, input_totalframes):
+        """Return the total number of frames that this adapter will output according to the
+        input_blocksize argument"""
+
+        totalframes = input_totalframes
+        if self.pad:
+            mod = input_totalframes % self.buffer_size
+            if mod:
+                totalframes += self.buffer_size - mod
+
+        return totalframes
 
     def process(self, frames, eod):
         """Returns an iterator over tuples of the form (buffer, eod) where buffer is a
@@ -206,7 +223,7 @@ class ProcessPipe(object):
         source.setup()
         last = source
         for item in items:
-            item.setup(last.channels(), last.samplerate(), last.blocksize())
+            item.setup(last.channels(), last.samplerate(), last.blocksize(), last.totalframes())
             last = item
 
         # now stream audio data along the pipe

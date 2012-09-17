@@ -67,9 +67,10 @@ class FileDecoder(Processor):
 
     def setup(self, channels = None, samplerate = None, blocksize = None):
         # the output data format we want
-        if blocksize:  self.output_blocksize  = blocksize
-        if samplerate: self.output_samplerate = int(samplerate)
-        if channels:   self.output_channels   = int(channels)
+        if blocksize:   self.output_blocksize  = blocksize
+        if samplerate:  self.output_samplerate = int(samplerate)
+        if channels:    self.output_channels   = int(channels)
+
         uri = self.uri
 
         self.pipe = ''' uridecodebin name=uridecodebin uri=%(uri)s
@@ -180,6 +181,7 @@ class FileDecoder(Processor):
                 self.input_width = caps[0]["width"]
             else:
                 self.input_width = caps[0]["depth"]
+            self.output_totalframes = self.totalframes()
 
     def _on_message_cb(self, bus, message):
         t = message.type
@@ -232,6 +234,7 @@ class FileDecoder(Processor):
     def blocksize(self):
         return self.output_blocksize
 
+    @interfacedoc
     def totalframes(self):
         if self.input_samplerate == self.output_samplerate:
             return self.input_totalframes

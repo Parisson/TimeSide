@@ -26,20 +26,20 @@ class IProcessor(Interface):
 
     @staticmethod
     def id():
-        """Short alphanumeric, lower-case string which uniquely identify this 
-        processor, suitable for use as an HTTP/GET argument value, in filenames, 
+        """Short alphanumeric, lower-case string which uniquely identify this
+        processor, suitable for use as an HTTP/GET argument value, in filenames,
         etc..."""
 
         # implementation: only letters and digits are allowed. An exception will
         # be raised by MetaProcessor if the id is malformed or not unique amongst
         # registered processors.
 
-    def setup(self, channels=None, samplerate=None, blocksize=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         """Allocate internal resources and reset state, so that this processor is
-        ready for a new run. 
-        
-        The channels, samplerate and/or blocksize arguments may be required by
-        processors which accept input. An error will occur if any of
+        ready for a new run.
+
+        The channels, samplerate and/or blocksize and/or totalframes arguments
+        may be required by processors which accept input. An error will occur if any of
         these arguments is passed to an output-only processor such as a decoder.
         """
 
@@ -54,19 +54,23 @@ class IProcessor(Interface):
         the samplerate passed to setup()"""
 
     def blocksize():
+        """The total number of frames that this processor can output for each step
+        in the pipeline, or None if the duration is unknown."""
+
+    def totalframes():
         """The total number of frames that this processor can output, or None if
         the duration is unknown."""
 
     def process(self, frames=None, eod=False):
         """Process input frames and return a (output_frames, eod) tuple.
-        Both input and output frames are 2D numpy arrays, where columns are 
-        channels, and containing an undetermined number of frames.  eod=True 
+        Both input and output frames are 2D numpy arrays, where columns are
+        channels, and containing an undetermined number of frames.  eod=True
         means that the end-of-data has been reached.
-        
+
         Output-only processors (such as decoders) will raise an exception if the
         frames argument is not None. All processors (even encoders) return data,
         even if that means returning the input unchanged.
-        
+
         Warning: it is required to call setup() before this method."""
 
     def release(self):
@@ -80,15 +84,15 @@ class IEncoder(IProcessor):
     format."""
 
     def __init__(self, output):
-        """Create a new encoder. output can either be a filename or a python callback 
+        """Create a new encoder. output can either be a filename or a python callback
         function/method for streaming mode.
 
         The streaming callback prototype is: callback(data, eod)
         Where data is a block of binary data of an undetermined size, and eod
         True when end-of-data is reached."""
 
-        # implementation: the constructor must always accept the output argument. It may 
-        # accept extra arguments such as bitrate, depth, etc.., but these must be optionnal 
+        # implementation: the constructor must always accept the output argument. It may
+        # accept extra arguments such as bitrate, depth, etc.., but these must be optionnal
 
     @staticmethod
     def format():
@@ -113,12 +117,12 @@ class IEncoder(IProcessor):
 
     def set_metadata(self, metadata):
         """Set the metadata to be embedded in the encoded output.
-        
-        In non-streaming mode, this method updates the metadata directly into the 
-        output file, without re-encoding the audio data, provided this file already 
+
+        In non-streaming mode, this method updates the metadata directly into the
+        output file, without re-encoding the audio data, provided this file already
         exists.
-        
-        It isn't required to call this method, but if called, it must be before 
+
+        It isn't required to call this method, but if called, it must be before
         process()."""
 
 class IDecoder(IProcessor):
@@ -128,11 +132,11 @@ class IDecoder(IProcessor):
 
     def __init__(self, filename):
         """Create a new decoder for filename."""
-        # implementation: additional optionnal arguments are allowed 
+        # implementation: additional optionnal arguments are allowed
 
     def format():
         """Return a user-friendly file format string"""
-   
+
     def encoding():
         """Return a user-friendly encoding string"""
 
@@ -153,7 +157,7 @@ class IGrapher(IProcessor):
         """Create a new grapher. width and height are generally
         in pixels but could be something else for eg. svg rendering, etc.. """
 
-        # implementation: additional optionnal arguments are allowed 
+        # implementation: additional optionnal arguments are allowed
 
     @staticmethod
     def name():
@@ -179,7 +183,7 @@ class IAnalyzer(IProcessor):
 
     def __init__(self):
         """Create a new analyzer."""
-        # implementation: additional optionnal arguments are allowed 
+        # implementation: additional optionnal arguments are allowed
 
     @staticmethod
     def name():
@@ -198,7 +202,7 @@ class IValueAnalyzer(IAnalyzer):
         repeatedly calling process()"""
 
     def __str__(self):
-        """Return a human readable string containing both result and unit 
+        """Return a human readable string containing both result and unit
         ('5.30dB', '4.2s', etc...)"""
 
 class IEffect(IProcessor):
@@ -206,7 +210,7 @@ class IEffect(IProcessor):
 
     def __init__(self):
         """Create a new effect."""
-        # implementation: additional optionnal arguments are allowed 
+        # implementation: additional optionnal arguments are allowed
 
     @staticmethod
     def name():

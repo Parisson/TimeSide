@@ -135,10 +135,10 @@ class WaveformImage(object):
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
     Peaks are colored relative to the spectral centroids of each frame packet. """
 
-    def __init__(self, image_width, image_height, nframes, samplerate, fft_size, bg_color, color_scheme):
+    def __init__(self, image_width, image_height, totalframes, samplerate, fft_size, bg_color, color_scheme):
         self.image_width = image_width
         self.image_height = image_height
-        self.nframes = nframes
+        self.nframes = totalframes
         self.samplerate = samplerate
         self.fft_size = fft_size
         self.bg_color = bg_color
@@ -154,7 +154,7 @@ class WaveformImage(object):
         self.samples_per_pixel = self.nframes / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
+        self.pixels_adapter_nframes = self.pixels_adapter.totalframes(self.nframes)
 
         self.lower = 800
         self.higher = 12000
