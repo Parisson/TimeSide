@@ -1,13 +1,13 @@
 include AUTHORS
 include LICENSE
 include README.rst
-include INSTALL.rst
-
-recursive-include tests *
 recursive-include timeside/tools *
 recursive-include timeside/doc *
-
+recursive-include tests *
 recursive-exclude * *.pyc
+recursive-exclude * *.swp
 recursive-exclude dist *
 recursive-exclude build *
 recursive-exclude TimeSide.egg-info *
+recursive-exclude tests/samples
+

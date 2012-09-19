@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-import os
 
 CLASSIFIERS = [
     'Intended Audience :: Science/Research',
@@ -36,4 +35,5 @@ setup(
   packages = find_packages(),
   include_package_data = True,
   zip_safe = False,
+  scripts=['scripts/ts-waveforms'],
 )
