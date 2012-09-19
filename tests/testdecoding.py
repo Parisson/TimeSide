@@ -10,7 +10,7 @@ class TestDecoding(TestCase):
 
     def setUp(self):
         pass
-   
+
     def testWav(self):
         "Test wav decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
@@ -40,7 +40,7 @@ class TestDecoding(TestCase):
 
         # FIXME compute actual number of frames from file
         if os.path.splitext(self.source)[-1].lower() == '.mp3':
-            self.assertEquals(totalframes, 355969)
+            self.assertEquals(totalframes, 353665)
         elif os.path.splitext(self.source)[-1].lower() == '.ogg':
             self.assertEquals(totalframes, 352833)
         else:
