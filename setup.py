@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-import os
 
 CLASSIFIERS = [
     'Intended Audience :: Science/Research',
@@ -22,12 +21,13 @@ setup(
   long_description = open('README.rst').read(),
   author = ["Guillaume Pellerin", "Olivier Guilyardi", "Riccardo Zaccarelli", "Paul Brossier"],
   author_email = ["yomguy@parisson.com","olivier@samalyse.com", "riccardo.zaccarelli@gmail.com", "piem@piem.org"],
-  version = '0.3.2',
+  version = '0.3.3',
   install_requires = [
-	    'setuptools',
-		'numpy',
-		'gst',
-  ],
+        'setuptools',
+        'numpy',
+        'mutagen',
+        'pil',
+        ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
   classifiers = CLASSIFIERS,
@@ -35,4 +35,5 @@ setup(
   packages = find_packages(),
   include_package_data = True,
   zip_safe = False,
+  scripts=['scripts/ts-waveforms'],
 )
