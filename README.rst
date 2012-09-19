@@ -55,9 +55,9 @@ More examples
 Related projects
 =================
 
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develop a free and open-source web audio CMS.
+TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open-source web audio CMS.
 
-The time decoder depends on the `GStreamer framework<http://gstreamer.freedesktop.org/>`_.
+The time decoder depends on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
 
 
 APIs
@@ -99,9 +99,7 @@ To get non-free MP3, MP4 or AAC decoding and encoding features, add Debian Multi
 Batching
 =========
 
-TimeSide provides ts-waveforms : a waveform redering batch script.
-
-Usage::
+TimeSide provides *ts-waveforms*, a waveform rendering batch script. Usage::
 
  $ ts-waveforms /path/to/media_dir /path/to/img_dir
 
