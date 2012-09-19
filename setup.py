@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-import os
 
 CLASSIFIERS = [
     'Intended Audience :: Science/Research',

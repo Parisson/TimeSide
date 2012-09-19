@@ -5,46 +5,24 @@ Howto Install TimeSide
 This file describe how to install the TimeSide python package from source.
 
 
-1. Install dependencies
-=======================
+INSTALL
+=======
 
-TimeSide needs some other python modules to run.
-See README for the full dependency list.
+TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on a Debian based system like Debian, Ubuntu, etc.. On Fedora and Red-Hat you might replace 'apt-get by 'yum', on Gentoo by 'emerge', or any other package manager you like::
 
-The following methods explain how to install all dependencies on a Debian based system
-and espacially on Debian Squeeze 6.0 (stable). Is it now considered you have install this system correctly.
+    $ sudo apt-get update
+    $ sudo apt-get install python python-pip python-setuptools python-gobject \
+                            python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
+                            gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+                            gobject-introspection
 
-Become root. In a terminal or console, run::
+    $ sudo pip install timeside
 
-    $ su
+To get non-free MP3, MP4 or AAC decoding and encoding features, add Debian Multimedia repository and install the modules::
 
-Write your root password.
-Note : you can paste the full command but without the shell character '$'. 
-Then::
-
-    $ aptitude update
-    $ aptitude install python python-gobject gobject-introspection python-setuptools python-xml python-mutagen \
-           python-imaging python-numpy python-scipy python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
-           gstreamer0.10-fluendo-mp3 gstreamer0.10-plugins-good gstreamer0.10-plugins-bad
-
-Add Debian multimedia repository to the apt sources.list and install Gstreamer MP3 modules::
-
-    $ echo "deb deb http://www.debian-multimedia.org stable main" | tee -a /etc/apt/sources.list
-    $ aptitude update
-    $ aptitude install gstreamer0.10-fluendo-mp3 gstreamer0.10-lame
-
-
-2. Install TimeSide
-===================
-
-Go into the module directory and then install::
-    
-    $ cd timeside
-    $ python setup.py install
-
-Or, directly from python package directory::
-
-	$ sudo pip install timeside
+    $ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
+    $ sudo apt-get update
+    $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad
 
 
 3. Use TimeSide
