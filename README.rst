@@ -11,6 +11,14 @@ The engine (server side) is fully written in Python, the player (client side) in
 News
 =====
 
+0.3.3
+
+ * mostly a transitional developer and mantainer version, no new cool features
+ * but add "ts-waveforms" script for waveform batching
+ * fix some tests, download audio samples
+ * fix setup
+ * update README
+
 0.3.2
 
  * move mainloop to its own thread to avoid memory hogging on large files
