@@ -135,10 +135,11 @@ class WaveformImage(object):
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
     Peaks are colored relative to the spectral centroids of each frame packet. """
 
-    def __init__(self, image_width, image_height, totalframes, samplerate, fft_size, bg_color, color_scheme):
+    def __init__(self, image_width, image_height, nframes, samplerate,
+                 fft_size, bg_color, color_scheme):
         self.image_width = image_width
         self.image_height = image_height
-        self.nframes = totalframes
+        self.nframes = nframes
         self.samplerate = samplerate
         self.fft_size = fft_size
         self.bg_color = bg_color
@@ -171,7 +172,6 @@ class WaveformImage(object):
         """ Find the minimum and maximum peak of the samples.
         Returns that pair in the order they were found.
         So if min was found first, it returns (min, max) else the other way around. """
-
         max_index = numpy.argmax(samples)
         max_value = samples[max_index]
 
@@ -402,7 +402,7 @@ class WaveformImageSimple(object):
         self.samples_per_pixel = self.nframes / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
+        self.pixels_adapter_nframes = self.pixels_adapter.totalframes(self.nframes)
 
         self.image = Image.new("RGBA", (self.image_width, self.image_height))
         self.pixel = self.image.load()
@@ -503,7 +503,7 @@ class SpectrogramImage(object):
         self.samples_per_pixel = self.nframes / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.nframes(self.nframes)
+        self.pixels_adapter_nframes = self.pixels_adapter.totalframes(self.nframes)
 
         self.lower = 100
         self.higher = 22050

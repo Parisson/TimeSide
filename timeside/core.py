@@ -112,23 +112,23 @@ class FixedSizeInputAdapter(object):
         self.len         = 0
         self.pad         = pad
 
-    def blocksize(self, input_blocksize):
-        """Return the total number of frames that this adapter will output according to the
-        input_blocksize argument"""
-
-        blocksize = input_blocksize
-        if self.pad:
-            mod = input_blocksize % self.buffer_size
-            if mod:
-                blocksize += self.buffer_size - mod
-
-        return blocksize
-
     def totalframes(self, input_totalframes):
         """Return the total number of frames that this adapter will output according to the
+        input_totalframes argument"""
+
+        totalframes = input_totalframes
+        if self.pad:
+            mod = input_totalframes % self.buffer_size
+            if mod:
+                totalframes += self.buffer_size - mod
+
+        return totalframes
+
+    def blocksize(self, blocksize):
+        """Return the total number of frames that this adapter will output according to the
         input_blocksize argument"""
 
-        return input_totalframes
+        return blocksize
 
     def process(self, frames, eod):
         """Returns an iterator over tuples of the form (buffer, eod) where buffer is a
@@ -216,7 +216,7 @@ class ProcessPipe(object):
         # setup/reset processors and configure channels and samplerate throughout the pipe
         source.setup()
         #FIXME: wait for decoder mainloop
-        time.sleep(0.1)
+        time.sleep(0.2)
 
         last = source
         for item in items:

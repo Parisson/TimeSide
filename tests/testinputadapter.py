@@ -27,7 +27,7 @@ class TestFixedSizeInputAdapter(TestCase):
         "Test simple stream with two channels"
         adapter = FixedSizeInputAdapter(4, 2)
 
-        self.assertEquals(len(self.data), adapter.nframes(len(self.data)))
+        self.assertEquals(len(self.data), adapter.totalframes(len(self.data)))
 
         self.assertIOEquals(adapter, self.data[0:1], False, [])
         self.assertIOEquals(adapter, self.data[1:5], False, [self.data[0:4]], False)
@@ -43,7 +43,7 @@ class TestFixedSizeInputAdapter(TestCase):
         "Test automatic padding support"
         adapter = FixedSizeInputAdapter(4, 2, pad=True)
 
-        self.assertEquals(len(self.data) + 2, adapter.nframes(len(self.data)))
+        self.assertEquals(len(self.data) + 2, adapter.totalframes(len(self.data)))
 
         self.assertIOEquals(adapter, self.data[0:21], False, 
             [self.data[0:4], self.data[4:8], self.data[8:12], self.data[12:16], self.data[16:20]], 
