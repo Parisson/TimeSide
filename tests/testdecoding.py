@@ -8,7 +8,7 @@ class TestDecoding(TestCase):
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = None, None, None
-   
+
     def testWav(self):
         "Test wav decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
