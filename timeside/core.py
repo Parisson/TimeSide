@@ -21,6 +21,7 @@ from timeside.component import *
 from timeside.api import IProcessor
 from timeside.exceptions import Error, ApiError
 import re
+import time
 import numpy
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
@@ -214,9 +215,15 @@ class ProcessPipe(object):
 
         # setup/reset processors and configure channels and samplerate throughout the pipe
         source.setup()
+        #FIXME: wait for decoder mainloop
+        time.sleep(0.1)
+
         last = source
         for item in items:
-            item.setup(last.channels(), last.samplerate(), last.blocksize(), last.totalframes())
+            item.setup(channels = last.channels(),
+                       samplerate = last.samplerate(),
+                       blocksize = last.blocksize(),
+                       totalframes = last.totalframes())
             last = item
 
         # now stream audio data along the pipe

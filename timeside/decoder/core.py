@@ -181,7 +181,6 @@ class FileDecoder(Processor):
                 self.input_width = caps[0]["width"]
             else:
                 self.input_width = caps[0]["depth"]
-            self.output_totalframes = self.totalframes()
 
     def _on_message_cb(self, bus, message):
         t = message.type
@@ -239,7 +238,7 @@ class FileDecoder(Processor):
         if self.input_samplerate == self.output_samplerate:
             return self.input_totalframes
         else:
-            ratio = self.input_totalframes / self.output_samplerate
+            ratio = self.output_samplerate / self.input_samplerate
             return self.input_totalframes * ratio
 
     @interfacedoc
