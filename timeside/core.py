@@ -123,18 +123,11 @@ class FixedSizeInputAdapter(object):
 
         return blocksize
 
-
     def totalframes(self, input_totalframes):
         """Return the total number of frames that this adapter will output according to the
         input_blocksize argument"""
 
-        totalframes = input_totalframes
-        if self.pad:
-            mod = input_totalframes % self.buffer_size
-            if mod:
-                totalframes += self.buffer_size - mod
-
-        return totalframes
+        return input_totalframes
 
     def process(self, frames, eod):
         """Returns an iterator over tuples of the form (buffer, eod) where buffer is a

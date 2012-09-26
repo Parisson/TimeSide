@@ -55,11 +55,11 @@ class IProcessor(Interface):
 
     def blocksize():
         """The total number of frames that this processor can output for each step
-        in the pipeline, or None if the duration is unknown."""
+        in the pipeline, or None if the number is unknown."""
 
     def totalframes():
-        """The total number of frames that this processor can output, or None if
-        the duration is unknown."""
+        """The total number of frames that this processor will output, or None if
+        the number is unknown."""
 
     def process(self, frames=None, eod=False):
         """Process input frames and return a (output_frames, eod) tuple.
