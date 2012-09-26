@@ -238,8 +238,8 @@ class FileDecoder(Processor):
         if self.input_samplerate == self.output_samplerate:
             return self.input_totalframes
         else:
-            ratio = self.output_samplerate / self.input_samplerate
-            return self.input_totalframes * ratio
+            ratio = float(self.output_samplerate) / self.input_samplerate
+            return int(self.input_totalframes * ratio)
 
     @interfacedoc
     def release(self):
@@ -273,9 +273,3 @@ class FileDecoder(Processor):
         # TODO check
         return self.tags
 
-    def duration(self):
-        if self.input_samplerate == self.output_samplerate:
-            return self.input_duration
-        else:
-            ratio = self.input_totalframes / self.output_samplerate
-            return self.input_duration * ratio

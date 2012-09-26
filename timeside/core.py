@@ -218,7 +218,6 @@ class ProcessPipe(object):
                        samplerate = last.samplerate(),
                        blocksize = last.blocksize(),
                        totalframes = last.totalframes())
-
             last = item
 
         # now stream audio data along the pipe
