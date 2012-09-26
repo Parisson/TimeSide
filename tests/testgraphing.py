@@ -1,15 +1,12 @@
-from timeside.core import *
 from timeside.decoder import *
 from timeside.grapher import *
-from timeside.api import *
-from timeside.component import *
 from unit_timeside import *
 
 import os.path
 
-__all__ = ['TestGraphers']
+__all__ = ['TestGraphing']
 
-class TestGraphers(TestCase):
+class TestGraphing(TestCase):
     "Test all graphers with various input media formats"
 
     def setUp(self):
@@ -39,6 +36,13 @@ class TestGraphers(TestCase):
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
         self.image = "/tmp/test_waveform_sweep_ogg.png"
         self.grapher = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+
+    # WAVEFORM SIMPLE
+    def testWav2WaveformSimple(self):
+        "Test WAV to WaveformSimple"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
+        self.image = "/tmp/test_waveform_simple_sweep_wav.png"
+        self.grapher = WaveformSimple(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
 
     # WAVEFORMS CONTOUR BLACK
     def testWav2WaveformContourBlack(self):

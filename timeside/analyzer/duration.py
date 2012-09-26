@@ -30,10 +30,10 @@ class Duration(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels, samplerate, nframes):
-        if not nframes:
+    def setup(self, channels, samplerate, blocksize=None, totalframes=None):
+        super(Duration, self).setup(channels, samplerate, blocksize, totalframes)
+        if not totalframes:
             raise Exception("nframes argument required")
-        super(Duration, self).setup(channels, samplerate, nframes)
 
     @staticmethod
     @interfacedoc
@@ -49,13 +49,13 @@ class Duration(Processor):
     @interfacedoc
     def unit():
         return "seconds"
-    
+
     def __str__(self):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
         return frames, eod
-    
+
     def result(self):
         return self.input_nframes / float(self.input_samplerate)
-    
+
