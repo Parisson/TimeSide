@@ -112,21 +112,15 @@ class FixedSizeInputAdapter(object):
         self.len         = 0
         self.pad         = pad
 
-    def totalframes(self, input_totalframes):
+    def blocksize(self, input_totalframes):
         """Return the total number of frames that this adapter will output according to the
         input_totalframes argument"""
 
-        totalframes = input_totalframes
+        blocksize = input_totalframes
         if self.pad:
             mod = input_totalframes % self.buffer_size
             if mod:
-                totalframes += self.buffer_size - mod
-
-        return totalframes
-
-    def blocksize(self, blocksize):
-        """Return the total number of frames that this adapter will output according to the
-        input_blocksize argument"""
+                blocksize += self.buffer_size - mod
 
         return blocksize
 
@@ -216,7 +210,7 @@ class ProcessPipe(object):
         # setup/reset processors and configure channels and samplerate throughout the pipe
         source.setup()
         #FIXME: wait for decoder mainloop
-        time.sleep(0.2)
+        time.sleep(0.1)
 
         last = source
         for item in items:
@@ -224,6 +218,7 @@ class ProcessPipe(object):
                        samplerate = last.samplerate(),
                        blocksize = last.blocksize(),
                        totalframes = last.totalframes())
+
             last = item
 
         # now stream audio data along the pipe

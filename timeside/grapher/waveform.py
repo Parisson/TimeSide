@@ -55,7 +55,7 @@ class Waveform(Processor):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(Waveform, self).setup(channels, samplerate, blocksize, totalframes)
-        self.graph = WaveformImage(self.width, self.height, self.totalframes(),
+        self.graph = WaveformImage(self.width, self.height, totalframes,
                                     self.samplerate(), self.FFT_SIZE,
                                     bg_color=self.bg_color,
                                     color_scheme=self.color_scheme)

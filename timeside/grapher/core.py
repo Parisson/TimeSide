@@ -155,7 +155,7 @@ class WaveformImage(object):
         self.samples_per_pixel = self.nframes / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.totalframes(self.nframes)
+        self.pixels_adapter_nframes = self.pixels_adapter.blocksize(self.nframes)
 
         self.lower = 800
         self.higher = 12000
@@ -402,7 +402,8 @@ class WaveformImageSimple(object):
         self.samples_per_pixel = self.nframes / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.totalframes(self.nframes)
+        self.pixels_adapter_nframes = self.pixels_adapter.blocksize(self.nframes)
+        print self.pixels_adapter_nframes
 
         self.image = Image.new("RGBA", (self.image_width, self.image_height))
         self.pixel = self.image.load()
@@ -503,7 +504,7 @@ class SpectrogramImage(object):
         self.samples_per_pixel = self.nframes / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_nframes = self.pixels_adapter.totalframes(self.nframes)
+        self.pixels_adapter_nframes = self.pixels_adapter.blocksize(self.nframes)
 
         self.lower = 100
         self.higher = 22050
