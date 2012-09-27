@@ -40,24 +40,24 @@ class Mp3Encoder(GstEncoder):
         self.streaming = streaming
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
-        
+
         self.metadata = None
         self.eod = False
-        
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(Mp3Encoder, self).setup(channels, samplerate, nframes)
 
         self.pipe = '''appsrc name=src
-                  ! audioconvert 
-                  ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard ! id3v2mux 
+                  ! audioconvert
+                  ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard ! id3v2mux
                   '''
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
-            
+
         elif self.filename :
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
@@ -93,7 +93,7 @@ class Mp3Encoder(GstEncoder):
     @interfacedoc
     def set_metadata(self, metadata):
         self.metadata = metadata
-  
+
     def write_metadata(self):
         """Write all ID3v2.4 tags to file from self.metadata"""
         from mutagen import id3
@@ -109,12 +109,12 @@ class Mp3Encoder(GstEncoder):
             id3.save()
         except:
             raise IOError('EncoderError: cannot write tags')
-        
+
 class Mp3EncoderSubprocess(object):
     """MP3 encoder in a subprocess pipe"""
 
 #    implements(IEncoder)
-    
+
     def __init__(self):
         import os
         import string
@@ -136,12 +136,12 @@ class Mp3EncoderSubprocess(object):
                              'publisher': 'tc', #comment
                              'date': 'ty', #year
                              }
-    
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         self.channels = channels
         super(Mp3EncoderSubprocess, self).setup(channels, samplerate, nframes)
-        
+
     @staticmethod
     @interfacedoc
     def id():
@@ -170,7 +170,7 @@ class Mp3EncoderSubprocess(object):
     @interfacedoc
     def set_metadata(self, metadata):
         self.metadata = metadata
-  
+
     def get_file_info(self):
         try:
             file_out1, file_out2 = os.popen4('mp3info "'+self.dest+'"')

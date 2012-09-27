@@ -21,6 +21,7 @@ from timeside.component import *
 from timeside.api import IProcessor
 from timeside.exceptions import Error, ApiError
 import re
+import time
 import numpy
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
@@ -58,10 +59,11 @@ class Processor(Component):
     implements(IProcessor)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None):
-        self.input_channels   = channels
-        self.input_samplerate = samplerate
-        self.input_blocksize  = blocksize
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        self.input_channels     = channels
+        self.input_samplerate   = samplerate
+        self.input_blocksize    = blocksize
+        self.input_totalframes  = totalframes
 
     # default channels(), samplerate() and blocksize() implementations returns
     # the input characteristics, but processors may change this behaviour by
@@ -77,6 +79,10 @@ class Processor(Component):
     @interfacedoc
     def blocksize(self):
         return self.input_blocksize
+
+    @interfacedoc
+    def totalframes(self):
+        return self.input_totalframes
 
     @interfacedoc
     def process(self, frames, eod):
@@ -106,18 +112,17 @@ class FixedSizeInputAdapter(object):
         self.len         = 0
         self.pad         = pad
 
-    def blocksize(self, input_blocksize):
+    def blocksize(self, input_totalframes):
         """Return the total number of frames that this adapter will output according to the
-        input_blocksize argument"""
+        input_totalframes argument"""
 
-        blocksize = input_blocksize
+        blocksize = input_totalframes
         if self.pad:
-            mod = input_blocksize % self.buffer_size
+            mod = input_totalframes % self.buffer_size
             if mod:
                 blocksize += self.buffer_size - mod
 
         return blocksize
-
 
     def process(self, frames, eod):
         """Returns an iterator over tuples of the form (buffer, eod) where buffer is a
@@ -204,9 +209,15 @@ class ProcessPipe(object):
 
         # setup/reset processors and configure channels and samplerate throughout the pipe
         source.setup()
+        #FIXME: wait for decoder mainloop
+        time.sleep(0.1)
+
         last = source
         for item in items:
-            item.setup(last.channels(), last.samplerate(), last.blocksize())
+            item.setup(channels = last.channels(),
+                       samplerate = last.samplerate(),
+                       blocksize = last.blocksize(),
+                       totalframes = last.totalframes())
             last = item
 
         # now stream audio data along the pipe
