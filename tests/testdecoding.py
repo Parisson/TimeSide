@@ -36,7 +36,7 @@ class TestDecoding(TestCase):
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
             if eod or decoder.eod: break
-            self.assertEquals(frames.shape[0], decoder.output_blocksize )
+            self.assertEquals(frames.shape[0], decoder.blocksize() )
             self.assertEquals(frames.shape[1], decoder.channels() )
 
         ratio = decoder.output_samplerate / float(decoder.input_samplerate)
