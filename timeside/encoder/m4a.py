@@ -37,8 +37,7 @@ class AacEncoder(GstEncoder):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(AacEncoder, self).setup(channels, samplerate, nframes)
-        # TODO open file for writing
-        # the output data format we want
+
         self.streaming = False
         self.pipe = ''' appsrc name=src
             ! audioconvert
