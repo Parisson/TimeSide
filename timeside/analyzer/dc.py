@@ -28,8 +28,8 @@ class MeanDCShift(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(MeanDCShift, self).setup(channels, samplerate, nframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(MeanDCShift, self).setup(channels, samplerate, blocksize, totalframes)
         self.values = numpy.array([0])
 
     @staticmethod

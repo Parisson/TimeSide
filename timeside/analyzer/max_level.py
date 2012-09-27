@@ -30,8 +30,8 @@ class MaxLevel(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(MaxLevel, self).setup(channels, samplerate, nframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(MaxLevel, self).setup(channels, samplerate, blocksize, totalframes)
         self.value = 0
 
     @staticmethod

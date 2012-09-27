@@ -55,9 +55,9 @@ class WaveformContourWhite(Processor):
         self.color_scheme = scheme
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WaveformContourWhite, self).setup(channels, samplerate, nframes)
-        self.graph = WaveformImageJoyContour(self.width, self.height, self.nframes(),
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(WaveformContourWhite, self).setup(channels, samplerate, blocksize, totalframes)
+        self.graph = WaveformImageJoyContour(self.width, self.height, totalframes,
                                              self.samplerate(), self.FFT_SIZE,
                                             bg_color=self.bg_color,
                                             color_scheme=self.color_scheme,
