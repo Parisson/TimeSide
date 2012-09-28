@@ -2,7 +2,7 @@
 TimeSide : open and fast web audio components
 ==============================================
 
-TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines
+TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
 
 It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback and remote indexing.
 
@@ -76,7 +76,7 @@ Related projects
 
 TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open-source web audio CMS.
 
-The time decoder depends on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
+Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
 
 
 APIs
