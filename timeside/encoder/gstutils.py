@@ -55,7 +55,6 @@ class GstEncoder(Processor):
     def on_message(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
-            print "stopping pipeline"
             self.pipeline.set_state(gst.STATE_NULL)
         elif t == gst.MESSAGE_ERROR:
             self.pipeline.set_state(gst.STATE_NULL)
