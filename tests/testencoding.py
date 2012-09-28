@@ -8,8 +8,7 @@ class TestEncoding(TestCase):
     "Test the low level streaming features"
 
     def setUp(self):
-        self.channels = 1
-        self.samplerate = 44100
+        self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
         import tempfile
         self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
         self.sink = self.tmpfile.name
@@ -50,7 +49,7 @@ class TestEncoding(TestCase):
 
         written_frames, eod = 0, False
         total_frames = 3. * self.samplerate
-        block_size = 1024
+        block_size = self.blocksize
         f0 = 800.
         omega = 2. * pi * f0 / float(self.samplerate)
 
@@ -70,9 +69,42 @@ class TestEncoding(TestCase):
                 self.assertEquals(self.encoder.eod, eod)
                 break
 
+        if 0:
+            import commands
+            print commands.getoutput('sndfile-info ' + self.sink)
+
         self.assertEquals(written_frames, total_frames)
         self.tmpfile.close()
 
+class TestEncodingLongBlock(TestEncoding):
+
+    def setUp(self):
+        super(TestEncodingLongBlock, self).setUp()
+        self.blocksize *= 8
+
+class TestEncodingShortBlock(TestEncoding):
+
+    def setUp(self):
+        super(TestEncodingShortBlock, self).setUp()
+        self.blocksize = 64
+
+class TestEncodingLowSamplerate(TestEncoding):
+
+    def setUp(self):
+        super(TestEncodingLowSamplerate, self).setUp()
+        self.samplerate = 8000
+
+class TestEncodingHighSamplerate(TestEncoding):
+
+    def setUp(self):
+        super(TestEncodingHighSamplerate, self).setUp()
+        self.samplerate = 192000
+
+class TestEncodingStereo(TestEncoding):
+
+    def setUp(self):
+        super(TestEncodingStereo, self).setUp()
+        self.channels = 2
+
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
-
