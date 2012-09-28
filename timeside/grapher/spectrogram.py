@@ -53,9 +53,10 @@ class Spectrogram(Processor):
         self.color_scheme = scheme
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(Spectrogram, self).setup(channels, samplerate, nframes)
-        self.graph = SpectrogramImage(self.width, self.height, self.nframes(), self.samplerate(), self.FFT_SIZE,
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(Spectrogram, self).setup(channels, samplerate, blocksize, totalframes)
+        self.graph = SpectrogramImage(self.width, self.height, totalframes,
+                                    self.samplerate(), self.FFT_SIZE,
                                     bg_color=self.bg_color, color_scheme=self.color_scheme)
 
     @interfacedoc
@@ -68,7 +69,7 @@ class Spectrogram(Processor):
         if output:
             self.graph.save(output)
         return self.graph.image
-    
+
     def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
         self.graph.watermark(text, color=color, opacity=0.9, margin=margin)
 

@@ -11,11 +11,22 @@ The engine (server side) is fully written in Python, the player (client side) in
 News
 =====
 
+0.4.0
+
+ * finally fixed an old decoder bug to prevent memory leaks during hard process (thanks to piem)
+ * add blocksize property to the processor API
+ * add many unit tests (check tests/alltests.py)
+ * re-add UI files (sorry, was missing in the last packages)
+ * various bugfixes
+ * encoders not all much tested on big files, please test!
+ * piem is now preparing some aubio analyzers :P
+
 0.3.3
 
  * mostly a transitional developer and mantainer version, no new cool features
  * but add "ts-waveforms" script for waveform batching
- * fix some tests, download audio samples
+ * fix some tests
+ * removed but download audio samples
  * fix setup
  * update README
 

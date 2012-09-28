@@ -24,7 +24,7 @@ from timeside.api import IGrapher
 from timeside.grapher.core import *
 
 
-class WaveformAwdio(Processor):
+class WaveformSimple(Processor):
     implements(IGrapher)
 
     FFT_SIZE = 0x400
@@ -52,9 +52,9 @@ class WaveformAwdio(Processor):
         self.color_scheme = scheme
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WaveformAwdio, self).setup(channels, samplerate, nframes)
-        self.graph = WaveformImageSimple(self.width, self.height, self.nframes(),
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(WaveformSimple, self).setup(channels, samplerate, blocksize, totalframes)
+        self.graph = WaveformImageSimple(self.width, self.height, self.totalframes(),
                                          self.samplerate(), self.FFT_SIZE,
                                          bg_color=self.bg_color,
                                          color_scheme=self.color_scheme)
