@@ -19,6 +19,7 @@ News
  * re-add UI files (sorry, was missing in the last packages)
  * various bugfixes
  * encoders not all much tested on big files, please test!
+ * piem is now preparing some aubio analyzers :P
 
 0.3.3
 
