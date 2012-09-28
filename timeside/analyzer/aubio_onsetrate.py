@@ -28,8 +28,8 @@ class AubioBPM(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(AubioBPM, self).setup(channels, samplerate, nframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(AubioBPM, self).setup(channels, samplerate,  blocksize, totalframes)
         self.win_s = 512
         self.hop_s = self.win_s / 2
         self.t = onset("default", self.win_s, self.hop_s, 1)
