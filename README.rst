@@ -2,7 +2,7 @@
 TimeSide : open and fast web audio components
 ==============================================
 
-TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines
+TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
 
 It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback and remote indexing.
 
@@ -10,6 +10,11 @@ The engine (server side) is fully written in Python, the player (client side) in
 
 News
 =====
+
+0.4.1
+
+ * just move ui/ to static/timeside/ for better django compatibility
+ * update SoundManager2 to v297a-20120916
 
 0.4.0
 
@@ -76,7 +81,7 @@ Related projects
 
 TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open-source web audio CMS.
 
-The time decoder depends on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
+Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
 
 
 APIs
@@ -108,11 +113,11 @@ TimeSide needs some other python modules to run. The following methods explain h
 
  $ sudo pip install timeside
 
-To get non-free MP3, MP4 or AAC decoding and encoding features, add Debian Multimedia repository and install the modules::
+To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
  $ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
- $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad
+ $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
 
 
 Batching
