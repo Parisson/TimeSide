@@ -13,8 +13,9 @@ News
 
 0.4.1
 
- * just move ui/ to static/timeside/ for better django compatibility
- * update SoundManager2 to v297a-20120916
+ * move UI static files from ui/ to static/timeside/ (for better django compatibility)
+ * upgrade js scripts from telemeta 1.4.4
+ * upgrade SoundManager2 to v297a-20120916
 
 0.4.0
 
