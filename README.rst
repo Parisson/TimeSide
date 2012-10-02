@@ -11,6 +11,12 @@ The engine (server side) is fully written in Python, the player (client side) in
 News
 =====
 
+0.4.1
+
+ * move UI static files from ui/ to static/timeside/ (for better django compatibility)
+ * upgrade js scripts from telemeta 1.4.4
+ * upgrade SoundManager2 to v297a-20120916
+
 0.4.0
 
  * finally fixed an old decoder bug to prevent memory leaks during hard process (thanks to piem)
@@ -108,11 +114,11 @@ TimeSide needs some other python modules to run. The following methods explain h
 
  $ sudo pip install timeside
 
-To get non-free MP3, MP4 or AAC decoding and encoding features, add Debian Multimedia repository and install the modules::
+To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
  $ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
- $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad
+ $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
 
 
 Batching
