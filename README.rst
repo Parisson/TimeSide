@@ -108,11 +108,11 @@ TimeSide needs some other python modules to run. The following methods explain h
 
  $ sudo pip install timeside
 
-To get non-free MP3, MP4 or AAC decoding and encoding features, add Debian Multimedia repository and install the modules::
+To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
  $ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
- $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad
+ $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
 
 
 Batching
