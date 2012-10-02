@@ -3,7 +3,7 @@ include LICENSE
 include README.rst
 recursive-include timeside/tools *
 recursive-include timeside/doc *
-recursive-include timeside/ui *
+recursive-include timeside/static *
 recursive-include tests *
 recursive-exclude * *.pyc
 recursive-exclude * *.swp
