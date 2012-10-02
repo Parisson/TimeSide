@@ -11,6 +11,11 @@ The engine (server side) is fully written in Python, the player (client side) in
 News
 =====
 
+0.4.1
+
+ * just move ui/ to static/timeside/ for better django compatibility
+ * update SoundManager2 to v297a-20120916
+
 0.4.0
 
  * finally fixed an old decoder bug to prevent memory leaks during hard process (thanks to piem)
