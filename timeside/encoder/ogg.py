@@ -21,7 +21,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
-from timeside.encoder.gstutils import *
+from timeside.gstutils import *
 
 class VorbisEncoder(GstEncoder):
     """ gstreamer-based vorbis encoder """
@@ -33,19 +33,19 @@ class VorbisEncoder(GstEncoder):
         else:
             self.filename = None
         self.streaming = streaming
-        
+
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
-        
+
         self.eod = False
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, nframes=None):
         super(VorbisEncoder, self).setup(channels, samplerate, nframes)
         # TODO open file for writing
-        # the output data format we want        
+        # the output data format we want
         self.pipe = ''' appsrc name=src
-                  ! audioconvert 
+                  ! audioconvert
                   ! vorbisenc
                   ! oggmux
                   '''
@@ -54,12 +54,12 @@ class VorbisEncoder(GstEncoder):
             ! queue ! filesink location=%s
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
-            
+
         elif self.filename :
             self.pipe += '! filesink async=True location=%s ' % self.filename
         else:
             self.pipe += '! appsink name=app sync=False '
-            
+
         # start pipeline
         self.start_pipeline(channels, samplerate)
 

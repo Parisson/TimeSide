@@ -21,7 +21,8 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
-from timeside.encoder.gstutils import *
+from timeside.gstutils import *
+
 
 class AacEncoder(GstEncoder):
     """ gstreamer-based AAC encoder """

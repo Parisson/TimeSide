@@ -23,7 +23,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
-from timeside.encoder.gstutils import *
+from timeside.gstutils import *
 
 import mutagen
 
@@ -64,7 +64,7 @@ class Mp3Encoder(GstEncoder):
             self.pipe += '! queue ! appsink name=app sync=False '
 
         self.start_pipeline(channels, samplerate)
-    
+
     @staticmethod
     @interfacedoc
     def id():
