@@ -25,6 +25,7 @@
 #          Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.gstutils import *
 
@@ -48,8 +49,8 @@ class Mp3Encoder(GstEncoder):
         self.eod = False
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(Mp3Encoder, self).setup(channels, samplerate, nframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(Mp3Encoder, self).setup(channels, samplerate, blocksize, totalframes)
 
         self.pipe = '''appsrc name=src
                   ! audioconvert

@@ -20,6 +20,7 @@
 
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.gstutils import *
 
@@ -36,8 +37,8 @@ class AacEncoder(GstEncoder):
             raise Exception("Streaming not supported")
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(AacEncoder, self).setup(channels, samplerate, nframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(AacEncoder, self).setup(channels, samplerate, blocksize, totalframes)
 
         self.streaming = False
         self.pipe = ''' appsrc name=src

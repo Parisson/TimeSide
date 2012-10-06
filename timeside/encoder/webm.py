@@ -20,6 +20,7 @@
 
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.gstutils import *
 
@@ -42,10 +43,9 @@ class WebMEncoder(GstEncoder):
         self.eod = False
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WebMEncoder, self).setup(channels, samplerate, nframes)
-        # TODO open file for writing
-        # the output data format we want
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(WebMEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+
         if self.video:
             self.pipe = '''videotestsrc pattern=black ! ffmpegcolorspace
                   ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
