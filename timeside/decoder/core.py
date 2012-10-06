@@ -62,6 +62,8 @@ class FileDecoder(Processor):
             # and make a uri of it
             from urllib import quote
             self.uri = 'file://'+quote(uri)
+        elif '://' in uri:
+            self.uri = uri
         else:
             raise IOError, 'File not found!'
 
