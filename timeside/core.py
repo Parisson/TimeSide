@@ -30,6 +30,7 @@ __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
 
 _processors = {}
 
+
 class MetaProcessor(MetaComponent):
     """Metaclass of the Processor class, used mainly for ensuring that processor
     id's are wellformed and unique"""
@@ -50,6 +51,7 @@ class MetaProcessor(MetaComponent):
             _processors[id] = new_class
 
         return new_class
+
 
 class Processor(Component):
     """Base component class of all processors"""
@@ -97,6 +99,7 @@ class Processor(Component):
 
     def __or__(self, other):
         return ProcessPipe(self, other)
+
 
 class FixedSizeInputAdapter(object):
     """Utility to make it easier to write processors which require fixed-sized
@@ -174,6 +177,7 @@ def get_processor(processor_id):
 
     return _processors[processor_id]
 
+
 class ProcessPipe(object):
     """Handle a pipe of processors"""
 
@@ -206,13 +210,13 @@ class ProcessPipe(object):
 
         source = self.processors[0]
         items  = self.processors[1:]
-
-        # setup/reset processors and configure channels and samplerate throughout the pipe
         source.setup()
+
         #FIXME: wait for decoder mainloop
         time.sleep(0.1)
 
         last = source
+        # setup/reset processors and configure properties throughout the pipe
         for item in items:
             item.setup(channels = last.channels(),
                        samplerate = last.samplerate(),

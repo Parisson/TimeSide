@@ -23,6 +23,7 @@
 from timeside.core import *
 import subprocess
 
+
 class SubProcessPipe(object):
     """Read media and stream data through a generator.
     Taken from Telemeta (see http://telemeta.org)"""
