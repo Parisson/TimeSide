@@ -1,1 +1,5 @@
 setuptools
+numpy
+mutagen
+pil
+
