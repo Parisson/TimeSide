@@ -6,6 +6,7 @@ python:
 # command to install dependencies
 install: 
  - "pip install -r requirements.txt --use-mirrors"
- - "python setup.py install"
 # command to run tests
 # script: python tests/alltests.py
+script:
+ - "python setup.py install"
