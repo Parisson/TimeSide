@@ -63,7 +63,7 @@ class FileDecoder(Processor):
             from urllib import quote
             self.uri = 'file://'+quote(uri)
         else:
-            self.uri = uri
+            raise IOError, 'File not found!'
 
     def setup(self, channels = None, samplerate = None, blocksize = None):
         # the output data format we want
