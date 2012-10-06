@@ -11,6 +11,14 @@ The engine (server side) is fully written in Python, the player (client side) in
 News
 =====
 
+0.4.2
+
+ * many releases these days, but there are some patches which are really worth to be HOT released ! We just need them in production..
+ * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms)
+ * *mv* gstutils to timeside.gstutils
+ * cleanup various processes
+ * can't get right streaming ogg and flac encoders..
+
 0.4.1
 
  * move UI static files from ui/ to static/timeside/ (for better django compatibility)
