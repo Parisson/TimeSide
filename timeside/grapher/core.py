@@ -55,9 +55,10 @@ default_color_schemes = {
 class Spectrum(object):
     """ FFT based frequency analysis of audio frames."""
 
-    def __init__(self, fft_size, nframes, samplerate, lower, higher, window_function=numpy.ones):
+    def __init__(self, fft_size, nframes, samplerate, lower, higher, window_function=numpy.hanning):
         self.fft_size = fft_size
         self.window = window_function(self.fft_size)
+        self.window_function = window_function
         self.spectrum_range = None
         self.lower = lower
         self.higher = higher
@@ -66,21 +67,28 @@ class Spectrum(object):
         self.clip = lambda val, low, high: min(high, max(low, val))
         self.nframes = nframes
         self.samplerate = samplerate
-        self.spectrum_adapter = FixedSizeInputAdapter(self.fft_size, 1, pad=True)
 
     def process(self, frames, eod, spec_range=120.0):
-        """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
-            An adapter is used to fix the buffer length and then provide fixed FFT window sizes."""
+        """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames. FFT window sizes are adatable to the input frame size."""
 
-        for buffer, end in self.spectrum_adapter.process(frames, eod):
-            samples = buffer[:,0].copy()
-            if end:
-                break
+        samples = frames[:,0]
+        nsamples = len(samples)
+        window = self.window_function(nsamples)
+        samples *= window
 
-        #samples = numpy.concatenate((numpy.zeros(self.fft_size/2), samples), axis=1)
-        samples *= self.window
+        while nsamples > self.fft_size:
+            self.fft_size = 2 * self.fft_size
+
+        zeros_p = numpy.zeros(self.fft_size/2-int(nsamples/2))
+        if nsamples % 2:
+            zeros_n = numpy.zeros(self.fft_size/2-int(nsamples/2)-1)
+        else:
+            zeros_n = numpy.zeros(self.fft_size/2-int(nsamples/2))
+
+        samples = numpy.concatenate((zeros_p, samples, zeros_n), axis=0)
+
         fft = numpy.fft.fft(samples)
-        spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(self.fft_size) # normalized abs(FFT) between 0 and 1
+        spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(nsamples) # normalized abs(FFT) between 0 and 1
         length = numpy.float64(spectrum.shape[0])
 
         # scale the db spectrum from [- spec_range db ... 0 db] > [0..1]
@@ -238,9 +246,9 @@ class WaveformImage(object):
         if len(frames) != 1:
             buffer = frames[:,0].copy()
             buffer.shape = (len(buffer),1)
-            (spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width:
+                    (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
                     peaks = self.peaks(samples)
                     self.draw_peaks(self.pixel_cursor, peaks, spectral_centroid)
                     self.pixel_cursor += 1
@@ -357,7 +365,6 @@ class WaveformImageJoyContour(WaveformImage):
             buffer.shape = (len(buffer),1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width:
-                    #(spectral_centroid, db_spectrum) = self.spectrum.process(buffer, True)
                     peaks = self.peaks(samples)
                     self.get_peaks_contour(self.pixel_cursor, peaks)
                     self.pixel_cursor += 1
@@ -457,10 +464,6 @@ class WaveformImageSimple(object):
                 if self.pixel_cursor < self.image_width-1:
                     self.draw_peaks(self.pixel_cursor, self.peaks(samples))
                     self.pixel_cursor += 1
-                if end:
-                    samples = 0
-                    buffer = 0
-                    break
             if self.pixel_cursor == self.image_width-1:
                 self.draw_peaks(self.pixel_cursor, (0, 0))
                 self.pixel_cursor += 1

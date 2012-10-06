@@ -1,4 +1,4 @@
-from timeside.decoder import *
+from timeside.decoder.core import FileDecoder
 from unit_timeside import *
 
 import os.path
