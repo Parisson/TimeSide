@@ -20,6 +20,7 @@
 
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.gstutils import *
 

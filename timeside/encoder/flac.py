@@ -20,6 +20,7 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.gstutils import *
 
@@ -43,8 +44,7 @@ class FlacEncoder(GstEncoder):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(FlacEncoder, self).setup(channels, samplerate, blocksize, totalframes)
-        # TODO open file for writing
-        # the output data format we want
+
         self.pipe = ''' appsrc name=src ! audioconvert
                         ! flacenc '''
 
