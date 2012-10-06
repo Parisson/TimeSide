@@ -41,8 +41,8 @@ class FlacEncoder(GstEncoder):
         self.eod = False
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(FlacEncoder, self).setup(channels, samplerate, nframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(FlacEncoder, self).setup(channels, samplerate, blocksize, totalframes)
         # TODO open file for writing
         # the output data format we want
         self.pipe = ''' appsrc name=src ! audioconvert
