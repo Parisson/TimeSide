@@ -5,7 +5,5 @@ from ogg import *
 from wav import *
 from mp3 import *
 from flac import *
-#from m4a import *
+from m4a import *
 from webm import *
-
-#from timeside.encoder.flac import *

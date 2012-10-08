@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2007-2009 Guillaume Pellerin <yomguy@parisson.com>
+# Copyright (c) 2012 Paul Brossier <piem@piem.org>
 
 # This file is part of TimeSide.
 
@@ -18,45 +18,59 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import *
-import subprocess
-
-class SubProcessPipe(object):
-    """Read media and stream data through a generator.
-    Taken from Telemeta (see http://telemeta.org)"""
-
-    def __init__(self, command, stdin=None):
-        self.buffer_size = 0xFFFF
-        if not stdin:
-            stdin =  subprocess.PIPE
-
-        self.proc = subprocess.Popen(command.encode('utf-8'),
-                    shell = True,
-                    bufsize = self.buffer_size,
-                    stdin = stdin,
-                    stdout = subprocess.PIPE,
-                    close_fds = True)
-
-        self.input = self.proc.stdin
-        self.output = self.proc.stdout
+from timeside.core import Processor, implements, interfacedoc
+from timeside.api import IEncoder
+from timeside.tools import *
 
 
-class EncoderSubProcessCore(Processor):
-    """Defines the main parts of the encoding tools :
-    paths, metadata parsing, data streaming thru system command"""
+class GstEncoder(Processor):
 
-    def core_process(self, command, stdin):
-        """Encode and stream audio data through a generator"""
+    def release(self):
+        while self.bus.have_pending():
+          self.bus.pop()
 
-        proc = SubProcessPipe(command, stdin)
+    def __del__(self):
+        self.release()
 
-        while True:
-            __chunk = proc.output.read(proc.buffer_size)
-            #status = proc.poll()
-            #if status != None and status != 0:
-                #raise EncodeProcessError('Command failure:', command, proc)
-            if len(__chunk) == 0:
-                break
-            yield __chunk
+    def start_pipeline(self, channels, samplerate):
+        self.pipeline = gst.parse_launch(self.pipe)
+        # store a pointer to appsrc in our encoder object
+        self.src = self.pipeline.get_by_name('src')
+        # store a pointer to appsink in our encoder object
+        self.app = self.pipeline.get_by_name('app')
+
+        srccaps = gst.Caps("""audio/x-raw-float,
+            endianness=(int)1234,
+            channels=(int)%s,
+            width=(int)32,
+            rate=(int)%d""" % (int(channels), int(samplerate)))
+        self.src.set_property("caps", srccaps)
+        self.src.set_property('emit-signals', True)
+
+        self.bus = self.pipeline.get_bus()
+        self.bus.add_signal_watch()
+        self.bus.connect("message", self.on_message)
+
+        # start pipeline
+        self.pipeline.set_state(gst.STATE_PLAYING)
+
+    def on_message(self, bus, message):
+        t = message.type
+        if t == gst.MESSAGE_EOS:
+            self.pipeline.set_state(gst.STATE_NULL)
+        elif t == gst.MESSAGE_ERROR:
+            self.pipeline.set_state(gst.STATE_NULL)
+            err, debug = message.parse_error()
+            print "Error: %s" % err, debug
+
+    def process(self, frames, eod=False):
+        self.eod = eod
+        buf = numpy_array_to_gst_buffer(frames)
+        self.src.emit('push-buffer', buf)
+        if self.eod:
+            self.src.emit('end-of-stream')
+        if self.streaming:
+            self.chunk = self.app.emit('pull-buffer')
+        return frames, eod
+

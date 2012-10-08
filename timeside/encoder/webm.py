@@ -20,8 +20,10 @@
 
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.encoder.gstutils import *
+from timeside.gstutils import *
+
 
 class WebMEncoder(GstEncoder):
     """ gstreamer-based webm encoder and muxer """
@@ -41,10 +43,9 @@ class WebMEncoder(GstEncoder):
         self.eod = False
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WebMEncoder, self).setup(channels, samplerate, nframes)
-        # TODO open file for writing
-        # the output data format we want
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(WebMEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+
         if self.video:
             self.pipe = '''videotestsrc pattern=black ! ffmpegcolorspace
                   ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
@@ -63,12 +64,12 @@ class WebMEncoder(GstEncoder):
             ''' % self.filename
 
         elif self.filename :
-            self.pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! appsink name=app sync=False '
+            self.pipe += '! queue ! appsink name=app sync=False '
 
-        # start pipeline
         self.start_pipeline(channels, samplerate)
+
 
     @staticmethod
     @interfacedoc
@@ -83,7 +84,7 @@ class WebMEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def format():
-        return "WEBM"
+        return "WebM"
 
     @staticmethod
     @interfacedoc
@@ -97,5 +98,4 @@ class WebMEncoder(GstEncoder):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO:
-        pass
+        self.metadata = metadata

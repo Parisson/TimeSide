@@ -21,8 +21,10 @@
 # Author: Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.encoder.gstutils import *
+from timeside.tools import *
+
 
 class WavEncoder(GstEncoder):
     """ gstreamer-based encoder """
@@ -34,19 +36,18 @@ class WavEncoder(GstEncoder):
         else:
             self.filename = None
         self.streaming = streaming
-        
+
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
         self.eod = False
-        
+
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, nframes=None):
-        super(WavEncoder, self).setup(channels, samplerate, nframes)
-        # TODO open file for writing
-        # the output data format we want
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(WavEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+
         self.pipe = ''' appsrc name=src
-                  ! audioconvert 
+                  ! audioconvert
                   ! wavenc
                   '''
         if self.filename and self.streaming:
@@ -54,15 +55,15 @@ class WavEncoder(GstEncoder):
             ! queue ! filesink location=%s
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
-            
+
         elif self.filename :
-            self.pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! appsink name=app sync=False'
-            
-        # start pipeline
+            self.pipe += '! queue ! appsink name=app sync=False '
+
         self.start_pipeline(channels, samplerate)
-        
+
+
     @staticmethod
     @interfacedoc
     def id():
