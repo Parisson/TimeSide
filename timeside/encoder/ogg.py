@@ -22,7 +22,7 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.gstutils import *
+from timeside.tools import *
 
 class VorbisEncoder(GstEncoder):
     """ gstreamer-based vorbis encoder """
@@ -49,6 +49,7 @@ class VorbisEncoder(GstEncoder):
                   ! vorbisenc
                   ! oggmux
                   '''
+
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s
@@ -56,12 +57,12 @@ class VorbisEncoder(GstEncoder):
             ''' % self.filename
 
         elif self.filename :
-            self.pipe += '! filesink async=True location=%s ' % self.filename
+            self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! appsink name=app sync=False '
+            self.pipe += '! queue ! appsink name=app sync=False '
 
-        # start pipeline
         self.start_pipeline(channels, samplerate)
+
 
     @staticmethod
     @interfacedoc
@@ -90,5 +91,5 @@ class VorbisEncoder(GstEncoder):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO:
-        pass
+        self.metadata = metadata
+

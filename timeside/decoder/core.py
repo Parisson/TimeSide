@@ -26,7 +26,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
-from timeside.gstutils import *
+from timeside.tools import *
 
 import Queue
 

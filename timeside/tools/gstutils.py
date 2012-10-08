@@ -1,6 +1,3 @@
-from timeside.core import Processor, implements, interfacedoc
-from timeside.api import IEncoder
-
 from numpy import array, getbuffer, frombuffer
 
 import pygst

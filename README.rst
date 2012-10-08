@@ -2,22 +2,43 @@
 TimeSide : open and fast web audio components
 ==============================================
 
+.. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
+    :target: http://travis-ci.org/yomguy/TimeSide/
+
 TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
 
 It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback and remote indexing.
 
 The engine (server side) is fully written in Python, the player (client side) in HTML, CSS and JavaScript.
 
+Goals
+=====
+
+We just *need* a python library to:
+
+ * build a python framework to do asynchronous audio processing,
+ * decode audio frames from ANY format to numpy arrays,
+ * stream the frames in processors and do numpy data analyzing,
+ * create various waveforms, spectrograms, etc.. with numpy and PIL,
+ * transcode the processed frames in various media formats and stream it,
+ * provide a high-level HTML5 UI to stream the results *on demand* through the web,
+ * remote metadata indexing and time marking (JSON RPC, needs a server system like `Telemeta <http://telemeta.org>`_).
+
+Here is a schematic diagram of the TimeSide engine architecture:
+
+.. image:: http://timeside.googlecode.com/git/doc/img/timeside_schema.png
+
+
 News
 =====
 
 0.4.2
 
- * many releases these days, but there are some patches which are really worth to be HOT released ! We just need them in production..
- * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms)
+ * many releases these days, but there are some patches which are really worth to be HOT released : we just need them in production..
+ * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms
  * *mv* gstutils to timeside.gstutils
  * cleanup various processes
- * can't get right streaming ogg and flac encoders..
+ * Ogg, Aac and Flac encoders not really working now (some frames missing) :( Will be fixed in next release.
 
 0.4.1
 
@@ -73,16 +94,25 @@ get the results::
  >>> grapher.render(output='image.png')
  >>> print 'Level:', analyzer.result()
 
-finally see image.png and play output.mp3 ;)
+and finally see image.png and play output.mp3 ;)
+
+`More examples <http://code.google.com/p/timeside/wiki/PythonApi>`_
 
 
-More examples
-=============
+UI examples
+===========
 
  * http://code.google.com/p/timeside/
- * http://code.google.com/p/timeside/wiki/PythonApi
- * https://github.com/yomguy/TimeSide/tree/master/scripts/batch/
+ * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
  * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/ (player embedded in a Telemeta session)
+
+
+APIs and guides
+===============
+
+Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
+
+Player API and guide : http://code.google.com/p/timeside/wiki/UiGuide
 
 
 Related projects
@@ -91,14 +121,6 @@ Related projects
 TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open-source web audio CMS.
 
 Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
-
-
-APIs
-====
-
-Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
-
-Player API and guide : http://code.google.com/p/timeside/wiki/UiGuide
 
 
 Platforms

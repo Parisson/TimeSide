@@ -22,7 +22,7 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.gstutils import *
+from timeside.tools import *
 
 
 class AacEncoder(GstEncoder):
@@ -44,10 +44,21 @@ class AacEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
             ! audioconvert
             ! faac
-            ! filesink location=%s ''' % self.filename
+            '''
 
-        # start pipeline
+        if self.filename and self.streaming:
+            self.pipe += ''' ! tee name=t
+            ! queue ! filesink location=%s
+            t. ! queue ! appsink name=app sync=False
+            ''' % self.filename
+
+        elif self.filename :
+            self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
+        else:
+            self.pipe += '! queue ! appsink name=app sync=False '
+
         self.start_pipeline(channels, samplerate)
+
 
     @staticmethod
     @interfacedoc
@@ -76,5 +87,4 @@ class AacEncoder(GstEncoder):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO
-        pass
+        self.metadata = metadata
