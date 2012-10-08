@@ -26,7 +26,7 @@ We just *need* a python library to:
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
-.. image:: http://timeside.googlecode.com/git/timeside/doc/img/timeside_schema.png
+.. image:: http://timeside.googlecode.com/git/doc/img/timeside_schema.png
 
 
 News
@@ -94,16 +94,25 @@ get the results::
  >>> grapher.render(output='image.png')
  >>> print 'Level:', analyzer.result()
 
-finally see image.png and play output.mp3 ;)
+and finally see image.png and play output.mp3 ;)
+
+`More examples <http://code.google.com/p/timeside/wiki/PythonApi>`_
 
 
-More examples
-=============
+UI examples
+===========
 
  * http://code.google.com/p/timeside/
- * http://code.google.com/p/timeside/wiki/PythonApi
- * https://github.com/yomguy/TimeSide/tree/master/scripts/batch/
+ * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
  * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/ (player embedded in a Telemeta session)
+
+
+APIs and guides
+===============
+
+Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
+
+Player API and guide : http://code.google.com/p/timeside/wiki/UiGuide
 
 
 Related projects
@@ -112,14 +121,6 @@ Related projects
 TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open-source web audio CMS.
 
 Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
-
-
-APIs
-====
-
-Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
-
-Player API and guide : http://code.google.com/p/timeside/wiki/UiGuide
 
 
 Platforms
