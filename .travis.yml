@@ -4,8 +4,9 @@ python:
   - "2.7"
 # command to install dependencies
 install: 
- - "pip install -r requirements.txt --use-mirrors"
+# - "pip install -r requirements.txt --use-mirrors"
+ - "python setup.py install"
+
 # command to run tests
 script:
- - "python setup.py install"
- #- "python setup.py install"
+ - "python tests/testcomponent.py"
