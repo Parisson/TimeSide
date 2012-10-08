@@ -55,11 +55,12 @@ class FlacEncoder(GstEncoder):
             ''' % self.filename
 
         elif self.filename :
-            self.pipe += '! filesink location=%s ' % self.filename
+            self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! appsink name=app sync=False '
+            self.pipe += '! queue ! appsink name=app sync=False '
 
         self.start_pipeline(channels, samplerate)
+
 
     @staticmethod
     @interfacedoc
@@ -88,5 +89,4 @@ class FlacEncoder(GstEncoder):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO:
-        pass
+        self.metadata = metadata

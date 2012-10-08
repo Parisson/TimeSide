@@ -56,12 +56,12 @@ class VorbisEncoder(GstEncoder):
             ''' % self.filename
 
         elif self.filename :
-            self.pipe += '! filesink async=True location=%s ' % self.filename
+            self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! appsink name=app sync=False '
+            self.pipe += '! queue ! appsink name=app sync=False '
 
-        # start pipeline
         self.start_pipeline(channels, samplerate)
+
 
     @staticmethod
     @interfacedoc
@@ -90,5 +90,5 @@ class VorbisEncoder(GstEncoder):
 
     @interfacedoc
     def set_metadata(self, metadata):
-        #TODO:
-        pass
+        self.metadata = metadata
+

@@ -54,8 +54,10 @@ class Mp3Encoder(GstEncoder):
 
         self.pipe = '''appsrc name=src
                   ! audioconvert
-                  ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard ! id3v2mux
+                  ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard
+                  ! id3v2mux
                   '''
+
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s
