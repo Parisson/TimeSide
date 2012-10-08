@@ -26,7 +26,7 @@
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
-from timeside.encoder.gstutils import *
+from timeside.tools import *
 
 import Queue
 
@@ -62,8 +62,10 @@ class FileDecoder(Processor):
             # and make a uri of it
             from urllib import quote
             self.uri = 'file://'+quote(uri)
-        else:
+        elif '://' in uri:
             self.uri = uri
+        else:
+            raise IOError, 'File not found!'
 
     def setup(self, channels = None, samplerate = None, blocksize = None):
         # the output data format we want

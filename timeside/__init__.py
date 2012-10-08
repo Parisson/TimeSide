@@ -9,6 +9,7 @@ import timeside.decoder
 import timeside.encoder
 import timeside.grapher
 import timeside.analyzer
+import timeside.tools
 from timeside.core import *
 
-__version__ = '0.4.0'
+__version__ = '0.4.2'
