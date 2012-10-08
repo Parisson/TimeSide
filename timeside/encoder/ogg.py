@@ -49,6 +49,7 @@ class VorbisEncoder(GstEncoder):
                   ! vorbisenc
                   ! oggmux
                   '''
+
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s

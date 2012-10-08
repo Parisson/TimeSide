@@ -44,7 +44,7 @@ class AacEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
             ! audioconvert
             ! faac
-            ! filesink location=%s ''' % self.filename
+            '''
 
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t

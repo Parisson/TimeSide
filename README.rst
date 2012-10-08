@@ -2,22 +2,40 @@
 TimeSide : open and fast web audio components
 ==============================================
 
+.. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
+    :target: http://travis-ci.org/yomguy/TimeSide/
+
 TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
 
 It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback and remote indexing.
 
 The engine (server side) is fully written in Python, the player (client side) in HTML, CSS and JavaScript.
 
+Goals
+=====
+
+We just *need* a python library to:
+
+ * forget Matlab,
+ * build a python framework to do asynchronous audio processing,
+ * decode audio frames from ANY format to numpy arrays,
+ * stream the frames in processors and do numpy data analyzing,
+ * create various waveforms, spectrograms, etc.. with numpy and PIL,
+ * transcode the processed frames in various media formats and stream it,
+ * provide a high-level HTML5 UI to stream the results *on demand* through the web,
+ * do temporal metadata indexing remotely.
+
+
 News
 =====
 
 0.4.2
 
- * many releases these days, but there are some patches which are really worth to be HOT released ! We just need them in production..
- * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms)
+ * many releases these days, but there are some patches which are really worth to be HOT released : we just need them in production..
+ * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms
  * *mv* gstutils to timeside.gstutils
  * cleanup various processes
- * can't get right streaming ogg and flac encoders..
+ * Ogg, Aac and Flac encoders not really working now (some frames missing) :( Will be fixed in next release.
 
 0.4.1
 
