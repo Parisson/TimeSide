@@ -16,7 +16,6 @@ Goals
 
 We just *need* a python library to:
 
- * forget Matlab,
  * build a python framework to do asynchronous audio processing,
  * decode audio frames from ANY format to numpy arrays,
  * stream the frames in processors and do numpy data analyzing,
@@ -24,6 +23,10 @@ We just *need* a python library to:
  * transcode the processed frames in various media formats and stream it,
  * provide a high-level HTML5 UI to stream the results *on demand* through the web,
  * remote metadata indexing and time marking (JSON RPC, needs a server system like `Telemeta <http://telemeta.org>`_).
+
+Here is a schematic diagram of the TimeSide engine architecture:
+
+.. image:: http://timeside.googlecode.com/git/timeside/doc/img/timeside_schema.png
 
 
 News
