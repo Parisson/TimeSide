@@ -1,7 +1,6 @@
 include AUTHORS
 include LICENSE
 include README.rst
-recursive-include timeside/tools *
 recursive-include doc *
 recursive-include timeside/static *
 recursive-include tests *
