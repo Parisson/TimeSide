@@ -23,7 +23,7 @@ We just *need* a python library to:
  * create various waveforms, spectrograms, etc.. with numpy and PIL,
  * transcode the processed frames in various media formats and stream it,
  * provide a high-level HTML5 UI to stream the results *on demand* through the web,
- * do temporal metadata indexing remotely.
+ * remote metadata indexing and time marking (JSON RPC, needs a server system like `Telemeta <http://telemeta.org>`_).
 
 
 News
