@@ -69,6 +69,10 @@ class TestEncoding(TestCase):
                 self.assertEquals(self.encoder.eod, eod)
                 break
 
+        if 0:
+            import commands
+            print commands.getoutput('sndfile-info ' + self.sink)
+
         self.assertEquals(written_frames, total_frames)
         self.tmpfile.close()
 
