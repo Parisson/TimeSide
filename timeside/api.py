@@ -19,7 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
+
 from timeside.component import Interface
+
 
 class IProcessor(Interface):
     """Common processor interface"""
@@ -79,6 +81,7 @@ class IProcessor(Interface):
 
         # implementations should always call the parent method
 
+
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific
     format."""
@@ -124,6 +127,7 @@ class IEncoder(IProcessor):
 
         It isn't required to call this method, but if called, it must be before
         process()."""
+
 
 class IDecoder(IProcessor):
     """Decoder driver interface. Decoders are different of encoders in that
@@ -172,6 +176,7 @@ class IGrapher(IProcessor):
         """Return a PIL Image object visually representing all of the data passed
         by repeatedly calling process() and write the image to the output if specified"""
 
+
 class IAnalyzer(IProcessor):
     """Media item analyzer driver interface. This interface is abstract, it doesn't
     describe a particular type of analyzer but is rather meant to group analyzers.
@@ -194,6 +199,7 @@ class IAnalyzer(IProcessor):
     def unit():
         """Return the unit of the data such as "dB", "seconds", etc...  """
 
+
 class IValueAnalyzer(IAnalyzer):
     """Interface for analyzers which return a single numeric value from result()"""
 
@@ -204,6 +210,7 @@ class IValueAnalyzer(IAnalyzer):
     def __str__(self):
         """Return a human readable string containing both result and unit
         ('5.30dB', '4.2s', etc...)"""
+
 
 class IEffect(IProcessor):
     """Effect processor interface"""

@@ -21,7 +21,7 @@ setup(
   long_description = open('README.rst').read(),
   author = ["Guillaume Pellerin", "Olivier Guilyardi", "Riccardo Zaccarelli", "Paul Brossier"],
   author_email = ["yomguy@parisson.com","olivier@samalyse.com", "riccardo.zaccarelli@gmail.com", "piem@piem.org"],
-  version = '0.4.2',
+  version = '0.4.3',
   install_requires = [
         'setuptools',
         'numpy',
