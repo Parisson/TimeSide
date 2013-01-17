@@ -16,6 +16,20 @@ class TestDecoding(TestCase):
         self.expected_channels = 2
         self.expected_samplerate = 44100
 
+    def testWavMono(self):
+        "Test mono wav decoding"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep_mono.wav")
+
+        self.expected_channels = 1
+        self.expected_samplerate = 44100
+
+    def testWav32k(self):
+        "Test 32kHz wav decoding"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep_32000.wav")
+
+        self.expected_channels = 2
+        self.expected_samplerate = 32000
+
     def testFlac(self):
         "Test flac decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
@@ -83,7 +97,10 @@ class TestDecoding(TestCase):
             elif os.path.splitext(self.source)[-1].lower() == '.ogg':
                 self.assertEquals(totalframes, 352832)
             else:
-                self.assertEquals(totalframes, 352800)
+                if '_32000.wav' in self.source:
+                    self.assertEquals(totalframes, 256000)
+                else:
+                    self.assertEquals(totalframes, 352800)
 
 class TestDecodingStereo(TestDecoding):
 
