@@ -39,8 +39,8 @@ class FileDecoder(Processor):
 
     mimetype = ''
     output_blocksize  = 8*1024
-    output_samplerate = 44100
-    output_channels   = 1
+    output_samplerate = None
+    output_channels   = None
 
     pipeline          = None
     mainloopthread    = None
@@ -82,11 +82,19 @@ class FileDecoder(Processor):
                   ''' % locals()
         self.pipeline = gst.parse_launch(self.pipe)
 
+        if self.output_channels:
+            caps_channels = int(self.output_channels)
+        else:
+            caps_channels = "[ 1, 2 ]"
+        if self.output_samplerate:
+            caps_samplerate = int(self.output_samplerate)
+        else:
+            caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000 }"
         sink_caps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
             width=(int)32,
-            rate=(int)%d""" % (int(self.output_channels), int(self.output_samplerate)))
+            rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.decodebin = self.pipeline.get_by_name('uridecodebin')
         self.decodebin.connect("pad-added", self._pad_added_cb)
@@ -176,7 +184,11 @@ class FileDecoder(Processor):
         # We store the caps and length in the proper location
         if "audio" in caps.to_string():
             self.input_samplerate = caps[0]["rate"]
+            if not self.output_samplerate:
+              self.output_samplerate = self.input_samplerate
             self.input_channels = caps[0]["channels"]
+            if not self.output_channels:
+              self.output_channels = self.input_channels
             self.input_duration = length / 1.e9
             self.input_totalframes = int(self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
