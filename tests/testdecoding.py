@@ -13,17 +13,29 @@ class TestDecoding(TestCase):
         "Test wav decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
+
     def testFlac(self):
         "Test flac decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
+
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
 
     def testOgg(self):
         "Test ogg decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
 
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
+
     def testMp3(self):
         "Test mp3 decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
+
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
@@ -46,6 +58,23 @@ class TestDecoding(TestCase):
             print "input / output_channels:", decoder.input_channels, decoder.output_channels
             print "input_duration:", decoder.input_duration
             print "input_totalframes:", decoder.input_totalframes
+
+        if self.channels:
+            # when specified, check that the channels are the ones requested
+            self.assertEquals(self.channels, decoder.output_channels)
+        else:
+            # otherwise check that the channels are preserved, if not specified
+            self.assertEquals(decoder.input_channels, decoder.output_channels)
+            # and if we know the expected channels, check the output match
+            if self.expected_channels:
+              self.assertEquals(self.expected_channels, decoder.output_channels)
+        # do the same with the sampling rate
+        if self.samplerate:
+            self.assertEquals(self.samplerate, decoder.output_samplerate)
+        else:
+            self.assertEquals(decoder.input_samplerate, decoder.output_samplerate)
+            if self.expected_samplerate:
+                self.assertEquals(self.expected_samplerate, decoder.output_samplerate)
 
         # FIXME compute actual number of frames from file
         if ratio == 1:
