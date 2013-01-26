@@ -23,10 +23,15 @@
 #   Guillaume Pellerin <yomguy@parisson.com>
 
 
-import optparse, math, sys
-import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
-import numpy
+import optparse, math, sys, numpy
+
+try:
+    import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+except ImportError:
+    from PIL import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+
 from timeside.core import FixedSizeInputAdapter
+
 
 default_color_schemes = {
     'default': {
