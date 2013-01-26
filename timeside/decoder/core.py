@@ -144,6 +144,10 @@ class FileDecoder(Processor):
             self.release()
             raise self.read_error
 
+        while not hasattr(self,'input_samplerate'):
+            import time
+            time.sleep(.1)
+
     def _pad_added_cb(self, decodebin, pad):
         caps = pad.get_caps()
         if caps.to_string().startswith('audio'):
@@ -199,8 +203,8 @@ class FileDecoder(Processor):
     def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
-            self.pipeline.set_state(gst.STATE_NULL)
             self.queue.put(gst.MESSAGE_EOS)
+            self.pipeline.set_state(gst.STATE_NULL)
             self.mainloop.quit()
         elif t == gst.MESSAGE_ERROR:
             self.pipeline.set_state(gst.STATE_NULL)
@@ -257,8 +261,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def release(self):
-        if self.pipeline: self.pipeline.set_state(gst.STATE_NULL)
-        if self.mainloopthread: self.mainloopthread.join()
+        pass
 
     def __del__(self):
         self.release()

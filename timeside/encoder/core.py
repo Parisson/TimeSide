@@ -27,8 +27,7 @@ from timeside.tools import *
 class GstEncoder(Processor):
 
     def release(self):
-        while self.bus.have_pending():
-          self.bus.pop()
+        pass
 
     def __del__(self):
         self.release()
@@ -47,6 +46,8 @@ class GstEncoder(Processor):
             rate=(int)%d""" % (int(channels), int(samplerate)))
         self.src.set_property("caps", srccaps)
         self.src.set_property('emit-signals', True)
+        self.src.set_property('num-buffers', -1)
+        self.src.set_property('block', True)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()

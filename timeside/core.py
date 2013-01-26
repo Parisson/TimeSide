@@ -212,10 +212,8 @@ class ProcessPipe(object):
         items  = self.processors[1:]
         source.setup()
 
-        #FIXME: wait for decoder mainloop
-        time.sleep(0.1)
-
         last = source
+
         # setup/reset processors and configure properties throughout the pipe
         for item in items:
             item.setup(channels = last.channels(),
