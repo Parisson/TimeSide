@@ -26,11 +26,13 @@ from timeside.tools import *
 
 class GstEncoder(Processor):
 
-    def __init__(self, output, streaming = False):
+    def __init__(self, output, streaming = False, overwrite = False):
         if isinstance(output, basestring):
             import os.path
             if os.path.isdir(output):
                 raise IOError("Encoder output must be a file, not a directory")
+            elif os.path.isfile(output) and not overwrite:
+                raise IOError("Encoder output %s exists, but overwrite set to False")
             self.filename = output
         else:
             self.filename = None

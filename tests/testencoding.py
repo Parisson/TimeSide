@@ -3,6 +3,7 @@ from numpy import arange, sin, zeros
 from unit_timeside import *
 
 import os.path
+from os import unlink
 
 class TestEncoding(TestCase):
     "Test encoding features"
@@ -12,6 +13,7 @@ class TestEncoding(TestCase):
         import tempfile
         self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
         self.sink = self.tmpfile.name
+        self.tmpfile.close()
 
     def testWav(self):
         "Test wav encoding"
@@ -74,7 +76,8 @@ class TestEncoding(TestCase):
             print commands.getoutput('sndfile-info ' + self.sink)
 
         self.assertEquals(written_frames, total_frames)
-        if hasattr(self, 'tmpfile'): self.tmpfile.close()
+
+        if hasattr(self, 'tmpfile'): unlink(self.sink)
 
 class TestEncodingLongBlock(TestEncoding):
     "Test encoding features with longer blocksize"
@@ -159,6 +162,91 @@ class TestEncodingToDirectory(TestEncoding):
     def tearDown(self):
         from os import rmdir
         rmdir(self.sink)
+
+class TestEncodingOverwriteFails(TestCase):
+    "Test encoding features"
+
+    def setUp(self):
+        self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
+        import tempfile
+        self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
+        self.sink = self.tmpfile.name
+
+    def testWav(self):
+        "Test wav encoding"
+        from timeside.encoder.wav import WavEncoder
+        self.assertRaises(IOError,WavEncoder,self.sink)
+
+    def testVorbis(self):
+        "Test vorbis encoding"
+        from timeside.encoder.ogg import VorbisEncoder
+        self.assertRaises(IOError,VorbisEncoder,self.sink)
+
+    def testMp3(self):
+        "Test mp3 encoding"
+        from timeside.encoder.mp3 import Mp3Encoder
+        self.assertRaises(IOError,Mp3Encoder,self.sink)
+
+    def testAac(self):
+        "Test aac encoding"
+        from timeside.encoder.m4a import AacEncoder
+        self.assertRaises(IOError,AacEncoder,self.sink)
+
+    def testFlac(self):
+        "Test flac encoding"
+        from timeside.encoder.flac import FlacEncoder
+        self.assertRaises(IOError,FlacEncoder,self.sink)
+
+    def testWebm(self):
+        "Test webm encoding"
+        from timeside.encoder.webm import WebMEncoder
+        self.assertRaises(IOError,WebMEncoder,self.sink)
+
+    def tearDown(self):
+        self.tmpfile.close()
+
+class TestEncodingOverwriteForced(TestCase):
+    "Test encoding features"
+
+    def setUp(self):
+        self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
+        import tempfile
+        self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
+        self.sink = self.tmpfile.name
+
+    def testWav(self):
+        "Test wav encoding"
+        from timeside.encoder.wav import WavEncoder
+        self.encoder = WavEncoder(self.sink, overwrite = True)
+
+    def testVorbis(self):
+        "Test vorbis encoding"
+        from timeside.encoder.ogg import VorbisEncoder
+        self.encoder = VorbisEncoder(self.sink, overwrite = True)
+
+    def testMp3(self):
+        "Test mp3 encoding"
+        from timeside.encoder.mp3 import Mp3Encoder
+        self.encoder = Mp3Encoder(self.sink, overwrite = True)
+
+    def testAac(self):
+        "Test aac encoding"
+        from timeside.encoder.m4a import AacEncoder
+        self.encoder = AacEncoder(self.sink, overwrite = True)
+
+    def testFlac(self):
+        "Test flac encoding"
+        from timeside.encoder.flac import FlacEncoder
+        self.encoder = FlacEncoder(self.sink, overwrite = True)
+
+    def testWebm(self):
+        "Test webm encoding"
+        from timeside.encoder.webm import WebMEncoder
+        self.encoder = WebMEncoder(self.sink, overwrite = True)
+
+    def tearDown(self):
+        super(TestEncodingOverwriteForced, self).tearDown()
+        self.tmpfile.close()
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
