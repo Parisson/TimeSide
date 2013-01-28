@@ -101,8 +101,6 @@ class FileDecoder(Processor):
             width=(int)32,
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
-        self.decodebin = self.pipeline.get_by_name('uridecodebin')
-
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
 
