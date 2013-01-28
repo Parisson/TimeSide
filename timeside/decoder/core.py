@@ -139,7 +139,7 @@ class FileDecoder(Processor):
         self.pipeline.set_state(gst.STATE_PLAYING)
 
         self.cond.acquire()
-        if not self.discovered:
+        while not self.discovered:
           #print 'waiting'
           self.cond.wait()
         self.cond.release()
@@ -202,8 +202,8 @@ class FileDecoder(Processor):
         elif t == gst.MESSAGE_ERROR:
             self.pipeline.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
-            self.discovered = True
             self.cond.acquire()
+            self.discovered = True
             self.cond.notify()
             self.cond.release()
             self.mainloop.quit()
