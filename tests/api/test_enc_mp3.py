@@ -5,8 +5,14 @@ from timeside.encoder import *
 import os.path
 import sys
 
+if len(sys.argv) < 2:
+    print 'usage:', sys.argv[0], '<inputfile>'
+    sys.exit(1)
+
 source = sys.argv[-1]
 dest = source+'.mp3'
+
+print 'converting', source, 'to', dest
 
 decoder  = FileDecoder(source)
 encoder  = Mp3Encoder(dest)
@@ -25,4 +31,3 @@ metadata = {'TIT2': 'title',  #title2
 
 encoder.set_metadata(metadata)
 encoder.write_metadata()
-
