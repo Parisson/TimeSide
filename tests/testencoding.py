@@ -5,7 +5,7 @@ from unit_timeside import *
 import os.path
 
 class TestEncoding(TestCase):
-    "Test the low level streaming features"
+    "Test encoding features"
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
@@ -74,37 +74,91 @@ class TestEncoding(TestCase):
             print commands.getoutput('sndfile-info ' + self.sink)
 
         self.assertEquals(written_frames, total_frames)
-        self.tmpfile.close()
+        if hasattr(self, 'tmpfile'): self.tmpfile.close()
 
 class TestEncodingLongBlock(TestEncoding):
+    "Test encoding features with longer blocksize"
 
     def setUp(self):
         super(TestEncodingLongBlock, self).setUp()
         self.blocksize *= 8
 
 class TestEncodingShortBlock(TestEncoding):
+    "Test encoding features with short blocksize"
 
     def setUp(self):
         super(TestEncodingShortBlock, self).setUp()
         self.blocksize = 64
 
 class TestEncodingLowSamplerate(TestEncoding):
+    "Test encoding features with low samplerate"
 
     def setUp(self):
         super(TestEncodingLowSamplerate, self).setUp()
         self.samplerate = 8000
 
 class TestEncodingHighSamplerate(TestEncoding):
+    "Test encoding features with high samplerate"
 
     def setUp(self):
         super(TestEncodingHighSamplerate, self).setUp()
         self.samplerate = 192000
 
 class TestEncodingStereo(TestEncoding):
+    "Test encoding features with stereo"
 
     def setUp(self):
         super(TestEncodingStereo, self).setUp()
         self.channels = 2
+
+class TestEncodingToDevNull(TestEncoding):
+    "Test encoding features with /dev/null"
+
+    def setUp(self):
+        self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
+        self.sink = '/dev/null'
+
+class TestEncodingToDirectory(TestEncoding):
+    "Test encoding features to a directory"
+
+    def setUp(self):
+        self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
+        import tempfile
+        self.sink = tempfile.mkdtemp()
+
+    def testWav(self):
+        "Test wav encoding"
+        from timeside.encoder.wav import WavEncoder
+        self.assertRaises(IOError,WavEncoder,self.sink)
+
+    def testVorbis(self):
+        "Test vorbis encoding"
+        from timeside.encoder.ogg import VorbisEncoder
+        self.assertRaises(IOError,VorbisEncoder,self.sink)
+
+    def testMp3(self):
+        "Test mp3 encoding"
+        from timeside.encoder.mp3 import Mp3Encoder
+        self.assertRaises(IOError,Mp3Encoder,self.sink)
+
+    def testAac(self):
+        "Test aac encoding"
+        from timeside.encoder.m4a import AacEncoder
+        self.assertRaises(IOError,AacEncoder,self.sink)
+
+    def testFlac(self):
+        "Test flac encoding"
+        from timeside.encoder.flac import FlacEncoder
+        self.assertRaises(IOError,FlacEncoder,self.sink)
+
+    def testWebm(self):
+        "Test webm encoding"
+        from timeside.encoder.webm import WebMEncoder
+        self.assertRaises(IOError,WebMEncoder,self.sink)
+
+    def tearDown(self):
+        from os import rmdir
+        rmdir(self.sink)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

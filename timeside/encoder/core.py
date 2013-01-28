@@ -26,6 +26,22 @@ from timeside.tools import *
 
 class GstEncoder(Processor):
 
+    def __init__(self, output, streaming = False):
+        if isinstance(output, basestring):
+            import os.path
+            if os.path.isdir(output):
+                raise IOError("Encoder output must be a file, not a directory")
+            self.filename = output
+        else:
+            self.filename = None
+        self.streaming = streaming
+
+        if not self.filename and not self.streaming:
+            raise Exception('Must give an output')
+
+        self.eod = False
+        self.metadata = None
+
     def release(self):
         pass
 

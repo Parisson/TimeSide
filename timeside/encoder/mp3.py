@@ -35,19 +35,6 @@ class Mp3Encoder(GstEncoder):
     """ gstreamer-based mp3 encoder """
     implements(IEncoder)
 
-    def __init__(self, output, streaming=False):
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
-            self.filename = None
-
-        self.streaming = streaming
-        if not self.filename and not self.streaming:
-            raise Exception('Must give an output')
-
-        self.metadata = None
-        self.eod = False
-
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(Mp3Encoder, self).setup(channels, samplerate, blocksize, totalframes)

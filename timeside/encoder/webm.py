@@ -29,18 +29,9 @@ class WebMEncoder(GstEncoder):
     """ gstreamer-based webm encoder and muxer """
     implements(IEncoder)
 
-    def __init__(self, output,  streaming=False, video=False):
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
-            self.filename = None
-        self.streaming = streaming
-
-        if not self.filename and not self.streaming:
-            raise Exception('Must give an output')
-
+    def __init__(self, output, streaming = False):
+        super(WebMEncoder, self).__init__(output, streaming)
         self.video = False
-        self.eod = False
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):

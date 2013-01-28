@@ -29,11 +29,9 @@ class AacEncoder(GstEncoder):
     """ gstreamer-based AAC encoder """
     implements(IEncoder)
 
-    def __init__(self, output):
-        self.file = None
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
+    def __init__(self, output, streaming = False):
+        super(AacEncoder, self).__init__(output, streaming)
+        if self.streaming:
             raise Exception("Streaming not supported")
 
     @interfacedoc
