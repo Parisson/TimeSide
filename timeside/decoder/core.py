@@ -44,7 +44,6 @@ class FileDecoder(Processor):
 
     pipeline          = None
     mainloopthread    = None
-    read_error        = None
 
     # IProcessor methods
 
@@ -103,9 +102,6 @@ class FileDecoder(Processor):
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.decodebin = self.pipeline.get_by_name('uridecodebin')
-        self.decodebin.connect("pad-added", self._pad_added_cb)
-        self.decodebin.connect("no-more-pads", self._no_more_pads_cb)
-        self.decodebin.connect("unknown-type", self._unknown_type_cb)
 
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
@@ -141,14 +137,8 @@ class FileDecoder(Processor):
 
         self.last_buffer = None
 
-        self._pad_found = False
-
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
-
-        if self.read_error:
-            self.release()
-            raise self.read_error
 
         self.cond.acquire()
         if not self.discovered:
@@ -161,24 +151,6 @@ class FileDecoder(Processor):
                 raise IOError(self.error_msg)
             else:
                 raise IOError('no known audio stream found')
-
-    def _pad_added_cb(self, decodebin, pad):
-        caps = pad.get_caps()
-        if caps.to_string().startswith('audio'):
-            if not self.conv.get_pad('sink').is_linked():
-                self._pad_found = True
-                pad.link(self.conv.get_pad('sink'))
-
-    def _no_more_pads_cb(self, decodebin):
-        self.pipeline.info("no more pads")
-        if not self._pad_found:
-            self.read_exc = Exception("no audio stream found")
-
-    def _unknown_type_cb(self, decodebin, pad, caps):
-        self.pipeline.debug("unknown type : %s" % caps.to_string())
-        if not caps.to_string().startswith('audio'):
-            return
-        self.read_error = Exception("no known audio stream found")
 
     def _notify_caps_cb(self, pad, args):
         self.cond.acquire()
