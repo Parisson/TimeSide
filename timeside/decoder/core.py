@@ -68,6 +68,12 @@ class FileDecoder(Processor):
             raise IOError, 'File not found!'
 
     def setup(self, channels = None, samplerate = None, blocksize = None):
+
+        # a lock to wait wait for gstreamer thread to be ready
+        import threading
+        self.cond = threading.Condition(threading.Lock())
+        self.discovered = False
+
         # the output data format we want
         if blocksize:   self.output_blocksize  = blocksize
         if samplerate:  self.output_samplerate = int(samplerate)
@@ -144,9 +150,17 @@ class FileDecoder(Processor):
             self.release()
             raise self.read_error
 
-        while not hasattr(self,'input_samplerate'):
-            import time
-            time.sleep(.1)
+        self.cond.acquire()
+        if not self.discovered:
+          #print 'waiting'
+          self.cond.wait()
+        self.cond.release()
+
+        if not hasattr(self,'input_samplerate'):
+            if hasattr(self, 'error_msg'):
+                raise IOError(self.error_msg)
+            else:
+                raise IOError('no known audio stream found')
 
     def _pad_added_cb(self, decodebin, pad):
         caps = pad.get_caps()
@@ -167,9 +181,14 @@ class FileDecoder(Processor):
         self.read_error = Exception("no known audio stream found")
 
     def _notify_caps_cb(self, pad, args):
+        self.cond.acquire()
+
         caps = pad.get_negotiated_caps()
         if not caps:
             pad.info("no negotiated caps available")
+            self.discovered = True
+            self.cond.notify()
+            self.cond.release()
             return
         # the caps are fixed
         # We now get the total length of that stream
@@ -200,6 +219,10 @@ class FileDecoder(Processor):
             else:
                 self.input_width = caps[0]["depth"]
 
+        self.discovered = True
+        self.cond.notify()
+        self.cond.release()
+
     def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
@@ -209,8 +232,12 @@ class FileDecoder(Processor):
         elif t == gst.MESSAGE_ERROR:
             self.pipeline.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
+            self.discovered = True
+            self.cond.acquire()
+            self.cond.notify()
+            self.cond.release()
             self.mainloop.quit()
-            print "Error: %s" % err, debug
+            self.error_msg = "Error: %s" % err, debug
         elif t == gst.MESSAGE_TAG:
             # TODO
             # msg.parse_tags()
