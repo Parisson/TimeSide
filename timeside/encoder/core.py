@@ -69,7 +69,7 @@ class GstEncoder(Processor):
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
-        self.bus.connect("message", self.on_message)
+        self.bus.connect("message", self._on_message_cb)
 
         import threading
         class MainloopThread(threading.Thread):
@@ -86,7 +86,7 @@ class GstEncoder(Processor):
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
-    def on_message(self, bus, message):
+    def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
             self.pipeline.set_state(gst.STATE_NULL)
