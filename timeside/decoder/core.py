@@ -70,7 +70,7 @@ class FileDecoder(Processor):
 
         # a lock to wait wait for gstreamer thread to be ready
         import threading
-        self.cond = threading.Condition(threading.Lock())
+        self.discovered_cond = threading.Condition(threading.Lock())
         self.discovered = False
 
         # the output data format we want
@@ -138,11 +138,11 @@ class FileDecoder(Processor):
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
-        self.cond.acquire()
+        self.discovered_cond.acquire()
         while not self.discovered:
           #print 'waiting'
-          self.cond.wait()
-        self.cond.release()
+          self.discovered_cond.wait()
+        self.discovered_cond.release()
 
         if not hasattr(self,'input_samplerate'):
             if hasattr(self, 'error_msg'):
@@ -151,14 +151,14 @@ class FileDecoder(Processor):
                 raise IOError('no known audio stream found')
 
     def _notify_caps_cb(self, pad, args):
-        self.cond.acquire()
+        self.discovered_cond.acquire()
 
         caps = pad.get_negotiated_caps()
         if not caps:
             pad.info("no negotiated caps available")
             self.discovered = True
-            self.cond.notify()
-            self.cond.release()
+            self.discovered_cond.notify()
+            self.discovered_cond.release()
             return
         # the caps are fixed
         # We now get the total length of that stream
@@ -190,8 +190,8 @@ class FileDecoder(Processor):
                 self.input_width = caps[0]["depth"]
 
         self.discovered = True
-        self.cond.notify()
-        self.cond.release()
+        self.discovered_cond.notify()
+        self.discovered_cond.release()
 
     def _on_message_cb(self, bus, message):
         t = message.type
@@ -202,12 +202,12 @@ class FileDecoder(Processor):
         elif t == gst.MESSAGE_ERROR:
             self.pipeline.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
-            self.cond.acquire()
+            self.discovered_cond.acquire()
             self.discovered = True
-            self.cond.notify()
-            self.cond.release()
             self.mainloop.quit()
             self.error_msg = "Error: %s" % err, debug
+            self.discovered_cond.notify()
+            self.discovered_cond.release()
         elif t == gst.MESSAGE_TAG:
             # TODO
             # msg.parse_tags()
