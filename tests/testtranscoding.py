@@ -36,7 +36,6 @@ class TestTranscodingFromWav(TestCase):
         self.tmpTarget()
         self.encoder = VorbisEncoder(self.target)
 
-    """
     def testToWebM(self):
         "Test conversion to webm"
         self.tmpTarget()
@@ -46,7 +45,6 @@ class TestTranscodingFromWav(TestCase):
         "Test conversion to m4a"
         self.tmpTarget()
         self.encoder = AacEncoder(self.target)
-    """
 
     def setUpDecoder(self):
         self.decoder = FileDecoder(self.source)
@@ -68,22 +66,25 @@ class TestTranscodingFromWav(TestCase):
             totalframes += frames.shape[0]
             if eod or self.encoder.eod: break
 
-        """
-        print self.channels, self.samplerate, totalframes
 
-        import time
-        time.sleep(.5)
+        #print self.channels, self.samplerate, totalframes
+
+        self.encoder.release()
 
         decoder = FileDecoder(self.target)
         decoder.setup()
-        totalframes = 0
+        written_frames = 0
         while True:
             frames, eod = decoder.process()
-            totalframes += frames.shape[0]
+            written_frames += frames.shape[0]
             if eod: break
 
-        print decoder.channels(), decoder.samplerate(), totalframes
-        """
+        #print decoder.channels(), decoder.samplerate(), written_frames
+
+        self.assertEquals(self.channels, decoder.channels())
+        self.assertEquals(self.samplerate, decoder.samplerate())
+        self.assertLessEqual(totalframes, written_frames)
+
         import os
         os.unlink(self.target)
 
@@ -134,4 +135,3 @@ class TestTranscodingFromMissingFile(TestTranscodingFromWav):
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
-
