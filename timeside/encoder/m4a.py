@@ -42,6 +42,7 @@ class AacEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
             ! audioconvert
             ! faac
+            ! matroskamux
             '''
 
         if self.filename and self.streaming:
