@@ -68,8 +68,10 @@ class TestEncoding(TestCase):
             self.encoder.process(frames, eod)
             written_frames += frames.shape[0]
             if eod:
-                self.assertEquals(self.encoder.eod, eod)
+                self.assertEquals(self.encoder.eod, True)
                 break
+
+        self.encoder.release()
 
         if 0:
             import commands
@@ -105,7 +107,26 @@ class TestEncodingHighSamplerate(TestEncoding):
 
     def setUp(self):
         super(TestEncodingHighSamplerate, self).setUp()
-        self.samplerate = 192000
+        self.samplerate = 48000
+
+    def testMp3(self):
+        "Test mp3 encoding"
+        from timeside.encoder.mp3 import Mp3Encoder
+        self.encoder = Mp3Encoder(self.sink)
+
+
+class TestEncodingTooManyChannels(TestEncoding):
+    "Test encoding features with high samplerate"
+
+    def setUp(self):
+        super(TestEncodingTooManyChannels, self).setUp()
+        self.samplerate = 192000 * 2
+        self.channels = 128
+
+    def tearDown(self):
+        self.encoder.setup(channels = self.channels, samplerate = self.samplerate)
+        self.assertRaises(IOError, self.encoder.release)
+        unlink(self.sink)
 
 class TestEncodingStereo(TestEncoding):
     "Test encoding features with stereo"
@@ -201,9 +222,6 @@ class TestEncodingOverwriteFails(TestCase):
         "Test webm encoding"
         from timeside.encoder.webm import WebMEncoder
         self.assertRaises(IOError,WebMEncoder,self.sink)
-
-    def tearDown(self):
-        self.tmpfile.close()
 
 class TestEncodingOverwriteForced(TestCase):
     "Test encoding features"
