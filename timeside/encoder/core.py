@@ -41,11 +41,20 @@ class GstEncoder(Processor):
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
+        import threading
+        self.end_cond = threading.Condition(threading.Lock())
+
         self.eod = False
         self.metadata = None
 
     def release(self):
-        pass
+        if hasattr(self, 'eod') and hasattr(self, 'mainloopthread'):
+            self.end_cond.acquire()
+            while not hasattr(self, 'end_reached'):
+                self.end_cond.wait()
+            self.end_cond.release()
+        if hasattr(self, 'error_msg'):
+            raise IOError(self.error_msg)
 
     def __del__(self):
         self.release()
@@ -89,11 +98,21 @@ class GstEncoder(Processor):
     def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
+            self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
+            self.mainloop.quit()
+            self.end_reached = True
+            self.end_cond.notify()
+            self.end_cond.release()
         elif t == gst.MESSAGE_ERROR:
+            self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
+            self.mainloop.quit()
+            self.end_reached = True
             err, debug = message.parse_error()
-            print "Error: %s" % err, debug
+            self.error_msg = "Error: %s" % err, debug
+            self.end_cond.notify()
+            self.end_cond.release()
 
     def process(self, frames, eod=False):
         self.eod = eod
