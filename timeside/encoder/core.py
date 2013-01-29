@@ -71,6 +71,18 @@ class GstEncoder(Processor):
         self.bus.add_signal_watch()
         self.bus.connect("message", self.on_message)
 
+        import threading
+        class MainloopThread(threading.Thread):
+            def __init__(self, mainloop):
+                threading.Thread.__init__(self)
+                self.mainloop = mainloop
+
+            def run(self):
+                self.mainloop.run()
+        self.mainloop = gobject.MainLoop()
+        self.mainloopthread = MainloopThread(self.mainloop)
+        self.mainloopthread.start()
+
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
