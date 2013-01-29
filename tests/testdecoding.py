@@ -4,7 +4,7 @@ from unit_timeside import *
 import os.path
 
 class TestDecoding(TestCase):
-    "Test the low level streaming features"
+    "Test decoding features"
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = None, None, None
@@ -136,6 +136,35 @@ class TestDecodingLongBlock(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = None, None, 1024*8*2
+
+class TestDecodingWrongFiles(TestCase):
+    "Test decoding features"
+
+    def testMissingFile(self):
+        "Test decoding missing file"
+        self.source = os.path.join (os.path.dirname(__file__),  "a_missing_file_blahblah.wav")
+        self.assertRaises(IOError, FileDecoder, self.source)
+
+    def testDevNull(self):
+        "Test decoding dev null"
+        self.source = "/dev/null"
+        decoder = FileDecoder(self.source)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
+
+    def testNoAudioStream(self):
+        "Test decoding file withouth audio stream"
+        self.source = __file__
+        decoder = FileDecoder(self.source)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
+
+    def testEmptyFile(self):
+        "Test decoding empty file"
+        import tempfile
+        self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
+        self.source = self.tmpfile.name
+        decoder = FileDecoder(self.source)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
+        self.tmpfile.close()
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

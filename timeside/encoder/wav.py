@@ -30,18 +30,6 @@ class WavEncoder(GstEncoder):
     """ gstreamer-based encoder """
     implements(IEncoder)
 
-    def __init__(self, output,  streaming=False):
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
-            self.filename = None
-        self.streaming = streaming
-
-        if not self.filename and not self.streaming:
-            raise Exception('Must give an output')
-
-        self.eod = False
-
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(WavEncoder, self).setup(channels, samplerate, blocksize, totalframes)

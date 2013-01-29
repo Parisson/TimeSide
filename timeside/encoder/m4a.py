@@ -29,11 +29,9 @@ class AacEncoder(GstEncoder):
     """ gstreamer-based AAC encoder """
     implements(IEncoder)
 
-    def __init__(self, output):
-        self.file = None
-        if isinstance(output, basestring):
-            self.filename = output
-        else:
+    def __init__(self, *args, **kwargs):
+        super(AacEncoder, self).__init__( *args, **kwargs)
+        if self.streaming:
             raise Exception("Streaming not supported")
 
     @interfacedoc
@@ -44,6 +42,7 @@ class AacEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
             ! audioconvert
             ! faac
+            ! matroskamux
             '''
 
         if self.filename and self.streaming:

@@ -12,35 +12,39 @@ import os.path
 class TestTranscodingFromWav(TestCase):
     "Test transcoding from wav"
 
+    def tmpTarget(self):
+        import tempfile
+        self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
+        self.target = self.tmpfile.name
+        self.tmpfile.close()
+
     def setUp(self):
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
     def testToWav(self):
         "Test conversion to wav"
-        self.target = "/tmp/test_wav_filesink.wav"
+        self.tmpTarget()
         self.encoder = WavEncoder(self.target)
 
     def testToMp3(self):
         "Test conversion to mp3"
-        self.target = "/tmp/test_wav_filesink.mp3"
+        self.tmpTarget()
         self.encoder = Mp3Encoder(self.target)
 
     def testToOgg(self):
         "Test conversion to ogg"
-        self.target = "/tmp/test_wav_filesink.ogg"
+        self.tmpTarget()
         self.encoder = VorbisEncoder(self.target)
 
-    """
     def testToWebM(self):
         "Test conversion to webm"
-        self.target = "/tmp/test_wav_filesink.webm"
+        self.tmpTarget()
         self.encoder = WebMEncoder(self.target)
 
     def testToM4a(self):
         "Test conversion to m4a"
-        self.target = "/tmp/test_wav_filesink.m4a"
+        self.tmpTarget()
         self.encoder = AacEncoder(self.target)
-    """
 
     def setUpDecoder(self):
         self.decoder = FileDecoder(self.source)
@@ -62,22 +66,27 @@ class TestTranscodingFromWav(TestCase):
             totalframes += frames.shape[0]
             if eod or self.encoder.eod: break
 
-        """
-        print self.channels, self.samplerate, totalframes
 
-        import time
-        time.sleep(.5)
+        #print self.channels, self.samplerate, totalframes
+
+        self.encoder.release()
 
         decoder = FileDecoder(self.target)
         decoder.setup()
-        totalframes = 0
+        written_frames = 0
         while True:
             frames, eod = decoder.process()
-            totalframes += frames.shape[0]
+            written_frames += frames.shape[0]
             if eod: break
 
-        print decoder.channels(), decoder.samplerate(), totalframes
-        """
+        #print decoder.channels(), decoder.samplerate(), written_frames
+
+        self.assertEquals(self.channels, decoder.channels())
+        self.assertEquals(self.samplerate, decoder.samplerate())
+        self.assertLessEqual(totalframes, written_frames)
+
+        import os
+        os.unlink(self.target)
 
 class TestTranscodingFromAnotherWav(TestTranscodingFromWav):
     "Test transcoding from another wav"
@@ -126,4 +135,3 @@ class TestTranscodingFromMissingFile(TestTranscodingFromWav):
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
-
