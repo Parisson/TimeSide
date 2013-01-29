@@ -58,10 +58,10 @@ class TestEncoding(TestCase):
         while True:
             remaining = total_frames - written_frames
             if remaining >= block_size:
-              write_length = block_size
+                write_length = block_size
             else:
-              write_length = remaining
-              eod = True
+                write_length = remaining
+                eod = True
             # build a sinusoid
             frames = .75 * sin( omega * (arange(write_length) + written_frames) )
             # process encoder, writing to file
