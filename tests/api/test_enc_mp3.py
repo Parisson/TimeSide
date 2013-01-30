@@ -15,7 +15,7 @@ dest = source+'.mp3'
 print 'converting', source, 'to', dest
 
 decoder  = FileDecoder(source)
-encoder  = Mp3Encoder(dest)
+encoder  = Mp3Encoder(dest, overwrite=True)
 
 (decoder | encoder).run()
 

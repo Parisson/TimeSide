@@ -229,4 +229,7 @@ class ProcessPipe(object):
             for item in items:
                 frames, eod = item.process(frames, eod)
 
+        for item in items:
+            item.release()
+
         return self
