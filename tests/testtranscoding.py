@@ -36,15 +36,15 @@ class TestTranscodingFromWav(TestCase):
         self.tmpTarget()
         self.encoder = VorbisEncoder(self.target)
 
-    def testToWebM(self):
-        "Test conversion to webm"
-        self.tmpTarget()
-        self.encoder = WebMEncoder(self.target)
+    # def testToWebM(self):
+    #     "Test conversion to webm"
+    #     self.tmpTarget()
+    #     self.encoder = WebMEncoder(self.target)
 
-    def testToM4a(self):
-        "Test conversion to m4a"
-        self.tmpTarget()
-        self.encoder = AacEncoder(self.target)
+    # def testToM4a(self):
+    #     "Test conversion to m4a"
+    #     self.tmpTarget()
+    #     self.encoder = AacEncoder(self.target)
 
     def setUpDecoder(self):
         self.decoder = FileDecoder(self.source)
@@ -83,7 +83,7 @@ class TestTranscodingFromWav(TestCase):
 
         self.assertEquals(self.channels, decoder.channels())
         self.assertEquals(self.samplerate, decoder.samplerate())
-        self.assertLessEqual(totalframes, written_frames)
+        self.assertTrue(written_frames - totalframes >= 0)
 
         import os
         os.unlink(self.target)
