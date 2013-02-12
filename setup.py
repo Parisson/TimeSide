@@ -24,8 +24,8 @@ setup(
   url='http://code.google.com/p/timeside',
   description = "open and fast web audio components",
   long_description = open('README.rst').read(),
-  author = "Guillaume Pellerin, Olivier Guilyardi, Paul Brossier, Riccardo Zaccarelli",
-  author_email = ["yomguy@parisson.com","olivier@samalyse.com", "riccardo.zaccarelli@gmail.com", "piem@piem.org"],
+  author = "Guillaume Pellerin, Paul Brossier, Riccardo Zaccarelli, Olivier Guilyardi",
+  author_email = "yomguy@parisson.com, piem@piem.org, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
   version = '0.4.3',
   install_requires = [
         'setuptools',
