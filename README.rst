@@ -40,6 +40,7 @@ News
  * fix multi-channels streaming (closes: #13)
  * add support for Pillow (closes: #12)
  * temporally desactivate AAC and WebM encoders (need to add some limits for them)
+ * WARNING : we now need to add overwrite=True to encoder kwargs instances in order to overwrite the destination file, i.e. e=Mp3Encoder(path, overwrite=True)
 
 0.4.2
 
