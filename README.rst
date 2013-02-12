@@ -39,6 +39,7 @@ News
  * fix OGG and FLAC encoders (closes: #8)
  * fix multi-channels streaming (closes: #13)
  * add support for Pillow (closes: #12)
+ * temporally desactivate AAC and WebM encoders (need to add some limits for them)
 
 0.4.2
 
