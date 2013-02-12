@@ -32,6 +32,14 @@ Here is a schematic diagram of the TimeSide engine architecture:
 News
 =====
 
+0.4.3
+
+ * finally fix decoder leaks and de-synchronizations (thanks to piem)
+ * this also fixes bad variable encoder file lengths
+ * fix OGG and FLAC encoders (closes: #8)
+ * fix multi-channels streaming (closes: #13)
+ * add support for Pillow (closes: #12)
+
 0.4.2
 
  * many releases these days, but there are some patches which are really worth to be HOT released : we just need them in production..
