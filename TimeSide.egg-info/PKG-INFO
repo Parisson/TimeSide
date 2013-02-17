@@ -1,10 +1,10 @@
 Metadata-Version: 1.0
 Name: TimeSide
-Version: 0.4.2
+Version: 0.4.3
 Summary: open and fast web audio components
 Home-page: http://code.google.com/p/timeside
-Author: ['Guillaume Pellerin', 'Olivier Guilyardi', 'Riccardo Zaccarelli', 'Paul Brossier']
-Author-email: ['yomguy@parisson.com', 'olivier@samalyse.com', 'riccardo.zaccarelli@gmail.com', 'piem@piem.org']
+Author: Guillaume Pellerin, Paul Brossier, Riccardo Zaccarelli, Olivier Guilyardi
+Author-email: yomguy@parisson.com, piem@piem.org, riccardo.zaccarelli@gmail.com, olivier@samalyse.com
 License: Gnu Public License V2
 Description: ==============================================
         TimeSide : open and fast web audio components
@@ -15,7 +15,7 @@ Description: ==============================================
         
         TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
         
-        It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback and remote indexing.
+        It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback (time-marking) and remote indexing.
         
         The engine (server side) is fully written in Python, the player (client side) in HTML, CSS and JavaScript.
         
@@ -39,6 +39,16 @@ Description: ==============================================
         
         News
         =====
+        
+        0.4.3
+        
+         * finally fix decoder leaks and de-synchronizations (thanks to piem)
+         * this also fixes bad variable encoder file lengths
+         * fix OGG and FLAC encoders (closes: #8)
+         * fix multi-channels streaming (closes: #13)
+         * add support for Pillow (closes: #12)
+         * temporally desactivate AAC and WebM encoders (need to add some limits for them)
+         * WARNING : we now need to add overwrite=True to encoder kwargs instances in order to overwrite the destination file, i.e. e=Mp3Encoder(path, overwrite=True)
         
         0.4.2
         
@@ -222,10 +232,14 @@ Description: ==============================================
 Keywords: audio analyze transcode graph player metadata
 Platform: OS Independent
 Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: JavaScript
 Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
 Classifier: Topic :: Multimedia :: Sound/Audio
 Classifier: Topic :: Multimedia :: Sound/Audio :: Analysis
 Classifier: Topic :: Multimedia :: Sound/Audio :: Players
+Classifier: Topic :: Multimedia :: Sound/Audio :: Conversion
 Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
