@@ -26,9 +26,35 @@ from timeside.tools import *
 
 class GstEncoder(Processor):
 
+    def __init__(self, output, streaming = False, overwrite = False):
+        if isinstance(output, basestring):
+            import os.path
+            if os.path.isdir(output):
+                raise IOError("Encoder output must be a file, not a directory")
+            elif os.path.isfile(output) and not overwrite:
+                raise IOError("Encoder output %s exists, but overwrite set to False")
+            self.filename = output
+        else:
+            self.filename = None
+        self.streaming = streaming
+
+        if not self.filename and not self.streaming:
+            raise Exception('Must give an output')
+
+        import threading
+        self.end_cond = threading.Condition(threading.Lock())
+
+        self.eod = False
+        self.metadata = None
+
     def release(self):
-        while self.bus.have_pending():
-          self.bus.pop()
+        if hasattr(self, 'eod') and hasattr(self, 'mainloopthread'):
+            self.end_cond.acquire()
+            while not hasattr(self, 'end_reached'):
+                self.end_cond.wait()
+            self.end_cond.release()
+        if hasattr(self, 'error_msg'):
+            raise IOError(self.error_msg)
 
     def __del__(self):
         self.release()
@@ -47,22 +73,46 @@ class GstEncoder(Processor):
             rate=(int)%d""" % (int(channels), int(samplerate)))
         self.src.set_property("caps", srccaps)
         self.src.set_property('emit-signals', True)
+        self.src.set_property('num-buffers', -1)
+        self.src.set_property('block', True)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
-        self.bus.connect("message", self.on_message)
+        self.bus.connect("message", self._on_message_cb)
+
+        import threading
+        class MainloopThread(threading.Thread):
+            def __init__(self, mainloop):
+                threading.Thread.__init__(self)
+                self.mainloop = mainloop
+
+            def run(self):
+                self.mainloop.run()
+        self.mainloop = gobject.MainLoop()
+        self.mainloopthread = MainloopThread(self.mainloop)
+        self.mainloopthread.start()
 
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
-    def on_message(self, bus, message):
+    def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
+            self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
+            self.mainloop.quit()
+            self.end_reached = True
+            self.end_cond.notify()
+            self.end_cond.release()
         elif t == gst.MESSAGE_ERROR:
+            self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
+            self.mainloop.quit()
+            self.end_reached = True
             err, debug = message.parse_error()
-            print "Error: %s" % err, debug
+            self.error_msg = "Error: %s" % err, debug
+            self.end_cond.notify()
+            self.end_cond.release()
 
     def process(self, frames, eod=False):
         self.eod = eod

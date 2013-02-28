@@ -9,84 +9,42 @@ from unit_timeside import *
 
 import os.path
 
-__all__ = ['TestTranscoding']
+class TestTranscodingFromWav(TestCase):
+    "Test transcoding from wav"
 
-class TestTranscoding(TestCase):
-    "Test the low level streaming features"
+    def tmpTarget(self):
+        import tempfile
+        self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
+        self.target = self.tmpfile.name
+        self.tmpfile.close()
 
     def setUp(self):
-        pass
-
-    def testWav2Mp3(self):
-        "Test wav to mp3 conversion"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
-        dest1 = "/tmp/test_wav_filesink.mp3"
-        dest2 = "/tmp/test_wav_appsink.mp3"
-        self.f = open(dest2,'w')
+    def testToWav(self):
+        "Test conversion to wav"
+        self.tmpTarget()
+        self.encoder = WavEncoder(self.target)
 
-        self.streaming=True
-        self.encoder = Mp3Encoder(dest1, streaming=True)
+    def testToMp3(self):
+        "Test conversion to mp3"
+        self.tmpTarget()
+        self.encoder = Mp3Encoder(self.target)
 
-    def testFlac2Mp3(self):
-        "Test flac to mp3 conversion"
-        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
+    def testToOgg(self):
+        "Test conversion to ogg"
+        self.tmpTarget()
+        self.encoder = VorbisEncoder(self.target)
 
-        dest1 = "/tmp/test_flac_filesink.mp3"
-        dest2 = "/tmp/test_flac_appsink.mp3"
-        self.f = open(dest2,'w')
+    # def testToWebM(self):
+    #     "Test conversion to webm"
+    #     self.tmpTarget()
+    #     self.encoder = WebMEncoder(self.target)
 
-        self.streaming=True
-        self.encoder = Mp3Encoder(dest1, streaming=True)
-
-
-    #def testFlac2Ogg(self):
-        #"Test flac to ogg conversion"
-        #self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
-
-        #dest1 = "/tmp/test_flac_filesink.ogg"
-        #dest2 = "/tmp/test_flac_appsink.ogg"
-        #self.f = open(dest2,'w')
-
-        #self.streaming=True
-
-        #encoder = VorbisEncoder(dest1, streaming=True)
-        #self.encoder = encoder
-
-#    def testWav2Ogg(self):
-#        "Test wav to ogg conversion"
-#        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
-#
-#        dest1 = "/tmp/test_wav_filesink.ogg"
-#        dest2 = "/tmp/test_wav_appsink.ogg"
-#        self.f = open(dest2,'w')
-#
-#        self.streaming=True
-#        self.encoder = VorbisEncoder(dest1, streaming=True)
-
-    #def testWav2Flac(self):
-        #"Test wav to flac conversion"
-        #self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
-
-        #dest1 = "/tmp/test_wav_filesink.flac"
-        #dest2 = "/tmp/test_wav_appsink.flac"
-        #self.f = open(dest2,'w')
-
-        #self.streaming=True
-
-        #encoder = FlacEncoder(dest1, streaming=True)
-        #self.encoder = encoder
-
-    def testWav2Webm(self):
-        "Test wav to webm conversion"
-        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
-
-        dest1 = "/tmp/test_wav_filesink.webm"
-        dest2 = "/tmp/test_wav_appsink.webm"
-        self.f = open(dest2,'w')
-
-        self.streaming=True
-        self.encoder = WebMEncoder(dest1, streaming=True)
+    # def testToM4a(self):
+    #     "Test conversion to m4a"
+    #     self.tmpTarget()
+    #     self.encoder = AacEncoder(self.target)
 
     def setUpDecoder(self):
         self.decoder = FileDecoder(self.source)
@@ -101,26 +59,79 @@ class TestTranscoding(TestCase):
         self.setUpDecoder()
         self.setUpEncoder()
 
-        #print "decoder pipe:\n", decoder.pipe
-        #print "encoder pipe:\n", encoder.pipe
-        totalframes = 0.
-
+        totalframes = 0
         while True:
             frames, eod = self.decoder.process()
-            #print frames.shape[0]
-            totalframes += frames.shape[0]
             self.encoder.process(frames, eod)
-            if self.streaming:
-                self.f.write(self.encoder.chunk)
-            if eod:
-                break
-            if self.encoder.eod :
-                break
-        self.f.close()
+            totalframes += frames.shape[0]
+            if eod or self.encoder.eod: break
 
-        # FIXME compute actual number of frames from file
-#        self.assertEquals(totalframes, 352801)
+
+        #print self.channels, self.samplerate, totalframes
+
+        self.encoder.release()
+
+        decoder = FileDecoder(self.target)
+        decoder.setup()
+        written_frames = 0
+        while True:
+            frames, eod = decoder.process()
+            written_frames += frames.shape[0]
+            if eod: break
+
+        #print decoder.channels(), decoder.samplerate(), written_frames
+
+        self.assertEquals(self.channels, decoder.channels())
+        self.assertEquals(self.samplerate, decoder.samplerate())
+        self.assertTrue(written_frames - totalframes >= 0)
+
+        import os
+        os.unlink(self.target)
+
+class TestTranscodingFromAnotherWav(TestTranscodingFromWav):
+    "Test transcoding from another wav"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/guitar.wav")
+
+class TestTranscodingFromMp3(TestTranscodingFromWav):
+    "Test transcoding from mp3"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
+
+class TestTranscodingFromFlac(TestTranscodingFromWav):
+    "Test transcoding from flac"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
+
+class TestTranscodingFromOgg(TestTranscodingFromWav):
+    "Test transcoding from ogg"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
+
+class TestTranscodingFromMonoWav(TestTranscodingFromWav):
+    "Test transcoding from a mono wav"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep_mono.wav")
+
+class TestTranscodingFrom32kHzWav(TestTranscodingFromWav):
+    "Test transcoding from a 32kHz wav"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep_32000.wav")
+
+class TestTranscodingFromMissingFile(TestTranscodingFromWav):
+    "Test transcoding from a missing file"
+
+    def setUp(self):
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/unexisting.wav")
+
+    def tearDown(self):
+        self.assertRaises(IOError, self.setUpDecoder)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
-

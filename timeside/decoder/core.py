@@ -39,12 +39,11 @@ class FileDecoder(Processor):
 
     mimetype = ''
     output_blocksize  = 8*1024
-    output_samplerate = 44100
-    output_channels   = 1
+    output_samplerate = None
+    output_channels   = None
 
     pipeline          = None
     mainloopthread    = None
-    read_error        = None
 
     # IProcessor methods
 
@@ -68,6 +67,12 @@ class FileDecoder(Processor):
             raise IOError, 'File not found!'
 
     def setup(self, channels = None, samplerate = None, blocksize = None):
+
+        # a lock to wait wait for gstreamer thread to be ready
+        import threading
+        self.discovered_cond = threading.Condition(threading.Lock())
+        self.discovered = False
+
         # the output data format we want
         if blocksize:   self.output_blocksize  = blocksize
         if samplerate:  self.output_samplerate = int(samplerate)
@@ -82,16 +87,19 @@ class FileDecoder(Processor):
                   ''' % locals()
         self.pipeline = gst.parse_launch(self.pipe)
 
+        if self.output_channels:
+            caps_channels = int(self.output_channels)
+        else:
+            caps_channels = "[ 1, 2 ]"
+        if self.output_samplerate:
+            caps_samplerate = int(self.output_samplerate)
+        else:
+            caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000 }"
         sink_caps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
             width=(int)32,
-            rate=(int)%d""" % (int(self.output_channels), int(self.output_samplerate)))
-
-        self.decodebin = self.pipeline.get_by_name('uridecodebin')
-        self.decodebin.connect("pad-added", self._pad_added_cb)
-        self.decodebin.connect("no-more-pads", self._no_more_pads_cb)
-        self.decodebin.connect("unknown-type", self._unknown_type_cb)
+            rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
@@ -127,37 +135,30 @@ class FileDecoder(Processor):
 
         self.last_buffer = None
 
-        self._pad_found = False
-
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
 
-        if self.read_error:
-            self.release()
-            raise self.read_error
+        self.discovered_cond.acquire()
+        while not self.discovered:
+          #print 'waiting'
+          self.discovered_cond.wait()
+        self.discovered_cond.release()
 
-    def _pad_added_cb(self, decodebin, pad):
-        caps = pad.get_caps()
-        if caps.to_string().startswith('audio'):
-            if not self.conv.get_pad('sink').is_linked():
-                self._pad_found = True
-                pad.link(self.conv.get_pad('sink'))
-
-    def _no_more_pads_cb(self, decodebin):
-        self.pipeline.info("no more pads")
-        if not self._pad_found:
-            self.read_exc = Exception("no audio stream found")
-
-    def _unknown_type_cb(self, decodebin, pad, caps):
-        self.pipeline.debug("unknown type : %s" % caps.to_string())
-        if not caps.to_string().startswith('audio'):
-            return
-        self.read_error = Exception("no known audio stream found")
+        if not hasattr(self,'input_samplerate'):
+            if hasattr(self, 'error_msg'):
+                raise IOError(self.error_msg)
+            else:
+                raise IOError('no known audio stream found')
 
     def _notify_caps_cb(self, pad, args):
+        self.discovered_cond.acquire()
+
         caps = pad.get_negotiated_caps()
         if not caps:
             pad.info("no negotiated caps available")
+            self.discovered = True
+            self.discovered_cond.notify()
+            self.discovered_cond.release()
             return
         # the caps are fixed
         # We now get the total length of that stream
@@ -176,7 +177,11 @@ class FileDecoder(Processor):
         # We store the caps and length in the proper location
         if "audio" in caps.to_string():
             self.input_samplerate = caps[0]["rate"]
+            if not self.output_samplerate:
+              self.output_samplerate = self.input_samplerate
             self.input_channels = caps[0]["channels"]
+            if not self.output_channels:
+              self.output_channels = self.input_channels
             self.input_duration = length / 1.e9
             self.input_totalframes = int(self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
@@ -184,17 +189,25 @@ class FileDecoder(Processor):
             else:
                 self.input_width = caps[0]["depth"]
 
+        self.discovered = True
+        self.discovered_cond.notify()
+        self.discovered_cond.release()
+
     def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
-            self.pipeline.set_state(gst.STATE_NULL)
             self.queue.put(gst.MESSAGE_EOS)
+            self.pipeline.set_state(gst.STATE_NULL)
             self.mainloop.quit()
         elif t == gst.MESSAGE_ERROR:
             self.pipeline.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
+            self.discovered_cond.acquire()
+            self.discovered = True
             self.mainloop.quit()
-            print "Error: %s" % err, debug
+            self.error_msg = "Error: %s" % err, debug
+            self.discovered_cond.notify()
+            self.discovered_cond.release()
         elif t == gst.MESSAGE_TAG:
             # TODO
             # msg.parse_tags()
@@ -245,8 +258,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def release(self):
-        if self.pipeline: self.pipeline.set_state(gst.STATE_NULL)
-        if self.mainloopthread: self.mainloopthread.join()
+        pass
 
     def __del__(self):
         self.release()

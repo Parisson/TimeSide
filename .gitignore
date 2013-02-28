@@ -1,6 +1,5 @@
 build/
 dist/
-TimeSide.egg-info
 *.pyc
 *.~[0-9]~
 *.swp

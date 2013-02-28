@@ -7,7 +7,7 @@ TimeSide : open and fast web audio components
 
 TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
 
-It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback and remote indexing.
+It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback (time-marking) and remote indexing.
 
 The engine (server side) is fully written in Python, the player (client side) in HTML, CSS and JavaScript.
 
@@ -31,6 +31,16 @@ Here is a schematic diagram of the TimeSide engine architecture:
 
 News
 =====
+
+0.4.3
+
+ * finally fix decoder leaks and de-synchronizations (thanks to piem)
+ * this also fixes bad variable encoder file lengths
+ * fix OGG and FLAC encoders (closes: #8)
+ * fix multi-channels streaming (closes: #13)
+ * add support for Pillow (closes: #12)
+ * temporally desactivate AAC and WebM encoders (need to add some limits for them)
+ * WARNING : we now need to add overwrite=True to encoder kwargs instances in order to overwrite the destination file, i.e. e=Mp3Encoder(path, overwrite=True)
 
 0.4.2
 

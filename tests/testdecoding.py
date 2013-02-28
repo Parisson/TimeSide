@@ -4,7 +4,7 @@ from unit_timeside import *
 import os.path
 
 class TestDecoding(TestCase):
-    "Test the low level streaming features"
+    "Test decoding features"
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = None, None, None
@@ -13,17 +13,43 @@ class TestDecoding(TestCase):
         "Test wav decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
 
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
+
+    def testWavMono(self):
+        "Test mono wav decoding"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep_mono.wav")
+
+        self.expected_channels = 1
+        self.expected_samplerate = 44100
+
+    def testWav32k(self):
+        "Test 32kHz wav decoding"
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep_32000.wav")
+
+        self.expected_channels = 2
+        self.expected_samplerate = 32000
+
     def testFlac(self):
         "Test flac decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
+
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
 
     def testOgg(self):
         "Test ogg decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
 
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
+
     def testMp3(self):
         "Test mp3 decoding"
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
+
+        self.expected_channels = 2
+        self.expected_samplerate = 44100
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
@@ -47,6 +73,23 @@ class TestDecoding(TestCase):
             print "input_duration:", decoder.input_duration
             print "input_totalframes:", decoder.input_totalframes
 
+        if self.channels:
+            # when specified, check that the channels are the ones requested
+            self.assertEquals(self.channels, decoder.output_channels)
+        else:
+            # otherwise check that the channels are preserved, if not specified
+            self.assertEquals(decoder.input_channels, decoder.output_channels)
+            # and if we know the expected channels, check the output match
+            if self.expected_channels:
+              self.assertEquals(self.expected_channels, decoder.output_channels)
+        # do the same with the sampling rate
+        if self.samplerate:
+            self.assertEquals(self.samplerate, decoder.output_samplerate)
+        else:
+            self.assertEquals(decoder.input_samplerate, decoder.output_samplerate)
+            if self.expected_samplerate:
+                self.assertEquals(self.expected_samplerate, decoder.output_samplerate)
+
         # FIXME compute actual number of frames from file
         if ratio == 1:
             if os.path.splitext(self.source)[-1].lower() == '.mp3':
@@ -54,7 +97,10 @@ class TestDecoding(TestCase):
             elif os.path.splitext(self.source)[-1].lower() == '.ogg':
                 self.assertEquals(totalframes, 352832)
             else:
-                self.assertEquals(totalframes, 352800)
+                if '_32000.wav' in self.source:
+                    self.assertEquals(totalframes, 256000)
+                else:
+                    self.assertEquals(totalframes, 352800)
 
 class TestDecodingStereo(TestDecoding):
 
@@ -90,6 +136,35 @@ class TestDecodingLongBlock(TestDecoding):
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = None, None, 1024*8*2
+
+class TestDecodingWrongFiles(TestCase):
+    "Test decoding features"
+
+    def testMissingFile(self):
+        "Test decoding missing file"
+        self.source = os.path.join (os.path.dirname(__file__),  "a_missing_file_blahblah.wav")
+        self.assertRaises(IOError, FileDecoder, self.source)
+
+    def testDevNull(self):
+        "Test decoding dev null"
+        self.source = "/dev/null"
+        decoder = FileDecoder(self.source)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
+
+    def testNoAudioStream(self):
+        "Test decoding file withouth audio stream"
+        self.source = __file__
+        decoder = FileDecoder(self.source)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
+
+    def testEmptyFile(self):
+        "Test decoding empty file"
+        import tempfile
+        self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
+        self.source = self.tmpfile.name
+        decoder = FileDecoder(self.source)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
+        self.tmpfile.close()
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

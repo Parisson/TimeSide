@@ -4,13 +4,18 @@ from setuptools import setup, find_packages
 
 CLASSIFIERS = [
     'Intended Audience :: Science/Research',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Information Technology',
     'Programming Language :: Python',
     'Programming Language :: JavaScript',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Multimedia :: Sound/Audio',
     'Topic :: Multimedia :: Sound/Audio :: Analysis',
     'Topic :: Multimedia :: Sound/Audio :: Players',
-    'Topic :: Scientific/Engineering :: Information Analysis', ]
+    'Topic :: Multimedia :: Sound/Audio :: Conversion',
+    'Topic :: Scientific/Engineering :: Information Analysis',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    ]
 
 KEYWORDS = 'audio analyze transcode graph player metadata'
 
@@ -19,9 +24,9 @@ setup(
   url='http://code.google.com/p/timeside',
   description = "open and fast web audio components",
   long_description = open('README.rst').read(),
-  author = ["Guillaume Pellerin", "Olivier Guilyardi", "Riccardo Zaccarelli", "Paul Brossier"],
-  author_email = ["yomguy@parisson.com","olivier@samalyse.com", "riccardo.zaccarelli@gmail.com", "piem@piem.org"],
-  version = '0.4.2',
+  author = "Guillaume Pellerin, Paul Brossier, Riccardo Zaccarelli, Olivier Guilyardi",
+  author_email = "yomguy@parisson.com, piem@piem.org, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
+  version = '0.4.3',
   install_requires = [
         'setuptools',
         'numpy',
