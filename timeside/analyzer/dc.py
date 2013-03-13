@@ -51,7 +51,8 @@ class MeanDCShift(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        self.values = numpy.append(self.values, numpy.mean(frames))
+        if frames.size:
+            self.values = numpy.append(self.values, numpy.mean(frames))
         return frames, eod
 
     def result(self):

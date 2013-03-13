@@ -50,9 +50,10 @@ class MaxLevel(Processor):
         return "dBFS"
 
     def process(self, frames, eod=False):
-        max = frames.max()
-        if max > self.value:
-            self.value = max
+        if frames.size:
+            max = frames.max()
+            if max > self.value:
+                self.value = max
         return frames, eod
 
     def result(self):
