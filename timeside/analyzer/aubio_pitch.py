@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013 Paul Brossier <piem@piem.org>
 
 # This file is part of TimeSide.
 
@@ -22,34 +22,35 @@
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
-from aubio import onset
+from aubio import pitch
 
-class AubioOnsetRate(Processor):
+class AubioPitch(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AubioOnsetRate, self).setup(channels, samplerate, blocksize, totalframes)
-        self.win_s = 512
+        super(AubioPitch, self).setup(channels, samplerate, blocksize, totalframes)
+        self.win_s = 2048
         self.hop_s = self.win_s / 2
-        self.t = onset("default", self.win_s, self.hop_s, samplerate)
+        self.p = pitch("default", self.win_s, self.hop_s, samplerate)
+        self.p.set_unit("freq")
         self.block_read = 0
-        self.onsets = []
+        self.pitches = []
 
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_onsetrate"
+        return "aubio_pitch"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "aubio onset rate"
+        return "aubio pitch"
 
     @staticmethod
     @interfacedoc
     def unit():
-        return "bpm"
+        return "Hz"
 
     def __str__(self):
         return "%s %s" % (str(self.value), unit())
@@ -58,15 +59,11 @@ class AubioOnsetRate(Processor):
         i = 0
         while i < frames.shape[0]:
             downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
-            isonset = self.t(downmixed)
-            if isonset:
-                self.onsets += [self.t.get_last_onset_s()]
+            self.pitches += [self.p(downmixed)[0]]
             i += self.hop_s
             self.block_read += 1
         return frames, eod
 
     def result(self):
-        if len(self.onsets) < 2: return 0
-        from numpy import mean
-        periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
-        return mean(periods)
+        return self.pitches
+

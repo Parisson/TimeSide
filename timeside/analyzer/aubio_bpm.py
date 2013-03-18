@@ -28,11 +28,12 @@ class AubioBPM(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+            totalframes=None):
         super(AubioBPM, self).setup(channels, samplerate, blocksize, totalframes)
         self.win_s = 512
         self.hop_s = self.win_s / 2
-        self.t = tempo("default", self.win_s, self.hop_s, 1)
+        self.t = tempo("default", self.win_s, self.hop_s, samplerate)
         self.block_read = 0
         self.beats = []
 
@@ -56,14 +57,16 @@ class AubioBPM(Processor):
 
     def process(self, frames, eod=False):
         i = 0
-        while not eod and i < frames.shape[0]:
-          isbeat = self.t(frames[0,i:i+self.hop_s])
-          if isbeat: self.beats += [(isbeat[0] + self.block_read * self.hop_s ) / 44100. ]
+        while i < frames.shape[0]:
+          downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
+          isbeat = self.t(downmixed)
+          if isbeat: self.beats += [(isbeat[0] + self.block_read * self.hop_s ) / self.samplerate() ]
           i += self.hop_s
           self.block_read += 1
         return frames, eod
 
     def result(self):
-        periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
+        if len(self.beats) < 2: return 0
         from numpy import median
+        periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
         return median (periods)

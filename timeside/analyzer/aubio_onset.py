@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013 Paul Brossier <piem@piem.org>
 
 # This file is part of TimeSide.
 
@@ -24,12 +24,12 @@ from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
 from aubio import onset
 
-class AubioOnsetRate(Processor):
+class AubioOnset(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AubioOnsetRate, self).setup(channels, samplerate, blocksize, totalframes)
+        super(AubioOnset, self).setup(channels, samplerate, blocksize, totalframes)
         self.win_s = 512
         self.hop_s = self.win_s / 2
         self.t = onset("default", self.win_s, self.hop_s, samplerate)
@@ -39,7 +39,7 @@ class AubioOnsetRate(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_onsetrate"
+        return "aubio_onset"
 
     @staticmethod
     @interfacedoc
@@ -49,7 +49,7 @@ class AubioOnsetRate(Processor):
     @staticmethod
     @interfacedoc
     def unit():
-        return "bpm"
+        return "seconds"
 
     def __str__(self):
         return "%s %s" % (str(self.value), unit())
@@ -60,13 +60,11 @@ class AubioOnsetRate(Processor):
             downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
             isonset = self.t(downmixed)
             if isonset:
+                #print self.t.get_last_onset_s()
                 self.onsets += [self.t.get_last_onset_s()]
             i += self.hop_s
             self.block_read += 1
         return frames, eod
 
     def result(self):
-        if len(self.onsets) < 2: return 0
-        from numpy import mean
-        periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
-        return mean(periods)
+        return self.onsets
