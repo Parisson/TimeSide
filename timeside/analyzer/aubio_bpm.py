@@ -58,11 +58,11 @@ class AubioBPM(Processor):
     def process(self, frames, eod=False):
         i = 0
         while i < frames.shape[0]:
-          downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
-          isbeat = self.t(downmixed)
-          if isbeat: self.beats += [(isbeat[0] + self.block_read * self.hop_s ) / self.samplerate() ]
-          i += self.hop_s
-          self.block_read += 1
+            downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
+            if self.t(downmixed):
+                self.beats += [self.t.get_last_s()]
+            i += self.hop_s
+            self.block_read += 1
         return frames, eod
 
     def result(self):

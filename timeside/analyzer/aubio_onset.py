@@ -60,8 +60,8 @@ class AubioOnset(Processor):
             downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
             isonset = self.t(downmixed)
             if isonset:
-                #print self.t.get_last_onset_s()
-                self.onsets += [self.t.get_last_onset_s()]
+                #print self.t.get_last_s()
+                self.onsets += [self.t.get_last_s()]
             i += self.hop_s
             self.block_read += 1
         return frames, eod
