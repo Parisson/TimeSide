@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from unittest import TestCase
+from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.aubio_bpm import AubioBPM
 
@@ -23,5 +23,4 @@ class TestAubioBPM(TestCase):
         #print 'result:', self.analyzer.result()
 
 if __name__ == '__main__':
-    from unittest import main
-    main()
+    unittest.main(testRunner=TestRunner())
