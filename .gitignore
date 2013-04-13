@@ -4,3 +4,4 @@ dist/
 *.~[0-9]~
 *.swp
 tests/samples
+TimeSide.egg-info
