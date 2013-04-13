@@ -44,7 +44,7 @@ class AubioOnsetRate(Processor):
     @staticmethod
     @interfacedoc
     def name():
-        return "aubio onset rate"
+        return "onset rate (aubio)"
 
     @staticmethod
     @interfacedoc

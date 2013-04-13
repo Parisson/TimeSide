@@ -45,7 +45,7 @@ class AubioBPM(Processor):
     @staticmethod
     @interfacedoc
     def name():
-        return "aubio bpm"
+        return "bpm (aubio)"
 
     @staticmethod
     @interfacedoc
