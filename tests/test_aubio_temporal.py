@@ -20,12 +20,8 @@ class TestAubioTemporal(TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        for r in self.analyzer.results():
-            assert hasattr(r, 'id')
-            assert hasattr(r, 'name')
-            assert hasattr(r, 'unit')
-            assert hasattr(r, 'value')
-            #print 'result:', r
+        results = self.analyzer.results()
+        # print results
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
