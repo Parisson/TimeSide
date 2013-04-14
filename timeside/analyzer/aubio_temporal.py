@@ -75,23 +75,20 @@ class AubioTemporal(Processor):
         onsets.value = self.onsets
 
         onsetrate_mean = AnalyzerResult(id = "aubio_onset_rate_mean", name = "onset rate (aubio)", unit = "bpm")
+        onsetrate_median = AnalyzerResult(id = "aubio_onset_rate_median", name = "onset rate (median) (aubio)", unit = "bpm")
         if len(self.onsets) > 1:
             periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
             onsetrate_mean.value = mean (periods)
+            onsetrate_median.value = median (periods)
         else:
-            onserate_mean.value = 0
-
-        onsetrate_median = AnalyzerResult(id = "aubio_onset_rate_median", name = "onset rate (median) (aubio)", unit = "bpm")
-        if len(self.onsets):
-            onsetrate_median.value = mean (periods)
-        else:
+            onsetrate_mean.value = 0
             onsetrate_median.value = 0
 
         beats = AnalyzerResult(id = "aubio_beat", name = "beats (aubio)", unit = "s")
         beats.value = self.beats
 
         bpm = AnalyzerResult(id = "aubio_bpm", name = "bpm (aubio)", unit = "bpm")
-        if len(self.beats) > 1:
+        if len(self.beats) > 2:
             periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
             bpm.value = median (periods)
         else:
