@@ -94,4 +94,4 @@ class AubioTemporal(Processor):
         else:
             bpm.value = 0
 
-        return onsets, onsetrate_mean, onsetrate_median, beats, bpm
+        return AnalyzerResultContainer([onsets, onsetrate_mean, onsetrate_median, beats, bpm])
