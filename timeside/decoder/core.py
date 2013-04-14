@@ -29,6 +29,7 @@ from timeside.api import IDecoder
 from timeside.tools import *
 
 import Queue
+from gst import _gst as gst
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10

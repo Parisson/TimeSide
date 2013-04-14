@@ -23,6 +23,7 @@ from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
 from timeside.tools import *
 
+from gst import _gst as gst
 
 class GstEncoder(Processor):
 
