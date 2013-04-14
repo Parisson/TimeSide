@@ -20,33 +20,26 @@
 # Authors:
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
+import numpy
 
-class AnalyzerResult(object):
+class AnalyzerResult(dict):
 
     def __init__(self, id = "", name = "", unit = "s", value = None):
-        self.id = id
-        self.name = name
-        self.unit = unit
-        self.value = value
+        self['id'] = id
+        self['name'] = name
+        self['unit'] = unit
+        self['value'] = value
 
-    def __repr__(self):
-        o = {}
-        for attr in ['id', 'name', 'unit', 'value']:
-            o[attr] = getattr(self, attr)
-        return repr(o)
-
-    def __getitem__(self, attr):
-        return getattr(self, attr)
-
-    def __eq__(self, that):
-        for attr in ['id', 'name', 'unit', 'value']:
-            if getattr(self, attr) != that[attr]:
-                return False
-        return True
+    def __setattr__(self, name, value):
+        if type(value) == numpy.float64:
+            value = float(value)
+        if type(value) not in [list, str, float, int]:
+            raise TypeError, 'AnalyzerResult only accepts types [list, str, float, int], not %s' % type(value)
+        if name == 'value': self['value'] = value
 
 class AnalyzerResultContainer(object):
 
-    def __init__(self, analyzer_results):
+    def __init__(self, analyzer_results = []):
         self.results = analyzer_results
 
     def __getitem__(self, i):
@@ -66,11 +59,9 @@ class AnalyzerResultContainer(object):
         doc.appendChild(root)
         for data in data_list:
             node = doc.createElement('data')
-            node.setAttribute('name', data.name)
-            node.setAttribute('id', data.id)
-            node.setAttribute('unit', data.unit)
-            node.setAttribute('value', str(data.value))
-            if type(data.value) != type(str()) and type(data.value) != type(unicode()):
+            for a in ['name', 'id', 'unit', 'value']:
+                node.setAttribute(a, str(data[a]) )
+            if type(data['value']) != type(str()) and type(data['value']) != type(unicode()):
                 node.setAttribute('str', '0')
             root.appendChild(node)
         return xml.dom.minidom.Document.toprettyxml(doc)
@@ -100,7 +91,7 @@ class AnalyzerResultContainer(object):
         for data in data_list:
             data_dict = {}
             for a in ['name', 'id', 'unit', 'value']:
-                data_dict[a] = getattr(data,a)
+                data_dict[a] = data[a]
             data_strings.append(data_dict)
         return json.dumps(data_strings)
 
@@ -114,8 +105,8 @@ class AnalyzerResultContainer(object):
         data_strings = []
         for f in data_list:
             f_dict = {}
-            for a in ['name', 'id', 'unit', 'value']:
-                f_dict[a] = getattr(f,a)
+            for a in f.keys():
+                f_dict[a] = f[a]
             data_strings.append(f_dict)
         return yaml.dump(data_strings, default_flow_style=False)
 
@@ -123,7 +114,8 @@ class AnalyzerResultContainer(object):
         import yaml
         return yaml.load(yaml_str)
 
-    def to_numpy(data_list, output_file = None):
+    def to_numpy(self, output_file, data_list = None):
+        if data_list == None: data_list = self.results
         import numpy
         numpy.save(output_file, data_list)
 

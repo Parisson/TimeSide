@@ -21,7 +21,10 @@ class TestAubioTemporal(TestCase):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
         results = self.analyzer.results()
-        # print results
+        #print results
+        #print results.to_yaml()
+        #print results.to_json()
+        #print results.to_xml()
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
