@@ -55,6 +55,9 @@ class AnalyzerResultContainer(object):
     def __len__(self):
         return len(self.results)
 
+    def __repr__(self):
+        return self.to_json()
+
     def to_xml(self, data_list = None):
         if data_list == None: data_list = self.results
         import xml.dom.minidom
