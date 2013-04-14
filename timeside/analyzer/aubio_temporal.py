@@ -41,7 +41,7 @@ class AubioTemporal(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_onset"
+        return "aubio_temporal"
 
     @staticmethod
     @interfacedoc
