@@ -43,9 +43,9 @@ class TestAnalyzerResultNumpy(TestAnalyzerResult):
     """ test AnalyzerResult numpy serialize """
 
     def tearDown(self):
-        results = [self.result]
-        r_numpy = data_to_numpy(results, '/tmp/t.npy')
-        d_numpy = data_from_numpy('/tmp/t.npy')
+        results = AnalyzerResultContainer([self.result])
+        r_numpy = results.to_numpy('/tmp/t.npy')
+        d_numpy = results.from_numpy('/tmp/t.npy')
         if verbose:
             print '%15s' % 'from numpy:',
             print d_numpy
@@ -55,12 +55,12 @@ class TestAnalyzerResultNumpy(TestAnalyzerResult):
 class TestAnalyzerResultYaml(TestAnalyzerResult):
     """ test AnalyzerResult yaml serialize """
     def tearDown(self):
-        results = [self.result]
-        r_yaml = data_to_yaml(results)
+        results = AnalyzerResultContainer([self.result])
+        r_yaml = results.to_yaml()
         if verbose:
             print 'to yaml:'
             print r_yaml
-        d_yaml = data_from_yaml(r_yaml)
+        d_yaml = results.from_yaml(r_yaml)
         if verbose:
             print '%15s' % 'from yaml:',
             print d_yaml
@@ -70,13 +70,13 @@ class TestAnalyzerResultYaml(TestAnalyzerResult):
 class TestAnalyzerResultXml(TestAnalyzerResult):
     """ test AnalyzerResult xml serialize """
     def tearDown(self):
-        results = [self.result]
-        r_xml = data_to_xml(results)
+        results = AnalyzerResultContainer([self.result])
+        r_xml = results.to_xml()
         if verbose:
             print 'to xml:'
             print r_xml
 
-        d_xml = data_from_xml(r_xml)
+        d_xml = results.from_xml(r_xml)
         if verbose:
             print '%15s' % 'from xml:',
             print d_xml
@@ -87,13 +87,13 @@ class TestAnalyzerResultXml(TestAnalyzerResult):
 class TestAnalyzerResultJson(TestAnalyzerResult):
     """ test AnalyzerResult json serialize """
     def tearDown(self):
-        results = [self.result]
-        r_json = data_to_json(results)
+        results = AnalyzerResultContainer([self.result])
+        r_json = results.to_json()
         if verbose:
             print 'to json:'
             print r_json
 
-        d_json = data_from_json(r_json)
+        d_json = results.from_json(r_json)
         if verbose:
             print d_json
             print '%15s' % 'from yaml:',
