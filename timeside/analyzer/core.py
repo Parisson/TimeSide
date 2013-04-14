@@ -20,6 +20,16 @@
 # Authors:
 #   Guillaume Pellerin <yomguy at parisson.com>
 
-pass
+class AnalyzerResult(object):
 
+    def __init__(self, id = "", name = "", unit = "s", value = None):
+        self.id = id
+        self.name = name
+        self.unit = unit
+        self.value = value
 
+    def __repr__(self):
+        o = {}
+        for attr in ['id', 'name', 'unit', 'value']:
+            o[attr] = getattr(self, attr)
+        return repr(o)
