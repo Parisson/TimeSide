@@ -9,7 +9,7 @@ if __name__ == '__main__':
     if curdir == '': curdir = '.'
     files = os.listdir(curdir)
     modfiles = filter (lambda y: y.endswith('.py'), files)
-    modfiles = filter (lambda f: f.startswith('test'), modfiles)
+    modfiles = filter (lambda f: f.startswith('test_'), modfiles)
     # get module names
     modnames = map (lambda x: os.path.splitext(x)[0], modfiles)
     # import them
