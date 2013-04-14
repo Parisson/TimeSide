@@ -36,6 +36,12 @@ class AnalyzerResult(dict):
         if type(value) not in [list, str, float, int]:
             raise TypeError, 'AnalyzerResult only accepts types [list, str, float, int], not %s' % type(value)
         if name == 'value': self['value'] = value
+        return super(AnalyzerResult, self).__setattr__(name, value)
+
+    def __getattr__(self, name):
+        if name in ['id', 'name', 'unit', 'value']:
+            return self[name]
+        return super(AnalyzerResult, self).__getattr__(name)
 
 class AnalyzerResultContainer(object):
 
