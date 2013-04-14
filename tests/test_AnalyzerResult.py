@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import *
 from timeside.analyzer.core import *
 
 verbose = 0
