@@ -37,17 +37,12 @@ class MaxLevel(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "maxlevel"
+        return "maxlevel_analyzer"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Max level"
-
-    @staticmethod
-    @interfacedoc
-    def unit():
-        return "dBFS"
+        return "Max level analyzer"
 
     def process(self, frames, eod=False):
         if frames.size:
@@ -56,5 +51,7 @@ class MaxLevel(Processor):
                 self.value = max
         return frames, eod
 
-    def result(self):
-        return numpy.round(20*numpy.log10(self.value), 3)
+    def results(self):
+        result = AnalyzerResult(id = "maxlevel", name = "Max level", unit = "dBFS")
+        result.value = numpy.round(20*numpy.log10(self.value), 3)
+        return AnalyzerResultContainer([result])
