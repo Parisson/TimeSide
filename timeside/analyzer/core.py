@@ -104,9 +104,9 @@ class AnalyzerResultContainer(object):
         for child in root.childNodes:
             if child.nodeType != child.ELEMENT_NODE: continue
             child_dict = {}
-            for a in ['name', 'id', 'unit', 'value']:
+            for a in ['name', 'id', 'unit']:
                 child_dict[a] = str(child.getAttribute(a))
-            child_dict['value'] = ast.literal_eval(child_dict['value'])
+            child_dict['value'] = ast.literal_eval(child.getAttribute('value'))
             results.append(child_dict)
         return results
 
