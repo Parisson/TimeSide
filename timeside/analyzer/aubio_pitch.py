@@ -50,21 +50,22 @@ class AubioPitch(Processor):
     @staticmethod
     @interfacedoc
     def unit():
-        return "Hz"
+        return ""
 
     def __str__(self):
-        return "%s %s" % (str(self.value), unit())
+        return "pitch values"
 
     def process(self, frames, eod=False):
         i = 0
         while i < frames.shape[0]:
             downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
-            time = self.block_read * self.hop_s * 1. / self.samplerate()
-            self.pitches += [[time, self.p(downmixed)[0]]]
+            #time = self.block_read * self.hop_s * 1. / self.samplerate()
+            self.pitches += [self.p(downmixed)[0]]
             i += self.hop_s
             self.block_read += 1
         return frames, eod
 
-    def result(self):
-        return self.pitches
-
+    def results(self):
+        pitch = AnalyzerResult(id = "aubio_pitch", name = "f0 (aubio)", unit = "Hz")
+        pitch.value = self.pitches
+        return AnalyzerResultContainer([pitch])
