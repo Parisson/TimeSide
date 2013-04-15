@@ -133,7 +133,7 @@ class AnalyzerResultContainer(object):
             for a in f.keys():
                 f_dict[a] = f[a]
             data_strings.append(f_dict)
-        return yaml.dump(data_strings, default_flow_style=False)
+        return yaml.dump(data_strings)
 
     def from_yaml(self, yaml_str):
         import yaml
