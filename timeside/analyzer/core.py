@@ -81,6 +81,15 @@ class AnalyzerResultContainer(object):
     def __repr__(self):
         return self.to_json()
 
+    def add_result(self, analyzer_result):
+        if type(analyzer_result) == list:
+            for a in analyzer_result:
+                self.add_result(a)
+            return
+        if type(analyzer_result) != AnalyzerResult:
+            raise TypeError('only AnalyzerResult can be added')
+        self.results += [analyzer_result]
+
     def to_xml(self, data_list = None):
         if data_list == None: data_list = self.results
         import xml.dom.minidom
