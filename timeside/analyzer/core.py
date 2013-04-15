@@ -97,6 +97,7 @@ class AnalyzerResultContainer(object):
 
     def from_xml(self, xml_string):
         import xml.dom.minidom
+        import ast
         doc = xml.dom.minidom.parseString(xml_string)
         root = doc.getElementsByTagName('telemeta')[0]
         results = []
@@ -105,7 +106,7 @@ class AnalyzerResultContainer(object):
             child_dict = {}
             for a in ['name', 'id', 'unit', 'value']:
                 child_dict[a] = str(child.getAttribute(a))
-            child_dict['value'] = eval(child_dict['value'])
+            child_dict['value'] = ast.literal_eval(child_dict['value'])
             results.append(child_dict)
         return results
 
