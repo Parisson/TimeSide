@@ -55,7 +55,7 @@ class AubioMfcc(Processor):
 
     def process(self, frames, eod=False):
         i = 0
-        while True:
+        while i < frames.shape[0]:
             downmixed_samples = frames[i:i+self.hop_s, :].sum(axis = -1)
             time = self.block_read * self.hop_s * 1. / self.samplerate()
             fftgrain = self.pvoc(downmixed_samples)
@@ -63,7 +63,6 @@ class AubioMfcc(Processor):
             self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
             i += self.hop_s
             self.block_read += 1
-            if self.hop_s + i < frames.shape[0]: break
         return frames, eod
 
     def results(self):
