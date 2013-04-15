@@ -26,8 +26,6 @@ from timeside.api import IValueAnalyzer
 import numpy
 from aubio import filterbank, pvoc
 
-from math import isnan
-
 class AubioMelEnergy(Processor):
     implements(IValueAnalyzer)
 
@@ -67,14 +65,19 @@ class AubioMelEnergy(Processor):
 
     def results(self):
 
+        container = AnalyzerResultContainer()
+
         melenergy = AnalyzerResult(id = "aubio_melenergy", name = "melenergy (aubio)", unit = "")
-        melenergy.value = [list(line) for line in self.melenergy_results]
+        melenergy.value = self.melenergy_results
+        container.add_result(melenergy)
 
         melenergy_mean = AnalyzerResult(id = "aubio_melenergy_mean", name = "melenergy mean (aubio)", unit = "")
-        melenergy_mean.value = list(self.melenergy_results.mean(axis=0))
+        melenergy_mean.value = numpy.mean(self.melenergy_results,axis=0)
+        container.add_result(melenergy_mean)
 
         melenergy_median = AnalyzerResult(id = "aubio_melenergy_median", name = "melenergy median (aubio)", unit = "")
-        melenergy_median.value = list(numpy.median(self.melenergy_results,axis=0))
+        melenergy_median.value = numpy.median(self.melenergy_results,axis=0)
+        container.add_result(melenergy_median)
 
-        return AnalyzerResultContainer([melenergy, melenergy_median, melenergy_mean])
+        return container
 
