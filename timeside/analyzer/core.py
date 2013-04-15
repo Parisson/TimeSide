@@ -21,6 +21,26 @@
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
 import numpy
+numpy_data_types = [
+    #'float128',
+    'float64',
+    'float32',
+    'float16',
+    'int64',
+    'int16',
+    'int32',
+    'int8',
+    'uint64',
+    'uint32',
+    'uint16',
+    'uint8',
+    #'timedelta64',
+    #'datetime64',
+    #'complex128',',
+    #'complex64',
+    ]
+numpy_data_types = map(lambda x: getattr(numpy,x), numpy_data_types)
+numpy_data_types += [numpy.ndarray]
 
 class AnalyzerResult(dict):
 
@@ -31,10 +51,14 @@ class AnalyzerResult(dict):
         self['value'] = value
 
     def __setattr__(self, name, value):
-        if type(value) == numpy.float64:
-            value = float(value)
-        if type(value) not in [list, str, float, int]:
-            raise TypeError, 'AnalyzerResult only accepts types [list, str, float, int], not %s' % type(value)
+        # make a numpy.array out of list
+        if type(value) is list:
+            value = numpy.array(value)
+        # serialize using numpy
+        if type(value) in numpy_data_types:
+            value = value.tolist()
+        if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
+            raise TypeError, 'AnalyzerResult can not accept type %s' % type(value)
         if name == 'value': self['value'] = value
         return super(AnalyzerResult, self).__setattr__(name, value)
 
