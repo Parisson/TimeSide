@@ -22,9 +22,9 @@ class TestAubioTemporal(TestCase):
         (decoder | self.analyzer).run()
         results = self.analyzer.results()
         #print results
-        #print results.to_yaml()
-        #print results.to_json()
-        #print results.to_xml()
+        results.to_yaml()
+        results.to_json()
+        results.to_xml()
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
