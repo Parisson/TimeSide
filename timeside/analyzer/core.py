@@ -20,6 +20,9 @@
 # Authors:
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
+
+from utils import *
+
 import numpy
 numpy_data_types = [
     #'float128',

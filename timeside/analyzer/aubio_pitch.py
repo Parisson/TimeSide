@@ -56,12 +56,9 @@ class AubioPitch(Processor):
         return "pitch values"
 
     def process(self, frames, eod=False):
-        i = 0
-        while i < frames.shape[0]:
-            downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
+        for samples in downsample_blocking(frames, self.hop_s):
             #time = self.block_read * self.hop_s * 1. / self.samplerate()
-            self.pitches += [self.p(downmixed)[0]]
-            i += self.hop_s
+            self.pitches += [self.p(samples)[0]]
             self.block_read += 1
         return frames, eod
 

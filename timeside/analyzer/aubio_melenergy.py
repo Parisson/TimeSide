@@ -53,13 +53,9 @@ class AubioMelEnergy(Processor):
         return "Mel Energy analysis (aubio)"
 
     def process(self, frames, eod=False):
-        i = 0
-        while i < frames.shape[0]:
-            downmixed_samples = frames[i:i+self.hop_s, :].sum(axis = -1)
-            time = self.block_read * self.hop_s * 1. / self.samplerate()
-            fftgrain = self.pvoc(downmixed_samples)
+        for samples in downsample_blocking(frames, self.hop_s):
+            fftgrain = self.pvoc(samples)
             self.melenergy_results = numpy.vstack( [ self.melenergy_results, self.melenergy(fftgrain) ])
-            i += self.hop_s
             self.block_read += 1
         return frames, eod
 

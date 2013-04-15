@@ -54,14 +54,11 @@ class AubioMfcc(Processor):
         return "MFCC analysis (aubio)"
 
     def process(self, frames, eod=False):
-        i = 0
-        while i < frames.shape[0]:
-            downmixed_samples = frames[i:i+self.hop_s, :].sum(axis = -1)
-            time = self.block_read * self.hop_s * 1. / self.samplerate()
-            fftgrain = self.pvoc(downmixed_samples)
+        for samples in downsample_blocking(frames, self.hop_s):
+            #time = self.block_read * self.hop_s * 1. / self.samplerate()
+            fftgrain = self.pvoc(samples)
             coeffs = self.mfcc(fftgrain)
             self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
-            i += self.hop_s
             self.block_read += 1
         return frames, eod
 

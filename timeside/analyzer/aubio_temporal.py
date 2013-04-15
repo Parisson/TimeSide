@@ -57,14 +57,11 @@ class AubioTemporal(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        i = 0
-        while i < frames.shape[0]:
-            downmixed = frames[i:i+self.hop_s, :].sum(axis = -1)
-            if self.o(downmixed):
+        for samples in downsample_blocking(frames, self.hop_s):
+            if self.o(samples):
                 self.onsets += [self.o.get_last_s()]
-            if self.t(downmixed):
+            if self.t(samples):
                 self.beats += [self.t.get_last_s()]
-            i += self.hop_s
             self.block_read += 1
         return frames, eod
 
