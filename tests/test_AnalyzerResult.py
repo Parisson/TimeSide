@@ -71,7 +71,7 @@ class TestAnalyzerResult(TestCase):
 good_numpy_data_types = [
     'float64',
     'float32',
-    'float16',
+#    'float16',
     'int64',
     'int16',
     'int32',
