@@ -2,12 +2,12 @@
 
 from unit_timeside import *
 from timeside.decoder import *
-from timeside.analyzer.max_level import MaxLevel
+from timeside.analyzer.level import Level
 
-class TestAubioMelEnergy(TestCase):
+class TestAnalyzerLevel(TestCase):
 
     def setUp(self):
-        self.analyzer = MaxLevel()
+        self.analyzer = Level()
 
     def testOnSweep(self):
         "runs on sweep"
