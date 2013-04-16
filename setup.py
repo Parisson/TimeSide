@@ -29,7 +29,7 @@ setup(
   version = '0.4.3',
   install_requires = [
         'setuptools',
-        'numpy',
+        'numpy>=1.6.2',
         'mutagen',
         'pil',
         ],

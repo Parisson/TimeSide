@@ -28,7 +28,7 @@ numpy_data_types = [
     #'float128',
     'float64',
     'float32',
- #   'float16',
+    'float16',
     'int64',
     'int16',
     'int32',
