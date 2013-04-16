@@ -103,7 +103,10 @@ class AnalyzerResultContainer(object):
             node = doc.createElement('data')
             for a in ['name', 'id', 'unit']:
                 node.setAttribute(a, str(data[a]) )
-            node.setAttribute('value', repr(data['value']) )
+            if type(data['value']) in [str, unicode]:
+                node.setAttribute('value', data['value'] )
+            else:
+                node.setAttribute('value', repr(data['value']) )
             root.appendChild(node)
         return xml.dom.minidom.Document.toprettyxml(doc)
 
@@ -118,7 +121,10 @@ class AnalyzerResultContainer(object):
             child_dict = {}
             for a in ['name', 'id', 'unit']:
                 child_dict[a] = str(child.getAttribute(a))
-            child_dict['value'] = ast.literal_eval(child.getAttribute('value'))
+            try:
+                child_dict['value'] = ast.literal_eval(child.getAttribute('value'))
+            except:
+                child_dict['value'] = child.getAttribute('value')
             results.append(child_dict)
         return results
 
