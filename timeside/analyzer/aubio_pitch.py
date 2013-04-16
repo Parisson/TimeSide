@@ -40,7 +40,7 @@ class AubioPitch(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_pitch"
+        return "aubio_pitch_analyzer"
 
     @staticmethod
     @interfacedoc
@@ -64,20 +64,21 @@ class AubioPitch(Processor):
 
     def results(self):
 
-        container = AnalyzerResultContainer()
+        #container = AnalyzerResultContainer()
 
         self.pitches = numpy.array(self.pitches)
 
         pitch = AnalyzerResult(id = "aubio_pitch", name = "f0 (aubio)", unit = "Hz")
         pitch.value = self.pitches
-        container.add_result(pitch)
+        #container.add_result(pitch)
 
         pitch_mean = AnalyzerResult(id = "aubio_pitch_mean", name = "f0 mean (aubio)", unit = "Hz")
         pitch_mean.value = numpy.mean(self.pitches)
-        container.add_result(pitch_mean)
+        #container.add_result(pitch_mean)
 
         pitch_median = AnalyzerResult(id = "aubio_pitch_median", name = "f0 median (aubio)", unit = "Hz")
         pitch_median.value = numpy.median(self.pitches)
-        container.add_result(pitch_median)
+        #container.add_result(pitch_median)
 
-        return container
+        #return container
+        return AnalyzerResultContainer([pitch, pitch_mean, pitch_median])
