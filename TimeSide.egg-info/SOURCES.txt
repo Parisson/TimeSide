@@ -2,6 +2,7 @@ AUTHORS
 LICENSE
 MANIFEST.in
 README.rst
+requirements.txt
 setup.py
 doc/img/timeside_schema.dia
 doc/img/timeside_schema.png
@@ -26,6 +27,7 @@ tests/api/test_aubio_bpm.py
 tests/api/test_aubio_onsetrate.py
 tests/api/test_enc_flac.py
 tests/api/test_enc_mp3.py
+tests/api/test_enc_mp3_by_block.py
 tests/api/test_enc_ogg.py
 tests/api/test_enc_webm.py
 tests/api/test_flac.py
@@ -52,6 +54,8 @@ timeside/core.py
 timeside/exceptions.py
 timeside/metadata.py
 timeside/analyzer/__init__.py
+timeside/analyzer/aubio_bpm.py
+timeside/analyzer/aubio_onsetrate.py
 timeside/analyzer/core.py
 timeside/analyzer/dc.py
 timeside/analyzer/max_level.py
@@ -60,22 +64,18 @@ timeside/analyzer/vamp/__init__.py
 timeside/analyzer/vamp/core.py
 timeside/decoder/__init__.py
 timeside/decoder/core.py
-timeside/decoder/subprocess.py
 timeside/encoder/__init__.py
 timeside/encoder/core.py
 timeside/encoder/flac.py
 timeside/encoder/m4a.py
 timeside/encoder/mp3.py
 timeside/encoder/ogg.py
-timeside/encoder/subprocess.py
 timeside/encoder/wav.py
 timeside/encoder/webm.py
 timeside/grapher/__init__.py
 timeside/grapher/core.py
 timeside/grapher/spectrogram.py
-timeside/grapher/spectrogram_audiolab.py
 timeside/grapher/waveform.py
-timeside/grapher/waveform_audiolab.py
 timeside/grapher/waveform_contour_bk.py
 timeside/grapher/waveform_contour_wh.py
 timeside/grapher/waveform_simple.py

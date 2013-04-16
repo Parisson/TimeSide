@@ -609,6 +609,7 @@ Timeside.classes.Player = Timeside.classes.TimesideClass.extend({
                 player.fire('playStateChanged',endData);
                 ruler.movePointer(player.getSoundDuration());
                 updateWaitBar.apply(player,[player.isImgRefreshing ? player.msgs.imgRefreshing : '']);
+                player.setSoundPosition(0);
             //player.fire('endReached');
             }
         };
