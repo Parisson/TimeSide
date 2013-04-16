@@ -70,6 +70,13 @@ class AnalyzerResult(dict):
             return self[name]
         return super(AnalyzerResult, self).__getattr__(name)
 
+    def to_json(self):
+        import simplejson as json
+        data_dict = {}
+        for a in ['name', 'id', 'unit', 'value']:
+            data_dict[a] = self[a]
+        return json.dumps(data_dict)
+
 class AnalyzerResultContainer(object):
 
     def __init__(self, analyzer_results = []):
