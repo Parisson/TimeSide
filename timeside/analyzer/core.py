@@ -91,6 +91,13 @@ class AnalyzerResultContainer(object):
     def __repr__(self):
         return self.to_json()
 
+    def __eq__(self, that):
+        if hasattr(that, 'results'):
+            that = that.results
+        for a, b in zip(self.results, that):
+            if a != b: return False
+        return True
+
     def add_result(self, analyzer_result):
         if type(analyzer_result) == list:
             for a in analyzer_result:
