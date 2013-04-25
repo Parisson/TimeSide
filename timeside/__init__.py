@@ -9,4 +9,4 @@ def get_processors(proc_type):
     import timeside.analyzer
     return core.processors(proc_type)
 
-__version__ = '0.4.3'
+__version__ = '0.5'
