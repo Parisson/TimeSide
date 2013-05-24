@@ -446,7 +446,7 @@ class NewAnalyzer(Processor):
     def process(self, frames, eod=False):
         # do process things...
         # and maybe store some results :
-        # self.results = ...
+        # self.result_data = ...
 
         return frames, eod
 
@@ -454,7 +454,7 @@ class NewAnalyzer(Processor):
         container = AnalyzerResultContainer()
 
         result = AnalyzerResult(id = self.id(), name = self.name(), unit = "something")
-        result.value = self.results
+        result.value = self.result_data
         container.add_result(result)
 
         # add other results in the container if needed...
