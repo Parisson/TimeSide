@@ -92,10 +92,10 @@ import timeside.grapher
 import timeside.analyzer
 import timeside.encoder
 
-decoder = timeside.decoder.FileDecoder('sweep.wav')
+decoder = timeside.decoder.FileDecoder('tests/samples/sweep.wav')
 grapher = timeside.grapher.Waveform()
 analyzer = timeside.analyzer.Level()
-encoder = timeside.encoder.Mp3Encoder('sweep.mp3')
+encoder = timeside.encoder.Mp3Encoder('tests/samples/sweep.mp3')
 					</code></pre>
 					<p>then, the <i>magic</i> pipeline:</p>
 					<pre><code data-trim>
@@ -491,7 +491,7 @@ from new_analyzer import * # << here
 import timeside.decoder
 import timeside.analyzer
 
-decoder = timeside.decoder.FileDecoder('sweep.wav')
+decoder = timeside.decoder.FileDecoder('tests/samples/sweep.wav')
 analyzer = timeside.analyzer.NewAnalyzer()
 
 (decoder | analyzer).run()
