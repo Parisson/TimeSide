@@ -169,10 +169,250 @@ git checkout dev
 
 export PYTHONPATH=$PYTHONPATH:`pwd`
 
+tests/run_all_tests
+
  					</code></pre>
 
  				<h3>Ready!</h3>
 				</section>
+
+				<section>
+					<h2>API</h2>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L26">IProcessor</a>
+					<pre><code data-trim class="python">
+class IProcessor(Interface):
+    """Common processor interface"""
+
+    @staticmethod
+    def id():
+        """Short alphanumeric, lower-case string which uniquely identify this
+        processor, suitable for use as an HTTP/GET argument value, in filenames,
+        etc..."""
+
+        # implementation: only letters and digits are allowed. An exception will
+        # be raised by MetaProcessor if the id is malformed or not unique amongst
+        # registered processors.
+
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        """Allocate internal resources and reset state, so that this processor is
+        ready for a new run.
+
+        The channels, samplerate and/or blocksize and/or totalframes arguments
+        may be required by processors which accept input. An error will occur if any of
+        these arguments is passed to an output-only processor such as a decoder.
+        """
+
+        # implementations should always call the parent method
+
+    def channels(self):
+        """Number of channels in the data returned by process(). May be different from
+        the number of channels passed to setup()"""
+
+    def samplerate(self):
+        """Samplerate of the data returned by process(). May be different from
+        the samplerate passed to setup()"""
+
+    def blocksize():
+        """The total number of frames that this processor can output for each step
+        in the pipeline, or None if the number is unknown."""
+
+    def totalframes():
+        """The total number of frames that this processor will output, or None if
+        the number is unknown."""
+
+    def process(self, frames=None, eod=False):
+        """Process input frames and return a (output_frames, eod) tuple.
+        Both input and output frames are 2D numpy arrays, where columns are
+        channels, and containing an undetermined number of frames.  eod=True
+        means that the end-of-data has been reached.
+
+        Output-only processors (such as decoders) will raise an exception if the
+        frames argument is not None. All processors (even encoders) return data,
+        even if that means returning the input unchanged.
+
+        Warning: it is required to call setup() before this method."""
+
+    def release(self):
+        """Release resources owned by this processor. The processor cannot
+        be used anymore after calling this method."""
+
+        # implementations should always call the parent method
+
+					</code></pre>
+				</section>
+
+
+				<section>
+					<h2>API</h2>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L132">IDecoder</a>
+					<pre><code data-trim class="python">
+class IDecoder(IProcessor):
+    """Decoder driver interface. Decoders are different of encoders in that
+    a given driver may support several input formats, hence this interface doesn't
+    export any static method, all informations are dynamic."""
+
+    def __init__(self, filename):
+        """Create a new decoder for filename."""
+        # implementation: additional optionnal arguments are allowed
+
+    def format():
+        """Return a user-friendly file format string"""
+
+    def encoding():
+        """Return a user-friendly encoding string"""
+
+    def resolution():
+        """Return the sample width (8, 16, etc..) of original audio file/stream,
+           or None if not applicable/known"""
+
+    def metadata(self):
+        """Return the metadata embedded into the encoded stream, if any."""
+
+					</code></pre>
+				</section>
+
+
+				<section>
+					<h2>API</h2>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L180">IAnalyzer</a>
+					<pre><code data-trim class="python">
+class IAnalyzer(IProcessor):
+    """Media item analyzer driver interface. This interface is abstract, it doesn't
+    describe a particular type of analyzer but is rather meant to group analyzers.
+    In particular, the way the result is returned may greatly vary from sub-interface
+    to sub-interface. For example the IValueAnalyzer returns a final single numeric
+    result at the end of the whole analysis. But some other analyzers may return
+    numpy arrays, and this, either at the end of the analysis, or from process()
+    for each block of data (as in Vamp)."""
+
+    def __init__(self):
+        """Create a new analyzer."""
+        # implementation: additional optionnal arguments are allowed
+
+    @staticmethod
+    def name():
+        """Return the analyzer name, such as "Mean Level", "Max level",
+        "Total length, etc..  """
+
+    @staticmethod
+    def unit():
+        """Return the unit of the data such as "dB", "seconds", etc...  """
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>API</h2>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/analyzer/core.py#L80">AnalyzerResultContainer</a>
+					<pre><code data-trim class="python">
+class AnalyzerResultContainer(object):
+
+    def __init__(self, analyzer_results = []):
+        self.results = analyzer_results
+
+    def __getitem__(self, i):
+        return self.results[i]
+
+    def __len__(self):
+        return len(self.results)
+
+    def __repr__(self):
+        return self.to_json()
+
+    def __eq__(self, that):
+        if hasattr(that, 'results'):
+            that = that.results
+        for a, b in zip(self.results, that):
+            if a != b: return False
+        return True
+
+    def add_result(self, analyzer_result):
+        if type(analyzer_result) == list:
+            for a in analyzer_result:
+                self.add_result(a)
+            return
+        if type(analyzer_result) != AnalyzerResult:
+            raise TypeError('only AnalyzerResult can be added')
+        self.results += [analyzer_result]
+
+    def to_xml(self, data_list = None):
+        if data_list == None: data_list = self.results
+        import xml.dom.minidom
+        doc = xml.dom.minidom.Document()
+        root = doc.createElement('telemeta')
+        doc.appendChild(root)
+        for data in data_list:
+            node = doc.createElement('data')
+            for a in ['name', 'id', 'unit']:
+                node.setAttribute(a, str(data[a]) )
+            if type(data['value']) in [str, unicode]:
+                node.setAttribute('value', data['value'] )
+            else:
+                node.setAttribute('value', repr(data['value']) )
+            root.appendChild(node)
+        return xml.dom.minidom.Document.toprettyxml(doc)
+
+    def from_xml(self, xml_string):
+        import xml.dom.minidom
+        import ast
+        doc = xml.dom.minidom.parseString(xml_string)
+        root = doc.getElementsByTagName('telemeta')[0]
+        results = []
+        for child in root.childNodes:
+            if child.nodeType != child.ELEMENT_NODE: continue
+            child_dict = {}
+            for a in ['name', 'id', 'unit']:
+                child_dict[a] = str(child.getAttribute(a))
+            try:
+                child_dict['value'] = ast.literal_eval(child.getAttribute('value'))
+            except:
+                child_dict['value'] = child.getAttribute('value')
+            results.append(child_dict)
+        return results
+
+    def to_json(self, data_list = None):
+        if data_list == None: data_list = self.results
+        import simplejson as json
+        data_strings = []
+        for data in data_list:
+            data_dict = {}
+            for a in ['name', 'id', 'unit', 'value']:
+                data_dict[a] = data[a]
+            data_strings.append(data_dict)
+        return json.dumps(data_strings)
+
+    def from_json(self, json_str):
+        import simplejson as json
+        return json.loads(json_str)
+
+    def to_yaml(self, data_list = None):
+        if data_list == None: data_list = self.results
+        import yaml
+        data_strings = []
+        for f in data_list:
+            f_dict = {}
+            for a in f.keys():
+                f_dict[a] = f[a]
+            data_strings.append(f_dict)
+        return yaml.dump(data_strings)
+
+    def from_yaml(self, yaml_str):
+        import yaml
+        return yaml.load(yaml_str)
+
+    def to_numpy(self, output_file, data_list = None):
+        if data_list == None: data_list = self.results
+        import numpy
+        numpy.save(output_file, data_list)
+
+    def from_numpy(self, input_file):
+        import numpy
+        return numpy.load(input_file)
+					</code></pre>
+				</section>
+
+
+
+
 
 				<section>
 					<h2>Links</h2>
