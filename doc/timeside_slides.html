@@ -117,7 +117,7 @@ print 'Level:', analyzer.results()
 
 				<section>
 					<h2>Install for production</h2>
-					<p>(Linux, Debian)</p>
+					<p>on Linux (Debian)</p>
 					<pre><code data-trim class="bash">
 sudo apt-get update
 
@@ -132,7 +132,7 @@ sudo pip install timeside
 
 				<section>
 					<h2>Install for development 1/2</h2>
-					<p>(Linux, Debian)</p>
+					<p>on Linux (Debian)</p>
 					<pre><code data-trim class="bash">
 sudo apt-get update
 
@@ -143,7 +143,7 @@ sudo apt-get install python python-pip python-setuptools python-gobject \
                         liblash-dev libfftw3-dev gcc git-core ipython
                     </code></pre>
 
-                    <p>Install <a href="http://aubio.org" target="_blank">aubio</a> with "develop" branch</p>
+                    <p>install <a href="http://aubio.org" target="_blank">aubio</a> with "develop" branch</p>
                     <pre><code data-trim class="bash">
 git clone git://git.aubio.org/git/aubio/
 
@@ -183,7 +183,7 @@ tests/run_all_tests
 
 				<section>
 					<h2>API</h2>
-					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L26">IProcessor</a>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L26" target="_blank">IProcessor</a>
 					<pre><code data-trim class="python">
 class IProcessor(Interface):
     """Common processor interface"""
@@ -249,7 +249,7 @@ class IProcessor(Interface):
 
 				<section>
 					<h2>API</h2>
-					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L132">IDecoder</a>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L132" target="_blank">IDecoder</a>
 					<pre><code data-trim class="python">
 class IDecoder(IProcessor):
     """Decoder driver interface. Decoders are different of encoders in that
@@ -279,7 +279,7 @@ class IDecoder(IProcessor):
 
 				<section>
 					<h2>API</h2>
-					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L180">IAnalyzer</a>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L180" target="_blank">IAnalyzer</a>
 					<pre><code data-trim class="python">
 class IAnalyzer(IProcessor):
     """Media item analyzer driver interface. This interface is abstract, it doesn't
@@ -307,7 +307,7 @@ class IAnalyzer(IProcessor):
 
 				<section>
 					<h2>API</h2>
-					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/analyzer/core.py#L80">AnalyzerResultContainer</a>
+					<a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/analyzer/core.py#L80" target="_blank">AnalyzerResultContainer</a>
 					<pre><code data-trim class="python">
 class AnalyzerResultContainer(object):
 
