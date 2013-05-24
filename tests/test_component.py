@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from timeside.component import *
 from unit_timeside import *
 

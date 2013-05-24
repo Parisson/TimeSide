@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007-2009 Guillaume Pellerin <yomguy@parisson.com>
+# Copyright (c) 2009 Olivier Guilyardi <olivier@samalyse.com>
 
 # This file is part of TimeSide.
 
@@ -25,36 +26,40 @@ from timeside.api import IValueAnalyzer
 import numpy
 
 
-class MeanLevel(Processor):
+class Level(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(MeanLevel, self).setup(channels, samplerate, blocksize, totalframes)
-        self.values = numpy.array([])
+        super(Level, self).setup(channels, samplerate, blocksize, totalframes)
+        # max_level
+        self.max_value = 0
+        # rms_level
+        self.mean_values = numpy.array([])
 
     @staticmethod
     @interfacedoc
     def id():
-        return "rmslevel"
+        return "level_analyzer"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "RMS level"
-
-    @staticmethod
-    @interfacedoc
-    def unit():
-        return "dBFS"
-
-    def __str__(self):
-        return "%s %s" % (str(self.value), unit())
+        return "level analyzer"
 
     def process(self, frames, eod=False):
         if frames.size:
-            self.values = numpy.append(self.values, numpy.mean(numpy.square(frames)))
+            # max_level
+            max_value = frames.max()
+            if max_value > self.max_value:
+                self.max_value = max_value
+            # rms_level
+            self.mean_values = numpy.append(self.mean_values, numpy.mean(numpy.square(frames)))
         return frames, eod
 
-    def result(self):
-        return numpy.round(20*numpy.log10(numpy.sqrt(numpy.mean(self.values))), 3)
+    def results(self):
+        max_level = AnalyzerResult(id = "max_level", name = "Max level", unit = "dBFS")
+        max_level.value = numpy.round(20*numpy.log10(self.max_value), 3)
+        rms_level = AnalyzerResult(id = "rms_level", name = "RMS level", unit = "dBFS")
+        rms_level.value = numpy.round(20*numpy.log10(numpy.sqrt(numpy.mean(self.mean_values))), 3)
+        return AnalyzerResultContainer([max_level, rms_level])

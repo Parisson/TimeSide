@@ -35,25 +35,19 @@ class MeanDCShift(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "dc"
+        return "dc_analyzer"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Mean DC shift"
-
-    @staticmethod
-    @interfacedoc
-    def unit():
-        return "%"
-
-    def __str__(self):
-        return "%s %s" % (str(self.value), unit())
+        return "Mean DC shift analyzer"
 
     def process(self, frames, eod=False):
         if frames.size:
             self.values = numpy.append(self.values, numpy.mean(frames))
         return frames, eod
 
-    def result(self):
-        return numpy.round(100*numpy.mean(self.values),3)
+    def results(self):
+        result = AnalyzerResult(id = "mean_dc_shift", name = "Mean DC shift", unit = "%")
+        result.value = numpy.round(100*numpy.mean(self.values),3)
+        return AnalyzerResultContainer([result])

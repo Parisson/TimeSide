@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import timeside.api
-import timeside.exceptions
-import timeside.core
-import timeside.component
-import timeside.metadata
-import timeside.decoder
-import timeside.encoder
-import timeside.grapher
-import timeside.analyzer
-import timeside.tools
-from timeside.core import *
+import api
 
-__version__ = '0.4.3'
+def get_processors(proc_type):
+    import timeside.decoder
+    import timeside.encoder
+    import timeside.grapher
+    import timeside.analyzer
+    return core.processors(proc_type)
+
+__version__ = '0.5'

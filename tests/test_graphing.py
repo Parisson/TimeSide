@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from timeside.decoder.core import FileDecoder
 from unit_timeside import *
 

@@ -5,13 +5,12 @@ from sys import stdout
 import os.path
 import numpy
 
-
 class TestAnalyzer:
 
-    graphers = timeside.core.processors(timeside.api.IGrapher)
-    decoders = timeside.core.processors(timeside.api.IDecoder)
-    encoders= timeside.core.processors(timeside.api.IEncoder)
-    analyzers = timeside.core.processors(timeside.api.IAnalyzer)
+    graphers = timeside.get_processors(timeside.api.IGrapher)
+    decoders = timeside.get_processors(timeside.api.IDecoder)
+    encoders= timeside.get_processors(timeside.api.IEncoder)
+    analyzers = timeside.get_processors(timeside.api.IAnalyzer)
 
     def __init__(self, path):
         self.source = os.path.join(os.path.dirname(__file__), path)
@@ -29,14 +28,17 @@ class TestAnalyzer:
         self.pipe.run()
 
     def results(self):
-        analyzers = []
+        results = []
         for analyzer in self.analyzers_sub_pipe:
-            value = analyzer.result()
-            analyzers.append({'name':analyzer.name(),
-                            'id':analyzer.id(),
-                            'unit':analyzer.unit(),
-                            'value':str(value)})
-        print analyzers
+            if hasattr(analyzer, 'results'):
+                results.append(analyzer.results())
+            else:
+                value = analyzer.result()
+                results.append([{'name':analyzer.name(),
+                                'id':analyzer.id(),
+                                'unit':analyzer.unit(),
+                                'value':str(value)}])
+        print results
 
 
 test = TestAnalyzer('../samples/guitar.wav')
