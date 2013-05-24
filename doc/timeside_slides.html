@@ -87,10 +87,10 @@
 					<h2>Quick processing example</h2>
 					<p>Define some processors:</p>
 					<pre><code data-trim class="python">
-from timeside.decoder import *
-from timeside.grapher import *
-from timeside.analyzer import *
-from timeside.encoder import *
+import timeside.decoder
+import timeside.grapher
+import timeside.analyzer
+import timeside.encoder
 
 decoder = timeside.decoder.FileDecoder('sweep.wav')
 grapher = timeside.grapher.Waveform()
@@ -488,8 +488,8 @@ from new_analyzer import * # << here
 					<h2>Howto implement an analyzer plugin?</h2>
 					<p>then test it!
 					<pre><code data-trim class="python">
-from timeside.decoder import *
-from timeside.analyzer import *
+import timeside.decoder
+import timeside.analyzer
 
 decoder = timeside.decoder.FileDecoder('sweep.wav')
 analyzer = timeside.analyzer.NewAnalyzer()
