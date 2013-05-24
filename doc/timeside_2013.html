@@ -41,11 +41,11 @@
 					<h1>TimeSide</h1>
 					<h3>open and fast web audio components</h3>
 					<p>
-						<small>Created by <a href="http://fr.linkedin.com/in/guillaumepellerin">Guillaume Pellerin</a> / <a href="http://twitter.com/yomguy">@yomguy</a> at <a href="http://parisson.com" target="_blank">Parisson.com</a></small>
+						<small>created by <a href="http://fr.linkedin.com/in/guillaumepellerin">Guillaume Pellerin</a> / <a href="http://twitter.com/yomguy">@yomguy</a> at <a href="http://parisson.com" target="_blank">Parisson.com</a></small>
 					</p>
 					<iframe width='374' height='221' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://parisson.telemeta.org/archives/items/PRS_07_01_01/player/360x130'></iframe>
 				</section>
-
+<!--
 				<section>
 					<h2>Heads up</h2>
 					<p>
@@ -61,20 +61,20 @@
 					<aside class="notes">
 						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
 					</aside>
-				</section>
-
+				</section> #}
+-->
 				<section>
 					<h2>Goals</h2>
-					<p>We just *need* a python library to:</p>
+					<p>We just <b>need</b> a python library to:</p>
 					<br/>
 					<ul>
 					 <li>build a <a href="http://python.org" target="_blank">python</a> framework to do asynchronous audio processing</li>
-					 <li>decode audio frames from ANY format to numpy arrays</li>
-					 <li>stream the frames in processors and do numpy data analyzing</li>
-					 <li>create various waveforms, spectrograms, etc.. with numpy and PIL</li>
-					 <li>transcode the processed frames in various media formats and stream it</li>
-					 <li>provide a high-level HTML5 UI to stream the results <i>on demand</i> through the web</li>
-					 <li>remote metadata indexing and time marking through a server like <a href="http://telemeta.org" target="_blank">Telemeta</a></li>
+					 <li>decode audio frames from <b>any</b> format into <a href="http://www.numpy.org/" target="_blank">numpy</a> arrays</li>
+					 <li>stream the frames in various processors and do <b>numpy data analyzing</b></li>
+					 <li>create various <b>image outputs</b> like waveforms, spectrograms, etc.. with numpy and PIL</li>
+					 <li><b>transcode</b> the processed frames in various media formats and <b>stream it on the fly in realtime</b></li>
+					 <li>provide a high-level <b>100% HTML5 user interface</b> to display the results <b>on demand</b> and <b>play sound</b> through the web</li>
+					 <li><b>metadata indexing</b>, <b>time marking</b> and <b>store everything</b> on a web server (see <a href="http://telemeta.org" target="_blank">Telemeta project</a>)</li>
 					</ul>
 				</section>
 
@@ -87,12 +87,15 @@
 					<h2>Quick processing example</h2>
 					<p>Define some processors:</p>
 					<pre><code data-trim class="python">
-import timeside
+from timeside.decoder import *
+from timeside.grapher import *
+from timeside.analyzer import *
+from timeside.encoder import *
 
-decoder = timeside.decoder.FileDecoder('source.wav')
+decoder = timeside.decoder.FileDecoder('sweep.wav')
 grapher = timeside.grapher.Waveform()
-analyzer = timeside.analyzer.MaxLevel()
-encoder = timeside.encoder.Mp3Encoder('output.mp3')
+analyzer = timeside.analyzer.Level()
+encoder = timeside.encoder.Mp3Encoder('sweep.mp3')
 					</code></pre>
 					<p>then, the <i>magic</i> pipeline:</p>
 					<pre><code data-trim>
@@ -101,13 +104,15 @@ encoder = timeside.encoder.Mp3Encoder('output.mp3')
 					<p>get the results:</p>
 					<pre><code data-trim>
 grapher.render(output='image.png')
-print 'Level:', analyzer.result()
+print 'Level:', analyzer.results()
 					</code></pre>
 				</section>
 
 				<section>
 					<h2>Quick UI example</h2>
 					<iframe width='374' height='221' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://parisson.telemeta.org/archives/items/PRS_07_01_01/player/360x130'></iframe>
+					<br/><br/>
+					<p>Documentation : <a href="https://code.google.com/p/timeside/wiki/UiGuide">UiGuide</a></p>
 				</section>
 
 				<section>
@@ -335,7 +340,7 @@ class AnalyzerResultContainer(object):
         self.results += [analyzer_result]
 
     def to_xml(self, data_list = None):
-        if data_list == None: data_list = self.results
+        if data_list == None: data_lit = self.results
         import xml.dom.minidom
         doc = xml.dom.minidom.Document()
         root = doc.createElement('telemeta')
@@ -410,16 +415,100 @@ class AnalyzerResultContainer(object):
 					</code></pre>
 				</section>
 
+				<section>
+					<h2>Howto implement an analyzer plugin?</h2>
+					<p>start from this template</p>
+					<pre><code data-trim class="python">
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.analyzer.core import *
+from timeside.api import IValueAnalyzer
 
+import numpy
+
+class NewAnalyzer(Processor):
+    implements(IValueAnalyzer)
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(NewAnalyzer, self).setup(channels, samplerate, blocksize, totalframes)
+        # do setup things...
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "new_analyzer"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "New analyzer"
+
+    def process(self, frames, eod=False):
+        # do process things...
+        # and maybe store some results :
+        # self.results = ...
+
+        return frames, eod
+
+    def results(self):
+        container = AnalyzerResultContainer()
+
+        result = AnalyzerResult(id = self.id(), name = self.name(), unit = "something")
+        result.value = self.results
+        container.add_result(result)
+
+        # add other results in the container if needed...
+
+        return container
+
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Howto implement an analyzer plugin?</h2>
+					<ul>
+					<li>adapt the template</li>
+					<li>save the file in timeside/analyzer/
+					<br/>for instance : timeside/analyzer/new_analyzer.py</li>
+					<li>add it to timeside/analyzer/__init__.py like:</li>
+					</ul>
+					<pre><code data-trim class="python">
+from level import *
+from dc import *
+from aubio_temporal import *
+from aubio_pitch import *
+from aubio_mfcc import *
+from aubio_melenergy import *
+from aubio_specdesc import *
+from new_analyzer import * # << here
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Howto implement an analyzer plugin?</h2>
+					<p>then test it!
+					<pre><code data-trim class="python">
+from timeside.decoder import *
+from timeside.analyzer import *
+
+decoder = timeside.decoder.FileDecoder('sweep.wav')
+analyzer = timeside.analyzer.NewAnalyzer()
+
+(decoder | analyzer).run()
+
+analyzer.results()
+					</code></pre>
+				</section>
 
 
 
 				<section>
 					<h2>Links</h2>
 					<ul>
-						<li><a href="https://code.google.com/p/timeside/">The official website</a></li>
+						<li><a href="https://code.google.com/p/timeside/">Official website and wiki</a></li>
 						<li><a href="https://github.com/yomguy/TimeSide">Source code on GitHub</a></li>
-						<li><a href="http://telemeta.org">Telemeta</a></li>
+						<li><a href="http://telemeta.org">Telemeta project : web audio CMS</a></li>
+						<li><a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a></li>
 					</ul>
 				</section>
 
