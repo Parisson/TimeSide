@@ -68,7 +68,7 @@
 					<p>We just <b>need</b> a python library to:</p>
 					<br/>
 					<ul>
-					 <li>build a <a href="http://python.org" target="_blank">python</a> framework to do asynchronous audio processing</li>
+					 <li>build an open <a href="http://python.org" target="_blank">python</a> framework to do scalable asynchronous audio processing</li>
 					 <li>decode audio frames from <b>any</b> format into <a href="http://www.numpy.org/" target="_blank">numpy</a> arrays</li>
 					 <li>stream the frames in various processors and do <b>numpy data analyzing</b></li>
 					 <li>create various <b>image outputs</b> like waveforms, spectrograms, etc.. with numpy and PIL</li>
@@ -114,6 +114,28 @@ print 'Level:', analyzer.results()
 					<br/><br/>
 					<p>Documentation : <a href="https://code.google.com/p/timeside/wiki/UiGuide">UiGuide</a></p>
 				</section>
+
+
+				<section>
+					<h2>Changelog (dev branch, 05/13)</h2>
+					<ul>
+						<li>finally fix all decoder memory leaks! (piem)</li>
+						<li>fix ogg vorbis and flac encoders (piem)</li>
+						<li>include various <a href="http://aubio.org" target="_blank">aubio</a> analyzers thanks to piem such as : </li>
+						 <ul>
+						 	<li>pitch (f0)</li>
+						 	<li>onsets</li>
+						 	<li>tempo</li>
+						 	<li>various spectral descriptors like : hfc, complex, phase, specdiff, kl,
+                				mkl, specflux, centroid, slope, rolloff, spread, skewness, kurtosis, decrease</li>
+                		 </ul>
+                		<li>new AnalyzerResultContainer class with various i/o formats : xml, json, yaml, numpy (piem)</li>
+                		<li>more unit tests (piem)</li>
+                		<li>UI : rewind player after ending + various bugfixes (yomguy)
+                		<li>separate hosting for test samples (yomguy)</li>
+					</ul>
+				</section>
+
 
 				<section>
 					<h2>Install for production</h2>
@@ -500,14 +522,13 @@ analyzer.results()
 					</code></pre>
 				</section>
 
-
-
 				<section>
 					<h2>Links</h2>
 					<ul>
 						<li><a href="https://code.google.com/p/timeside/" target="_blank">Official website and wiki</a></li>
 						<li><a href="https://github.com/yomguy/TimeSide" target="_blank">Source code on GitHub</a></li>
 						<li><a href="http://telemeta.org" target="_blank">Telemeta project : web audio CMS</a></li>
+						<li><a href="http://aubio.org" target="_blank">Aubio project</a></li>
 						<li><a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License</a></li>
 					</ul>
 				</section>
