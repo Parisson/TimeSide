@@ -207,7 +207,7 @@ See LICENSE for more details.
 Development
 ===========
 
-For version >= 0.4 + aubio 0.4dev on Linux (Debian Stable 7.0)::
+For version >= 0.5 + aubio 0.4dev on Linux (Debian Stable 7.0)::
 
  sudo apt-get update
 
@@ -246,12 +246,14 @@ Official repositories:
  * https://github.com/yomguy/TimeSide
 
 
-API
-====
+API / Documentation
+====================
 
-See the *source code* and more documentation:
+The *source code*, the API and some slides:
 
  * http://code.google.com/p/timeside/
+ * https://github.com/yomguy/TimeSide
+ * http://files.parisson.com/api/timeside/
  * http://files.parisson.com/timeside/timeside/doc/timeside_slides.html
 
 
