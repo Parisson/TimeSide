@@ -146,19 +146,19 @@ Install
 
 TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on a Debian based system like Debian, Ubuntu, etc.. On Fedora and Red-Hat you might replace 'apt-get by 'yum', on Gentoo by 'emerge', or any other package manager you like::
 
- $ sudo apt-get update
- $ sudo apt-get install python python-pip python-setuptools python-gobject \
+ sudo apt-get update
+ sudo apt-get install python python-pip python-setuptools python-gobject \
                         python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
                         gstreamer0.10-plugins-ugly gobject-introspection python-mutagen
 
- $ sudo pip install timeside
+ sudo pip install timeside
 
 To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
- $ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
- $ sudo apt-get update
- $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
+ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
+ sudo apt-get update
+ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
 
 
 Batching
@@ -166,18 +166,18 @@ Batching
 
 TimeSide provides *ts-waveforms*, a waveform rendering batch script. Usage::
 
- $ ts-waveforms /path/to/media_dir /path/to/img_dir
+ ts-waveforms /path/to/media_dir /path/to/img_dir
 
 Please use absolute paths. For example::
 
- $ ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
+ ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
 
 To change the color scheme or the size of the waveforms, edit the script from the source and change the variables of the GrapherScheme object::
 
- $ git clone https://github.com/yomguy/TimeSide.git
- $ cd timeside/scripts/
- $ vi ts-waveforms
- $ ./ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
+ git clone https://github.com/yomguy/TimeSide.git
+ cd timeside/scripts/
+ vi ts-waveforms
+ ./ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
 
 
 Packages included
@@ -207,16 +207,59 @@ See LICENSE for more details.
 Development
 ===========
 
+For version >= 0.4 + aubio 0.4dev on Linux (Debian Stable 7.0)::
+
+ sudo apt-get update
+
+ sudo apt-get install python python-dev python-pip python-setuptools python-gobject \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
+                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+                        gstreamer0.10-plugins-ugly gobject-introspection python-numpy \
+                        python-yaml python-imaging python-simplejson python-mutagen
+                        libsndfile-dev libsamplerate-dev  libjack-jackd2-dev \
+                        liblash-compat-dev libfftw3-dev \
+                        docbook-to-man gcc git-core ipython \
+
+Install aubio module with "develop" branch::
+
+ git clone git://git.aubio.org/git/aubio/
+ cd aubio
+ git checkout develop
+ ./waf configure
+ ./waf build
+ sudo ./waf install
+ cd python
+ sudo python setup.py install
+
+Install temporary timeside module with "dev" branch::
+
+ git clone https://github.com/yomguy/TimeSide.git
+ cd TimeSide
+ git checkout dev
+ export PYTHONPATH=$PYTHONPATH:`pwd`
+ $tests/run_all_tests
+
+
+Official repositories:
+
  * http://code.google.com/p/timeside/
  * https://github.com/yomguy/TimeSide
+
+
+API
+====
+
+See the *source code* and more documentation:
+
+ * http://code.google.com/p/timeside/
+ * http://files.parisson.com/timeside/timeside/doc/timeside_slides.html
 
 
 Copyrights
 ==========
 
- * Copyright (c) 2006, 2012 Parisson SARL
- * Copyright (c) 2006, 2012 Guillaume Pellerin
+ * Copyright (c) 2006, 2013 Parisson SARL
+ * Copyright (c) 2006, 2013 Guillaume Pellerin
  * Copyright (c) 2010, 2012 Paul Brossier
  * Copyright (c) 2006, 2010 Samalyse SARL
-
 
