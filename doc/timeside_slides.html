@@ -139,22 +139,7 @@ print 'Level:', analyzer.results()
 
 				<section>
 					<h2>Install for production</h2>
-					<p>on Linux (Debian)</p>
-					<pre><code data-trim class="bash">
-sudo apt-get update
-
-sudo apt-get install python python-pip python-setuptools python-gobject \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
-                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gstreamer0.10-plugins-ugly gobject-introspection python-mutagen
-
-sudo pip install timeside
- 					</code></pre>
-				</section>
-
-				<section>
-					<h2>Install for development 1/2</h2>
-					<p>on Linux (Debian)</p>
+					<p>version 0.3.2 on Linux (Debian Stable 7.0)</p>
 					<pre><code data-trim class="bash">
 sudo apt-get update
 
@@ -162,8 +147,24 @@ sudo apt-get install python python-pip python-setuptools python-gobject \
                         python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
                         gstreamer0.10-plugins-ugly gobject-introspection \
-                        libsndfile-dev libsamplerate-dev docbook-to-man \
-                        liblash-dev libfftw3-dev gcc git-core ipython python-mutagen
+                        python-numpy python-mutagen
+
+sudo pip install timeside
+ 					</code></pre>
+				</section>
+
+				<section>
+					<h2>Install for development 1/2</h2>
+					<p>version >= 0.4 on Linux (Debian Stable 7.0)</p>
+					<pre><code data-trim class="bash">
+sudo apt-get update
+
+sudo apt-get install python python-dev python-pip python-setuptools python-gobject \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
+                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+                        gstreamer0.10-plugins-ugly gobject-introspection python-numpy \
+                        libsndfile-dev libsamplerate-dev docbook-to-man libjack-jackd2-dev \
+                        liblash-compat-dev libfftw3-dev gcc git-core ipython python-mutagen \
                     </code></pre>
 
                     <p>install <a href="http://aubio.org" target="_blank">aubio</a> with "develop" branch</p>
