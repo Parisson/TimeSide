@@ -174,7 +174,7 @@ Please use absolute paths. For example::
 
 To change the color scheme or the size of the waveforms, edit the script from the source and change the variables of the GrapherScheme object::
 
- $ git clone git://github.com/yomguy/TimeSide.git
+ $ git clone https://github.com/yomguy/TimeSide.git
  $ cd timeside/scripts/
  $ vi ts-waveforms
  $ ./ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
