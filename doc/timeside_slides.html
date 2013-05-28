@@ -144,9 +144,9 @@ print 'Level:', analyzer.results()
 sudo apt-get update
 
 sudo apt-get install python python-pip python-setuptools python-gobject \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gobject-introspection
+                        gstreamer0.10-plugins-ugly gobject-introspection python-mutagen
 
 sudo pip install timeside
  					</code></pre>
@@ -159,10 +159,11 @@ sudo pip install timeside
 sudo apt-get update
 
 sudo apt-get install python python-pip python-setuptools python-gobject \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gobject-introspection libsndfile-dev libsamplerate-dev docbook-to-man \
-                        liblash-dev libfftw3-dev gcc git-core ipython
+                        gstreamer0.10-plugins-ugly gobject-introspection \
+                        libsndfile-dev libsamplerate-dev docbook-to-man \
+                        liblash-dev libfftw3-dev gcc git-core ipython python-mutagen
                     </code></pre>
 
                     <p>install <a href="http://aubio.org" target="_blank">aubio</a> with "develop" branch</p>

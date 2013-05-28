@@ -148,9 +148,9 @@ TimeSide needs some other python modules to run. The following methods explain h
 
  $ sudo apt-get update
  $ sudo apt-get install python python-pip python-setuptools python-gobject \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gobject-introspection
+                        gstreamer0.10-plugins-ugly gobject-introspection python-mutagen
 
  $ sudo pip install timeside
 
