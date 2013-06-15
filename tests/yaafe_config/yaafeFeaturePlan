@@ -1,0 +1,3 @@
+mfcc: MFCC blockSize=1024 stepSize=1024 CepsNbCoeffs=11
+mfcc_d1: MFCC blockSize=1024 stepSize=1024 CepsNbCoeffs=11 > Derivate DOrder=1
+mfcc_d2: MFCC blockSize=1024 stepSize=1024 CepsNbCoeffs=11 > Derivate DOrder=2
