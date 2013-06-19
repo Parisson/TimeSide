@@ -207,6 +207,10 @@ class IValueAnalyzer(IAnalyzer):
         """Return the final result of the analysis performed over the data passed by
         repeatedly calling process()"""
 
+    def results():
+        """Return the final results of the analysis performed over the data passed by
+        repeatedly calling process()"""
+
     def __str__(self):
         """Return a human readable string containing both result and unit
         ('5.30dB', '4.2s', etc...)"""

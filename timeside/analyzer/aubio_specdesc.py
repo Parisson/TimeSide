@@ -88,4 +88,4 @@ class AubioSpecdesc(Processor):
 
             container.add_result([specdesc, specdesc_mean, specdesc_median])
 
-        return AnalyzerResultContainer()
+        return container

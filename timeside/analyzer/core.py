@@ -79,7 +79,9 @@ class AnalyzerResult(dict):
 
 class AnalyzerResultContainer(object):
 
-    def __init__(self, analyzer_results = []):
+    def __init__(self, analyzer_results=None):
+        if analyzer_results is None:
+            analyzer_results = []
         self.results = analyzer_results
 
     def __getitem__(self, i):

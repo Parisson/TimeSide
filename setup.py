@@ -32,6 +32,7 @@ setup(
         'numpy>=1.6.2',
         'mutagen',
         'pil',
+        'scipy',
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
