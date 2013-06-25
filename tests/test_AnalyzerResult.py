@@ -137,6 +137,18 @@ class TestAnalyzerResultNumpy(TestAnalyzerResult):
         for i in range(len(d_numpy)):
             self.assertEquals(d_numpy[i], results[i])
 
+class TestAnalyzerResultHdf5(TestAnalyzerResult):
+    """ test AnalyzerResult hdf5 serialize """
+
+    def tearDown(self):
+        results = AnalyzerResultContainer([self.result])
+        results.to_hdf5('/tmp/t.h5')
+        res_hdf5 = results.from_hdf5('/tmp/t.h5')
+        if verbose:
+            print '%15s' % 'from hdf5:',
+            print res_hdf5
+        self.assertEquals(res_hdf5, results)
+
 class TestAnalyzerResultYaml(TestAnalyzerResult):
     """ test AnalyzerResult yaml serialize """
     def tearDown(self):
