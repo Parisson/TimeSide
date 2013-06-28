@@ -35,6 +35,8 @@ News
 0.4.4
 
  * Only setup bugfixes
+ * Last compatible version with Python 2.6
+ * Next version 0.5 will integrate serious new analyzer features (aubio, yaafe and more)
 
 0.4.3
 
@@ -152,7 +154,7 @@ TimeSide needs some other python modules to run. The following methods explain h
 
  $ sudo apt-get update
  $ sudo apt-get install python python-pip python-setuptools python-gobject \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.0-gstreamer-0.10 \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
                         gobject-introspection
 
