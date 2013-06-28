@@ -32,6 +32,10 @@ Here is a schematic diagram of the TimeSide engine architecture:
 News
 =====
 
+0.4.4
+
+ * Only setup bugfixes
+
 0.4.3
 
  * finally fix decoder leaks and de-synchronizations (thanks to piem)
