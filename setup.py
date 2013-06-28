@@ -33,6 +33,7 @@ setup(
         'mutagen',
         'pil',
         'scipy',
+        'hf5py',
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
