@@ -3,6 +3,8 @@
 from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.level import Level
+from timeside.analyzer import AnalyzerResult, AnalyzerResultContainer
+from timeside.analyzer import AnalyzerAttributes
 
 class TestAnalyzerLevel(TestCase):
 
@@ -12,14 +14,40 @@ class TestAnalyzerLevel(TestCase):
     def testOnSweep(self):
         "runs on sweep"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "sweep.wav")
-        self.expected = [{"value": -6.021, "name": "Max level", "unit": "dBFS", "id": "max_level"},
-                {"value": -9.856, "name": "RMS level", "unit": "dBFS", "id": "rms_level"}]
-
+               
+        # Max level
+        attr = AnalyzerAttributes(id="max_level",
+                                  name="Max level",
+                                  unit = "dBFS",
+                                  sampleRate=44100) 
+        max_level = AnalyzerResult(-6.021, attr)
+        
+        # RMS level
+        attr = AnalyzerAttributes(id="rms_level",
+                                  name="RMS level",
+                                  unit="dBFS",
+                                  sampleRate=44100)
+        rms_level = AnalyzerResult(-9.856, attr)                          
+        self.expected = AnalyzerResultContainer([max_level,rms_level])
+        
     def testOnGuitar(self):
         "runs on guitar"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "guitar.wav")
-        self.expected = [{"value": -4.258, "name": "Max level", "unit": "dBFS", "id": "max_level"},
-                {"value": -21.945, "name": "RMS level", "unit": "dBFS", "id": "rms_level"}]
+               
+        # Max level
+        attr = AnalyzerAttributes(id="max_level",
+                                  name="Max level",
+                                  unit = "dBFS",
+                                  sampleRate=44100) 
+        max_level = AnalyzerResult(-4.258, attr)
+        
+        # RMS level
+        attr = AnalyzerAttributes(id="rms_level",
+                                  name="RMS level",
+                                  unit="dBFS",
+                                  sampleRate=44100)
+        rms_level = AnalyzerResult(-21.945, attr)                          
+        self.expected = AnalyzerResultContainer([max_level,rms_level])
 
     def tearDown(self):
         decoder = FileDecoder(self.source)

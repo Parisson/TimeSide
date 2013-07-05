@@ -48,6 +48,16 @@ class MeanDCShift(Processor):
         return frames, eod
 
     def results(self):
-        result = AnalyzerResult(id = "mean_dc_shift", name = "Mean DC shift", unit = "%")
-        result.value = numpy.round(100*numpy.mean(self.values),3)
-        return AnalyzerResultContainer([result])
+        result = AnalyzerResult()
+        #  Set attributes
+        #  FIXME : blockSize and stepSize are not appropriate here
+        result.attributes = AnalyzerAttributes(id="mean_dc_shift",
+                                               name = "Mean DC shift",
+                                               unit = "%",
+                                               sampleRate=self.samplerate(),
+                                               blockSize=None,
+                                               stepSize=None)
+                                               
+        # Set Data
+        result.data = numpy.round(numpy.mean(100*self.values),3)
+        return AnalyzerResultContainer(result)

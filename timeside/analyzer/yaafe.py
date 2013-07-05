@@ -81,18 +81,26 @@ class Yaafe(Processor):
     def results(self):
         # Get back current container
         container = AnalyzerResultContainer()
-        # Get feature extraction results from yaafe        
+        # Get feature extraction results from yaafe
+        map_keys = {'sampleRate': 'sampleRate',
+                    'frameLength': 'blockSize',
+                    'sampleStep': 'stepSize', 
+                    'parameters': 'parameters', 
+                    }
         featNames = self.yaafe_engine.getOutputs().keys()
         for featName in featNames:
+            # Map Yaafe attributes into AnalyzerResults dict
+            res_dict = {map_keys[name]: self.yaafe_engine.getOutputs()['mfcc'][name] for name in map_keys.keys()}
             # Define ID fields            
-            id = 'yaafe_' + featName
-            name = 'Yaafe ' + featName
-            unit = ''
+            res_dict['id'] = 'yaafe_' + featName
+            res_dict['name'] = 'Yaafe ' + featName
+            res_dict['unit'] = ''
+            # create AnalyzerResult and set its attributes
+            result = AnalyzerResult(attributes=res_dict)
             # Get results from Yaafe engine
-            result = AnalyzerResult(id = id, name = name, unit = unit)
-            result.value = self.yaafe_engine.readOutput(featName)  # Read Yaafe Results       
+            result.data = self.yaafe_engine.readOutput(featName)  # Read Yaafe Results       
             # Store results in Container
-            if len(result.value):
+            if len(result.data):
                 container.add_result(result)
         
         return container

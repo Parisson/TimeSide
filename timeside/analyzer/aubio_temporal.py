@@ -24,6 +24,7 @@ from timeside.analyzer.core import *
 from timeside.api import IAnalyzer
 from aubio import onset, tempo
 
+
 class AubioTemporal(Processor):
     implements(IAnalyzer)
 
@@ -66,29 +67,70 @@ class AubioTemporal(Processor):
         return frames, eod
 
     def results(self):
-        from numpy import mean, median
+        # Get common attributes
+        commonAttr = dict(sampleRate=self.samplerate(),
+                          blockSize=self.win_s,
+                          stepSize=self.hop_s)
+       # FIXME : Onsets, beat and onset rate are not frame based Results
+        # sampleRate, blockSize, etc. are not appropriate here
+        # Those might be some kind of "AnalyzerSegmentResults"
 
-        onsets = AnalyzerResult(id = "aubio_onset", name = "onsets (aubio)", unit = "s")
-        onsets.value = self.onsets
+        #---------------------------------
+        #  Onsets
+        #---------------------------------
+        onsets = AnalyzerResult()
+        # Set attributes
+        onsetsAttr = dict(id="aubio_onset",
+                          name="onsets (aubio)",
+                          unit="s")
+        onsets.attributes = dict(onsetsAttr.items() + commonAttr.items())
+        # Set Data
+        onsets.data = self.onsets
 
-        onsetrate_mean = AnalyzerResult(id = "aubio_onset_rate_mean", name = "onset rate (aubio)", unit = "bpm")
-        onsetrate_median = AnalyzerResult(id = "aubio_onset_rate_median", name = "onset rate (median) (aubio)", unit = "bpm")
+        #---------------------------------
+        #  Onset Rate
+        #---------------------------------
+        onsetRate = AnalyzerResult()
+        # Set attributes
+        onsetRateAttr = dict(id="aubio_onset_rate",
+                             name="onset rate (aubio)",
+                             unit="bpm")
+        onsetRate.attributes = dict(onsetRateAttr.items() + commonAttr.items())
+        # Set Data
         if len(self.onsets) > 1:
-            periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
-            onsetrate_mean.value = mean (periods)
-            onsetrate_median.value = median (periods)
+            #periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
+            periods = 60. / numpy.diff(self.onsets)
+            onsetRate.data = periods
         else:
-            onsetrate_mean.value = 0
-            onsetrate_median.value = 0
+            onsetRate.data = []
 
-        beats = AnalyzerResult(id = "aubio_beat", name = "beats (aubio)", unit = "s")
-        beats.value = self.beats
+        #---------------------------------
+        #  Beats
+        #---------------------------------
+        beats = AnalyzerResult()
+        # Set attributes
+        beatsAttr = dict(id="aubio_beat",
+                        name="beats (aubio)",
+                        unit="s")
+        beats.attributes = dict(beatsAttr.items() + commonAttr.items())
+        #  Set Data
+        beats.data = self.beats
 
-        bpm = AnalyzerResult(id = "aubio_bpm", name = "bpm (aubio)", unit = "bpm")
-        if len(self.beats) > 2:
-            periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
-            bpm.value = median (periods)
+        #---------------------------------
+        #  BPM
+        #---------------------------------
+        bpm = AnalyzerResult()
+        # Set attributes
+        bpmAttr = dict(id="aubio_bpm",
+                       name="bpm (aubio)",
+                       unit="bpm")
+        bpm.attributes = dict(bpmAttr.items() + commonAttr.items())
+        #  Set Data
+        if len(self.beats) > 1:
+            #periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
+            periods = 60. / numpy.diff(self.beats)
+            bpm.data = periods
         else:
-            bpm.value = 0
+            bpm.data = []
 
-        return AnalyzerResultContainer([onsets, onsetrate_mean, onsetrate_median, beats, bpm])
+        return AnalyzerResultContainer([onsets, onsetRate, beats, bpm])

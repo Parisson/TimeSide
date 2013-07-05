@@ -53,7 +53,7 @@ class AubioSpecdesc(Processor):
     @staticmethod
     @interfacedoc
     def name():
-        return "Mel Energy analysis (aubio)"
+        return "Spectral Descriptor (aubio)"
 
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.hop_s):
@@ -65,27 +65,29 @@ class AubioSpecdesc(Processor):
     def results(self):
 
         container = AnalyzerResultContainer()
-
+       # Get common attributes
+        sampleRate = self.samplerate()
+        blockSize = self.win_s
+        stepSize = self.hop_s
+        unit = ""
+        # For each method store results in container
         for method in self.methods:
+            specdesc = AnalyzerResult()
+            # Set attributes
             id = '_'.join(["aubio_specdesc", method])
             name = ' '.join(["spectral descriptor", method, "(aubio)"])
-            unit = ""
+            
 
-            values = numpy.array(self.specdesc_results[method])
+            specdesc.attributes = AnalyzerAttributes(id = id,
+                                                  name = name,
+                                                  unit = unit,
+                                                  sampleRate = sampleRate,
+                                                  blockSize = blockSize,
+                                                  stepSize = stepSize) 
+                                                  
+            # Set Data                                         
+            specdesc.data = numpy.array(self.specdesc_results[method])
 
-            specdesc = AnalyzerResult(id = id, name = name, unit = unit)
-            specdesc.value = values
-
-            mean_id = '_'.join([id, 'mean'])
-            mean_name = ' '.join(["spectral descriptor", method, "mean", "(aubio)"])
-            specdesc_mean = AnalyzerResult(id = mean_id, name = mean_name, unit = "")
-            specdesc_mean.value = numpy.mean(values,axis=0)
-
-            median_id = '_'.join([id, 'median'])
-            median_name = ' '.join(["spectral descriptor", method, "median", "(aubio)"])
-            specdesc_median = AnalyzerResult(id = median_id , name = median_name , unit = "")
-            specdesc_median.value = numpy.median(values,axis=0)
-
-            container.add_result([specdesc, specdesc_mean, specdesc_median])
+            container.add_result(specdesc)
 
         return container
