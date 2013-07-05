@@ -62,18 +62,24 @@ class AubioMelEnergy(Processor):
     def results(self):
 
         container = AnalyzerResultContainer()
-
-        melenergy = AnalyzerResult(id = "aubio_melenergy", name = "melenergy (aubio)", unit = "")
-        melenergy.value = self.melenergy_results
+        melenergy = AnalyzerResult()
+              
+        # Get attributes
+        sampleRate = self.samplerate()
+        blockSize = self.win_s
+        stepSize = self.hop_s
+        parameters = dict(n_filters= self.n_filters,
+                          n_coeffs=  self.n_coeffs)
+        # Set attributes
+        melenergy.attributes = AnalyzerAttributes(id="aubio_melenergy",
+                                                  name="melenergy (aubio)",
+                                                  unit='',
+                                                  sampleRate = sampleRate,
+                                                  blockSize = blockSize,
+                                                  stepSize = stepSize,
+                                                  parameters = parameters)                         
+        # Set Data
+        melenergy.data = self.melenergy_results
         container.add_result(melenergy)
-
-        melenergy_mean = AnalyzerResult(id = "aubio_melenergy_mean", name = "melenergy mean (aubio)", unit = "")
-        melenergy_mean.value = numpy.mean(self.melenergy_results,axis=0)
-        container.add_result(melenergy_mean)
-
-        melenergy_median = AnalyzerResult(id = "aubio_melenergy_median", name = "melenergy median (aubio)", unit = "")
-        melenergy_median.value = numpy.median(self.melenergy_results,axis=0)
-        container.add_result(melenergy_median)
-
         return container
 

@@ -63,14 +63,20 @@ class AubioMfcc(Processor):
         return frames, eod
 
     def results(self):
-
-        mfcc = AnalyzerResult(id = "aubio_mfcc", name = "mfcc (aubio)", unit = "")
-        mfcc.value = [list(line) for line in self.mfcc_results]
-
-        mfcc_mean = AnalyzerResult(id = "aubio_mfcc_mean", name = "mfcc mean (aubio)", unit = "")
-        mfcc_mean.value = list(self.mfcc_results.mean(axis=0))
-
-        mfcc_median = AnalyzerResult(id = "aubio_mfcc_median", name = "mfcc median (aubio)", unit = "")
-        mfcc_median.value = list(numpy.median(self.mfcc_results,axis=0))
-
-        return AnalyzerResultContainer([mfcc, mfcc_median, mfcc_mean])
+        # MFCC
+        mfcc = AnalyzerResult()
+        sampleRate = self.samplerate()
+        blockSize = self.win_s
+        stepSize = self.hop_s
+        parameters = dict(n_filters= self.n_filters,
+                          n_coeffs=  self.n_coeffs)
+        mfcc.attributes = AnalyzerAttributes(id = "aubio_mfcc", 
+                                             name = "mfcc (aubio)",
+                                             unit = "",
+                                             sampleRate = sampleRate,
+                                             blockSize = blockSize,
+                                             stepSize = stepSize,
+                                             parameters = parameters)
+        mfcc.data = [list(line) for line in self.mfcc_results] # TODO : type ? list list ?
+        
+        return AnalyzerResultContainer(mfcc)

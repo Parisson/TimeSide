@@ -21,7 +21,7 @@
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
 
-from utils import *
+from utils import downsample_blocking
 
 import numpy
 numpy_data_types = [
@@ -42,47 +42,182 @@ numpy_data_types = [
     #'complex128',',
     #'complex64',
     ]
-numpy_data_types = map(lambda x: getattr(numpy,x), numpy_data_types)
+numpy_data_types = map(lambda x: getattr(numpy, x), numpy_data_types)
 numpy_data_types += [numpy.ndarray]
 
-class AnalyzerResult(dict):
 
-    def __init__(self, id = "", name = "", unit = "s", value = None):
-        self['id'] = id
-        self['name'] = name
-        self['unit'] = unit
-        self['value'] = value
+class AnalyzerAttributes(object):
+    """
+    Object that contains the attributes and parameters of an analyzer process
+    stucture inspired by [1]
+    [1] : http://www.saltycrane.com/blog/2012/08/python-data-object-motivated-desire-mutable-namedtuple-default-values/
+
+    Attributes
+    ----------
+    id : string
+    name : string
+    unit : string
+    sampleRate : int or float
+    blockSize : int
+    stepSize : int
+    parameters : dict
+
+    Methods
+    -------
+    asdict()
+        Return a dictionnary representation of the AnalyzerAttributes
+    """
+    from collections import OrderedDict
+    # Define default values as an OrderDict
+    # in order to keep the order of the keys for display
+    _default_value = OrderedDict([('id', ''),
+                                  ('name', ''),
+                                  ('unit', ''),
+                                  ('sampleRate', None),
+                                  ('blockSize', None),
+                                  ('stepSize', None),
+                                  ('parameters', {})
+                                  ])
+    # TODO : rajouter
+    # - version timeside
+    # - date import datetime format iso
+    # - filename (audio)
+    # - (long) description --> à mettre dans l'API Processor
+
+    def __init__(self, **kwargs):
+        '''
+        Construct an AnalyzerAttributes object
+
+        AnalyzerAttributes()
+
+        Parameters
+        ----------
+        id : string
+        name : string
+        unit : string
+        sampleRate : int or float
+        blockSize : int
+        stepSize : int
+        parameters : dict
+
+        Returns
+        -------
+        AnalyzerAttributes
+        '''
+        # Set Default values
+        for key, value in self._default_value.items():
+            setattr(self, key, value)
+
+        # Set attributes passed in as arguments
+        #for k, v in zip(self._default_value.keys(), args):
+        #    setattr(self, k, v)
+        #    print 'args'
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def __setattr__(self, name, value):
-        # make a numpy.array out of list
-        if type(value) is list:
-            value = numpy.array(value)
-        # serialize using numpy
-        if type(value) in numpy_data_types:
-            value = value.tolist()
-        if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
-            raise TypeError, 'AnalyzerResult can not accept type %s' % type(value)
-        if name == 'value': self['value'] = value
+        if name not in self._default_value.keys():
+            raise AttributeError("%s is not a valid attribute in %s" %
+            (name, self.__class__.__name__))
+        super(AnalyzerAttributes, self).__setattr__(name, value)
+
+    def asdict(self):
+        return dict((att, getattr(self, att))
+        for att in self._default_value.keys())
+
+    def __repr__(self):
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join('{}={}'.format(
+            att, repr(getattr(self, att)))
+            for att in self._default_value.keys()))
+            
+    def __eq__(self,other):
+        return (isinstance(other, self.__class__)
+            and self.asdict() == other.asdict())
+
+
+class AnalyzerResult(object):
+    """
+    Object that contains results return by an analyzer process
+    Attributes :
+        - data :
+        - attributes : an AnalyzerAttributes object containing the attributes
+    """
+    def __init__(self, data=None, attributes=None):
+        # Define Attributes
+        if attributes is None:
+            self.attributes = AnalyzerAttributes()
+        else:
+            self.attributes = attributes
+
+        # Define Data
+        if data is None:
+            self.data = []
+        else:
+            self.data = data
+
+    def __setattr__(self, name, value):
+        # Set Data with the proper type
+        if name == 'data':
+            if value is None:
+                value = []
+            # make a numpy.array out of list
+            if type(value) is list:
+                value = numpy.array(value)
+            # serialize using numpy
+            if type(value) in numpy_data_types:
+                value = value.tolist()
+            if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
+                raise TypeError('AnalyzerResult can not accept type %s' %
+                type(value))
+        elif name == 'attributes':
+            if not isinstance(value, AnalyzerAttributes):
+                value = AnalyzerAttributes(**value)
+        else:
+            raise AttributeError("%s is not a valid attribute in %s" %
+            (name, self.__class__.__name__))
+
         return super(AnalyzerResult, self).__setattr__(name, value)
 
-    def __getattr__(self, name):
-        if name in ['id', 'name', 'unit', 'value']:
-            return self[name]
-        return super(AnalyzerResult, self).__getattr__(name)
+    @property
+    def properties(self):
+        prop = dict(mean=numpy.mean(self.data, axis=0),
+                     std=numpy.std(self.data, axis=0, ddof=1),
+                     median=numpy.median(self.data, axis=0),
+                     max=numpy.max(self.data, axis=0),
+                     min=numpy.min(self.data, axis=0)
+                     )
+                     # ajouter size
+        return(prop)
+#    def __getattr__(self, name):
+#        if name in ['id', 'name', 'unit', 'value', 'attributes']:
+#            return self[name]
+#        return super(AnalyzerResult, self).__getattr__(name)
+
+    def asdict(self):
+        return(dict(data=self.data, attributes=self.attributes.asdict()))
 
     def to_json(self):
         import simplejson as json
-        data_dict = {}
-        for a in ['name', 'id', 'unit', 'value']:
-            data_dict[a] = self[a]
-        return json.dumps(data_dict)
+        return json.dumps(self.asdict())
+
+    def __repr__(self):
+        return self.to_json()
+    
+    def __eq__(self,other):
+        return (isinstance(other, self.__class__)
+            and self.asdict() == other.asdict())
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 class AnalyzerResultContainer(object):
 
     def __init__(self, analyzer_results=None):
-        if analyzer_results is None:
-            analyzer_results = []
-        self.results = analyzer_results
+        self.results = []
+        if analyzer_results is not None:
+            self.add_result(analyzer_results)
 
     def __getitem__(self, i):
         return self.results[i]
@@ -91,91 +226,169 @@ class AnalyzerResultContainer(object):
         return len(self.results)
 
     def __repr__(self):
-        return self.to_json()
+        return [res.asdict() for res in self.results]
 
-    def __eq__(self, that):
-        if hasattr(that, 'results'):
-            that = that.results
-        for a, b in zip(self.results, that):
-            if a != b: return False
+    def __eq__(self, other):
+        if hasattr(other, 'results'):
+            other = other.results
+        for a, b in zip(self.results, other):
+            if a != b:
+                return False
         return True
+   
+    def __ne__(self, other):
+        return not self.__eq__(other)     
 
     def add_result(self, analyzer_result):
         if type(analyzer_result) == list:
-            for a in analyzer_result:
-                self.add_result(a)
+            for res in analyzer_result:
+                self.add_result(res)
             return
         if type(analyzer_result) != AnalyzerResult:
             raise TypeError('only AnalyzerResult can be added')
         self.results += [analyzer_result]
 
-    def to_xml(self, data_list = None):
-        if data_list == None: data_list = self.results
-        import xml.dom.minidom
-        doc = xml.dom.minidom.Document()
-        root = doc.createElement('telemeta')
-        doc.appendChild(root)
-        for data in data_list:
-            node = doc.createElement('data')
-            for a in ['name', 'id', 'unit']:
-                node.setAttribute(a, str(data[a]) )
-            if type(data['value']) in [str, unicode]:
-                node.setAttribute('value', data['value'] )
+    def to_xml(self, data_list=None):
+        if data_list is None:
+            data_list = self.results
+        import xml.etree.ElementTree as ET
+        # TODO : cf. telemeta util
+        root = ET.Element('timeside')
+
+        for result in data_list:
+            res_node = ET.SubElement(root, 'result')
+            res_node.attrib = {'name': result.attributes.name,
+                               'id': result.attributes.id}
+            # Serialize Data
+            data_node = ET.SubElement(res_node, 'data')
+            if type(result.data) in [str, unicode]:
+                data_node.text = result.data
             else:
-                node.setAttribute('value', repr(data['value']) )
-            root.appendChild(node)
-        return xml.dom.minidom.Document.toprettyxml(doc)
+                data_node.text = repr(result.data)
+            # Serialize Attributes
+            attr_node = ET.SubElement(res_node, 'attributes')
+            for (name, val) in result.attributes.asdict().items():
+                # TODO reorder keys
+                child = ET.SubElement(attr_node, name)
+                if name == 'parameters':
+                    for (par_key, par_val) in val.items():
+                        par_child = ET.SubElement(child, par_key)
+                        par_child.text = repr(par_val)
+                else:
+                    child.text = repr(val)
+
+        #tree = ET.ElementTree(root)
+        return ET.tostring(root, encoding="utf-8", method="xml")
+#        import xml.dom.minidom
+#        doc = xml.dom.minidom.Document()
+#
+#        root = doc.createElement('telemeta')
+#        doc.appendChild(root)
+#        for result in data_list:
+#            node = doc.createElement('dataset')
+#            # Serialize Data
+#            if type(result.data) in [str, unicode]:
+#                node.setAttribute('data', result.data )
+#            else:
+#                node.setAttribute('data', repr(result.data))
+#            # Serialize Attributes
+#
+#            node_attr = doc.createElement('attributes')
+#            for name in result.attributes._default_value.keys():
+#                node_attr.setAttribute(name, str(result.attributes.name) )
+#            node.appendChild(node_attr)
+#            root.appendChild(node)
+#        return xml.dom.minidom.Document.toprettyxml(doc)
 
     def from_xml(self, xml_string):
-        import xml.dom.minidom
+        import xml.etree.ElementTree as ET
         import ast
-        doc = xml.dom.minidom.parseString(xml_string)
-        root = doc.getElementsByTagName('telemeta')[0]
-        results = []
-        for child in root.childNodes:
-            if child.nodeType != child.ELEMENT_NODE: continue
-            child_dict = {}
-            for a in ['name', 'id', 'unit']:
-                child_dict[a] = str(child.getAttribute(a))
-            try:
-                child_dict['value'] = ast.literal_eval(child.getAttribute('value'))
-            except:
-                child_dict['value'] = child.getAttribute('value')
-            results.append(child_dict)
-        return results
 
-    def to_json(self, data_list = None):
-        if data_list == None: data_list = self.results
+        results = AnalyzerResultContainer()
+        # TODO : from file
+        #tree = ET.parse(xml_file)
+        #root = tree.getroot()
+        root = ET.fromstring(xml_string)
+        for result_child in root.iter('result'):
+            result = AnalyzerResult()
+            # Get data
+            try:
+                result.data = ast.literal_eval(result_child.find('data').text)
+            except:
+                result.data = result_child.find('data').text
+            
+            # Get attributes
+            for attr_child in result_child.find('attributes'):
+                name = attr_child.tag
+                if name == 'parameters':
+                    parameters = dict()
+                    for param_child in attr_child:
+                        par_key = param_child.tag
+                        par_val = param_child.text
+                        parameters[par_key] = ast.literal_eval(par_val)
+                    value = parameters
+                else:
+                    value = ast.literal_eval(attr_child.text)
+                result.attributes.__setattr__(name, value)
+            results.add_result(result)
+
+        return results
+#
+#
+#        import xml.dom.minidom
+#        import ast
+#        doc = xml.dom.minidom.parseString(xml_string)
+#        root = doc.getElementsByTagName('telemeta')[0]
+#        results = []
+#        for child in root.childNodes:
+#            if child.nodeType != child.ELEMENT_NODE: continue
+#            result = AnalyzerResult()
+#            for a in ['name', 'id', 'unit']:
+#                child_dict[a] = str(child.getAttribute(a))
+#            # Get Data
+#            try:
+#                result.data = ast.literal_eval(child.getAttribute('data'))
+#            except:
+#                results.data = child.getAttribute('data')
+#            # Get Attributes
+#            node_attr = root.childNodes
+#            results.append(results)
+#        return results
+
+    def to_json(self):
+        #if data_list == None: data_list = self.results
         import simplejson as json
-        data_strings = []
-        for data in data_list:
-            data_dict = {}
-            for a in ['name', 'id', 'unit', 'value']:
-                data_dict[a] = data[a]
-            data_strings.append(data_dict)
-        return json.dumps(data_strings)
+        return json.dumps([res.asdict() for res in self])
 
     def from_json(self, json_str):
         import simplejson as json
-        return json.loads(json_str)
+        results_json = json.loads(json_str)
+        results = AnalyzerResultContainer()
+        for res_json in results_json:
+            res = AnalyzerResult(data=res_json['data'],
+                                 attributes=res_json['attributes'])
+            results.add_result(res)
+        return results
 
-    def to_yaml(self, data_list = None):
-        if data_list == None: data_list = self.results
+    def to_yaml(self):
+        #if data_list == None: data_list = self.results
         import yaml
-        data_strings = []
-        for f in data_list:
-            f_dict = {}
-            for a in f.keys():
-                f_dict[a] = f[a]
-            data_strings.append(f_dict)
-        return yaml.dump(data_strings)
+        return yaml.dump([res.asdict() for res in self])
 
     def from_yaml(self, yaml_str):
         import yaml
-        return yaml.load(yaml_str)
 
-    def to_numpy(self, output_file, data_list = None):
-        if data_list == None: data_list = self.results
+        results_yaml = yaml.load(yaml_str)
+        results = AnalyzerResultContainer()
+        for res_yaml in results_yaml:
+            res = AnalyzerResult(data=res_yaml['data'],
+                                 attributes=res_yaml['attributes'])
+            results.add_result(res)
+        return results
+
+    def to_numpy(self, output_file, data_list=None):
+        if data_list is None:
+            data_list = self.results
         import numpy
         numpy.save(output_file, data_list)
 
@@ -183,11 +396,12 @@ class AnalyzerResultContainer(object):
         import numpy
         return numpy.load(input_file)
 
-    def to_hdf5(self, output_file, data_list = None):
-        if data_list == None: data_list = self.results
-        
+    def to_hdf5(self, output_file, data_list=None):
+        if data_list is None:
+            data_list = self.results
+
         import h5py
-        
+
         # Open HDF5 file and save dataset
         # TODO : Check self.results format
         # as it asumes 'id', 'name', 'value' and 'units' keys
@@ -200,13 +414,13 @@ class AnalyzerResultContainer(object):
                 dset.attrs["unit"] = data['unit']
                 dset.attrs["name"] = data['name']
         except TypeError:
-            print('TypeError for HDF5 serialization')
-        finally:        
-            h5_file.close()  # Close the HDF5 file 
+            pass
+        finally:
+            h5_file.close()  # Close the HDF5 file
 
     def from_hdf5(self, input_file):
         import h5py
-        
+
         # Open HDF5 file for reading and get results
         h5_file = h5py.File(input_file, 'r')
         data_list = AnalyzerResultContainer()
@@ -217,27 +431,27 @@ class AnalyzerResultContainer(object):
                 # Read Attributes
                 unit = dset.attrs['unit']
                 name = dset.attrs['name']
-                # Create new AnalyzerResult        
-                data = AnalyzerResult(id = id, name = name, unit = unit)
-                
+                # Create new AnalyzerResult
+                data = AnalyzerResult(id=id, name=name, unit=unit)
+
                 # Load value from the hdf5 dataset and store in data
-                # FIXME : the following conditional statement is to prevent 
+                # FIXME : the following conditional statement is to prevent
                 # reading an empty dataset.
                 # see : https://github.com/h5py/h5py/issues/281
-                # It should be fixed by the next h5py version                
-                if dset.shape!=(0,): 
+                # It should be fixed by the next h5py version
+                if dset.shape != (0,):
                     data.value = dset[...]
                 else:
                     data.value = []
-                    
+
                 # TODO : enable import from yaafe hdf5 format
                 #for attr_name in dset.attrs.keys():
                 #   data[attr_name] = dset.attrs[attr_name]
-                
+
                 data_list.add_result(data)
         except TypeError:
             print('TypeError for HDF5 serialization')
         finally:
             h5_file.close()  # Close the HDF5 file
-        
+
         return data_list
