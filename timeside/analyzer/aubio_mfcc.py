@@ -65,18 +65,18 @@ class AubioMfcc(Processor):
     def results(self):
         # MFCC
         mfcc = AnalyzerResult()
-        sampleRate = self.samplerate()
-        blockSize = self.win_s
-        stepSize = self.hop_s
+        samplerate = self.samplerate()
+        blocksize = self.win_s
+        stepsize = self.hop_s
         parameters = dict(n_filters= self.n_filters,
                           n_coeffs=  self.n_coeffs)
-        mfcc.attributes = AnalyzerAttributes(id = "aubio_mfcc", 
+        mfcc.attributes = AnalyzerAttributes(id = "aubio_mfcc",
                                              name = "mfcc (aubio)",
                                              unit = "",
-                                             sampleRate = sampleRate,
-                                             blockSize = blockSize,
-                                             stepSize = stepSize,
+                                             samplerate = samplerate,
+                                             blocksize = blocksize,
+                                             stepsize = stepsize,
                                              parameters = parameters)
         mfcc.data = [list(line) for line in self.mfcc_results] # TODO : type ? list list ?
-        
+
         return AnalyzerResultContainer(mfcc)

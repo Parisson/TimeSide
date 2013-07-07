@@ -50,14 +50,14 @@ class MeanDCShift(Processor):
     def results(self):
         result = AnalyzerResult()
         #  Set attributes
-        #  FIXME : blockSize and stepSize are not appropriate here
+        #  FIXME : blocksize and stepsize are not appropriate here
         result.attributes = AnalyzerAttributes(id="mean_dc_shift",
                                                name = "Mean DC shift",
                                                unit = "%",
-                                               sampleRate=self.samplerate(),
-                                               blockSize=None,
-                                               stepSize=None)
-                                               
+                                               samplerate=self.samplerate(),
+                                               blocksize=None,
+                                               stepsize=None)
+
         # Set Data
         result.data = numpy.round(numpy.mean(100*self.values),3)
         return AnalyzerResultContainer(result)

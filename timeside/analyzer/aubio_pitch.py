@@ -66,23 +66,23 @@ class AubioPitch(Processor):
 
         container = AnalyzerResultContainer()
         pitch = AnalyzerResult()
-              
+
         # Get attributes
-        sampleRate = self.samplerate()
-        blockSize = self.win_s
-        stepSize = self.hop_s
+        samplerate = self.samplerate()
+        blocksize = self.win_s
+        stepsize = self.hop_s
         # parameters : None # TODO check with Piem "default" and "freq" in setup
-        
+
         # Set attributes
         pitch.attributes = AnalyzerAttributes(id="aubio_pitch",
                                               name="f0 (aubio)",
                                               unit='Hz',
-                                              sampleRate = sampleRate,
-                                              blockSize = blockSize,
-                                              stepSize = stepSize)                         
+                                              samplerate = samplerate,
+                                              blocksize = blocksize,
+                                              stepsize = stepsize)
         # Set Data
         self.pitches = numpy.array(self.pitches)
         pitch.data = self.pitches
         container.add_result(pitch)
-        
+
         return container

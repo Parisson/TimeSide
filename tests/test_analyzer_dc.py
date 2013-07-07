@@ -17,10 +17,10 @@ class TestAnalyzerDC(TestCase):
         attributes=AnalyzerAttributes(name="Mean DC shift",
                                       unit="%",
                                       id="mean_dc_shift",
-                                      sampleRate=44100,
-                                      blockSize=None,
-                                      stepSize=None)
-  
+                                      samplerate=44100,
+                                      blocksize=None,
+                                      stepsize=None)
+
         self.expected = AnalyzerResult(data=-0.000, attributes=attributes)
 
     def testOnGuitar(self):
@@ -29,10 +29,10 @@ class TestAnalyzerDC(TestCase):
         attributes=AnalyzerAttributes(name="Mean DC shift",
                                       unit="%",
                                       id="mean_dc_shift",
-                                      sampleRate=44100,
-                                      blockSize=None,
-                                      stepSize=None)
-        self.expected = AnalyzerResult(data=0.054, attributes=attributes) 
+                                      samplerate=44100,
+                                      blocksize=None,
+                                      stepsize=None)
+        self.expected = AnalyzerResult(data=0.054, attributes=attributes)
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
