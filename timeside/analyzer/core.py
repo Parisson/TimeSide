@@ -57,14 +57,14 @@ class AnalyzerAttributes(object):
     id : string
     name : string
     unit : string
-    sampleRate : int or float
-    blockSize : int
-    stepSize : int
+    samplerate : int or float
+    blocksize : int
+    stepsize : int
     parameters : dict
 
     Methods
     -------
-    asdict()
+    as_dict()
         Return a dictionnary representation of the AnalyzerAttributes
     """
     from collections import OrderedDict
@@ -73,9 +73,9 @@ class AnalyzerAttributes(object):
     _default_value = OrderedDict([('id', ''),
                                   ('name', ''),
                                   ('unit', ''),
-                                  ('sampleRate', None),
-                                  ('blockSize', None),
-                                  ('stepSize', None),
+                                  ('samplerate', None),
+                                  ('blocksize', None),
+                                  ('stepsize', None),
                                   ('parameters', {})
                                   ])
     # TODO : rajouter
@@ -95,9 +95,9 @@ class AnalyzerAttributes(object):
         id : string
         name : string
         unit : string
-        sampleRate : int or float
-        blockSize : int
-        stepSize : int
+        samplerate : int or float
+        blocksize : int
+        stepsize : int
         parameters : dict
 
         Returns
@@ -121,7 +121,7 @@ class AnalyzerAttributes(object):
             (name, self.__class__.__name__))
         super(AnalyzerAttributes, self).__setattr__(name, value)
 
-    def asdict(self):
+    def as_dict(self):
         return dict((att, getattr(self, att))
         for att in self._default_value.keys())
 
@@ -131,10 +131,10 @@ class AnalyzerAttributes(object):
             ', '.join('{}={}'.format(
             att, repr(getattr(self, att)))
             for att in self._default_value.keys()))
-            
+
     def __eq__(self,other):
         return (isinstance(other, self.__class__)
-            and self.asdict() == other.asdict())
+            and self.as_dict() == other.as_dict())
 
 
 class AnalyzerResult(object):
@@ -195,19 +195,19 @@ class AnalyzerResult(object):
 #            return self[name]
 #        return super(AnalyzerResult, self).__getattr__(name)
 
-    def asdict(self):
-        return(dict(data=self.data, attributes=self.attributes.asdict()))
+    def as_dict(self):
+        return(dict(data=self.data, attributes=self.attributes.as_dict()))
 
     def to_json(self):
         import simplejson as json
-        return json.dumps(self.asdict())
+        return json.dumps(self.as_dict())
 
     def __repr__(self):
         return self.to_json()
-    
+
     def __eq__(self,other):
         return (isinstance(other, self.__class__)
-            and self.asdict() == other.asdict())
+            and self.as_dict() == other.as_dict())
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -226,7 +226,7 @@ class AnalyzerResultContainer(object):
         return len(self.results)
 
     def __repr__(self):
-        return [res.asdict() for res in self.results]
+        return [res.as_dict() for res in self.results]
 
     def __eq__(self, other):
         if hasattr(other, 'results'):
@@ -235,9 +235,9 @@ class AnalyzerResultContainer(object):
             if a != b:
                 return False
         return True
-   
+
     def __ne__(self, other):
-        return not self.__eq__(other)     
+        return not self.__eq__(other)
 
     def add_result(self, analyzer_result):
         if type(analyzer_result) == list:
@@ -267,7 +267,7 @@ class AnalyzerResultContainer(object):
                 data_node.text = repr(result.data)
             # Serialize Attributes
             attr_node = ET.SubElement(res_node, 'attributes')
-            for (name, val) in result.attributes.asdict().items():
+            for (name, val) in result.attributes.as_dict().items():
                 # TODO reorder keys
                 child = ET.SubElement(attr_node, name)
                 if name == 'parameters':
@@ -316,7 +316,7 @@ class AnalyzerResultContainer(object):
                 result.data = ast.literal_eval(result_child.find('data').text)
             except:
                 result.data = result_child.find('data').text
-            
+
             # Get attributes
             for attr_child in result_child.find('attributes'):
                 name = attr_child.tag
@@ -358,7 +358,7 @@ class AnalyzerResultContainer(object):
     def to_json(self):
         #if data_list == None: data_list = self.results
         import simplejson as json
-        return json.dumps([res.asdict() for res in self])
+        return json.dumps([res.as_dict() for res in self])
 
     def from_json(self, json_str):
         import simplejson as json
@@ -373,7 +373,7 @@ class AnalyzerResultContainer(object):
     def to_yaml(self):
         #if data_list == None: data_list = self.results
         import yaml
-        return yaml.dump([res.asdict() for res in self])
+        return yaml.dump([res.as_dict() for res in self])
 
     def from_yaml(self, yaml_str):
         import yaml

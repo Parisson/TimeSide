@@ -59,21 +59,21 @@ class Level(Processor):
 
     def results(self):
         # Max level
-        #  FIXME : blockSize and stepSize are not appropriate here
+        #  FIXME : blocksize and stepsize are not appropriate here
         attr = AnalyzerAttributes(id="max_level",
                                   name="Max level",
                                   unit = "dBFS",
-                                  sampleRate=self.samplerate()) 
+                                  samplerate=self.samplerate())
         data = numpy.round(20*numpy.log10(self.max_value), 3)
         max_level = AnalyzerResult(data, attr)
-        
+
         # RMS level
-        #  FIXME : blockSize and stepSize are not appropriate here
+        #  FIXME : blocksize and stepsize are not appropriate here
         attr = AnalyzerAttributes(id="rms_level",
                                   name="RMS level",
                                   unit="dBFS",
-                                  sampleRate=self.samplerate())
+                                  samplerate=self.samplerate())
         data = numpy.round(20*numpy.log10(numpy.sqrt(numpy.mean(self.mean_values))), 3)
         rms_level = AnalyzerResult(data, attr)
-        
+
         return AnalyzerResultContainer([max_level, rms_level])

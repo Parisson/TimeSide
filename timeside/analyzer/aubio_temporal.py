@@ -68,11 +68,11 @@ class AubioTemporal(Processor):
 
     def results(self):
         # Get common attributes
-        commonAttr = dict(sampleRate=self.samplerate(),
-                          blockSize=self.win_s,
-                          stepSize=self.hop_s)
+        commonAttr = dict(samplerate=self.samplerate(),
+                          blocksize=self.win_s,
+                          stepsize=self.hop_s)
        # FIXME : Onsets, beat and onset rate are not frame based Results
-        # sampleRate, blockSize, etc. are not appropriate here
+        # samplerate, blocksize, etc. are not appropriate here
         # Those might be some kind of "AnalyzerSegmentResults"
 
         #---------------------------------
@@ -90,19 +90,19 @@ class AubioTemporal(Processor):
         #---------------------------------
         #  Onset Rate
         #---------------------------------
-        onsetRate = AnalyzerResult()
+        onsetrate = AnalyzerResult()
         # Set attributes
-        onsetRateAttr = dict(id="aubio_onset_rate",
+        onsetrateAttr = dict(id="aubio_onset_rate",
                              name="onset rate (aubio)",
                              unit="bpm")
-        onsetRate.attributes = dict(onsetRateAttr.items() + commonAttr.items())
+        onsetrate.attributes = dict(onsetrateAttr.items() + commonAttr.items())
         # Set Data
         if len(self.onsets) > 1:
             #periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
             periods = 60. / numpy.diff(self.onsets)
-            onsetRate.data = periods
+            onsetrate.data = periods
         else:
-            onsetRate.data = []
+            onsetrate.data = []
 
         #---------------------------------
         #  Beats
@@ -133,4 +133,4 @@ class AubioTemporal(Processor):
         else:
             bpm.data = []
 
-        return AnalyzerResultContainer([onsets, onsetRate, beats, bpm])
+        return AnalyzerResultContainer([onsets, onsetrate, beats, bpm])

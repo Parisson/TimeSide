@@ -66,9 +66,9 @@ class AubioSpecdesc(Processor):
 
         container = AnalyzerResultContainer()
        # Get common attributes
-        sampleRate = self.samplerate()
-        blockSize = self.win_s
-        stepSize = self.hop_s
+        samplerate = self.samplerate()
+        blocksize = self.win_s
+        stepsize = self.hop_s
         unit = ""
         # For each method store results in container
         for method in self.methods:
@@ -76,16 +76,16 @@ class AubioSpecdesc(Processor):
             # Set attributes
             id = '_'.join(["aubio_specdesc", method])
             name = ' '.join(["spectral descriptor", method, "(aubio)"])
-            
+
 
             specdesc.attributes = AnalyzerAttributes(id = id,
                                                   name = name,
                                                   unit = unit,
-                                                  sampleRate = sampleRate,
-                                                  blockSize = blockSize,
-                                                  stepSize = stepSize) 
-                                                  
-            # Set Data                                         
+                                                  samplerate = samplerate,
+                                                  blocksize = blocksize,
+                                                  stepsize = stepsize)
+
+            # Set Data
             specdesc.data = numpy.array(self.specdesc_results[method])
 
             container.add_result(specdesc)
