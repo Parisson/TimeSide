@@ -1,0 +1,5 @@
+timeside (0.4.3-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Paul Brossier <piem@debian.org>  Mon, 08 Jul 2013 10:18:57 -0500

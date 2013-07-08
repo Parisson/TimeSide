@@ -1,0 +1,22 @@
+Source: timeside
+Section: web
+Priority: extra
+Maintainer: Paul Brossier <piem@debian.org>
+Build-Depends: debhelper (>= 8.0.0), python
+Standards-Version: 3.9.3
+Homepage: http://code.google.com/p/timeside
+
+Package: timeside
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python-gst0.10
+Description: open and fast web audio components
+ TimeSide is a set of python components enabling easy audio processing,
+ transcoding, imaging and streaming. Its simple architecture and high-level
+ API have been design to process serial pipelines.
+ .
+ It includes a powerful HTML5 interactive player which can be embedded in any
+ web application to provide fancy waveforms, various analyzer results, synced
+ time metadata display during playback (time-marking) and remote indexing.
+ .
+ The engine (server side) is fully written in Python, the player (client side)
+ in HTML, CSS and JavaScript.
