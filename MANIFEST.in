@@ -12,3 +12,4 @@ recursive-exclude build *
 recursive-exclude TimeSide.egg-info *
 recursive-exclude tests/samples *
 recursive-exclude tests/results *
+recursive-exclude debian *
