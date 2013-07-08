@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 8.0.0), python
 Standards-Version: 3.9.3
 Homepage: http://code.google.com/p/timeside
 
-Package: timeside
+Package: python-timeside
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python-gst0.10
 Description: open and fast web audio components
