@@ -31,21 +31,42 @@ from matplotlib import pylab
 
 class IRITSpeech4Hz(Processor):
     implements(IValueAnalyzer)
+    '''
+    Segmentor based on the analysis of the 4Hz energy modulation.
+
+    Properties:
+		- energy4hz 		(list) 		: List of the 4Hz energy by frame for the modulation computation
+		- threshold 		(float) 	: Threshold for the classification Speech/NonSpeech
+		- frequency_center	(float)		: Center of the frequency range where the energy is extracted
+		- frequency_width	(float)		: Width of the frequency range where the energy is extracted
+		- orderFilter		(int)		: Order of the pass-band filter extracting the frequency range
+		- normalizeEnergy	(boolean)	: Whether the energy must be normalized or not 
+		- nFFT 				(int)		: Number of points for the FFT. Better if 512 <= nFFT <= 2048
+		- nbFilters			(int)		: Length of the Mel Filter bank 
+		- melFilter		(numpy array)	: Mel Filter bank 
+		- modulLen			(float)		: Length (in second) of the modulation computation window 
+    '''
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(IRITSpeech4Hz, self).setup(channels, samplerate, blocksize, totalframes)
         self.energy4hz = []
+        print "top"
+        # Classification
         self.threshold = 2.0
-        self.smoothLen = 5
-        self.fCenter = 4.0
+        
+        # Pass-band Filter 
+        self.frequency_center = 4.0
+        self.frequency_width = 0.5
+        self.orderFilter=100
+
+
         self.normalizeEnergy = True
         self.nFFT=2048
-        self.orderFilter=100
         self.nbFilters =30
-        self.modulLen = 2
-        self.fwidth = 0.5
+        self.modulLen = 2.0
         self.melFilter = melFilterBank(self.nbFilters,self.nFFT,samplerate);
+
     @staticmethod
     @interfacedoc
     def id():
@@ -65,45 +86,56 @@ class IRITSpeech4Hz(Processor):
         return "Speech confidences indexes"
 
     def process(self, frames, eod=False):
-        '''
-
-        '''
+		'''
+				
+		'''
+		
+		frames = frames.T[0]
+		# windowing of the frame (could be a changeable property)
+		w = frames * hamming(len(frames));
+		
+		# Mel scale spectrum extraction
+		f = abs(rfft(w,n=2*self.nFFT)[0:self.nFFT])
+		e = dot(f**2,self.melFilter)
+		
+		self.energy4hz.append(e)
+		
+		return frames, eod
         
-        frames = frames.T[0]
-        w = frames * hamming(len(frames))
-        f = abs(rfft(w, n=2*self.nFFT)[0:self.nFFT])
-        e = dot(f**2, self.melFilter)
-        self.energy4hz.append(e)
-        return frames, eod
-
     def results(self):
-        '''
+	'''
+		
+	'''	
+	print "Results"
+	# Creation of the pass-band filter	
+	Wo = self.frequency_center/self.samplerate()  ;
+	Wn = [ Wo-(self.frequency_width/2)/self.samplerate() , Wo+(self.frequency_width/2)/self.samplerate()];
+	num = firwin(self.orderFilter, Wn,pass_zero=False);
+		
+		
+	# Energy on the frequency range 
+	self.energy4hz=numpy.array(self.energy4hz)		
+	energy = lfilter(num,1,self.energy4hz.T,0)
+	energy = sum(energy)
+		
+	# Normalization
+	if self.normalizeEnergy :
+		energy =energy/mean(energy)
+			
+	# Energy Modulation
+	frameLenModulation = int(self.modulLen*self.samplerate()/self.blocksize())
+	modEnergyValue =computeModulation(energy,frameLenModulation,True)
+		
+	# Confidence Index	
+	conf = array(modEnergyValue-self.threshold)/self.threshold
+	conf[conf>1] = 1
 
-        '''
-        #wavwrite('out.wav',self.fe,(numpy.array(self.data)*2**15).astype(numpy.int16))
-
-        Wo = self.fCenter/self.samplerate()
-        Wn = [ Wo-(self.fwidth/2)/self.samplerate() , Wo+(self.fwidth/2)/self.samplerate()]
-        num = firwin(self.orderFilter, Wn, pass_zero=False)
-        self.energy4hz=numpy.array(self.energy4hz)
-        energy = lfilter(num, 1, self.energy4hz.T, 0)
-        energy = sum(energy)
-
-        if self.normalizeEnergy:
-            energy = energy / mean(energy)
-
-        w = int(float(self.modulLen) * self.samplerate() / self.blocksize())
-        modEnergyValue = computeModulation(energy, w, True)
-
-        conf = array(modEnergyValue-self.threshold)/self.threshold
-        conf[conf>1] = 1
-
-        modEnergy = AnalyzerResult(id = "irit_4hzenergy_confidence", name = "modulation energie (IRIT)", unit = "?")
-        modEnergy.value = conf
-        convert = {False:'NonSpeech',True:'Speech'}
-
-        segList = segmentFromValues(modEnergyValue>self.threshold)
-        segmentsEntropy =[]
+	modEnergy = AnalyzerResult(id = "irit_4hzenergy_confidence", name = "modulation energie (IRIT)", unit = "?")
+	modEnergy.value = conf
+	convert = {False:'NonSpeech',True:'Speech'}
+		
+	segList = segmentFromValues(modEnergyValue>self.threshold)
+	segmentsEntropy =[]
         for s in segList : 
             segmentsEntropy.append((numpy.float(s[0])*self.blocksize()/self.samplerate(),
                                     numpy.float(s[1])*self.blocksize()/self.samplerate(),

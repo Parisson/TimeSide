@@ -74,11 +74,11 @@ def segmentFromValues(values,offset=0):
     for i,v in enumerate(values) :
 
         if not (v == seg[2]) :
-            seg[1] = i+offset
+            seg[1] = i+offset-1
             segList.append(tuple(seg))
             seg = [i+offset,-1,v]
 
-    seg[1] = i+offset+1
+    seg[1] = i+offset
     segList.append(tuple(seg))
 
     return segList
