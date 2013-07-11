@@ -56,9 +56,9 @@ class IRITSpeechEntropy(Processor):
         return "Speech confidences indexes"
 
     def process(self, frames, eod=False):
-		self.entropyValue.append(entropy(frames))
-		return frames, eod        
-      
+        self.entropyValue.append(entropy(frames))
+        return frames, eod
+
     def results(self):
 
         entropyValue = numpy.array(self.entropyValue)
@@ -66,21 +66,23 @@ class IRITSpeechEntropy(Processor):
         modulentropy = computeModulation(entropyValue,w,False)
         confEntropy=  array(modulentropy-self.threshold)/self.threshold
         confEntropy[confEntropy>1] = 1
-        
+
         conf = AnalyzerResult(id = "irit_entropy_confidence", name = "entropy (IRIT)", unit = "?")
         conf.value = confEntropy
-        
+
         binaryEntropy = modulentropy > self.threshold
         binaryEntropy = binary_opening(binaryEntropy,[1]*(self.smoothLen*2))
-        
+
         convert = {False:'NonSpeech',True:'Speech'}
         segList = segmentFromValues(binaryEntropy)
+
         segmentsEntropy =[]
-        for s in segList : 
-            segmentsEntropy.append((s[0],s[1],convert[s[2]])) 
-        
-        segs = AnalyzerResult(id = "irit_entropy_segments", name = "seg entropy (IRIT)", unit = "s")
+        for s in segList :
+            segmentsEntropy.append((numpy.float(s[0])*self.blocksize()/self.samplerate(),
+                                    numpy.float(s[1])*self.blocksize()/self.samplerate(),
+                                    convert[s[2]]))
+
+        segs = AnalyzerResult(id="irit_entropy_segments", name="seg entropy (IRIT)", unit="s")
         segs.value = segmentsEntropy
 
-      
         return AnalyzerResultContainer([conf, segs])

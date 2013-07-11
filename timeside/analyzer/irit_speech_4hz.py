@@ -65,48 +65,50 @@ class IRITSpeech4Hz(Processor):
         return "Speech confidences indexes"
 
     def process(self, frames, eod=False):
-		'''
-		
-		'''
-		
-		frames = frames.T[0]
-		w = frames * hamming(len(frames));
-		f = abs(rfft(w,n=2*self.nFFT)[0:self.nFFT])
-		e = dot(f**2,self.melFilter)
-		self.energy4hz.append(e)
-		return frames, eod
-        
-    def results(self):
-		'''
-		
-		'''		
-		#wavwrite('out.wav',self.fe,(numpy.array(self.data)*2**15).astype(numpy.int16))
-		
-		Wo = self.fCenter/self.samplerate()  ;
-		Wn = [ Wo-(self.fwidth/2)/self.samplerate() , Wo+(self.fwidth/2)/self.samplerate()];
-		num = firwin(self.orderFilter, Wn,pass_zero=False);
-		self.energy4hz=numpy.array(self.energy4hz)
-		energy = lfilter(num,1,self.energy4hz.T,0)
-		energy = sum(energy)
-		
-		if self.normalizeEnergy :
-			energy =energy/mean(energy)
-			
-		
-		w= int(float(self.modulLen)*self.samplerate()/self.blocksize())
-		modEnergyValue =computeModulation(energy,w,True)
-				
-		conf = array(modEnergyValue-self.threshold)/self.threshold
-		conf[conf>1] = 1
+        '''
 
-		modEnergy = AnalyzerResult(id = "irit_4hzenergy_confidence", name = "modulation energie (IRIT)", unit = "?")
-		modEnergy.value = conf
-		convert = {False:'NonSpeech',True:'Speech'}
-		
-		segList = segmentFromValues(modEnergyValue>self.threshold)
-		segmentsEntropy =[]
-		for s in segList : 
-			segmentsEntropy.append((s[0],s[1],convert[s[2]]))
-		segs = AnalyzerResult(id = "irit_4hzenergy_segments", name = "seg 4Hz (IRIT)", unit = "s")
-		segs.value = segmentsEntropy
-		return AnalyzerResultContainer([modEnergy,segs])
+        '''
+        
+        frames = frames.T[0]
+        w = frames * hamming(len(frames))
+        f = abs(rfft(w, n=2*self.nFFT)[0:self.nFFT])
+        e = dot(f**2, self.melFilter)
+        self.energy4hz.append(e)
+        return frames, eod
+
+    def results(self):
+        '''
+
+        '''
+        #wavwrite('out.wav',self.fe,(numpy.array(self.data)*2**15).astype(numpy.int16))
+
+        Wo = self.fCenter/self.samplerate()
+        Wn = [ Wo-(self.fwidth/2)/self.samplerate() , Wo+(self.fwidth/2)/self.samplerate()]
+        num = firwin(self.orderFilter, Wn, pass_zero=False)
+        self.energy4hz=numpy.array(self.energy4hz)
+        energy = lfilter(num, 1, self.energy4hz.T, 0)
+        energy = sum(energy)
+
+        if self.normalizeEnergy:
+            energy = energy / mean(energy)
+
+        w = int(float(self.modulLen) * self.samplerate() / self.blocksize())
+        modEnergyValue = computeModulation(energy, w, True)
+
+        conf = array(modEnergyValue-self.threshold)/self.threshold
+        conf[conf>1] = 1
+
+        modEnergy = AnalyzerResult(id = "irit_4hzenergy_confidence", name = "modulation energie (IRIT)", unit = "?")
+        modEnergy.value = conf
+        convert = {False:'NonSpeech',True:'Speech'}
+
+        segList = segmentFromValues(modEnergyValue>self.threshold)
+        segmentsEntropy =[]
+        for s in segList : 
+            segmentsEntropy.append((numpy.float(s[0])*self.blocksize()/self.samplerate(),
+                                    numpy.float(s[1])*self.blocksize()/self.samplerate(),
+                                    convert[s[2]])) 
+       
+        segs = AnalyzerResult(id="irit_4hzenergy_segments", name="seg 4Hz (IRIT)", unit="s")
+        segs.value = segmentsEntropy
+        return AnalyzerResultContainer([modEnergy,segs])
