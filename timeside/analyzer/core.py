@@ -226,7 +226,7 @@ class AnalyzerResultContainer(object):
         return len(self.results)
 
     def __repr__(self):
-        return [res.as_dict() for res in self.results]
+        return [res.as_dict() for res in self.results].__repr__()
 
     def __eq__(self, other):
         if hasattr(other, 'results'):
