@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import api
+import core
 
 def get_processors(proc_type):
     import timeside.decoder
