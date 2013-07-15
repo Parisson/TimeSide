@@ -93,7 +93,7 @@ class Yaafe(Processor):
 
             # Get results from Yaafe engine
             result = AnalyzerResult()
-            result.attributes = AnalyzerAttributes(id = id,
+            result.metadata = AnalyzerMetadata(id = id,
                                       name = name,
                                       unit = unit,
                                       samplerate = self.samplerate,
