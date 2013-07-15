@@ -64,14 +64,14 @@ class AubioMelEnergy(Processor):
         container = AnalyzerResultContainer()
         melenergy = AnalyzerResult()
 
-        # Get attributes
+        # Get metadata
         samplerate = self.samplerate()
         blocksize = self.win_s
         stepsize = self.hop_s
         parameters = dict(n_filters= self.n_filters,
                           n_coeffs=  self.n_coeffs)
-        # Set attributes
-        melenergy.attributes = AnalyzerAttributes(id="aubio_melenergy",
+        # Set metadata
+        melenergy.metadata = AnalyzerMetadata(id="aubio_melenergy",
                                                   name="melenergy (aubio)",
                                                   unit='',
                                                   samplerate = samplerate,

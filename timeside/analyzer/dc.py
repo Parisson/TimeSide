@@ -49,9 +49,9 @@ class MeanDCShift(Processor):
 
     def results(self):
         result = AnalyzerResult()
-        #  Set attributes
+        #  Set metadata
         #  FIXME : blocksize and stepsize are not appropriate here
-        result.attributes = AnalyzerAttributes(id="mean_dc_shift",
+        result.metadata = AnalyzerMetadata(id="mean_dc_shift",
                                                name = "Mean DC shift",
                                                unit = "%",
                                                samplerate=self.samplerate(),

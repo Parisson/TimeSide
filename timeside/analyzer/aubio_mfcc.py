@@ -70,7 +70,7 @@ class AubioMfcc(Processor):
         stepsize = self.hop_s
         parameters = dict(n_filters= self.n_filters,
                           n_coeffs=  self.n_coeffs)
-        mfcc.attributes = AnalyzerAttributes(id = "aubio_mfcc",
+        mfcc.metadata = AnalyzerMetadata(id = "aubio_mfcc",
                                              name = "mfcc (aubio)",
                                              unit = "",
                                              samplerate = samplerate,

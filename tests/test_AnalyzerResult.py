@@ -13,7 +13,7 @@ class TestAnalyzerResult(TestCase):
 
     def setUp(self):
         self.result = AnalyzerResult()
-        self.result.attributes=dict(id="foo_bar", name="Foo bar", unit="foo")
+        self.result.metadata=dict(id="foo_bar", name="Foo bar", unit="foo")
 
     def testOnFloat(self):
         "float result"

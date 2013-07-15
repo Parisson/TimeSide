@@ -67,14 +67,14 @@ class AubioPitch(Processor):
         container = AnalyzerResultContainer()
         pitch = AnalyzerResult()
 
-        # Get attributes
+        # Get metadata
         samplerate = self.samplerate()
         blocksize = self.win_s
         stepsize = self.hop_s
         # parameters : None # TODO check with Piem "default" and "freq" in setup
 
-        # Set attributes
-        pitch.attributes = AnalyzerAttributes(id="aubio_pitch",
+        # Set metadata
+        pitch.metadata = AnalyzerMetadata(id="aubio_pitch",
                                               name="f0 (aubio)",
                                               unit='Hz',
                                               samplerate = samplerate,

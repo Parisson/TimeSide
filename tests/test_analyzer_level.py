@@ -4,7 +4,7 @@ from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.level import Level
 from timeside.analyzer import AnalyzerResult, AnalyzerResultContainer
-from timeside.analyzer import AnalyzerAttributes
+from timeside.analyzer import AnalyzerMetadata
 
 class TestAnalyzerLevel(TestCase):
 
@@ -16,18 +16,18 @@ class TestAnalyzerLevel(TestCase):
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "sweep.wav")
 
         # Max level
-        attr = AnalyzerAttributes(id="max_level",
+        metadata = AnalyzerMetadata(id="max_level",
                                   name="Max level",
                                   unit = "dBFS",
                                   samplerate=44100)
-        max_level = AnalyzerResult(-6.021, attr)
+        max_level = AnalyzerResult(-6.021, metadata)
 
         # RMS level
-        attr = AnalyzerAttributes(id="rms_level",
+        metadata = AnalyzerMetadata(id="rms_level",
                                   name="RMS level",
                                   unit="dBFS",
                                   samplerate=44100)
-        rms_level = AnalyzerResult(-9.856, attr)
+        rms_level = AnalyzerResult(-9.856, metadata)
         self.expected = AnalyzerResultContainer([max_level,rms_level])
 
     def testOnGuitar(self):
@@ -35,18 +35,18 @@ class TestAnalyzerLevel(TestCase):
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "guitar.wav")
 
         # Max level
-        attr = AnalyzerAttributes(id="max_level",
+        metadata = AnalyzerMetadata(id="max_level",
                                   name="Max level",
                                   unit = "dBFS",
                                   samplerate=44100)
-        max_level = AnalyzerResult(-4.258, attr)
+        max_level = AnalyzerResult(-4.258, metadata)
 
         # RMS level
-        attr = AnalyzerAttributes(id="rms_level",
+        metadata = AnalyzerMetadata(id="rms_level",
                                   name="RMS level",
                                   unit="dBFS",
                                   samplerate=44100)
-        rms_level = AnalyzerResult(-21.945, attr)
+        rms_level = AnalyzerResult(-21.945, metadata)
         self.expected = AnalyzerResultContainer([max_level,rms_level])
 
     def tearDown(self):

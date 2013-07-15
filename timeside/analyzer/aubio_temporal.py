@@ -67,7 +67,7 @@ class AubioTemporal(Processor):
         return frames, eod
 
     def results(self):
-        # Get common attributes
+        # Get common metadata
         commonAttr = dict(samplerate=self.samplerate(),
                           blocksize=self.win_s,
                           stepsize=self.hop_s)
@@ -79,11 +79,11 @@ class AubioTemporal(Processor):
         #  Onsets
         #---------------------------------
         onsets = AnalyzerResult()
-        # Set attributes
+        # Set metadata
         onsetsAttr = dict(id="aubio_onset",
                           name="onsets (aubio)",
                           unit="s")
-        onsets.attributes = dict(onsetsAttr.items() + commonAttr.items())
+        onsets.metadata = dict(onsetsAttr.items() + commonAttr.items())
         # Set Data
         onsets.data = self.onsets
 
@@ -91,11 +91,11 @@ class AubioTemporal(Processor):
         #  Onset Rate
         #---------------------------------
         onsetrate = AnalyzerResult()
-        # Set attributes
+        # Set metadata
         onsetrateAttr = dict(id="aubio_onset_rate",
                              name="onset rate (aubio)",
                              unit="bpm")
-        onsetrate.attributes = dict(onsetrateAttr.items() + commonAttr.items())
+        onsetrate.metadata = dict(onsetrateAttr.items() + commonAttr.items())
         # Set Data
         if len(self.onsets) > 1:
             #periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
@@ -108,11 +108,11 @@ class AubioTemporal(Processor):
         #  Beats
         #---------------------------------
         beats = AnalyzerResult()
-        # Set attributes
+        # Set metadata
         beatsAttr = dict(id="aubio_beat",
                         name="beats (aubio)",
                         unit="s")
-        beats.attributes = dict(beatsAttr.items() + commonAttr.items())
+        beats.metadata = dict(beatsAttr.items() + commonAttr.items())
         #  Set Data
         beats.data = self.beats
 
@@ -120,11 +120,11 @@ class AubioTemporal(Processor):
         #  BPM
         #---------------------------------
         bpm = AnalyzerResult()
-        # Set attributes
+        # Set metadata
         bpmAttr = dict(id="aubio_bpm",
                        name="bpm (aubio)",
                        unit="bpm")
-        bpm.attributes = dict(bpmAttr.items() + commonAttr.items())
+        bpm.metadata = dict(bpmAttr.items() + commonAttr.items())
         #  Set Data
         if len(self.beats) > 1:
             #periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
