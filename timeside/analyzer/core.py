@@ -46,63 +46,39 @@ numpy_data_types = map(lambda x: getattr(numpy, x), numpy_data_types)
 numpy_data_types += [numpy.ndarray]
 
 
-class AnalyzerMetadata(object):
+class MetadataObject(object):
     """
-    Object that contains the metadata and parameters of an analyzer process
+    Object that contains a metadata structure
     stucture inspired by [1]
     [1] : http://www.saltycrane.com/blog/2012/08/python-data-object-motivated-desire-mutable-namedtuple-default-values/
 
     Metadata
     ----------
-    id : string
-    name : string
-    unit : string
-    samplerate : int or float
-    blocksize : int
-    stepsize : int
-    parameters : dict
+
 
     Methods
     -------
     as_dict()
-        Return a dictionnary representation of the AnalyzerMetadata
+        Return a dictionnary representation of the MetadataObject
     """
     from collections import OrderedDict
     # Define default values as an OrderDict
     # in order to keep the order of the keys for display
-    _default_value = OrderedDict([('id', ''),
-                                  ('name', ''),
-                                  ('unit', ''),
-                                  ('samplerate', None),
-                                  ('blocksize', None),
-                                  ('stepsize', None),
-                                  ('parameters', {})
-                                  ])
-    # TODO : rajouter
-    # - version timeside
-    # - date import datetime format iso
-    # - filename (audio)
-    # - (long) description --> à mettre dans l'API Processor
+    _default_value = OrderedDict()
 
     def __init__(self, **kwargs):
         '''
-        Construct an AnalyzerMetadata object
+        Construct an Metadata object
+        Abstract Class _default_value must be specified by
 
-        AnalyzerMetadata()
+        Metadata()
 
         Parameters
         ----------
-        id : string
-        name : string
-        unit : string
-        samplerate : int or float
-        blocksize : int
-        stepsize : int
-        parameters : dict
 
         Returns
         -------
-        AnalyzerMetadata
+        Metadata
         '''
         # Set Default values
         for key, value in self._default_value.items():
@@ -119,7 +95,7 @@ class AnalyzerMetadata(object):
         if name not in self._default_value.keys():
             raise AttributeError("%s is not a valid attribute in %s" %
             (name, self.__class__.__name__))
-        super(AnalyzerMetadata, self).__setattr__(name, value)
+        super(MetadataObject, self).__setattr__(name, value)
 
     def as_dict(self):
         return dict((att, getattr(self, att))
@@ -132,9 +108,46 @@ class AnalyzerMetadata(object):
             att, repr(getattr(self, att)))
             for att in self._default_value.keys()))
 
-    def __eq__(self,other):
+    def __str__(self):
+        return self.as_dict().__str__()
+
+    def __eq__(self, other):
         return (isinstance(other, self.__class__)
             and self.as_dict() == other.as_dict())
+
+
+class AnalyzerMetadata(MetadataObject):
+    """
+    Object that contains the metadata and parameters of an analyzer process
+
+    Metadata
+    ----------
+    id : string
+    name : string
+    unit : string
+    samplerate : int or float
+    blocksize : int
+    stepsize : int
+    parameters : dict
+
+    """
+
+    from collections import OrderedDict
+    # Define default values as an OrderDict
+    # in order to keep the order of the keys for display
+    _default_value = OrderedDict([('id', ''),
+                                  ('name', ''),
+                                  ('unit', ''),
+                                  ('samplerate', None),
+                                  ('blocksize', None),
+                                  ('stepsize', None),
+                                  ('parameters', {})
+                                  ])
+    # TODO : rajouter
+    # - version timeside
+    # - date import datetime format iso
+    # - filename (audio)
+    # - (long) description --> à mettre dans l'API Processor
 
 
 class AnalyzerResult(object):
