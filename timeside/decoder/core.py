@@ -30,6 +30,8 @@ from timeside.tools import *
 
 import Queue
 from gst import _gst as gst
+from numpy import int64, uint64
+
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
@@ -53,7 +55,7 @@ class FileDecoder(Processor):
     def id():
         return "gstreamerdec"
 
-    def __init__(self, uri):
+    def __init__(self, uri, uri_segment = None):
         # is this a file?
         import os.path
         if os.path.exists(uri):
@@ -61,13 +63,18 @@ class FileDecoder(Processor):
             uri = os.path.abspath(uri)
             # and make a uri of it
             from urllib import quote
-            self.uri = 'file://'+quote(uri)
+            self.uri = 'file://' + quote(uri)
         elif '://' in uri:
             self.uri = uri
         else:
             raise IOError, 'File not found!'
+        
+        if uri_segment:
+            self.uri_start = uri_segment['start']
+            self.uri_duration = uri_segment['duration']
 
-    def setup(self, channels = None, samplerate = None, blocksize = None):
+
+    def setup(self, channels=None, samplerate=None, blocksize=None):
 
         # a lock to wait wait for gstreamer thread to be ready
         import threading
@@ -81,11 +88,23 @@ class FileDecoder(Processor):
 
         uri = self.uri
 
-        self.pipe = ''' uridecodebin name=uridecodebin uri=%(uri)s
-                  ! audioconvert name=audioconvert
-                  ! audioresample
-                  ! appsink name=sink sync=False async=True
-                  ''' % locals()
+        if hasattr(self, 'uri_start'):
+            uri_start = uint64(round(self.uri_start*gst.SECOND))
+            uri_duration = int64(round(self.uri_duration*gst.SECOND))
+            self.pipe = ''' gnlurisource uri={uri}
+                            media-start={uri_start}
+                            media-duration={uri_duration}
+                            ! audioconvert name=audioconvert
+                            ! audioresample
+                            ! appsink name=sink sync=False async=True
+                            '''.format(**locals())
+        else:
+            self.pipe = ''' uridecodebin name=uridecodebin uri={uri}
+                            ! audioconvert name=audioconvert
+                            ! audioresample
+                            ! appsink name=sink sync=False async=True
+                            '''.format(**locals())
+                        
         self.pipeline = gst.parse_launch(self.pipe)
 
         if self.output_channels:
