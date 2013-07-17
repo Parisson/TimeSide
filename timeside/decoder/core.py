@@ -68,7 +68,7 @@ class FileDecoder(Processor):
             self.uri = uri
         else:
             raise IOError, 'File not found!'
-        
+
         if uri_segment:
             self.uri_start = uri_segment['start']
             self.uri_duration = uri_segment['duration']
@@ -92,6 +92,8 @@ class FileDecoder(Processor):
             uri_start = uint64(round(self.uri_start*gst.SECOND))
             uri_duration = int64(round(self.uri_duration*gst.SECOND))
             self.pipe = ''' gnlurisource uri={uri}
+                            start=0
+                            duration={uri_duration}
                             media-start={uri_start}
                             media-duration={uri_duration}
                             ! audioconvert name=audioconvert
@@ -104,7 +106,7 @@ class FileDecoder(Processor):
                             ! audioresample
                             ! appsink name=sink sync=False async=True
                             '''.format(**locals())
-                        
+
         self.pipeline = gst.parse_launch(self.pipe)
 
         if self.output_channels:
@@ -138,6 +140,7 @@ class FileDecoder(Processor):
         self.queue = Queue.Queue(QUEUE_SIZE)
 
         import threading
+
         class MainloopThread(threading.Thread):
             def __init__(self, mainloop):
                 threading.Thread.__init__(self)
@@ -160,11 +163,11 @@ class FileDecoder(Processor):
 
         self.discovered_cond.acquire()
         while not self.discovered:
-          #print 'waiting'
-          self.discovered_cond.wait()
+            #print 'waiting'
+            self.discovered_cond.wait()
         self.discovered_cond.release()
 
-        if not hasattr(self,'input_samplerate'):
+        if not hasattr(self, 'input_samplerate'):
             if hasattr(self, 'error_msg'):
                 raise IOError(self.error_msg)
             else:
@@ -198,10 +201,10 @@ class FileDecoder(Processor):
         if "audio" in caps.to_string():
             self.input_samplerate = caps[0]["rate"]
             if not self.output_samplerate:
-              self.output_samplerate = self.input_samplerate
+                self.output_samplerate = self.input_samplerate
             self.input_channels = caps[0]["channels"]
             if not self.output_channels:
-              self.output_channels = self.input_channels
+                self.output_channels = self.input_channels
             self.input_duration = length / 1.e9
             self.input_totalframes = int(self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
@@ -246,10 +249,10 @@ class FileDecoder(Processor):
             new_block = self.last_buffer[:self.output_blocksize]
             self.last_buffer = self.last_buffer[self.output_blocksize:]
             #print 'queueing', new_block.shape, 'remaining', self.last_buffer.shape
-            self.queue.put( [new_block, False ] )
+            self.queue.put([new_block, False])
 
     @interfacedoc
-    def process(self, frames = None, eod = False):
+    def process(self, frames=None, eod=False):
         buf = self.queue.get()
         if buf == gst.MESSAGE_EOS:
             return self.last_buffer, True
@@ -258,7 +261,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def channels(self):
-        return  self.output_channels
+        return self.output_channels
 
     @interfacedoc
     def samplerate(self):
@@ -306,4 +309,3 @@ class FileDecoder(Processor):
     def metadata(self):
         # TODO check
         return self.tags
-
