@@ -116,6 +116,166 @@ class MetadataObject(object):
             and self.as_dict() == other.as_dict())
 
 
+class IdMetadata(MetadataObject):
+    '''
+    Metadata object to handle Audio related Metadata
+
+        Attributes
+        ----------
+        id : str
+        name : str
+        unit : str
+        description : str
+        date : str
+            date and time in ISO  8601 format YYYY-MM-DDTHH:MM:SS
+        version : str
+        author : str
+    '''
+    # TODO :
+    # - (long) description --> à mettre dans l'API Processor
+
+    from collections import OrderedDict
+    # Define default values
+    _default_value = OrderedDict([('id', ''),
+                                  ('name', ''),
+                                  ('unit', ''),
+                                  ('description', ''),
+                                  ('date', ''),
+                                  ('version', ''),
+                                  ('author', '')])
+    # HINT : 
+    # from datetime import datetime
+    #date = datetime.now().replace(microsecond=0).isoformat(' ')
+
+class AudioMetadata(MetadataObject):
+    '''
+    Metadata object to handle Identification Metadata
+
+        Attributes
+        ----------
+        uri : str
+        start : float
+            Start time of the segment in seconds
+        duration : float
+            Duration of the segment in seconds
+        channels : int
+            Number of channels
+        channelsManagement : str
+            A string that indicates how the channels are manage
+            Examples :
+                channelsManagement = '(L+R)/2'
+                channelsManagement = 'R' keep only right channel
+                channelsManagement = 'L' keep only left channel
+                channelsManagement = 'stereo' keep both stereo channels
+    '''
+    from collections import OrderedDict
+    # Define default values
+    _default_value = OrderedDict([('uri', ''),
+                                  ('start', None),
+                                  ('duration', None),
+                                  ('channels', None),
+                                  ('channelsManagement', '')])
+
+
+class LabelMetadata(MetadataObject):
+    '''
+    Metadata object to handle Label Metadata
+
+        Attributes
+        ----------
+        label : dict
+            A dictionnary that contains :
+                - label id has keys and
+                - label names has values
+
+        description : dict
+            A dictionnary that contains :
+                - label id has keys and
+                - label descriptions has values
+
+        labelType : str
+            = 'mono' or 'multi'
+            'mono' or 'multi' enable to specify the label mode :
+            - 'mono'  : mono-label (only 1 label at a time)
+            - 'multi' : multi-label (several labels can be observe
+                        at the same time)
+
+
+    '''
+
+    from collections import OrderedDict
+    # Define default values
+    _default_value = OrderedDict([('label', None),
+                                  ('description', None),
+                                  ('labelType', None)])
+
+
+class FrameMetadata(MetadataObject):
+    '''
+    Metadata object to handle Frame related Metadata
+
+        Attributes
+        ----------
+        samplerate : int (or float?)
+        blocksize : int
+        stepsize : int
+    '''
+    # TODO : check is samplerate can support float
+
+    from collections import OrderedDict
+    # Define default values
+    _default_value = OrderedDict([('samplerate', None),
+                                  ('blocksize', None),
+                                  ('stepsize', None)])
+
+
+class AnalyserData(MetadataObject):
+    '''
+    Metadata object to handle Frame related Metadata
+
+        Attributes
+        ----------
+        data : numpy array or list ?
+        dataType : type
+        dataMode : str
+            dataMode describe the type of the data :
+                - 'value' for values
+                - 'label' for label data
+    '''
+    from collections import OrderedDict
+    # Define default values
+    _default_value = OrderedDict([('data', None),
+                                  ('dataType', ''),
+                                  ('dataMode', '')])
+
+
+class newAnalyzerResults(MetadataObject):
+    """
+    Object that contains the metadata and parameters of an analyzer process
+
+    Attributes
+    ----------
+    data : MetadataObject
+    idMetadata : MetadataObject
+    audioMetadata : MetadataObject
+    frameMetadata : MetadataObject
+    labelMetadata : MetadataObject
+    parameters : dict
+
+    """
+
+    from collections import OrderedDict
+    # Define default values as an OrderDict
+    # in order to keep the order of the keys for display
+    _default_value = OrderedDict([('data', None),
+                                  ('idMetadata', None),
+                                  ('audioMetadata', None),
+                                  ('frameMetadata', None),
+                                  ('labelMetadata', None),
+                                  ('parameters', {})
+                                  ])
+
+
 class AnalyzerMetadata(MetadataObject):
     """
     Object that contains the metadata and parameters of an analyzer process
