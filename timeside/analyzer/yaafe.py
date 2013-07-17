@@ -51,8 +51,8 @@ class Yaafe(Processor):
         self.yaafe_engine = Engine()
         self.yaafe_engine.load(self.dataFlow)
         self.yaafe_engine.reset()
-        self.samplerate = samplerate
-        self.blocksize = blocksize
+        self.input_samplerate = samplerate
+        self.input_blocksize = blocksize
 
     @staticmethod
     @interfacedoc
