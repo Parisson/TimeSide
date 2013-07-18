@@ -35,6 +35,8 @@ from numpy import int64, uint64
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
+GST_DISCOVER_TIMEOUT = 5000000000L
+
 
 class FileDecoder(Processor):
     """ gstreamer-based decoder """
@@ -55,7 +57,19 @@ class FileDecoder(Processor):
     def id():
         return "gstreamerdec"
 
-    def __init__(self, uri, uri_segment = None):
+    def __init__(self, uri, start = 0, duration = None):
+        '''
+            Construct a new FileDecoder
+
+            Parameters
+            ----------
+            uri: uri of the media
+            start : float
+                start time of the segment in seconds
+            duration : float
+                duration of the segment in seconds
+        '''
+
         # is this a file?
         import os.path
         if os.path.exists(uri):
@@ -67,11 +81,19 @@ class FileDecoder(Processor):
         elif '://' in uri:
             self.uri = uri
         else:
-            raise IOError, 'File not found!'
+            raise IOError('File not found!')
 
-        if uri_segment:
-            self.uri_start = uri_segment['start']
-            self.uri_duration = uri_segment['duration']
+        # Set the default duration from the length of the file
+        if not(duration):
+            from gst.pbutils import Discoverer
+            #import gobject
+            uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
+            uri_info = uri_discoverer.discover_uri(self.uri)
+            duration = uri_info.get_duration() / gst.SECOND - start
+
+
+        self.uri_start = start
+        self.uri_duration = duration
 
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
@@ -82,30 +104,28 @@ class FileDecoder(Processor):
         self.discovered = False
 
         # the output data format we want
-        if blocksize:   self.output_blocksize  = blocksize
-        if samplerate:  self.output_samplerate = int(samplerate)
-        if channels:    self.output_channels   = int(channels)
+        if blocksize:
+            self.output_blocksize  = blocksize
+        if samplerate:
+            self.output_samplerate = int(samplerate)
+        if channels:
+            self.output_channels   = int(channels)
 
         uri = self.uri
+        # Convert uri_start and uri_duration to nanoseconds
+        uri_start = uint64(round(self.uri_start * gst.SECOND))
+        uri_duration = int64(round(self.uri_duration * gst.SECOND))
 
-        if hasattr(self, 'uri_start'):
-            uri_start = uint64(round(self.uri_start*gst.SECOND))
-            uri_duration = int64(round(self.uri_duration*gst.SECOND))
-            self.pipe = ''' gnlurisource uri={uri}
-                            start=0
-                            duration={uri_duration}
-                            media-start={uri_start}
-                            media-duration={uri_duration}
-                            ! audioconvert name=audioconvert
-                            ! audioresample
-                            ! appsink name=sink sync=False async=True
-                            '''.format(**locals())
-        else:
-            self.pipe = ''' uridecodebin name=uridecodebin uri={uri}
-                            ! audioconvert name=audioconvert
-                            ! audioresample
-                            ! appsink name=sink sync=False async=True
-                            '''.format(**locals())
+        # Create the pipe with Gnonlin gnlurisource
+        self.pipe = ''' gnlurisource uri={uri}
+                        start=0
+                        duration={uri_duration}
+                        media-start={uri_start}
+                        media-duration={uri_duration}
+                        ! audioconvert name=audioconvert
+                        ! audioresample
+                        ! appsink name=sink sync=False async=True
+                        '''.format(**locals())
 
         self.pipeline = gst.parse_launch(self.pipe)
 
