@@ -261,6 +261,12 @@ class FileDecoder(Processor):
     def release(self):
         pass
 
+    @interfacedoc
+    def mediainfo(self):
+        return dict(uri=self.uri)
+        # TODO : for segment support :
+        #return dict(uri=self.uri, duration=self.input_duration, segment_start=self.segment_start, segment_duration=self.segment_duration)
+
     def __del__(self):
         self.release()
 

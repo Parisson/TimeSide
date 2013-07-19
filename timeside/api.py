@@ -81,6 +81,13 @@ class IProcessor(Interface):
 
         # implementations should always call the parent method
 
+    def mediainfo():
+        """
+        Information about the media object
+        uri
+        start
+        duration
+        """
 
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific

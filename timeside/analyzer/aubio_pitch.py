@@ -24,15 +24,18 @@ from timeside.analyzer.core import *
 from timeside.api import IValueAnalyzer
 from aubio import pitch
 
-class AubioPitch(Processor):
-    implements(IValueAnalyzer)
+class AubioPitch(Analyzer):
+    implements(IAnalyzer) # TODO check if needed with inheritance
+
+    def __init__(self):
+        self.input_blocksize = 2048
+        self.input_stepsize = self.input_blocksize / 2
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(AubioPitch, self).setup(channels, samplerate, blocksize, totalframes)
-        self.win_s = 2048
-        self.hop_s = self.win_s / 2
-        self.p = pitch("default", self.win_s, self.hop_s, samplerate)
+        self.p = pitch("default", self.input_blocksize, self.input_stepsize,
+                       samplerate)
         self.p.set_unit("freq")
         self.block_read = 0
         self.pitches = []
@@ -56,33 +59,29 @@ class AubioPitch(Processor):
         return "pitch values"
 
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.hop_s):
-            #time = self.block_read * self.hop_s * 1. / self.samplerate()
+        for samples in downsample_blocking(frames, self.input_stepsize):
+            #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
             self.pitches += [self.p(samples)[0]]
             self.block_read += 1
         return frames, eod
 
     def results(self):
 
-        container = AnalyzerResultContainer()
-        pitch = AnalyzerResult()
+        container = super(AubioPitch, self).results()
 
+        pitch = self.new_result(dataMode='value', resultType='framewise')
+
+        pitch.idMetadata.id = "aubio_pitch"
+        pitch.idMetadata.name = "f0 (aubio)"
+        pitch.idMetadata.unit = 'Hz'
         # Get metadata
-        samplerate = self.samplerate()
-        blocksize = self.win_s
-        stepsize = self.hop_s
         # parameters : None # TODO check with Piem "default" and "freq" in setup
 
-        # Set metadata
-        pitch.metadata = AnalyzerMetadata(id="aubio_pitch",
-                                              name="f0 (aubio)",
-                                              unit='Hz',
-                                              samplerate = samplerate,
-                                              blocksize = blocksize,
-                                              stepsize = stepsize)
+
         # Set Data
         self.pitches = numpy.array(self.pitches)
-        pitch.data = self.pitches
+        pitch.data.data = self.pitches
+        pitch.data.dataType = float
         container.add_result(pitch)
 
         return container

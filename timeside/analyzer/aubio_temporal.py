@@ -25,16 +25,18 @@ from timeside.api import IAnalyzer
 from aubio import onset, tempo
 
 
-class AubioTemporal(Processor):
+class AubioTemporal(Analyzer):
     implements(IAnalyzer)
+
+    def __init__(self):
+        self.input_blocksize = 1024
+        self.input_stepsize = 256
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(AubioTemporal, self).setup(channels, samplerate, blocksize, totalframes)
-        self.win_s = 1024
-        self.hop_s = 256
-        self.o = onset("default", self.win_s, self.hop_s, samplerate)
-        self.t = tempo("default", self.win_s, self.hop_s, samplerate)
+        self.o = onset("default", self.input_blocksize, self.input_stepsize, samplerate)
+        self.t = tempo("default", self.input_blocksize, self.input_stepsize, samplerate)
         self.block_read = 0
         self.onsets = []
         self.beats = []
@@ -58,7 +60,7 @@ class AubioTemporal(Processor):
         return "%s %s" % (str(self.value), unit())
 
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.hop_s):
+        for samples in downsample_blocking(frames, self.input_stepsize):
             if self.o(samples):
                 self.onsets += [self.o.get_last_s()]
             if self.t(samples):
@@ -67,70 +69,87 @@ class AubioTemporal(Processor):
         return frames, eod
 
     def results(self):
-        # Get common metadata
-        commonAttr = dict(samplerate=self.samplerate(),
-                          blocksize=self.win_s,
-                          stepsize=self.hop_s)
-       # FIXME : Onsets, beat and onset rate are not frame based Results
-        # samplerate, blocksize, etc. are not appropriate here
-        # Those might be some kind of "AnalyzerSegmentResults"
+
+        container = super(AubioTemporal, self).results()
 
         #---------------------------------
         #  Onsets
         #---------------------------------
-        onsets = AnalyzerResult()
-        # Set metadata
-        onsetsAttr = dict(id="aubio_onset",
-                          name="onsets (aubio)",
-                          unit="s")
-        onsets.metadata = dict(onsetsAttr.items() + commonAttr.items())
-        # Set Data
-        onsets.data = self.onsets
+        onsets = self.new_result(dataMode='label', resultType='event')
+
+        onsets.idMetadata.id = "aubio_onset"
+        onsets.idMetadata.name = "onsets (aubio)"
+        onsets.idMetadata.unit = 's'
+
+        # Set Data , dataMode='label', resultType='event'
+        # Event = list of (time, labelId)
+        onsets.data.data = [(time,1) for time in self.onsets]
+
+        onsets.labelMetadata.label = {1: 'Onset'}
+
+        container.add_result(onsets)
 
         #---------------------------------
         #  Onset Rate
         #---------------------------------
-        onsetrate = AnalyzerResult()
+        onsetrate = self.new_result(dataMode='value', resultType='event')
         # Set metadata
-        onsetrateAttr = dict(id="aubio_onset_rate",
-                             name="onset rate (aubio)",
-                             unit="bpm")
-        onsetrate.metadata = dict(onsetrateAttr.items() + commonAttr.items())
-        # Set Data
+        onsetrate.idMetadata.id = "aubio_onset_rate"
+        onsetrate.idMetadata.name="onset rate (aubio)"
+        onsetrate.idMetadata.unit="bpm"
+
+        # Set Data , dataMode='value', resultType='event'
+        # Event = list of (time, value)
         if len(self.onsets) > 1:
             #periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
             periods = 60. / numpy.diff(self.onsets)
-            onsetrate.data = periods
+            onsetrate.data.data = zip(periods,self.onsets[:-1])
         else:
-            onsetrate.data = []
+            onsetrate.data.data = []
+
+        container.add_result(onsetrate)
 
         #---------------------------------
         #  Beats
         #---------------------------------
-        beats = AnalyzerResult()
+        beats = self.new_result(dataMode='label', resultType='segment')
         # Set metadata
-        beatsAttr = dict(id="aubio_beat",
-                        name="beats (aubio)",
-                        unit="s")
-        beats.metadata = dict(beatsAttr.items() + commonAttr.items())
-        #  Set Data
-        beats.data = self.beats
+        beats.idMetadata.id="aubio_beat"
+        beats.idMetadata.name="beats (aubio)"
+        beats.idMetadata.unit="s"
+
+        #  Set Data, dataMode='label', resultType='segment'
+        # Segment = list of (time, duration, labelId)
+        if len(self.beats) > 1:
+            duration = numpy.diff(self.beats)
+            duration = numpy.append(duration,duration[-1])
+            beats.data.data = [(time,dur,1) for (time, dur) in zip(self.beats, duration)]
+        else:
+            beats.data.data = []
+        beats.labelMetadata.label = {1: 'Beat'}
+
+        container.add_result(beats)
 
         #---------------------------------
         #  BPM
         #---------------------------------
-        bpm = AnalyzerResult()
+        bpm = self.new_result(dataMode='value', resultType='segment')
         # Set metadata
-        bpmAttr = dict(id="aubio_bpm",
-                       name="bpm (aubio)",
-                       unit="bpm")
-        bpm.metadata = dict(bpmAttr.items() + commonAttr.items())
-        #  Set Data
+        bpm.idMetadata.id="aubio_bpm"
+        bpm.idMetadata.name="bpm (aubio)"
+        bpm.idMetadata.unit="bpm"
+
+        #  Set Data, dataMode='value', resultType='segment'
         if len(self.beats) > 1:
             #periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
             periods = 60. / numpy.diff(self.beats)
-            bpm.data = periods
-        else:
-            bpm.data = []
+            periods = numpy.append(periods,periods[-1])
 
-        return AnalyzerResultContainer([onsets, onsetrate, beats, bpm])
+            bpm.data.data = zip(self.beats, duration, periods)
+
+        else:
+            bpm.data.data = []
+
+        container.add_result(bpm)
+
+        return container
