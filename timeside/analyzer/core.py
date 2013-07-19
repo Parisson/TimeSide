@@ -20,9 +20,12 @@
 # Authors:
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
+#   Thomas Fillon <thomas  at parisson.com>
 
 from utils import downsample_blocking
-
+from timeside.core import Processor, implements, interfacedoc
+from timeside.api import IAnalyzer
+from timeside import __version__ as TimeSideVersion
 import numpy
 numpy_data_types = [
     #'float128',
@@ -143,9 +146,7 @@ class IdMetadata(MetadataObject):
                                   ('date', ''),
                                   ('version', ''),
                                   ('author', '')])
-    # HINT : 
-    # from datetime import datetime
-    #date = datetime.now().replace(microsecond=0).isoformat(' ')
+
 
 class AudioMetadata(MetadataObject):
     '''
@@ -207,7 +208,7 @@ class LabelMetadata(MetadataObject):
     # Define default values
     _default_value = OrderedDict([('label', None),
                                   ('description', None),
-                                  ('labelType', None)])
+                                  ('labelType', 'mono')])
 
 
 class FrameMetadata(MetadataObject):
@@ -228,7 +229,6 @@ class FrameMetadata(MetadataObject):
                                   ('blocksize', None),
                                   ('stepsize', None)])
 
-
 class AnalyserData(MetadataObject):
     '''
     Metadata object to handle Frame related Metadata
@@ -248,8 +248,28 @@ class AnalyserData(MetadataObject):
                                   ('dataType', ''),
                                   ('dataMode', '')])
 
+    def __setattr__(self, name, value):
+    # Set Data with the proper type
+        if name == 'data':
+            if value is None:
+                value = []
+            # make a numpy.array out of list
+            if type(value) is list:
+                value = numpy.array(value)
+            # serialize using numpy
+            if type(value) in numpy_data_types:
+                value = value.tolist()
+            if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
+                raise TypeError('AnalyzerResult can not accept type %s' %
+                type(value))
 
-class newAnalyzerResults(MetadataObject):
+            # TODO : guess dataType from value and set datType with:
+            #super(AnalyserData, self).__setattr__('dataType', dataType)
+
+        super(AnalyserData, self).__setattr__(name, value)
+
+
+class newAnalyzerResult(MetadataObject):
     """
     Object that contains the metadata and parameters of an analyzer process
 
@@ -267,8 +287,8 @@ class newAnalyzerResults(MetadataObject):
     from collections import OrderedDict
     # Define default values as an OrderDict
     # in order to keep the order of the keys for display
-    _default_value = OrderedDict([('data', None),
-                                  ('idMetadata', None),
+    _default_value = OrderedDict([('idMetadata', None),
+                                  ('data', None),
                                   ('audioMetadata', None),
                                   ('frameMetadata', None),
                                   ('labelMetadata', None),
@@ -417,7 +437,8 @@ class AnalyzerResultContainer(object):
             for res in analyzer_result:
                 self.add_result(res)
             return
-        if type(analyzer_result) != AnalyzerResult:
+        if not (isinstance(analyzer_result, AnalyzerResult)
+                or isinstance(analyzer_result, newAnalyzerResult)):
             raise TypeError('only AnalyzerResult can be added')
         self.results += [analyzer_result]
 
@@ -589,3 +610,95 @@ class AnalyzerResultContainer(object):
             h5_file.close()  # Close the HDF5 file
 
         return data_list
+
+
+class Analyzer(Processor):
+    '''
+    Generic class for the analyzers
+    '''
+
+    implements(IAnalyzer)
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(Analyzer, self).setup(channels, samplerate, blocksize, totalframes)
+
+        # Set default values for output_* attributes
+        # may be overwritten by the analyzer
+        self.output_channels     = self.input_channels
+        self.output_samplerate   = self.input_samplerate
+        self.output_blocksize    = self.input_blocksize
+        self.output_stepsize     = self.input_blocksize
+
+    def results(self):
+        container = AnalyzerResultContainer()
+        return container
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "analyzer"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Generic analyzer"
+
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return ""
+
+    def new_result(self, dataMode='value', resultType='framewise'):
+        '''
+        Create a new result
+
+        Attributes
+        ----------
+        data : MetadataObject
+        idMetadata : MetadataObject
+        audioMetadata : MetadataObject
+        frameMetadata : MetadataObject
+        labelMetadata : MetadataObject
+        parameters : dict
+
+        '''
+
+        from datetime import datetime
+
+        result = newAnalyzerResult()
+        # Automatically write known metadata
+        result.idMetadata = IdMetadata(date=datetime.now().replace(microsecond=0).isoformat(' '),
+                                       version=TimeSideVersion,
+                                       author='TimeSide')
+        result.audioMetadata = AudioMetadata(uri=self.mediainfo()['uri'])
+
+        result.data = AnalyserData(dataMode=dataMode)
+
+        if dataMode == 'value':
+            pass
+        elif dataMode == 'label':
+            result.labelMetadata = LabelMetadata()
+        else:
+            # raise ArgError('')
+            pass
+
+        if resultType == 'framewise':
+            result.frameMetadata = FrameMetadata(
+                                        samplerate=self.output_samplerate,
+                                        blocksize=self.output_blocksize,
+                                        stepsize=self.input_stepsize)
+        elif resultType == 'value':
+            # None : handle by data
+            pass
+        elif resultType == 'segment':
+            # None : handle by data
+            pass
+        elif resultType == 'event':
+            # None : handle by data, duration = 0
+            pass
+        else:
+            # raise ArgError('')
+            pass
+
+        return result

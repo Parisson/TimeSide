@@ -31,7 +31,6 @@ class VorbisEncoder(GstEncoder):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(VorbisEncoder, self).setup(channels, samplerate, blocksize, totalframes)
-
         self.pipe = ''' appsrc name=src
                   ! audioconvert
                   ! vorbisenc

@@ -61,30 +61,43 @@ class Processor(Component):
     implements(IProcessor)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        self.input_channels     = channels
-        self.input_samplerate   = samplerate
-        self.input_blocksize    = blocksize
-        self.input_totalframes  = totalframes
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
+        self.source_channels     = channels
+        self.source_samplerate   = samplerate
+        self.source_blocksize    = blocksize
+        self.source_totalframes  = totalframes
+
+        # If empty Set default values for input_* attributes
+        # may be setted by the processor during __init__()
+        if not hasattr(self, 'input_channels'):
+            self.input_channels = self.source_channels
+        if not hasattr(self, 'input_samplerate'):
+            self.input_samplerate = self.source_samplerate
+        if not hasattr(self, 'input_blocksize'):
+            self.input_blocksize = self.source_blocksize
+        if not hasattr(self, 'input_stepsize'):
+            self.input_stepsize = self.source_blocksize
+
 
     # default channels(), samplerate() and blocksize() implementations returns
-    # the input characteristics, but processors may change this behaviour by
+    # the source characteristics, but processors may change this behaviour by
     # overloading those methods
     @interfacedoc
     def channels(self):
-        return self.input_channels
+        return self.source_channels
 
     @interfacedoc
     def samplerate(self):
-        return self.input_samplerate
+        return self.source_samplerate
 
     @interfacedoc
     def blocksize(self):
-        return self.input_blocksize
+        return self.source_blocksize
 
     @interfacedoc
     def totalframes(self):
-        return self.input_totalframes
+        return self.source_totalframes
 
     @interfacedoc
     def process(self, frames, eod):
@@ -93,6 +106,10 @@ class Processor(Component):
     @interfacedoc
     def release(self):
         pass
+
+    @interfacedoc
+    def mediainfo(self):
+        return self.source_mediainfo
 
     def __del__(self):
         self.release()
@@ -220,6 +237,7 @@ class ProcessPipe(object):
                        samplerate = last.samplerate(),
                        blocksize = last.blocksize(),
                        totalframes = last.totalframes())
+            item.source_mediainfo = source.mediainfo()
             last = item
 
         # now stream audio data along the pipe
