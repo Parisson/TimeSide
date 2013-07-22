@@ -71,7 +71,6 @@ class AubioPitch(Processor):
         samplerate = self.samplerate()
         blocksize = self.win_s
         stepsize = self.hop_s
-        # parameters : None # TODO check with Piem "default" and "freq" in setup
 
         # Set metadata
         pitch.metadata = AnalyzerMetadata(id="aubio_pitch",

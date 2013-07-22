@@ -98,7 +98,6 @@ class AubioTemporal(Processor):
         onsetrate.metadata = dict(onsetrateAttr.items() + commonAttr.items())
         # Set Data
         if len(self.onsets) > 1:
-            #periods = [60./(b - a) for a,b in zip(self.onsets[:-1],self.onsets[1:])]
             periods = 60. / numpy.diff(self.onsets)
             onsetrate.data = periods
         else:
@@ -127,7 +126,6 @@ class AubioTemporal(Processor):
         bpm.metadata = dict(bpmAttr.items() + commonAttr.items())
         #  Set Data
         if len(self.beats) > 1:
-            #periods = [60./(b - a) for a,b in zip(self.beats[:-1],self.beats[1:])]
             periods = 60. / numpy.diff(self.beats)
             bpm.data = periods
         else:
