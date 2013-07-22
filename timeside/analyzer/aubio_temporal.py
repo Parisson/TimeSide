@@ -71,13 +71,11 @@ class AubioTemporal(Processor):
         commonAttr = dict(samplerate=self.samplerate(),
                           blocksize=self.win_s,
                           stepsize=self.hop_s)
-       # FIXME : Onsets, beat and onset rate are not frame based Results
+        # FIXME : Onsets, beat and onset rate are not frame based Results
         # samplerate, blocksize, etc. are not appropriate here
         # Those might be some kind of "AnalyzerSegmentResults"
 
-        #---------------------------------
-        #  Onsets
-        #---------------------------------
+        # list of onset locations
         onsets = AnalyzerResult()
         # Set metadata
         onsetsAttr = dict(id="aubio_onset",
@@ -87,9 +85,7 @@ class AubioTemporal(Processor):
         # Set Data
         onsets.data = self.onsets
 
-        #---------------------------------
-        #  Onset Rate
-        #---------------------------------
+        # list of inter-onset intervals, in beats per minute
         onsetrate = AnalyzerResult()
         # Set metadata
         onsetrateAttr = dict(id="aubio_onset_rate",
@@ -103,9 +99,7 @@ class AubioTemporal(Processor):
         else:
             onsetrate.data = []
 
-        #---------------------------------
-        #  Beats
-        #---------------------------------
+        # list of beat locations
         beats = AnalyzerResult()
         # Set metadata
         beatsAttr = dict(id="aubio_beat",
@@ -115,9 +109,7 @@ class AubioTemporal(Processor):
         #  Set Data
         beats.data = self.beats
 
-        #---------------------------------
-        #  BPM
-        #---------------------------------
+        # list of inter-beat intervals, in beats per minute
         bpm = AnalyzerResult()
         # Set metadata
         bpmAttr = dict(id="aubio_bpm",
