@@ -34,7 +34,7 @@ News
 
 0.4.4
 
- * Only setup bugfixes
+ * Only minor setup bugfixes
  * Last compatible version with Python 2.6
  * Next version 0.5 will integrate serious new analyzer features (aubio, yaafe and more)
 
@@ -150,15 +150,27 @@ The player should work on any modern HTML5 enabled browser. Flash is needed for 
 Install
 =======
 
-TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on a Debian based system like Debian, Ubuntu, etc.. On Fedora and Red-Hat you might replace 'apt-get by 'yum', on Gentoo by 'emerge', or any other package manager you like::
+TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems. 
+
+On Debian, Ubuntu, etc::
 
  $ sudo apt-get update
- $ sudo apt-get install python python-pip python-setuptools python-gobject \
+ $ sudo apt-get install python python-pip python-setuptools python-gobject gobject-introspection \
                         python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gobject-introspection
+                        gstreamer0.10-plugins-ugly
 
+On Fedora and Red-Hat, etc::
+
+ $ sudo yum update
+ $ sudo yum install gstreamer pygobject2 gstreamer-python  \
+                    gstreamer gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras \
+                    gstreamer-plugins-base gstreamer-plugins-good 
+
+And then::
+ 
  $ sudo pip install timeside
+
 
 To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
