@@ -155,7 +155,8 @@ TimeSide needs some other python modules to run. The following methods explain h
 On Debian, Ubuntu, etc::
 
  $ sudo apt-get update
- $ sudo apt-get install python python-pip python-setuptools python-gobject gobject-introspection \
+ $ sudo apt-get install gcc python python-dev python-pip python-setuptools 
+                        python-gobject gobject-introspection \
                         python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
                         gstreamer0.10-plugins-ugly
@@ -163,14 +164,13 @@ On Debian, Ubuntu, etc::
 On Fedora and Red-Hat, etc::
 
  $ sudo yum update
- $ sudo yum install gstreamer pygobject2 gstreamer-python  \
+ $ sudo yum install gcc python python-devel gstreamer pygobject2 gstreamer-python  \
                     gstreamer gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras \
-                    gstreamer-plugins-base gstreamer-plugins-good 
+                    gstreamer-plugins-base gstreamer-plugins-good
 
 And then::
  
  $ sudo pip install timeside
-
 
 To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
