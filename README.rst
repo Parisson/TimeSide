@@ -32,6 +32,12 @@ Here is a schematic diagram of the TimeSide engine architecture:
 News
 =====
 
+0.4.4
+
+ * Only setup bugfixes
+ * Last compatible version with Python 2.6
+ * Next version 0.5 will integrate serious new analyzer features (aubio, yaafe and more)
+
 0.4.3
 
  * finally fix decoder leaks and de-synchronizations (thanks to piem)
@@ -146,8 +152,8 @@ Install
 
 TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on a Debian based system like Debian, Ubuntu, etc.. On Fedora and Red-Hat you might replace 'apt-get by 'yum', on Gentoo by 'emerge', or any other package manager you like::
 
- sudo apt-get update
- sudo apt-get install python python-pip python-setuptools python-gobject \
+ $ sudo apt-get update
+ $ sudo apt-get install python python-pip python-setuptools python-gobject \
                         python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
                         gstreamer0.10-plugins-ugly gobject-introspection python-mutagen \
