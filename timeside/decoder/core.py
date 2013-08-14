@@ -83,20 +83,27 @@ class FileDecoder(Processor):
         else:
             raise IOError('File not found!')
 
-        # Set the default duration from the length of the file
-        if not(duration):
-            from gst.pbutils import Discoverer
-            #import gobject
-            uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
-            uri_info = uri_discoverer.discover_uri(self.uri)
-            duration = uri_info.get_duration() / gst.SECOND - start
-
-
         self.uri_start = start
         self.uri_duration = duration
 
+        if start==0 and duration is None:
+            self.IS_SEGMENT = False
+        else:
+            self.IS_SEGMENT = True
+
+    def set_uri_default_duration(self):
+        # Set the duration from the length of the file
+        from gst.pbutils import Discoverer
+        #import gobject
+        uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
+        uri_info = uri_discoverer.discover_uri(self.uri)
+        self.uri_duration = (uri_info.get_duration() / gst.SECOND -
+                            self.uri_start)
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
+
+        if not(self.uri_duration):
+            self.set_uri_default_duration()
 
         # a lock to wait wait for gstreamer thread to be ready
         import threading
@@ -105,27 +112,33 @@ class FileDecoder(Processor):
 
         # the output data format we want
         if blocksize:
-            self.output_blocksize  = blocksize
+            self.output_blocksize = blocksize
         if samplerate:
             self.output_samplerate = int(samplerate)
         if channels:
-            self.output_channels   = int(channels)
+            self.output_channels = int(channels)
 
-        uri = self.uri
-        # Convert uri_start and uri_duration to nanoseconds
-        uri_start = uint64(round(self.uri_start * gst.SECOND))
-        uri_duration = int64(round(self.uri_duration * gst.SECOND))
-
-        # Create the pipe with Gnonlin gnlurisource
-        self.pipe = ''' gnlurisource uri={uri}
-                        start=0
-                        duration={uri_duration}
-                        media-start={uri_start}
-                        media-duration={uri_duration}
-                        ! audioconvert name=audioconvert
-                        ! audioresample
-                        ! appsink name=sink sync=False async=True
-                        '''.format(**locals())
+        if self.IS_SEGMENT:
+            # Create the pipe with Gnonlin gnlurisource
+            self.pipe = ''' gnlurisource uri={uri}
+                            start=0
+                            duration={uri_duration}
+                            media-start={uri_start}
+                            media-duration={uri_duration}
+                            ! audioconvert name=audioconvert
+                            ! audioresample
+                            ! appsink name=sink sync=False async=True
+                            '''.format(uri = self.uri,
+                                       uri_start = uint64(round(self.uri_start * gst.SECOND)),
+                                       uri_duration = int64(round(self.uri_duration * gst.SECOND)))
+                                       # convert uri_start and uri_duration to nanoseconds
+        else:
+            # Create the pipe with standard Gstreamer uridecodbin
+            self.pipe = ''' uridecodebin name=uridecodebin uri={uri}
+                           ! audioconvert name=audioconvert
+                           ! audioresample
+                           ! appsink name=sink sync=False async=True
+                           '''.format(uri = self.uri)
 
         self.pipeline = gst.parse_launch(self.pipe)
 
