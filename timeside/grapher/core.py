@@ -26,9 +26,9 @@
 import optparse, math, sys, numpy
 
 try:
-    from PIL import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
-except ImportError:
     import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+except ImportError:
+    from PIL import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
 
 from timeside.core import FixedSizeInputAdapter
 
