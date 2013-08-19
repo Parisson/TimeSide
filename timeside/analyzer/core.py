@@ -468,6 +468,7 @@ class AnalyzerResult(object):
             self.data = data
 
     def __setattr__(self, name, value):
+
         # Set Data with the proper type
         if name == 'data':
             if value is None:
@@ -515,7 +516,9 @@ class AnalyzerResult(object):
     def __repr__(self):
         return self.to_json()
 
+
     def __eq__(self, other):
+
         return (isinstance(other, self.__class__)
             and self.as_dict() == other.as_dict())
 
@@ -548,6 +551,9 @@ class AnalyzerResultContainer(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def add_result(self, analyzer_result):
         if type(analyzer_result) == list:
             for res in analyzer_result:
@@ -566,6 +572,7 @@ class AnalyzerResultContainer(object):
         root = ET.Element('timeside')
 
         for result in data_list:
+
             if result:
                 root.append(ET.fromstring(result.to_xml()))
 
@@ -597,6 +604,7 @@ class AnalyzerResultContainer(object):
         results_json = json.loads(json_str)
         results = AnalyzerResultContainer()
         for res_json in results_json:
+
             res = newAnalyzerResult()
             res.idMetadata = res_json['idMetadata']
             res.data = res_json['data']

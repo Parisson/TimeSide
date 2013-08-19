@@ -74,10 +74,8 @@ class AubioPitch(Analyzer):
         pitch.idMetadata.id = "aubio_pitch"
         pitch.idMetadata.name = "f0 (aubio)"
         pitch.idMetadata.unit = 'Hz'
-        # Get metadata
 
         # parameters : None # TODO check with Piem "default" and "freq" in setup
-
 
         # Set Data
         self.pitches = numpy.array(self.pitches)

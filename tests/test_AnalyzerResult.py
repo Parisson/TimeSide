@@ -50,6 +50,7 @@ class TestAnalyzerResult(TestCase):
     def testOnListOfList(self):
         "list of lists result"
         self.result.data.data = [[0, 1, 3], [0, 1, 2]]
+        # TODO : @piem, @yomguy : check use case for [[0, 1], [0, 1, 2]]
 
     def testOnNumpyVectorOfFloat(self):
         "numpy vector of float"
