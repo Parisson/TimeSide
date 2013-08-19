@@ -12,60 +12,72 @@ class TestAnalyzerResult(TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = AnalyzerResult()
-        self.result.metadata=dict(id="foo_bar", name="Foo bar", unit="foo")
+        self.result = newAnalyzerResult()
+        from datetime import datetime
+        self.result.idMetadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
+                                       version=TimeSideVersion,
+                                       author='TimeSide',
+                                       id="foo_bar",
+                                       name="Foo bar",
+                                       unit="foo")
+        self.result.audioMetadata = dict(uri='Foo.wav',
+                                         start=0, duration = 20,
+                                         channels=2)
+
+        self.result.data = dict(dataMode='value')
+
 
     def testOnFloat(self):
         "float result"
-        self.result.data = 1.2
+        self.result.data.data = 1.2
 
     def testOnInt(self):
         "integer result"
-        self.result.data = 1
+        self.result.data.data = 1
 
     def testOnList(self):
         "list result"
-        self.result.data = [1., 2.]
+        self.result.data.data = [1., 2.]
 
     def testOnString(self):
         "string result"
-        self.result.data = "hello"
+        self.result.data.data = "hello"
 
     def testOnListOfString(self):
         "list of strings result"
-        self.result.data = ["hello", "hola"]
+        self.result.data.data = ["hello", "hola"]
 
     def testOnListOfList(self):
         "list of lists result"
-        self.result.data = [[0, 1], [0, 1, 2]]
+        self.result.data.data = [[0, 1, 3], [0, 1, 2]]
 
     def testOnNumpyVectorOfFloat(self):
         "numpy vector of float"
-        self.result.data = ones(2, dtype='float') * pi
+        self.result.data.data = ones(2, dtype='float') * pi
 
     def testOnNumpy2DArrayOfFloat64(self):
         "numpy 2d array of float64"
-        self.result.data = ones([2, 3], dtype='float64') * pi
+        self.result.data.data = ones([2, 3], dtype='float64') * pi
 
     def testOnNumpy3DArrayOfInt32(self):
         "numpy 3d array of int32"
-        self.result.data = ones([2, 3, 2], dtype='int32') * pi
+        self.result.data.data = ones([2, 3, 2], dtype='int32') * pi
 
     def testOnNumpyArrayOfStrings(self):
         "numpy array of strings"
-        self.result.data = array(['hello', 'hola'])
+        self.result.data.data = array(['hello', 'hola'])
 
     def testOnEmptyList(self):
         "empty list"
-        self.result.data = []
+        self.result.data.data = []
 
     def testOnNone(self):
         "None"
-        self.result.data = None
+        self.result.data.data = None
 
     def testOnUnicode(self):
         "None"
-        self.result.data = None
+        self.result.data.data = None
 
     def tearDown(self):
         pass
@@ -101,7 +113,7 @@ def create_good_method_func(numpy_data_type):
     def method(self):
         "numpy %s" % numpy_data_type
         import numpy
-        self.result.data = getattr(numpy, numpy_data_type)(pi)
+        self.result.data.data = getattr(numpy, numpy_data_type)(pi)
     return method
 
 
@@ -113,7 +125,7 @@ def create_bad_method_func(numpy_data_type):
             data = getattr(numpy, numpy_data_type)(pi)
         except ValueError:
             data = getattr(numpy, numpy_data_type)()
-        self.assertRaises(TypeError, self.result.__setattr__, 'data', data)
+        self.assertRaises(TypeError, self.result.data.__setattr__, 'data', data)
     return method
 
 for numpy_data_type in good_numpy_data_types:

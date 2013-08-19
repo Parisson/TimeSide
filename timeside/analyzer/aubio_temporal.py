@@ -95,8 +95,8 @@ class AubioTemporal(Analyzer):
         onsetrate = self.new_result(dataMode='value', resultType='event')
         # Set metadata
         onsetrate.idMetadata.id = "aubio_onset_rate"
-        onsetrate.idMetadata.name="onset rate (aubio)"
-        onsetrate.idMetadata.unit="bpm"
+        onsetrate.idMetadata.name = "onset rate (aubio)"
+        onsetrate.idMetadata.unit = "bpm"
 
         # Set Data , dataMode='value', resultType='event'
         # Event = list of (time, value)
