@@ -31,28 +31,6 @@ class TestListCoreProcessors(TestCase):
         procs = timeside.core.processors(timeside.api.IGrapher)
         self.assertNotEquals(len(procs), 0)
 
-class TestListProcessors(TestCase):
-    """ test get list of processors """
-
-    def testHasSomeDecoders(self):
-        "has some decoders"
-        procs = timeside.get_processors(timeside.api.IEncoder)
-        self.assertNotEquals(len(procs), 0)
-
-    def testHasSomeEncoders(self):
-        "has some encoders"
-        procs = timeside.get_processors(timeside.api.IEncoder)
-        self.assertNotEquals(len(procs), 0)
-
-    def testHasSomeAnalyzers(self):
-        "has some analyzers"
-        procs = timeside.get_processors(timeside.api.IAnalyzer)
-        self.assertNotEquals(len(procs), 0)
-
-    def testHasSomeGraphers(self):
-        "has some graphers"
-        procs = timeside.get_processors(timeside.api.IGrapher)
-        self.assertNotEquals(len(procs), 0)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
