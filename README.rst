@@ -32,6 +32,11 @@ Here is a schematic diagram of the TimeSide engine architecture:
 News
 =====
 
+0.4.5
+
+ * (re)fix Pillow support (#12)
+ * add Debian package directory (thanks to piem)
+ 
 0.4.4
 
  * Only minor setup bugfixes

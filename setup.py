@@ -26,7 +26,7 @@ setup(
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin, Paul Brossier, Riccardo Zaccarelli, Olivier Guilyardi",
   author_email = "yomguy@parisson.com, piem@piem.org, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
-  version = '0.4.4',
+  version = '0.4.5',
   install_requires = [
         'setuptools',
         'numpy',
