@@ -5,8 +5,8 @@ from unit_timeside import *
 
 import os.path
 
-from glib import GError as GST_IOError
-
+#from glib import GError as GST_IOError
+# HINT : to use later with Gnonlin only
 
 class TestDecoding(TestCase):
     "Test decoding features"
@@ -136,11 +136,11 @@ class TestDecodingSegment(TestDecoding):
         "Test 32kHz wav decoding"
         super(TestDecodingSegment, self).testWav32k()
 
-    @unittest.skip("demonstrating skipping")
+    @unittest.skip("Flac not supported until bug fix is GST Gnonlin")
     def testFlac(self):
         "Test flac decoding"
 
-    @unittest.skip("demonstrating skipping")
+    @unittest.skip("Ogg not supported until bug fix is GST Gnonlin")
     def testOgg(self):
         "Test ogg decoding"
 
@@ -180,7 +180,7 @@ class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
     def testMp3(self):
         "Test mp3 decoding"
         super(TestDecodingSegment, self).testMp3()
-        self.expected_totalframes = 308701
+        self.expected_totalframes = 310715#308701
 
 
 class TestDecodingStereo(TestDecoding):
@@ -225,28 +225,75 @@ class TestDecodingMonoUpsampling(TestDecoding):
         self.expected_totalframes = 384000
 
 
-@unittest.skip("demonstrating skipping")
 class TestDecodingMonoDownsampling(TestDecoding):
 
     def setUp(self):
         super(TestDecodingMonoDownsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 16000, None, None
 
+        self.expected_totalframes = 128000
 
-@unittest.skip("demonstrating skipping")
+    def testWav32k(self):
+        "Test 32kHz wav decoding"
+        super(TestDecodingMonoDownsampling, self).testWav32k()
+        self.expected_totalframes = 128000
+
+    def testOgg(self):
+        "Test ogg decoding"
+        super(TestDecodingMonoDownsampling, self).testOgg()
+        self.expected_totalframes = 127980
+
+    def testMp3(self):
+        "Test mp3 decoding"
+        super(TestDecodingMonoDownsampling, self).testMp3()
+        self.expected_totalframes = 128314
+
 class TestDecodingStereoDownsampling(TestDecoding):
 
     def setUp(self):
         super(TestDecodingStereoDownsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 32000, 2, None
 
+        self.expected_totalframes = 256000
 
-@unittest.skip("demonstrating skipping")
+    def testWav32k(self):
+        "Test 32kHz wav decoding"
+        super(TestDecodingStereoDownsampling, self).testWav32k()
+        self.expected_totalframes = 256000
+
+    def testOgg(self):
+        "Test ogg decoding"
+        super(TestDecodingStereoDownsampling, self).testOgg()
+        self.expected_totalframes = 255992
+
+    def testMp3(self):
+        "Test mp3 decoding"
+        super(TestDecodingStereoDownsampling, self).testMp3()
+        self.expected_totalframes = 256627
+
+
 class TestDecodingStereoUpsampling(TestDecoding):
 
     def setUp(self):
         super(TestDecodingStereoUpsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 96000, 2, None
+
+        self.expected_totalframes = 768000
+
+    def testWav32k(self):
+        "Test 32kHz wav decoding"
+        super(TestDecodingStereoUpsampling, self).testWav32k()
+        self.expected_totalframes = 768000
+
+    def testOgg(self):
+        "Test ogg decoding"
+        super(TestDecodingStereoUpsampling, self).testOgg()
+        self.expected_totalframes = 768000
+
+    def testMp3(self):
+        "Test mp3 decoding"
+        super(TestDecodingStereoUpsampling, self).testMp3()
+        self.expected_totalframes = 769881
 
 
 class TestDecodingShortBlock(TestDecoding):
@@ -277,13 +324,13 @@ class TestDecodingWrongFiles(TestCase):
         "Test decoding dev null"
         self.source = "/dev/null"
         decoder = FileDecoder(self.source)
-        self.assertRaises(GST_IOError, FileDecoder.setup, decoder)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
 
     def testNoAudioStream(self):
         "Test decoding file withouth audio stream"
         self.source = __file__
         decoder = FileDecoder(self.source)
-        self.assertRaises(GST_IOError, FileDecoder.setup, decoder)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
 
     def testEmptyFile(self):
         "Test decoding empty file"
@@ -291,7 +338,7 @@ class TestDecodingWrongFiles(TestCase):
         self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
         self.source = self.tmpfile.name
         decoder = FileDecoder(self.source)
-        self.assertRaises(GST_IOError, FileDecoder.setup, decoder)
+        self.assertRaises(IOError, FileDecoder.setup, decoder)
         self.tmpfile.close()
 
 if __name__ == '__main__':
