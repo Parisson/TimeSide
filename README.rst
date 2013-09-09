@@ -161,7 +161,7 @@ TimeSide needs some other python modules to run. The following methods explain h
 On Debian, Ubuntu, etc::
 
  $ sudo apt-get update
- $ sudo apt-get install gcc python python-dev python-pip python-setuptools 
+ $ sudo apt-get install gcc python python-dev python-pip python-setuptools \
                         python-gobject gobject-introspection \
                         python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
                         gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
