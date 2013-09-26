@@ -83,8 +83,11 @@ class FileDecoder(Processor):
         else:
             raise IOError('File not found!')
 
-        self.uri_start = start
-        self.uri_duration = duration
+        self.uri_start = float(start)
+        if duration:
+            self.uri_duration = float(duration)
+        else:
+            self.uri_duration = duration
 
         if start==0 and duration is None:
             self.IS_SEGMENT = False
@@ -97,12 +100,12 @@ class FileDecoder(Processor):
         #import gobject
         uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
         uri_info = uri_discoverer.discover_uri(self.uri)
-        self.uri_duration = (uri_info.get_duration() / gst.SECOND -
+        self.uri_duration = (uri_info.get_duration() / float(gst.SECOND) -
                             self.uri_start)
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
-        if not(self.uri_duration):
+        if self.IS_SEGMENT and not(self.uri_duration):
             self.set_uri_default_duration()
 
         # a lock to wait wait for gstreamer thread to be ready
@@ -318,9 +321,7 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def mediainfo(self):
-        return dict(uri=self.uri)
-        # TODO : for segment support :
-        #return dict(uri=self.uri, duration=self.input_duration, segment_start=self.segment_start, segment_duration=self.segment_duration)
+        return dict(uri=self.uri, duration=self.uri_duration, start=self.uri_start)
 
     def __del__(self):
         self.release()
