@@ -12,7 +12,7 @@ class TestAnalyzerResult(TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = newAnalyzerResult()
+        self.result = newAnalyzerResult(dataMode='value', timeMode='framewise')
         from datetime import datetime
         self.result.idMetadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
                                        version=TimeSideVersion,
@@ -21,85 +21,84 @@ class TestAnalyzerResult(TestCase):
                                        name="Foo bar",
                                        unit="foo")
         self.result.audioMetadata = dict(uri='Foo.wav',
-                                         start=0, duration = 20,
+                                         start=0, duration=20,
                                          channels=2)
-
-        self.result.data = dict(dataMode='value')
-
 
     def testOnFloat(self):
         "float result"
-        self.result.data.data = 1.2
+        self.result.data.value = 1.2
 
     def testOnInt(self):
         "integer result"
-        self.result.data.data = 1
+        self.result.data.value = 1
 
     def testOnList(self):
         "list result"
-        self.result.data.data = [1., 2.]
+        self.result.data.value = [1., 2.]
 
     def testOnString(self):
         "string result"
-        self.result.data.data = "hello"
+        self.result.data.value = "hello"
 
     def testOnListOfString(self):
         "list of strings result"
-        self.result.data.data = ["hello", "hola"]
+        self.result.data.value = ["hello", "hola"]
 
     def testOnListOfList(self):
         "list of lists result"
-        self.result.data.data = [[0, 1, 3], [0, 1, 2]]
-        # TODO : @piem, @yomguy : check use case for [[0, 1], [0, 1, 2]]
+        self.result.data.value = [[0, 1], [0, 1, 2]]
 
     def testOnNumpyVectorOfFloat(self):
         "numpy vector of float"
-        self.result.data.data = ones(2, dtype='float') * pi
+        self.result.data.value = ones(2, dtype='float') * pi
 
     def testOnNumpy2DArrayOfFloat64(self):
         "numpy 2d array of float64"
-        self.result.data.data = ones([2, 3], dtype='float64') * pi
+        self.result.data.value = ones([2, 3], dtype='float64') * pi
 
     def testOnNumpy3DArrayOfInt32(self):
         "numpy 3d array of int32"
-        self.result.data.data = ones([2, 3, 2], dtype='int32') * pi
+        self.result.data.value = ones([2, 3, 2], dtype='int32')
 
     def testOnNumpyArrayOfStrings(self):
         "numpy array of strings"
-        self.result.data.data = array(['hello', 'hola'])
+        self.result.data.value = array(['hello', 'hola'])
 
     def testOnEmptyList(self):
         "empty list"
-        self.result.data.data = []
+        self.result.data.value = []
 
     def testOnNone(self):
         "None"
-        self.result.data.data = None
+        self.result.data.value = None
 
     def testOnUnicode(self):
         "None"
-        self.result.data.data = None
+        self.result.data.value = None
 
     def tearDown(self):
         pass
 
-good_numpy_data_types = [
-    'float64',
-    'float32',
-#    'float16',
-    'int64',
-    'int16',
-    'int32',
-    'int8',
-    'uint16',
-    'uint32',
-    'uint64',
-    'uint8',
-]
+#good_numpy_data_types = [
+#    'float64',
+#    'float32',
+##    'float16',
+#    'int64',
+#    'int16',
+#    'int32',
+#    'int8',
+#    'uint16',
+#    'uint32',
+#    'uint64',
+#    'uint8',
+#]
+from timeside.analyzer.core import numpy_data_types as good_numpy_data_types
 
 bad_numpy_data_types = [
     # not understood by json or yaml
     'float128',
+    # Not supported by h5py for version < 2.2
+    'float16',
     # complex can not be serialized in json
     'complex256',
     'complex128',
@@ -112,9 +111,9 @@ bad_numpy_data_types = [
 
 def create_good_method_func(numpy_data_type):
     def method(self):
-        "numpy %s" % numpy_data_type
+        "numpy %s" % str(numpy_data_type)[7:-1]
         import numpy
-        self.result.data.data = getattr(numpy, numpy_data_type)(pi)
+        self.result.data.value = numpy_data_type(pi)
     return method
 
 
@@ -126,13 +125,14 @@ def create_bad_method_func(numpy_data_type):
             data = getattr(numpy, numpy_data_type)(pi)
         except ValueError:
             data = getattr(numpy, numpy_data_type)()
-        self.assertRaises(TypeError, self.result.data.__setattr__, 'data', data)
+        self.assertRaises(TypeError, self.result.data.__setattr__, 'value', data)
     return method
 
 for numpy_data_type in good_numpy_data_types:
     test_method = create_good_method_func(numpy_data_type)
-    test_method.__name__ = 'testOnNumpy_%s' % numpy_data_type
-    test_method.__doc__ = 'groks a numpy %s' % numpy_data_type
+    str_type = str(numpy_data_type)[13:-2] # keep only type string
+    test_method.__name__ = 'testOnNumpy_%s' % str_type
+    test_method.__doc__ = 'groks a numpy %s' % str_type
     setattr(TestAnalyzerResult, test_method.__name__, test_method)
 
 for numpy_data_type in bad_numpy_data_types:
@@ -152,7 +152,6 @@ class TestAnalyzerResultNumpy(TestAnalyzerResult):
         if verbose:
             print '%15s' % 'from numpy:',
             print d_numpy
-
         self.assertEquals(d_numpy, results)
 
 
@@ -204,7 +203,7 @@ class TestAnalyzerResultXml(TestAnalyzerResult):
 
 
 class TestAnalyzerResultJson(TestAnalyzerResult):
-    """ test AnalyzerResult json serialize """
+    """ test AnalyzerResult """
     def tearDown(self):
         results = AnalyzerResultContainer([self.result])
         try:
