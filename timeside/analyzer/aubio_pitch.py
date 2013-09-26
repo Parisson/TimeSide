@@ -69,7 +69,7 @@ class AubioPitch(Analyzer):
 
         container = super(AubioPitch, self).results()
 
-        pitch = self.new_result(dataMode='value', resultType='framewise')
+        pitch = self.new_result(dataMode='value', timeMode='framewise')
 
         pitch.idMetadata.id = "aubio_pitch"
         pitch.idMetadata.name = "f0 (aubio)"
@@ -78,9 +78,7 @@ class AubioPitch(Analyzer):
         # parameters : None # TODO check with Piem "default" and "freq" in setup
 
         # Set Data
-        self.pitches = numpy.array(self.pitches)
-        pitch.data.data = self.pitches
-        pitch.data.dataType = float
+        pitch.data.value = numpy.array(self.pitches)
         container.add_result(pitch)
 
         return container

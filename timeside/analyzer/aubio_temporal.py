@@ -75,15 +75,17 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         #  Onsets
         #---------------------------------
-        onsets = self.new_result(dataMode='label', resultType='event')
+        onsets = self.new_result(dataMode='label', timeMode='event')
 
         onsets.idMetadata.id = "aubio_onset"
         onsets.idMetadata.name = "onsets (aubio)"
         onsets.idMetadata.unit = 's'
 
-        # Set Data , dataMode='label', resultType='event'
+        # Set Data , dataMode='label', timeMode='event'
         # Event = list of (time, labelId)
-        onsets.data.data = [(time,1) for time in self.onsets]
+
+        onsets.data.label = numpy.ones(len(self.onsets))
+        onsets.data.time = self.onsets
 
         onsets.labelMetadata.label = {1: 'Onset'}
 
@@ -92,39 +94,43 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         #  Onset Rate
         #---------------------------------
-        onsetrate = self.new_result(dataMode='value', resultType='event')
+        onsetrate = self.new_result(dataMode='value', timeMode='event')
         # Set metadata
         onsetrate.idMetadata.id = "aubio_onset_rate"
         onsetrate.idMetadata.name = "onset rate (aubio)"
         onsetrate.idMetadata.unit = "bpm"
 
-        # Set Data , dataMode='value', resultType='event'
+        # Set Data , dataMode='value', timeMode='event'
         # Event = list of (time, value)
+        # TODO : add time
         if len(self.onsets) > 1:
-            periods = 60. / numpy.diff(self.onsets)
-            onsetrate.data.data = zip(periods,self.onsets[:-1])
+            onsetrate.data.value = 60. / numpy.diff(self.onsets)
+            onsetrate.data.time = self.onsets[:-1]
         else:
-            onsetrate.data.data = []
+            onsetrate.data.value = []
 
         container.add_result(onsetrate)
 
         #---------------------------------
         #  Beats
         #---------------------------------
-        beats = self.new_result(dataMode='label', resultType='segment')
+        beats = self.new_result(dataMode='label', timeMode='segment')
         # Set metadata
-        beats.idMetadata.id="aubio_beat"
-        beats.idMetadata.name="beats (aubio)"
-        beats.idMetadata.unit="s"
+        beats.idMetadata.id = "aubio_beat"
+        beats.idMetadata.name = "beats (aubio)"
+        beats.idMetadata.unit = "s"
 
-        #  Set Data, dataMode='label', resultType='segment'
+        #  Set Data, dataMode='label', timeMode='segment'
         # Segment = list of (time, duration, labelId)
         if len(self.beats) > 1:
             duration = numpy.diff(self.beats)
             duration = numpy.append(duration,duration[-1])
-            beats.data.data = [(time,dur,1) for (time, dur) in zip(self.beats, duration)]
+            beats.data.time = self.beats
+            beats.data.duration = duration
+            beats.data.label = numpy.ones(len(self.beats))
         else:
-            beats.data.data = []
+            beats.data.label = []
+
         beats.labelMetadata.label = {1: 'Beat'}
 
         container.add_result(beats)
@@ -132,21 +138,23 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         #  BPM
         #---------------------------------
-        bpm = self.new_result(dataMode='value', resultType='segment')
+        bpm = self.new_result(dataMode='value', timeMode='segment')
         # Set metadata
-        bpm.idMetadata.id="aubio_bpm"
-        bpm.idMetadata.name="bpm (aubio)"
-        bpm.idMetadata.unit="bpm"
+        bpm.idMetadata.id = "aubio_bpm"
+        bpm.idMetadata.name = "bpm (aubio)"
+        bpm.idMetadata.unit = "bpm"
 
-        #  Set Data, dataMode='value', resultType='segment'
+        #  Set Data, dataMode='value', timeMode='segment'
         if len(self.beats) > 1:
             periods = 60. / numpy.diff(self.beats)
             periods = numpy.append(periods,periods[-1])
 
-            bpm.data.data = zip(self.beats, duration, periods)
+            bpm.data.time = self.beats
+            bpm.data.duration = duration
+            bpm.data.value = periods
 
         else:
-            bpm.data.data = []
+            bpm.data.value = []
 
         container.add_result(bpm)
 
