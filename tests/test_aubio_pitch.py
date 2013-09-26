@@ -20,6 +20,7 @@ class TestAubioPitch(TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
+        results = self.analyzer.results()
         #print "result:", self.analyzer.result()
 
 if __name__ == '__main__':
