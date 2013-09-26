@@ -27,6 +27,8 @@ from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IAnalyzer
 from timeside import __version__ as TimeSideVersion
 import numpy
+from collections import OrderedDict
+
 numpy_data_types = [
     #'float128',
     'float64',
@@ -67,7 +69,7 @@ class MetadataObject(object):
     as_dict()
         Return a dictionnary representation of the MetadataObject
     """
-    from collections import OrderedDict
+
     # Define default values as an OrderDict
     # in order to keep the order of the keys for display
     _default_value = OrderedDict()
@@ -192,7 +194,7 @@ class IdMetadata(MetadataObject):
     # TODO :
     # - (long) description --> à mettre dans l'API Processor
 
-    from collections import OrderedDict
+
     # Define default values
     _default_value = OrderedDict([('id', ''),
                                   ('name', ''),
@@ -224,7 +226,7 @@ class AudioMetadata(MetadataObject):
                 channelsManagement = 'L' keep only left channel
                 channelsManagement = 'stereo' keep both stereo channels
     '''
-    from collections import OrderedDict
+
     # Define default values
     _default_value = OrderedDict([('uri', ''),
                                   ('start', 0),
@@ -259,7 +261,7 @@ class LabelMetadata(MetadataObject):
 
     '''
 
-    from collections import OrderedDict
+
     # Define default values
     _default_value = OrderedDict([('label', None),
                                   ('description', None),
@@ -278,7 +280,7 @@ class FrameMetadata(MetadataObject):
     '''
     # TODO : check is samplerate can support float
 
-    from collections import OrderedDict
+
     # Define default values
     _default_value = OrderedDict([('samplerate', None),
                                   ('blocksize', None),
@@ -296,7 +298,7 @@ class AnalyzerData(MetadataObject):
         duration : numpy array of float
 
     '''
-    from collections import OrderedDict
+
     # Define default values
     _default_value = OrderedDict([('value', None),
                                   ('label', []),
@@ -425,9 +427,7 @@ class newAnalyzerResult(MetadataObject):
 
     """
 
-    from collections import OrderedDict
-    # Define default values as an OrderDict
-    # in order to keep the order of the keys for display
+    # Define default values
     _default_value = OrderedDict([('dataMode', None),
                                   ('timeMode', None),
                                   ('idMetadata', None),
@@ -463,7 +463,6 @@ class newAnalyzerResult(MetadataObject):
             elif isinstance(value, dict):
                 for (sub_name, sub_value) in value.items():
                     self[name][sub_name] = sub_value
-                #super(newAnalyzerResult, self).__setattr__(name, setFunc(**value))
                 return
             elif value is None:
                 super(newAnalyzerResult, self).__setattr__(name, setFunc())
@@ -475,18 +474,10 @@ class newAnalyzerResult(MetadataObject):
                 raise AttributeError("The value of attribute ''timeMode'' \\\
                 can not change after setup")
             if value == 'value':
-                # Initialize data with:
-                    # 'value', 'dataType'
-                # Remove labelMetadata
                 del self.labelMetadata
                 del self.data.label
             elif value == 'label':
-                # Initialize data with:
-                    # 'label', 'dataType'
                 del self.data.value
-                # TODO : restore labelMetadata if needed
-                # Initialize labelMetadata
-                pass
             elif value is None:
                 pass
             else:
@@ -498,26 +489,19 @@ class newAnalyzerResult(MetadataObject):
                 can not change after setup")
 
             if value == 'framewise':
-                # Initialize frameMetadata
-                # Remove time and duration from data
                 del self.data.time
                 del self.data.duration
                 pass
             elif value == 'global':
-                # Remove time and duration from data
                 del self.data.time
                 del self.data.duration
-                # Remove frameMetadata
                 del self.frameMetadata
 
                 pass
             elif value == 'segment':
-                # Remove frameMetadata
                 del self.frameMetadata
             elif value == 'event':
-                # Remove frameMetadata
                 del self.frameMetadata
-                # Remove duration from data
                 del self.data.duration
 
                 pass
@@ -582,8 +566,8 @@ class AnalyzerMetadata(MetadataObject):
     parameters : dict
 
     """
+    # TODO : Remove this class
 
-    from collections import OrderedDict
     # Define default values as an OrderDict
     # in order to keep the order of the keys for display
     _default_value = OrderedDict([('id', ''),
@@ -594,11 +578,6 @@ class AnalyzerMetadata(MetadataObject):
                                   ('stepsize', None),
                                   ('parameters', {})
                                   ])
-    # TODO : rajouter
-    # - version timeside
-    # - date import datetime format iso
-    # - filename (audio)
-    # - (long) description --> à mettre dans l'API Processor
 
 
 class AnalyzerResult(object):
@@ -608,6 +587,8 @@ class AnalyzerResult(object):
         - data :
         - metadata : an AnalyzerMetadata object containing the metadata
     """
+    # TODO : Remove this class
+
     def __init__(self, data=None, metadata=None):
         # Define Metadata
         if metadata is None:
@@ -655,10 +636,6 @@ class AnalyzerResult(object):
                      )
                      # ajouter size
         return(prop)
-#    def __getattr__(self, name):
-#        if name in ['id', 'name', 'unit', 'value', 'metadata']:
-#            return self[name]
-#        return super(AnalyzerResult, self).__getattr__(name)
 
     def as_dict(self):
         return(dict(data=self.data, metadata=self.metadata.as_dict()))
