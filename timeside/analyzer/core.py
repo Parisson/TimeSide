@@ -555,7 +555,7 @@ class AnalyzerMetadata(MetadataObject):
     """
     Object that contains the metadata and parameters of an analyzer process
 
-    Metadata
+    Attributes
     ----------
     id : string
     name : string
@@ -597,10 +597,7 @@ class AnalyzerResult(object):
             self.metadata = metadata
 
         # Define Data
-        if data is None:
-            self.data = []
-        else:
-            self.data = data
+        self.data = data
 
     def __setattr__(self, name, value):
 
@@ -612,7 +609,7 @@ class AnalyzerResult(object):
             if type(value) is list:
                 value = numpy.array(value)
             # serialize using numpy
-            if type(value) in numpy_data_types:
+            if type(value) in numpy_data_types+[numpy.ndarray]:
                 value = value.tolist()
             if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
                 raise TypeError('AnalyzerResult can not accept type %s' %
