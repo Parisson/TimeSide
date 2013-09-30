@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2007-2009 Guillaume Pellerin <yomguy@parisson.com>
+# Copyright (c) 2007-2013 Parisson SARL
 
 # This file is part of TimeSide.
 

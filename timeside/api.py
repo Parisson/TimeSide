@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007-2012 Parisson SARL
+# Copyright (C) 2007-2013 Parisson SARL
 # Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
 # Copyright (c) 2007-2009 Guillaume Pellerin <pellerin@parisson.com>
 #

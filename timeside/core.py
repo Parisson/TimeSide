@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (c) 2009-2013 Parisson SARL
 # Copyright (c) 2009 Olivier Guilyardi <olivier@samalyse.com>
 #
 # This file is part of TimeSide.
