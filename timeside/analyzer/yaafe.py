@@ -85,6 +85,8 @@ class Yaafe(Processor):
         container = AnalyzerResultContainer()
         # Get feature extraction results from yaafe
         featNames = self.yaafe_engine.getOutputs().keys()
+        if len(featNames) == 0:
+            raise KeyError('Yaafe engine did not return any feature')
         for featName in featNames:
             # Define ID fields
             id = 'yaafe_' + featName
@@ -93,14 +95,14 @@ class Yaafe(Processor):
 
             # Get results from Yaafe engine
             result = AnalyzerResult()
-            result.metadata = AnalyzerMetadata(id = id,
-                                      name = name,
-                                      unit = unit,
-                                      samplerate = self.samplerate,
-                                      blocksize = self.blocksize,
-                                      stepsize = None)
-
-            result.data = self.yaafe_engine.readOutput(featName)  # Read Yaafe Results
+            result.metadata = AnalyzerMetadata(id=id,
+                                      name=name,
+                                      unit=unit,
+                                      samplerate=self.samplerate,
+                                      blocksize=self.blocksize,
+                                      stepsize=None)
+            # Read Yaafe Results
+            result.data = self.yaafe_engine.readOutput(featName)
             # Store results in Container
             if len(result.data):
                 container.add_result(result)
