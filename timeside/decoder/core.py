@@ -22,7 +22,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Authors: Paul Brossier <piem@piem.org>
-#          Guilaume Pellerin <yomguy@parisson.com>
+# Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
