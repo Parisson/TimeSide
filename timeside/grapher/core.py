@@ -619,36 +619,55 @@ def downsample(vector, factor):
 
 
 def smooth(x, window_len=10, window='hanning'):
-    """smooth the data using a window with requested size.
+    """
+    Smooth the data using a window with requested size.
 
     This method is based on the convolution of a scaled window with the signal.
     The signal is prepared by introducing reflected copies of the signal
     (with the window size) in both ends so that transient parts are minimized
     in the begining and end part of the output signal.
 
-    input:
-        x: the input signal
-        window_len: the dimension of the smoothing window
-        window: the type of window from 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'
-            flat window will produce a moving average smoothing.
+    Parameters
+    ----------
+    x : numpy.array
+        the input signal
+    window_len : int
+        the dimension of the smoothing window
+    window : str
+        the type of window from 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'
+        flat window will produce a moving average smoothing.
 
-    output:
-        the smoothed signal
+    Returns
+    -------
+    The smoothed signal
 
-    example:
-
-    import numpy as np
-    t = numpy.linspace(-2,2,0.1)
-    x = numpy.sin(t)+numpy.random.randn(len(t))*0.1
-    y = smooth(x)
-
-    see also:
+    See Also
+    --------
 
     numpy.hanning, numpy.hamming, numpy.bartlett, numpy.blackman, numpy.convolve
     scipy.signal.lfilter
 
-    TODO: the window parameter could be the window itself if an array instead of a string
+
+    Examples
+    --------
+
+    >>> import numpy as np
+    >>> from timeside.grapher import smooth
+    >>> t = np.arange(-2,2,0.1)
+    >>> x = np.sin(t)+np.random.randn(len(t))*0.1
+    >>> y = smooth(x)
+    >>> import matplotlib.pyplot as plt
+    >>> plt.plot(x) # doctest: +ELLIPSIS
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.plot(y) # doctest: +ELLIPSIS
+    [<matplotlib.lines.Line2D object at 0x...>]
+    >>> plt.legend(['Source signal', 'Smoothed signal']) # doctest: +ELLIPSIS
+    <matplotlib.legend.Legend object at 0x...>
+    >>> #plt.show()
     """
+
+    # TODO: the window parameter could be the window itself if an array instead of a string
+
 
     if x.ndim != 1:
         raise ValueError, "smooth only accepts 1 dimension arrays."
@@ -698,3 +717,8 @@ def im_watermark(im, inputtext, font=None, color=None, opacity=.6, margin=(30,30
     if opacity != 1:
         textlayer = reduce_opacity(textlayer,opacity)
     return Image.composite(textlayer, im, textlayer)
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

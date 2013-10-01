@@ -43,8 +43,15 @@ class MetaProcessor(MetaComponent):
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
             if _processors.has_key(id):
-                raise ApiError("%s and %s have the same id: '%s'"
-                    % (new_class.__name__, _processors[id].__name__, id))
+                # Doctest test can duplicate a processor
+                # This can be identify by the conditon "module == '__main__'"
+                if new_class.__module__ == '__main__':
+                    new_class = _processors[id]
+                elif _processors[id].__module__ == '__main__':
+                    pass
+                else:
+                    raise ApiError("%s and %s have the same id: '%s'"
+                        % (new_class.__name__, _processors[id].__name__, id))
             if not MetaProcessor.valid_id.match(id):
                 raise ApiError("%s has a malformed id: '%s'"
                     % (new_class.__name__, id))

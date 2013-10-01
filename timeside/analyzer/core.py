@@ -406,7 +406,7 @@ class newAnalyzerResult(MetadataObject):
     """
     Object that contains the metadata and parameters of an analyzer process
 
-    Attributes
+    Parameters
     ----------
     dataMode : str
         dataMode describes the type of data :
@@ -418,12 +418,19 @@ class newAnalyzerResult(MetadataObject):
             - 'global'
             - 'segment'
             - 'event'
-    data : AnalyzerData
-    idMetadata : IdMetadata
-    audioMetadata : AudioMetadata
-    frameMetadata : FrameMetadata
-    labelMetadata : LabelMetadata
-    parameters : AnalyzerParameters Object
+
+
+    Returns
+    -------
+    A new MetadataObject with the following attributes :
+        - dataMode
+        - timeMode
+        - data : :class:`AnalyzerData`
+        - idMetadata : :class:`IdMetadata`
+        - audioMetadata : :class:`AudioMetadata`
+        - frameMetadata : :class:`FrameMetadata`
+        - labelMetadata : :class:`LabelMetadata`
+        - parameters : :class:`AnalyzerParameters` Object
 
     """
 
@@ -655,17 +662,18 @@ class AnalyzerResult(object):
 class AnalyzerResultContainer(object):
     '''
     >>> from timeside.decoder import FileDecoder
-    >>> #from timeside.analyzer.core import Analyzer
-    >>> #from timeside.analyzer import AnalyzerResultContainer, newAnalyzerResult
-    >>> wavFile = 'tests/samples/sweep.wav'
+    >>> import timeside.analyzer.core as coreA
+    >>> import os
+    >>> ModulePath =  os.path.dirname(os.path.realpath(coreA.__file__))
+    >>> wavFile = os.path.join(ModulePath , '../../tests/samples/sweep.wav')
     >>> d = FileDecoder(wavFile, start=1)
 
-    >>> a = Analyzer()
+    >>> a = coreA.Analyzer()
     >>> (d|a).run() #doctest: +ELLIPSIS
     <timeside.core.ProcessPipe object at 0x...>
     >>> a.new_result() #doctest: +ELLIPSIS
-    newAnalyzerResult(dataMode=None, timeMode=None, idMetadata=IdMetadata(id='', name='', unit='', description='', date='...', version='0.4.4', author='TimeSide'), data=AnalyzerData(data=None, time=None, duration=None, dataType=None), audioMetadata=AudioMetadata(uri='file:///home/thomas/code/timeside/TimeSide/tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frameMetadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), labelMetadata=LabelMetadata(label=None, description=None, labelType='mono'), parameters={})
-    >>> resContainer = AnalyzerResultContainer()
+    newAnalyzerResult(dataMode=None, timeMode=None, idMetadata=IdMetadata(id='', name='', unit='', description='', date='...', version='...', author='TimeSide'), data=AnalyzerData(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audioMetadata=AudioMetadata(uri='file:///.../tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frameMetadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), labelMetadata=LabelMetadata(label=None, description=None, labelType='mono'), parameters={})
+    >>> resContainer = coreA.AnalyzerResultContainer()
 
     '''
     def __init__(self, analyzer_results=None):
