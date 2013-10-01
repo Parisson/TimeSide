@@ -20,8 +20,11 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
+from timeside.core import Processor, implements, interfacedoc,  \
+                            FixedSizeInputAdapter
+from timeside.analyzer.core import AnalyzerMetadata, \
+                                   AnalyzerResultContainer, \
+                                   AnalyzerResult
 from timeside.api import IValueAnalyzer
 import numpy
 
@@ -30,7 +33,8 @@ class Level(Processor):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
         super(Level, self).setup(channels, samplerate, blocksize, totalframes)
         # max_level
         self.max_value = 0
@@ -54,7 +58,8 @@ class Level(Processor):
             if max_value > self.max_value:
                 self.max_value = max_value
             # rms_level
-            self.mean_values = numpy.append(self.mean_values, numpy.mean(numpy.square(frames)))
+            self.mean_values = numpy.append(self.mean_values,
+                                            numpy.mean(numpy.square(frames)))
         return frames, eod
 
     def results(self):
@@ -73,7 +78,8 @@ class Level(Processor):
                                   name="RMS level",
                                   unit="dBFS",
                                   samplerate=self.samplerate())
-        data = numpy.round(20*numpy.log10(numpy.sqrt(numpy.mean(self.mean_values))), 3)
+        data = numpy.round(20*numpy.log10(
+                                numpy.sqrt(numpy.mean(self.mean_values))), 3)
         rms_level = AnalyzerResult(data, metadata)
 
         return AnalyzerResultContainer([max_level, rms_level])
