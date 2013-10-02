@@ -1,5 +1,5 @@
 Source: timeside
-Section: web
+Section: python
 Priority: extra
 Maintainer: Paul Brossier <piem@debian.org>
 Build-Depends: debhelper (>= 8.0.0), python
@@ -8,7 +8,7 @@ Homepage: http://code.google.com/p/timeside
 
 Package: python-timeside
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python-gst0.10
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, python-gst0.10, python-aubio, python-yaafe
 Description: open and fast web audio components
  TimeSide is a set of python components enabling easy audio processing,
  transcoding, imaging and streaming. Its simple architecture and high-level
