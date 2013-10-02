@@ -1,5 +1,12 @@
+timeside (0.5.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Initial debian release (Closes: #nnnn)
+
+ -- Paul Brossier <piem@debian.org>  Wed, 02 Oct 2013 00:30:04 -0500
+
 timeside (0.4.3-1) unstable; urgency=low
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * First debian package
 
  -- Paul Brossier <piem@debian.org>  Mon, 08 Jul 2013 10:18:57 -0500
