@@ -11,3 +11,13 @@
 
 %:
 	dh $@ --with python2
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf doc/build
+
+override_dh_auto_build:
+	dh_auto_build
+	cd doc; make html; cd ..
+	ln -sf /usr/share/javascript/jquery/jquery.js doc/build/html/_static/jquery.js
+	ln -sf /usr/share/javascript/underscore/underscore.js doc/build/html/_static/underscore.js
