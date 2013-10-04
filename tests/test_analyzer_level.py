@@ -3,8 +3,6 @@
 from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.level import Level
-from timeside.analyzer import newAnalyzerResult, AnalyzerResultContainer
-from timeside.analyzer import AnalyzerMetadata
 
 class TestAnalyzerLevel(TestCase):
 

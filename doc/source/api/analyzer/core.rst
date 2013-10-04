@@ -7,8 +7,8 @@
 New analyzer Result
 *******************
 
-.. autoclass:: newAnalyzerResult
-   :members: 
+.. autoclass:: AnalyzerResult
+   :members:
    :undoc-members:
    :show-inheritance:
 
@@ -16,6 +16,6 @@ AnalyzerResultContainer
 ***********************
 
 .. autoclass:: AnalyzerResultContainer
-   :members: 
+   :members:
    :undoc-members:
    :show-inheritance:

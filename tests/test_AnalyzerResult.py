@@ -12,7 +12,7 @@ class TestAnalyzerResult(TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = newAnalyzerResult(dataMode='value', timeMode='framewise')
+        self.result = AnalyzerResult(dataMode='value', timeMode='framewise')
         from datetime import datetime
         self.result.idMetadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
                                        version=TimeSideVersion,

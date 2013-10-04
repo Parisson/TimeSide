@@ -1,10 +1,8 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import *
+from timeside.decoder import FileDecoder
 from timeside.analyzer.dc import MeanDCShift
-from timeside.analyzer.core import AnalyzerResult, AnalyzerMetadata
-from numpy import round
 
 class TestAnalyzerDC(TestCase):
 

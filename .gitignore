@@ -5,3 +5,5 @@ dist/
 *.swp
 tests/samples
 TimeSide.egg-info
+*.rst~
+*.py~

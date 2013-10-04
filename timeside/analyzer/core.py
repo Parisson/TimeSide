@@ -315,7 +315,7 @@ class AnalyzerData(MetadataObject):
                 value = numpy.asarray(value)
                 if value.dtype.type not in numpy_data_types:
                     raise TypeError(
-                        'AnalyzerResult can not accept type %s for %s' %
+                        'Result Data can not accept type %s for %s' %
                         (value.dtype.type, name))
                 if value.shape == ():
                     value.resize((1,))
@@ -325,7 +325,7 @@ class AnalyzerData(MetadataObject):
                     value = numpy.asarray(value, dtype='int')
                 except ValueError:
                     raise TypeError(
-                        'AnalyzerResult can not accept type %s for %s' %
+                        'Result Data can not accept type %s for %s' %
                         (value.dtype.type, name))
 
             elif name in ['time', 'duration']:
@@ -333,7 +333,7 @@ class AnalyzerData(MetadataObject):
                     value = numpy.asfarray(value)
                 except ValueError:
                     raise TypeError(
-                        'AnalyzerResult can not accept type %s for %s' %
+                        'Result Data can not accept type %s for %s' %
                         (value.dtype.type, name))
             elif name == 'dataType':
                 return
@@ -405,7 +405,7 @@ class AnalyzerParameters(dict):
         return self
 
 
-class newAnalyzerResult(MetadataObject):
+class AnalyzerResult(MetadataObject):
 
     """
     Object that contains the metadata and parameters of an analyzer process
@@ -454,7 +454,7 @@ class newAnalyzerResult(MetadataObject):
 
     def __init__(self, dataMode=None,
                  timeMode=None):
-        super(newAnalyzerResult, self).__init__()
+        super(AnalyzerResult, self).__init__()
         self.dataMode = dataMode
         self.timeMode = timeMode
 
@@ -469,14 +469,14 @@ class newAnalyzerResult(MetadataObject):
         if name in setFuncDict.keys():
             setFunc = setFuncDict[name]
             if isinstance(value, setFunc):
-                super(newAnalyzerResult, self).__setattr__(name, value)
+                super(AnalyzerResult, self).__setattr__(name, value)
                 return
             elif isinstance(value, dict):
                 for (sub_name, sub_value) in value.items():
                     self[name][sub_name] = sub_value
                 return
             elif value is None:
-                super(newAnalyzerResult, self).__setattr__(name, setFunc())
+                super(AnalyzerResult, self).__setattr__(name, setFunc())
                 return
             else:
                 raise TypeError('Wrong argument')
@@ -521,7 +521,7 @@ class newAnalyzerResult(MetadataObject):
             else:
                 raise ValueError('Argument ''timeMode''=%s should be in %s'
                                  % (value, self._validTimeMode))
-        super(newAnalyzerResult, self).__setattr__(name, value)
+        super(AnalyzerResult, self).__setattr__(name, value)
 
     def as_dict(self):
         return dict([(key, self[key].as_dict())
@@ -551,7 +551,7 @@ class newAnalyzerResult(MetadataObject):
 
         dataModeChild = root.find('dataMode')
         timeModeChild = root.find('timeMode')
-        result = newAnalyzerResult(dataMode=dataModeChild.text,
+        result = AnalyzerResult(dataMode=dataModeChild.text,
                                    timeMode=timeModeChild.text)
         for child in root:
             key = child.tag
@@ -562,107 +562,17 @@ class newAnalyzerResult(MetadataObject):
         return result
 
 
-class AnalyzerMetadata(MetadataObject):
 
-    """
-    Object that contains the metadata and parameters of an analyzer process
-
-    Attributes
-    ----------
-    id : string
-    name : string
-    unit : string
-    samplerate : int or float
-    blocksize : int
-    stepsize : int
-    parameters : dict
-
-    """
-    # TODO : Remove this class
-
-    # Define default values as an OrderDict
-    # in order to keep the order of the keys for display
-    _default_value = OrderedDict([('id', ''),
-                                  ('name', ''),
-                                  ('unit', ''),
-                                  ('samplerate', None),
-                                  ('blocksize', None),
-                                  ('stepsize', None),
-                                  ('parameters', {})
-                                  ])
-
-
-class AnalyzerResult(object):
-
-    """
-    Object that contains results return by an analyzer process
-    metadata :
-        - data :
-        - metadata : an AnalyzerMetadata object containing the metadata
-    """
-    # TODO : Remove this class
-
-    def __init__(self, data=None, metadata=None):
-        # Define Metadata
-        if metadata is None:
-            self.metadata = AnalyzerMetadata()
-        else:
-            self.metadata = metadata
-
-        # Define Data
-        self.data = data
-
-    def __setattr__(self, name, value):
-
-        # Set Data with the proper type
-        if name == 'data':
-            if value is None:
-                value = []
-            # make a numpy.array out of list
-            if isinstance(value, list):
-                value = numpy.array(value)
-            # serialize using numpy
-            if type(value) in numpy_data_types + [numpy.ndarray]:
-                value = value.tolist()
-            if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
-                raise TypeError('AnalyzerResult can not accept type %s' %
-                                type(value))
-        elif name == 'metadata':
-            if not isinstance(value, AnalyzerMetadata):
-                value = AnalyzerMetadata(**value)
-        else:
-            raise AttributeError("%s is not a valid attribute in %s" %
-                                 (name, self.__class__.__name__))
-
-        return super(AnalyzerResult, self).__setattr__(name, value)
-
-    @property
-    def properties(self):
-        prop = dict(mean=numpy.mean(self.data, axis=0),
-                    std=numpy.std(self.data, axis=0, ddof=1),
-                    median=numpy.median(self.data, axis=0),
-                    max=numpy.max(self.data, axis=0),
-                    min=numpy.min(self.data, axis=0)
-                    )
-                     # ajouter size
-        return(prop)
-
-    def as_dict(self):
-        return(dict(data=self.data, metadata=self.metadata.as_dict()))
-
-    def to_json(self):
-        import simplejson as json
-        return json.dumps(self.as_dict())
-
-    def __repr__(self):
-        return self.to_json()
-
-    def __eq__(self, other):
-        return (isinstance(other, self.__class__)
-                and self.as_dict() == other.as_dict())
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
+#    @property
+#    def properties(self):
+#        prop = dict(mean=numpy.mean(self.data, axis=0),
+#                    std=numpy.std(self.data, axis=0, ddof=1),
+#                    median=numpy.median(self.data, axis=0),
+#                    max=numpy.max(self.data, axis=0),
+#                    min=numpy.min(self.data, axis=0)
+#                    )
+#                     # ajouter size
+#        return(prop)
 
 
 class AnalyzerResultContainer(dict):
@@ -679,7 +589,7 @@ class AnalyzerResultContainer(dict):
     >>> (d|a).run() #doctest: +ELLIPSIS
     <timeside.core.ProcessPipe object at 0x...>
     >>> a.new_result() #doctest: +ELLIPSIS
-    newAnalyzerResult(dataMode=None, timeMode=None, idMetadata=IdMetadata(id='', name='', unit='', description='', date='...', version='...', author='TimeSide'), data=AnalyzerData(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audioMetadata=AudioMetadata(uri='file:///.../tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frameMetadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), labelMetadata=LabelMetadata(label=None, description=None, labelType='mono'), parameters={})
+    AnalyzerResult(dataMode=None, timeMode=None, idMetadata=IdMetadata(id='', name='', unit='', description='', date='...', version='...', author='TimeSide'), data=AnalyzerData(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audioMetadata=AudioMetadata(uri='file:///.../tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frameMetadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), labelMetadata=LabelMetadata(label=None, description=None, labelType='mono'), parameters={})
     >>> resContainer = coreA.AnalyzerResultContainer()
 
     '''
@@ -712,8 +622,7 @@ class AnalyzerResultContainer(dict):
                 self.add_result(res)
             return
         # Check result
-        if not (isinstance(analyzer_result, AnalyzerResult)
-                or isinstance(analyzer_result, newAnalyzerResult)):
+        if not isinstance(analyzer_result, AnalyzerResult):
             raise TypeError('only AnalyzerResult can be added')
 
         self.__setitem__(analyzer_result.idMetadata.id,
@@ -741,7 +650,7 @@ class AnalyzerResultContainer(dict):
         #root = tree.getroot()
         root = ET.fromstring(xml_string)
         for child in root.iter('result'):
-            result = newAnalyzerResult()
+            result = AnalyzerResult()
             results.add_result(result.from_xml(ET.tostring(child)))
 
         return results
@@ -776,7 +685,7 @@ class AnalyzerResultContainer(dict):
         results = AnalyzerResultContainer()
         for res_json in results_json:
 
-            res = newAnalyzerResult(dataMode=res_json['dataMode'],
+            res = AnalyzerResult(dataMode=res_json['dataMode'],
                                     timeMode=res_json['timeMode'])
             for key in res_json.keys():
                 if key not in ['dataMode', 'timeMode']:
@@ -812,7 +721,7 @@ class AnalyzerResultContainer(dict):
         results_yaml = yaml.load(yaml_str)
         results = AnalyzerResultContainer()
         for res_yaml in results_yaml:
-            res = newAnalyzerResult()
+            res = AnalyzerResult()
             for key in res_yaml.keys():
                 res[key] = res_yaml[key]
             results.add_result(res)
@@ -871,7 +780,7 @@ class AnalyzerResultContainer(dict):
         try:
             for (group_name, group) in h5_file.items():
 
-                result = newAnalyzerResult(dataMode=group.attrs['dataMode'],
+                result = AnalyzerResult(dataMode=group.attrs['dataMode'],
                                            timeMode=group.attrs['timeMode'])
                 # Read Sub-Group
                 for subgroup_name, subgroup in group.items():
@@ -946,8 +855,8 @@ class Analyzer(Processor):
     def unit():
         return ""
 
-    def new_result(self, dataMode=newAnalyzerResult._default_value['dataMode'],
-                   timeMode=newAnalyzerResult._default_value['timeMode']):
+    def new_result(self, dataMode=AnalyzerResult._default_value['dataMode'],
+                   timeMode=AnalyzerResult._default_value['timeMode']):
         '''
         Create a new result
 
@@ -964,7 +873,7 @@ class Analyzer(Processor):
 
         from datetime import datetime
 
-        result = newAnalyzerResult(dataMode=dataMode, timeMode=timeMode)
+        result = AnalyzerResult(dataMode=dataMode, timeMode=timeMode)
         # Automatically write known metadata
         result.idMetadata = IdMetadata(
             date=datetime.now().replace(microsecond=0).isoformat(' '),

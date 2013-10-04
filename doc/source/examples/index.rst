@@ -12,6 +12,6 @@ Contents:
    :maxdepth: 2
 
       Tutorial <tutorial>
-      Usage of the 'new' AnalyzerResult <newAnalyzerResult>
+      Usage of AnalyzerResult <AnalyzerResult>
 
 
