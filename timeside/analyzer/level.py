@@ -22,14 +22,12 @@
 
 from timeside.core import Processor, implements, interfacedoc,  \
                             FixedSizeInputAdapter
-from timeside.analyzer.core import AnalyzerMetadata, \
-                                   AnalyzerResultContainer, \
-                                   AnalyzerResult
+from timeside.analyzer.core import Analyzer
 from timeside.api import IValueAnalyzer
 import numpy
 
 
-class Level(Processor):
+class Level(Analyzer):
     implements(IValueAnalyzer)
 
     @interfacedoc
@@ -62,24 +60,24 @@ class Level(Processor):
                                             numpy.mean(numpy.square(frames)))
         return frames, eod
 
-    def results(self):
+    def release(self):
         # Max level
-        #  FIXME : blocksize and stepsize are not appropriate here
-        metadata = AnalyzerMetadata(id="max_level",
-                                  name="Max level",
-                                  unit = "dBFS",
-                                  samplerate=self.samplerate())
-        data = numpy.round(20*numpy.log10(self.max_value), 3)
-        max_level = AnalyzerResult(data, metadata)
+        max_level = self.new_result(dataMode='value', timeMode='global')
+
+        max_level.idMetadata.id = "max_level"
+        max_level.idMetadata.name = "Max level"
+        max_level.idMetadata.unit = "dBFS"
+
+        max_level.data.value = numpy.round(20*numpy.log10(self.max_value), 3)
+        self.resultContainer.add_result(max_level)
 
         # RMS level
-        #  FIXME : blocksize and stepsize are not appropriate here
-        metadata = AnalyzerMetadata(id="rms_level",
-                                  name="RMS level",
-                                  unit="dBFS",
-                                  samplerate=self.samplerate())
-        data = numpy.round(20*numpy.log10(
-                                numpy.sqrt(numpy.mean(self.mean_values))), 3)
-        rms_level = AnalyzerResult(data, metadata)
+        rms_level = self.new_result(dataMode='value', timeMode='global')
+        rms_level.idMetadata.id = "rms_level"
+        rms_level.idMetadata.name="RMS level"
+        rms_level.idMetadata.unit="dBFS"
 
-        return AnalyzerResultContainer([max_level, rms_level])
+        rms_level.data.value = numpy.round(20*numpy.log10(
+                                numpy.sqrt(numpy.mean(self.mean_values))), 3)
+        self.resultContainer.add_result(rms_level)
+

@@ -20,24 +20,27 @@
 # Author: Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
+from utils import downsample_blocking
 
 import numpy
 from aubio import filterbank, pvoc
 
-class AubioMelEnergy(Processor):
-    implements(IValueAnalyzer)
+class AubioMelEnergy(Analyzer):
+    implements(IAnalyzer)
+
+    def __init__(self):
+        self.input_blocksize = 1024
+        self.input_stepsize = self.input_blocksize/4
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(AubioMelEnergy, self).setup(channels, samplerate, blocksize, totalframes)
-        self.win_s = 1024
-        self.hop_s = self.win_s / 4
         self.n_filters = 40
         self.n_coeffs = 13
-        self.pvoc = pvoc(self.win_s, self.hop_s)
-        self.melenergy = filterbank(self.n_filters, self.win_s)
+        self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
+        self.melenergy = filterbank(self.n_filters, self.input_blocksize)
         self.melenergy.set_mel_coeffs_slaney(samplerate)
         self.block_read = 0
         self.melenergy_results = numpy.zeros([self.n_filters, ])
@@ -53,33 +56,27 @@ class AubioMelEnergy(Processor):
         return "Mel Energy analysis (aubio)"
 
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.hop_s):
+        for samples in downsample_blocking(frames, self.input_stepsize):
+            # TODO : check pourquoi on utilise pas le blocksize ?
             fftgrain = self.pvoc(samples)
             self.melenergy_results = numpy.vstack( [ self.melenergy_results, self.melenergy(fftgrain) ])
             self.block_read += 1
         return frames, eod
 
-    def results(self):
+    def release(self):
 
-        container = AnalyzerResultContainer()
-        melenergy = AnalyzerResult()
+        melenergy = self.new_result(dataMode='value', timeMode='framewise')
 
-        # Get metadata
-        samplerate = self.samplerate()
-        blocksize = self.win_s
-        stepsize = self.hop_s
-        parameters = dict(n_filters= self.n_filters,
+        # Metadata
+        melenergy.parameters = dict(n_filters= self.n_filters,
                           n_coeffs=  self.n_coeffs)
         # Set metadata
-        melenergy.metadata = AnalyzerMetadata(id="aubio_melenergy",
-                                                  name="melenergy (aubio)",
-                                                  unit='',
-                                                  samplerate = samplerate,
-                                                  blocksize = blocksize,
-                                                  stepsize = stepsize,
-                                                  parameters = parameters)
+        melenergy.idMetadata.id ="aubio_melenergy"
+        melenergy.idMetadata.name = "melenergy (aubio)"
+        melenergy.idMetadata.unit=''
+
         # Set Data
-        melenergy.data = self.melenergy_results
-        container.add_result(melenergy)
-        return container
+        melenergy.data.value = self.melenergy_results
+
+        self.resultContainer.add_result(melenergy)
 

@@ -20,10 +20,12 @@
 # Author: Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
+from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
+from utils import downsample_blocking
 from aubio import onset, tempo
 
+import numpy
 
 class AubioTemporal(Analyzer):
     implements(IAnalyzer)
@@ -68,9 +70,7 @@ class AubioTemporal(Analyzer):
             self.block_read += 1
         return frames, eod
 
-    def results(self):
-
-        container = super(AubioTemporal, self).results()
+    def release(self):
 
         #---------------------------------
         #  Onsets
@@ -89,7 +89,7 @@ class AubioTemporal(Analyzer):
 
         onsets.labelMetadata.label = {1: 'Onset'}
 
-        container.add_result(onsets)
+        self.resultContainer.add_result(onsets)
 
         #---------------------------------
         #  Onset Rate
@@ -109,7 +109,7 @@ class AubioTemporal(Analyzer):
         else:
             onsetrate.data.value = []
 
-        container.add_result(onsetrate)
+        self.resultContainer.add_result(onsetrate)
 
         #---------------------------------
         #  Beats
@@ -133,7 +133,7 @@ class AubioTemporal(Analyzer):
 
         beats.labelMetadata.label = {1: 'Beat'}
 
-        container.add_result(beats)
+        self.resultContainer.add_result(beats)
 
         #---------------------------------
         #  BPM
@@ -147,7 +147,7 @@ class AubioTemporal(Analyzer):
         #  Set Data, dataMode='value', timeMode='segment'
         if len(self.beats) > 1:
             periods = 60. / numpy.diff(self.beats)
-            periods = numpy.append(periods,periods[-1])
+            periods = numpy.append(periods, periods[-1])
 
             bpm.data.time = self.beats
             bpm.data.duration = duration
@@ -156,6 +156,4 @@ class AubioTemporal(Analyzer):
         else:
             bpm.data.value = []
 
-        container.add_result(bpm)
-
-        return container
+        self.resultContainer.add_result(bpm)

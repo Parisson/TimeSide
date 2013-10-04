@@ -43,7 +43,7 @@ class AubioPitch(Analyzer):
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_pitch_analyzer"
+        return "aubio_pitch"
 
     @staticmethod
     @interfacedoc
@@ -65,10 +65,8 @@ class AubioPitch(Analyzer):
             self.block_read += 1
         return frames, eod
 
-    def results(self):
-
-        container = super(AubioPitch, self).results()
-
+    def release(self):
+        # set Result
         pitch = self.new_result(dataMode='value', timeMode='framewise')
 
         pitch.idMetadata.id = "aubio_pitch"
@@ -79,6 +77,6 @@ class AubioPitch(Analyzer):
 
         # Set Data
         pitch.data.value = numpy.array(self.pitches)
-        container.add_result(pitch)
 
-        return container
+        self.resultContainer.add_result(pitch)
+

@@ -663,7 +663,7 @@ def smooth(x, window_len=10, window='hanning'):
     [<matplotlib.lines.Line2D object at 0x...>]
     >>> plt.legend(['Source signal', 'Smoothed signal']) # doctest: +ELLIPSIS
     <matplotlib.legend.Legend object at 0x...>
-    >>> #plt.show()
+    >>> plt.show() # doctest: +SKIP
     """
 
     # TODO: the window parameter could be the window itself if an array instead of a string

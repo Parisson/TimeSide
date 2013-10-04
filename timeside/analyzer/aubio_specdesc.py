@@ -20,29 +20,33 @@
 # Author: Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
+from utils import downsample_blocking
 
 import numpy
 from aubio import specdesc, pvoc
 
-class AubioSpecdesc(Processor):
-    implements(IValueAnalyzer)
+class AubioSpecdesc(Analyzer):
+    implements(IAnalyzer)
+
+
+    def __init__(self):
+        self.input_blocksize = 1024
+        self.input_stepsize = self.input_blocksize / 4
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(AubioSpecdesc, self).setup(channels, samplerate, blocksize, totalframes)
         self.block_read = 0
-        self.win_s = 1024
-        self.hop_s = self.win_s / 4
-        self.pvoc = pvoc(self.win_s, self.hop_s)
+        self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
         self.methods = ['default', 'energy', 'hfc', 'complex', 'phase', 'specdiff', 'kl',
                 'mkl', 'specflux', 'centroid', 'slope', 'rolloff', 'spread', 'skewness',
                 'kurtosis', 'decrease']
         self.specdesc = {}
         self.specdesc_results = {}
         for method in self.methods:
-            self.specdesc[method] = specdesc(method, self.win_s)
+            self.specdesc[method] = specdesc(method, self.input_blocksize)
             self.specdesc_results[method] = []
 
     @staticmethod
@@ -56,38 +60,28 @@ class AubioSpecdesc(Processor):
         return "Spectral Descriptor (aubio)"
 
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.hop_s):
+        for samples in downsample_blocking(frames, self.input_stepsize):
             fftgrain = self.pvoc(samples)
             for method in self.methods:
                 self.specdesc_results[method] += [self.specdesc[method](fftgrain)[0]]
         return frames, eod
 
-    def results(self):
+    def release(self):
 
-        container = AnalyzerResultContainer()
-       # Get common metadata
-        samplerate = self.samplerate()
-        blocksize = self.win_s
-        stepsize = self.hop_s
         unit = ""
+
         # For each method store results in container
         for method in self.methods:
-            specdesc = AnalyzerResult()
+            res_specdesc = self.new_result(dataMode='value',
+                                           timeMode='framewise')
             # Set metadata
-            id = '_'.join(["aubio_specdesc", method])
-            name = ' '.join(["spectral descriptor", method, "(aubio)"])
+            res_specdesc.idMetadata.id = '_'.join(["aubio_specdesc", method])
+            res_specdesc.idMetadata.name = ' '.join(["spectral descriptor", method, "(aubio)"])
+
+            res_specdesc.idMetadata.unit = unit
 
 
-            specdesc.metadata = AnalyzerMetadata(id = id,
-                                                  name = name,
-                                                  unit = unit,
-                                                  samplerate = samplerate,
-                                                  blocksize = blocksize,
-                                                  stepsize = stepsize)
+            res_specdesc.data.value = self.specdesc_results[method]
 
-            # Set Data
-            specdesc.data = numpy.array(self.specdesc_results[method])
+            self.resultContainer.add_result(res_specdesc)
 
-            container.add_result(specdesc)
-
-        return container

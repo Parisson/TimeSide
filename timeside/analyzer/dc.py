@@ -20,11 +20,11 @@
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
+from timeside.analyzer.core import Analyzer
 from timeside.api import IValueAnalyzer
 import numpy
 
-class MeanDCShift(Processor):
+class MeanDCShift(Analyzer):
     implements(IValueAnalyzer)
 
     @interfacedoc
@@ -47,17 +47,12 @@ class MeanDCShift(Processor):
             self.values = numpy.append(self.values, numpy.mean(frames))
         return frames, eod
 
-    def results(self):
-        result = AnalyzerResult()
+    def release(self):
+        dc_result = self.new_result(dataMode='value', timeMode='global')
         #  Set metadata
-        #  FIXME : blocksize and stepsize are not appropriate here
-        result.metadata = AnalyzerMetadata(id="mean_dc_shift",
-                                               name = "Mean DC shift",
-                                               unit = "%",
-                                               samplerate=self.samplerate(),
-                                               blocksize=None,
-                                               stepsize=None)
-
+        dc_result.idMetadata.id = "mean_dc_shift"
+        dc_result.idMetadata.name = "Mean DC shift"
+        dc_result.idMetadata.unit = "%"
         # Set Data
-        result.data = numpy.round(numpy.mean(100*self.values),3)
-        return AnalyzerResultContainer(result)
+        dc_result.data.value = numpy.round(numpy.mean(100*self.values),3)
+        self.resultContainer.add_result(dc_result)

@@ -49,12 +49,13 @@ numpy_data_types = [
     #'datetime64',
     #'complex128',
     #'complex64',
-    ]
+]
 numpy_data_types = map(lambda x: getattr(numpy, x), numpy_data_types)
 #numpy_data_types += [numpy.ndarray]
 
 
 class MetadataObject(object):
+
     """
     Object that contains a metadata structure
     stucture inspired by [1]
@@ -93,7 +94,7 @@ class MetadataObject(object):
             setattr(self, key, value)
 
         # Set metadata passed in as arguments
-        #for k, v in zip(self._default_value.keys(), args):
+        # for k, v in zip(self._default_value.keys(), args):
         #    setattr(self, k, v)
         #    print 'args'
         for key, value in kwargs.items():
@@ -102,7 +103,7 @@ class MetadataObject(object):
     def __setattr__(self, name, value):
         if name not in self._default_value.keys():
             raise AttributeError("%s is not a valid attribute in %s" %
-            (name, self.__class__.__name__))
+                                 (name, self.__class__.__name__))
         super(MetadataObject, self).__setattr__(name, value)
 
     def __delattr__(self, name):
@@ -115,19 +116,19 @@ class MetadataObject(object):
 
     def as_dict(self):
         return dict((att, getattr(self, att))
-            for att in self._default_value.keys())
+                    for att in self._default_value.keys())
 
     def keys(self):
         return [attr for attr in self._default_value.keys()
-                        if hasattr(self, attr)]
+                if hasattr(self, attr)]
 
     def values(self):
         return [self[attr] for attr in self._default_value.keys()
-                        if hasattr(self, attr)]
+                if hasattr(self, attr)]
 
     def items(self):
         return [(attr, self[attr]) for attr in self._default_value.keys()
-                        if hasattr(self, attr)]
+                if hasattr(self, attr)]
 
     def __getitem__(self, key, default=None):
         try:
@@ -142,19 +143,19 @@ class MetadataObject(object):
         return '{}({})'.format(
             self.__class__.__name__,
             ', '.join('{}={}'.format(
-            att, repr(getattr(self, att)))
-            for att in self._default_value.keys()))
+                att, repr(getattr(self, att)))
+                for att in self._default_value.keys()))
 
     def __str__(self):
         return self.as_dict().__str__()
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
-            and all([self[key] == other[key] for key in self.keys()]))
+                and all([self[key] == other[key] for key in self.keys()]))
 
     def __ne__(self, other):
         return not(isinstance(other, self.__class__)
-            or self.as_dict() != other.as_dict())
+                   or self.as_dict() != other.as_dict())
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
@@ -177,6 +178,7 @@ class MetadataObject(object):
 
 
 class IdMetadata(MetadataObject):
+
     '''
     Metadata object to handle Audio related Metadata
 
@@ -194,7 +196,6 @@ class IdMetadata(MetadataObject):
     # TODO :
     # - (long) description --> à mettre dans l'API Processor
 
-
     # Define default values
     _default_value = OrderedDict([('id', ''),
                                   ('name', ''),
@@ -206,6 +207,7 @@ class IdMetadata(MetadataObject):
 
 
 class AudioMetadata(MetadataObject):
+
     '''
     Metadata object to handle Identification Metadata
 
@@ -236,6 +238,7 @@ class AudioMetadata(MetadataObject):
 
 
 class LabelMetadata(MetadataObject):
+
     '''
     Metadata object to handle Label Metadata
 
@@ -261,7 +264,6 @@ class LabelMetadata(MetadataObject):
 
     '''
 
-
     # Define default values
     _default_value = OrderedDict([('label', None),
                                   ('description', None),
@@ -269,6 +271,7 @@ class LabelMetadata(MetadataObject):
 
 
 class FrameMetadata(MetadataObject):
+
     '''
     Metadata object to handle Frame related Metadata
 
@@ -280,7 +283,6 @@ class FrameMetadata(MetadataObject):
     '''
     # TODO : check is samplerate can support float
 
-
     # Define default values
     _default_value = OrderedDict([('samplerate', None),
                                   ('blocksize', None),
@@ -288,6 +290,7 @@ class FrameMetadata(MetadataObject):
 
 
 class AnalyzerData(MetadataObject):
+
     '''
     Metadata object to handle Frame related Metadata
 
@@ -340,18 +343,18 @@ class AnalyzerData(MetadataObject):
     def __eq__(self, other):
         try:
             return (isinstance(other, self.__class__) and
-                all([numpy.array_equal (self[key], other[key])
-                        for key in self.keys()]))
+                    all([numpy.array_equal(self[key], other[key])
+                         for key in self.keys()]))
         except AttributeError:
-            #print self
-            #print [self[key] == other[key] for key in self.keys()]
+            # print self
+            # print [self[key] == other[key] for key in self.keys()]
             return (isinstance(other, self.__class__) and
-                all([bool(numpy.logical_and.reduce((self[key] == other[key]).ravel()))
+                    all([bool(numpy.logical_and.reduce((self[key] == other[key]).ravel()))
                          for key in self.keys()]))
 
     def __ne__(self, other):
         return not(isinstance(other, self.__class__) or
-                any([numpy.array_equal (self[key], other[key])
+                   any([numpy.array_equal(self[key], other[key])
                         for key in self.keys()]))
 
     def to_xml(self):
@@ -363,7 +366,7 @@ class AnalyzerData(MetadataObject):
             value = getattr(self, key)
             if value not in [None, []]:
                 child.text = repr(value.tolist())
-                child.set('dtype',value.dtype.__str__())
+                child.set('dtype', value.dtype.__str__())
 
         return ET.tostring(root, encoding="utf-8", method="xml")
 
@@ -403,6 +406,7 @@ class AnalyzerParameters(dict):
 
 
 class newAnalyzerResult(MetadataObject):
+
     """
     Object that contains the metadata and parameters of an analyzer process
 
@@ -449,7 +453,7 @@ class newAnalyzerResult(MetadataObject):
     _validTimeMode = ['framewise', 'global', 'segment', 'event', None]
 
     def __init__(self, dataMode=None,
-                       timeMode=None):
+                 timeMode=None):
         super(newAnalyzerResult, self).__init__()
         self.dataMode = dataMode
         self.timeMode = timeMode
@@ -489,7 +493,7 @@ class newAnalyzerResult(MetadataObject):
                 pass
             else:
                 raise ValueError('Argument ''dataMode''=%s should be in %s'
-                                % (value, self._validDataMode))
+                                 % (value, self._validDataMode))
         elif name == 'timeMode':
             if self[name] is not None:
                 raise AttributeError("The value of attribute ''timeMode'' \\\
@@ -516,19 +520,19 @@ class newAnalyzerResult(MetadataObject):
                 pass
             else:
                 raise ValueError('Argument ''timeMode''=%s should be in %s'
-                                % (value, self._validTimeMode))
+                                 % (value, self._validTimeMode))
         super(newAnalyzerResult, self).__setattr__(name, value)
 
     def as_dict(self):
         return dict([(key, self[key].as_dict())
-                    for key in self.keys() if hasattr(self[key],'as_dict')]+
-            [('dataMode', self.dataMode), ('timeMode', self.timeMode)])
+                    for key in self.keys() if hasattr(self[key], 'as_dict')] +
+                    [('dataMode', self.dataMode), ('timeMode', self.timeMode)])
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
         root = ET.Element('result')
         root.metadata = {'name': self.idMetadata.name,
-                             'id': self.idMetadata.id}
+                         'id': self.idMetadata.id}
 
         for key in self.keys():
             if key in ['dataMode', 'timeMode']:
@@ -559,6 +563,7 @@ class newAnalyzerResult(MetadataObject):
 
 
 class AnalyzerMetadata(MetadataObject):
+
     """
     Object that contains the metadata and parameters of an analyzer process
 
@@ -588,6 +593,7 @@ class AnalyzerMetadata(MetadataObject):
 
 
 class AnalyzerResult(object):
+
     """
     Object that contains results return by an analyzer process
     metadata :
@@ -613,31 +619,31 @@ class AnalyzerResult(object):
             if value is None:
                 value = []
             # make a numpy.array out of list
-            if type(value) is list:
+            if isinstance(value, list):
                 value = numpy.array(value)
             # serialize using numpy
-            if type(value) in numpy_data_types+[numpy.ndarray]:
+            if type(value) in numpy_data_types + [numpy.ndarray]:
                 value = value.tolist()
             if type(value) not in [list, str, int, long, float, complex, type(None)] + numpy_data_types:
                 raise TypeError('AnalyzerResult can not accept type %s' %
-                type(value))
+                                type(value))
         elif name == 'metadata':
             if not isinstance(value, AnalyzerMetadata):
                 value = AnalyzerMetadata(**value)
         else:
             raise AttributeError("%s is not a valid attribute in %s" %
-            (name, self.__class__.__name__))
+                                 (name, self.__class__.__name__))
 
         return super(AnalyzerResult, self).__setattr__(name, value)
 
     @property
     def properties(self):
         prop = dict(mean=numpy.mean(self.data, axis=0),
-                     std=numpy.std(self.data, axis=0, ddof=1),
-                     median=numpy.median(self.data, axis=0),
-                     max=numpy.max(self.data, axis=0),
-                     min=numpy.min(self.data, axis=0)
-                     )
+                    std=numpy.std(self.data, axis=0, ddof=1),
+                    median=numpy.median(self.data, axis=0),
+                    max=numpy.max(self.data, axis=0),
+                    min=numpy.min(self.data, axis=0)
+                    )
                      # ajouter size
         return(prop)
 
@@ -653,13 +659,14 @@ class AnalyzerResult(object):
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
-            and self.as_dict() == other.as_dict())
+                and self.as_dict() == other.as_dict())
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
 
-class AnalyzerResultContainer(object):
+class AnalyzerResultContainer(dict):
+
     '''
     >>> from timeside.decoder import FileDecoder
     >>> import timeside.analyzer.core as coreA
@@ -676,30 +683,31 @@ class AnalyzerResultContainer(object):
     >>> resContainer = coreA.AnalyzerResultContainer()
 
     '''
+
     def __init__(self, analyzer_results=None):
-        self.results = []
+        super(AnalyzerResultContainer,self).__init__()
         if analyzer_results is not None:
             self.add_result(analyzer_results)
 
-    def __getitem__(self, i):
-        return self.results[i]
+#    def __getitem__(self, i):
+#        return self.results[i]
 
-    def __len__(self):
-        return len(self.results)
+#    def __len__(self):
+#        return len(self.results)
 
-    def __repr__(self):
-        return [res.as_dict() for res in self.results].__repr__()
+#    def __repr__(self):
+ #       return [res.as_dict() for res in self.values()].__repr__()
 
-    def __eq__(self, other):
-        if hasattr(other, 'results'):
-            other = other.results
-        return self.results == other
+    #def __eq__(self, other):
+        #if hasattr(other, 'results'):
+        #    other = other.results
+   #     return self == other
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
+    #def __ne__(self, other):
+    #    return not self.__eq__(other)
 
     def add_result(self, analyzer_result):
-        if type(analyzer_result) == list:
+        if isinstance(analyzer_result, list):
             for res in analyzer_result:
                 self.add_result(res)
             return
@@ -708,16 +716,17 @@ class AnalyzerResultContainer(object):
                 or isinstance(analyzer_result, newAnalyzerResult)):
             raise TypeError('only AnalyzerResult can be added')
 
-        self.results += [analyzer_result]
+        self.__setitem__(analyzer_result.idMetadata.id,
+                         analyzer_result)
+        #self.results += [analyzer_result]
 
-    def to_xml(self, data_list=None):
-        if data_list is None:
-            data_list = self.results
+    def to_xml(self):
+
         import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
         root = ET.Element('timeside')
 
-        for result in data_list:
+        for result in self.values():
             if result:
                 root.append(ET.fromstring(result.to_xml()))
 
@@ -748,8 +757,8 @@ class AnalyzerResultContainer(object):
                         'dtype': obj.dtype.__str__()}
             raise TypeError(repr(obj) + " is not JSON serializable")
 
-        return json.dumps([res.as_dict() for res in self],
-                           default=NumpyArrayEncoder)
+        return json.dumps([res.as_dict() for res in self.values()],
+                          default=NumpyArrayEncoder)
 
     def from_json(self, json_str):
         import simplejson as json
@@ -788,7 +797,7 @@ class AnalyzerResultContainer(object):
 
         yaml.add_representer(numpy.ndarray, numpyArray_representer)
 
-        return yaml.dump([res.as_dict() for res in self])
+        return yaml.dump([res.as_dict() for res in self.values()])
 
     def from_yaml(self, yaml_str):
         import yaml
@@ -809,23 +818,19 @@ class AnalyzerResultContainer(object):
             results.add_result(res)
         return results
 
-    def to_numpy(self, output_file, data_list=None):
-        if data_list is None:
-            data_list = self.results
-        numpy.save(output_file, data_list)
+    def to_numpy(self, output_file):
+        numpy.save(output_file, self)
 
     def from_numpy(self, input_file):
         return numpy.load(input_file)
 
-    def to_hdf5(self, output_file, data_list=None):
-        if data_list is None:
-            data_list = self.results
+    def to_hdf5(self, output_file):
 
         import h5py
 
         # Open HDF5 file and save dataset (overwrite any existing file)
         with h5py.File(output_file, 'w') as h5_file:
-            for res in data_list:
+            for res in self.values():
                 # Save results in HDF5 Dataset
                 group = h5_file.create_group(res.idMetadata.id)
                 group.attrs['dataMode'] = res['dataMode']
@@ -848,13 +853,13 @@ class AnalyzerResultContainer(object):
                         if res[key][dsetName].dtype == 'object':
                             # Handle numpy type = object as vlen string
                             subgroup.create_dataset(dsetName,
-                                    data=res[key][dsetName].tolist().__repr__(),
-                                    dtype=h5py.special_dtype(vlen=str))
+                                                    data=res[key][
+                                                        dsetName].tolist(
+                                                    ).__repr__(),
+                                                    dtype=h5py.special_dtype(vlen=str))
                         else:
                             subgroup.create_dataset(dsetName,
-                                                  data=res[key][dsetName])
-
-
+                                                    data=res[key][dsetName])
 
     def from_hdf5(self, input_file):
         import h5py
@@ -883,9 +888,10 @@ class AnalyzerResultContainer(object):
                             # It should be fixed by the next h5py version
                             if dset.shape != (0,):
                                 if h5py.check_dtype(vlen=dset.dtype):
-                                    # to deal with VLEN data used for list of list
+                                    # to deal with VLEN data used for list of
+                                    # list
                                     result[subgroup_name][dsetName] = eval(
-                                            dset[...].tolist())
+                                        dset[...].tolist())
                                 else:
                                     result[subgroup_name][dsetName] = dset[...]
                             else:
@@ -901,6 +907,7 @@ class AnalyzerResultContainer(object):
 
 
 class Analyzer(Processor):
+
     '''
     Generic class for the analyzers
     '''
@@ -921,8 +928,8 @@ class Analyzer(Processor):
         self.result_stepsize = self.input_stepsize
 
     def results(self):
-        container = AnalyzerResultContainer()
-        return container
+        #container = AnalyzerResultContainer()
+        return self.resultContainer
 
     @staticmethod
     @interfacedoc
@@ -940,7 +947,7 @@ class Analyzer(Processor):
         return ""
 
     def new_result(self, dataMode=newAnalyzerResult._default_value['dataMode'],
-                         timeMode=newAnalyzerResult._default_value['timeMode']):
+                   timeMode=newAnalyzerResult._default_value['timeMode']):
         '''
         Create a new result
 
@@ -959,9 +966,10 @@ class Analyzer(Processor):
 
         result = newAnalyzerResult(dataMode=dataMode, timeMode=timeMode)
         # Automatically write known metadata
-        result.idMetadata = IdMetadata(date=datetime.now().replace(microsecond=0).isoformat(' '),
-                                       version=TimeSideVersion,
-                                       author='TimeSide')
+        result.idMetadata = IdMetadata(
+            date=datetime.now().replace(microsecond=0).isoformat(' '),
+            version=TimeSideVersion,
+            author='TimeSide')
         result.audioMetadata = AudioMetadata(uri=self.mediainfo()['uri'],
                                              start=self.mediainfo()['start'],
                                              duration=self.mediainfo()['duration'])
@@ -978,9 +986,9 @@ class Analyzer(Processor):
 
         if timeMode == 'framewise':
             result.frameMetadata = FrameMetadata(
-                                        samplerate=self.result_samplerate,
-                                        blocksize=self.result_blocksize,
-                                        stepsize=self.result_stepsize)
+                samplerate=self.result_samplerate,
+                blocksize=self.result_blocksize,
+                stepsize=self.result_stepsize)
         elif timeMode == 'global':
             # None : handle by data
             pass

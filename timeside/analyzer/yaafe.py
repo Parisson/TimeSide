@@ -25,14 +25,14 @@ Created on Thu Jun 13 16:05:02 2013
 @author: Thomas Fillon
 """
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
 from yaafelib import *
 import numpy
 
 
-class Yaafe(Processor):
-    implements(IValueAnalyzer)
+class Yaafe(Analyzer):
+    implements(IAnalyzer)
 
     def __init__(self, yaafeSpecification):
         # Check arguments
@@ -80,9 +80,7 @@ class Yaafe(Processor):
 
         return frames, eod
 
-    def results(self):
-        # Get back current container
-        container = AnalyzerResultContainer()
+    def release(self):
         # Get feature extraction results from yaafe
         featNames = self.yaafe_engine.getOutputs().keys()
         if len(featNames) == 0:
@@ -91,21 +89,16 @@ class Yaafe(Processor):
             # Define ID fields
             id = 'yaafe_' + featName
             name = 'Yaafe ' + featName
-            unit = ''
 
             # Get results from Yaafe engine
-            result = AnalyzerResult()
-            result.metadata = AnalyzerMetadata(id=id,
-                                      name=name,
-                                      unit=unit,
-                                      samplerate=self.samplerate,
-                                      blocksize=self.blocksize,
-                                      stepsize=None)
+            result = self.new_result(dataMode='value', timeMode='framewise')
+            result.idMetadata.id = id
+            result.idMetadata.name = name
+            result.idMetadata.unit = ''
             # Read Yaafe Results
-            result.data = self.yaafe_engine.readOutput(featName)
+            result.data.value = self.yaafe_engine.readOutput(featName)
             # Store results in Container
-            if len(result.data):
-                container.add_result(result)
+            if len(result.data.value):
+                self.resultContainer.add_result(result)
 
-        return container
 

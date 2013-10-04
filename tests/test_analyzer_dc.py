@@ -14,31 +14,20 @@ class TestAnalyzerDC(TestCase):
     def testOnSweep(self):
         "runs on sweep"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "sweep.wav")
-        metadata=AnalyzerMetadata(name="Mean DC shift",
-                                      unit="%",
-                                      id="mean_dc_shift",
-                                      samplerate=44100,
-                                      blocksize=None,
-                                      stepsize=None)
 
-        self.expected = AnalyzerResult(data=-0.000, metadata=metadata)
+        self.expected = {'mean_dc_shift': -0.000}
 
     def testOnGuitar(self):
         "runs on guitar"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "guitar.wav")
-        metadata=AnalyzerMetadata(name="Mean DC shift",
-                                      unit="%",
-                                      id="mean_dc_shift",
-                                      samplerate=44100,
-                                      blocksize=None,
-                                      stepsize=None)
-        self.expected = AnalyzerResult(data=0.054, metadata=metadata)
+        self.expected = {'mean_dc_shift': 0.054}
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
         results = self.analyzer.results()
-        self.assertEquals(results[0], self.expected)
+        for key in self.expected.keys():
+            self.assertEquals(results[key].data.value, self.expected[key])
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

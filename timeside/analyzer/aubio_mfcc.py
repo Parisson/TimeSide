@@ -20,26 +20,29 @@
 # Author: Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
+from utils import downsample_blocking
 
 import numpy
 from aubio import mfcc, pvoc
 
 from math import isnan
 
-class AubioMfcc(Processor):
-    implements(IValueAnalyzer)
+class AubioMfcc(Analyzer):
+    implements(IAnalyzer)
+
+    def __init__(self):
+        self.input_blocksize = 1024
+        self.input_stepsize = self.input_blocksize/4
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(AubioMfcc, self).setup(channels, samplerate, blocksize, totalframes)
-        self.win_s = 1024
-        self.hop_s = self.win_s / 4
         self.n_filters = 40
         self.n_coeffs = 13
-        self.pvoc = pvoc(self.win_s, self.hop_s)
-        self.mfcc = mfcc(self.win_s, self.n_filters, self.n_coeffs, samplerate)
+        self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
+        self.mfcc = mfcc(self.input_blocksize, self.n_filters, self.n_coeffs, samplerate)
         self.block_read = 0
         self.mfcc_results = numpy.zeros([self.n_coeffs, ])
 
@@ -54,29 +57,24 @@ class AubioMfcc(Processor):
         return "MFCC analysis (aubio)"
 
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.hop_s):
-            #time = self.block_read * self.hop_s * 1. / self.samplerate()
+        for samples in downsample_blocking(frames, self.input_stepsize):
+            #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
             fftgrain = self.pvoc(samples)
             coeffs = self.mfcc(fftgrain)
             self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
             self.block_read += 1
         return frames, eod
 
-    def results(self):
+    def release(self):
         # MFCC
-        mfcc = AnalyzerResult()
-        samplerate = self.samplerate()
-        blocksize = self.win_s
-        stepsize = self.hop_s
+        mfcc = self.new_result(dataMode='value', timeMode='framewise')
         parameters = dict(n_filters= self.n_filters,
                           n_coeffs=  self.n_coeffs)
-        mfcc.metadata = AnalyzerMetadata(id = "aubio_mfcc",
-                                             name = "mfcc (aubio)",
-                                             unit = "",
-                                             samplerate = samplerate,
-                                             blocksize = blocksize,
-                                             stepsize = stepsize,
-                                             parameters = parameters)
-        mfcc.data = [list(line) for line in self.mfcc_results] # TODO : type ? list list ?
 
-        return AnalyzerResultContainer(mfcc)
+        mfcc.idMetadata.id = "aubio_mfcc"
+        mfcc.idMetadata.name = "mfcc (aubio)"
+        mfcc.idMetadata.unit = ""
+        mfcc.parameters = parameters
+
+        mfcc.data.value = self.mfcc_results
+        self.resultContainer.add_result(mfcc)

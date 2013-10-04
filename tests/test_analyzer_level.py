@@ -3,7 +3,7 @@
 from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.level import Level
-from timeside.analyzer import AnalyzerResult, AnalyzerResultContainer
+from timeside.analyzer import newAnalyzerResult, AnalyzerResultContainer
 from timeside.analyzer import AnalyzerMetadata
 
 class TestAnalyzerLevel(TestCase):
@@ -15,45 +15,27 @@ class TestAnalyzerLevel(TestCase):
         "runs on sweep"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "sweep.wav")
 
-        # Max level
-        metadata = AnalyzerMetadata(id="max_level",
-                                  name="Max level",
-                                  unit = "dBFS",
-                                  samplerate=44100)
-        max_level = AnalyzerResult(-6.021, metadata)
+        max_level_value = -6.021
+        rms_level_value = -9.856
 
-        # RMS level
-        metadata = AnalyzerMetadata(id="rms_level",
-                                  name="RMS level",
-                                  unit="dBFS",
-                                  samplerate=44100)
-        rms_level = AnalyzerResult(-9.856, metadata)
-        self.expected = AnalyzerResultContainer([max_level,rms_level])
+        self.expected = {'max_level':max_level_value , 'rms_level':rms_level_value }
 
     def testOnGuitar(self):
         "runs on guitar"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "guitar.wav")
 
-        # Max level
-        metadata = AnalyzerMetadata(id="max_level",
-                                  name="Max level",
-                                  unit = "dBFS",
-                                  samplerate=44100)
-        max_level = AnalyzerResult(-4.258, metadata)
+        max_level_value = -4.258
+        rms_level_value = -21.945
 
-        # RMS level
-        metadata = AnalyzerMetadata(id="rms_level",
-                                  name="RMS level",
-                                  unit="dBFS",
-                                  samplerate=44100)
-        rms_level = AnalyzerResult(-21.945, metadata)
-        self.expected = AnalyzerResultContainer([max_level,rms_level])
+        self.expected = {'max_level':max_level_value , 'rms_level':rms_level_value }
+
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
         results = self.analyzer.results()
-        self.assertEquals(results, self.expected)
+        for key in self.expected.keys():
+            self.assertEquals(results[key].data.value, self.expected[key])
         #print results
         #print results.to_yaml()
         #print results.to_json()
