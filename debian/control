@@ -10,7 +10,16 @@ Vcs-Git: https://github.com/yomguy/TimeSide.git
 
 Package: python-timeside
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}, python-gst0.10, python-aubio, python-yaafe
+Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends},
+  python-aubio,
+  python-yaafe,
+  python-simplejson,
+  python-yaml,
+  python-h5py,
+  python-gst0.10,
+  gstreamer0.10-plugins-good,
+  gstreamer0.10-gnonlin,
+  gstreamer0.10-plugins-ugly,
 Description: open and fast web audio components
  TimeSide is a set of Python components enabling easy audio processing,
  transcoding, imaging and streaming. Its simple architecture and high-level
