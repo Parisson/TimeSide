@@ -99,6 +99,6 @@ class Yaafe(Analyzer):
             result.data.value = self.yaafe_engine.readOutput(featName)
             # Store results in Container
             if len(result.data.value):
-                self.resultContainer.add_result(result)
+                self._results.add(result)
 
 

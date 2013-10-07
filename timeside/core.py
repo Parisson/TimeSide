@@ -240,7 +240,7 @@ class ProcessPipe(object):
         last = source
 
         from timeside.analyzer.core import AnalyzerResultContainer
-        self.resultContainer = AnalyzerResultContainer()
+        self._results = AnalyzerResultContainer()
 
         # setup/reset processors and configure properties throughout the pipe
         for item in items:
@@ -249,7 +249,7 @@ class ProcessPipe(object):
                        blocksize = last.blocksize(),
                        totalframes = last.totalframes())
             item.source_mediainfo = source.mediainfo()
-            item.resultContainer = self.resultContainer
+            item._results = self._results
             last = item
 
         # now stream audio data along the pipe

@@ -69,7 +69,7 @@ class Level(Analyzer):
         max_level.idMetadata.unit = "dBFS"
 
         max_level.data.value = numpy.round(20*numpy.log10(self.max_value), 3)
-        self.resultContainer.add_result(max_level)
+        self._results.add(max_level)
 
         # RMS level
         rms_level = self.new_result(dataMode='value', timeMode='global')
@@ -79,5 +79,5 @@ class Level(Analyzer):
 
         rms_level.data.value = numpy.round(20*numpy.log10(
                                 numpy.sqrt(numpy.mean(self.mean_values))), 3)
-        self.resultContainer.add_result(rms_level)
+        self._results.add(rms_level)
 

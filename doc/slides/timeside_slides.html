@@ -358,10 +358,10 @@ class AnalyzerResultContainer(object):
             if a != b: return False
         return True
 
-    def add_result(self, analyzer_result):
+    def add(self, analyzer_result):
         if type(analyzer_result) == list:
             for a in analyzer_result:
-                self.add_result(a)
+                self.add(a)
             return
         if type(analyzer_result) != AnalyzerResult:
             raise TypeError('only AnalyzerResult can be added')
@@ -483,7 +483,7 @@ class NewAnalyzer(Processor):
 
         result = AnalyzerResult(id = self.id(), name = self.name(), unit = "something")
         result.value = self.result_data
-        container.add_result(result)
+        container.add(result)
 
         # add other results in the container if needed...
 

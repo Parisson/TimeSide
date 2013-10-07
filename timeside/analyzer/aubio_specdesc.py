@@ -83,5 +83,5 @@ class AubioSpecdesc(Analyzer):
 
             res_specdesc.data.value = self.specdesc_results[method]
 
-            self.resultContainer.add_result(res_specdesc)
+            self._results.add(res_specdesc)
 

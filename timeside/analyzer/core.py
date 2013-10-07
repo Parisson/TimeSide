@@ -597,7 +597,7 @@ class AnalyzerResultContainer(dict):
     def __init__(self, analyzer_results=None):
         super(AnalyzerResultContainer,self).__init__()
         if analyzer_results is not None:
-            self.add_result(analyzer_results)
+            self.add(analyzer_results)
 
 #    def __getitem__(self, i):
 #        return self.results[i]
@@ -616,10 +616,10 @@ class AnalyzerResultContainer(dict):
     #def __ne__(self, other):
     #    return not self.__eq__(other)
 
-    def add_result(self, analyzer_result):
+    def add(self, analyzer_result):
         if isinstance(analyzer_result, list):
             for res in analyzer_result:
-                self.add_result(res)
+                self.add(res)
             return
         # Check result
         if not isinstance(analyzer_result, AnalyzerResult):
@@ -651,7 +651,7 @@ class AnalyzerResultContainer(dict):
         root = ET.fromstring(xml_string)
         for child in root.iter('result'):
             result = AnalyzerResult()
-            results.add_result(result.from_xml(ET.tostring(child)))
+            results.add(result.from_xml(ET.tostring(child)))
 
         return results
 
@@ -691,7 +691,7 @@ class AnalyzerResultContainer(dict):
                 if key not in ['dataMode', 'timeMode']:
                     res[key] = res_json[key]
 
-            results.add_result(res)
+            results.add(res)
         return results
 
     def to_yaml(self):
@@ -724,7 +724,7 @@ class AnalyzerResultContainer(dict):
             res = AnalyzerResult()
             for key in res_yaml.keys():
                 res[key] = res_yaml[key]
-            results.add_result(res)
+            results.add(res)
         return results
 
     def to_numpy(self, output_file):
@@ -806,7 +806,7 @@ class AnalyzerResultContainer(dict):
                             else:
                                 result[subgroup_name][dsetName] = []
 
-                data_list.add_result(result)
+                data_list.add(result)
         except TypeError:
             print('TypeError for HDF5 serialization')
         finally:
@@ -837,8 +837,8 @@ class Analyzer(Processor):
         self.result_stepsize = self.input_stepsize
 
     def results(self):
-        #container = AnalyzerResultContainer()
-        return self.resultContainer
+        #TODO :return self._results[id=analyzerID]
+        return self._results
 
     @staticmethod
     @interfacedoc

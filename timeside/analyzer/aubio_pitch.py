@@ -78,5 +78,5 @@ class AubioPitch(Analyzer):
         # Set Data
         pitch.data.value = numpy.array(self.pitches)
 
-        self.resultContainer.add_result(pitch)
+        self._results.add(pitch)
 
