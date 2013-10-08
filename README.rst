@@ -5,11 +5,10 @@ TimeSide : open web audio processing framework
 .. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: http://travis-ci.org/yomguy/TimeSide/
 
-TimeSide is a set of python components enabling easy audio analysis, transcoding, imaging and streaming. Its simple architecture and high-level API have been design to process serial pipelines.
+TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API has been designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
 
-It includes a powerful HTML5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback (time-marking) and remote indexing.
+It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
 
-The engine (server side) is fully written in Python, the player (client side) in HTML, CSS and JavaScript.
 
 Goals
 =====
@@ -17,17 +16,48 @@ Goals
 We just *need* a python library to:
 
  * build a python framework to do asynchronous audio processing,
- * decode audio frames from ANY format to numpy arrays,
- * stream the frames in processors and do numpy data analyzing,
- * create various waveforms, spectrograms, etc.. with numpy and PIL,
- * transcode the processed frames in various media formats and stream it,
- * provide a high-level HTML5 UI to stream the results *on demand* through the web,
- * remote metadata indexing and time marking (JSON RPC, needs a server system like `Telemeta <http://telemeta.org>`_).
+ * decode audio frames from ANY format into numpy arrays,
+ * analyze audio content to give low and high level descriptors,
+ * organize, serialize and save analysis metadata through various formats,
+ * draw various fancy waveforms, spectrograms and other cool graphers,
+ * transcode audio data in various media formats and stream them through web apps,
+ * playback and interact *on demand* through a smart high-level HTML5 extensible player,
+ * index, tag and organize semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
 .. image:: http://timeside.googlecode.com/git/doc/img/timeside_schema.png
 
+
+Available plugins
+=================
+
+ * Decoder:
+     - ALL known media formats thanks to Gstreamer
+
+ * Analyzers:
+     - MaxLevel, MeanLevel
+     - DC
+     - any Yaafe data flow
+     - Aubio BPM, Beats, MFCC, ...
+
+ * Graphers:
+     - WaveForm
+     - Contour
+     - Spectrogram
+
+ * Encoders:
+     - WAV
+     - FLAC
+     - WebM
+     - OGG Vorbis
+     - MP3
+
+ * Serializers:
+     - YAML
+     - JSON
+     - XML
+     - HDF5
 
 News
 =====
