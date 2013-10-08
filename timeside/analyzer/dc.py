@@ -55,4 +55,4 @@ class MeanDCShift(Analyzer):
         dc_result.idMetadata.unit = "%"
         # Set Data
         dc_result.data.value = numpy.round(numpy.mean(100*self.values),3)
-        self.resultContainer.add_result(dc_result)
+        self._results.add(dc_result)

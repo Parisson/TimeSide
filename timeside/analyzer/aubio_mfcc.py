@@ -77,4 +77,4 @@ class AubioMfcc(Analyzer):
         mfcc.parameters = parameters
 
         mfcc.data.value = self.mfcc_results
-        self.resultContainer.add_result(mfcc)
+        self._results.add(mfcc)

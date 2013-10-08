@@ -89,7 +89,7 @@ class AubioTemporal(Analyzer):
 
         onsets.labelMetadata.label = {1: 'Onset'}
 
-        self.resultContainer.add_result(onsets)
+        self._results.add(onsets)
 
         #---------------------------------
         #  Onset Rate
@@ -109,7 +109,7 @@ class AubioTemporal(Analyzer):
         else:
             onsetrate.data.value = []
 
-        self.resultContainer.add_result(onsetrate)
+        self._results.add(onsetrate)
 
         #---------------------------------
         #  Beats
@@ -133,7 +133,7 @@ class AubioTemporal(Analyzer):
 
         beats.labelMetadata.label = {1: 'Beat'}
 
-        self.resultContainer.add_result(beats)
+        self._results.add(beats)
 
         #---------------------------------
         #  BPM
@@ -156,4 +156,4 @@ class AubioTemporal(Analyzer):
         else:
             bpm.data.value = []
 
-        self.resultContainer.add_result(bpm)
+        self._results.add(bpm)
