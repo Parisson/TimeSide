@@ -17,7 +17,7 @@ We just *need* a python library to:
 
  * build a python framework to do asynchronous audio processing,
  * decode audio frames from ANY format into numpy arrays,
- * analyze audio content to give low and high level descriptors,
+ * analyze audio content with some state-of-the-art audio feature extraction libraries,
  * organize, serialize and save analysis metadata through various formats,
  * draw various fancy waveforms, spectrograms and other cool graphers,
  * transcode audio data in various media formats and stream them through web apps,
