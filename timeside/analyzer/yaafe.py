@@ -96,9 +96,9 @@ class Yaafe(Analyzer):
             result.idMetadata.name = name
             result.idMetadata.unit = ''
             # Read Yaafe Results
-            result.data.value = self.yaafe_engine.readOutput(featName)
+            result.dataObject.value = self.yaafe_engine.readOutput(featName)
             # Store results in Container
-            if len(result.data.value):
+            if len(result.dataObject.value):
                 self._results.add(result)
 
 

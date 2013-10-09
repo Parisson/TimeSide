@@ -233,6 +233,7 @@ class AudioMetadata(MetadataObject):
     _default_value = OrderedDict([('uri', ''),
                                   ('start', 0),
                                   ('duration', None),
+                                  ('IS_SEGMENT', None),
                                   ('channels', None),
                                   ('channelsManagement', '')])
 
@@ -289,14 +290,15 @@ class FrameMetadata(MetadataObject):
                                   ('stepsize', None)])
 
 
-class AnalyzerData(MetadataObject):
+class DataObject(MetadataObject):
 
     '''
     Metadata object to handle Frame related Metadata
 
         Attributes
         ----------
-        data : numpy array
+        value : numpy array
+        label : numpy array of int
         time : numpy array of float
         duration : numpy array of float
 
@@ -338,7 +340,7 @@ class AnalyzerData(MetadataObject):
             elif name == 'dataType':
                 return
 
-        super(AnalyzerData, self).__setattr__(name, value)
+        super(DataObject, self).__setattr__(name, value)
 
     def __eq__(self, other):
         try:
@@ -429,7 +431,7 @@ class AnalyzerResult(MetadataObject):
     A new MetadataObject with the following attributes :
         - dataMode
         - timeMode
-        - data : :class:`AnalyzerData`
+        - data : :class:`DataObject`
         - idMetadata : :class:`IdMetadata`
         - audioMetadata : :class:`AudioMetadata`
         - frameMetadata : :class:`FrameMetadata`
@@ -442,7 +444,7 @@ class AnalyzerResult(MetadataObject):
     _default_value = OrderedDict([('dataMode', None),
                                   ('timeMode', None),
                                   ('idMetadata', None),
-                                  ('data', None),
+                                  ('dataObject', None),
                                   ('audioMetadata', None),
                                   ('frameMetadata', None),
                                   ('labelMetadata', None),
@@ -460,7 +462,7 @@ class AnalyzerResult(MetadataObject):
 
     def __setattr__(self, name, value):
         setFuncDict = {'idMetadata': IdMetadata,
-                       'data': AnalyzerData,
+                       'dataObject': DataObject,
                        'audioMetadata': AudioMetadata,
                        'frameMetadata': FrameMetadata,
                        'labelMetadata': LabelMetadata,
@@ -482,13 +484,13 @@ class AnalyzerResult(MetadataObject):
                 raise TypeError('Wrong argument')
         elif name == 'dataMode':
             if self[name] is not None:
-                raise AttributeError("The value of attribute ''timeMode'' \\\
+                raise AttributeError("The value of attribute ''dataMode'' \\\
                 can not change after setup")
             if value == 'value':
                 del self.labelMetadata
-                del self.data.label
+                del self.dataObject.label
             elif value == 'label':
-                del self.data.value
+                del self.dataObject.value
             elif value is None:
                 pass
             else:
@@ -500,12 +502,12 @@ class AnalyzerResult(MetadataObject):
                 can not change after setup")
 
             if value == 'framewise':
-                del self.data.time
-                del self.data.duration
+                del self.dataObject.time
+                del self.dataObject.duration
                 pass
             elif value == 'global':
-                del self.data.time
-                del self.data.duration
+                del self.dataObject.time
+                del self.dataObject.duration
                 del self.frameMetadata
 
                 pass
@@ -513,7 +515,7 @@ class AnalyzerResult(MetadataObject):
                 del self.frameMetadata
             elif value == 'event':
                 del self.frameMetadata
-                del self.data.duration
+                del self.dataObject.duration
 
                 pass
             elif value is None:
@@ -527,7 +529,7 @@ class AnalyzerResult(MetadataObject):
         return dict([(key, self[key].as_dict())
                     for key in self.keys() if hasattr(self[key], 'as_dict')] +
                     [('dataMode', self.dataMode), ('timeMode', self.timeMode)])
-
+                    # TODO : check if it can be simplified now
     def to_xml(self):
         import xml.etree.ElementTree as ET
         root = ET.Element('result')
@@ -561,6 +563,34 @@ class AnalyzerResult(MetadataObject):
 
         return result
 
+    def data(self):
+        return {key: self.dataObject[key] for key in ['value', 'label'] if key in self.dataObject.keys()}
+
+    def time(self):
+        if self.timeMode == 'global':
+            return self.audioMetadata.start
+        elif self.timeMode == 'framewise':
+            return (self.audioMetadata.start +
+                    self.frameMetadata.stepsize * numpy.arange(0,len(self)))
+        else:
+            return self.dataObject.time
+        pass
+
+    def duration(self):
+        if self.timeMode == 'global':
+            return self.audioMetadata.duration
+        elif self.timeMode == 'framewise':
+            return self.frameMetadata.blockwise * numpy.ones(len(self))
+        elif self.timeMode == 'event':
+            return numpy.zeros(len(self))
+        elif self.timeMode == 'segment':
+            return self.dataObject.duration
+
+    def __len__(self):
+        if self.dataMode == 'value':
+            return len(self.dataObject.value)
+        else:
+            return len(self.dataObject.label)
 
 
 #    @property
@@ -589,7 +619,7 @@ class AnalyzerResultContainer(dict):
     >>> (d|a).run() #doctest: +ELLIPSIS
     <timeside.core.ProcessPipe object at 0x...>
     >>> a.new_result() #doctest: +ELLIPSIS
-    AnalyzerResult(dataMode=None, timeMode=None, idMetadata=IdMetadata(id='', name='', unit='', description='', date='...', version='...', author='TimeSide'), data=AnalyzerData(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audioMetadata=AudioMetadata(uri='file:///.../tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frameMetadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), labelMetadata=LabelMetadata(label=None, description=None, labelType='mono'), parameters={})
+    AnalyzerResult(dataMode=None, timeMode=None, idMetadata=IdMetadata(id='', name='', unit='', description='', date='...', version='...', author='TimeSide'), data=DataObject(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audioMetadata=AudioMetadata(uri='file:///.../tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frameMetadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), labelMetadata=LabelMetadata(label=None, description=None, labelType='mono'), parameters={})
     >>> resContainer = coreA.AnalyzerResultContainer()
 
     '''
@@ -636,7 +666,7 @@ class AnalyzerResultContainer(dict):
         root = ET.Element('timeside')
 
         for result in self.values():
-            if result:
+            if result is not None:
                 root.append(ET.fromstring(result.to_xml()))
 
         return ET.tostring(root, encoding="utf-8", method="xml")
@@ -745,7 +775,7 @@ class AnalyzerResultContainer(dict):
                 group.attrs['dataMode'] = res['dataMode']
                 group.attrs['timeMode'] = res['timeMode']
                 for key in res.keys():
-                    if key not in ['dataMode', 'timeMode', 'data']:
+                    if key not in ['dataMode', 'timeMode', 'dataObject']:
                         subgroup = group.create_group(key)
 
                         # Write attributes
@@ -755,7 +785,7 @@ class AnalyzerResultContainer(dict):
                                 subgroup.attrs[name] = res[key][name]
 
                 # Write Datasets
-                key = 'data'
+                key = 'dataObject'
                 subgroup = group.create_group(key)
                 for dsetName in res[key].keys():
                     if res[key][dsetName] is not None:
@@ -788,7 +818,7 @@ class AnalyzerResultContainer(dict):
                     for name, value in subgroup.attrs.items():
                             result[subgroup_name][name] = value
 
-                    if subgroup_name == 'data':
+                    if subgroup_name == 'dataObject':
                         for dsetName, dset in subgroup.items():
                             # Load value from the hdf5 dataset and store in data
                             # FIXME : the following conditional statement is to prevent
@@ -874,42 +904,22 @@ class Analyzer(Processor):
         from datetime import datetime
 
         result = AnalyzerResult(dataMode=dataMode, timeMode=timeMode)
+
         # Automatically write known metadata
-        result.idMetadata = IdMetadata(
-            date=datetime.now().replace(microsecond=0).isoformat(' '),
-            version=TimeSideVersion,
-            author='TimeSide')
-        result.audioMetadata = AudioMetadata(uri=self.mediainfo()['uri'],
-                                             start=self.mediainfo()['start'],
-                                             duration=self.mediainfo()['duration'])
+        result.idMetadata.date = datetime.now().replace(
+                                                microsecond=0).isoformat(' ')
+        result.idMetadata.version = TimeSideVersion
+        result.idMetadata.author = 'TimeSide'
 
-        result.data = AnalyzerData()
-
-        if dataMode == 'value':
-            pass
-        elif dataMode == 'label':
-            result.labelMetadata = LabelMetadata()
-        else:
-            # raise ArgError('')
-            pass
+        result.audioMetadata.uri = self.mediainfo()['uri']
+        result.audioMetadata.start = self.mediainfo()['start']
+        result.audioMetadata.duration = self.mediainfo()['duration']
+        result.audioMetadata.IS_SEGMENT = self.mediainfo()['IS_SEGMENT']
 
         if timeMode == 'framewise':
-            result.frameMetadata = FrameMetadata(
-                samplerate=self.result_samplerate,
-                blocksize=self.result_blocksize,
-                stepsize=self.result_stepsize)
-        elif timeMode == 'global':
-            # None : handle by data
-            pass
-        elif timeMode == 'segment':
-            # None : handle by data
-            pass
-        elif timeMode == 'event':
-            # None : handle by data, duration = 0
-            pass
-        else:
-            # raise ArgError('')
-            pass
+            result.frameMetadata.samplerate = self.result_samplerate
+            result.frameMetadata.blocksize = self.result_blocksize
+            result.frameMetadata.stepsize = self.result_stepsize
 
         return result
 
