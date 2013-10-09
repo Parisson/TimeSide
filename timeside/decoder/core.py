@@ -97,15 +97,19 @@ class FileDecoder(Processor):
     def set_uri_default_duration(self):
         # Set the duration from the length of the file
         from gst.pbutils import Discoverer
+        from glib import GError
         #import gobject
         uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
-        uri_info = uri_discoverer.discover_uri(self.uri)
+        try:
+            uri_info = uri_discoverer.discover_uri(self.uri)
+        except  GError as e:
+            raise IOError(e)
         self.uri_duration = (uri_info.get_duration() / float(gst.SECOND) -
                             self.uri_start)
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
-        if self.IS_SEGMENT and not(self.uri_duration):
+        if self.uri_duration is None:
             self.set_uri_default_duration()
 
         # a lock to wait wait for gstreamer thread to be ready
@@ -321,7 +325,10 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def mediainfo(self):
-        return dict(uri=self.uri, duration=self.uri_duration, start=self.uri_start)
+        return dict(uri=self.uri,
+                    duration=self.uri_duration,
+                    start=self.uri_start,
+                    IS_SEGMENT=self.IS_SEGMENT)
 
     def __del__(self):
         self.release()
