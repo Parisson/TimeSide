@@ -263,3 +263,11 @@ class ProcessPipe(object):
             item.release()
 
         return self
+
+    @property
+    def results(self):
+        """
+        Results Container for all the analyzers of the Pipe process
+        """
+        if hasattr(self, '_results'):
+            return self._results
