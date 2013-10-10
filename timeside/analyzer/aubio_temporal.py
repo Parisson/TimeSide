@@ -84,8 +84,8 @@ class AubioTemporal(Analyzer):
         # Set Data , dataMode='label', timeMode='event'
         # Event = list of (time, labelId)
 
-        onsets.data.label = numpy.ones(len(self.onsets))
-        onsets.data.time = self.onsets
+        onsets.dataObject.label = numpy.ones(len(self.onsets))
+        onsets.dataObject.time = self.onsets
 
         onsets.labelMetadata.label = {1: 'Onset'}
 
@@ -104,10 +104,10 @@ class AubioTemporal(Analyzer):
         # Event = list of (time, value)
         # TODO : add time
         if len(self.onsets) > 1:
-            onsetrate.data.value = 60. / numpy.diff(self.onsets)
-            onsetrate.data.time = self.onsets[:-1]
+            onsetrate.dataObject.value = 60. / numpy.diff(self.onsets)
+            onsetrate.dataObject.time = self.onsets[:-1]
         else:
-            onsetrate.data.value = []
+            onsetrate.dataObject.value = []
 
         self._results.add(onsetrate)
 
@@ -125,11 +125,11 @@ class AubioTemporal(Analyzer):
         if len(self.beats) > 1:
             duration = numpy.diff(self.beats)
             duration = numpy.append(duration,duration[-1])
-            beats.data.time = self.beats
-            beats.data.duration = duration
-            beats.data.label = numpy.ones(len(self.beats))
+            beats.dataObject.time = self.beats
+            beats.dataObject.duration = duration
+            beats.dataObject.label = numpy.ones(len(self.beats))
         else:
-            beats.data.label = []
+            beats.dataObject.label = []
 
         beats.labelMetadata.label = {1: 'Beat'}
 
@@ -149,11 +149,11 @@ class AubioTemporal(Analyzer):
             periods = 60. / numpy.diff(self.beats)
             periods = numpy.append(periods, periods[-1])
 
-            bpm.data.time = self.beats
-            bpm.data.duration = duration
-            bpm.data.value = periods
+            bpm.dataObject.time = self.beats
+            bpm.dataObject.duration = duration
+            bpm.dataObject.value = periods
 
         else:
-            bpm.data.value = []
+            bpm.dataObject.value = []
 
         self._results.add(bpm)

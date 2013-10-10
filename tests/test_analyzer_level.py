@@ -33,7 +33,7 @@ class TestAnalyzerLevel(TestCase):
         (decoder | self.analyzer).run()
         results = self.analyzer.results()
         for key in self.expected.keys():
-            self.assertEquals(results[key].data.value, self.expected[key])
+            self.assertEquals(results[key].dataObject.value, self.expected[key])
         #print results
         #print results.to_yaml()
         #print results.to_json()

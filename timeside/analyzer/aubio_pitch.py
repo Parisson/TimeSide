@@ -76,7 +76,7 @@ class AubioPitch(Analyzer):
         # parameters : None # TODO check with Piem "default" and "freq" in setup
 
         # Set Data
-        pitch.data.value = numpy.array(self.pitches)
+        pitch.dataObject.value = numpy.array(self.pitches)
 
         self._results.add(pitch)
 

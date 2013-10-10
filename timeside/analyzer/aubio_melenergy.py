@@ -76,7 +76,7 @@ class AubioMelEnergy(Analyzer):
         melenergy.idMetadata.unit=''
 
         # Set Data
-        melenergy.data.value = self.melenergy_results
+        melenergy.dataObject.value = self.melenergy_results
 
         self._results.add(melenergy)
 

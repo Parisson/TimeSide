@@ -68,7 +68,7 @@ class Level(Analyzer):
         max_level.idMetadata.name = "Max level"
         max_level.idMetadata.unit = "dBFS"
 
-        max_level.data.value = numpy.round(20*numpy.log10(self.max_value), 3)
+        max_level.dataObject.value = numpy.round(20*numpy.log10(self.max_value), 3)
         self._results.add(max_level)
 
         # RMS level
@@ -77,7 +77,7 @@ class Level(Analyzer):
         rms_level.idMetadata.name="RMS level"
         rms_level.idMetadata.unit="dBFS"
 
-        rms_level.data.value = numpy.round(20*numpy.log10(
+        rms_level.dataObject.value = numpy.round(20*numpy.log10(
                                 numpy.sqrt(numpy.mean(self.mean_values))), 3)
         self._results.add(rms_level)
 

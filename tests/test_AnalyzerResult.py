@@ -26,55 +26,55 @@ class TestAnalyzerResult(TestCase):
 
     def testOnFloat(self):
         "float result"
-        self.result.data.value = 1.2
+        self.result.dataObject.value = 1.2
 
     def testOnInt(self):
         "integer result"
-        self.result.data.value = 1
+        self.result.dataObject.value = 1
 
     def testOnList(self):
         "list result"
-        self.result.data.value = [1., 2.]
+        self.result.dataObject.value = [1., 2.]
 
     def testOnString(self):
         "string result"
-        self.result.data.value = "hello"
+        self.result.dataObject.value = "hello"
 
     def testOnListOfString(self):
         "list of strings result"
-        self.result.data.value = ["hello", "hola"]
+        self.result.dataObject.value = ["hello", "hola"]
 
     def testOnListOfList(self):
         "list of lists result"
-        self.result.data.value = [[0, 1], [0, 1, 2]]
+        self.result.dataObject.value = [[0, 1], [0, 1, 2]]
 
     def testOnNumpyVectorOfFloat(self):
         "numpy vector of float"
-        self.result.data.value = ones(2, dtype='float') * pi
+        self.result.dataObject.value = ones(2, dtype='float') * pi
 
     def testOnNumpy2DArrayOfFloat64(self):
         "numpy 2d array of float64"
-        self.result.data.value = ones([2, 3], dtype='float64') * pi
+        self.result.dataObject.value = ones([2, 3], dtype='float64') * pi
 
     def testOnNumpy3DArrayOfInt32(self):
         "numpy 3d array of int32"
-        self.result.data.value = ones([2, 3, 2], dtype='int32')
+        self.result.dataObject.value = ones([2, 3, 2], dtype='int32')
 
     def testOnNumpyArrayOfStrings(self):
         "numpy array of strings"
-        self.result.data.value = array(['hello', 'hola'])
+        self.result.dataObject.value = array(['hello', 'hola'])
 
     def testOnEmptyList(self):
         "empty list"
-        self.result.data.value = []
+        self.result.dataObject.value = []
 
     def testOnNone(self):
         "None"
-        self.result.data.value = None
+        self.result.dataObject.value = None
 
     def testOnUnicode(self):
         "None"
-        self.result.data.value = None
+        self.result.dataObject.value = None
 
     def tearDown(self):
         pass
@@ -113,7 +113,7 @@ def create_good_method_func(numpy_data_type):
     def method(self):
         "numpy %s" % str(numpy_data_type)[7:-1]
         import numpy
-        self.result.data.value = numpy_data_type(pi)
+        self.result.dataObject.value = numpy_data_type(pi)
     return method
 
 
@@ -125,7 +125,7 @@ def create_bad_method_func(numpy_data_type):
             data = getattr(numpy, numpy_data_type)(pi)
         except ValueError:
             data = getattr(numpy, numpy_data_type)()
-        self.assertRaises(TypeError, self.result.data.__setattr__, 'value', data)
+        self.assertRaises(TypeError, self.result.dataObject.__setattr__, 'value', data)
     return method
 
 for numpy_data_type in good_numpy_data_types:

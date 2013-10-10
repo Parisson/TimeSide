@@ -76,5 +76,5 @@ class AubioMfcc(Analyzer):
         mfcc.idMetadata.unit = ""
         mfcc.parameters = parameters
 
-        mfcc.data.value = self.mfcc_results
+        mfcc.dataObject.value = self.mfcc_results
         self._results.add(mfcc)

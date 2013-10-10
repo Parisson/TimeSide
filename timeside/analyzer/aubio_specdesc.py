@@ -81,7 +81,7 @@ class AubioSpecdesc(Analyzer):
             res_specdesc.idMetadata.unit = unit
 
 
-            res_specdesc.data.value = self.specdesc_results[method]
+            res_specdesc.dataObject.value = self.specdesc_results[method]
 
             self._results.add(res_specdesc)
 
