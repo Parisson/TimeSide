@@ -20,7 +20,7 @@ class TestAubioTemporal(TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        results = self.analyzer.results()
+        results = self.analyzer.results
         #print results
         results.to_yaml()
         results.to_json()

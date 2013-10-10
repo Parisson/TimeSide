@@ -570,6 +570,7 @@ class AnalyzerResult(MetadataObject):
 
         return result
 
+    @property
     def data(self):
         if self.dataMode is None:
             return (
@@ -581,6 +582,7 @@ class AnalyzerResult(MetadataObject):
         elif self.dataMode is 'label':
             return self.dataObject.label
 
+    @property
     def time(self):
         if self.timeMode == 'global':
             return self.audioMetadata.start
@@ -593,6 +595,7 @@ class AnalyzerResult(MetadataObject):
             return self.audioMetadata.start + self.dataObject.time
         pass
 
+    @property
     def duration(self):
         if self.timeMode == 'global':
             return self.audioMetadata.duration
@@ -604,6 +607,15 @@ class AnalyzerResult(MetadataObject):
             return numpy.zeros(len(self))
         elif self.timeMode == 'segment':
             return self.dataObject.duration
+
+    @property
+    def id(self):
+        return self.idMetadata.id
+
+    @property
+    def name(self):
+        return self.idMetadata.name
+
 
 
 #    @property
@@ -879,6 +891,7 @@ class Analyzer(Processor):
         self.result_blocksize = self.input_blocksize
         self.result_stepsize = self.input_stepsize
 
+    @property
     def results(self):
 
         return AnalyzerResultContainer(
