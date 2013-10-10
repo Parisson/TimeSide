@@ -23,7 +23,7 @@ class TestAnalyzerDC(TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        results = self.analyzer.results()
+        results = self.analyzer.results
         for key in self.expected.keys():
             self.assertEquals(results[key].dataObject.value, self.expected[key])
 

@@ -65,7 +65,7 @@ class TestYaafe(TestCase):
         decoder = FileDecoder(self.source)
         decoder.output_samplerate = self.sample_rate
         (decoder | self.analyzer).run()
-        results = self.analyzer.results()
+        results = self.analyzer.results
         self.assertEquals(self.result_length, len(results))
         #print results
         #print results.to_yaml()

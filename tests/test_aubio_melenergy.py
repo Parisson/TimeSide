@@ -20,7 +20,7 @@ class TestAubioMelEnergy(TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        results = self.analyzer.results()
+        results = self.analyzer.results
         #print results
         #print results.to_yaml()
         #print results.to_json()
