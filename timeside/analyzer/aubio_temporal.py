@@ -19,13 +19,14 @@
 
 # Author: Paul Brossier <piem@piem.org>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from utils import downsample_blocking
 from aubio import onset, tempo
 
 import numpy
+
 
 class AubioTemporal(Analyzer):
     implements(IAnalyzer)
@@ -35,10 +36,17 @@ class AubioTemporal(Analyzer):
         self.input_stepsize = 256
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AubioTemporal, self).setup(channels, samplerate, blocksize, totalframes)
-        self.o = onset("default", self.input_blocksize, self.input_stepsize, samplerate)
-        self.t = tempo("default", self.input_blocksize, self.input_stepsize, samplerate)
+    def setup(self,
+              channels=None,
+              samplerate=None,
+              blocksize=None,
+              totalframes=None):
+        super(AubioTemporal, self).setup(
+            channels, samplerate, blocksize, totalframes)
+        self.o = onset(
+            "default", self.input_blocksize, self.input_stepsize, samplerate)
+        self.t = tempo(
+            "default", self.input_blocksize, self.input_stepsize, samplerate)
         self.block_read = 0
         self.onsets = []
         self.beats = []
@@ -56,10 +64,10 @@ class AubioTemporal(Analyzer):
     @staticmethod
     @interfacedoc
     def unit():
-        return "seconds"
+        return ""
 
     def __str__(self):
-        return "%s %s" % (str(self.value), unit())
+        return "%s %s" % (str(self.value), self.unit())
 
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.input_stepsize):
@@ -77,8 +85,8 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         onsets = self.new_result(dataMode='label', timeMode='event')
 
-        onsets.idMetadata.id = "aubio_onset"
-        onsets.idMetadata.name = "onsets (aubio)"
+        onsets.idMetadata.id += '.' + 'onset'
+        onsets.idMetadata.name += ' ' + 'Onset'
         onsets.idMetadata.unit = 's'
 
         # Set Data , dataMode='label', timeMode='event'
@@ -96,8 +104,8 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         onsetrate = self.new_result(dataMode='value', timeMode='event')
         # Set metadata
-        onsetrate.idMetadata.id = "aubio_onset_rate"
-        onsetrate.idMetadata.name = "onset rate (aubio)"
+        onsetrate.idMetadata.id += '.' + "onset_rate"
+        onsetrate.idMetadata.name = " " + "Onset Rate"
         onsetrate.idMetadata.unit = "bpm"
 
         # Set Data , dataMode='value', timeMode='event'
@@ -116,15 +124,15 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         beats = self.new_result(dataMode='label', timeMode='segment')
         # Set metadata
-        beats.idMetadata.id = "aubio_beat"
-        beats.idMetadata.name = "beats (aubio)"
+        beats.idMetadata.id += '.' + "beat"
+        beats.idMetadata.name += " " + "Beats"
         beats.idMetadata.unit = "s"
 
         #  Set Data, dataMode='label', timeMode='segment'
         # Segment = list of (time, duration, labelId)
         if len(self.beats) > 1:
             duration = numpy.diff(self.beats)
-            duration = numpy.append(duration,duration[-1])
+            duration = numpy.append(duration, duration[-1])
             beats.dataObject.time = self.beats
             beats.dataObject.duration = duration
             beats.dataObject.label = numpy.ones(len(self.beats))
@@ -140,8 +148,8 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         bpm = self.new_result(dataMode='value', timeMode='segment')
         # Set metadata
-        bpm.idMetadata.id = "aubio_bpm"
-        bpm.idMetadata.name = "bpm (aubio)"
+        bpm.idMetadata.id += '.' + "bpm"
+        bpm.idMetadata.name += ' ' + "bpm"
         bpm.idMetadata.unit = "bpm"
 
         #  Set Data, dataMode='value', timeMode='segment'

@@ -2,8 +2,10 @@
 
 from unit_timeside import *
 from timeside.analyzer.core import *
+from timeside.__init__ import __version__
 from numpy import ones, array
 from math import pi
+
 
 verbose = 0
 
@@ -15,7 +17,7 @@ class TestAnalyzerResult(TestCase):
         self.result = AnalyzerResult(dataMode='value', timeMode='framewise')
         from datetime import datetime
         self.result.idMetadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
-                                       version=TimeSideVersion,
+                                       version=__version__,
                                        author='TimeSide',
                                        id="foo_bar",
                                        name="Foo bar",

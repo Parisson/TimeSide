@@ -20,20 +20,26 @@
 # Author: Paul Brossier <piem@piem.org>
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
+from utils import downsample_blocking
 from aubio import pitch
 
+
 class AubioPitch(Analyzer):
-    implements(IAnalyzer) # TODO check if needed with inheritance
+    implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):
         self.input_blocksize = 2048
         self.input_stepsize = self.input_blocksize / 2
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AubioPitch, self).setup(channels, samplerate, blocksize, totalframes)
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
+        super(AubioPitch, self).setup(channels,
+                                      samplerate,
+                                      blocksize,
+                                      totalframes)
         self.p = pitch("default", self.input_blocksize, self.input_stepsize,
                        samplerate)
         self.p.set_unit("freq")
@@ -53,7 +59,7 @@ class AubioPitch(Analyzer):
     @staticmethod
     @interfacedoc
     def unit():
-        return ""
+        return "Hz"
 
     def __str__(self):
         return "pitch values"
@@ -69,14 +75,10 @@ class AubioPitch(Analyzer):
         # set Result
         pitch = self.new_result(dataMode='value', timeMode='framewise')
 
-        pitch.idMetadata.id = "aubio_pitch"
-        pitch.idMetadata.name = "f0 (aubio)"
-        pitch.idMetadata.unit = 'Hz'
-
-        # parameters : None # TODO check with Piem "default" and "freq" in setup
+        # parameters : None # TODO check with Piem "default" and "freq" in
+        # setup
 
         # Set Data
-        pitch.dataObject.value = numpy.array(self.pitches)
+        pitch.dataObject.value = self.pitches
 
         self._results.add(pitch)
-

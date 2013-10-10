@@ -20,11 +20,10 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import Processor, implements, interfacedoc,  \
-                            FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IValueAnalyzer
-import numpy
+import numpy as np
 
 
 class Level(Analyzer):
@@ -37,17 +36,22 @@ class Level(Analyzer):
         # max_level
         self.max_value = 0
         # rms_level
-        self.mean_values = numpy.array([])
+        self.mean_values = np.array([])
 
     @staticmethod
     @interfacedoc
     def id():
-        return "level_analyzer"
+        return "level"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "level analyzer"
+        return "Level Analyzer"
+
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return "dBFS"
 
     def process(self, frames, eod=False):
         if frames.size:
@@ -56,28 +60,26 @@ class Level(Analyzer):
             if max_value > self.max_value:
                 self.max_value = max_value
             # rms_level
-            self.mean_values = numpy.append(self.mean_values,
-                                            numpy.mean(numpy.square(frames)))
+            self.mean_values = np.append(self.mean_values,
+                                            np.mean(np.square(frames)))
         return frames, eod
 
     def release(self):
         # Max level
         max_level = self.new_result(dataMode='value', timeMode='global')
 
-        max_level.idMetadata.id = "max_level"
-        max_level.idMetadata.name = "Max level"
-        max_level.idMetadata.unit = "dBFS"
+        max_level.idMetadata.id += '.' + "max"
+        max_level.idMetadata.name += ' ' + "Max"
 
-        max_level.dataObject.value = numpy.round(20*numpy.log10(self.max_value), 3)
+        max_level.dataObject.value = np.round(20*np.log10(self.max_value), 3)
         self._results.add(max_level)
 
         # RMS level
         rms_level = self.new_result(dataMode='value', timeMode='global')
-        rms_level.idMetadata.id = "rms_level"
-        rms_level.idMetadata.name="RMS level"
-        rms_level.idMetadata.unit="dBFS"
+        rms_level.idMetadata.id += '.' + "rms"
+        rms_level.idMetadata.name += ' ' + "RMS"
 
-        rms_level.dataObject.value = numpy.round(20*numpy.log10(
-                                numpy.sqrt(numpy.mean(self.mean_values))), 3)
+        rms_level.dataObject.value = np.round(20*np.log10(
+                                np.sqrt(np.mean(self.mean_values))), 3)
         self._results.add(rms_level)
 

@@ -24,7 +24,7 @@ Created on Thu Jun 13 16:05:02 2013
 
 @author: Thomas Fillon
 """
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from yaafelib import *
@@ -36,16 +36,20 @@ class Yaafe(Analyzer):
 
     def __init__(self, yaafeSpecification):
         # Check arguments
-        if isinstance(yaafeSpecification,DataFlow):
+        if isinstance(yaafeSpecification, DataFlow):
             self.dataFlow = yaafeSpecification
-        elif isinstance(yaafeSpecification,FeaturePlan):
+        elif isinstance(yaafeSpecification, FeaturePlan):
             self.featurePlan = yaafeSpecification
             self.dataFlow = self.featurePlan.getDataFlow()
         else:
-            raise TypeError("'%s' Type must be either '%s' or '%s'" % (str(yaafeSpecification),str(DataFlow),str(FeaturePlan)))
+            raise TypeError("'%s' Type must be either '%s' or '%s'" %
+                            (str(yaafeSpecification),
+                             str(DataFlow),
+                             str(FeaturePlan)))
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
         super(Yaafe, self).setup(channels, samplerate, blocksize, totalframes)
         # Configure a YAAFE engine
         self.yaafe_engine = Engine()
@@ -64,14 +68,21 @@ class Yaafe(Analyzer):
     def name():
         return "Yaafe Descriptor"
 
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return ''
+
     def process(self, frames, eod=False):
         # do process things...
-        # Downmixing to mono and convert to float64 for compatibility with Yaafe
-        yaafe_frames = frames.sum(axis=-1,dtype=numpy.float64) / frames.shape[-1]
+        # Downmixing to mono and convert to float64 for compatibility with
+        # Yaafe
+        yaafe_frames = frames.sum(
+            axis=-1, dtype=numpy.float64) / frames.shape[-1]
         # Reshape for compatibility with Yaafe input format
-        yaafe_frames.shape = (1,yaafe_frames.shape[0])
+        yaafe_frames.shape = (1, yaafe_frames.shape[0])
         # write audio array on 'audio' input
-        self.yaafe_engine.writeInput('audio',yaafe_frames)
+        self.yaafe_engine.writeInput('audio', yaafe_frames)
         # process available data
         self.yaafe_engine.process()
         if eod:
@@ -86,19 +97,12 @@ class Yaafe(Analyzer):
         if len(featNames) == 0:
             raise KeyError('Yaafe engine did not return any feature')
         for featName in featNames:
-            # Define ID fields
-            id = 'yaafe_' + featName
-            name = 'Yaafe ' + featName
 
-            # Get results from Yaafe engine
             result = self.new_result(dataMode='value', timeMode='framewise')
-            result.idMetadata.id = id
-            result.idMetadata.name = name
-            result.idMetadata.unit = ''
+            result.idMetadata.id += '.' + featName
+            result.idMetadata.name += ' ' + featName
             # Read Yaafe Results
             result.dataObject.value = self.yaafe_engine.readOutput(featName)
             # Store results in Container
             if len(result.dataObject.value):
                 self._results.add(result)
-
-

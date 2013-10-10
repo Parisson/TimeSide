@@ -19,7 +19,7 @@
 
 # Author: Paul Brossier <piem@piem.org>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from utils import downsample_blocking
@@ -27,38 +27,46 @@ from utils import downsample_blocking
 import numpy
 from aubio import mfcc, pvoc
 
-from math import isnan
 
 class AubioMfcc(Analyzer):
     implements(IAnalyzer)
 
     def __init__(self):
         self.input_blocksize = 1024
-        self.input_stepsize = self.input_blocksize/4
+        self.input_stepsize = self.input_blocksize / 4
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AubioMfcc, self).setup(channels, samplerate, blocksize, totalframes)
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
+        super(AubioMfcc, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.n_filters = 40
         self.n_coeffs = 13
         self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
-        self.mfcc = mfcc(self.input_blocksize, self.n_filters, self.n_coeffs, samplerate)
+        self.mfcc = mfcc(self.input_blocksize,
+                         self.n_filters,
+                         self.n_coeffs,
+                         samplerate)
         self.block_read = 0
         self.mfcc_results = numpy.zeros([self.n_coeffs, ])
 
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_mfcc_analyzer"
+        return "aubio_mfcc"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "MFCC analysis (aubio)"
+        return "MFCC (aubio)"
+
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return ""
 
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.input_stepsize):
-            #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
             fftgrain = self.pvoc(samples)
             coeffs = self.mfcc(fftgrain)
             self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
@@ -68,13 +76,9 @@ class AubioMfcc(Analyzer):
     def release(self):
         # MFCC
         mfcc = self.new_result(dataMode='value', timeMode='framewise')
-        parameters = dict(n_filters= self.n_filters,
-                          n_coeffs=  self.n_coeffs)
 
-        mfcc.idMetadata.id = "aubio_mfcc"
-        mfcc.idMetadata.name = "mfcc (aubio)"
-        mfcc.idMetadata.unit = ""
-        mfcc.parameters = parameters
+        mfcc.parameters = dict(n_filters=self.n_filters,
+                               n_coeffs=self.n_coeffs)
 
         mfcc.dataObject.value = self.mfcc_results
         self._results.add(mfcc)

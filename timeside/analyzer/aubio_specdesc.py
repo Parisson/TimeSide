@@ -24,25 +24,32 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from utils import downsample_blocking
 
-import numpy
 from aubio import specdesc, pvoc
+
 
 class AubioSpecdesc(Analyzer):
     implements(IAnalyzer)
-
 
     def __init__(self):
         self.input_blocksize = 1024
         self.input_stepsize = self.input_blocksize / 4
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AubioSpecdesc, self).setup(channels, samplerate, blocksize, totalframes)
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
+        super(
+            AubioSpecdesc,
+            self).setup(
+            channels,
+            samplerate,
+            blocksize,
+            totalframes)
         self.block_read = 0
         self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
-        self.methods = ['default', 'energy', 'hfc', 'complex', 'phase', 'specdiff', 'kl',
-                'mkl', 'specflux', 'centroid', 'slope', 'rolloff', 'spread', 'skewness',
-                'kurtosis', 'decrease']
+        self.methods = [
+            'default', 'energy', 'hfc', 'complex', 'phase', 'specdiff', 'kl',
+            'mkl', 'specflux', 'centroid', 'slope', 'rolloff', 'spread', 'skewness',
+            'kurtosis', 'decrease']
         self.specdesc = {}
         self.specdesc_results = {}
         for method in self.methods:
@@ -52,36 +59,36 @@ class AubioSpecdesc(Analyzer):
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_specdesc_analyzer"
+        return "aubio_specdesc"
 
     @staticmethod
     @interfacedoc
     def name():
         return "Spectral Descriptor (aubio)"
 
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return ""
+
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.input_stepsize):
             fftgrain = self.pvoc(samples)
             for method in self.methods:
-                self.specdesc_results[method] += [self.specdesc[method](fftgrain)[0]]
+                self.specdesc_results[method] += [
+                    self.specdesc[method](fftgrain)[0]]
         return frames, eod
 
     def release(self):
-
-        unit = ""
 
         # For each method store results in container
         for method in self.methods:
             res_specdesc = self.new_result(dataMode='value',
                                            timeMode='framewise')
             # Set metadata
-            res_specdesc.idMetadata.id = '_'.join(["aubio_specdesc", method])
-            res_specdesc.idMetadata.name = ' '.join(["spectral descriptor", method, "(aubio)"])
-
-            res_specdesc.idMetadata.unit = unit
-
+            res_specdesc.idMetadata.id += '.' + method
+            res_specdesc.idMetadata.name = ' ' + method
 
             res_specdesc.dataObject.value = self.specdesc_results[method]
 
             self._results.add(res_specdesc)
-

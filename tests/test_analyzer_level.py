@@ -16,7 +16,7 @@ class TestAnalyzerLevel(TestCase):
         max_level_value = -6.021
         rms_level_value = -9.856
 
-        self.expected = {'max_level':max_level_value , 'rms_level':rms_level_value }
+        self.expected = {'level.max':max_level_value , 'level.rms':rms_level_value }
 
     def testOnGuitar(self):
         "runs on guitar"
@@ -25,7 +25,7 @@ class TestAnalyzerLevel(TestCase):
         max_level_value = -4.258
         rms_level_value = -21.945
 
-        self.expected = {'max_level':max_level_value , 'rms_level':rms_level_value }
+        self.expected = {'level.max':max_level_value , 'level.rms':rms_level_value }
 
 
     def tearDown(self):

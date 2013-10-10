@@ -21,8 +21,8 @@
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
 #   Thomas Fillon <thomas  at parisson.com>
+from __future__ import division
 
-from utils import downsample_blocking
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IAnalyzer
 from timeside.__init__ import __version__
@@ -525,11 +525,18 @@ class AnalyzerResult(MetadataObject):
                                  % (value, self._validTimeMode))
         super(AnalyzerResult, self).__setattr__(name, value)
 
+    def __len__(self):
+        if self.dataMode == 'value':
+            return len(self.dataObject.value)
+        else:
+            return len(self.dataObject.label)
+
     def as_dict(self):
         return dict([(key, self[key].as_dict())
                     for key in self.keys() if hasattr(self[key], 'as_dict')] +
                     [('dataMode', self.dataMode), ('timeMode', self.timeMode)])
                     # TODO : check if it can be simplified now
+
     def to_xml(self):
         import xml.etree.ElementTree as ET
         root = ET.Element('result')
@@ -554,7 +561,7 @@ class AnalyzerResult(MetadataObject):
         dataModeChild = root.find('dataMode')
         timeModeChild = root.find('timeMode')
         result = AnalyzerResult(dataMode=dataModeChild.text,
-                                   timeMode=timeModeChild.text)
+                                timeMode=timeModeChild.text)
         for child in root:
             key = child.tag
             if key not in ['dataMode', 'timeMode']:
@@ -564,33 +571,39 @@ class AnalyzerResult(MetadataObject):
         return result
 
     def data(self):
-        return {key: self.dataObject[key] for key in ['value', 'label'] if key in self.dataObject.keys()}
+        if self.dataMode is None:
+            return (
+                {key: self.dataObject[key]
+                    for key in ['value', 'label'] if key in self.dataObject.keys()}
+            )
+        elif self.dataMode is 'value':
+            return self.dataObject.value
+        elif self.dataMode is 'label':
+            return self.dataObject.label
 
     def time(self):
         if self.timeMode == 'global':
             return self.audioMetadata.start
         elif self.timeMode == 'framewise':
             return (self.audioMetadata.start +
-                    self.frameMetadata.stepsize * numpy.arange(0,len(self)))
+                    self.frameMetadata.stepsize /
+                    self.frameMetadata.samplerate *
+                    numpy.arange(0, len(self)))
         else:
-            return self.dataObject.time
+            return self.audioMetadata.start + self.dataObject.time
         pass
 
     def duration(self):
         if self.timeMode == 'global':
             return self.audioMetadata.duration
         elif self.timeMode == 'framewise':
-            return self.frameMetadata.blockwise * numpy.ones(len(self))
+            return (self.frameMetadata.blockwise /
+                    self.frameMetadata.samplerate
+                    * numpy.ones(len(self)))
         elif self.timeMode == 'event':
             return numpy.zeros(len(self))
         elif self.timeMode == 'segment':
             return self.dataObject.duration
-
-    def __len__(self):
-        if self.dataMode == 'value':
-            return len(self.dataObject.value)
-        else:
-            return len(self.dataObject.label)
 
 
 #    @property
@@ -601,7 +614,7 @@ class AnalyzerResult(MetadataObject):
 #                    max=numpy.max(self.data, axis=0),
 #                    min=numpy.min(self.data, axis=0)
 #                    )
-#                     # ajouter size
+# ajouter size
 #        return(prop)
 
 
@@ -625,7 +638,7 @@ class AnalyzerResultContainer(dict):
     '''
 
     def __init__(self, analyzer_results=None):
-        super(AnalyzerResultContainer,self).__init__()
+        super(AnalyzerResultContainer, self).__init__()
         if analyzer_results is not None:
             self.add(analyzer_results)
 
@@ -638,12 +651,12 @@ class AnalyzerResultContainer(dict):
 #    def __repr__(self):
  #       return [res.as_dict() for res in self.values()].__repr__()
 
-    #def __eq__(self, other):
-        #if hasattr(other, 'results'):
+    # def __eq__(self, other):
+        # if hasattr(other, 'results'):
         #    other = other.results
    #     return self == other
 
-    #def __ne__(self, other):
+    # def __ne__(self, other):
     #    return not self.__eq__(other)
 
     def add(self, analyzer_result):
@@ -716,7 +729,7 @@ class AnalyzerResultContainer(dict):
         for res_json in results_json:
 
             res = AnalyzerResult(dataMode=res_json['dataMode'],
-                                    timeMode=res_json['timeMode'])
+                                 timeMode=res_json['timeMode'])
             for key in res_json.keys():
                 if key not in ['dataMode', 'timeMode']:
                     res[key] = res_json[key]
@@ -811,7 +824,7 @@ class AnalyzerResultContainer(dict):
             for (group_name, group) in h5_file.items():
 
                 result = AnalyzerResult(dataMode=group.attrs['dataMode'],
-                                           timeMode=group.attrs['timeMode'])
+                                        timeMode=group.attrs['timeMode'])
                 # Read Sub-Group
                 for subgroup_name, subgroup in group.items():
                     # Read attributes
@@ -867,8 +880,9 @@ class Analyzer(Processor):
         self.result_stepsize = self.input_stepsize
 
     def results(self):
-        #TODO :return self._results[id=analyzerID]
-        return self._results
+        # TODO :return self._results[id=analyzerID]
+        return {key:self._results[key] for key in self._results.keys()
+                    if key.split('.')[0] == self.id()}
 
     @staticmethod
     @interfacedoc
@@ -910,6 +924,9 @@ class Analyzer(Processor):
                                                 microsecond=0).isoformat(' ')
         result.idMetadata.version = __version__
         result.idMetadata.author = 'TimeSide'
+        result.idMetadata.id = self.id()
+        result.idMetadata.name = self.name()
+        result.idMetadata.unit = self.unit()
 
         result.audioMetadata.uri = self.mediainfo()['uri']
         result.audioMetadata.start = self.mediainfo()['start']

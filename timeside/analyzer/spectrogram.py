@@ -23,40 +23,39 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from utils import downsample_blocking
-
-import numpy
-from aubio import filterbank, pvoc
+import numpy as np
 
 
-class AubioMelEnergy(Analyzer):
-    implements(IAnalyzer)
+class Spectrogram(Analyzer):
+    implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):
-        self.input_blocksize = 1024
-        self.input_stepsize = self.input_blocksize / 4
+        self.input_blocksize = 2048
+        self.input_stepsize = self.input_blocksize / 2
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(AubioMelEnergy, self).setup(
-            channels, samplerate, blocksize, totalframes)
-        self.n_filters = 40
-        self.n_coeffs = 13
-        self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
-        self.melenergy = filterbank(self.n_filters, self.input_blocksize)
-        self.melenergy.set_mel_coeffs_slaney(samplerate)
-        self.block_read = 0
-        self.melenergy_results = numpy.zeros([self.n_filters, ])
+        super(
+            Spectrogram,
+            self).setup(
+            channels,
+            samplerate,
+            blocksize,
+            totalframes)
+
+        self.values = []
+        self.FFT_SIZE = 2048
 
     @staticmethod
     @interfacedoc
     def id():
-        return "aubio_melenergy"
+        return "spectrogram_analyzer"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Mel Energy (aubio)"
+        return "Spectrogram Analyzer"
 
     @staticmethod
     @interfacedoc
@@ -65,21 +64,19 @@ class AubioMelEnergy(Analyzer):
 
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.input_stepsize):
-            # TODO : check pourquoi on utilise pas le blocksize ?
-            fftgrain = self.pvoc(samples)
-            self.melenergy_results = numpy.vstack(
-                [self.melenergy_results, self.melenergy(fftgrain)])
-            self.block_read += 1
+            #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
+            self.values.append(np.abs(np.fft.rfft(samples, self.FFT_SIZE)))
+
         return frames, eod
 
     def release(self):
+        # set Result
+        spectrogram = self.new_result(dataMode='value', timeMode='framewise')
 
-        melenergy = self.new_result(dataMode='value', timeMode='framewise')
+        # parameters :
+        spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
 
-        # Metadata
-        melenergy.parameters = dict(n_filters=self.n_filters,
-                                    n_coeffs=self.n_coeffs)
         # Set Data
-        melenergy.dataObject.value = self.melenergy_results
+        spectrogram.dataObject.value = self.values
 
-        self._results.add(melenergy)
+        self._results.add(spectrogram)

@@ -8,3 +8,5 @@ from aubio_mfcc import *
 from aubio_melenergy import *
 from aubio_specdesc import *
 from yaafe import * # TF : add Yaafe analyzer
+from spectrogram import Spectrogram
+from waveform import Waveform
