@@ -880,9 +880,10 @@ class Analyzer(Processor):
         self.result_stepsize = self.input_stepsize
 
     def results(self):
-        # TODO :return self._results[id=analyzerID]
-        return {key:self._results[key] for key in self._results.keys()
-                    if key.split('.')[0] == self.id()}
+
+        return AnalyzerResultContainer(
+            [self._results[key] for key in self._results.keys()
+             if key.split('.')[0] == self.id()])
 
     @staticmethod
     @interfacedoc
@@ -921,7 +922,7 @@ class Analyzer(Processor):
 
         # Automatically write known metadata
         result.idMetadata.date = datetime.now().replace(
-                                                microsecond=0).isoformat(' ')
+            microsecond=0).isoformat(' ')
         result.idMetadata.version = __version__
         result.idMetadata.author = 'TimeSide'
         result.idMetadata.id = self.id()
