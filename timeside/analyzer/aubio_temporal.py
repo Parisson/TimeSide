@@ -83,85 +83,85 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         #  Onsets
         #---------------------------------
-        onsets = self.new_result(dataMode='label', timeMode='event')
+        onsets = self.new_result(data_mode='label', time_mode='event')
 
-        onsets.idMetadata.id += '.' + 'onset'
-        onsets.idMetadata.name += ' ' + 'Onset'
-        onsets.idMetadata.unit = 's'
+        onsets.id_metadata.id += '.' + 'onset'
+        onsets.id_metadata.name += ' ' + 'Onset'
+        onsets.id_metadata.unit = 's'
 
-        # Set Data , dataMode='label', timeMode='event'
+        # Set Data , data_mode='label', time_mode='event'
         # Event = list of (time, labelId)
 
-        onsets.dataObject.label = numpy.ones(len(self.onsets))
-        onsets.dataObject.time = self.onsets
+        onsets.data_object.label = numpy.ones(len(self.onsets))
+        onsets.data_object.time = self.onsets
 
-        onsets.labelMetadata.label = {1: 'Onset'}
+        onsets.label_metadata.label = {1: 'Onset'}
 
         self._results.add(onsets)
 
         #---------------------------------
         #  Onset Rate
         #---------------------------------
-        onsetrate = self.new_result(dataMode='value', timeMode='event')
+        onsetrate = self.new_result(data_mode='value', time_mode='event')
         # Set metadata
-        onsetrate.idMetadata.id += '.' + "onset_rate"
-        onsetrate.idMetadata.name = " " + "Onset Rate"
-        onsetrate.idMetadata.unit = "bpm"
+        onsetrate.id_metadata.id += '.' + "onset_rate"
+        onsetrate.id_metadata.name = " " + "Onset Rate"
+        onsetrate.id_metadata.unit = "bpm"
 
-        # Set Data , dataMode='value', timeMode='event'
+        # Set Data , data_mode='value', time_mode='event'
         # Event = list of (time, value)
         # TODO : add time
         if len(self.onsets) > 1:
-            onsetrate.dataObject.value = 60. / numpy.diff(self.onsets)
-            onsetrate.dataObject.time = self.onsets[:-1]
+            onsetrate.data_object.value = 60. / numpy.diff(self.onsets)
+            onsetrate.data_object.time = self.onsets[:-1]
         else:
-            onsetrate.dataObject.value = []
+            onsetrate.data_object.value = []
 
         self._results.add(onsetrate)
 
         #---------------------------------
         #  Beats
         #---------------------------------
-        beats = self.new_result(dataMode='label', timeMode='segment')
+        beats = self.new_result(data_mode='label', time_mode='segment')
         # Set metadata
-        beats.idMetadata.id += '.' + "beat"
-        beats.idMetadata.name += " " + "Beats"
-        beats.idMetadata.unit = "s"
+        beats.id_metadata.id += '.' + "beat"
+        beats.id_metadata.name += " " + "Beats"
+        beats.id_metadata.unit = "s"
 
-        #  Set Data, dataMode='label', timeMode='segment'
+        #  Set Data, data_mode='label', time_mode='segment'
         # Segment = list of (time, duration, labelId)
         if len(self.beats) > 1:
             duration = numpy.diff(self.beats)
             duration = numpy.append(duration, duration[-1])
-            beats.dataObject.time = self.beats
-            beats.dataObject.duration = duration
-            beats.dataObject.label = numpy.ones(len(self.beats))
+            beats.data_object.time = self.beats
+            beats.data_object.duration = duration
+            beats.data_object.label = numpy.ones(len(self.beats))
         else:
-            beats.dataObject.label = []
+            beats.data_object.label = []
 
-        beats.labelMetadata.label = {1: 'Beat'}
+        beats.label_metadata.label = {1: 'Beat'}
 
         self._results.add(beats)
 
         #---------------------------------
         #  BPM
         #---------------------------------
-        bpm = self.new_result(dataMode='value', timeMode='segment')
+        bpm = self.new_result(data_mode='value', time_mode='segment')
         # Set metadata
-        bpm.idMetadata.id += '.' + "bpm"
-        bpm.idMetadata.name += ' ' + "bpm"
-        bpm.idMetadata.unit = "bpm"
+        bpm.id_metadata.id += '.' + "bpm"
+        bpm.id_metadata.name += ' ' + "bpm"
+        bpm.id_metadata.unit = "bpm"
 
-        #  Set Data, dataMode='value', timeMode='segment'
+        #  Set Data, data_mode='value', time_mode='segment'
         if len(self.beats) > 1:
             periods = 60. / numpy.diff(self.beats)
             periods = numpy.append(periods, periods[-1])
 
-            bpm.dataObject.time = self.beats
-            bpm.dataObject.duration = duration
-            bpm.dataObject.value = periods
+            bpm.data_object.time = self.beats
+            bpm.data_object.duration = duration
+            bpm.data_object.value = periods
 
         else:
-            bpm.dataObject.value = []
+            bpm.data_object.value = []
 
         self._results.add(bpm)

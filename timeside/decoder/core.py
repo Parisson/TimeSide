@@ -90,9 +90,9 @@ class FileDecoder(Processor):
             self.uri_duration = duration
 
         if start==0 and duration is None:
-            self.IS_SEGMENT = False
+            self.is_segment = False
         else:
-            self.IS_SEGMENT = True
+            self.is_segment = True
 
     def set_uri_default_duration(self):
         # Set the duration from the length of the file
@@ -125,7 +125,7 @@ class FileDecoder(Processor):
         if channels:
             self.output_channels = int(channels)
 
-        if self.IS_SEGMENT:
+        if self.is_segment:
             # Create the pipe with Gnonlin gnlurisource
             self.pipe = ''' gnlurisource uri={uri}
                             start=0
@@ -328,7 +328,7 @@ class FileDecoder(Processor):
         return dict(uri=self.uri,
                     duration=self.uri_duration,
                     start=self.uri_start,
-                    IS_SEGMENT=self.IS_SEGMENT)
+                    is_segment=self.is_segment)
 
     def __del__(self):
         self.release()

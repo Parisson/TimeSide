@@ -25,7 +25,7 @@ class TestAnalyzerDC(TestCase):
         (decoder | self.analyzer).run()
         results = self.analyzer.results
         for key in self.expected.keys():
-            self.assertEquals(results[key].dataObject.value, self.expected[key])
+            self.assertEquals(results[key].data_object.value, self.expected[key])
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
