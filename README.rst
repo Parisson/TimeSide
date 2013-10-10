@@ -132,10 +132,10 @@ Dive in
 Define some processors::
 
  >>> import timeside
- >>> decoder  =  timeside.decoder.FileDecoder('source.wav')
+ >>> decoder  =  timeside.decoder.FileDecoder('sweep.wav')
  >>> grapher  =  timeside.grapher.Waveform()
- >>> analyzer =  timeside.analyzer.MaxLevel()
- >>> encoder  =  timeside.encoder.Mp3Encoder('output.mp3')
+ >>> analyzer =  timeside.analyzer.Level()
+ >>> encoder  =  timeside.encoder.VorbisEncoder('sweep.ogg')
 
 then, the *magic* pipeline::
 
@@ -143,10 +143,8 @@ then, the *magic* pipeline::
 
 get the results::
 
- >>> grapher.render(output='image.png')
- >>> print 'Level:', analyzer.result()
-
-and finally see image.png and play output.mp3 ;)
+ >>> grapher.render(output='waveform.png')
+ >>> print 'Level:', analyzer.results()
 
 `More examples <http://code.google.com/p/timeside/wiki/PythonApi>`_
 

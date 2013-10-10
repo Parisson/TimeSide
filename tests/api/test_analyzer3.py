@@ -9,10 +9,10 @@ import time
 
 class TestAnalyzer:
 
-    analyzer = timeside.analyzer.MaxLevel()
+    analyzer = timeside.analyzer.Level()
 
     def __init__(self, path):
-        self.source = os.path.join(os.path.dirname(__file__), path)
+        self.source = path
         print "Processing %s" % self.source
         self.decoder  = timeside.decoder.FileDecoder(self.source)
         print 'format: ', self.decoder.format()

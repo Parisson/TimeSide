@@ -25,7 +25,7 @@
 from utils import downsample_blocking
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IAnalyzer
-from timeside import __version__ as TimeSideVersion
+from timeside.__init__ import __version__
 import numpy
 from collections import OrderedDict
 
@@ -877,7 +877,7 @@ class Analyzer(Processor):
         # Automatically write known metadata
         result.idMetadata = IdMetadata(
             date=datetime.now().replace(microsecond=0).isoformat(' '),
-            version=TimeSideVersion,
+            version=__version__,
             author='TimeSide')
         result.audioMetadata = AudioMetadata(uri=self.mediainfo()['uri'],
                                              start=self.mediainfo()['start'],
