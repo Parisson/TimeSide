@@ -69,7 +69,7 @@ plt.imshow(20 * np.log10(spec_res.data.T),
                    max_freq],
            aspect='auto')
 
-data = res_vamp.data - res_vamp.data.mean()
+data = (res_vamp.data - res_vamp.data.mean()).clip(0)
 plt.plot(res_vamp.time, abs(data / data.max() * max_freq))
 
 
