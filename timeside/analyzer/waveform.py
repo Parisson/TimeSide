@@ -36,14 +36,8 @@ class Waveform(Analyzer):
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(
-            Waveform,
-            self).setup(
-            channels,
-            samplerate,
-            blocksize,
-            totalframes)
-
+        super(Waveform, self).setup(channels, samplerate,
+              blocksize, totalframes)
         self.values = []
         self.result_blocksize = 1
         self.result_stepsize = 1
@@ -71,9 +65,9 @@ class Waveform(Analyzer):
 
     def release(self):
         # set Result
-        waveform = self.new_result(data_mode='value', time_mode='framewise')
+        waveform = self.new_result(dataMode='value', timeMode='framewise')
 
         # Set Data
-        waveform.data_object.value = np.asarray(self.values).flatten()
+        waveform.dataObject.value = np.asarray(self.values).flatten()
 
         self._results.add(waveform)

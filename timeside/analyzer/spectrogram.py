@@ -36,13 +36,8 @@ class Spectrogram(Analyzer):
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(
-            Spectrogram,
-            self).setup(
-            channels,
-            samplerate,
-            blocksize,
-            totalframes)
+        super(Spectrogram, self).setup(channels, samplerate,
+              blocksize, totalframes)
 
         self.values = []
         self.FFT_SIZE = 2048
@@ -71,12 +66,12 @@ class Spectrogram(Analyzer):
 
     def release(self):
         # set Result
-        spectrogram = self.new_result(data_mode='value', time_mode='framewise')
+        spectrogram = self.new_result(dataMode='value', timeMode='framewise')
 
         # parameters :
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
 
         # Set Data
-        spectrogram.data_object.value = self.values
+        spectrogram.dataObject.value = self.values
 
         self._results.add(spectrogram)
