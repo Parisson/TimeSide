@@ -21,13 +21,13 @@
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.api import IAnalyzer
 from numpy import array
 from scipy.ndimage.morphology import binary_opening
 from matplotlib import pylab
 
 class IRITSpeechEntropy(Processor):
-    implements(IValueAnalyzer)
+    implements(IAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):

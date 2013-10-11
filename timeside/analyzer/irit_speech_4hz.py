@@ -21,7 +21,7 @@
 
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import *
-from timeside.api import IValueAnalyzer
+from timeside.api import IAnalyzer
 from numpy import array,hamming,dot,mean
 from numpy.fft import rfft
 from scipy.ndimage.morphology import binary_opening
@@ -30,7 +30,7 @@ from scipy.io.wavfile import write as wavwrite
 from matplotlib import pylab
 
 class IRITSpeech4Hz(Processor):
-    implements(IValueAnalyzer)
+    implements(IAnalyzer)
     '''
     Segmentor based on the analysis of the 4Hz energy modulation.
 
@@ -40,11 +40,11 @@ class IRITSpeech4Hz(Processor):
 		- frequency_center	(float)		: Center of the frequency range where the energy is extracted
 		- frequency_width	(float)		: Width of the frequency range where the energy is extracted
 		- orderFilter		(int)		: Order of the pass-band filter extracting the frequency range
-		- normalizeEnergy	(boolean)	: Whether the energy must be normalized or not 
+		- normalizeEnergy	(boolean)	: Whether the energy must be normalized or not
 		- nFFT 				(int)		: Number of points for the FFT. Better if 512 <= nFFT <= 2048
-		- nbFilters			(int)		: Length of the Mel Filter bank 
-		- melFilter		(numpy array)	: Mel Filter bank 
-		- modulLen			(float)		: Length (in second) of the modulation computation window 
+		- nbFilters			(int)		: Length of the Mel Filter bank
+		- melFilter		(numpy array)	: Mel Filter bank
+		- modulLen			(float)		: Length (in second) of the modulation computation window
     '''
 
     @interfacedoc
@@ -54,8 +54,8 @@ class IRITSpeech4Hz(Processor):
         print "top"
         # Classification
         self.threshold = 2.0
-        
-        # Pass-band Filter 
+
+        # Pass-band Filter
         self.frequency_center = 4.0
         self.frequency_width = 0.5
         self.orderFilter=100
@@ -101,7 +101,7 @@ class IRITSpeech4Hz(Processor):
 		self.energy4hz.append(e)
 		
 		return frames, eod
-        
+
     def results(self):
 	'''
 		
@@ -113,7 +113,7 @@ class IRITSpeech4Hz(Processor):
 	num = firwin(self.orderFilter, Wn,pass_zero=False);
 		
 		
-	# Energy on the frequency range 
+	# Energy on the frequency range
 	self.energy4hz=numpy.array(self.energy4hz)		
 	energy = lfilter(num,1,self.energy4hz.T,0)
 	energy = sum(energy)
@@ -136,11 +136,11 @@ class IRITSpeech4Hz(Processor):
 		
 	segList = segmentFromValues(modEnergyValue>self.threshold)
 	segmentsEntropy =[]
-        for s in segList : 
+        for s in segList :
             segmentsEntropy.append((numpy.float(s[0])*self.blocksize()/self.samplerate(),
                                     numpy.float(s[1])*self.blocksize()/self.samplerate(),
-                                    convert[s[2]])) 
-       
+                                    convert[s[2]]))
+
         segs = AnalyzerResult(id="irit_4hzenergy_segments", name="seg 4Hz (IRIT)", unit="s")
         segs.value = segmentsEntropy
         return AnalyzerResultContainer([modEnergy,segs])
