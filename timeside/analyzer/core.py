@@ -600,7 +600,7 @@ class AnalyzerResult(MetadataObject):
         if self.time_mode == 'global':
             return self.audio_metadata.duration
         elif self.time_mode == 'framewise':
-            return (self.frame_metadata.blockwise /
+            return (self.frame_metadata.blocksize /
                     self.frame_metadata.samplerate
                     * numpy.ones(len(self)))
         elif self.time_mode == 'event':

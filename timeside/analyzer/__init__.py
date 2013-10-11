@@ -10,3 +10,4 @@ from aubio_specdesc import *
 from yaafe import * # TF : add Yaafe analyzer
 from spectrogram import Spectrogram
 from waveform import Waveform
+from vamp_plugin import VampSimpleHost

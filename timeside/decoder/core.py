@@ -328,7 +328,8 @@ class FileDecoder(Processor):
         return dict(uri=self.uri,
                     duration=self.uri_duration,
                     start=self.uri_start,
-                    is_segment=self.is_segment)
+                    is_segment=self.is_segment,
+                    samplerate=self.input_samplerate)
 
     def __del__(self):
         self.release()
