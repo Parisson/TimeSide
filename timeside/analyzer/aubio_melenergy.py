@@ -74,12 +74,12 @@ class AubioMelEnergy(Analyzer):
 
     def release(self):
 
-        melenergy = self.new_result(dataMode='value', timeMode='framewise')
+        melenergy = self.new_result(data_mode='value', time_mode='framewise')
 
         # Metadata
         melenergy.parameters = dict(n_filters=self.n_filters,
                                     n_coeffs=self.n_coeffs)
         # Set Data
-        melenergy.dataObject.value = self.melenergy_results
+        melenergy.data_object.value = self.melenergy_results
 
         self._results.add(melenergy)

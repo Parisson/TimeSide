@@ -58,9 +58,9 @@ class MeanDCShift(Analyzer):
         return frames, eod
 
     def release(self):
-        dc_result = self.new_result(dataMode='value', timeMode='global')
+        dc_result = self.new_result(data_mode='value', time_mode='global')
 
         # Set Data
-        dc_result.dataObject.value = numpy.round(
+        dc_result.data_object.value = numpy.round(
             numpy.mean(100 * self.values), 3)
         self._results.add(dc_result)

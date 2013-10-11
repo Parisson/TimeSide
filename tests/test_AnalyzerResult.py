@@ -14,69 +14,69 @@ class TestAnalyzerResult(TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = AnalyzerResult(dataMode='value', timeMode='framewise')
+        self.result = AnalyzerResult(data_mode='value', time_mode='framewise')
         from datetime import datetime
-        self.result.idMetadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
+        self.result.id_metadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
                                        version=__version__,
                                        author='TimeSide',
                                        id="foo_bar",
                                        name="Foo bar",
                                        unit="foo")
-        self.result.audioMetadata = dict(uri='Foo.wav',
+        self.result.audio_metadata = dict(uri='Foo.wav',
                                          start=0, duration=20,
                                          channels=2)
 
     def testOnFloat(self):
         "float result"
-        self.result.dataObject.value = 1.2
+        self.result.data_object.value = 1.2
 
     def testOnInt(self):
         "integer result"
-        self.result.dataObject.value = 1
+        self.result.data_object.value = 1
 
     def testOnList(self):
         "list result"
-        self.result.dataObject.value = [1., 2.]
+        self.result.data_object.value = [1., 2.]
 
     def testOnString(self):
         "string result"
-        self.result.dataObject.value = "hello"
+        self.result.data_object.value = "hello"
 
     def testOnListOfString(self):
         "list of strings result"
-        self.result.dataObject.value = ["hello", "hola"]
+        self.result.data_object.value = ["hello", "hola"]
 
     def testOnListOfList(self):
         "list of lists result"
-        self.result.dataObject.value = [[0, 1], [0, 1, 2]]
+        self.result.data_object.value = [[0, 1], [0, 1, 2]]
 
     def testOnNumpyVectorOfFloat(self):
         "numpy vector of float"
-        self.result.dataObject.value = ones(2, dtype='float') * pi
+        self.result.data_object.value = ones(2, dtype='float') * pi
 
     def testOnNumpy2DArrayOfFloat64(self):
         "numpy 2d array of float64"
-        self.result.dataObject.value = ones([2, 3], dtype='float64') * pi
+        self.result.data_object.value = ones([2, 3], dtype='float64') * pi
 
     def testOnNumpy3DArrayOfInt32(self):
         "numpy 3d array of int32"
-        self.result.dataObject.value = ones([2, 3, 2], dtype='int32')
+        self.result.data_object.value = ones([2, 3, 2], dtype='int32')
 
     def testOnNumpyArrayOfStrings(self):
         "numpy array of strings"
-        self.result.dataObject.value = array(['hello', 'hola'])
+        self.result.data_object.value = array(['hello', 'hola'])
 
     def testOnEmptyList(self):
         "empty list"
-        self.result.dataObject.value = []
+        self.result.data_object.value = []
 
     def testOnNone(self):
         "None"
-        self.result.dataObject.value = None
+        self.result.data_object.value = None
 
     def testOnUnicode(self):
         "None"
-        self.result.dataObject.value = None
+        self.result.data_object.value = None
 
     def tearDown(self):
         pass
@@ -115,7 +115,7 @@ def create_good_method_func(numpy_data_type):
     def method(self):
         "numpy %s" % str(numpy_data_type)[7:-1]
         import numpy
-        self.result.dataObject.value = numpy_data_type(pi)
+        self.result.data_object.value = numpy_data_type(pi)
     return method
 
 
@@ -127,7 +127,7 @@ def create_bad_method_func(numpy_data_type):
             data = getattr(numpy, numpy_data_type)(pi)
         except ValueError:
             data = getattr(numpy, numpy_data_type)()
-        self.assertRaises(TypeError, self.result.dataObject.__setattr__, 'value', data)
+        self.assertRaises(TypeError, self.result.data_object.__setattr__, 'value', data)
     return method
 
 for numpy_data_type in good_numpy_data_types:

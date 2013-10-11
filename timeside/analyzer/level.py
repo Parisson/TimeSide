@@ -66,20 +66,20 @@ class Level(Analyzer):
 
     def release(self):
         # Max level
-        max_level = self.new_result(dataMode='value', timeMode='global')
+        max_level = self.new_result(data_mode='value', time_mode='global')
 
-        max_level.idMetadata.id += '.' + "max"
-        max_level.idMetadata.name += ' ' + "Max"
+        max_level.id_metadata.id += '.' + "max"
+        max_level.id_metadata.name += ' ' + "Max"
 
-        max_level.dataObject.value = np.round(20*np.log10(self.max_value), 3)
+        max_level.data_object.value = np.round(20*np.log10(self.max_value), 3)
         self._results.add(max_level)
 
         # RMS level
-        rms_level = self.new_result(dataMode='value', timeMode='global')
-        rms_level.idMetadata.id += '.' + "rms"
-        rms_level.idMetadata.name += ' ' + "RMS"
+        rms_level = self.new_result(data_mode='value', time_mode='global')
+        rms_level.id_metadata.id += '.' + "rms"
+        rms_level.id_metadata.name += ' ' + "RMS"
 
-        rms_level.dataObject.value = np.round(20*np.log10(
+        rms_level.data_object.value = np.round(20*np.log10(
                                 np.sqrt(np.mean(self.mean_values))), 3)
         self._results.add(rms_level)
 

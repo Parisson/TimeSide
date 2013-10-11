@@ -83,12 +83,12 @@ class AubioSpecdesc(Analyzer):
 
         # For each method store results in container
         for method in self.methods:
-            res_specdesc = self.new_result(dataMode='value',
-                                           timeMode='framewise')
+            res_specdesc = self.new_result(data_mode='value',
+                                           time_mode='framewise')
             # Set metadata
-            res_specdesc.idMetadata.id += '.' + method
-            res_specdesc.idMetadata.name = ' ' + method
+            res_specdesc.id_metadata.id += '.' + method
+            res_specdesc.id_metadata.name = ' ' + method
 
-            res_specdesc.dataObject.value = self.specdesc_results[method]
+            res_specdesc.data_object.value = self.specdesc_results[method]
 
             self._results.add(res_specdesc)

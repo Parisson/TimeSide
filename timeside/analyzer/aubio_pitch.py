@@ -73,12 +73,12 @@ class AubioPitch(Analyzer):
 
     def release(self):
         # set Result
-        pitch = self.new_result(dataMode='value', timeMode='framewise')
+        pitch = self.new_result(data_mode='value', time_mode='framewise')
 
         # parameters : None # TODO check with Piem "default" and "freq" in
         # setup
 
         # Set Data
-        pitch.dataObject.value = self.pitches
+        pitch.data_object.value = self.pitches
 
         self._results.add(pitch)

@@ -71,12 +71,12 @@ class Spectrogram(Analyzer):
 
     def release(self):
         # set Result
-        spectrogram = self.new_result(dataMode='value', timeMode='framewise')
+        spectrogram = self.new_result(data_mode='value', time_mode='framewise')
 
         # parameters :
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
 
         # Set Data
-        spectrogram.dataObject.value = self.values
+        spectrogram.data_object.value = self.values
 
         self._results.add(spectrogram)

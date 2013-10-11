@@ -98,11 +98,11 @@ class Yaafe(Analyzer):
             raise KeyError('Yaafe engine did not return any feature')
         for featName in featNames:
 
-            result = self.new_result(dataMode='value', timeMode='framewise')
-            result.idMetadata.id += '.' + featName
-            result.idMetadata.name += ' ' + featName
+            result = self.new_result(data_mode='value', time_mode='framewise')
+            result.id_metadata.id += '.' + featName
+            result.id_metadata.name += ' ' + featName
             # Read Yaafe Results
-            result.dataObject.value = self.yaafe_engine.readOutput(featName)
+            result.data_object.value = self.yaafe_engine.readOutput(featName)
             # Store results in Container
-            if len(result.dataObject.value):
+            if len(result.data_object.value):
                 self._results.add(result)
