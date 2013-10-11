@@ -5,10 +5,7 @@ Created on Tue Jul 16 13:04:49 2013
 @author: thomas
 """
 from __future__ import division
-import timeside.decoder
-import timeside.encoder
-import timeside.grapher
-import timeside.analyzer
+import timeside
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -23,8 +20,7 @@ aubio_temporal = timeside.analyzer.AubioTemporal()
 specgram = timeside.analyzer.Spectrogram()
 waveform = timeside.analyzer.Waveform()
 #g  =  timeside.grapher.Spectrogram()
-#
-#
+
 pipe = (decoder | aubio_pitch | aubio_temporal | specgram | waveform).run()
 
 pipe.results.keys()
@@ -37,7 +33,7 @@ N = spec_res.parameters['FFT_SIZE']
 plt.imshow(20 * np.log10(spec_res.data.T),
            origin='lower',
            extent=[spec_res.time[0], spec_res.time[-1], 0,
-                   (N // 2 + 1) / N * spec_res.frameMetadata.samplerate],
+                   (N // 2 + 1) / N * spec_res.frame_metadata.samplerate],
            aspect='auto')
 
 res_pitch = aubio_pitch.results['aubio_pitch']

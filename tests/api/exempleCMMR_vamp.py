@@ -6,17 +6,15 @@ Created on Fri Oct 11 13:22:37 2013
 """
 
 from __future__ import division
-import timeside.decoder
-import timeside.encoder
-import timeside.grapher
-import timeside.analyzer
+import timeside
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
-wavFile = 'TimeSide/tests/samples/sweep.mp3'
-wavFile = '/home/thomas/data/CNRSMH_E_1985_001_001_001_04.wav'
+wav_file = sys.argv[-1]
+
 # normal
-d = timeside.decoder.FileDecoder(wavFile, start=10, duration=15)
+d = timeside.decoder.FileDecoder(wav_file, start=10, duration=15)
 
 specgram = timeside.analyzer.Spectrogram()
 waveform = timeside.analyzer.Waveform()
