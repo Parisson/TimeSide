@@ -273,6 +273,7 @@ class WaveformImage(object):
     def release(self):
         pass
 
+
 class WaveformImageJoyContour(WaveformImage):
 
     def __init__(self, image_width, image_height, nframes, samplerate,
@@ -325,7 +326,6 @@ class WaveformImageJoyContour(WaveformImage):
         for i in range(0,self.ndiv):
             self.previous_x, self.previous_y = None, None
 
-            #bright_color = 255
             bright_color = int(255*(1-float(i)/(self.ndiv*2)))
             bright_color = 255-bright_color+self.color_offset
             #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
@@ -335,11 +335,9 @@ class WaveformImageJoyContour(WaveformImage):
             #contour = contour*(1.0-float(i)/self.ndiv)
             #contour = contour*(1-float(i)/self.ndiv)
 
-            # Cosine
+            # Scaled
             contour = contour*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi
             #contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)
-
-            # Negative Sine
             #contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))
 
             curve = (height-1)*contour
@@ -390,6 +388,7 @@ class WaveformImageJoyContour(WaveformImage):
 
     def release(self):
         pass
+
 
 class WaveformImageSimple(object):
     """ Builds a PIL image representing a waveform of the audio stream.
@@ -488,6 +487,7 @@ class WaveformImageSimple(object):
     def release(self):
         pass
 
+
 class SpectrogramImage(object):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
@@ -568,6 +568,7 @@ class SpectrogramImage(object):
 
     def release(self):
         pass
+
 
 class Noise(object):
     """A class that mimics audiolab.sndfile but generates noise instead of reading
@@ -691,6 +692,7 @@ def smooth(x, window_len=10, window='hanning'):
     y = numpy.convolve(w/w.sum(), s, mode='same')
     return y[window_len-1:-window_len+1]
 
+
 def reduce_opacity(im, opacity):
     """Returns an image with reduced opacity."""
     assert opacity >= 0 and opacity <= 1
@@ -702,6 +704,7 @@ def reduce_opacity(im, opacity):
     alpha = ImageEnhance.Brightness(alpha).enhance(opacity)
     im.putalpha(alpha)
     return im
+
 
 def im_watermark(im, inputtext, font=None, color=None, opacity=.6, margin=(30,30)):
     """

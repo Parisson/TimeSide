@@ -15,14 +15,14 @@ Goals
 
 We just *need* a python library to:
 
- * build a python framework to do asynchronous audio processing,
- * decode audio frames from ANY format into numpy arrays,
- * analyze audio content with some state-of-the-art audio feature extraction libraries,
- * organize, serialize and save analysis metadata through various formats,
- * draw various fancy waveforms, spectrograms and other cool graphers,
- * transcode audio data in various media formats and stream them through web apps,
- * playback and interact *on demand* through a smart high-level HTML5 extensible player,
- * index, tag and organize semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+ * Do asynchronous and fast audio processing with Python,
+ * Decode audio frames from ANY format into numpy arrays,
+ * Analyze audio content with some state-of-the-art audio feature extraction libraries,
+ * Organize, serialize and save analysis metadata through various formats,
+ * Draw various fancy waveforms, spectrograms and other cool graphers,
+ * Transcode audio data in various media formats and stream them through web apps,
+ * Playback and interact *on demand* through a smart high-level HTML5 extensible player,
+ * Index, tag and organize semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
@@ -149,38 +149,6 @@ get the results::
 `More examples <http://code.google.com/p/timeside/wiki/PythonApi>`_
 
 
-UI examples
-===========
-
- * http://code.google.com/p/timeside/
- * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
- * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/ (player embedded in a Telemeta session)
-
-
-APIs and guides
-===============
-
-Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
-
-Player API and guide : http://code.google.com/p/timeside/wiki/UiGuide
-
-
-Related projects
-=================
-
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open-source web audio CMS.
-
-Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
-
-
-Platforms
-=========
-
-The TimeSide engine is intended to work on all Unix / Linux platforms, but MacOS X and Windows versions will soon be explorated.
-
-The player should work on any modern HTML5 enabled browser. Flash is needed for MP3 if the browser doesn't support it.
-
-
 Install
 =======
 
@@ -188,57 +156,89 @@ TimeSide needs some other python modules to run. The following methods explain h
 
 On Debian, Ubuntu, etc::
 
+ $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
- $ sudo apt-get install gcc python python-dev python-pip python-setuptools \
-                        python-gobject gobject-introspection \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
-                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gobject-introspection python-mutagen \
-                        python-scipy python-h5py
+ $ sudo apt-get install python-timeside
 
-On Fedora and Red-Hat, etc::
-
- $ sudo yum update
- $ sudo yum install gcc python python-devel gstreamer pygobject2 gstreamer-python  \
-                    gstreamer gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras \
-                    gstreamer-plugins-base gstreamer-plugins-good
-
-And then::
+On other system, you'll need to install the Gstreamer framework and modules, aubio 0.4, yaafe 0.64 and then ::
 
  $ sudo pip install timeside
 
-To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules::
 
- echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
- sudo apt-get update
- apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
+Extensible HTML5 User Interface
+================================
 
+TimeSide comes with a smart HTML5 audio player which can drive the process engine through a web server.
 
-Batching
-=========
+Some examples of application:
 
-TimeSide provides *ts-waveforms*, a waveform rendering batch script. Usage::
+ * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
+ * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/ (player embedded in a Telemeta session)
 
- ts-waveforms /path/to/media_dir /path/to/img_dir
+The detailed documentation to extend the player:
 
-Please use absolute paths. For example::
-
- ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
-
-To change the color scheme or the size of the waveforms, edit the script from the source and change the variables of the GrapherScheme object::
-
- git clone https://github.com/yomguy/TimeSide.git
- cd timeside/scripts/
- vi ts-waveforms
- ./ts-waveforms /home/$user/music/mp3/ /home/$USER/images/
+ * https://github.com/yomguy/TimeSide/wiki/Ui-Guide
 
 
-Packages included
+Documentation
+==============
+
+Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
+
+
+Related projects
 =================
 
- * SoundManager 2 >= 2.91 (http://www.schillmania.com/projects/soundmanager2)
- * jQuery => 1.2.6 (http://www.jquery.com)
- * jsGraphics => 3.03 (http://www.walterzorn.com/jsgraphics/jsgraphics_e.htm)
+TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS.
+
+Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
+
+
+Platforms
+=========
+
+The TimeSide engine is intended to work on all Unix / Linux platforms.
+MacOS X and Windows versions will soon be explorated.
+The player should work on any modern HTML5 enabled browser.
+Flash is needed for MP3 if the browser doesn't support it.
+
+
+Development
+===========
+
+For version >= 0.5 on Debian Stable 7.0 Wheezy::
+
+ $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
+ $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
+ $ sudo apt-get update
+ $ sudo apt-get install git
+ $ sudo apt-get build-dep python-timeside
+
+ $ git clone https://github.com/yomguy/TimeSide.git
+ $ cd TimeSide
+ $ git checkout dev
+ $ export PYTHONPATH=$PYTHONPATH:`pwd`
+ $ python tests/run_all_tests
+
+
+API / Documentation
+====================
+
+The *source code*, the API and some slides:
+
+ * https://github.com/yomguy/TimeSide
+ * http://files.parisson.com/api/timeside/
+ * http://files.parisson.com/timeside/timeside/doc/timeside_slides.html
+
+
+Copyrights
+==========
+
+ * Copyright (c) 2006, 2013 Parisson SARL
+ * Copyright (c) 2006, 2013 Guillaume Pellerin
+ * Copyright (c) 2010, 2013 Paul Brossier
+ * Copyright (c) 2013 Thomas Fillon
+ * Copyright (c) 2006, 2010 Samalyse SARL
 
 
 License
@@ -255,67 +255,3 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 See LICENSE for more details.
-
-
-Development
-===========
-
-For version >= 0.5 + aubio 0.4dev on Linux (Debian Stable 7.0)::
-
- sudo apt-get update
-
- sudo apt-get install python python-dev python-pip python-setuptools python-gobject \
-                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
-                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-                        gstreamer0.10-plugins-ugly gobject-introspection python-numpy \
-                        python-yaml python-imaging python-simplejson python-mutagen
-                        libsndfile-dev libsamplerate-dev  libjack-jackd2-dev \
-                        liblash-compat-dev libfftw3-dev \
-                        docbook-to-man gcc git-core ipython \
-
-Install aubio module with "develop" branch::
-
- git clone git://git.aubio.org/git/aubio/
- cd aubio
- git checkout develop
- ./waf configure
- ./waf build
- sudo ./waf install
- cd python
- sudo python setup.py install
-
-Install temporary timeside module with "dev" branch::
-
- git clone https://github.com/yomguy/TimeSide.git
- cd TimeSide
- git checkout dev
- export PYTHONPATH=$PYTHONPATH:`pwd`
- $tests/run_all_tests
-
-
-Official repositories:
-
- * http://code.google.com/p/timeside/
- * https://github.com/yomguy/TimeSide
-
-
-API / Documentation
-====================
-
-The *source code*, the API and some slides:
-
- * http://code.google.com/p/timeside/
- * https://github.com/yomguy/TimeSide
- * http://files.parisson.com/api/timeside/
- * http://files.parisson.com/timeside/timeside/doc/timeside_slides.html
-
-
-Copyrights
-==========
-
- * Copyright (c) 2006, 2013 Parisson SARL
- * Copyright (c) 2006, 2013 Guillaume Pellerin
- * Copyright (c) 2010, 2013 Paul Brossier
- * Copyright (c) 2013 Thomas Fillon
- * Copyright (c) 2006, 2010 Samalyse SARL
-
