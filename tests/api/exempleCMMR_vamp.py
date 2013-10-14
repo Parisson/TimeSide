@@ -12,7 +12,7 @@ import numpy as np
 import sys
 
 wav_file = sys.argv[-1]
-
+wav_file =  '/home/thomas/code/timeside/voix.wav'
 # normal
 d = timeside.decoder.FileDecoder(wav_file, start=10, duration=15)
 
@@ -35,7 +35,7 @@ print my_plugin
 
 #
 # Vamp plugin Analyzer
-vamp = timeside.analyzer.VampSimpleHost(my_plugin)
+vamp = timeside.analyzer.VampSimpleHost([my_plugin])
 
 #
 myPipe = (d | vamp | specgram | waveform).run()

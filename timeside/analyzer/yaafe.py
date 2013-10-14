@@ -34,8 +34,15 @@ import numpy
 class Yaafe(Analyzer):
     implements(IAnalyzer)
 
-    def __init__(self, yaafeSpecification):
+    def __init__(self, yaafeSpecification=None):
         # Check arguments
+        if yaafeSpecification is None:
+            print 'None'
+            yaafeSpecification = FeaturePlan(sample_rate=32000)
+            # add feature definitions manually
+            yaafeSpecification.addFeature('mfcc: MFCC blockSize=512 stepSize=256')
+
+
         if isinstance(yaafeSpecification, DataFlow):
             self.dataFlow = yaafeSpecification
         elif isinstance(yaafeSpecification, FeaturePlan):

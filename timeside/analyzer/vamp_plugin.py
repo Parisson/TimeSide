@@ -30,8 +30,12 @@ import numpy as np
 class VampSimpleHost(Analyzer):
     implements(IAnalyzer)
 
-    def __init__(self, plugin):
-        self.plugin = ':'.join(plugin)
+    def __init__(self, plugin_list=None):
+
+        if plugin_list is None:
+            plugin_list = self.get_plugins_list()
+
+        self.plugin_list = plugin_list
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -63,42 +67,44 @@ class VampSimpleHost(Analyzer):
 
         wavfile = self.mediainfo()['uri'].split('file://')[-1]
 
-        (blocksize, stepsize, values) = self.vamp_plugin(self.plugin, wavfile)
+        for plugin_line in self.plugin_list:
+            plugin = ':'.join(plugin_line)
+            print plugin
+            (blocksize, stepsize, values) = self.vamp_plugin(plugin, wavfile)
 
-        self.result_blocksize = blocksize
-        self.result_stepsize = stepsize
-        self.result_samplerate = self.mediainfo()['samplerate']
+            self.result_blocksize = blocksize
+            self.result_stepsize = stepsize
+            self.result_samplerate = self.mediainfo()['samplerate']
 
-        plugin_res = self.new_result(data_mode='value', time_mode='framewise')
+            plugin_res = self.new_result(data_mode='value', time_mode='framewise')
 
-        # Fix strat, duration issues if audio is a segment
-        if self.mediainfo()['is_segment']:
-            start_index = np.floor(self.mediainfo()['start'] *
-                                   self.result_samplerate /
-                                   self.result_stepsize)
-            new_start = start_index * self.result_stepsize
+            # Fix strat, duration issues if audio is a segment
+            if self.mediainfo()['is_segment']:
+                start_index = np.floor(self.mediainfo()['start'] *
+                                       self.result_samplerate /
+                                       self.result_stepsize)
 
-            stop_index = np.ceil((self.mediainfo()['start'] +
-                                  self.mediainfo()['duration']) *
-                                 self.result_samplerate /
-                                 self.result_stepsize)
+                stop_index = np.ceil((self.mediainfo()['start'] +
+                                      self.mediainfo()['duration']) *
+                                     self.result_samplerate /
+                                     self.result_stepsize)
 
-            fixed_start = (start_index * self.result_stepsize /
-                           self.result_samplerate)
-            fixed_duration = ((stop_index - start_index) * self.result_stepsize /
-                              self.result_samplerate)
+                fixed_start = (start_index * self.result_stepsize /
+                               self.result_samplerate)
+                fixed_duration = ((stop_index - start_index) * self.result_stepsize /
+                                  self.result_samplerate)
 
-            plugin_res.audio_metadata.start = fixed_start
-            plugin_res.audio_metadata.duration = fixed_duration
+                plugin_res.audio_metadata.start = fixed_start
+                plugin_res.audio_metadata.duration = fixed_duration
 
-            values = values[start_index:stop_index + 1]
+                values = values[start_index:stop_index + 1]
 
-        plugin_res.id_metadata.id += '.' + '.'.join(self.plugin.split(':')[1:])
-        plugin_res.id_metadata.name += ' ' + \
-            ' '.join(self.plugin.split(':')[1:])
-        plugin_res.data_object.value = values
+            plugin_res.id_metadata.id += '.' + '.'.join(self.plugin.split(':')[1:])
+            plugin_res.id_metadata.name += ' ' + \
+                ' '.join(self.plugin.split(':')[1:])
+            plugin_res.data_object.value = values
 
-        self._results.add(plugin_res)
+            self._results.add(plugin_res)
 
     @staticmethod
     def vamp_plugin(plugin, wavfile):
