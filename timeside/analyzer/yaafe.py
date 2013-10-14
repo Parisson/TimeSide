@@ -42,7 +42,6 @@ class Yaafe(Analyzer):
             # add feature definitions manually
             yaafeSpecification.addFeature('mfcc: MFCC blockSize=512 stepSize=256')
 
-
         if isinstance(yaafeSpecification, DataFlow):
             self.dataFlow = yaafeSpecification
         elif isinstance(yaafeSpecification, FeaturePlan):
@@ -53,6 +52,8 @@ class Yaafe(Analyzer):
                             (str(yaafeSpecification),
                              str(DataFlow),
                              str(FeaturePlan)))
+        self.yaafe_engine = None
+
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
