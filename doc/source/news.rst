@@ -1,6 +1,12 @@
 News
 =====
 
+0.4.5
+
+ * (re)fix Pillow support (#12)
+ * fix some python package rules
+ * add a Debian package directory (thanks to piem, in git repo only)
+
 0.4.4
 
  * Only setup bugfixes

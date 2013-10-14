@@ -1,26 +1,25 @@
-
-
-
 Install
 =======
 
-TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on a Debian based system like Debian, Ubuntu, etc.. On Fedora and Red-Hat you might replace 'apt-get by 'yum', on Gentoo by 'emerge', or any other package manager you like :
+
+TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems.
+
+On Debian, Ubuntu, etc:
 
 .. code-block:: bash
 
-   $ sudo apt-get update
-   $ sudo apt-get install python python-pip python-setuptools python-gobject \
-   python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
-   gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
-   gstreamer0.10-plugins-ugly gobject-introspection python-mutagen \
-   python-scipy python-h5py
+ $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
+ $ sudo apt-get update
+ $ sudo apt-get install python-timeside
 
-   $ sudo pip install timeside
-
-To get non-free (MP3, MP4, AAC, etc) decoding and encoding features, add Debian Multimedia repository and install the modules :
+On other system, you'll need to install the Gstreamer framework and modules, aubio (>=0.4), yaafe (>=0.64) and some more programs.
+For example on Fedora and Red-Hat:
 
 .. code-block:: bash
 
-   $ echo "deb http://www.deb-multimedia.org stable main non-free" | sudo tee -a /etc/apt/sources.list
-   $ sudo apt-get update
-   $ apt-get install gstreamer0.10-lame gstreamer0.10-plugins-really-bad gstreamer0.10-plugins-ugly
+ $ sudo yum install gcc python python-devel gstreamer pygobject2 gstreamer-python  \
+                   gstreamer gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras \
+                   gstreamer-plugins-base gstreamer-plugins-good
+
+ $ sudo pip install timeside
+

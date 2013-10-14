@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ==============================================
-TimeSide : open and fast web audio components
+TimeSide : open web audio processing framework
 ==============================================
 Contents:
 

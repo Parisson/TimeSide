@@ -16,8 +16,8 @@ Default
 
 Create a new analyzer result without arguments
 
-   >>> import timeside.analyzer.core as coreA
-   >>> res = coreA.AnalyzerResult()
+   >>> from timeside.analyzer.core import AnalyzerResult
+   >>> res = AnalyzerResult()
 
 This default result has all the metadata and dataObject attribute
 
@@ -50,7 +50,7 @@ Four different time_mode can be specified :
 Framewise
 ---------
 
->>> res = coreA.AnalyzerResult(time_mode='framewise')
+>>> res = AnalyzerResult(time_mode='framewise')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
 
@@ -60,7 +60,7 @@ Global
 No frame metadata information is needed for these modes.
 The 'frame_metadata' key/attribute is deleted.
 
->>> res = coreA.AnalyzerResult(time_mode='global')
+>>> res = AnalyzerResult(time_mode='global')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
 >>> res.data
@@ -69,7 +69,7 @@ DataObject(value=None, label=array([], dtype=int64))
 Segment
 -------
 
->>> res = coreA.AnalyzerResult(time_mode='segment')
+>>> res = AnalyzerResult(time_mode='segment')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
 >>> res.data
@@ -78,7 +78,7 @@ DataObject(value=None, label=array([], dtype=int64), time=array([], dtype=float6
 Event
 -----
 
->>> res = coreA.AnalyzerResult(time_mode='event')
+>>> res = AnalyzerResult(time_mode='event')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
 >>> res.data
@@ -95,7 +95,7 @@ Value
 -----
 The label_metadata key is deleted.
 
->>> res = coreA.AnalyzerResult(data_mode='value')
+>>> res = AnalyzerResult(data_mode='value')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'parameters']
 
@@ -106,7 +106,7 @@ DataObject(value=None, time=array([], dtype=float64), duration=array([], dtype=f
 
 Label
 -----
->>> res = coreA.AnalyzerResult(data_mode='label')
+>>> res = AnalyzerResult(data_mode='label')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
 
