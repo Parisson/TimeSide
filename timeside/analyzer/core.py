@@ -880,9 +880,6 @@ class Analyzer(Processor):
     Generic class for the analyzers
     '''
 
-    implements(IAnalyzer)
-
-    @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Analyzer, self).setup(channels, samplerate,
@@ -903,17 +900,14 @@ class Analyzer(Processor):
              if key.split('.')[0] == self.id()])
 
     @staticmethod
-    @interfacedoc
     def id():
         return "analyzer"
 
     @staticmethod
-    @interfacedoc
     def name():
         return "Generic analyzer"
 
     @staticmethod
-    @interfacedoc
     def unit():
         return ""
 
