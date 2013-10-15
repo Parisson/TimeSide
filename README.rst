@@ -176,13 +176,14 @@ On Fedora and Red-Hat:
 
 .. code-block:: bash
 
- $ sudo yum install gcc python python-devel gstreamer pygobject2 gstreamer-python  \
-                   gstreamer gstreamer-plugins-bad-free gstreamer-plugins-bad-free-extras \
+ $ sudo yum install gcc python python-devel gstreamer pygobject2 \
+                   gstreamer-python gstreamer gstreamer-plugins-bad-free \
+                   gstreamer-plugins-bad-free-extras \
                    gstreamer-plugins-base gstreamer-plugins-good
 
  $ sudo pip install timeside
 
-On other system, you'll need to install the Gstreamer framework, some librairies and some python modules (see #Dependencies) ::
+On other system, you'll need to install all dependencies and then::
 
  $ sudo pip install timeside
 
