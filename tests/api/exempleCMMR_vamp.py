@@ -15,7 +15,7 @@ wav_file = sys.argv[-1]
 #wav_file =  '/home/thomas/code/timeside/voix.wav'
 
 # normal
-d = timeside.decoder.FileDecoder(wav_file, start=0, duration=10)
+d = timeside.decoder.FileDecoder(wav_file)
 
 specgram = timeside.analyzer.Spectrogram()
 waveform = timeside.analyzer.Waveform()
@@ -36,7 +36,8 @@ print my_plugin
 
 #
 # Vamp plugin Analyzer
-vamp = timeside.analyzer.VampSimpleHost([my_plugin])
+#vamp = timeside.analyzer.VampSimpleHost([my_plugin])
+vamp = timeside.analyzer.VampSimpleHost()
 
 #
 myPipe = (d | vamp | specgram | waveform).run()

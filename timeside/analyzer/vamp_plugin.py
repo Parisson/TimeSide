@@ -33,8 +33,8 @@ class VampSimpleHost(Analyzer):
     def __init__(self, plugin_list=None):
 
         if plugin_list is None:
-            #plugin_list = self.get_plugins_list()
-            plugin_list = [['vamp-example-plugins', 'percussiononsets', 'detectionfunction']]
+            plugin_list = self.get_plugins_list()
+            #plugin_list = [['vamp-example-plugins', 'percussiononsets', 'detectionfunction']]
 
         self.plugin_list = plugin_list
 
@@ -71,39 +71,42 @@ class VampSimpleHost(Analyzer):
         for plugin_line in self.plugin_list:
 
             plugin = ':'.join(plugin_line)
-            (blocksize, stepsize, values) = self.vamp_plugin(plugin, wavfile)
+            (time, duration, value) = self.vamp_plugin(plugin, wavfile)
 
-            self.result_blocksize = blocksize
-            self.result_stepsize = stepsize
-            self.result_samplerate = self.mediainfo()['samplerate']
+            if duration is not None:
+                plugin_res = self.new_result(data_mode='value', time_mode='segment')
+                plugin_res.data_object.duration = duration
+            else:
+                plugin_res = self.new_result(data_mode='value', time_mode='event')
 
-            plugin_res = self.new_result(data_mode='value', time_mode='framewise')
+            plugin_res.data_object.time = time
+            plugin_res.data_object.value = value
 
-            # Fix strat, duration issues if audio is a segment
-            if self.mediainfo()['is_segment']:
-                start_index = np.floor(self.mediainfo()['start'] *
-                                       self.result_samplerate /
-                                       self.result_stepsize)
 
-                stop_index = np.ceil((self.mediainfo()['start'] +
-                                      self.mediainfo()['duration']) *
-                                     self.result_samplerate /
-                                     self.result_stepsize)
-
-                fixed_start = (start_index * self.result_stepsize /
-                               self.result_samplerate)
-                fixed_duration = ((stop_index - start_index) * self.result_stepsize /
-                                  self.result_samplerate)
-
-                plugin_res.audio_metadata.start = fixed_start
-                plugin_res.audio_metadata.duration = fixed_duration
-
-                values = values[start_index:stop_index + 1]
+#            # Fix strat, duration issues if audio is a segment
+#            if self.mediainfo()['is_segment']:
+#                start_index = np.floor(self.mediainfo()['start'] *
+#                                       self.result_samplerate /
+#                                       self.result_stepsize)
+#
+#                stop_index = np.ceil((self.mediainfo()['start'] +
+#                                      self.mediainfo()['duration']) *
+#                                     self.result_samplerate /
+#                                     self.result_stepsize)
+#
+#                fixed_start = (start_index * self.result_stepsize /
+#                               self.result_samplerate)
+#                fixed_duration = ((stop_index - start_index) * self.result_stepsize /
+#                                  self.result_samplerate)
+#
+#                plugin_res.audio_metadata.start = fixed_start
+#                plugin_res.audio_metadata.duration = fixed_duration
+#
+#                value = value[start_index:stop_index + 1]
 
             plugin_res.id_metadata.id += '.' + '.'.join(plugin_line[1:])
             plugin_res.id_metadata.name += ' ' + \
                 ' '.join(plugin_line[1:])
-            plugin_res.data_object.value = values
 
             self._results.add(plugin_res)
 
@@ -128,10 +131,19 @@ class VampSimpleHost(Analyzer):
         blocksize = int(m.groups()[0])
         stepsize = int(m.groups()[1])
         # Get the results
-        values = np.asfarray([line.split(': ')[1] for line in res])
-        # TODO int support ?
 
-        return (blocksize, stepsize, values)
+        value = np.asfarray([line.split(': ')[1].split(' ') for line in res if (len(line.split(': ')) > 1)])
+        time = np.asfarray([r.split(':')[0].split(',')[0] for r in res])
+
+        time_len = len(res[0].split(':')[0].split(','))
+        if time_len == 1:
+            # event
+            duration = None
+        elif time_len == 2:
+            # segment
+            duration = np.asfarray([r.split(':')[0].split(',')[1] for r in res])
+
+        return (time, duration, value)
 
     @staticmethod
     def get_plugins_list():

@@ -337,8 +337,6 @@ class DataObject(MetadataObject):
                     raise TypeError(
                         'Result Data can not accept type %s for %s' %
                         (value.dtype.type, name))
-            elif name == 'dataType':
-                return
 
         super(DataObject, self).__setattr__(name, value)
 
