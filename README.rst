@@ -33,16 +33,17 @@ Available plugins
 =================
 
  * Decoder:
-     - ALL known media formats thanks to Gstreamer
+     - Takes ALL known media formats thanks to GStreamer
 
  * Analyzers:
      - MaxLevel, MeanLevel
      - DC
-     - any Yaafe data flow
-     - Aubio BPM, Beats, MFCC, ...
+     - Yaafe, all data flows
+     - Aubio BPM, Beats, Pitch, various spectral descriptors
+     - IRIT 4Hz, Entropy
 
  * Graphers:
-     - WaveForm
+     - Waveform
      - Contour
      - Spectrogram
 
@@ -59,18 +60,19 @@ Available plugins
      - XML
      - HDF5
 
+
 News
 =====
 
 0.5.0
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
- * Add serializable global result container (AnalyzerResultContainer)
- * Add new audio feature extraction thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
- * Add new audio feature extraction thanks to the Yaafe library (NEW dependency)
+ * Add serializable global result container (NEW dependency to h5py, json, yaml)
+ * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
+ * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency)
  * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
- * Add new documentation, see http://files.parisson.com/timeside/doc/
- * Provide a Debian repository for instant install (see [Install](#Install))
+ * Add new documentation : http://files.parisson.com/timeside/doc/
+ * New Debian repository for instant install
  * Various bugfixes
  * Comptatible with python >=2.7
 
