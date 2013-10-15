@@ -123,7 +123,7 @@ class VampSimpleHost(Analyzer):
         res = stdout[8:]  # stdout containg the feature data
 
         if len(res) == 0:
-            return
+            return (None, None, None)
 
         # Parse stderr to get blocksize and stepsize
         blocksize_info = stderr[4]
