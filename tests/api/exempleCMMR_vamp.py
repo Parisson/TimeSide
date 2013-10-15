@@ -12,9 +12,10 @@ import numpy as np
 import sys
 
 wav_file = sys.argv[-1]
-wav_file =  '/home/thomas/code/timeside/voix.wav'
+#wav_file =  '/home/thomas/code/timeside/voix.wav'
+
 # normal
-d = timeside.decoder.FileDecoder(wav_file, start=10, duration=15)
+d = timeside.decoder.FileDecoder(wav_file, start=0, duration=10)
 
 specgram = timeside.analyzer.Spectrogram()
 waveform = timeside.analyzer.Waveform()
@@ -61,7 +62,7 @@ plt.grid
 plt.title(res_vamp.name)
 
 plt.subplot(2,1,2)
-plt.imshow(20 * np.log10(spec_res.data.T),
+plt.imshow(20 * np.log10(spec_res.data.T + 1e-6),
            origin='lower',
            extent=[spec_res.time[0], spec_res.time[-1], 0,
                    max_freq],

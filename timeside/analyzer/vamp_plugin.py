@@ -33,7 +33,8 @@ class VampSimpleHost(Analyzer):
     def __init__(self, plugin_list=None):
 
         if plugin_list is None:
-            plugin_list = self.get_plugins_list()
+            #plugin_list = self.get_plugins_list()
+            plugin_list = [['vamp-example-plugins', 'percussiononsets', 'detectionfunction']]
 
         self.plugin_list = plugin_list
 
@@ -68,8 +69,8 @@ class VampSimpleHost(Analyzer):
         wavfile = self.mediainfo()['uri'].split('file://')[-1]
 
         for plugin_line in self.plugin_list:
+
             plugin = ':'.join(plugin_line)
-            print plugin
             (blocksize, stepsize, values) = self.vamp_plugin(plugin, wavfile)
 
             self.result_blocksize = blocksize
@@ -99,9 +100,9 @@ class VampSimpleHost(Analyzer):
 
                 values = values[start_index:stop_index + 1]
 
-            plugin_res.id_metadata.id += '.' + '.'.join(self.plugin.split(':')[1:])
+            plugin_res.id_metadata.id += '.' + '.'.join(plugin_line[1:])
             plugin_res.id_metadata.name += ' ' + \
-                ' '.join(self.plugin.split(':')[1:])
+                ' '.join(plugin_line[1:])
             plugin_res.data_object.value = values
 
             self._results.add(plugin_res)
@@ -126,7 +127,6 @@ class VampSimpleHost(Analyzer):
 
         blocksize = int(m.groups()[0])
         stepsize = int(m.groups()[1])
-
         # Get the results
         values = np.asfarray([line.split(': ')[1] for line in res])
         # TODO int support ?
