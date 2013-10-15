@@ -73,7 +73,7 @@ News
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
- * Comptatible with python >=2.7
+ * Comptatible with Python >=2.7
 
 0.4.5
 
