@@ -1,6 +1,9 @@
-==============
- Introduction
-==============
+==============================================
+TimeSide : open web audio processing framework
+==============================================
+
+.. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
+    :target: http://travis-ci.org/yomguy/TimeSide/
 
 TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API has been designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
 
@@ -30,16 +33,17 @@ Available plugins
 =================
 
  * Decoder:
-     - ALL known media formats thanks to Gstreamer
+     - Takes ALL known media formats thanks to GStreamer
 
  * Analyzers:
      - MaxLevel, MeanLevel
      - DC
-     - any Yaafe data flow
-     - Aubio BPM, Beats, MFCC, ...
+     - Yaafe, all data flows
+     - Aubio BPM, Beats, Pitch, various spectral descriptors
+     - IRIT 4Hz, Entropy
 
  * Graphers:
-     - WaveForm
+     - Waveform
      - Contour
      - Spectrogram
 
@@ -55,3 +59,4 @@ Available plugins
      - JSON
      - XML
      - HDF5
+
