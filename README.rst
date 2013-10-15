@@ -70,7 +70,7 @@ News
  * Add new audio feature extraction thanks to the Yaafe library (NEW dependency)
  * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
  * Add new documentation, see http://files.parisson.com/timeside/doc/
- * Provide a Debian repository for instant install (see #Install)
+ * Provide a Debian repository for instant install (see [Install](#Install))
  * Various bugfixes
  * Comptatible with python >=2.7
 
