@@ -16,6 +16,10 @@ Contents:
    Installation <install>
    Examples <examples/index>
    API <api/index>
+   ui
+   Development <dev>
+   related
+   Copyright <copyright>
 
 
 Indices and tables

@@ -33,16 +33,17 @@ Available plugins
 =================
 
  * Decoder:
-     - ALL known media formats thanks to Gstreamer
+     - Takes ALL known media formats thanks to GStreamer
 
  * Analyzers:
-     - MaxLevel, MeanLevel
-     - DC
-     - any Yaafe data flow
-     - Aubio BPM, Beats, MFCC, ...
+     - MaxLevel, MeanLevel, DC
+     - Yaafe : all data flows
+     - Aubio : BPM, Beats, Pitch, various spectral descriptors
+     - VAMP : all default plugins from simple host
+     - IRIT 4Hz, Entropy
 
  * Graphers:
-     - WaveForm
+     - Waveform
      - Contour
      - Spectrogram
 
@@ -65,12 +66,12 @@ News
 0.5.0
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
- * Add serializable global result container (AnalyzerResultContainer)
- * Add new audio feature extraction thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
- * Add new audio feature extraction thanks to the Yaafe library (NEW dependency)
+ * Add serializable global result container (NEW dependency to h5py, json, yaml)
+ * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
+ * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency)
  * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
- * Add new documentation, see http://files.parisson.com/timeside/doc/
- * Provide a Debian repository for instant install (see [Install](#Install))
+ * Add new documentation : http://files.parisson.com/timeside/doc/
+ * New Debian repository for instant install
  * Various bugfixes
  * Comptatible with python >=2.7
 
@@ -82,7 +83,7 @@ News
 
 0.4.4
 
- * Only minor setup bugfixes
+ * Only setup bugfixes
  * Last compatible version with Python 2.6
  * Next version 0.5 will integrate serious new analyzer features (aubio, yaafe and more)
 
@@ -137,7 +138,6 @@ News
  * duration analysis goes to decoder.duration property
  * bugfixes
 
-
 Dive in
 ========
 
@@ -158,23 +158,35 @@ get the results::
  >>> grapher.render(output='waveform.png')
  >>> print 'Level:', analyzer.results
 
-`More examples <http://code.google.com/p/timeside/wiki/PythonApi>`_
-
 
 Install
 =======
 
 TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems.
 
-On Debian, Ubuntu, etc::
+On Debian, Ubuntu, etc:
+
+.. code-block:: bash
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-On other system, you'll need to install the Gstreamer framework, some librairies and some python modules (see #Dependencies) ::
+On Fedora and Red-Hat:
+
+.. code-block:: bash
+
+ $ sudo yum install gcc python python-devel gstreamer pygobject2 \
+                   gstreamer-python gstreamer gstreamer-plugins-bad-free \
+                   gstreamer-plugins-bad-free-extras \
+                   gstreamer-plugins-base gstreamer-plugins-good
 
  $ sudo pip install timeside
+
+On other system, you'll need to install all dependencies and then::
+
+ $ sudo pip install timeside
+
 
 Dependencies
 ============
@@ -182,6 +194,14 @@ Dependencies
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py
 
+
+Platforms
+==========
+
+The TimeSide engine is intended to work on all Unix / Linux platforms.
+MacOS X and Windows versions will soon be explorated.
+The player should work on any modern HTML5 enabled browser.
+Flash is needed for MP3 if the browser doesn't support it.
 
 Extensible HTML5 User Interface
 ================================
@@ -197,34 +217,12 @@ The detailed documentation to extend the player:
 
  * https://github.com/yomguy/TimeSide/wiki/Ui-Guide
 
-
-Documentation
-==============
-
-Engine API : http://code.google.com/p/timeside/source/browse/trunk/timeside/api.py
-
-
-Related projects
-=================
-
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS.
-
-Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
-
-
-Platforms
-=========
-
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
-The player should work on any modern HTML5 enabled browser.
-Flash is needed for MP3 if the browser doesn't support it.
-
-
 Development
 ===========
 
-For versions >=0.5 on Debian Stable 7.0 Wheezy::
+For versions >=0.5 on Debian Stable 7.0 Wheezy:
+
+.. code-block:: bash
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
@@ -238,16 +236,12 @@ For versions >=0.5 on Debian Stable 7.0 Wheezy::
  $ export PYTHONPATH=$PYTHONPATH:`pwd`
  $ python tests/run_all_tests
 
+Related projects
+=================
 
-API / Documentation
-====================
+TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS.
 
-The *source code*, the API and some slides:
-
- * https://github.com/yomguy/TimeSide
- * http://files.parisson.com/api/timeside/
- * http://files.parisson.com/timeside/timeside/doc/timeside_slides.html
-
+Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
 
 Copyrights
 ==========
