@@ -73,7 +73,7 @@ class AubioMfcc(Analyzer):
             self.block_read += 1
         return frames, eod
 
-    def release(self):
+    def post_process(self):
         # MFCC
         mfcc = self.new_result(data_mode='value', time_mode='framewise')
 

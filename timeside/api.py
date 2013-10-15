@@ -75,6 +75,13 @@ class IProcessor(Interface):
 
         Warning: it is required to call setup() before this method."""
 
+    def post_process(self):
+        '''
+        Post-Process data after processign the input frames with process()
+
+        Processors such as analyzers will produce Results during the Post-Process
+        '''
+
     def release(self):
         """Release resources owned by this processor. The processor cannot
         be used anymore after calling this method."""

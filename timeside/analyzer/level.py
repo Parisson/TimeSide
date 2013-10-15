@@ -64,7 +64,7 @@ class Level(Analyzer):
                                             np.mean(np.square(frames)))
         return frames, eod
 
-    def release(self):
+    def post_process(self):
         # Max level
         max_level = self.new_result(data_mode='value', time_mode='global')
 

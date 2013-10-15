@@ -98,7 +98,7 @@ class Yaafe(Analyzer):
 
         return frames, eod
 
-    def release(self):
+    def post_process(self):
         # Get feature extraction results from yaafe
         featNames = self.yaafe_engine.getOutputs().keys()
         if len(featNames) == 0:

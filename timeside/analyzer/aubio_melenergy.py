@@ -72,7 +72,7 @@ class AubioMelEnergy(Analyzer):
             self.block_read += 1
         return frames, eod
 
-    def release(self):
+    def post_process(self):
 
         melenergy = self.new_result(data_mode='value', time_mode='framewise')
 

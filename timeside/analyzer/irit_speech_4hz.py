@@ -101,7 +101,7 @@ class IRITSpeech4Hz(Analyzer):
 
         return frames, eod
 
-    def release(self):
+    def post_process(self):
         '''
 
         '''

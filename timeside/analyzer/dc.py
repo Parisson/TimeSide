@@ -57,7 +57,7 @@ class MeanDCShift(Analyzer):
             self.values = numpy.append(self.values, numpy.mean(frames))
         return frames, eod
 
-    def release(self):
+    def post_process(self):
         dc_result = self.new_result(data_mode='value', time_mode='global')
 
         # Set Data

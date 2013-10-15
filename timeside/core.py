@@ -112,6 +112,10 @@ class Processor(Component):
         return frames, eod
 
     @interfacedoc
+    def post_process(self):
+        pass
+
+    @interfacedoc
     def release(self):
         pass
 
@@ -258,6 +262,9 @@ class ProcessPipe(object):
             frames, eod = source.process()
             for item in items:
                 frames, eod = item.process(frames, eod)
+
+        for item in items:
+            item.post_process()
 
         for item in items:
             item.release()

@@ -63,7 +63,7 @@ class VampSimpleHost(Analyzer):
         pass
         return frames, eod
 
-    def release(self):
+    def post_process(self):
         #plugin = 'vamp-example-plugins:amplitudefollower:amplitude'
 
         wavfile = self.mediainfo()['uri'].split('file://')[-1]

@@ -79,7 +79,7 @@ class AubioSpecdesc(Analyzer):
                     self.specdesc[method](fftgrain)[0]]
         return frames, eod
 
-    def release(self):
+    def post_process(self):
 
         # For each method store results in container
         for method in self.methods:

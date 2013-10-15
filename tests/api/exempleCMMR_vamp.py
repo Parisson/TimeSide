@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-wav_file = sys.argv[-1]
-#wav_file =  '/home/thomas/code/timeside/voix.wav'
+#wav_file = sys.argv[-1]
+wav_file =  '/home/thomas/code/timeside/voix.wav'
 
 # normal
 d = timeside.decoder.FileDecoder(wav_file)
@@ -50,7 +50,8 @@ max_freq = (N // 2 + 1) / N * spec_res.frame_metadata.samplerate
 
 
 # Get the vamp plugin result and plot it
-vamp.results.keys()
+for key in vamp.results.keys():
+    print vamp.results[key].data
 
 res_vamp = vamp.results['vamp_simple_host.percussiononsets.detectionfunction']
 

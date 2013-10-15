@@ -78,7 +78,7 @@ class AubioTemporal(Analyzer):
             self.block_read += 1
         return frames, eod
 
-    def release(self):
+    def post_process(self):
 
         #---------------------------------
         #  Onsets
