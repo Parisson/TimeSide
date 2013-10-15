@@ -72,6 +72,8 @@ class VampSimpleHost(Analyzer):
 
             plugin = ':'.join(plugin_line)
             (time, duration, value) = self.vamp_plugin(plugin, wavfile)
+            if value is None:
+                return
 
             if duration is not None:
                 plugin_res = self.new_result(data_mode='value', time_mode='segment')
@@ -119,6 +121,9 @@ class VampSimpleHost(Analyzer):
 
         stderr = stdout[0:8]  # stderr containing file and process information
         res = stdout[8:]  # stdout containg the feature data
+
+        if len(res) == 0:
+            return
 
         # Parse stderr to get blocksize and stepsize
         blocksize_info = stderr[4]

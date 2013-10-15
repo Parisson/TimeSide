@@ -12,7 +12,7 @@ import numpy as np
 import sys
 
 #wav_file = sys.argv[-1]
-wav_file =  '/home/thomas/code/timeside/voix.wav'
+wav_file =  '/home/thomas/code/timeside/TimeSide/tests/samples/sweep.wav'
 
 # normal
 d = timeside.decoder.FileDecoder(wav_file)
