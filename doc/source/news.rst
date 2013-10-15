@@ -12,7 +12,7 @@ News
  * New Debian repository for instant install
  * Various bugfixes
  * Comptatible with python >=2.7
- * WARNING : no longer compatibility with Telemeta 1.4.5
+ * WARNING : no longer compatible with Telemeta 1.4.5
 
 0.4.5
 
