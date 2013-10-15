@@ -20,18 +20,21 @@
 # Author: Maxime Le Coz <lecoz@irit.fr>
 
 from timeside.core import Processor, implements, interfacedoc
-from timeside.analyzer.core import *
+from timeside.analyzer.core import Analyzer
+from timeside.analyzer.utils import entropy, computeModulation
+from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
 from numpy import array
 from scipy.ndimage.morphology import binary_opening
 
 
-class IRITSpeechEntropy(Processor):
+class IRITSpeechEntropy(Analyzer):
     implements(IAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(IRITSpeechEntropy, self).setup(channels, samplerate, blocksize, totalframes)
+        super(IRITSpeechEntropy, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.entropyValue = []
         self.threshold = 0.4
         self.smoothLen = 5
@@ -45,7 +48,7 @@ class IRITSpeechEntropy(Processor):
     @staticmethod
     @interfacedoc
     def name():
-        return "Speech entropy (IRIT)"
+        return "IRIT Speech entropy"
 
     @staticmethod
     @interfacedoc
@@ -59,30 +62,47 @@ class IRITSpeechEntropy(Processor):
         self.entropyValue.append(entropy(frames))
         return frames, eod
 
-    def results(self):
+    def release(self):
 
-        entropyValue = numpy.array(self.entropyValue)
-        w = self.modulLen*self.samplerate()/self.blocksize()
-        modulentropy = computeModulation(entropyValue,w,False)
-        confEntropy=  array(modulentropy-self.threshold)/self.threshold
-        confEntropy[confEntropy>1] = 1
+        entropyValue = array(self.entropyValue)
+        w = self.modulLen * self.samplerate() / self.blocksize()
+        modulentropy = computeModulation(entropyValue, w, False)
+        confEntropy = array(modulentropy - self.threshold) / self.threshold
+        confEntropy[confEntropy > 1] = 1
 
-        conf = AnalyzerResult(id = "irit_entropy_confidence", name = "entropy (IRIT)", unit = "?")
-        conf.value = confEntropy
+        conf = self.new_result(data_mode='value', time_mode='framewise')
 
+        conf.id_metadata.id += '.' + 'confidence'
+        conf.id_metadata.name += ' ' + 'Confidence'
+
+        conf.data_object.value = confEntropy
+        self._results.add(conf)
+
+        # Binary Entropy
         binaryEntropy = modulentropy > self.threshold
-        binaryEntropy = binary_opening(binaryEntropy,[1]*(self.smoothLen*2))
+        binaryEntropy = binary_opening(
+            binaryEntropy, [1] * (self.smoothLen * 2))
 
-        convert = {False:'NonSpeech',True:'Speech'}
+        convert = {False: 0, True: 1}
+        label = {0: 'NonSpeech', 1: 'Speech'}
         segList = segmentFromValues(binaryEntropy)
 
-        segmentsEntropy =[]
-        for s in segList :
-            segmentsEntropy.append((numpy.float(s[0])*self.blocksize()/self.samplerate(),
-                                    numpy.float(s[1])*self.blocksize()/self.samplerate(),
-                                    convert[s[2]]))
 
-        segs = AnalyzerResult(id="irit_entropy_segments", name="seg entropy (IRIT)", unit="s")
-        segs.value = segmentsEntropy
 
-        return AnalyzerResultContainer([conf, segs])
+        segs = self.new_result(data_mode='label', time_mode='segment')
+        segs.id_metadata.id += '.' + 'segments'
+        segs.id_metadata.name += ' ' + 'Segments'
+
+        segs.data_object.label = segList
+
+        segs.data_object.label = [convert[s[2]] for s in segList]
+        segs.data_object.time = [(float(s[0]) * self.blocksize() /
+                                  self.samplerate())
+                                  for s in segList]
+        segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
+                                  self.samplerate())
+                                  for s in segList]
+
+        self._results.add(segs)
+
+        return
