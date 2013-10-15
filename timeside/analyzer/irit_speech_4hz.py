@@ -24,10 +24,8 @@ from timeside.analyzer.core import *
 from timeside.api import IAnalyzer
 from numpy import array,hamming,dot,mean
 from numpy.fft import rfft
-from scipy.ndimage.morphology import binary_opening
 from scipy.signal import firwin,lfilter
-from scipy.io.wavfile import write as wavwrite
-from matplotlib import pylab
+
 
 class IRITSpeech4Hz(Processor):
     implements(IAnalyzer)

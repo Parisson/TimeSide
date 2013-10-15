@@ -62,6 +62,18 @@ Available plugins
 News
 =====
 
+0.5.0
+
+ * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
+ * Add serializable global result container (AnalyzerResultContainer)
+ * Add new audio feature extraction thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
+ * Add new audio feature extraction thanks to the Yaafe library (NEW dependency)
+ * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
+ * Add new documentation, see http://files.parisson.com/timeside/doc/
+ * Provide a Debian repository for instant install (see #Install)
+ * Various bugfixes
+ * Comptatible with python >=2.7
+
 0.4.5
 
  * (re)fix Pillow support (#12)
@@ -144,7 +156,7 @@ then, the *magic* pipeline::
 get the results::
 
  >>> grapher.render(output='waveform.png')
- >>> print 'Level:', analyzer.results()
+ >>> print 'Level:', analyzer.results
 
 `More examples <http://code.google.com/p/timeside/wiki/PythonApi>`_
 
@@ -160,9 +172,15 @@ On Debian, Ubuntu, etc::
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-On other system, you'll need to install the Gstreamer framework and modules, aubio 0.4, yaafe 0.64 and then ::
+On other system, you'll need to install the Gstreamer framework, some librairies and some python modules (see #Dependencies) ::
 
  $ sudo pip install timeside
+
+Dependencies
+============
+
+python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
+gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py
 
 
 Extensible HTML5 User Interface
@@ -206,7 +224,7 @@ Flash is needed for MP3 if the browser doesn't support it.
 Development
 ===========
 
-For version >= 0.5 on Debian Stable 7.0 Wheezy::
+For versions >=0.5 on Debian Stable 7.0 Wheezy::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list

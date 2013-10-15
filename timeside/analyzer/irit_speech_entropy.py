@@ -19,12 +19,12 @@
 
 # Author: Maxime Le Coz <lecoz@irit.fr>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import Processor, implements, interfacedoc
 from timeside.analyzer.core import *
 from timeside.api import IAnalyzer
 from numpy import array
 from scipy.ndimage.morphology import binary_opening
-from matplotlib import pylab
+
 
 class IRITSpeechEntropy(Processor):
     implements(IAnalyzer)
