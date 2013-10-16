@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Paul Brossier <piem@debian.org>
 Build-Depends: debhelper (>= 8.0.0), python, python-sphinx
 Standards-Version: 3.9.3
-Homepage: http://code.google.com/p/timeside
+Homepage: https://github.com/yomguy/TimeSide
 Vcs-Browser: https://github.com/yomguy/TimeSide
 Vcs-Git: https://github.com/yomguy/TimeSide.git
 
