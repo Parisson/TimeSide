@@ -36,11 +36,11 @@ Available plugins
      - Takes ALL known media formats thanks to GStreamer
 
  * Analyzers:
-     - MaxLevel, MeanLevel, DC
+     - Levels : max level, mean level, DC
      - Yaafe : all data flows
-     - Aubio : BPM, Beats, Pitch, various spectral descriptors
+     - Aubio : BPM, beats, pitch, various spectral descriptors
      - VAMP : all default plugins from simple host
-     - IRIT 4Hz, Entropy
+     - IRIT : 4Hz modulation and entropy speech detectors
 
  * Graphers:
      - Waveform

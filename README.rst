@@ -36,11 +36,11 @@ Available plugins
      - Takes ALL known media formats thanks to GStreamer
 
  * Analyzers:
-     - MaxLevel, MeanLevel, DC
+     - Levels : max level, mean level, DC
      - Yaafe : all data flows
-     - Aubio : BPM, Beats, Pitch, various spectral descriptors
+     - Aubio : BPM, beats, pitch, various spectral descriptors
      - VAMP : all default plugins from simple host
-     - IRIT 4Hz, Entropy
+     - IRIT : 4Hz modulation and entropy speech detectors
 
  * Graphers:
      - Waveform
@@ -73,7 +73,8 @@ News
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
- * Comptatible with Python >=2.7
+ * Comptatible with python >=2.7
+ * WARNING : no longer compatible with Telemeta 1.4.5
 
 0.4.5
 
@@ -192,7 +193,8 @@ Dependencies
 ============
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
-gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py
+gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
+python-scipy
 
 
 Platforms

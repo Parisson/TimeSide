@@ -35,6 +35,7 @@ setup(
         'h5py',
         'yaml',
         'simplejson',
+        'scipy',
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
