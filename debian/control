@@ -20,7 +20,7 @@ Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends},
   gstreamer0.10-plugins-good,
   gstreamer0.10-gnonlin,
   gstreamer0.10-plugins-ugly,
-Description: open and fast web audio components
+Description: open web audio processing framework
  TimeSide is a set of Python components enabling easy audio processing,
  transcoding, imaging and streaming. Its simple architecture and high-level
  API have been design to process serial pipelines.
@@ -36,7 +36,7 @@ Package: python-timeside-doc
 Architecture: all
 Section: doc
 Depends: ${misc:Depends}, libjs-underscore, libjs-jquery
-Description: open and fast web audio components -- documentation
+Description: open web audio processing framework -- documentation
  TimeSide is a set of Python components enabling easy audio processing,
  transcoding, imaging and streaming. Its simple architecture and high-level
  API have been design to process serial pipelines.
