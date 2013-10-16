@@ -160,6 +160,11 @@ get the results::
  >>> print 'Level:', analyzer.results
 
 
+API / Documentation
+====================
+
+http://files.parisson.com/timeside/doc/
+
 Install
 =======
 
