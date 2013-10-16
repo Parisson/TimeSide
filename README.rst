@@ -73,13 +73,13 @@ News
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
- * Comptatible with python >=2.7
+ * Comptatible with Python >=2.7
  * WARNING : no longer compatible with Telemeta 1.4.5
 
 0.4.5
 
  * (re)fix Pillow support (#12)
- * fix some python package rules
+ * fix some Python package rules
  * add a Debian package directory (thanks to piem, in git repo only)
 
 0.4.4
