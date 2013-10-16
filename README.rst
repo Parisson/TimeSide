@@ -13,16 +13,16 @@ It also includes a smart HTML5 interactive user interface embeddable in any web 
 Goals
 =====
 
-We just *need* a python library to:
+We just **need** a python library to:
 
- * Do asynchronous and fast audio processing with Python,
- * Decode audio frames from ANY format into numpy arrays,
- * Analyze audio content with some state-of-the-art audio feature extraction libraries,
- * Organize, serialize and save analysis metadata through various formats,
- * Draw various fancy waveforms, spectrograms and other cool graphers,
- * Transcode audio data in various media formats and stream them through web apps,
- * Playback and interact *on demand* through a smart high-level HTML5 extensible player,
- * Index, tag and organize semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+ * **Do** asynchronous and fast audio processing with Python,
+ * **Decode** audio frames from ANY format into numpy arrays,
+ * **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
+ * **Organize**, serialize and save analysis metadata through various formats,
+ * **Draw** various fancy waveforms, spectrograms and other cool graphers,
+ * **Transcode** audio data in various media formats and stream them through web apps,
+ * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
+ * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
@@ -32,29 +32,29 @@ Here is a schematic diagram of the TimeSide engine architecture:
 Available plugins
 =================
 
- * Decoder:
+* Decoder:
      - Takes ALL known media formats thanks to GStreamer
 
- * Analyzers:
+* Analyzers:
      - Levels : max level, mean level, DC
      - Yaafe : all data flows
      - Aubio : BPM, beats, pitch, various spectral descriptors
      - VAMP : all default plugins from simple host
      - IRIT : 4Hz modulation and entropy speech detectors
 
- * Graphers:
+* Graphers:
      - Waveform
      - Contour
      - Spectrogram
 
- * Encoders:
+* Encoders:
      - WAV
      - FLAC
      - WebM
      - OGG Vorbis
      - MP3
 
- * Serializers:
+* Serializers:
      - YAML
      - JSON
      - XML
@@ -66,14 +66,14 @@ News
 0.5.0
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
- * Add serializable global result container (NEW dependency to h5py, simplejson, yaml)
+ * Add serializable global result container (NEW dependency to h5py, json, yaml)
  * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
  * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency)
  * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
- * Comptatible with Python >=2.7
+ * Comptatible with python >=2.7
  * WARNING : no longer compatible with Telemeta 1.4.5
 
 0.4.5
