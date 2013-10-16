@@ -26,7 +26,7 @@ We just **need** a python library to:
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
-.. image:: http://timeside.googlecode.com/git/doc/img/timeside_schema.png
+.. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
 
 
 Available plugins
