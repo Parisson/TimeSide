@@ -15,14 +15,14 @@ Goals
 
 We just **need** a python library to:
 
- * **Do** asynchronous and fast audio processing with Python,
- * **Decode** audio frames from ANY format into numpy arrays,
- * **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
- * **Organize**, serialize and save analysis metadata through various formats,
- * **Draw** various fancy waveforms, spectrograms and other cool graphers,
- * **Transcode** audio data in various media formats and stream them through web apps,
- * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
- * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Do** asynchronous and fast audio processing with Python,
+* **Decode** audio frames from ANY format into numpy arrays,
+* **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
+* **Organize**, serialize and save analysis metadata through various formats,
+* **Draw** various fancy waveforms, spectrograms and other cool graphers,
+* **Transcode** audio data in various media formats and stream them through web apps,
+* **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
+* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
@@ -241,18 +241,23 @@ For versions >=0.5 on Debian Stable 7.0 Wheezy:
 Related projects
 =================
 
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS.
+TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS. Find a direct example of application here : http://archives.crem-cnrs.fr/
 
-Some decoders and encoders depend on the great `GStreamer framework <http://gstreamer.freedesktop.org/>`_.
+This project has been sponsored by:
+
+    * CNRS (french center of national research)
+    * TGE Adonis
+    * CREM (Nanterre, UPMC (Paris),
+
 
 Copyrights
 ==========
 
- * Copyright (c) 2006, 2013 Parisson SARL
- * Copyright (c) 2006, 2013 Guillaume Pellerin
- * Copyright (c) 2010, 2013 Paul Brossier
- * Copyright (c) 2013 Thomas Fillon
- * Copyright (c) 2006, 2010 Samalyse SARL
+* Copyright (c) 2006, 2013 Parisson SARL
+* Copyright (c) 2006, 2013 Guillaume Pellerin
+* Copyright (c) 2010, 2013 Paul Brossier
+* Copyright (c) 2013 Thomas Fillon
+* Copyright (c) 2006, 2010 Samalyse SARL
 
 
 License

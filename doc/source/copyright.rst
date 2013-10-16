@@ -1,11 +1,11 @@
 Copyrights
 ==========
 
- * Copyright (c) 2006, 2013 Parisson SARL
- * Copyright (c) 2006, 2013 Guillaume Pellerin
- * Copyright (c) 2010, 2013 Paul Brossier
- * Copyright (c) 2013 Thomas Fillon
- * Copyright (c) 2006, 2010 Samalyse SARL
+* Copyright (c) 2006, 2013 Parisson SARL
+* Copyright (c) 2006, 2013 Guillaume Pellerin
+* Copyright (c) 2010, 2013 Paul Brossier
+* Copyright (c) 2013 Thomas Fillon
+* Copyright (c) 2006, 2010 Samalyse SARL
 
 
 License

@@ -15,14 +15,14 @@ Goals
 
 We just **need** a python library to:
 
- * **Do** asynchronous and fast audio processing with Python,
- * **Decode** audio frames from ANY format into numpy arrays,
- * **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
- * **Organize**, serialize and save analysis metadata through various formats,
- * **Draw** various fancy waveforms, spectrograms and other cool graphers,
- * **Transcode** audio data in various media formats and stream them through web apps,
- * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
- * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Do** asynchronous and fast audio processing with Python,
+* **Decode** audio frames from ANY format into numpy arrays,
+* **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
+* **Organize**, serialize and save analysis metadata through various formats,
+* **Draw** various fancy waveforms, spectrograms and other cool graphers,
+* **Transcode** audio data in various media formats and stream them through web apps,
+* **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
+* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
