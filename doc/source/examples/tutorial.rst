@@ -8,7 +8,7 @@ A most basic operation, transcoding, is easily performed with two processors:
 
  >>> import timeside
  >>> decoder = timeside.decoder.FileDecoder('myfile.wav')
- >>> encoder = timeside.encoder.OggEncoder("myfile.ogg")
+ >>> encoder = timeside.encoder.VorbisEncoder("myfile.ogg")
  >>> pipe = decoder | encoder
  >>> pipe.run()
 

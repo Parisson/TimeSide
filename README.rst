@@ -66,14 +66,14 @@ News
 0.5.0
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
- * Add serializable global result container (NEW dependency to h5py, json, yaml)
+ * Add serializable global result container (NEW dependency to h5py, simplejson, yaml)
  * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
  * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency)
  * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
- * Comptatible with python >=2.7
+ * Comptatible with Python >=2.7
  * WARNING : no longer compatible with Telemeta 1.4.5
 
 0.4.5

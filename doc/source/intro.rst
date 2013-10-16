@@ -13,16 +13,16 @@ It also includes a smart HTML5 interactive user interface embeddable in any web 
 Goals
 =====
 
-We just *need* a python library to:
+We just **need** a python library to:
 
- * Do asynchronous and fast audio processing with Python,
- * Decode audio frames from ANY format into numpy arrays,
- * Analyze audio content with some state-of-the-art audio feature extraction libraries,
- * Organize, serialize and save analysis metadata through various formats,
- * Draw various fancy waveforms, spectrograms and other cool graphers,
- * Transcode audio data in various media formats and stream them through web apps,
- * Playback and interact *on demand* through a smart high-level HTML5 extensible player,
- * Index, tag and organize semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+ * **Do** asynchronous and fast audio processing with Python,
+ * **Decode** audio frames from ANY format into numpy arrays,
+ * **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
+ * **Organize**, serialize and save analysis metadata through various formats,
+ * **Draw** various fancy waveforms, spectrograms and other cool graphers,
+ * **Transcode** audio data in various media formats and stream them through web apps,
+ * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
+ * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
@@ -32,29 +32,29 @@ Here is a schematic diagram of the TimeSide engine architecture:
 Available plugins
 =================
 
- * Decoder:
+* Decoder:
      - Takes ALL known media formats thanks to GStreamer
 
- * Analyzers:
+* Analyzers:
      - Levels : max level, mean level, DC
      - Yaafe : all data flows
      - Aubio : BPM, beats, pitch, various spectral descriptors
      - VAMP : all default plugins from simple host
      - IRIT : 4Hz modulation and entropy speech detectors
 
- * Graphers:
+* Graphers:
      - Waveform
      - Contour
      - Spectrogram
 
- * Encoders:
+* Encoders:
      - WAV
      - FLAC
      - WebM
      - OGG Vorbis
      - MP3
 
- * Serializers:
+* Serializers:
      - YAML
      - JSON
      - XML
