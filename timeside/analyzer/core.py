@@ -573,10 +573,8 @@ class AnalyzerResult(MetadataObject):
     @property
     def data(self):
         if self.data_mode is None:
-            return (
-                {key: self.data_object[key]
-                    for key in ['value', 'label'] if key in self.data_object.keys()}
-            )
+            return {key: self.data_object[key] for key in ['value', 'label'] if key in self.data_object.keys()}
+
         elif self.data_mode is 'value':
             return self.data_object.value
         elif self.data_mode is 'label':
