@@ -7,12 +7,11 @@ Standards-Version: 3.9.3
 Homepage: https://github.com/yomguy/TimeSide
 Vcs-Browser: https://github.com/yomguy/TimeSide
 Vcs-Git: https://github.com/yomguy/TimeSide.git
+XS-Python-Version: 2.7
 
 Package: python-timeside
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends},
-  python-aubio,
-  python-yaafe,
   python-simplejson,
   python-yaml,
   python-h5py,
@@ -20,6 +19,11 @@ Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends},
   gstreamer0.10-plugins-good,
   gstreamer0.10-gnonlin,
   gstreamer0.10-plugins-ugly,
+  python-aubio,
+  python-yaafe,
+  python-scipy,
+  vamp-examples,
+  vamp-plugin-sdk,
 Description: open web audio processing framework
  TimeSide is a set of Python components enabling easy audio processing,
  transcoding, imaging and streaming. Its simple architecture and high-level
