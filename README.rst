@@ -211,7 +211,7 @@ The player should work on any modern HTML5 enabled browser.
 Flash is needed for MP3 if the browser doesn't support it.
 
 HTML5 User Interface
-=======================
+====================
 
 TimeSide comes with a smart and pure HTML5 audio player.
 
