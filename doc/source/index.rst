@@ -14,7 +14,7 @@ Contents:
    intro
    news
    Installation <install>
-   Tutorial <examples/index>
+   Tutorial <tutorial/index>
    ui
    API <api/index>
    Development <dev>
