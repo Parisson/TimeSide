@@ -5,9 +5,10 @@ News
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
  * Add serializable global result container (NEW dependency to h5py, json, yaml)
- * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
- * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency)
- * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
+ * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency on aubio)
+ * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency on yaafe)
+ * Add new IRIT speech detection analyzers (NEW dependency on scipy)
+ * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency on some vamp toold)
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes

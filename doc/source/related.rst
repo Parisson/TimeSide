@@ -1,12 +1,21 @@
+Sponsors and Patners
+====================
+
+    * `Parisson <http://parisson.com>`_
+    * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
+    * `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
+    * `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
+    * `Université Pierre et Marie Curie <http://www-upmc.fr>`_ (UPMC Paris, France)
+    * `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
+    * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
+
+
 Related projects
 =================
 
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS. Find a direct example of application here : http://archives.crem-cnrs.fr/
+    * `Telemeta <http://telemeta.org>`_ : open source web audio CMS
+    * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
+    * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
-This project has been sponsored by:
-
-    * CNRS (french center of national research)
-    * TGE Adonis
-    * CREM (Nanterre, UPMC (Paris),
 
 

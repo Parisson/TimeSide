@@ -14,9 +14,9 @@ Contents:
    intro
    news
    Installation <install>
-   Examples <examples/index>
-   API <api/index>
+   Tutorial <examples/index>
    ui
+   API <api/index>
    Development <dev>
    related
    Copyright <copyright>
