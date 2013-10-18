@@ -260,12 +260,12 @@ Sponsors and Patners
 ====================
 
     * `Parisson <http://parisson.com>`_
-    * CNRS (National Center of Science Research, France)
-    * TGE Adonis (big data equipment for human sciences)
-    * CREM (french National Center of Ethomusicology Research, France)
-    * Université Pierre et Marie Curie (UPMC Paris, France)
-    * ANR (CONTINT 2012 project : DIADEMS)
-    * MNHN : Museum National d'Histoire Naturelle (Paris, France)
+    * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
+    * `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
+    * `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
+    * `Université Pierre et Marie Curie <http://www-upmc.fr>`_ (UPMC Paris, France)
+    * `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
+    * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 
 
 Related projects
