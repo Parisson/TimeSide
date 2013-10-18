@@ -1,8 +1,7 @@
 .. This file is part of TimeSide
    @author: Thomas Fillon
 
-=============================
- New analyzer Result example
+Analyzer Result example
 =============================
 
 Example of use of the new analyzerResult structure
@@ -42,9 +41,9 @@ Specification of time_mode
 Four different time_mode can be specified :
 
 - 'framewise' : Data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
--  'global' : A global data value is return for the entire audio item
--  'segment' : Data are returned on a segmnet basis (i.e. with specified start time and duration)
--  'event' :  Data are returned on a segment basis (i.e. with specified start time)
+- 'global' : A global data value is return for the entire audio item
+- 'segment' : Data are returned on a segmnet basis (i.e. with specified start time and duration)
+- 'event' :  Data are returned on a segment basis (i.e. with specified start time)
 
 
 Framewise
@@ -63,7 +62,7 @@ The 'frame_metadata' key/attribute is deleted.
 >>> res = AnalyzerResult(time_mode='global')
 >>> res.keys()
 ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
->>> res.data
+>>> res.data_object
 DataObject(value=None, label=array([], dtype=int64))
 
 Segment

@@ -1,12 +1,20 @@
+Sponsors and Patners
+====================
+
+    * CNRS (National Center of Science Research, France)
+    * TGE Adonis (big data equipment for human sciences)
+    * CREM (french National Center of Ethomusicology Research, France)
+    * Université Pierre et Marie Curie (UPMC Paris, France)
+    * ANR (CONTINT 2012 project : DIADEMS)
+    * MNHN :
+
+
 Related projects
 =================
 
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS. Find a direct example of application here : http://archives.crem-cnrs.fr/
+    * `Telemeta <http://telemeta.org>`_ : open source web audio CMS
+    * `Sound archives <http://archives.crem-cnrs.fr/>` of the CNRS, CREM and the "Musée de l'Homme" in Paris.
+    * DIADEMS :
 
-This project has been sponsored by:
-
-    * CNRS (french center of national research)
-    * TGE Adonis
-    * CREM (Nanterre, UPMC (Paris),
 
 

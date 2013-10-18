@@ -573,8 +573,10 @@ class AnalyzerResult(MetadataObject):
     @property
     def data(self):
         if self.data_mode is None:
-            return {key: self.data_object[key] for key in ['value', 'label'] if key in self.data_object.keys()}
-
+            return (
+                {key: self.data_object[key]
+                    for key in ['value', 'label'] if key in self.data_object.keys()}
+            )
         elif self.data_mode is 'value':
             return self.data_object.value
         elif self.data_mode is 'label':
@@ -635,19 +637,18 @@ class AnalyzerResult(MetadataObject):
 class AnalyzerResultContainer(dict):
 
     '''
-    >>> from timeside.decoder import FileDecoder
-    >>> import timeside.analyzer.core as coreA
+    >>> import timeside
     >>> import os
     >>> ModulePath =  os.path.dirname(os.path.realpath(coreA.__file__))
     >>> wavFile = os.path.join(ModulePath , '../../tests/samples/sweep.wav')
-    >>> d = FileDecoder(wavFile, start=1)
+    >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
 
-    >>> a = coreA.Analyzer()
+    >>> a = timeside.analyzer.Analyzer()
     >>> (d|a).run() #doctest: +ELLIPSIS
     <timeside.core.ProcessPipe object at 0x...>
     >>> a.new_result() #doctest: +ELLIPSIS
     AnalyzerResult(data_mode=None, time_mode=None, id_metadata=id_metadata(id='', name='', unit='', description='', date='...', version='...', author='TimeSide'), data=DataObject(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audio_metadata=audio_metadata(uri='file:///.../tests/samples/sweep.wav', start=1.0, duration=7.0, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None), label_metadata=LabelMetadata(label=None, description=None, label_type='mono'), parameters={})
-    >>> resContainer = coreA.AnalyzerResultContainer()
+    >>> resContainer = timeside.analyzer.AnalyzerResultContainer()
 
     '''
 
@@ -916,7 +917,7 @@ class Analyzer(Processor):
 
         Attributes
         ----------
-        data : MetadataObject
+        data_object : MetadataObject
         id_metadata : MetadataObject
         audio_metadata : MetadataObject
         frame_metadata : MetadataObject

@@ -3,15 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-==============================================
-TimeSide : Examples
-==============================================
+====================
+TimeSide : Tutorial
+====================
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-      Tutorial <tutorial>
+      Quick start <quick_start>
       Usage of AnalyzerResult <AnalyzerResult>
 
 

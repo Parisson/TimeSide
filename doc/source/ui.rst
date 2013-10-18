@@ -1,7 +1,7 @@
-HTML5 User Interface
-====================
+User Interface
+===============
 
-TimeSide comes with a smart and pure HTML5 audio player.
+TimeSide comes with a smart and pure **HTML5** audio player.
 
 Features:
     * embed it in any audio web application
