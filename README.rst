@@ -67,9 +67,10 @@ News
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
  * Add serializable global result container (NEW dependency to h5py, json, yaml)
- * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency)
- * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency)
- * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency)
+ * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency on aubio)
+ * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency on yaafe)
+ * Add new IRIT speech detection analyzers (NEW dependency on scipy)
+ * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency on some vamp toold)
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
@@ -163,7 +164,9 @@ get the results::
 API / Documentation
 ====================
 
-http://files.parisson.com/timeside/doc/
+* General : http://files.parisson.com/timeside/doc/
+* Tutorial : http://files.parisson.com/timeside/doc/examples/index.html
+* API : http://files.parisson.com/timeside/doc/api/index.html
 
 Install
 =======
@@ -210,10 +213,10 @@ MacOS X and Windows versions will soon be explorated.
 The player should work on any modern HTML5 enabled browser.
 Flash is needed for MP3 if the browser doesn't support it.
 
-HTML5 User Interface
-====================
+User Interface
+===============
 
-TimeSide comes with a smart and pure HTML5 audio player.
+TimeSide comes with a smart and pure **HTML5** audio player.
 
 Features:
     * embed it in any audio web application
@@ -253,16 +256,24 @@ For versions >=0.5 on Debian Stable 7.0 Wheezy:
  $ export PYTHONPATH=$PYTHONPATH:`pwd`
  $ python tests/run_all_tests
 
+Sponsors and Patners
+====================
+
+    * CNRS (National Center of Science Research, France)
+    * TGE Adonis (big data equipment for human sciences)
+    * CREM (french National Center of Ethomusicology Research, France)
+    * Université Pierre et Marie Curie (UPMC Paris, France)
+    * ANR (CONTINT 2012 project : DIADEMS)
+    * MNHN :
+
+
 Related projects
 =================
 
-TimeSide has emerged in 2010 from the `Telemeta project <http://telemeta.org>`_ which develops a free and open source web audio CMS. Find a direct example of application here : http://archives.crem-cnrs.fr/
+    * `Telemeta <http://telemeta.org>`_ : open source web audio CMS
+    * `Sound archives <http://archives.crem-cnrs.fr/>` of the CNRS, CREM and the "Musée de l'Homme" in Paris.
+    * DIADEMS :
 
-This project has been sponsored by:
-
-    * CNRS (french center of national research)
-    * TGE Adonis
-    * CREM (Nanterre, UPMC (Paris),
 
 
 Copyrights
