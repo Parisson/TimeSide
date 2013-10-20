@@ -8,6 +8,7 @@ Grapher
 
 Core module
 ===========
+
 .. automodule:: timeside.grapher.core
   :members:
 
@@ -16,16 +17,19 @@ Graphers
 
 Spectrogram
 -----------
+
 .. automodule:: timeside.grapher.spectrogram
   :members:
 
 Waveform
 -----------
+
 .. automodule:: timeside.grapher.waveform
   :members:
 
 Simple Waveform
 ---------------
+
 .. automodule:: timeside.grapher.waveform_simple
   :members:
 
