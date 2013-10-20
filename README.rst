@@ -226,7 +226,6 @@ Features:
     * fully skinnable with CSS style
 
 Screenshot:
-
  .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_player_01.png
 
 Examples of the player embeded in the Telemeta open web audio CMS:
