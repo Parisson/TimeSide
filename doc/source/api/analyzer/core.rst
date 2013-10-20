@@ -4,8 +4,8 @@
 
 .. automodule:: timeside.analyzer.core
 
-New analyzer Result
-*******************
+AnalyzerResult
+***************
 
 .. autoclass:: AnalyzerResult
    :members:
