@@ -30,7 +30,7 @@ except ImportError:
     import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
 
 from timeside.core import FixedSizeInputAdapter
-from color_schemes import default_color_schemes
+from timeside.grapher.color_schemes import default_color_schemes
 from utils import *
 
 class Spectrum(object):
