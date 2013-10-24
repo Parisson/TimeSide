@@ -6,33 +6,30 @@ Analyzer Result example
 
 Example of use of the new analyzerResult structure
 
-Usage : AnalyzerResult(data_mode=None, time_mode=None)
+Usage : AnalyzerResultFactory(data_mode=None, time_mode=None)
 
-See : :class:`timeside.analyzer.core.AnalyzerResult`
+See : :function:`timeside.analyzer.core.AnalyzerResultFactory`, :class:`timeside.analyzer.core.AnalyzerResult`
 
 Default
 =======
 
 Create a new analyzer result without arguments
 
-   >>> from timeside.analyzer.core import AnalyzerResult
-   >>> res = AnalyzerResult()
+   >>> from timeside.analyzer.core import AnalyzerResultFactory
+   >>> res = AnalyzerResultFactory()
 
 This default result has all the metadata and dataObject attribute
 
    >>> res.keys()
-   ['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
+   ['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'parameters']
 
    >>> for key,value in res.items():
    ...     print '%s : %s' % (key, value)
    ...
-   data_mode : None
-   time_mode : None
    id_metadata : {'description': '', 'author': '', 'version': '', 'date': '', 'id': '', 'unit': '', 'name': ''}
-   dataObject : {'duration': array([], dtype=float64), 'time': array([], dtype=float64), 'value': None, 'label': array([], dtype=int64)}
-   audio_metadata : {'duration': None, 'start': 0, 'channelsManagement': '', 'uri': '', 'channels': None}
+   data_object : {'value': array([], dtype=float64)}
+   audio_metadata : {'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
    frame_metadata : {'blocksize': None, 'samplerate': None, 'stepsize': None}
-   label_metadata : {'label_type': 'mono', 'description': None, 'label': None}
    parameters : {}
 
 
@@ -49,9 +46,9 @@ Four different time_mode can be specified :
 Framewise
 ---------
 
->>> res = AnalyzerResult(time_mode='framewise')
+>>> res = AnalyzerResultFactory(time_mode='framewise')
 >>> res.keys()
-['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
+['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'parameters']
 
 Global
 ------
@@ -59,29 +56,29 @@ Global
 No frame metadata information is needed for these modes.
 The 'frame_metadata' key/attribute is deleted.
 
->>> res = AnalyzerResult(time_mode='global')
+>>> res = AnalyzerResultFactory(time_mode='global')
 >>> res.keys()
-['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
+['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
-DataObject(value=None, label=array([], dtype=int64))
+DataObject(value=array([], dtype=float64))
 
 Segment
 -------
 
->>> res = AnalyzerResult(time_mode='segment')
+>>> res = AnalyzerResultFactory(time_mode='segment')
 >>> res.keys()
-['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
->>> res.data
-DataObject(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64))
+['id_metadata', 'data_object', 'audio_metadata', 'parameters']
+>>> res.data_object
+DataObject(value=array([], dtype=float64), time=array([], dtype=float64), duration=array([], dtype=float64))
 
 Event
 -----
 
->>> res = AnalyzerResult(time_mode='event')
+>>> res = AnalyzerResultFactory(time_mode='event')
 >>> res.keys()
-['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'label_metadata', 'parameters']
->>> res.data
-DataObject(value=None, label=array([], dtype=int64), time=array([], dtype=float64))
+['id_metadata', 'data_object', 'audio_metadata', 'parameters']
+>>> res.data_object
+DataObject(value=array([], dtype=float64), time=array([], dtype=float64))
 
 Specification of data_mode
 =========================
@@ -94,23 +91,23 @@ Value
 -----
 The label_metadata key is deleted.
 
->>> res = AnalyzerResult(data_mode='value')
+>>> res = AnalyzerResultFactory(data_mode='value')
 >>> res.keys()
-['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'parameters']
+['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'parameters']
 
 In the dataObject key, the 'value' key is kept and the 'label' key is deleted.
 
->>> res.data
-DataObject(value=None, time=array([], dtype=float64), duration=array([], dtype=float64))
+>>> res.data_object
+DataObject(value=array([], dtype=float64))
 
 Label
 -----
->>> res = AnalyzerResult(data_mode='label')
+>>> res = AnalyzerResultFactory(data_mode='label')
 >>> res.keys()
-['data_mode', 'time_mode', 'id_metadata', 'data', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
+['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
 
 In the dataObject key, the 'label' key is kept and the 'value' key is deleted.
 
 
->>> res.data
-DataObject(label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64))
+>>> res.data_object
+DataObject(label=array([], dtype=int64))
