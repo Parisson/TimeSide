@@ -1,8 +1,9 @@
 .. This file is part of TimeSide
    @author: Thomas Fillon
 
-Analyzer Result examples
-=============================
+==========================
+ Analyzer Result examples
+==========================
 
 Example of use of the Aanalyzer Result structure
 
@@ -47,7 +48,7 @@ This default result has all the metadata and dataObject attribute
 
 
 Specification of time_mode
-=========================
+==========================
 Four different time_mode can be specified :
 
 - 'framewise' : Data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
