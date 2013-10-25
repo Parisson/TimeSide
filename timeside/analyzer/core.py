@@ -194,13 +194,19 @@ class IdMetadata(MetadataObject):
     # - (long) description --> à mettre dans l'API Processor
 
     # Define default values
-    _default_value = OrderedDict([('id', ''),
-                                  ('name', ''),
-                                  ('unit', ''),
-                                  ('description', ''),
-                                  ('date', ''),
-                                  ('version', ''),
-                                  ('author', '')])
+    _default_value = OrderedDict([('id', None),
+                                  ('name', None),
+                                  ('unit', None),
+                                  ('description', None),
+                                  ('date', None),
+                                  ('version', None),
+                                  ('author', None)])
+
+    def __setattr__(self, name, value):
+        if value is None:
+            value = ''
+
+        super(IdMetadata, self).__setattr__(name, value)
 
 
 class AudioMetadata(MetadataObject):
@@ -302,40 +308,42 @@ class DataObject(MetadataObject):
     '''
 
     # Define default values
-    _default_value = OrderedDict([('value', []),
-                                  ('label', []),
-                                  ('time', []),
-                                  ('duration', [])])
+    _default_value = OrderedDict([('value', None),
+                                  ('label', None),
+                                  ('time', None),
+                                  ('duration', None)])
 
     def __setattr__(self, name, value):
-        if value is not None:
-            # Set Data with the proper type
-            if name == 'value':
-                value = numpy.asarray(value)
-                if value.dtype.type not in numpy_data_types:
-                    raise TypeError(
-                        'Result Data can not accept type %s for %s' %
-                        (value.dtype.type, name))
-                if value.shape == ():
-                    value.resize((1,))
+        if value is None:
+            value = []
 
-            elif name == 'label':
-                try:
-                    value = numpy.asarray(value, dtype='int')
-                except ValueError:
-                    raise TypeError(
-                        'Result Data can not accept type %s for %s' %
-                        (value.dtype.type, name))
+        # Set Data with the proper type
+        if name == 'value':
+            value = numpy.asarray(value)
+            if value.dtype.type not in numpy_data_types:
+                raise TypeError(
+                    'Result Data can not accept type %s for %s' %
+                    (value.dtype.type, name))
+            if value.shape == ():
+                value.resize((1,))
 
-            elif name in ['time', 'duration']:
-                try:
-                    value = numpy.asfarray(value)
-                except ValueError:
-                    raise TypeError(
-                        'Result Data can not accept type %s for %s' %
-                        (value.dtype.type, name))
-            elif name == 'dataType':
-                return
+        elif name == 'label':
+            try:
+                value = numpy.asarray(value, dtype='int')
+            except ValueError:
+                raise TypeError(
+                    'Result Data can not accept type %s for %s' %
+                    (value.dtype.type, name))
+
+        elif name in ['time', 'duration']:
+            try:
+                value = numpy.asfarray(value)
+            except ValueError:
+                raise TypeError(
+                    'Result Data can not accept type %s for %s' %
+                    (value.dtype.type, name))
+        elif name == 'dataType':
+            return
 
         super(DataObject, self).__setattr__(name, value)
 
@@ -437,17 +445,24 @@ class AnalyzerResult(MetadataObject):
     """
 
     # Define default values
-    _default_value = OrderedDict([('id_metadata', IdMetadata()),
-                                  ('data_object', DataObject()),
-                                  ('audio_metadata', AudioMetadata()),
-                                  ('frame_metadata', FrameMetadata()),
-                                  ('label_metadata', LabelMetadata()),
-                                  ('parameters', AnalyzerParameters())
+    _default_value = OrderedDict([('id_metadata', None),
+                                  ('data_object', None),
+                                  ('audio_metadata', None),
+                                  ('frame_metadata', None),
+                                  ('label_metadata', None),
+                                  ('parameters', None)
                                   ])
 
-    def __init__(self, data_mode=None,
-                 time_mode=None):
+    def __init__(self, data_mode=None, time_mode=None):
         super(AnalyzerResult, self).__init__()
+
+        self.id_metadata = IdMetadata()
+        self.data_object = DataObject()
+        self.audio_metadata = AudioMetadata()
+        self.frame_metadata = FrameMetadata()
+        self.label_metadata = LabelMetadata()
+        self.parameters = AnalyzerParameters()
+
         self._data_mode = data_mode
         self._time_mode = time_mode
 
@@ -644,35 +659,35 @@ class SegmentObject(EventObject):
 
 
 class GlobalValueResult(ValueObject, GlobalObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class GlobalLabelResult(LabelObject, GlobalObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class FrameValueResult(ValueObject, FramewiseObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class FrameLabelResult(LabelObject, FramewiseObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class EventValueResult(ValueObject, EventObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class EventLabelResult(LabelObject, EventObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class SegmentValueResult(ValueObject, SegmentObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 class SegmentLabelResult(LabelObject, SegmentObject):
-    _default_value =  deepcopy(LabelObject._default_value)
+    pass
 
 
 def AnalyzerResultFactory(data_mode='value', time_mode='framewise'):
@@ -725,7 +740,7 @@ class AnalyzerResultContainer(dict):
     >>> (d|a).run() #doctest: +ELLIPSIS
     <timeside.core.ProcessPipe object at 0x...>
     >>> a.new_result() #doctest: +ELLIPSIS
-    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='0.5.1', author='TimeSide'), data_object=DataObject(value=None, label=array([], dtype=int64), time=array([], dtype=float64), duration=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='file:///home/thomas/code/timeside/TimeSide/tests/samples/sweep.wav', start=1.0, duration=7.0, is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), label_metadata=None, parameters={})
+    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='0.5.1', author='TimeSide'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='file:///...', start=1.0, duration=7.0, is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
 
     '''
@@ -734,23 +749,6 @@ class AnalyzerResultContainer(dict):
         super(AnalyzerResultContainer, self).__init__()
         if analyzer_results is not None:
             self.add(analyzer_results)
-
-#    def __getitem__(self, i):
-#        return self.results[i]
-
-#    def __len__(self):
-#        return len(self.results)
-
-#    def __repr__(self):
- #       return [res.as_dict() for res in self.values()].__repr__()
-
-    # def __eq__(self, other):
-        # if hasattr(other, 'results'):
-        #    other = other.results
-   #     return self == other
-
-    # def __ne__(self, other):
-    #    return not self.__eq__(other)
 
     def add(self, analyzer_result):
         if isinstance(analyzer_result, list):
@@ -821,7 +819,7 @@ class AnalyzerResultContainer(dict):
         for res_json in results_json:
 
             res = AnalyzerResultFactory(data_mode=res_json['data_mode'],
-                                 time_mode=res_json['time_mode'])
+                                        time_mode=res_json['time_mode'])
             for key in res_json.keys():
                 if key not in ['data_mode', 'time_mode']:
                     res[key] = res_json[key]
@@ -856,7 +854,8 @@ class AnalyzerResultContainer(dict):
         results_yaml = yaml.load(yaml_str)
         results = AnalyzerResultContainer()
         for res_yaml in results_yaml:
-            res = AnalyzerResultFactory(data_mode=res_yaml['data_mode'], time_mode=res_yaml['time_mode'])
+            res = AnalyzerResultFactory(data_mode=res_yaml['data_mode'],
+                                        time_mode=res_yaml['time_mode'])
             for key in res_yaml.keys():
                 if key not in ['data_mode', 'time_mode']:
                     res[key] = res_yaml[key]

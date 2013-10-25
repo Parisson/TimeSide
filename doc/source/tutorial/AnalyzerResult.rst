@@ -1,14 +1,27 @@
 .. This file is part of TimeSide
    @author: Thomas Fillon
 
-Analyzer Result example
+Analyzer Result examples
 =============================
 
-Example of use of the new analyzerResult structure
+Example of use of the Aanalyzer Result structure
 
 Usage : AnalyzerResultFactory(data_mode=None, time_mode=None)
 
-See : :function:`timeside.analyzer.core.AnalyzerResultFactory`, :class:`timeside.analyzer.core.AnalyzerResult`
+Four different *time_mode* can be specified :
+
+- 'framewise' : Data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
+- 'global' : A global data value is return for the entire audio item
+- 'segment' : Data are returned on a segmnet basis (i.e. with specified start time and duration)
+- 'event' :  Data are returned on a segment basis (i.e. with specified start time)
+
+Two different *data_mode* can be specified :
+
+- 'value' : Data are returned as numpy Array of arbitrary type
+- 'label' : Data are returned as label indexes (specified by the label_metadata key)
+
+
+See : :func:`timeside.analyzer.core.AnalyzerResultFactory`, :class:`timeside.analyzer.core.AnalyzerResult`
 
 Default
 =======
