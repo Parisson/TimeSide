@@ -738,7 +738,6 @@ class AnalyzerResultContainer(dict):
 
     >>> a = timeside.analyzer.Analyzer()
     >>> (d|a).run() #doctest: +ELLIPSIS
-    <timeside.core.ProcessPipe object at 0x...>
     >>> a.new_result() #doctest: +ELLIPSIS
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='0.5.1', author='TimeSide'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='file:///...', start=1.0, duration=7.0, is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()

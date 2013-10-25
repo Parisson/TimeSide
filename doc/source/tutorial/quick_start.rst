@@ -33,7 +33,6 @@ A most basic operation, transcoding, is easily performed with two processors:
  >>> encoder = timeside.encoder.VorbisEncoder('sweep.ogg')
  >>> pipe = decoder | encoder
  >>> pipe.run()
- <timeside.core.ProcessPipe object at 0x...>
 
 As one can see in the above example, creating a processing pipe is performed with
 the binary OR operator.
@@ -47,7 +46,6 @@ Spectrogram. All graphers return an image:
    >>> decoder = timeside.decoder.FileDecoder('sweep.wav') # doctest: +SKIP
    >>> spectrogram = timeside.grapher.Spectrogram(width=400, height=150)
    >>> (decoder | spectrogram).run()
-   <timeside.core.ProcessPipe object at 0x...>
    >>> spectrogram.render().save('graph.png')
 
 It is possible to create longer pipes, as well as subpipes, here for both
@@ -60,6 +58,5 @@ analysis and encoding:
    >>> levels = timeside.analyzer.Level()
    >>> encoders = timeside.encoder.Mp3Encoder('sweep.mp3') | timeside.encoder.FlacEncoder('sweep.flac')
    >>> (decoder | levels | encoders).run()
-   <timeside.core.ProcessPipe object at 0x...>
    >>> print levels.results
    {'level.max': GlobalValueResult(id_metadata=IdMetadata(id='level.max', name='Level Analyzer Max', unit='dBFS', description='', date='...', version='0.5.1', author='TimeSide'), data_object=DataObject(value=array([-6.021])), audio_metadata=AudioMetadata(uri='file://...sweep.wav', start=0.0, duration=8.0, is_segment=False, channels=None, channelsManagement=''), parameters={}), 'level.rms': GlobalValueResult(id_metadata=IdMetadata(id='level.rms', name='Level Analyzer RMS', unit='dBFS', description='', date='...', version='0.5.1', author='TimeSide'), data_object=DataObject(value=array([-9.856])), audio_metadata=AudioMetadata(uri='file://...sweep.wav', start=0.0, duration=8.0, is_segment=False, channels=None, channelsManagement=''), parameters={})}

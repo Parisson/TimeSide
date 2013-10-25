@@ -269,7 +269,7 @@ class ProcessPipe(object):
         for item in items:
             item.release()
 
-        return self
+        #return self
 
     @property
     def results(self):
