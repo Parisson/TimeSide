@@ -7,7 +7,7 @@
 
 Example of use of the Aanalyzer Result structure
 
-Usage : AnalyzerResultFactory(data_mode=None, time_mode=None)
+Usage : analyzer_result_factory(data_mode=None, time_mode=None)
 
 Four different *time_mode* can be specified :
 
@@ -22,15 +22,15 @@ Two different *data_mode* can be specified :
 - 'label' : Data are returned as label indexes (specified by the label_metadata key)
 
 
-See : :func:`timeside.analyzer.core.AnalyzerResultFactory`, :class:`timeside.analyzer.core.AnalyzerResult`
+See : :func:`timeside.analyzer.core.analyzer_result_factory`, :class:`timeside.analyzer.core.AnalyzerResult`
 
 Default
 =======
 
 Create a new analyzer result without arguments
 
-   >>> from timeside.analyzer.core import AnalyzerResultFactory
-   >>> res = AnalyzerResultFactory()
+   >>> from timeside.analyzer.core import analyzer_result_factory
+   >>> res = analyzer_result_factory()
 
 This default result has all the metadata and dataObject attribute
 
@@ -60,7 +60,7 @@ Four different time_mode can be specified :
 Framewise
 ---------
 
->>> res = AnalyzerResultFactory(time_mode='framewise')
+>>> res = analyzer_result_factory(time_mode='framewise')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'parameters']
 
@@ -70,7 +70,7 @@ Global
 No frame metadata information is needed for these modes.
 The 'frame_metadata' key/attribute is deleted.
 
->>> res = AnalyzerResultFactory(time_mode='global')
+>>> res = analyzer_result_factory(time_mode='global')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
@@ -79,7 +79,7 @@ DataObject(value=array([], dtype=float64))
 Segment
 -------
 
->>> res = AnalyzerResultFactory(time_mode='segment')
+>>> res = analyzer_result_factory(time_mode='segment')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
@@ -88,7 +88,7 @@ DataObject(value=array([], dtype=float64), time=array([], dtype=float64), durati
 Event
 -----
 
->>> res = AnalyzerResultFactory(time_mode='event')
+>>> res = analyzer_result_factory(time_mode='event')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
@@ -105,7 +105,7 @@ Value
 -----
 The label_metadata key is deleted.
 
->>> res = AnalyzerResultFactory(data_mode='value')
+>>> res = analyzer_result_factory(data_mode='value')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'parameters']
 
@@ -116,7 +116,7 @@ DataObject(value=array([], dtype=float64))
 
 Label
 -----
->>> res = AnalyzerResultFactory(data_mode='label')
+>>> res = analyzer_result_factory(data_mode='label')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'label_metadata', 'parameters']
 

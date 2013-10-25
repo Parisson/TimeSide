@@ -14,7 +14,7 @@ class TestAnalyzerResult(TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = AnalyzerResultFactory(data_mode='value', time_mode='framewise')
+        self.result = analyzer_result_factory(data_mode='value', time_mode='framewise')
         from datetime import datetime
         self.result.id_metadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
                                        version=__version__,

@@ -517,7 +517,7 @@ class AnalyzerResult(MetadataObject):
 
         data_mode_child = root.find('data_mode')
         time_mode_child = root.find('time_mode')
-        result = AnalyzerResultFactory(data_mode=data_mode_child.text,
+        result = analyzer_result_factory(data_mode=data_mode_child.text,
                                 time_mode=time_mode_child.text)
         for child in root:
             key = child.tag
@@ -690,7 +690,7 @@ class SegmentLabelResult(LabelObject, SegmentObject):
     pass
 
 
-def AnalyzerResultFactory(data_mode='value', time_mode='framewise'):
+def analyzer_result_factory(data_mode='value', time_mode='framewise'):
     '''
     Analyzer result Factory function
     '''
@@ -818,7 +818,7 @@ class AnalyzerResultContainer(dict):
         results = AnalyzerResultContainer()
         for res_json in results_json:
 
-            res = AnalyzerResultFactory(data_mode=res_json['data_mode'],
+            res = analyzer_result_factory(data_mode=res_json['data_mode'],
                                         time_mode=res_json['time_mode'])
             for key in res_json.keys():
                 if key not in ['data_mode', 'time_mode']:
@@ -854,7 +854,7 @@ class AnalyzerResultContainer(dict):
         results_yaml = yaml.load(yaml_str)
         results = AnalyzerResultContainer()
         for res_yaml in results_yaml:
-            res = AnalyzerResultFactory(data_mode=res_yaml['data_mode'],
+            res = analyzer_result_factory(data_mode=res_yaml['data_mode'],
                                         time_mode=res_yaml['time_mode'])
             for key in res_yaml.keys():
                 if key not in ['data_mode', 'time_mode']:
@@ -915,7 +915,7 @@ class AnalyzerResultContainer(dict):
         try:
             for (group_name, group) in h5_file.items():
 
-                result = AnalyzerResultFactory(data_mode=group.attrs['data_mode'],
+                result = analyzer_result_factory(data_mode=group.attrs['data_mode'],
                                         time_mode=group.attrs['time_mode'])
                 # Read Sub-Group
                 for subgroup_name, subgroup in group.items():
@@ -1004,7 +1004,7 @@ class Analyzer(Processor):
 
         from datetime import datetime
 
-        result = AnalyzerResultFactory(data_mode=data_mode, time_mode=time_mode)
+        result = analyzer_result_factory(data_mode=data_mode, time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
