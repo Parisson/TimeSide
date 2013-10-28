@@ -24,7 +24,7 @@ from timeside.api import IGrapher
 from timeside.grapher.core import *
 
 
-class Spectrogram(Grapher):
+class SpectrogramLog(Grapher):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
 
@@ -32,7 +32,7 @@ class Spectrogram(Grapher):
 
     @interfacedoc
     def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
-        super(Spectrogram, self).__init__(width, height, bg_color, color_scheme)
+        super(SpectrogramLog, self).__init__(width, height, bg_color, color_scheme)
         self.colors = default_color_schemes[color_scheme]['spectrogram']
         self.pixels = []
         self.y_to_bin = []
@@ -45,11 +45,11 @@ class Spectrogram(Grapher):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectrogram"
+        return "SpectrogramLog"
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(Spectrogram, self).setup(channels, samplerate, blocksize, totalframes)
+        super(SpectrogramLog, self).setup(channels, samplerate, blocksize, totalframes)
         self.image = Image.new("P", (self.image_height, self.image_width))
         self.image.putpalette(interpolate_colors(self.colors, True))
         self.set_scale()

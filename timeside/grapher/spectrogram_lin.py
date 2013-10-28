@@ -22,10 +22,10 @@
 from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
 from timeside.grapher.core import *
-from timeside.grapher.spectrogram import Spectrogram
+from timeside.grapher.spectrogram_log import SpectrogramLog
 
 
-class SpectrogramLinear(Spectrogram):
+class SpectrogramLinear(SpectrogramLog):
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
 

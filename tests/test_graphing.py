@@ -158,34 +158,63 @@ class TestGraphing(TestCase):
         self.image = "/tmp/test_waveform_contour_wh_sweep_ogg.png"
         self.grapher = WaveformContourWhite(width=1024, height=256, bg_color=(255,255,255), color_scheme='default')
 
-    # SPECTROGRAMS
+    # LOG SPECTROGRAMS
     def testWav2Spectrogram(self):
         "Test WAV to Spectrogram"
-        from timeside.grapher.spectrogram import Spectrogram
+        from timeside.grapher.spectrogram_log import SpectrogramLog
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
-        self.image = "/tmp/test_spectrogram_sweep_wav.png"
-        self.grapher = Spectrogram(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.image = "/tmp/test_spectrogram_log_sweep_wav.png"
+        self.grapher = SpectrogramLog(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
 
-    def testMp32Spectrogram(self):
-        "Test MP3 to Spectrogram"
-        from timeside.grapher.spectrogram import Spectrogram
+    def testMp32SpectrogramLog(self):
+        "Test MP3 to SpectrogramLog"
+        from timeside.grapher.spectrogram_log import SpectrogramLog
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
-        self.image = "/tmp/test_spectrogram_sweep_mp3.png"
-        self.grapher = Spectrogram(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.image = "/tmp/test_spectrogram_log_sweep_mp3.png"
+        self.grapher = SpectrogramLog(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
 
-    def testFlac2Spectrogram(self):
-        "Test FLAC to Spectrogram"
-        from timeside.grapher.spectrogram import Spectrogram
+    def testFlac2SpectrogramLog(self):
+        "Test FLAC to SpectrogramLog"
+        from timeside.grapher.spectrogram_log import SpectrogramLog
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
-        self.image = "/tmp/test_spectrogram_sweep_flac.png"
-        self.grapher = Spectrogram(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.image = "/tmp/test_spectrogram_log_sweep_flac.png"
+        self.grapher = SpectrogramLog(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
 
-    def testOgg2Spectrogram(self):
-        "Test OGG to Spectrogram"
-        from timeside.grapher.spectrogram import Spectrogram
+    def testOgg2SpectrogramLog(self):
+        "Test OGG to SpectrogramLog"
+        from timeside.grapher.spectrogram_log import SpectrogramLog
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
-        self.image = "/tmp/test_spectrogram_sweep_ogg.png"
-        self.grapher = Spectrogram(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.image = "/tmp/test_spectrogram_log_sweep_ogg.png"
+        self.grapher = SpectrogramLog(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+
+    # LIN SPECTROGRAMS
+    def testWav2Spectrogram(self):
+        "Test WAV to SpectrogramLinear"
+        from timeside.grapher.spectrogram_lin import SpectrogramLinear
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
+        self.image = "/tmp/test_spectrogram_lin_sweep_wav.png"
+        self.grapher = SpectrogramLinear(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+
+    def testMp32SpectrogramLinear(self):
+        "Test MP3 to SpectrogramLinear"
+        from timeside.grapher.spectrogram_lin import SpectrogramLinear
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
+        self.image = "/tmp/test_spectrogram_lin_sweep_mp3.png"
+        self.grapher = SpectrogramLinear(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+
+    def testFlac2SpectrogramLinear(self):
+        "Test FLAC to SpectrogramLinear"
+        from timeside.grapher.spectrogram_lin import SpectrogramLinear
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
+        self.image = "/tmp/test_spectrogram_lin_sweep_flac.png"
+        self.grapher = SpectrogramLinear(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+
+    def testOgg2SpectrogramLinear(self):
+        "Test OGG to SpectrogramLinear"
+        from timeside.grapher.spectrogram_lin import SpectrogramLinear
+        self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
+        self.image = "/tmp/test_spectrogram_lin_sweep_ogg.png"
+        self.grapher = SpectrogramLinear(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
