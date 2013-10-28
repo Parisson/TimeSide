@@ -19,7 +19,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
 from timeside.grapher.core import *
 
@@ -44,10 +44,10 @@ class Spectrogram(Grapher):
         y_max = math.log10(f_max)
         for y in range(self.image_height):
             freq = math.pow(10.0, y_min + y / (self.image_height - 1.0) *(y_max - y_min))
-            bin = freq / 22050.0 * (self.fft_size/2 + 1)
-            if bin < self.fft_size/2:
-                alpha = bin - int(bin)
-                self.y_to_bin.append((int(bin), alpha * 255))
+            fft_bin = freq / 22050.0 * (self.fft_size/2 + 1)
+            if fft_bin < self.fft_size/2:
+                alpha = fft_bin - int(fft_bin)
+                self.y_to_bin.append((int(fft_bin), alpha * 255))
 
     @staticmethod
     @interfacedoc
@@ -62,8 +62,6 @@ class Spectrogram(Grapher):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate, blocksize, totalframes)
-        self.spectrum = Spectrum(self.fft_size, self.totalframes, self.samplerate,
-                                 self.lower_freq, self.higher_freq, numpy.hanning)
         self.image = Image.new("P", (self.image_height, self.image_width))
         self.image.putpalette(interpolate_colors(self.colors, True))
 
@@ -76,9 +74,9 @@ class Spectrogram(Grapher):
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
-            buffer = frames[:,0].copy()
-            buffer.shape = (len(buffer),1)
-            for samples, end in self.pixels_adapter.process(buffer, eod):
+            chunk = frames[:,0].copy()
+            chunk.shape = (len(chunk),1)
+            for samples, end in self.pixels_adapter.process(chunk, eod):
                 if self.pixel_cursor < self.image_width:
                     (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
                     self.draw_spectrum(self.pixel_cursor, db_spectrum)

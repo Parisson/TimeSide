@@ -22,7 +22,7 @@
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.api import IGrapher
 from timeside.grapher.core import *
-from timeside.grapher.waveform_contour_bk import WaveformContourBlack
+from timeside.grapher.waveform_contour_black import WaveformContourBlack
 
 
 class WaveformContourWhite(WaveformContourBlack):

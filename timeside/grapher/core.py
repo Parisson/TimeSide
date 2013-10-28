@@ -37,27 +37,31 @@ from utils import *
 class Spectrum(object):
     """ FFT based frequency analysis of audio frames."""
 
-    def __init__(self, fft_size, totalframes, samplerate, lower, higher, window_function=numpy.hanning):
+    def __init__(self, fft_size, samplerate, blocksize, totalframes, lower, higher, window_function=numpy.hanning):
         self.fft_size = fft_size
         self.window = window_function(self.fft_size)
         self.window_function = window_function
         self.spectrum_range = None
         self.lower = lower
         self.higher = higher
+        self.blocksize = blocksize
         self.lower_log = math.log10(self.lower)
         self.higher_log = math.log10(self.higher)
         self.clip = lambda val, low, high: min(high, max(low, val))
         self.totalframes = totalframes
         self.samplerate = samplerate
+        self.window_function = window_function
+        self.window = self.window_function(self.blocksize)
 
     def process(self, frames, eod, spec_range=120.0):
         """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
         FFT window sizes are adatable to the input frame size."""
 
         samples = frames[:,0]
-        nsamples = len(samples)
-        window = self.window_function(nsamples)
-        samples *= window
+        nsamples = len(frames[:,0])
+        if nsamples != self.blocksize:
+            self.window = self.window_function(nsamples)
+        samples *= self.window
 
         while nsamples > self.fft_size:
             self.fft_size = 2 * self.fft_size
@@ -67,11 +71,11 @@ class Spectrum(object):
             zeros_n = numpy.zeros(self.fft_size/2-int(nsamples/2)-1)
         else:
             zeros_n = numpy.zeros(self.fft_size/2-int(nsamples/2))
-
         samples = numpy.concatenate((zeros_p, samples, zeros_n), axis=0)
 
         fft = numpy.fft.fft(samples)
-        spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(nsamples) # normalized abs(FFT) between 0 and 1
+        # normalized abs(FFT) between 0 and 1
+        spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(nsamples)
         length = numpy.float64(spectrum.shape[0])
 
         # scale the db spectrum from [- spec_range db ... 0 db] > [0..1]
@@ -83,7 +87,6 @@ class Spectrum(object):
             # calculate the spectral centroid
             if self.spectrum_range == None:
                 self.spectrum_range = numpy.arange(length)
-
             spectral_centroid = (spectrum * self.spectrum_range).sum() / (energy * (length - 1)) * self.samplerate * 0.5
             # clip > log10 > scale between 0 and 1
             spectral_centroid = (math.log10(self.clip(spectral_centroid, self.lower, self.higher)) - \
@@ -97,13 +100,13 @@ class Grapher(Processor):
     Generic abstract class for the graphers
     '''
 
-    fft_size = 0x400
+    fft_size = 0x800
     frame_cursor = 0
     pixel_cursor = 0
     lower_freq = 200
     higher_freq = 22050
 
-    def __init__(self, width=1024, height=256, bg_color=(255,255,255), color_scheme='default'):
+    def __init__(self, width=1024, height=256, bg_color=None, color_scheme='default'):
         self.bg_color = bg_color
         self.color_scheme = color_scheme
         self.graph = None
@@ -135,7 +138,7 @@ class Grapher(Processor):
         self.buffer_size = int(round(self.samples_per_pixel, 0))
         self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
         self.pixels_adapter_totalframes = self.pixels_adapter.blocksize(self.totalframes)
-        self.spectrum = Spectrum(self.fft_size, self.totalframes, self.samplerate,
+        self.spectrum = Spectrum(self.fft_size, self.samplerate, self.blocksize, self.totalframes,
                                  self.lower_freq, self.higher_freq, numpy.hanning)
         self.pixel = self.image.load()
         self.draw = ImageDraw.Draw(self.image)
@@ -143,23 +146,22 @@ class Grapher(Processor):
     def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
         self.image = im_watermark(text, text, color=color, opacity=opacity, margin=margin)
 
-    def draw_centroid_peaks(self, x, peaks, spectral_centroid):
-        """ draw 2 peaks at x using the spectral_centroid for color """
+    def draw_peaks(self, x, peaks, line_color):
+        """Draw 2 peaks at x"""
 
         y1 = self.image_height * 0.5 - peaks[0] * (self.image_height - 4) * 0.5
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
-        line_color = self.color_lookup[int(spectral_centroid*255.0)]
 
         if self.previous_y:
             self.draw.line([self.previous_x, self.previous_y, x, y1, x, y2], line_color)
         else:
             self.draw.line([x, y1, x, y2], line_color)
 
-        self.previous_x, self.previous_y = x, y2
         self.draw_anti_aliased_pixels(x, y1, y2, line_color)
+        self.previous_x, self.previous_y = x, y2
 
-    def draw_simple_peaks(self, x, peaks, line_color):
-        """ draw 2 peaks at x using the spectral_centroid for color """
+    def draw_peaks_inverted(self, x, peaks, line_color):
+        """Draw 2 inverted peaks at x"""
 
         y1 = self.image_height * 0.5 - peaks[0] * (self.image_height - 4) * 0.5
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
@@ -173,6 +175,7 @@ class Grapher(Processor):
                 self.draw.line((x, self.image_height , x, y1), line_color)
         else:
             self.draw.line((x, 0, x, self.image_height), line_color)
+        self.draw_anti_aliased_pixels(x, y1, y2, line_color)
         self.previous_x, self.previous_y = x, y1
 
     def draw_anti_aliased_pixels(self, x, y1, y2, color):
@@ -232,7 +235,7 @@ class Grapher(Processor):
             #contour = contour*(1.0-float(i)/self.ndiv)
             #contour = contour*(1-float(i)/self.ndiv)
 
-            # Scaled
+            # Cosinus
             contour = contour*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi
             #contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)
             #contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))

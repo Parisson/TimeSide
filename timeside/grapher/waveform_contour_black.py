@@ -33,10 +33,8 @@ class WaveformContourBlack(Waveform):
     def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
         super(WaveformContourBlack, self).__init__(width, height, bg_color, color_scheme)
         self.contour = numpy.zeros(self.image_width)
-        self.centroids = numpy.zeros(self.image_width)
         self.ndiv = 4
         self.x = numpy.r_[0:self.image_width-1:1]
-        self.dx1 = self.x[1]-self.x[0]
         self.symetry = True
         self.color_offset = 160
 
@@ -54,10 +52,6 @@ class WaveformContourBlack(Waveform):
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(WaveformContourBlack, self).setup(channels, samplerate, blocksize, totalframes)
 
-    def get_peaks_contour(self, x, peaks, spectral_centroid=None):
-        self.contour[x] = numpy.max(peaks)
-        self.centroids[x] = spectral_centroid
-
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
@@ -65,7 +59,7 @@ class WaveformContourBlack(Waveform):
             buffer.shape = (len(buffer),1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width:
-                    self.get_peaks_contour(self.pixel_cursor, peaks(samples))
+                    self.contour[self.pixel_cursor] = numpy.max(peaks(samples))
                     self.pixel_cursor += 1
         if eod:
             self.draw_peaks_contour()

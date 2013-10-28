@@ -34,6 +34,8 @@ class WaveformCentroid(Waveform):
     @interfacedoc
     def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
         super(WaveformCentroid, self).__init__(width, height, bg_color, color_scheme)
+        colors = default_color_schemes[color_scheme]['waveform']
+        self.color_lookup = interpolate_colors(colors)
 
     @staticmethod
     @interfacedoc
@@ -57,6 +59,7 @@ class WaveformCentroid(Waveform):
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width:
                     (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
-                    self.draw_centroid_peaks(self.pixel_cursor, peaks(samples), spectral_centroid)
+                    line_color = self.color_lookup[int(spectral_centroid*255.0)]
+                    self.draw_peaks(self.pixel_cursor, peaks(samples), line_color)
                     self.pixel_cursor += 1
         return frames, eod
