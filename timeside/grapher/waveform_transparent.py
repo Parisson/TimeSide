@@ -60,7 +60,7 @@ class WaveformTransparent(Waveform):
                     self.draw_peaks_inverted(self.pixel_cursor, peaks(samples), self.line_color)
                     self.pixel_cursor += 1
             if self.pixel_cursor == self.image_width-1:
-                self.draw_peaks(self.pixel_cursor, peaks(samples), self.bg_color)
+                self.draw_peaks_inverted(self.pixel_cursor, peaks(samples), self.line_color)
                 self.pixel_cursor += 1
         return frames, eod
 
