@@ -24,22 +24,24 @@ from timeside.api import IGrapher
 from timeside.grapher.core import *
 
 
-class WaveformSimple(Processor):
+class Waveform(Grapher):
+    """ Builds a PIL image representing a waveform of the audio stream.
+    Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
+    """
+
     implements(IGrapher)
 
-    FFT_SIZE = 0x400
-
     @interfacedoc
-    def __init__(self, width=572, height=74, bg_color=None, color_scheme='awdio'):
-        self.width = width
-        self.height = height
-        self.bg_color = bg_color
-        self.color_scheme = color_scheme
+    def __init__(self, width=1024, height=256, bg_color=(255,255,255), color_scheme='default'):
+        super(Waveform, self).__init__(width, height, bg_color, color_scheme)
+        self.line_color = (0,0,0)
+        colors = default_color_schemes[color_scheme]['waveform']
+        self.color_lookup = interpolate_colors(colors)
 
     @staticmethod
     @interfacedoc
     def id():
-        return "waveform_simple"
+        return "waveform"
 
     @staticmethod
     @interfacedoc
@@ -47,28 +49,28 @@ class WaveformSimple(Processor):
         return "Waveform simple"
 
     @interfacedoc
-    def set_colors(self, background, scheme):
-        self.bg_color = background
-        self.color_scheme = scheme
-
-    @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(WaveformSimple, self).setup(channels, samplerate, blocksize, totalframes)
-        self.graph = WaveformImageSimple(self.width, self.height, self.totalframes(),
-                                         self.samplerate(), self.FFT_SIZE,
-                                         bg_color=self.bg_color,
-                                         color_scheme=self.color_scheme)
+        super(Waveform, self).setup(channels, samplerate, blocksize, totalframes)
 
     @interfacedoc
     def process(self, frames, eod=False):
-        self.graph.process(frames, eod)
+        if len(frames) != 1:
+            buffer = frames[:,0]
+            buffer.shape = (len(buffer),1)
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width-1:
+                    self.draw_simple_peaks(self.pixel_cursor, peaks(samples), self.line_color)
+                    self.pixel_cursor += 1
+            if self.pixel_cursor == self.image_width-1:
+                self.draw_simple_peaks(self.pixel_cursor, peaks(samples), self.line_color)
+                self.pixel_cursor += 1
         return frames, eod
 
     @interfacedoc
     def render(self, output):
         if output:
-            self.graph.save(output)
-        return self.graph.image
-
-    def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
-        self.graph.watermark(text, color=color, opacity=opacity, margin=margin)
+            a = 1
+            for x in range(self.image_width):
+                self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
+            self.image.save(output)
+        return self.image

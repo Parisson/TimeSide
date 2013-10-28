@@ -22,54 +22,41 @@
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.api import IGrapher
 from timeside.grapher.core import *
+from timeside.grapher.waveform_simple import Waveform
 
 
-class Waveform(Processor):
+class WaveformCentroid(Waveform):
+    """ Builds a PIL image representing a waveform of the audio stream.
+    Peaks are colored relatively to the spectral centroids of each frame buffer. """
+
     implements(IGrapher)
-
-    FFT_SIZE = 0x400
 
     @interfacedoc
     def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
-        self.width = width
-        self.height = height
-        self.bg_color = bg_color
-        self.color_scheme = color_scheme
-        self.graph = None
+        super(WaveformCentroid, self).__init__(width, height, bg_color, color_scheme)
 
     @staticmethod
     @interfacedoc
     def id():
-        return "waveform"
+        return "waveform_centroid"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Waveform"
-
-    @interfacedoc
-    def set_colors(self, background, scheme):
-        self.bg_color = background
-        self.color_scheme = scheme
+        return "Spectral centroid waveform"
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(Waveform, self).setup(channels, samplerate, blocksize, totalframes)
-        self.graph = WaveformImage(self.width, self.height, totalframes,
-                                    self.samplerate(), self.FFT_SIZE,
-                                    bg_color=self.bg_color,
-                                    color_scheme=self.color_scheme)
+        super(WaveformCentroid, self).setup(channels, samplerate, blocksize, totalframes)
 
     @interfacedoc
     def process(self, frames, eod=False):
-        self.graph.process(frames, eod)
+        if len(frames) != 1:
+            buffer = frames[:,0].copy()
+            buffer.shape = (len(buffer),1)
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width:
+                    (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
+                    self.draw_centroid_peaks(self.pixel_cursor, peaks(samples), spectral_centroid)
+                    self.pixel_cursor += 1
         return frames, eod
-
-    @interfacedoc
-    def render(self, output=None):
-        if output:
-            self.graph.save(output)
-        return self.graph.image
-
-    def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
-        self.graph.watermark(text, color=color, opacity=opacity, margin=margin)

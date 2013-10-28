@@ -193,10 +193,12 @@ class FixedSizeInputAdapter(object):
             yield block, True
             self.len = 0
 
+
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
     any of the descendants of this interface."""
     return implementations(interface, recurse)
+
 
 def get_processor(processor_id):
     """Return a processor by its id"""
@@ -268,8 +270,6 @@ class ProcessPipe(object):
 
         for item in items:
             item.release()
-
-        #return self
 
     @property
     def results(self):

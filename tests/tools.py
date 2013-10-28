@@ -1,6 +1,7 @@
 import os
 import urllib
 
+
 def check_samples():
     url = 'http://github.com/yomguy/timeside-samples/raw/master/samples/'
     samples = ['guitar.wav', 'sweep.wav', 'sweep_mono.wav', 'sweep_32000.wav', 'sweep.flac', 'sweep.ogg', 'sweep.mp3', 'sweep_source.wav']

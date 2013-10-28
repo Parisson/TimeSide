@@ -63,41 +63,6 @@ def interpolate_colors(colors, flat=False, num_colors=256):
     return palette
 
 
-class Noise(object):
-    """A class that mimics audiolab.sndfile but generates noise instead of reading
-    a wave file. Additionally it can be told to have a "broken" header and thus crashing
-    in the middle of the file. Also useful for testing ultra-short files of 20 samples."""
-
-    def __init__(self, num_frames, has_broken_header=False):
-        self.seekpoint = 0
-        self.num_frames = num_frames
-        self.has_broken_header = has_broken_header
-
-    def seek(self, seekpoint):
-        self.seekpoint = seekpoint
-
-    def get_nframes(self):
-        return self.num_frames
-
-    def get_samplerate(self):
-        return 44100
-
-    def get_channels(self):
-        return 1
-
-    def read_frames(self, frames_to_read):
-        if self.has_broken_header and self.seekpoint + frames_to_read > self.num_frames / 2:
-            raise IOError()
-
-        num_frames_left = self.num_frames - self.seekpoint
-        if num_frames_left < frames_to_read:
-            will_read = num_frames_left
-        else:
-            will_read = frames_to_read
-        self.seekpoint += will_read
-        return numpy.random.random(will_read)*2 - 1
-
-
 def downsample(vector, factor):
     """
     downsample(vector, factor):
@@ -211,3 +176,35 @@ def im_watermark(im, inputtext, font=None, color=None, opacity=.6, margin=(30,30
     if opacity != 1:
         textlayer = reduce_opacity(textlayer,opacity)
     return Image.composite(textlayer, im, textlayer)
+
+
+def peaks(samples):
+    """ Find the minimum and maximum peak of the samples.
+    Returns that pair in the order they were found.
+    So if min was found first, it returns (min, max) else the other way around. """
+    max_index = numpy.argmax(samples)
+    max_value = samples[max_index]
+
+    min_index = numpy.argmin(samples)
+    min_value = samples[min_index]
+
+    if min_index < max_index:
+        return (min_value, max_value)
+    else:
+        return (max_value, min_value)
+
+
+def color_from_value(self, value):
+    """ given a value between 0 and 1, return an (r,g,b) tuple """
+    return ImageColor.getrgb("hsl(%d,%d%%,%d%%)" % (int( (1.0 - value) * 360 ), 80, 50))
+
+
+def mean(samples):
+    return numpy.mean(samples)
+
+
+def normalize(contour):
+    contour = contour-min(contour)
+    return contour/max(contour)
+
+

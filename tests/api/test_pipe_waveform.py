@@ -9,7 +9,7 @@ from timeside.grapher import *
 sample_dir = '../samples'
 img_dir = '../results/img'
 if not os.path.exists(img_dir):
-    os.mkdir(img_dir)
+    os.makedirs(img_dir)
 
 test_dict = {'sweep.wav': 'waveform_wav.png',
             'sweep.flac': 'waveform_flac.png',
@@ -22,10 +22,8 @@ for source, image in test_dict.iteritems():
     image = img_dir + os.sep + image
     print 'Test : decoder(%s) | waveform (%s)' % (source, image)
     decoder  = FileDecoder(audio)
-    waveform = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+    waveform = Waveform(width=1024, height=256, bg_color=(255,255,255), color_scheme='default')
     (decoder | waveform).run()
-    print 'frames per pixel = ', waveform.graph.samples_per_pixel
+    print 'frames per pixel = ', waveform.samples_per_pixel
     print "render waveform to: %s" %  image
     waveform.render(image)
-
-

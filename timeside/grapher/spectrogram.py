@@ -24,18 +24,30 @@ from timeside.api import IGrapher
 from timeside.grapher.core import *
 
 
-class Spectrogram(Processor):
-    implements(IGrapher)
+class Spectrogram(Grapher):
+    """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
+    Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
 
-    FFT_SIZE = 0x400
+    implements(IGrapher)
 
     @interfacedoc
     def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
-        self.width = width
-        self.height = height
-        self.bg_color = bg_color
-        self.color_scheme = color_scheme
-        self.graph = None
+        super(Spectrogram, self).__init__(width, height, bg_color, color_scheme)
+        self.colors = default_color_schemes[color_scheme]['spectrogram']
+        self.pixels = []
+
+        # generate the lookup which translates y-coordinate to fft-bin
+        self.y_to_bin = []
+        f_min = float(self.lower_freq)
+        f_max = float(self.higher_freq)
+        y_min = math.log10(f_min)
+        y_max = math.log10(f_max)
+        for y in range(self.image_height):
+            freq = math.pow(10.0, y_min + y / (self.image_height - 1.0) *(y_max - y_min))
+            bin = freq / 22050.0 * (self.fft_size/2 + 1)
+            if bin < self.fft_size/2:
+                alpha = bin - int(bin)
+                self.y_to_bin.append((int(bin), alpha * 255))
 
     @staticmethod
     @interfacedoc
@@ -48,28 +60,32 @@ class Spectrogram(Processor):
         return "Spectrogram"
 
     @interfacedoc
-    def set_colors(self, background, scheme):
-        self.bg_color = background
-        self.color_scheme = scheme
-
-    @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate, blocksize, totalframes)
-        self.graph = SpectrogramImage(self.width, self.height, totalframes,
-                                    self.samplerate(), self.FFT_SIZE,
-                                    bg_color=self.bg_color, color_scheme=self.color_scheme)
+        self.spectrum = Spectrum(self.fft_size, self.totalframes, self.samplerate,
+                                 self.lower_freq, self.higher_freq, numpy.hanning)
+        self.image = Image.new("P", (self.image_height, self.image_width))
+        self.image.putpalette(interpolate_colors(self.colors, True))
+
+    def draw_spectrum(self, x, spectrum):
+        for (index, alpha) in self.y_to_bin:
+            self.pixels.append( int( ((255.0-alpha) * spectrum[index] + alpha * spectrum[index + 1] )) )
+        for y in range(len(self.y_to_bin), self.image_height):
+            self.pixels.append(0)
 
     @interfacedoc
     def process(self, frames, eod=False):
-        self.graph.process(frames, eod)
+        if len(frames) != 1:
+            buffer = frames[:,0].copy()
+            buffer.shape = (len(buffer),1)
+            for samples, end in self.pixels_adapter.process(buffer, eod):
+                if self.pixel_cursor < self.image_width:
+                    (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
+                    self.draw_spectrum(self.pixel_cursor, db_spectrum)
+                    self.pixel_cursor += 1
         return frames, eod
 
-    @interfacedoc
-    def render(self, output=None):
-        if output:
-            self.graph.save(output)
-        return self.graph.image
-
-    def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
-        self.graph.watermark(text, color=color, opacity=0.9, margin=margin)
-
+    def render(self, filename):
+        """ Apply last 2D transforms and write all pixels to the file. """
+        self.image.putdata(self.pixels)
+        self.image.transpose(Image.ROTATE_90).save(filename)
