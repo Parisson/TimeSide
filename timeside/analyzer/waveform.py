@@ -60,14 +60,9 @@ class Waveform(Analyzer):
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.input_blocksize):
             self.values.append(samples)
-
         return frames, eod
 
     def post_process(self):
-        # set Result
         waveform = self.new_result(data_mode='value', time_mode='framewise')
-
-        # Set Data
         waveform.data_object.value = np.asarray(self.values).flatten()
-
         self._results.add(waveform)

@@ -73,13 +73,8 @@ class AubioMelEnergy(Analyzer):
         return frames, eod
 
     def post_process(self):
-
         melenergy = self.new_result(data_mode='value', time_mode='framewise')
-
-        # Metadata
         melenergy.parameters = dict(n_filters=self.n_filters,
                                     n_coeffs=self.n_coeffs)
-        # Set Data
         melenergy.data_object.value = self.melenergy_results
-
         self._results.add(melenergy)

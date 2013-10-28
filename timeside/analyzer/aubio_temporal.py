@@ -94,7 +94,6 @@ class AubioTemporal(Analyzer):
 
         onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.data_object.time = self.onsets
-
         onsets.label_metadata.label = {1: 'Onset'}
 
         self._results.add(onsets)

@@ -61,17 +61,10 @@ class Spectrogram(Analyzer):
         for samples in downsample_blocking(frames, self.input_stepsize):
             #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
             self.values.append(np.abs(np.fft.rfft(samples, self.FFT_SIZE)))
-
         return frames, eod
 
     def post_process(self):
-        # set Result
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
-
-        # parameters :
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
-
-        # Set Data
         spectrogram.data_object.value = self.values
-
         self._results.add(spectrogram)

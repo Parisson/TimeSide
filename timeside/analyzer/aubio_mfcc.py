@@ -74,11 +74,8 @@ class AubioMfcc(Analyzer):
         return frames, eod
 
     def post_process(self):
-        # MFCC
         mfcc = self.new_result(data_mode='value', time_mode='framewise')
-
         mfcc.parameters = dict(n_filters=self.n_filters,
                                n_coeffs=self.n_coeffs)
-
         mfcc.data_object.value = self.mfcc_results
         self._results.add(mfcc)

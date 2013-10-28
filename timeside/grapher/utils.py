@@ -104,7 +104,6 @@ def smooth(x, window_len=10, window='hanning'):
     numpy.hanning, numpy.hamming, numpy.bartlett, numpy.blackman, numpy.convolve
     scipy.signal.lfilter
 
-
     Examples
     --------
 
@@ -125,20 +124,16 @@ def smooth(x, window_len=10, window='hanning'):
 
     # TODO: the window parameter could be the window itself if an array instead of a string
 
-
     if x.ndim != 1:
         raise ValueError, "smooth only accepts 1 dimension arrays."
-
     if x.size < window_len:
         raise ValueError, "Input vector needs to be bigger than window size."
-
     if window_len < 3:
         return x
-
     if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
         raise ValueError, "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
 
-    s=numpy.r_[2*x[0]-x[window_len:1:-1], x, 2*x[-1]-x[-1:-window_len:-1]]
+    s = numpy.r_[2*x[0]-x[window_len:1:-1], x, 2*x[-1]-x[-1:-window_len:-1]]
 
     if window == 'flat': #moving average
         w = numpy.ones(window_len,'d')
@@ -163,9 +158,7 @@ def reduce_opacity(im, opacity):
 
 
 def im_watermark(im, inputtext, font=None, color=None, opacity=.6, margin=(30,30)):
-    """
-    imprints a PIL image with the indicated text in lower-right corner
-    """
+    """imprints a PIL image with the indicated text in lower-right corner"""
     if im.mode != "RGBA":
         im = im.convert("RGBA")
     textlayer = Image.new("RGBA", im.size, (0,0,0,0))
@@ -206,5 +199,3 @@ def mean(samples):
 def normalize(contour):
     contour = contour-min(contour)
     return contour/max(contour)
-
-

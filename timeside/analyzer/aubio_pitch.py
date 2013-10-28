@@ -72,13 +72,10 @@ class AubioPitch(Analyzer):
         return frames, eod
 
     def post_process(self):
-        # set Result
         pitch = self.new_result(data_mode='value', time_mode='framewise')
 
         # parameters : None # TODO check with Piem "default" and "freq" in
         # setup
 
-        # Set Data
         pitch.data_object.value = self.pitches
-
         self._results.add(pitch)
