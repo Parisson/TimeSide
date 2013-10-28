@@ -19,28 +19,28 @@ class TestGraphing(TestCase):
         from timeside.grapher.waveform_simple import Waveform
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.wav")
         self.image = "/tmp/test_waveform_sweep_wav.png"
-        self.grapher = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.grapher = Waveform(width=1024, height=256, bg_color=(255,255,255), color_scheme='default')
 
     def testFlac2Waveform(self):
         "Test FLAC to Waveform"
         from timeside.grapher.waveform_simple import Waveform
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.flac")
         self.image = "/tmp/test_waveform_sweep_flac.png"
-        self.grapher = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.grapher = Waveform(width=1024, height=256, bg_color=(255,255,255), color_scheme='default')
 
     def testMp32Waveform(self):
         "Test MP3 to Waveform"
         from timeside.grapher.waveform_simple import Waveform
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.mp3")
         self.image = "/tmp/test_waveform_sweep_mp3.png"
-        self.grapher = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.grapher = Waveform(width=1024, height=256, bg_color=(255,255,255), color_scheme='default')
 
     def testOgg2Waveform(self):
         "Test OGG to Waveform"
         from timeside.grapher.waveform_simple import Waveform
         self.source = os.path.join (os.path.dirname(__file__),  "samples/sweep.ogg")
         self.image = "/tmp/test_waveform_sweep_ogg.png"
-        self.grapher = Waveform(width=1024, height=256, bg_color=(0,0,0), color_scheme='default')
+        self.grapher = Waveform(width=1024, height=256, bg_color=(255,255,255), color_scheme='default')
 
     # WAVEFORM CENTROID
     def testWav2WaveformCentroid(self):

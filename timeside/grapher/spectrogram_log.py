@@ -33,6 +33,7 @@ class SpectrogramLog(Grapher):
     @interfacedoc
     def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
         super(SpectrogramLog, self).__init__(width, height, bg_color, color_scheme)
+        self.lower_freq = 100
         self.colors = default_color_schemes[color_scheme]['spectrogram']
         self.pixels = []
         self.y_to_bin = []

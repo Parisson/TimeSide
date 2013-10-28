@@ -100,11 +100,10 @@ class Grapher(Processor):
     Generic abstract class for the graphers
     '''
 
-    fft_size = 0x800
+    fft_size = 0x1000
     frame_cursor = 0
     pixel_cursor = 0
-    lower_freq = 200
-    higher_freq = 22050
+    lower_freq = 20
 
     def __init__(self, width=1024, height=256, bg_color=None, color_scheme='default'):
         self.bg_color = bg_color
@@ -131,6 +130,7 @@ class Grapher(Processor):
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(Grapher, self).setup(channels, samplerate, blocksize, totalframes)
         self.samplerate = samplerate
+        self.higher_freq = self.samplerate/2
         self.blocksize = blocksize
         self.totalframes = totalframes
         self.image = Image.new("RGBA", (self.image_width, self.image_height), self.bg_color)
