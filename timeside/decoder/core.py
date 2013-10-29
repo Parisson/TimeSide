@@ -55,7 +55,7 @@ class FileDecoder(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "gstreamerdec"
+        return "gst_dec"
 
     def __init__(self, uri, start = 0, duration = None):
         '''
