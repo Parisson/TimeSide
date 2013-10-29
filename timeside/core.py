@@ -235,6 +235,14 @@ class ProcessPipe(object):
 
         return self
 
+    def __repr__(self):
+        pipe = ''
+        for item in self.processors:
+            pipe += item.id()
+            if item != self.processors[-1]:
+                pipe += ' | '
+        return pipe
+
     def run(self):
         """Setup/reset all processors in cascade and stream audio data along
         the pipe. Also returns the pipe itself."""
