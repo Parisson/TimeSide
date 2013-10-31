@@ -189,6 +189,7 @@ class IdMetadata(MetadataObject):
             date and time in ISO  8601 format YYYY-MM-DDTHH:MM:SS
         version : str
         author : str
+        uuid : str
     '''
     # TODO :
     # - (long) description --> à mettre dans l'API Processor
@@ -200,7 +201,8 @@ class IdMetadata(MetadataObject):
                                   ('description', None),
                                   ('date', None),
                                   ('version', None),
-                                  ('author', None)])
+                                  ('author', None),
+                                  ('uuid', None)])
 
     def __setattr__(self, name, value):
         if value is None:
@@ -1016,6 +1018,7 @@ class Analyzer(Processor):
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()
         result.id_metadata.unit = self.unit()
+        result.id_metadata.uuid = self.uuid()
 
         result.audio_metadata.uri = self.mediainfo()['uri']
         result.audio_metadata.start = self.mediainfo()['start']
