@@ -24,6 +24,7 @@ from timeside.exceptions import Error, ApiError
 import re
 import time
 import numpy
+import random
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
@@ -81,6 +82,7 @@ class Processor(Component):
         self.parents = []
         self.source_mediainfo = None
         self.pipe = None
+        self.UUID = "%08x" % random.getrandbits(32)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -136,6 +138,10 @@ class Processor(Component):
     @interfacedoc
     def mediainfo(self):
         return self.source_mediainfo
+
+    @interfacedoc
+    def uuid(self):
+        return self.UUID
 
     def __del__(self):
         self.release()

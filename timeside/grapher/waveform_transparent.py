@@ -24,6 +24,7 @@ from timeside.api import IGrapher
 from timeside.grapher.core import *
 from timeside.grapher.waveform_simple import Waveform
 
+
 class WaveformTransparent(Waveform):
     """ Builds a PIL image representing a waveform of the audio stream.
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.

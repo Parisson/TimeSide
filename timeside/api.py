@@ -96,11 +96,9 @@ class IProcessor(Interface):
         duration
         """
 
-    @property
-    def parents(self):
-        """
-        Return the processor's parents
-        """
+    @staticmethod
+    def uuid():
+        """Return the UUID of the processor"""
 
 
 class IEncoder(IProcessor):
