@@ -96,6 +96,11 @@ class IProcessor(Interface):
         duration
         """
 
+    @staticmethod
+    def uuid():
+        """Return the UUID of the processor"""
+
+
 class IEncoder(IProcessor):
     """Encoder driver interface. Each encoder is expected to support a specific
     format."""
