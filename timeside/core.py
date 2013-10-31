@@ -62,11 +62,25 @@ class MetaProcessor(MetaComponent):
 
 
 class Processor(Component):
-    """Base component class of all processors"""
+    """Base component class of all processors
+
+
+    Attributes:
+              parents :  List of parent Processors that must be processed
+                         before the current Processor
+              pipe :     The current ProcessPipe in which the Processor will run
+        """
     __metaclass__ = MetaProcessor
 
     abstract()
     implements(IProcessor)
+
+    def __init__(self):
+        super(Processor, self).__init__()
+
+        self.parents = []
+        self.source_mediainfo = None
+        self.pipe = None
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -204,23 +218,35 @@ def get_processor(processor_id):
     """Return a processor by its id"""
     if not _processors.has_key(processor_id):
         raise Error("No processor registered with id: '%s'"
-              % processor_id)
+                      % processor_id)
 
     return _processors[processor_id]
 
 
 class ProcessPipe(object):
-    """Handle a pipe of processors"""
+    """Handle a pipe of processors
+
+    Attributes:
+        processor: List of all processors in the Process pipe
+        results : Results Container for all the analyzers of the Pipe process
+"""
 
     def __init__(self, *others):
         self.processors = []
         self |= others
+
+        from timeside.analyzer.core import AnalyzerResultContainer
+        self.results = AnalyzerResultContainer()
+
+        for proc in self.processors:
+            proc.pipe = self
 
     def __or__(self, other):
         return ProcessPipe(self, other)
 
     def __ior__(self, other):
         if isinstance(other, Processor):
+            self |= other.parents
             self.processors.append(other)
         elif isinstance(other, ProcessPipe):
             self.processors.extend(other.processors)
@@ -248,22 +274,18 @@ class ProcessPipe(object):
         the pipe. Also returns the pipe itself."""
 
         source = self.processors[0]
-        items  = self.processors[1:]
+        items = self.processors[1:]
         source.setup()
 
         last = source
 
-        from timeside.analyzer.core import AnalyzerResultContainer
-        self._results = AnalyzerResultContainer()
-
         # setup/reset processors and configure properties throughout the pipe
         for item in items:
-            item.setup(channels = last.channels(),
-                       samplerate = last.samplerate(),
-                       blocksize = last.blocksize(),
-                       totalframes = last.totalframes())
+            item.setup(channels=last.channels(),
+                       samplerate=last.samplerate(),
+                       blocksize=last.blocksize(),
+                       totalframes=last.totalframes())
             item.source_mediainfo = source.mediainfo()
-            item._results = self._results
             last = item
 
         # now stream audio data along the pipe
@@ -279,10 +301,3 @@ class ProcessPipe(object):
         for item in items:
             item.release()
 
-    @property
-    def results(self):
-        """
-        Results Container for all the analyzers of the Pipe process
-        """
-        if hasattr(self, '_results'):
-            return self._results

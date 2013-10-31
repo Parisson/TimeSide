@@ -69,6 +69,7 @@ class FileDecoder(Processor):
             duration : float
                 duration of the segment in seconds
         '''
+        super(FileDecoder, self).__init__()
 
         # is this a file?
         import os.path

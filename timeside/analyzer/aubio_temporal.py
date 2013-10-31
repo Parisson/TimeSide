@@ -32,6 +32,7 @@ class AubioTemporal(Analyzer):
     implements(IAnalyzer)
 
     def __init__(self):
+        super(AubioTemporal, self).__init__()
         self.input_blocksize = 1024
         self.input_stepsize = 256
 
@@ -96,7 +97,7 @@ class AubioTemporal(Analyzer):
         onsets.data_object.time = self.onsets
         onsets.label_metadata.label = {1: 'Onset'}
 
-        self._results.add(onsets)
+        self.pipe.results.add(onsets)
 
         #---------------------------------
         #  Onset Rate
@@ -116,7 +117,7 @@ class AubioTemporal(Analyzer):
         else:
             onsetrate.data_object.value = []
 
-        self._results.add(onsetrate)
+        self.pipe.results.add(onsetrate)
 
         #---------------------------------
         #  Beats
@@ -140,7 +141,7 @@ class AubioTemporal(Analyzer):
 
         beats.label_metadata.label = {1: 'Beat'}
 
-        self._results.add(beats)
+        self.pipe.results.add(beats)
 
         #---------------------------------
         #  BPM
@@ -163,4 +164,4 @@ class AubioTemporal(Analyzer):
         else:
             bpm.data_object.value = []
 
-        self._results.add(bpm)
+        self.pipe.results.add(bpm)

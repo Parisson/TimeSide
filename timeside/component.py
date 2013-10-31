@@ -19,7 +19,7 @@
 
 
 # This file defines a generic object interface mechanism and
-# a way to determine which components implements a given interface.
+# a way to determine which components implements a given interface.
 #
 # For example, the following defines the Music class as implementing the
 # listenable interface.

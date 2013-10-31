@@ -27,11 +27,16 @@ import numpy as np
 
 
 class Spectrogram(Analyzer):
-    implements(IAnalyzer)  # TODO check if needed with inheritance
+    implements(IAnalyzer)
 
-    def __init__(self):
-        self.input_blocksize = 2048
-        self.input_stepsize = self.input_blocksize / 2
+    def __init__(self, blocksize=2048, stepsize=None):
+        super(Spectrogram, self).__init__()
+
+        self.input_blocksize = blocksize
+        if stepsize:
+            self.input_stepsize = stepsize
+        else:
+            self.input_stepsize = blocksize / 2
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -67,4 +72,4 @@ class Spectrogram(Analyzer):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
         spectrogram.data_object.value = self.values
-        self._results.add(spectrogram)
+        self.pipe.results.add(spectrogram)

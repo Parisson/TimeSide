@@ -32,6 +32,7 @@ class AubioMfcc(Analyzer):
     implements(IAnalyzer)
 
     def __init__(self):
+        super(AubioMfcc, self).__init__()
         self.input_blocksize = 1024
         self.input_stepsize = self.input_blocksize / 4
 
@@ -78,4 +79,4 @@ class AubioMfcc(Analyzer):
         mfcc.parameters = dict(n_filters=self.n_filters,
                                n_coeffs=self.n_coeffs)
         mfcc.data_object.value = self.mfcc_results
-        self._results.add(mfcc)
+        self.pipe.results.add(mfcc)

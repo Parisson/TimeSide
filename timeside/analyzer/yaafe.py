@@ -35,6 +35,8 @@ class Yaafe(Analyzer):
     implements(IAnalyzer)
 
     def __init__(self, yaafeSpecification=None):
+        super(Yaafe,self).__init__()
+
         # Check arguments
         if yaafeSpecification is None:
             yaafeSpecification = FeaturePlan(sample_rate=32000)
@@ -112,4 +114,4 @@ class Yaafe(Analyzer):
             result.data_object.value = self.yaafe_engine.readOutput(featName)
             # Store results in Container
             if len(result.data_object.value):
-                self._results.add(result)
+                self.pipe.results.add(result)

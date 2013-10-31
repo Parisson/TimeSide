@@ -518,7 +518,7 @@ class AnalyzerResult(MetadataObject):
         data_mode_child = root.find('data_mode')
         time_mode_child = root.find('time_mode')
         result = analyzer_result_factory(data_mode=data_mode_child.text,
-                                time_mode=time_mode_child.text)
+                                         time_mode=time_mode_child.text)
         for child in root:
             key = child.tag
             if key not in ['data_mode', 'time_mode']:
@@ -558,7 +558,6 @@ class AnalyzerResult(MetadataObject):
     @property
     def unit(self):
         return self.id_metadata.unit
-
 
 
 class ValueObject(AnalyzerResult):
@@ -955,6 +954,9 @@ class Analyzer(Processor):
     Generic class for the analyzers
     '''
 
+    def __init__(self):
+        super(Analyzer, self).__init__()
+
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Analyzer, self).setup(channels, samplerate,
@@ -971,7 +973,7 @@ class Analyzer(Processor):
     def results(self):
 
         return AnalyzerResultContainer(
-            [self._results[key] for key in self._results.keys()
+            [self.pipe.results[key] for key in self.pipe.results.keys()
              if key.split('.')[0] == self.id()])
 
     @staticmethod
@@ -1003,7 +1005,8 @@ class Analyzer(Processor):
 
         from datetime import datetime
 
-        result = analyzer_result_factory(data_mode=data_mode, time_mode=time_mode)
+        result = analyzer_result_factory(data_mode=data_mode,
+                                         time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(

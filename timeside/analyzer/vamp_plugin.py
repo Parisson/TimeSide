@@ -31,7 +31,7 @@ class VampSimpleHost(Analyzer):
     implements(IAnalyzer)
 
     def __init__(self, plugin_list=None):
-
+        super(VampSimpleHost, self).__init__()
         if plugin_list is None:
             plugin_list = self.get_plugins_list()
             #plugin_list = [['vamp-example-plugins', 'percussiononsets', 'detectionfunction']]
@@ -110,7 +110,7 @@ class VampSimpleHost(Analyzer):
             plugin_res.id_metadata.name += ' ' + \
                 ' '.join(plugin_line[1:])
 
-            self._results.add(plugin_res)
+            self.pipe.results.add(plugin_res)
 
     @staticmethod
     def vamp_plugin(plugin, wavfile):

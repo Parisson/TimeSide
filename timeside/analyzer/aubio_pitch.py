@@ -30,6 +30,7 @@ class AubioPitch(Analyzer):
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):
+        super(AubioPitch, self).__init__()
         self.input_blocksize = 2048
         self.input_stepsize = self.input_blocksize / 2
 
@@ -78,4 +79,4 @@ class AubioPitch(Analyzer):
         # setup
 
         pitch.data_object.value = self.pitches
-        self._results.add(pitch)
+        self.pipe.results.add(pitch)

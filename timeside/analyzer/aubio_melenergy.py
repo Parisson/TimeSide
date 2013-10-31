@@ -32,6 +32,7 @@ class AubioMelEnergy(Analyzer):
     implements(IAnalyzer)
 
     def __init__(self):
+        super(AubioMelEnergy, self).__init__()
         self.input_blocksize = 1024
         self.input_stepsize = self.input_blocksize / 4
 
@@ -77,4 +78,4 @@ class AubioMelEnergy(Analyzer):
         melenergy.parameters = dict(n_filters=self.n_filters,
                                     n_coeffs=self.n_coeffs)
         melenergy.data_object.value = self.melenergy_results
-        self._results.add(melenergy)
+        self.pipe.results.add(melenergy)

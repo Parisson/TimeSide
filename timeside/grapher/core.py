@@ -106,6 +106,7 @@ class Grapher(Processor):
     lower_freq = 20
 
     def __init__(self, width=1024, height=256, bg_color=None, color_scheme='default'):
+        super(Grapher, self).__init__()
         self.bg_color = bg_color
         self.color_scheme = color_scheme
         self.graph = None
