@@ -252,7 +252,10 @@ class ProcessPipe(object):
 
     def __ior__(self, other):
         if isinstance(other, Processor):
-            self |= other.parents
+            parents = other.parents
+            if parents:
+                for parent in parents:
+                    self |= parent
             self.processors.append(other)
         elif isinstance(other, ProcessPipe):
             self.processors.extend(other.processors)
