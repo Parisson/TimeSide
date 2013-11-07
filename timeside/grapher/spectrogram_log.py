@@ -41,7 +41,7 @@ class SpectrogramLog(Grapher):
     @staticmethod
     @interfacedoc
     def id():
-        return "spectrogram"
+        return "spectrogram_log"
 
     @staticmethod
     @interfacedoc

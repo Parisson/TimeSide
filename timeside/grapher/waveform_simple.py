@@ -39,7 +39,7 @@ class Waveform(Grapher):
     @staticmethod
     @interfacedoc
     def id():
-        return "waveform"
+        return "waveform_simple"
 
     @staticmethod
     @interfacedoc

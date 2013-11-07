@@ -308,4 +308,3 @@ class ProcessPipe(object):
 
         for item in items:
             item.release()
-

@@ -40,7 +40,7 @@ This default result has all the metadata and dataObject attribute
    >>> for key,value in res.items():
    ...     print '%s : %s' % (key, value)
    ...
-   id_metadata : {'description': '', 'author': '', 'version': '', 'date': '', 'id': '', 'unit': '', 'name': ''}
+   id_metadata : {'description': '', 'author': '', 'uuid': '', 'version': '', 'date': '', 'id': '', 'unit': '', 'name': ''}
    data_object : {'value': array([], dtype=float64)}
    audio_metadata : {'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
    frame_metadata : {'blocksize': None, 'samplerate': None, 'stepsize': None}

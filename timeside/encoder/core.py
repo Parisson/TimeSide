@@ -28,6 +28,9 @@ from gst import _gst as gst
 class GstEncoder(Processor):
 
     def __init__(self, output, streaming = False, overwrite = False):
+
+        super(GstEncoder, self).__init__()
+
         if isinstance(output, basestring):
             import os.path
             if os.path.isdir(output):
