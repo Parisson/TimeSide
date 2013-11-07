@@ -19,9 +19,7 @@
 
 # Authors:
 #   Thomas Fillon <thomas  at parisson.com>
-
-
-import unittest
+from unit_timeside import *
 import doctest
 import timeside
 import pkgutil
@@ -33,17 +31,6 @@ def load_tests(loader, tests, ignore):
     import os
 
     finder = doctest.DocTestFinder(exclude_empty=False)
-
-    timeside_path = os.path.dirname(timeside.__path__[0])
-
-    # Create tests for doctest ReST files
-    rst_files = []
-    for root, dirnames, filenames in os.walk(timeside_path):
-        for filename in fnmatch.filter(filenames, '*.rst'):
-            rst_files.append(os.path.join(root, filename))
-
-    for filename in rst_files:
-        tests.addTests(doctest.DocFileSuite(filename, module_relative=False))
 
     # Create tests for doctest in timeside modules and sub-modules
     modules_list = [modname for _, modname, _ in pkgutil.walk_packages(
@@ -58,4 +45,4 @@ def load_tests(loader, tests, ignore):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(testRunner=TestRunner())
