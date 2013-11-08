@@ -38,7 +38,7 @@ def load_tests(loader, tests, ignore):
 
     for module in modules_list:
         tests.addTests(doctest.DocTestSuite(module, test_finder=finder))
-    print tests
+
     return tests
 
 
