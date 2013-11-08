@@ -39,10 +39,8 @@ Processors
   - FlacEncoder [gst_flac_enc]
   - AacEncoder [gst_aac_enc]
   - WebMEncoder [gst_webm_enc]
-
  * IDecoder
   - FileDecoder [gst_dec]
-
  * IGrapher
   - Waveform [waveform_simple]
   - WaveformCentroid [waveform_centroid]
@@ -51,7 +49,6 @@ Processors
   - WaveformContourWhite [waveform_contour_white]
   - SpectrogramLog [spectrogram_log]
   - SpectrogramLinear [spectrogram_linear]
-
  * IAnalyzer
   - IValueAnalyzer
     * Level [level]
