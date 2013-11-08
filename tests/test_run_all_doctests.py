@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007-2013 Parisson SARL
@@ -27,9 +28,6 @@ import pkgutil
 
 def load_tests(loader, tests, ignore):
 
-    import fnmatch
-    import os
-
     finder = doctest.DocTestFinder(exclude_empty=False)
 
     # Create tests for doctest in timeside modules and sub-modules
@@ -40,7 +38,7 @@ def load_tests(loader, tests, ignore):
 
     for module in modules_list:
         tests.addTests(doctest.DocTestSuite(module, test_finder=finder))
-
+    print tests
     return tests
 
 
