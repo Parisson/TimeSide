@@ -64,10 +64,8 @@ class Waveform(Grapher):
         return frames, eod
 
     @interfacedoc
-    def render(self, output):
-        if output:
-            a = 1
-            for x in range(self.image_width):
-                self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
-            self.image.save(output)
-        return self.image
+    def post_process(self, output=None):
+        a = 1
+        for x in range(self.image_width):
+            self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
+

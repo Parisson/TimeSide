@@ -87,7 +87,9 @@ class SpectrogramLog(Grapher):
                     self.pixel_cursor += 1
         return frames, eod
 
-    def render(self, filename):
-        """ Apply last 2D transforms and write all pixels to the file. """
+    @interfacedoc
+    def post_process(self):
+        """ Apply last 2D transforms"""
         self.image.putdata(self.pixels)
-        self.image.transpose(Image.ROTATE_90).save(filename)
+        self.image.transpose(Image.ROTATE_90)
+

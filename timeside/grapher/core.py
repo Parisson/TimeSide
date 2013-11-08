@@ -144,6 +144,12 @@ class Grapher(Processor):
         self.pixel = self.image.load()
         self.draw = ImageDraw.Draw(self.image)
 
+    def render(self, output=None):
+        if output:
+            self.image.save(output)
+            return
+        return self.image
+
     def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
         self.image = im_watermark(text, text, color=color, opacity=opacity, margin=margin)
 
@@ -262,6 +268,7 @@ class Grapher(Processor):
                     else:
                         self.draw.point((x, y+height), line_color)
                 self.previous_x, self.previous_y = x, y
+
 
 
 if __name__ == "__main__":
