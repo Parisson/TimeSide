@@ -1,6 +1,22 @@
 News
 =====
 
+0.5.1
+
+ * Add *parent* procesor list to Processor
+ * Simplify and optimize the grapher system
+ * Add Grapher abstract generic class
+ * Add a UUID property to Processor
+ * Add a SpectrogramLinear grapher
+ * Add WaveformTransparent grapher
+ * Fix some assignment issues regarding immutable type in for Analyzer Result
+ * Simplify analyzer results implementation by introducing a Factory and multiple classes and subclasses to handle the 8 different kinds of results
+ * Add doctests and improve the unit tests
+ * Add a OnsetDetectionFunction analyzer
+ * Update documentation
+ * Various cleanups
+ * Various bugfixes
+
 0.5.0
 
  * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction

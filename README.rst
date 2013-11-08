@@ -77,7 +77,6 @@ IAnalyzer
   * IRITSpeech4Hz [irit_speech_4hz]
   * OnsetDetectionFunction [odf]
 
-
 News
 =====
 
