@@ -32,16 +32,24 @@ Here is a schematic diagram of the TimeSide engine architecture:
 Processors
 ==========
 
- * IEncoder
+IEncoder
+---------
+
   * VorbisEncoder [gst_vorbis_enc]
   * WavEncoder [gst_wav_enc]
   * Mp3Encoder [gst_mp3_enc]
   * FlacEncoder [gst_flac_enc]
   * AacEncoder [gst_aac_enc]
   * WebMEncoder [gst_webm_enc]
- * IDecoder
+
+IDecoder
+---------
+
   * FileDecoder [gst_dec]
- * IGrapher
+
+IGrapher
+---------
+
   * Waveform [waveform_simple]
   * WaveformCentroid [waveform_centroid]
   * WaveformTransparent [waveform_transparent]
@@ -49,10 +57,13 @@ Processors
   * WaveformContourWhite [waveform_contour_white]
   * SpectrogramLog [spectrogram_log]
   * SpectrogramLinear [spectrogram_linear]
- * IAnalyzer
+
+IAnalyzer
+---------
+
   * IValueAnalyzer
-    * Level [level]
-    * MeanDCShift [mean_dc_shift]
+    - Level [level]
+    - MeanDCShift [mean_dc_shift]
   * AubioTemporal [aubio_temporal]
   * AubioPitch [aubio_pitch]
   * AubioMfcc [aubio_mfcc]
