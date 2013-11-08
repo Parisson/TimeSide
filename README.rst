@@ -33,38 +33,41 @@ Processors
 ==========
 
  * IEncoder
-    VorbisEncoder [gst_vorbis_enc]
-    WavEncoder [gst_wav_enc]
-    Mp3Encoder [gst_mp3_enc]
-    FlacEncoder [gst_flac_enc]
-    AacEncoder [gst_aac_enc]
-    WebMEncoder [gst_webm_enc]
+  - VorbisEncoder [gst_vorbis_enc]
+  - WavEncoder [gst_wav_enc]
+  - Mp3Encoder [gst_mp3_enc]
+  - FlacEncoder [gst_flac_enc]
+  - AacEncoder [gst_aac_enc]
+  - WebMEncoder [gst_webm_enc]
+
  * IDecoder
-    FileDecoder [gst_dec]
+  - FileDecoder [gst_dec]
+
  * IGrapher
-    Waveform [waveform_simple]
-    WaveformCentroid [waveform_centroid]
-    WaveformTransparent [waveform_transparent]
-    WaveformContourBlack [waveform_contour_black]
-    WaveformContourWhite [waveform_contour_white]
-    SpectrogramLog [spectrogram_log]
-    SpectrogramLinear [spectrogram_linear]
+  - Waveform [waveform_simple]
+  - WaveformCentroid [waveform_centroid]
+  - WaveformTransparent [waveform_transparent]
+  - WaveformContourBlack [waveform_contour_black]
+  - WaveformContourWhite [waveform_contour_white]
+  - SpectrogramLog [spectrogram_log]
+  - SpectrogramLinear [spectrogram_linear]
+
  * IAnalyzer
-    IValueAnalyzer
-      Level [level]
-      MeanDCShift [mean_dc_shift]
-    AubioTemporal [aubio_temporal]
-    AubioPitch [aubio_pitch]
-    AubioMfcc [aubio_mfcc]
-    AubioMelEnergy [aubio_melenergy]
-    AubioSpecdesc [aubio_specdesc]
-    Yaafe [yaafe]
-    Spectrogram [spectrogram_analyzer]
-    Waveform [waveform_analyzer]
-    VampSimpleHost [vamp_simple_host]
-    IRITSpeechEntropy [irit_speech_entropy]
-    IRITSpeech4Hz [irit_speech_4hz]
-    OnsetDetectionFunction [odf]
+  - IValueAnalyzer
+    * Level [level]
+    * MeanDCShift [mean_dc_shift]
+  - AubioTemporal [aubio_temporal]
+  - AubioPitch [aubio_pitch]
+  - AubioMfcc [aubio_mfcc]
+  - AubioMelEnergy [aubio_melenergy]
+  - AubioSpecdesc [aubio_specdesc]
+  - Yaafe [yaafe]
+  - Spectrogram [spectrogram_analyzer]
+  - Waveform [waveform_analyzer]
+  - VampSimpleHost [vamp_simple_host]
+  - IRITSpeechEntropy [irit_speech_entropy]
+  - IRITSpeech4Hz [irit_speech_4hz]
+  - OnsetDetectionFunction [odf]
 
 
 News
