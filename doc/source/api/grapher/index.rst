@@ -15,30 +15,41 @@ Core module
 Graphers
 ========
 
-Spectrogram
------------
-
-.. automodule:: timeside.grapher.spectrogram
-  :members:
 
 Waveform
 -----------
 
-.. automodule:: timeside.grapher.waveform
-  :members:
-
-Simple Waveform
----------------
-
 .. automodule:: timeside.grapher.waveform_simple
   :members:
 
-Contour Waveform (white)
-------------------------
-.. automodule:: timeside.grapher.waveform_contour_wh
+WaveformCentroid
+------------------
+
+.. automodule:: timeside.grapher.waveform_centroid
   :members:
 
-Contour Waveform (black)
+WaveformTransparent
+--------------------
+
+.. automodule:: timeside.grapher.waveform_centroid
+  :members:
+
+WaveformContour
 ------------------------
-.. automodule:: timeside.grapher.waveform_contour_bk
+
+.. automodule:: timeside.grapher.waveform_contour
+  :members:
+
+
+SpectrogramLog
+---------------
+
+.. automodule:: timeside.grapher.spectrogram_log
+  :members:
+
+
+SpectrogramLin
+---------------
+
+.. automodule:: timeside.grapher.spectrogram_lin
   :members:

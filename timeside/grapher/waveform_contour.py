@@ -26,6 +26,8 @@ from timeside.grapher.waveform_simple import Waveform
 
 
 class WaveformContourBlack(Waveform):
+    """ Builds a PIL image representing an amplitude coutour (envelop) of the audio stream.
+    """
 
     implements(IGrapher)
 
@@ -64,3 +66,27 @@ class WaveformContourBlack(Waveform):
         if eod:
             self.draw_peaks_contour()
         return frames, eod
+
+
+
+class WaveformContourWhite(WaveformContourBlack):
+
+    """ Builds a PIL image representing an amplitude coutour (envelop) of the audio stream.
+    """
+
+    implements(IGrapher)
+
+    @interfacedoc
+    def __init__(self, width=1024, height=256, bg_color=(255,255,255), color_scheme='default'):
+        super(WaveformContourWhite, self).__init__(width, height, bg_color, color_scheme)
+        self.color_offset = 60
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "waveform_contour_white"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Contour white"

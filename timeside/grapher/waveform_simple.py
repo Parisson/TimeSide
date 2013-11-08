@@ -25,8 +25,7 @@ from timeside.grapher.core import *
 
 
 class Waveform(Grapher):
-    """ Builds a PIL image representing a waveform of the audio stream.
-    Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.
+    """ Builds a PIL image representing a simple waveform of the audio stream.
     """
 
     implements(IGrapher)
