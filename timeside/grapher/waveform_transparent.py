@@ -63,12 +63,3 @@ class WaveformTransparent(Waveform):
                 self.draw_peaks_inverted(self.pixel_cursor, peaks(samples), self.line_color)
                 self.pixel_cursor += 1
         return frames, eod
-
-    @interfacedoc
-    def render(self, output):
-        if output:
-            a = 1
-            for x in range(self.image_width):
-                self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
-            self.image.save(output)
-        return self.image

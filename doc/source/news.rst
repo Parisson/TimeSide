@@ -3,7 +3,7 @@ News
 
 0.5.1
 
- * Add *parent* procesor list to Processor
+ * Add *parent* processor list to Processor
  * Simplify and optimize the grapher system
  * Add Grapher abstract generic class
  * Add a UUID property to Processor

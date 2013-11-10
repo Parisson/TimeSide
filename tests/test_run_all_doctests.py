@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007-2013 Parisson SARL
@@ -26,9 +27,6 @@ import pkgutil
 
 
 def load_tests(loader, tests, ignore):
-
-    import fnmatch
-    import os
 
     finder = doctest.DocTestFinder(exclude_empty=False)
 
