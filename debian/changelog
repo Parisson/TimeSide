@@ -1,3 +1,9 @@
+timeside (0.5.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Guillaume Pellerin <yomguy@parisson.com>  Mon, 11 Nov 2013 21:48:09 +0100
+
 timeside (0.5.0-1) unstable; urgency=low
 
   * New upstream release
