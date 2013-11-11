@@ -37,7 +37,7 @@ from utils import *
 class Spectrum(object):
     """ FFT based frequency analysis of audio frames."""
 
-    def __init__(self, fft_size, samplerate, blocksize, totalframes, lower, higher, window_function=numpy.hanning):
+    def __init__(self, fft_size, samplerate, blocksize, totalframes, lower, higher, window_function=None):
         self.fft_size = fft_size
         self.window = window_function(self.fft_size)
         self.window_function = window_function
@@ -52,6 +52,13 @@ class Spectrum(object):
         self.samplerate = samplerate
         self.window_function = window_function
         self.window = self.window_function(self.blocksize)
+        # Hanning window by default
+        if self.window_function:
+            self.window = self.window_function(self.blocksize)
+        else:
+            self.window_function = numpy.hanning
+            self.window = self.window_function(self.blocksize)
+
 
     def process(self, frames, eod, spec_range=120.0):
         """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
