@@ -30,6 +30,7 @@ except ImportError:
     import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
 
 from timeside.core import *
+from timeside.api import IGrapher
 from timeside.grapher.color_schemes import default_color_schemes
 from utils import *
 
@@ -112,6 +113,9 @@ class Grapher(Processor):
     pixel_cursor = 0
     lower_freq = 20
 
+    implements(IGrapher)
+    abstract()
+
     def __init__(self, width=1024, height=256, bg_color=None, color_scheme='default'):
         super(Grapher, self).__init__()
         self.bg_color = bg_color
@@ -151,6 +155,7 @@ class Grapher(Processor):
         self.pixel = self.image.load()
         self.draw = ImageDraw.Draw(self.image)
 
+    @interfacedoc
     def render(self, output=None):
         if output:
             self.image.save(output)
