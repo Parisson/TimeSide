@@ -7,6 +7,7 @@ Analyzer package
 
    Analyzer Core module <core>
    Analyzers processors <analyzers>
+   Analyzer preprocessors <preprocessors>
     
 
 	      

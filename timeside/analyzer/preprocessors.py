@@ -34,6 +34,7 @@ def downmix_to_mono(process_func):
 
     Downmix is achieved by averaging all channels
 
+    >>> from timeside.analyzer.preprocessors import downmix_to_mono
     >>> @downmix_to_mono
     ... def process(analyzer,frames,eod):
     ...     print 'Frames, eod inside process :'
@@ -48,6 +49,7 @@ def downmix_to_mono(process_func):
     [ 1.5  3.5  5.5  7.5  9.5] False
 
     Outside Process frames and eod are preserved :
+
     >>> frames_
     array([[ 1,  2],
            [ 3,  4],
@@ -79,6 +81,7 @@ def frames_adapter(process_func):
     Pre-processing decorator that adapt frames to match input_blocksize and
     input_stepsize of the decorated analyzer
 
+    >>> from timeside.analyzer.preprocessors import frames_adapter
     >>> @frames_adapter
     ... def process(analyzer,frames,eod):
     ...     analyzer.frames.append(frames)
@@ -97,16 +100,19 @@ def frames_adapter(process_func):
 
     Inside the process the frames have been adapted to match input_blocksize
     and input_stepsize
+
     >>> analyzer.frames
     [array([0, 1, 2, 3]), array([3, 4, 5, 6]), array([6, 7, 8, 9])]
 
-    Outside the process, the original frames and eod are preserved :
+    Outside the process, the original frames and eod are preserved:
+
     >>> frames_
     array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11])
     >>> eod_
     False
 
     Releasing the process with eod=True will zeropad the last frame if necessary
+
     >>> frames = np.asarray(range(12,14))
     >>> eod = True
     >>> frames_, eod_ = process(analyzer,frames,eod)
