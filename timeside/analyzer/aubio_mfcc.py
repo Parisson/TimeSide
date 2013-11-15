@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
+from preprocessors import downmix_to_mono, frames_adapter
 
 import numpy
 from aubio import mfcc, pvoc
@@ -66,12 +66,13 @@ class AubioMfcc(Analyzer):
     def unit():
         return ""
 
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_stepsize):
-            fftgrain = self.pvoc(samples)
-            coeffs = self.mfcc(fftgrain)
-            self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
-            self.block_read += 1
+        fftgrain = self.pvoc(frames)
+        coeffs = self.mfcc(fftgrain)
+        self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
+        self.block_read += 1
         return frames, eod
 
     def post_process(self):

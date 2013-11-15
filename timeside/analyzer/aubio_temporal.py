@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
+from preprocessors import downmix_to_mono, frames_adapter
 from aubio import onset, tempo
 
 import numpy
@@ -70,13 +70,15 @@ class AubioTemporal(Analyzer):
     def __str__(self):
         return "%s %s" % (str(self.value), self.unit())
 
+
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_stepsize):
-            if self.o(samples):
-                self.onsets += [self.o.get_last_s()]
-            if self.t(samples):
-                self.beats += [self.t.get_last_s()]
-            self.block_read += 1
+        if self.o(frames):
+            self.onsets += [self.o.get_last_s()]
+        if self.t(frames):
+            self.beats += [self.t.get_last_s()]
+        self.block_read += 1
         return frames, eod
 
     def post_process(self):

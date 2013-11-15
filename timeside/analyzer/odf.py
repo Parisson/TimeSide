@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Author: Thomas Fillon <thomas@parisson.com>
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
@@ -74,11 +74,23 @@ class OnsetDetectionFunction(Analyzer):
         #spectrogram = self.pipe._results[self.parents()[0].id]
 
         # Low-pass filtering of the spectrogram amplitude along the time axis
-        S = signal.lfilter(signal.hann(15), 1, abs(spectrogram), axis=0)
+        S = signal.lfilter(signal.hann(15)[8:], 1, abs(spectrogram), axis=0)
+
+
+        import matplotlib.pyplot as plt
+#        plt.figure()
+#        plt.imshow(np.log10(abs(spectrogram)), origin='lower', aspect='auto', interpolation='nearest')
+
+
         # Clip small value to a minimal threshold
         np.maximum(S, 1e-9, out=S)
 
         S = np.log10(S)
+
+#        plt.figure()
+#        plt.imshow(S,origin='lower', aspect='auto', interpolation='nearest')
+#        plt.show()
+
         # S[S<1e-3]=0
         np.maximum(S, 1e-3, out=S)
 

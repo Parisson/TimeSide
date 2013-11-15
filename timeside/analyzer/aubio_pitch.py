@@ -22,7 +22,7 @@
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
+from preprocessors import downmix_to_mono, frames_adapter
 from aubio import pitch
 
 
@@ -65,11 +65,12 @@ class AubioPitch(Analyzer):
     def __str__(self):
         return "pitch values"
 
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_stepsize):
-            #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
-            self.pitches += [self.p(samples)[0]]
-            self.block_read += 1
+        #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
+        self.pitches += [self.p(frames)[0]]
+        self.block_read += 1
         return frames, eod
 
     def post_process(self):

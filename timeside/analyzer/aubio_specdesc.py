@@ -22,7 +22,7 @@
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
+from preprocessors import downmix_to_mono, frames_adapter
 
 from aubio import specdesc, pvoc
 
@@ -72,12 +72,13 @@ class AubioSpecdesc(Analyzer):
     def unit():
         return ""
 
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_stepsize):
-            fftgrain = self.pvoc(samples)
-            for method in self.methods:
-                self.specdesc_results[method] += [
-                    self.specdesc[method](fftgrain)[0]]
+        fftgrain = self.pvoc(frames)
+        for method in self.methods:
+            self.specdesc_results[method] += [
+                self.specdesc[method](fftgrain)[0]]
         return frames, eod
 
     def post_process(self):

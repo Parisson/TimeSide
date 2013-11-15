@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
+from preprocessors import downmix_to_mono, frames_adapter
 import numpy as np
 
 
@@ -62,11 +62,11 @@ class Spectrogram(Analyzer):
     def unit():
         return ""
 
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_stepsize):
-            #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
-            self.values.append(np.abs(np.fft.rfft(samples, self.FFT_SIZE)))
-        return frames, eod
+            self.values.append(np.abs(np.fft.rfft(frames, self.FFT_SIZE)))
+            return frames, eod
 
     def post_process(self):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')

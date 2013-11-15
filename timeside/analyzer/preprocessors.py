@@ -18,12 +18,22 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Author : Thomas fillon <thomas@parisson.fr>
+'''
+    Collections of preprocessors to use as decorators for the analyzers process
 
+    Preprocessors process the (frame, eod) arguments in order to handle various
+    preprocessing such as :
+        - Downmixing to mono
+        - Adapt the frames to match the input_blocksize and input_stepsize
+            of the analyzer
+'''
 
 def downmix_to_mono(process_func):
     '''
     Pre-processing decorator that downmixes frames from multi-channel to mono
-    Downmix by averaging all channels
+
+    Downmix is achieved by averaging all channels
+
     >>> @downmix_to_mono
     ... def process(analyzer,frames,eod):
     ...     print 'Frames, eod inside process :'
@@ -66,7 +76,9 @@ def downmix_to_mono(process_func):
 
 def frames_adapter(process_func):
     '''
-    Pre-processing decorator that adapt frames to match blocksize and stepsize
+    Pre-processing decorator that adapt frames to match input_blocksize and
+    input_stepsize of the decorated analyzer
+
     >>> @frames_adapter
     ... def process(analyzer,frames,eod):
     ...     analyzer.frames.append(frames)
@@ -164,5 +176,11 @@ def frames_adapter(process_func):
 
 
 if __name__ == "__main__":
+    # Run doctest
     import doctest
     doctest.testmod()
+
+    # Run unittest from test_analyzer_preprocessors
+    from tests import test_analyzer_preprocessors
+    from tests.unit_timeside import runTestModule
+    runTestModule(test_analyzer_preprocessors)

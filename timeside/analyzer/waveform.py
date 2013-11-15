@@ -22,14 +22,15 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
 import numpy as np
 
+from preprocessors import downmix_to_mono, frames_adapter
 
 class Waveform(Analyzer):
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):
+        super(Waveform, self).__init__()
         self.input_blocksize = 2048
         self.input_stepsize = self.input_blocksize / 2
 
@@ -57,6 +58,8 @@ class Waveform(Analyzer):
     def unit():
         return ""
 
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
         for samples in downsample_blocking(frames, self.input_blocksize):
             self.values.append(samples)

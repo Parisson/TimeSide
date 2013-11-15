@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from utils import downsample_blocking
+from preprocessors import downmix_to_mono, frames_adapter
 
 import numpy
 from aubio import filterbank, pvoc
@@ -47,7 +47,7 @@ class AubioMelEnergy(Analyzer):
         self.melenergy = filterbank(self.n_filters, self.input_blocksize)
         self.melenergy.set_mel_coeffs_slaney(samplerate)
         self.block_read = 0
-        self.melenergy_results = numpy.zeros([self.n_filters, ])
+        self.melenergy_results = []
 
     @staticmethod
     @interfacedoc
@@ -64,13 +64,13 @@ class AubioMelEnergy(Analyzer):
     def unit():
         return ""
 
+    @downmix_to_mono
+    @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_stepsize):
-            # TODO : check pourquoi on utilise pas le blocksize ?
-            fftgrain = self.pvoc(samples)
-            self.melenergy_results = numpy.vstack(
-                [self.melenergy_results, self.melenergy(fftgrain)])
-            self.block_read += 1
+
+        fftgrain = self.pvoc(frames)
+        self.melenergy_results.append(self.melenergy(fftgrain))
+        self.block_read += 1
         return frames, eod
 
     def post_process(self):

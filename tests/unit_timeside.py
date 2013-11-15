@@ -142,4 +142,6 @@ class TestRunner:
             self.stream.writeln("OK")
         return result
 
-
+def runTestModule(module):
+    suite = unittest.loader.TestLoader().loadTestsFromModule(module)
+    TestRunner().run(suite)
