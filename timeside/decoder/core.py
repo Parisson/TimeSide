@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2007-2011 Parisson
+# Copyright (c) 2007-2013 Parisson
 # Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
-# Copyright (c) 2007-2011 Guillaume Pellerin <pellerin@parisson.com>
-# Copyright (c) 2010-2011 Paul Brossier <piem@piem.org>
+# Copyright (c) 2007-2013 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2010-2013 Paul Brossier <piem@piem.org>
 #
 # This file is part of TimeSide.
 
@@ -21,8 +21,12 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Authors: Paul Brossier <piem@piem.org>
+# Authors:
+# Paul Brossier <piem@piem.org>
 # Guillaume Pellerin <yomguy@parisson.com>
+# Thomas Fillon <thomas@parisson.com>
+
+from __future__ import division
 
 from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
@@ -30,7 +34,7 @@ from timeside.tools import *
 
 import Queue
 from gst import _gst as gst
-from numpy import int64, uint64
+import numpy as np
 
 
 GST_APPSINK_MAX_BUFFERS = 10
@@ -105,8 +109,8 @@ class FileDecoder(Processor):
             uri_info = uri_discoverer.discover_uri(self.uri)
         except  GError as e:
             raise IOError(e)
-        self.uri_duration = (uri_info.get_duration() / float(gst.SECOND) -
-                            self.uri_start)
+        self.uri_duration = (uri_info.get_duration() / gst.SECOND
+                                - self.uri_start)
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
@@ -137,8 +141,8 @@ class FileDecoder(Processor):
                             ! audioresample
                             ! appsink name=sink sync=False async=True
                             '''.format(uri = self.uri,
-                                       uri_start = uint64(round(self.uri_start * gst.SECOND)),
-                                       uri_duration = int64(round(self.uri_duration * gst.SECOND)))
+                                       uri_start = np.uint64(round(self.uri_start * gst.SECOND)),
+                                       uri_duration = np.int64(round(self.uri_duration * gst.SECOND)))
                                        # convert uri_start and uri_duration to nanoseconds
         else:
             # Create the pipe with standard Gstreamer uridecodbin
@@ -278,14 +282,13 @@ class FileDecoder(Processor):
             pass
 
     def _on_new_buffer_cb(self, sink):
-        from numpy import concatenate
         buf = sink.emit('pull-buffer')
         new_array = gst_buffer_to_numpy_array(buf, self.output_channels)
         #print 'processing new buffer', new_array.shape
         if self.last_buffer is None:
             self.last_buffer = new_array
         else:
-            self.last_buffer = concatenate((self.last_buffer, new_array), axis=0)
+            self.last_buffer = np.concatenate((self.last_buffer, new_array), axis=0)
         while self.last_buffer.shape[0] >= self.output_blocksize:
             new_block = self.last_buffer[:self.output_blocksize]
             self.last_buffer = self.last_buffer[self.output_blocksize:]
@@ -317,7 +320,7 @@ class FileDecoder(Processor):
         if self.input_samplerate == self.output_samplerate:
             return self.input_totalframes
         else:
-            ratio = float(self.output_samplerate) / self.input_samplerate
+            ratio = self.output_samplerate / self.input_samplerate
             return int(self.input_totalframes * ratio)
 
     @interfacedoc
@@ -352,9 +355,174 @@ class FileDecoder(Processor):
     @interfacedoc
     def resolution(self):
         # TODO check: width or depth?
-        return self.audiowidth
+        return self.input_width
 
     @interfacedoc
     def metadata(self):
         # TODO check
         return self.tags
+
+
+class ArrayDecoder(Processor):
+    """ Decoder taking Numpy array as input"""
+    implements(IDecoder)
+
+    mimetype = ''
+    output_blocksize = 8*1024
+    output_samplerate = None
+    output_channels = None
+
+    # IProcessor methods
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "array_dec"
+
+    def __init__(self, samples, samplerate=44100, start=0, duration=None):
+        '''
+            Construct a new ArrayDecoder from an numpy array
+
+            Parameters
+            ----------
+            samples : numpy array of dimension 1 (mono) or 2 (multichannel)
+                    if shape = (n) or (n,1) : n samples, mono
+                    if shape = (n,m) : n samples with m channels
+            start : float
+                start time of the segment in seconds
+            duration : float
+                duration of the segment in seconds
+        '''
+        super(ArrayDecoder, self).__init__()
+
+        # Check array dimension
+        if samples.ndim > 2:
+            raise TypeError('Wrong number of dimensions for argument samples')
+        if samples.ndim == 1:
+            samples = samples[:, np.newaxis]  # reshape to 2D array
+
+        self.samples = samples  # Create a 2 dimensions array
+        self.input_samplerate = samplerate
+        self.input_channels = self.samples.shape[1]
+
+        self.uri = '_'.join(['raw_audio_array',
+                            'x'.join([str(dim) for dim in samples.shape]),
+                             samples.dtype.type.__name__])
+
+        self.uri_start = float(start)
+        if duration:
+            self.uri_duration = float(duration)
+        else:
+            self.uri_duration = duration
+
+        if start == 0 and duration is None:
+            self.is_segment = False
+        else:
+            self.is_segment = True
+
+        self.frames = self.get_frames()
+
+    def setup(self, channels=None, samplerate=None, blocksize=None):
+
+        # the output data format we want
+        if blocksize:
+            self.output_blocksize = blocksize
+        if samplerate:
+            self.output_samplerate = int(samplerate)
+        if channels:
+            self.output_channels = int(channels)
+
+        if self.uri_duration is None:
+            self.uri_duration = (len(self.samples) / self.input_samplerate
+                                 - self.uri_start)
+
+        if self.is_segment:
+            start_index = self.uri_start * self.input_samplerate
+            stop_index = start_index + int(np.ceil(self.uri_duration
+                                           * self.input_samplerate))
+            stop_index = min(stop_index, len(self.samples))
+            self.samples = self.samples[start_index:stop_index]
+
+        if not self.output_samplerate:
+            self.output_samplerate = self.input_samplerate
+
+        if not self.output_channels:
+            self.output_channels = self.input_channels
+
+        self.input_totalframes = len(self.samples)
+        self.input_duration = self.input_totalframes / self.input_samplerate
+
+        self.input_width = self.samples.itemsize * 8
+
+    def get_frames(self):
+        "Define an iterator that will return frames at the given blocksize"
+        nb_frames = self.input_totalframes // self.output_blocksize
+
+        if self.input_totalframes % self.output_blocksize == 0:
+            nb_frames -= 1  # Last frame must send eod=True
+
+        for index in xrange(0,
+                            nb_frames * self.output_blocksize,
+                            self.output_blocksize):
+            yield (self.samples[index:index+self.output_blocksize], False)
+
+        yield (self.samples[nb_frames * self.output_blocksize:], True)
+
+    @interfacedoc
+    def process(self, frames=None, eod=False):
+
+        return self.frames.next()
+
+    @interfacedoc
+    def channels(self):
+        return self.output_channels
+
+    @interfacedoc
+    def samplerate(self):
+        return self.output_samplerate
+
+    @interfacedoc
+    def blocksize(self):
+        return self.output_blocksize
+
+    @interfacedoc
+    def totalframes(self):
+        if self.input_samplerate == self.output_samplerate:
+            return self.input_totalframes
+        else:
+            ratio = self.output_samplerate / self.input_samplerate
+            return int(self.input_totalframes * ratio)
+
+    @interfacedoc
+    def release(self):
+        pass
+
+    @interfacedoc
+    def mediainfo(self):
+        return dict(uri=self.uri,
+                    duration=self.uri_duration,
+                    start=self.uri_start,
+                    is_segment=self.is_segment,
+                    samplerate=self.input_samplerate)
+
+    def __del__(self):
+        self.release()
+
+    ## IDecoder methods
+    @interfacedoc
+    def format(self):
+        import re
+        base_type = re.search('^[a-z]*', self.samples.dtype.name).group(0)
+        return 'audio/x-raw-'+base_type
+
+    @interfacedoc
+    def encoding(self):
+        return self.format().split('/')[-1]
+
+    @interfacedoc
+    def resolution(self):
+        return self.input_width
+
+    @interfacedoc
+    def metadata(self):
+        return None
