@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import doctest
 import os, sys
 import time
 from tools import *
@@ -142,6 +143,15 @@ class TestRunner:
             self.stream.writeln("OK")
         return result
 
-def runTestModule(module):
-    suite = unittest.loader.TestLoader().loadTestsFromModule(module)
+
+def runTestModule(*modules):
+
+    suite = unittest.TestSuite()
+    finder = doctest.DocTestFinder(exclude_empty=False)  # finder for doctest
+
+    for module in modules:
+        # Doctest
+        suite.addTest(doctest.DocTestSuite(module, test_finder=finder))
+        # unittest
+        suite.addTest(unittest.loader.TestLoader().loadTestsFromModule(module))
     TestRunner().run(suite)

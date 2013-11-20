@@ -128,11 +128,11 @@ def frames_adapter(process_func):
         def __init__(self, blocksize, stepsize):
             self.blocksize = blocksize
             self.stepsize = stepsize
-            self.stack = None
+            self.buffer = None
 
         def frames(self, frames, eod):
-            if self.stack is not None:
-                stack = np.concatenate([self.stack, frames])
+            if self.buffer is not None:
+                stack = np.concatenate([self.buffer, frames])
             else:
                 stack = frames.copy()
 
@@ -154,17 +154,14 @@ def frames_adapter(process_func):
                                                         dtype=frames.dtype)])
                 nb_frames += 1
 
-            self.stack = stack[nb_frames * self.stepsize:]
+            self.buffer = stack[nb_frames * self.stepsize:]
 
             eod_list = np.repeat(False, nb_frames)
             if eod and len(eod_list):
                 eod_list[-1] = eod
 
-            for n in xrange(nb_frames):
-                yield (
-                    stack[
-                        n * self.stepsize:n * self.stepsize + self.blocksize],
-                    eod_list[n])
+            for index, eod in zip(xrange(0, nb_frames*self.stepsize, self.stepsize), eod_list):
+                yield (stack[index:index + self.blocksize],eod)
 
     @functools.wraps(process_func)
     def wrapper(analyzer, frames, eod):
@@ -182,11 +179,7 @@ def frames_adapter(process_func):
 
 
 if __name__ == "__main__":
-    # Run doctest
-    import doctest
-    doctest.testmod()
-
-    # Run unittest from test_analyzer_preprocessors
+    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
     from tests import test_analyzer_preprocessors
     from tests.unit_timeside import runTestModule
-    runTestModule(test_analyzer_preprocessors)
+    runTestModule('__main__', test_analyzer_preprocessors)

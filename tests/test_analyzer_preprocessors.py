@@ -1,7 +1,6 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # Author : Thomas fillon <thomas@parisson.com>
-
-#! /usr/bin/env python
 
 from unit_timeside import *
 from timeside.decoder import *

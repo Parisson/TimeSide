@@ -27,7 +27,7 @@ from timeside.core import Processor
 from timeside.__init__ import __version__
 import numpy
 from collections import OrderedDict
-from copy import deepcopy
+
 
 numpy_data_types = [
     #'float128',
@@ -432,7 +432,6 @@ class AnalyzerResult(MetadataObject):
             - 'global'
             - 'segment'
             - 'event'
-
 
     Returns
     -------

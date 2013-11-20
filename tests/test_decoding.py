@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from __future__ import division
+
 from timeside.decoder.core import FileDecoder
 from unit_timeside import *
 
@@ -19,6 +21,7 @@ class TestDecoding(TestCase):
         self.expected_samplerate = 44100
         self.expected_channels = 2
         self.expected_totalframes = 352800
+        self.test_exact_duration = True
 
     def testWav(self):
         "Test wav decoding"
@@ -39,7 +42,7 @@ class TestDecoding(TestCase):
                                    "samples/sweep_32000.wav")
 
         expected_samplerate = 32000
-        ratio = expected_samplerate/float(self.expected_samplerate)
+        ratio = expected_samplerate/self.expected_samplerate
 
         self.expected_totalframes = int(self.expected_totalframes * ratio)
         self.expected_samplerate = expected_samplerate
@@ -55,6 +58,8 @@ class TestDecoding(TestCase):
                                    "samples/sweep.ogg")
 
         self.expected_totalframes = 352832
+        self.test_exact_duration = False
+
 
     def testMp3(self):
         "Test mp3 decoding"
@@ -62,6 +67,8 @@ class TestDecoding(TestCase):
                                    "samples/sweep.mp3")
 
         self.expected_totalframes = 353664
+        self.test_exact_duration = False
+
 
     def tearDown(self):
         decoder = FileDecoder(uri=self.source,
@@ -78,10 +85,10 @@ class TestDecoding(TestCase):
             totalframes += frames.shape[0]
             if eod or decoder.eod:
                 break
-            self.assertEquals(frames.shape[0], decoder.blocksize())
-            self.assertEquals(frames.shape[1], decoder.channels())
+            self.assertEqual(frames.shape[0], decoder.blocksize())
+            self.assertEqual(frames.shape[1], decoder.channels())
 
-        ratio = decoder.output_samplerate / float(decoder.input_samplerate)
+        ratio = decoder.output_samplerate / decoder.input_samplerate
         if 0:
             print "input / output_samplerate:", decoder.input_samplerate, '/', decoder.output_samplerate,
             print "ratio:", ratio
@@ -91,22 +98,29 @@ class TestDecoding(TestCase):
 
         if self.channels:
             # when specified, check that the channels are the ones requested
-            self.assertEquals(self.channels, decoder.output_channels)
+            self.assertEqual(self.channels, decoder.output_channels)
         else:
             # otherwise check that the channels are preserved, if not specified
-            self.assertEquals(decoder.input_channels, decoder.output_channels)
+            self.assertEqual(decoder.input_channels, decoder.output_channels)
             # and if we know the expected channels, check the output match
             if self.expected_channels:
-                self.assertEquals(self.expected_channels, decoder.output_channels)
+                self.assertEqual(self.expected_channels, decoder.output_channels)
         # do the same with the sampling rate
         if self.samplerate:
-            self.assertEquals(self.samplerate, decoder.output_samplerate)
+            self.assertEqual(self.samplerate, decoder.output_samplerate)
         else:
-            self.assertEquals(decoder.input_samplerate, decoder.output_samplerate)
+            self.assertEqual(decoder.input_samplerate, decoder.output_samplerate)
             if self.expected_samplerate:
-                self.assertEquals(self.expected_samplerate, decoder.output_samplerate)
+                self.assertEqual(self.expected_samplerate, decoder.output_samplerate)
 
-        self.assertEquals(totalframes, self.expected_totalframes)
+        self.assertEqual(totalframes, self.expected_totalframes)
+        if self.test_exact_duration:
+            self.assertEqual(totalframes/decoder.output_samplerate,
+                             decoder.totalframes()/decoder.output_samplerate)
+        else:
+            self.assertAlmostEqual(totalframes/decoder.output_samplerate,
+                               decoder.totalframes()/decoder.output_samplerate,
+                               places=1)
 
 
 class TestDecodingSegment(TestDecoding):

@@ -106,6 +106,7 @@ class TestDecoding(TestCase):
 
 
         self.assertEqual(totalframes, self.expected_duration * decoder.output_samplerate)
+        self.assertEquals(totalframes, decoder.totalframes())
 
 
 class TestDecodingSegment(TestDecoding):

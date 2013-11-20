@@ -62,17 +62,20 @@ class FileDecoder(Processor):
         return "gst_dec"
 
     def __init__(self, uri, start = 0, duration = None):
-        '''
-            Construct a new FileDecoder
 
-            Parameters
-            ----------
-            uri: uri of the media
-            start : float
-                start time of the segment in seconds
-            duration : float
-                duration of the segment in seconds
-        '''
+        """
+        Construct a new FileDecoder
+
+        Parameters
+        ----------
+        uri : str
+            uri of the media
+        start : float
+            start time of the segment in seconds
+        duration : float
+            duration of the segment in seconds
+        """
+
         super(FileDecoder, self).__init__()
 
         # is this a file?
@@ -526,3 +529,13 @@ class ArrayDecoder(Processor):
     @interfacedoc
     def metadata(self):
         return None
+
+
+if __name__ == "__main__":
+    # Run doctest from __main__ and unittest from tests
+    from tests.unit_timeside import runTestModule
+    # load corresponding tests
+    from tests import test_decoding, test_array_decoding
+
+    runTestModule('__main__', test_decoding, test_array_decoding)
+
