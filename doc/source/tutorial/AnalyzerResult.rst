@@ -95,7 +95,7 @@ Event
 DataObject(value=array([], dtype=float64), time=array([], dtype=float64))
 
 Specification of data_mode
-=========================
+==========================
 Two different data_mode can be specified :
 
 - 'value' : Data are returned as numpy Array of arbitrary type

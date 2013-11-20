@@ -7,6 +7,20 @@ Decoder package
    :maxdepth: 2
 
 .. automodule:: timeside.decoder.core
-   :members:
-
    
+
+File Decoder
+===========
+
+.. autoclass:: FileDecoder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Array Decoder
+=============
+
+.. autoclass:: ArrayDecoder
+   :members:
+   :undoc-members:
+   :show-inheritance:
