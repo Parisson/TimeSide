@@ -29,8 +29,8 @@ class WebMEncoder(GstEncoder):
     """ gstreamer-based webm encoder and muxer """
     implements(IEncoder)
 
-    def __init__(self, *args, **kwargs):
-        super(WebMEncoder, self).__init__(*args, **kwargs)
+    def __init__(self, output, streaming = False, overwrite = False):
+        super(WebMEncoder, self).__init__(output, streaming, overwrite)
         self.video = False
 
     @interfacedoc

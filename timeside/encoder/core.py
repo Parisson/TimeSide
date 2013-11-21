@@ -127,4 +127,3 @@ class GstEncoder(Processor):
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
         return frames, eod
-
