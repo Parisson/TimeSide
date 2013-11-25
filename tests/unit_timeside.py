@@ -74,6 +74,13 @@ class _TextTestResult(unittest.TestResult):
         elif self.dots:
             self.stream.write('F')
 
+    def addSkip(self, test, reason):
+        unittest.TestResult.addSkip(self, test, reason)
+        if self.showAll:
+            self.stream.writeln("SKIP : " + reason)
+        elif self.dots:
+            self.stream.write('S')
+
     def printErrors(self):
         if self.dots or self.showAll:
             self.stream.writeln()

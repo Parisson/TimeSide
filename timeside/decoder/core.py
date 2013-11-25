@@ -32,6 +32,8 @@ from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IDecoder
 from timeside.tools import *
 
+from utils import get_uri, get_media_uri_info
+
 import Queue
 from gst import _gst as gst
 import numpy as np
@@ -39,7 +41,6 @@ import numpy as np
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
-GST_DISCOVER_TIMEOUT = 5000000000L
 
 
 class FileDecoder(Processor):
@@ -78,18 +79,7 @@ class FileDecoder(Processor):
 
         super(FileDecoder, self).__init__()
 
-        # is this a file?
-        import os.path
-        if os.path.exists(uri):
-            # get the absolute path
-            uri = os.path.abspath(uri)
-            # and make a uri of it
-            from urllib import quote
-            self.uri = 'file://' + quote(uri)
-        elif '://' in uri:
-            self.uri = uri
-        else:
-            raise IOError('File not found!')
+        self.uri = get_uri(uri)
 
         self.uri_start = float(start)
         if duration:
@@ -104,16 +94,8 @@ class FileDecoder(Processor):
 
     def set_uri_default_duration(self):
         # Set the duration from the length of the file
-        from gst.pbutils import Discoverer
-        from glib import GError
-        #import gobject
-        uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
-        try:
-            uri_info = uri_discoverer.discover_uri(self.uri)
-        except  GError as e:
-            raise IOError(e)
-        self.uri_duration = (uri_info.get_duration() / gst.SECOND
-                                - self.uri_start)
+        uri_total_duration = get_media_uri_info(self.uri)['duration']
+        self.uri_duration = uri_total_duration - self.uri_start
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
@@ -254,6 +236,7 @@ class FileDecoder(Processor):
             if not self.output_channels:
                 self.output_channels = self.input_channels
             self.input_duration = length / 1.e9
+
             self.input_totalframes = int(self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
                 self.input_width = caps[0]["width"]
@@ -454,7 +437,6 @@ class ArrayDecoder(Processor):
 
         self.input_totalframes = len(self.samples)
         self.input_duration = self.input_totalframes / self.input_samplerate
-
         self.input_width = self.samples.itemsize * 8
 
     def get_frames(self):
