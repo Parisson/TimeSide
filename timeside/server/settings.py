@@ -3,6 +3,9 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+import sys
+sys.dont_write_bytecode = True
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
