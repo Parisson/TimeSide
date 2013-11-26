@@ -42,6 +42,7 @@ class Mp3Encoder(GstEncoder):
         self.pipe = '''appsrc name=src
                   ! audioconvert
                   ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard
+                  ! xingmux
                   ! id3v2mux
                   '''
 
