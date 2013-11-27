@@ -19,7 +19,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.tools import *
@@ -29,8 +29,8 @@ class AacEncoder(GstEncoder):
     """ gstreamer-based AAC encoder """
     implements(IEncoder)
 
-    def __init__(self, *args, **kwargs):
-        super(AacEncoder, self).__init__( *args, **kwargs)
+    def __init__(self, output, streaming = False, overwrite = False):
+        super(AacEncoder, self).__init__(output, streaming, overwrite)
         if self.streaming:
             raise Exception("Streaming not supported")
 
