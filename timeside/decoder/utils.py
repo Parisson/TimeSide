@@ -24,8 +24,9 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-import numpy
+from __future__ import division
 
+import numpy
 
 class Noise(object):
     """A class that mimics audiolab.sndfile but generates noise instead of reading
@@ -50,7 +51,7 @@ class Noise(object):
         return 1
 
     def read_frames(self, frames_to_read):
-        if self.has_broken_header and self.seekpoint + frames_to_read > self.num_frames / 2:
+        if self.has_broken_header and self.seekpoint + frames_to_read > self.num_frames // 2:
             raise IOError()
 
         num_frames_left = self.num_frames - self.seekpoint
@@ -106,33 +107,34 @@ def get_uri(source):
     return uri
 
 def get_media_uri_info(uri):
-        from gst.pbutils import Discoverer
-        from gst import SECOND as GST_SECOND
-        from glib import GError
-        #import gobject
-        GST_DISCOVER_TIMEOUT = 5000000000L
-        uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
-        try:
-            uri_info = uri_discoverer.discover_uri(uri)
-        except  GError as e:
-            raise IOError(e)
-        info = dict()
 
-        # Duration in seconds
-        info['duration'] = uri_info.get_duration() / GST_SECOND
+    from gst.pbutils import Discoverer
+    from gst import SECOND as GST_SECOND
+    from glib import GError
+    #import gobject
+    GST_DISCOVER_TIMEOUT = 5000000000L
+    uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
+    try:
+        uri_info = uri_discoverer.discover_uri(uri)
+    except  GError as e:
+        raise IOError(e)
+    info = dict()
 
-        audio_streams = uri_info.get_audio_streams()
-        info['streams'] = []
-        for stream in audio_streams:
-            stream_info = {'bitrate': stream.get_bitrate (),
-                           'channels': stream.get_channels (),
-                           'depth': stream.get_depth (),
-                           'max_bitrate': stream.get_max_bitrate(),
-                           'samplerate': stream.get_sample_rate()
-                           }
-            info['streams'].append(stream_info)
+    # Duration in seconds
+    info['duration'] = uri_info.get_duration() / GST_SECOND
 
-        return info
+    audio_streams = uri_info.get_audio_streams()
+    info['streams'] = []
+    for stream in audio_streams:
+        stream_info = {'bitrate': stream.get_bitrate (),
+                       'channels': stream.get_channels (),
+                       'depth': stream.get_depth (),
+                       'max_bitrate': stream.get_max_bitrate(),
+                       'samplerate': stream.get_sample_rate()
+                       }
+        info['streams'].append(stream_info)
+
+    return info
 
 
 
