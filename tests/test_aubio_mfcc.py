@@ -4,7 +4,7 @@ from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.aubio_mfcc import AubioMfcc
 
-class TestAubioMfcc(TestCase):
+class TestAubioMfcc(unittest.TestCase):
 
     def setUp(self):
         self.analyzer = AubioMfcc()

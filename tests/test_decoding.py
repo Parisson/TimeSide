@@ -10,7 +10,9 @@ import os.path
 #from glib import GError as GST_IOError
 # HINT : to use later with Gnonlin only
 
-class TestDecoding(TestCase):
+
+class TestDecoding(unittest.TestCase):
+
     "Test decoding features"
 
     def setUp(self):
@@ -22,12 +24,12 @@ class TestDecoding(TestCase):
         self.expected_channels = 2
         self.expected_totalframes = 352800
         self.test_exact_duration = True
+        self.source_duration = 8
 
     def testWav(self):
         "Test wav decoding"
         self.source = os.path.join(os.path.dirname(__file__),
-                                    "samples/sweep.wav")
-
+                                   "samples/sweep.wav")
 
     def testWavMono(self):
         "Test mono wav decoding"
@@ -42,7 +44,7 @@ class TestDecoding(TestCase):
                                    "samples/sweep_32000.wav")
 
         expected_samplerate = 32000
-        ratio = expected_samplerate/self.expected_samplerate
+        ratio = expected_samplerate / self.expected_samplerate
 
         self.expected_totalframes = int(self.expected_totalframes * ratio)
         self.expected_samplerate = expected_samplerate
@@ -60,7 +62,6 @@ class TestDecoding(TestCase):
         self.expected_totalframes = 352832
         self.test_exact_duration = False
 
-
     def testMp3(self):
         "Test mp3 decoding"
         self.source = os.path.join(os.path.dirname(__file__),
@@ -68,7 +69,6 @@ class TestDecoding(TestCase):
 
         self.expected_totalframes = 353664
         self.test_exact_duration = False
-
 
     def tearDown(self):
         decoder = FileDecoder(uri=self.source,
@@ -104,23 +104,36 @@ class TestDecoding(TestCase):
             self.assertEqual(decoder.input_channels, decoder.output_channels)
             # and if we know the expected channels, check the output match
             if self.expected_channels:
-                self.assertEqual(self.expected_channels, decoder.output_channels)
+                self.assertEqual(
+                    self.expected_channels, decoder.output_channels)
         # do the same with the sampling rate
         if self.samplerate:
             self.assertEqual(self.samplerate, decoder.output_samplerate)
         else:
-            self.assertEqual(decoder.input_samplerate, decoder.output_samplerate)
+            self.assertEqual(
+                decoder.input_samplerate, decoder.output_samplerate)
             if self.expected_samplerate:
-                self.assertEqual(self.expected_samplerate, decoder.output_samplerate)
+                self.assertEqual(
+                    self.expected_samplerate, decoder.output_samplerate)
 
         self.assertEqual(totalframes, self.expected_totalframes)
+        input_duration = decoder.input_totalframes / decoder.input_samplerate
+        output_duration = decoder.totalframes() / decoder.output_samplerate
         if self.test_exact_duration:
-            self.assertEqual(totalframes/decoder.output_samplerate,
-                             decoder.totalframes()/decoder.output_samplerate)
+            self.assertEqual(input_duration, output_duration)
+            self.assertEqual(input_duration,
+                             decoder.uri_duration)
+            self.assertEqual(self.source_duration,
+                             decoder.uri_duration)
         else:
-            self.assertAlmostEqual(totalframes/decoder.output_samplerate,
-                               decoder.totalframes()/decoder.output_samplerate,
-                               places=1)
+            self.assertAlmostEqual(input_duration, output_duration,
+                                   places=1)
+            self.assertAlmostEqual(input_duration,
+                                   decoder.uri_duration,
+                                   places=1)
+            self.assertAlmostEqual(self.source_duration,
+                                   decoder.uri_duration,
+                                   places=1)
 
 
 class TestDecodingSegment(TestDecoding):
@@ -129,14 +142,15 @@ class TestDecodingSegment(TestDecoding):
         super(TestDecodingSegment, self).setUp()
         self.start = 1
         self.duration = 3
+        self.source_duration = self.duration
 
         self.expected_totalframes = self.duration * self.expected_samplerate
-
 
     def testMp3(self):
         "Test mp3 decoding"
         super(TestDecodingSegment, self).testMp3()
-        self.expected_totalframes = self.duration * self.expected_samplerate + 1
+        self.expected_totalframes = self.duration * \
+            self.expected_samplerate + 1
 
     def testWav(self):
         "Test wav decoding"
@@ -164,12 +178,14 @@ class TestDecodingSegmentDefaultStart(TestDecodingSegment):
     def setUp(self):
         super(TestDecodingSegmentDefaultStart, self).setUp()
         self.duration = 1
+        self.source_duration = self.duration
         self.expected_totalframes = self.duration * self.expected_samplerate
 
     def testMp3(self):
         "Test mp3 decoding"
         super(TestDecodingSegmentDefaultStart, self).testMp3()
-        self.expected_totalframes = self.duration * self.expected_samplerate + 1
+        self.expected_totalframes = self.duration * \
+            self.expected_samplerate + 1
 
 
 class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
@@ -177,7 +193,10 @@ class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
     def setUp(self):
         super(TestDecodingSegment, self).setUp()
         self.start = 1
-        self.expected_totalframes = self.expected_totalframes - self.start * self.expected_samplerate
+        self.source_duration -= self.start
+
+        self.expected_totalframes = (self.expected_totalframes
+                                     - self.start * self.expected_samplerate)
 
     def testWav(self):
         "Test wav decoding"
@@ -194,7 +213,7 @@ class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
     def testMp3(self):
         "Test mp3 decoding"
         super(TestDecodingSegment, self).testMp3()
-        self.expected_totalframes = 310715#308701
+        self.expected_totalframes = 310715  # was  308701 ?
 
 
 class TestDecodingStereo(TestDecoding):
@@ -262,6 +281,7 @@ class TestDecodingMonoDownsampling(TestDecoding):
         super(TestDecodingMonoDownsampling, self).testMp3()
         self.expected_totalframes = 128314
 
+
 class TestDecodingStereoDownsampling(TestDecoding):
 
     def setUp(self):
@@ -321,16 +341,18 @@ class TestDecodingLongBlock(TestDecoding):
 
     def setUp(self):
         super(TestDecodingLongBlock, self).setUp()
-        self.samplerate, self.channels, self.blocksize = None, None, 1024*8*2
+        self.samplerate, self.channels, self.blocksize = None, None, 1024 * \
+            8 * 2
 
 
-class TestDecodingWrongFiles(TestCase):
+class TestDecodingWrongFiles(unittest.TestCase):
+
     "Test decoding features"
 
     def testMissingFile(self):
         "Test decoding missing file"
         self.source = os.path.join(os.path.dirname(__file__),
-                                    "a_missing_file_blahblah.wav")
+                                   "a_missing_file_blahblah.wav")
 
         self.assertRaises(IOError, FileDecoder, self.source)
 

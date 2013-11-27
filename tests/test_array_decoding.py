@@ -8,7 +8,7 @@ from unit_timeside import *
 import numpy as np
 
 
-class TestDecoding(TestCase):
+class TestDecoding(unittest.TestCase):
 
     "Test decoding for ArrayDecoder"
 

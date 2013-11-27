@@ -5,7 +5,7 @@ from timeside.decoder import *
 from timeside.analyzer import Yaafe
 from yaafelib import DataFlow,FeaturePlan
 
-class TestYaafe(TestCase):
+class TestYaafe(unittest.TestCase):
 
     def setUp(self):
         self.sample_rate = 16000

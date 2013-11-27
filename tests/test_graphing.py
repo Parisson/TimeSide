@@ -7,7 +7,7 @@ import os.path
 
 __all__ = ['TestGraphing']
 
-class TestGraphing(TestCase):
+class TestGraphing(unittest.TestCase):
     "Test all graphers with various input media formats"
 
     def setUp(self):

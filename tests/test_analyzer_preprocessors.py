@@ -21,7 +21,7 @@ class FakeAnalyzer(object):
         return frames, eod
 
 
-class TestAnalyzerPreProcessors(TestCase):
+class TestAnalyzerPreProcessors(unittest.TestCase):
 
     def tearDown(self):
 
@@ -86,7 +86,7 @@ class TestDownmixToMono(TestAnalyzerPreProcessors):
         self.input_eod[-1] = True
         self.process_frames = self.input_frames.mean(axis=-1)
 
-class TestFramesAdapter(TestAnalyzerPreProcessors, TestCase):
+class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
 
     def setUp(self):
         self.decorator = frames_adapter

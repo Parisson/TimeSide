@@ -10,7 +10,7 @@ from timeside.decoder.utils import get_uri, get_media_uri_info, path2uri
 import os.path
 
 
-class TestGetUri(TestCase):
+class TestGetUri(unittest.TestCase):
     "Test get_uri function"
     def testFileName(self):
         "Retrieve the uri from a filename"
@@ -28,7 +28,7 @@ class TestGetUri(TestCase):
         self.assertEqual(self.uri, get_uri(self.source))
 
 
-class TestGetUriWrongUri(TestCase):
+class TestGetUriWrongUri(unittest.TestCase):
     def testMissingFile(self):
         "Missing file raise IOerror"
         self.source = os.path.join(os.path.dirname(__file__),
@@ -45,12 +45,13 @@ class TestGetUriWrongUri(TestCase):
         self.assertRaises(IOError, get_uri, self.source)
 
 
-class TestGetMediaInfo(TestCase):
+class TestGetMediaInfo(unittest.TestCase):
     "Test get_media_uri_info function on an uri"
 
     def setUp(self):
         self.test_exact_duration = True
         self.source_duration = 8
+        self.test_exact_duration = True
         self.expected_channels = 2
         self.expected_samplerate = 44100
         self.expected_depth = 16
@@ -90,11 +91,18 @@ class TestGetMediaInfo(TestCase):
         self.source = os.path.join(os.path.dirname(__file__),
                                    "samples/sweep.mp3")
         self.expected_depth = 32
+        self.test_exact_duration = False
+
 
     def tearDown(self):
         uri = get_uri(self.source)
         uri_info = get_media_uri_info(uri)
-        self.assertEqual(self.source_duration, uri_info['duration'])
+        if self.test_exact_duration:
+            self.assertEqual(self.source_duration, uri_info['duration'])
+        else:
+            self.assertAlmostEqual(self.source_duration,
+                                   uri_info['duration'],
+                                   places=1)
         self.assertEqual(self.expected_channels, uri_info['streams'][0]['channels'])
         self.assertEqual(self.expected_samplerate, uri_info['streams'][0]['samplerate'])
         self.assertEqual(self.expected_depth, uri_info['streams'][0]['depth'])

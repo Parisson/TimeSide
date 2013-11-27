@@ -4,7 +4,7 @@ from timeside.core import FixedSizeInputAdapter
 from unit_timeside import *
 import numpy
 
-class TestFixedSizeInputAdapter(TestCase):
+class TestFixedSizeInputAdapter(unittest.TestCase):
     "Test the fixed-sized input adapter"
 
     def assertIOEquals(self, adapter, input, input_eod, output, output_eod=None):

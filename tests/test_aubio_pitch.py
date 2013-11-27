@@ -4,7 +4,7 @@ from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.aubio_pitch import AubioPitch
 
-class TestAubioPitch(TestCase):
+class TestAubioPitch(unittest.TestCase):
 
     def setUp(self):
         self.analyzer = AubioPitch()

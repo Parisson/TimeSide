@@ -4,7 +4,7 @@ from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.aubio_temporal import AubioTemporal
 
-class TestAubioTemporal(TestCase):
+class TestAubioTemporal(unittest.TestCase):
 
     def setUp(self):
         self.analyzer = AubioTemporal()

@@ -4,7 +4,7 @@ from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.level import Level
 
-class TestAnalyzerLevel(TestCase):
+class TestAnalyzerLevel(unittest.TestCase):
 
     def setUp(self):
         self.analyzer = Level()

@@ -4,7 +4,7 @@ from unit_timeside import *
 from timeside.decoder import *
 from timeside.analyzer.aubio_melenergy import AubioMelEnergy
 
-class TestAubioMelEnergy(TestCase):
+class TestAubioMelEnergy(unittest.TestCase):
 
     def setUp(self):
         self.analyzer = AubioMelEnergy()

@@ -10,7 +10,7 @@ from math import pi
 verbose = 0
 
 
-class TestAnalyzerResult(TestCase):
+class TestAnalyzerResult(unittest.TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):

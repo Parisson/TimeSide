@@ -3,8 +3,9 @@
 from unit_timeside import *
 from timeside.decoder import FileDecoder
 from timeside.analyzer.dc import MeanDCShift
+import os
 
-class TestAnalyzerDC(TestCase):
+class TestAnalyzerDC(unittest.TestCase):
 
     def setUp(self):
         self.analyzer = MeanDCShift()

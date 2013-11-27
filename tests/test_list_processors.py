@@ -4,7 +4,7 @@ from unit_timeside import *
 import timeside
 verbose = 0
 
-class TestListCoreProcessors(TestCase):
+class TestListCoreProcessors(unittest.TestCase):
     """ test get list of processors """
 
     def testHasSomeDecoders(self):
