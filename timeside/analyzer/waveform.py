@@ -61,8 +61,7 @@ class Waveform(Analyzer):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
-        for samples in downsample_blocking(frames, self.input_blocksize):
-            self.values.append(samples)
+        self.values.append(frames)
         return frames, eod
 
     def post_process(self):
