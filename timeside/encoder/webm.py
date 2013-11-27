@@ -45,7 +45,7 @@ class WebMEncoder(GstEncoder):
                   '''
         else:
             self.pipe = '''
-                  appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
+                  appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue !
                   webmmux streamable=true name=mux
                   '''
         if self.filename and self.streaming:
