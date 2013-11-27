@@ -42,7 +42,7 @@ class AacEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
             ! audioconvert
             ! voaacenc
-            ! matroskamux
+            ! mp4mux
             '''
 
         if self.filename and self.streaming:
