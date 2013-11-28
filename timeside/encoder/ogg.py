@@ -33,7 +33,7 @@ class VorbisEncoder(GstEncoder):
         super(VorbisEncoder, self).setup(channels, samplerate, blocksize, totalframes)
         self.pipe = ''' appsrc name=src
                   ! audioconvert
-                  ! vorbisenc
+                  ! vorbisenc quality=0.9
                   ! oggmux
                   '''
 
