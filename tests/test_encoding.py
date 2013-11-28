@@ -33,7 +33,7 @@ class TestEncoding(unittest.TestCase):
         self.test_channels = True
 
         # Source
-        self.source_duration = 6.
+        self.source_duration = 10.
 
     def testWav(self):
         "Test wav encoding"
@@ -45,7 +45,7 @@ class TestEncoding(unittest.TestCase):
         "Test vorbis encoding"
         from timeside.encoder.ogg import VorbisEncoder
         self.encoder_function = VorbisEncoder
-        self.delta = 0.2
+        self.delta = 0.3
 
     def testMp3(self):
         "Test mp3 encoding"
@@ -58,7 +58,7 @@ class TestEncoding(unittest.TestCase):
         from timeside.encoder.m4a import AacEncoder
         self.encoder_function = AacEncoder
         self.test_channels = False
-        self.delta = 0.2
+        self.delta = 0.3
 
     def testFlac(self):
         "Test flac encoding"
@@ -67,11 +67,24 @@ class TestEncoding(unittest.TestCase):
         self.delta = 0
 
     def testWebm(self):
-        "Test webm encoding"
+        "Test webm encoding, audio only"
         from timeside.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
+
+    def testWebmVideo(self):
+        "Test webm encoding, video"
+        from timeside.encoder.webm import WebMEncoder
+        self.encoder_function = WebMEncoder
+        self.test_duration = False  # webmmux encoder with streamable=true
+                                    # does not return a valid duration
+        file_extension = '.' + self.encoder_function.file_extension()
+        self.sink = tmp_file_sink(prefix=self.__class__.__name__,
+                                      suffix=file_extension)
+        self.encoder = self.encoder_function(self.sink,
+                                             overwrite=self.overwrite,
+                                             video=True)
 
     def tearDown(self):
 
@@ -84,8 +97,10 @@ class TestEncoding(unittest.TestCase):
         if not hasattr(self, 'sink'):
             self.sink = tmp_file_sink(prefix=self.__class__.__name__,
                                       suffix=file_extension)
-        self.encoder = self.encoder_function(self.sink,
-                                             overwrite=self.overwrite)
+
+        if not hasattr(self, 'encoder'):
+            self.encoder = self.encoder_function(self.sink,
+                                                 overwrite=self.overwrite)
 
         # Run Pipe
         (decoder | self.encoder).run()

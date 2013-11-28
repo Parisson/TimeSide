@@ -29,20 +29,22 @@ class WebMEncoder(GstEncoder):
     """ gstreamer-based webm encoder and muxer """
     implements(IEncoder)
 
-    def __init__(self, output, streaming = False, overwrite = False):
+    def __init__(self, output, streaming=False, overwrite=False, video=False):
         super(WebMEncoder, self).__init__(output, streaming, overwrite)
-        self.video = False
+        self.video = video
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(WebMEncoder, self).setup(channels, samplerate, blocksize, totalframes)
-
+        from numpy import ceil
+        framerate = 30
+        num_buffers =  ceil(self.mediainfo()['duration'] *
+                            framerate).astype(int)
         if self.video:
-            self.pipe = '''videotestsrc pattern=black ! ffmpegcolorspace
-                  ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
-                  appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
-                  webmmux streamable=true name=mux
-                  '''
+            self.pipe = '''appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
+                        videotestsrc pattern=black num_buffers=%d ! ffmpegcolorspace ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
+                        webmmux streamable=true name=mux
+                        ''' % num_buffers
         else:
             self.pipe = '''
                   appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue !

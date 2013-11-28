@@ -289,11 +289,11 @@ class ProcessPipe(object):
 
         # setup/reset processors and configure properties throughout the pipe
         for item in items:
+            item.source_mediainfo = source.mediainfo()
             item.setup(channels=last.channels(),
                        samplerate=last.samplerate(),
                        blocksize=last.blocksize(),
                        totalframes=last.totalframes())
-            item.source_mediainfo = source.mediainfo()
             last = item
 
         # now stream audio data along the pipe
