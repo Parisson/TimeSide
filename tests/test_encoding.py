@@ -21,9 +21,9 @@ class TestEncoding(unittest.TestCase):
         omega = 2. * pi * f / self.samplerate
         samples = np.empty((self.expected_total_frames, self.channels))
         for n in xrange(self.channels):
-            samples[:,n] = .75 * np.sin(omega[n]*np.arange(self.expected_total_frames))
+            samples[:, n] = .75 * np.sin(omega[n] *
+                                         np.arange(self.expected_total_frames))
         return samples
-
 
     def setUp(self):
         self.samplerate, self.channels, self.blocksize = 44100, 1, 1024
@@ -33,8 +33,7 @@ class TestEncoding(unittest.TestCase):
         self.test_channels = True
 
         # Source
-        self.source_duration = 3.
-
+        self.source_duration = 6.
 
     def testWav(self):
         "Test wav encoding"
@@ -54,14 +53,12 @@ class TestEncoding(unittest.TestCase):
         self.encoder_function = Mp3Encoder
         self.delta = 0.2
 
-
     def testAac(self):
         "Test aac encoding"
         from timeside.encoder.m4a import AacEncoder
         self.encoder_function = AacEncoder
         self.test_channels = False
-        self.delta = 0.06
-
+        self.delta = 0.2
 
     def testFlac(self):
         "Test flac encoding"
@@ -86,7 +83,7 @@ class TestEncoding(unittest.TestCase):
         file_extension = '.' + self.encoder_function.file_extension()
         if not hasattr(self, 'sink'):
             self.sink = tmp_file_sink(prefix=self.__class__.__name__,
-                                  suffix=file_extension)
+                                      suffix=file_extension)
         self.encoder = self.encoder_function(self.sink,
                                              overwrite=self.overwrite)
 
@@ -99,7 +96,7 @@ class TestEncoding(unittest.TestCase):
             media_channels = media_info['streams'][0]['channels']
             media_samplerate = media_info['streams'][0]['samplerate']
 
-            #os.unlink(self.sink)
+            os.unlink(self.sink)
 
             if self.test_duration:
                 self.assertAlmostEqual(self.source_duration,
@@ -120,8 +117,6 @@ class TestEncoding(unittest.TestCase):
         self.assertEqual(self.samplerate, self.encoder.samplerate())
         self.assertEqual(self.source_duration,
                          self.encoder.num_samples/self.encoder.samplerate())
-
-
 
 
 class TestEncodingLongBlock(TestEncoding):
@@ -188,7 +183,6 @@ class TestEncodingToDevNull(TestEncoding):
         self.encode_to_file = False
 
 
-
 class TestEncodingToDirectory(TestEncoding):
     "Test encoding features to a directory"
 
@@ -224,7 +218,6 @@ class TestEncodingOverwriteForced(unittest.TestCase):
         self.tmpfile = tempfile.NamedTemporaryFile(delete=True)
         self.sink = self.tmpfile.name
         self.overwrite = True
-
 
     def tearDown(self):
         super(TestEncodingOverwriteForced, self).tearDown()
