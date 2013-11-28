@@ -79,12 +79,13 @@ class TestEncoding(unittest.TestCase):
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
-        file_extension = '.' + self.encoder_function.file_extension()
-        self.sink = tmp_file_sink(prefix=self.__class__.__name__,
+        if not hasattr(self, 'sink'):
+            file_extension = '.' + self.encoder_function.file_extension()
+            self.sink = tmp_file_sink(prefix=self.__class__.__name__,
                                       suffix=file_extension)
-        self.encoder = self.encoder_function(self.sink,
-                                             overwrite=self.overwrite,
-                                             video=True)
+            self.encoder = self.encoder_function(self.sink,
+                                                 overwrite=self.overwrite,
+                                                 video=True)
 
     def tearDown(self):
 
@@ -93,8 +94,8 @@ class TestEncoding(unittest.TestCase):
         decoder = ArrayDecoder(self.generate_source(),
                                samplerate=self.samplerate)
         # Encoder
-        file_extension = '.' + self.encoder_function.file_extension()
         if not hasattr(self, 'sink'):
+            file_extension = '.' + self.encoder_function.file_extension()
             self.sink = tmp_file_sink(prefix=self.__class__.__name__,
                                       suffix=file_extension)
 
