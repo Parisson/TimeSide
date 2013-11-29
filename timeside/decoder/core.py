@@ -515,9 +515,9 @@ class ArrayDecoder(Processor):
 
 if __name__ == "__main__":
     # Run doctest from __main__ and unittest from tests
-    from tests.unit_timeside import runTestModule
+    from tests.unit_timeside import run_test_module
     # load corresponding tests
     from tests import test_decoding, test_array_decoding
 
-    runTestModule([test_decoding, test_array_decoding])
+    run_test_module([test_decoding, test_array_decoding])
 

@@ -142,7 +142,7 @@ class TestRunner:
         return result
 
 
-def runTestModule(test_modules_list=None, test_prefix=None):
+def run_test_module(test_modules_list=None, test_prefix=None):
     suite = unittest.TestSuite()
     finder = doctest.DocTestFinder(exclude_empty=False)  # finder for doctest
     if test_prefix:
