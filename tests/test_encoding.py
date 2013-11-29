@@ -10,6 +10,7 @@ from timeside.decoder import ArrayDecoder
 import os
 from tools import tmp_file_sink
 
+
 class TestEncoding(unittest.TestCase):
     "Test encoding features"
 
@@ -66,14 +67,14 @@ class TestEncoding(unittest.TestCase):
         self.encoder_function = FlacEncoder
         self.delta = 0
 
-    def testWebm(self):
+    def testWebM(self):
         "Test webm encoding, audio only"
         from timeside.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 
-    def testWebmVideo(self):
+    def testWebMVideo(self):
         "Test webm encoding, video"
         from timeside.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder

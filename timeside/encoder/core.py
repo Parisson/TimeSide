@@ -146,4 +146,4 @@ if __name__ == "__main__":
     # Run doctest from __main__ and unittest from test_analyzer_preprocessors
     from tests import test_encoding, test_transcoding
     from tests.unit_timeside import runTestModule
-    runTestModule('__main__', test_encoding, test_transcoding)
+    runTestModule([test_encoding, test_transcoding])

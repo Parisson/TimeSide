@@ -519,5 +519,5 @@ if __name__ == "__main__":
     # load corresponding tests
     from tests import test_decoding, test_array_decoding
 
-    runTestModule('__main__', test_decoding, test_array_decoding)
+    runTestModule([test_decoding, test_array_decoding])
 

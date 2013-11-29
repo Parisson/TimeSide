@@ -144,5 +144,5 @@ if __name__ == "__main__":
     # load corresponding tests
     from tests import test_decoder_utils
 
-    runTestModule('__main__', test_decoder_utils)
+    runTestModule(test_decoder_utils)
 

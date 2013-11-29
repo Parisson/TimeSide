@@ -34,21 +34,21 @@ class WebMEncoder(GstEncoder):
         self.video = video
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(WebMEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
+        super(WebMEncoder, self).setup(channels, samplerate, blocksize,
+                                       totalframes)
         from numpy import ceil
         framerate = 30
-        num_buffers =  ceil(self.mediainfo()['duration'] *
-                            framerate).astype(int)
+        num_buffers = ceil(self.mediainfo()['duration'] *
+                           framerate).astype(int)
+        self.pipe = ''
         if self.video:
-            self.pipe = '''appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
-                        videotestsrc pattern=black num_buffers=%d ! ffmpegcolorspace ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
-                        webmmux streamable=true name=mux
-                        ''' % num_buffers
-        else:
-            self.pipe = '''
-                  appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue !
-                  webmmux streamable=true name=mux
+            self.pipe += '''videotestsrc pattern=black num_buffers=%d ! ffmpegcolorspace ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
+                         ''' % num_buffers
+        self.pipe += '''
+              appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
+              webmmux streamable=true name=mux
                   '''
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
@@ -56,13 +56,12 @@ class WebMEncoder(GstEncoder):
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
 
-        elif self.filename :
+        elif self.filename:
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
             self.pipe += '! queue ! appsink name=app sync=False '
 
         self.start_pipeline(channels, samplerate)
-
 
     @staticmethod
     @interfacedoc
@@ -92,3 +91,9 @@ class WebMEncoder(GstEncoder):
     @interfacedoc
     def set_metadata(self, metadata):
         self.metadata = metadata
+
+if __name__ == "__main__":
+    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
+    from tests import test_encoding, test_transcoding
+    from tests.unit_timeside import runTestModule
+    runTestModule([test_encoding, test_transcoding], test_prefix='testWebM')
