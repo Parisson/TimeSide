@@ -84,19 +84,14 @@ class AubioTemporal(Analyzer):
     def post_process(self):
 
         #---------------------------------
-        #  Onsets
+        #  Onsets: Event (time, "Onset")
         #---------------------------------
         onsets = self.new_result(data_mode='label', time_mode='event')
-
         onsets.id_metadata.id += '.' + 'onset'
         onsets.id_metadata.name += ' ' + 'Onset'
         onsets.id_metadata.unit = 's'
-
-        # Set Data , data_mode='label', time_mode='event'
-        # Event = list of (time, labelId)
-
-        onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.data_object.time = self.onsets
+        onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.label_metadata.label = {1: 'Onset'}
 
         self.pipe.results.add(onsets)
@@ -146,23 +141,18 @@ class AubioTemporal(Analyzer):
         self.pipe.results.add(beats)
 
         #---------------------------------
-        #  BPM
+        #  BPM: Segment (time, duration, value)
         #---------------------------------
         bpm = self.new_result(data_mode='value', time_mode='segment')
-        # Set metadata
         bpm.id_metadata.id += '.' + "bpm"
         bpm.id_metadata.name += ' ' + "bpm"
         bpm.id_metadata.unit = "bpm"
-
-        #  Set Data, data_mode='value', time_mode='segment'
         if len(self.beats) > 1:
-            periods = 60. / numpy.diff(self.beats)
+            periods = numpy.diff(self.beats)
             periods = numpy.append(periods, periods[-1])
-
             bpm.data_object.time = self.beats
-            bpm.data_object.duration = duration
-            bpm.data_object.value = periods
-
+            bpm.data_object.duration = periods
+            bpm.data_object.value = 60. / periods
         else:
             bpm.data_object.value = []
 
