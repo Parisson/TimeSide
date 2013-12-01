@@ -51,6 +51,7 @@ class AubioTemporal(Analyzer):
         self.block_read = 0
         self.onsets = []
         self.beats = []
+        self.beat_confidences = []
 
     @staticmethod
     @interfacedoc
@@ -78,91 +79,82 @@ class AubioTemporal(Analyzer):
             self.onsets += [self.o.get_last_s()]
         if self.t(frames):
             self.beats += [self.t.get_last_s()]
+            self.beat_confidences += [self.t.get_confidence()]
         self.block_read += 1
         return frames, eod
 
     def post_process(self):
 
         #---------------------------------
-        #  Onsets
+        #  Onsets: Event (time, "Onset")
         #---------------------------------
         onsets = self.new_result(data_mode='label', time_mode='event')
-
         onsets.id_metadata.id += '.' + 'onset'
         onsets.id_metadata.name += ' ' + 'Onset'
         onsets.id_metadata.unit = 's'
-
-        # Set Data , data_mode='label', time_mode='event'
-        # Event = list of (time, labelId)
-
-        onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.data_object.time = self.onsets
+        onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.label_metadata.label = {1: 'Onset'}
 
         self.pipe.results.add(onsets)
 
         #---------------------------------
-        #  Onset Rate
+        #  Onset Rate: Segment (time, duration, value)
         #---------------------------------
-        onsetrate = self.new_result(data_mode='value', time_mode='event')
-        # Set metadata
+        onsetrate = self.new_result(data_mode='value', time_mode='segment')
         onsetrate.id_metadata.id += '.' + "onset_rate"
         onsetrate.id_metadata.name = " " + "Onset Rate"
         onsetrate.id_metadata.unit = "bpm"
-
-        # Set Data , data_mode='value', time_mode='event'
-        # Event = list of (time, value)
-        # TODO : add time
         if len(self.onsets) > 1:
-            onsetrate.data_object.value = 60. / numpy.diff(self.onsets)
-            onsetrate.data_object.time = self.onsets[:-1]
+            periods = 60. / numpy.diff(self.onsets)
+            periods = numpy.append(periods, periods[-1])
+            onsetrate.data_object.time = self.onsets
+            onsetrate.data_object.duration = periods
+            onsetrate.data_object.value = 60. / periods
         else:
             onsetrate.data_object.value = []
+            onsetrate.data_object.time = []
 
         self.pipe.results.add(onsetrate)
 
         #---------------------------------
-        #  Beats
+        #  Beats: Event (time, "Beat")
         #---------------------------------
-        beats = self.new_result(data_mode='label', time_mode='segment')
-        # Set metadata
+        beats = self.new_result(data_mode='label', time_mode='event')
         beats.id_metadata.id += '.' + "beat"
         beats.id_metadata.name += " " + "Beats"
         beats.id_metadata.unit = "s"
-
-        #  Set Data, data_mode='label', time_mode='segment'
-        # Segment = list of (time, duration, labelId)
-        if len(self.beats) > 1:
-            duration = numpy.diff(self.beats)
-            duration = numpy.append(duration, duration[-1])
-            beats.data_object.time = self.beats
-            beats.data_object.duration = duration
-            beats.data_object.label = numpy.ones(len(self.beats))
-        else:
-            beats.data_object.label = []
-
+        beats.data_object.time = self.beats
+        beats.data_object.label = numpy.ones(len(self.beats))
         beats.label_metadata.label = {1: 'Beat'}
 
         self.pipe.results.add(beats)
 
         #---------------------------------
-        #  BPM
+        #  Beat confidences: Event (time, value)
+        #---------------------------------
+        beat_confidences = self.new_result(data_mode='value', time_mode='event')
+        beat_confidences.id_metadata.id += '.' + "beat_confidence"
+        beat_confidences.id_metadata.name += " " + "Beat confidences"
+        beat_confidences.id_metadata.unit = None
+        beat_confidences.data_object.time = self.beats
+        beat_confidences.data_object.value = self.beat_confidences
+
+        self.pipe.results.add(beat_confidences)
+
+        #---------------------------------
+        #  BPM: Segment (time, duration, value)
         #---------------------------------
         bpm = self.new_result(data_mode='value', time_mode='segment')
-        # Set metadata
         bpm.id_metadata.id += '.' + "bpm"
         bpm.id_metadata.name += ' ' + "bpm"
         bpm.id_metadata.unit = "bpm"
-
-        #  Set Data, data_mode='value', time_mode='segment'
         if len(self.beats) > 1:
-            periods = 60. / numpy.diff(self.beats)
+            periods = numpy.diff(self.beats)
             periods = numpy.append(periods, periods[-1])
-
             bpm.data_object.time = self.beats
-            bpm.data_object.duration = duration
-            bpm.data_object.value = periods
-
+            bpm.data_object.duration = periods
+            bpm.data_object.value = 60. / periods
         else:
             bpm.data_object.value = []
 

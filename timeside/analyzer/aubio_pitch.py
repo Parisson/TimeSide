@@ -41,11 +41,12 @@ class AubioPitch(Analyzer):
                                       samplerate,
                                       blocksize,
                                       totalframes)
-        self.p = pitch("default", self.input_blocksize, self.input_stepsize,
+        self.aubio_pitch = pitch("default", self.input_blocksize, self.input_stepsize,
                        samplerate)
-        self.p.set_unit("freq")
+        self.aubio_pitch.set_unit("freq")
         self.block_read = 0
         self.pitches = []
+        self.pitch_confidences = []
 
     @staticmethod
     @interfacedoc
@@ -69,7 +70,8 @@ class AubioPitch(Analyzer):
     @frames_adapter
     def process(self, frames, eod=False):
         #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
-        self.pitches += [self.p(frames)[0]]
+        self.pitches += [self.aubio_pitch(frames)[0]]
+        self.pitch_confidences += [self.aubio_pitch.get_confidence()]
         self.block_read += 1
         return frames, eod
 
@@ -79,5 +81,15 @@ class AubioPitch(Analyzer):
         # parameters : None # TODO check with Piem "default" and "freq" in
         # setup
 
+        pitch.id_metadata.id += '.' + "pitch"
+        pitch.id_metadata.name += ' ' + "pitch"
+        pitch.id_metadata.unit = "Hz"
         pitch.data_object.value = self.pitches
         self.pipe.results.add(pitch)
+
+        pitch_confidence = self.new_result(data_mode='value', time_mode='framewise')
+        pitch_confidence.id_metadata.id += '.' + "pitch_confidence"
+        pitch_confidence.id_metadata.name += ' ' + "pitch confidence"
+        pitch_confidence.id_metadata.unit = None
+        pitch_confidence.data_object.value = self.pitch_confidences
+        self.pipe.results.add(pitch_confidence)
