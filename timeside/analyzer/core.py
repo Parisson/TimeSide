@@ -804,9 +804,7 @@ class AnalyzerResultContainer(dict):
 
     '''
     >>> import timeside
-    >>> import os
-    >>> ModulePath =  os.path.dirname(os.path.realpath(timeside.analyzer.core.__file__))
-    >>> wavFile = os.path.join(ModulePath , '../../tests/samples/sweep.wav')
+    >>> wavFile = 'tests/samples/sweep.wav'
     >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
 
     >>> a = timeside.analyzer.Analyzer()
