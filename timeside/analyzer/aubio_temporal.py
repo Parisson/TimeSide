@@ -51,6 +51,7 @@ class AubioTemporal(Analyzer):
         self.block_read = 0
         self.onsets = []
         self.beats = []
+        self.beat_confidences = []
 
     @staticmethod
     @interfacedoc
@@ -78,6 +79,7 @@ class AubioTemporal(Analyzer):
             self.onsets += [self.o.get_last_s()]
         if self.t(frames):
             self.beats += [self.t.get_last_s()]
+            self.beat_confidences += [self.t.get_confidence()]
         self.block_read += 1
         return frames, eod
 
@@ -127,6 +129,18 @@ class AubioTemporal(Analyzer):
         beats.label_metadata.label = {1: 'Beat'}
 
         self.pipe.results.add(beats)
+
+        #---------------------------------
+        #  Beat confidences: Event (time, value)
+        #---------------------------------
+        beat_confidences = self.new_result(data_mode='value', time_mode='event')
+        beat_confidences.id_metadata.id += '.' + "beat_confidence"
+        beat_confidences.id_metadata.name += " " + "Beat confidences"
+        beat_confidences.id_metadata.unit = None
+        beat_confidences.data_object.time = self.beats
+        beat_confidences.data_object.value = self.beat_confidences
+
+        self.pipe.results.add(beat_confidences)
 
         #---------------------------------
         #  BPM: Segment (time, duration, value)
