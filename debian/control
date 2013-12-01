@@ -2,7 +2,7 @@ Source: timeside
 Section: python
 Priority: extra
 Maintainer: Paul Brossier <piem@debian.org>
-Build-Depends: debhelper (>= 8.0.0), python, python-sphinx
+Build-Depends: debhelper (>= 8.0.0), python, python-sphinx, python-yaafe
 Standards-Version: 3.9.3
 Homepage: https://github.com/yomguy/TimeSide
 Vcs-Browser: https://github.com/yomguy/TimeSide
@@ -18,7 +18,6 @@ Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends},
   python-gst0.10,
   gstreamer0.10-plugins-good,
   gstreamer0.10-gnonlin,
-  gstreamer0.10-plugins-bad,
   gstreamer0.10-plugins-ugly,
   python-aubio,
   python-yaafe,
