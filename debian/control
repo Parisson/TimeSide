@@ -22,6 +22,7 @@ Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends},
   python-aubio,
   python-yaafe,
   python-scipy,
+  python-matplotlib,
   vamp-examples,
   vamp-plugin-sdk,
 Description: open web audio processing framework
