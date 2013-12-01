@@ -97,45 +97,33 @@ class AubioTemporal(Analyzer):
         self.pipe.results.add(onsets)
 
         #---------------------------------
-        #  Onset Rate
+        #  Onset Rate: Segment (time, duration, value)
         #---------------------------------
-        onsetrate = self.new_result(data_mode='value', time_mode='event')
-        # Set metadata
+        onsetrate = self.new_result(data_mode='value', time_mode='segment')
         onsetrate.id_metadata.id += '.' + "onset_rate"
         onsetrate.id_metadata.name = " " + "Onset Rate"
         onsetrate.id_metadata.unit = "bpm"
-
-        # Set Data , data_mode='value', time_mode='event'
-        # Event = list of (time, value)
-        # TODO : add time
         if len(self.onsets) > 1:
-            onsetrate.data_object.value = 60. / numpy.diff(self.onsets)
-            onsetrate.data_object.time = self.onsets[:-1]
+            periods = 60. / numpy.diff(self.onsets)
+            periods = numpy.append(periods, periods[-1])
+            onsetrate.data_object.time = self.onsets
+            onsetrate.data_object.duration = periods
+            onsetrate.data_object.value = 60. / periods
         else:
             onsetrate.data_object.value = []
+            onsetrate.data_object.time = []
 
         self.pipe.results.add(onsetrate)
 
         #---------------------------------
-        #  Beats
+        #  Beats: Event (time, "Beat")
         #---------------------------------
-        beats = self.new_result(data_mode='label', time_mode='segment')
-        # Set metadata
+        beats = self.new_result(data_mode='label', time_mode='event')
         beats.id_metadata.id += '.' + "beat"
         beats.id_metadata.name += " " + "Beats"
         beats.id_metadata.unit = "s"
-
-        #  Set Data, data_mode='label', time_mode='segment'
-        # Segment = list of (time, duration, labelId)
-        if len(self.beats) > 1:
-            duration = numpy.diff(self.beats)
-            duration = numpy.append(duration, duration[-1])
-            beats.data_object.time = self.beats
-            beats.data_object.duration = duration
-            beats.data_object.label = numpy.ones(len(self.beats))
-        else:
-            beats.data_object.label = []
-
+        beats.data_object.time = self.beats
+        beats.data_object.label = numpy.ones(len(self.beats))
         beats.label_metadata.label = {1: 'Beat'}
 
         self.pipe.results.add(beats)
