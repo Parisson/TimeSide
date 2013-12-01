@@ -106,7 +106,7 @@ class AubioTemporal(Analyzer):
         onsetrate.id_metadata.name = " " + "Onset Rate"
         onsetrate.id_metadata.unit = "bpm"
         if len(self.onsets) > 1:
-            periods = 60. / numpy.diff(self.onsets)
+            periods = numpy.diff(self.onsets)
             periods = numpy.append(periods, periods[-1])
             onsetrate.data_object.time = self.onsets
             onsetrate.data_object.duration = periods
