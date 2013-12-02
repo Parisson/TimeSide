@@ -113,11 +113,11 @@ def smooth(x, window_len=10, window='hanning'):
     >>> x = np.sin(t)+np.random.randn(len(t))*0.1
     >>> y = smooth(x)
     >>> import matplotlib.pyplot as plt
-    >>> plt.plot(x) # doctest: +ELLIPSIS
+    >>> plt.plot(x) # doctest: +SKIP
     [<matplotlib.lines.Line2D object at 0x...>]
-    >>> plt.plot(y) # doctest: +ELLIPSIS
+    >>> plt.plot(y) # doctest: +SKIP
     [<matplotlib.lines.Line2D object at 0x...>]
-    >>> plt.legend(['Source signal', 'Smoothed signal']) # doctest: +ELLIPSIS
+    >>> plt.legend(['Source signal', 'Smoothed signal']) # doctest: +SKIP
     <matplotlib.legend.Legend object at 0x...>
     >>> plt.show() # doctest: +SKIP
     """
