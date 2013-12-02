@@ -14,7 +14,7 @@ class TestAnalyzerResult(unittest.TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = analyzer_result_factory(data_mode='value', time_mode='framewise')
+        self.result = AnalyzerResult.factory(data_mode='value', time_mode='framewise')
 
         from datetime import datetime
         self.result.id_metadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
@@ -224,6 +224,16 @@ class TestAnalyzerResultJson(TestAnalyzerResult):
 
         #for i in range(len(d_json)):
         self.assertEqual(d_json, results)
+
+
+class TestAnalyzerResultAsDict(TestAnalyzerResult):
+    """ test AnalyzerResult as Dictionnary"""
+
+    def tearDown(self):
+
+        self.assertIsInstance(self.result.as_dict(), dict)
+        self.assertItemsEqual(self.result.keys() + ['data_mode', 'time_mode'],
+                              self.result.as_dict().keys())
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
