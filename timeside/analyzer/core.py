@@ -793,8 +793,8 @@ class AnalyzerResultContainer(dict):
     >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
 
     >>> a = timeside.analyzer.Analyzer()
-    >>> (d|a).run() #doctest: +ELLIPSIS
-    >>> a.new_result() #doctest: +ELLIPSIS
+    >>> (d|a).run() #doctest: +SKIP
+    >>> a.new_result() #doctest: +SKIP
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='http://...', start=1.0, duration=7..., is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
 
