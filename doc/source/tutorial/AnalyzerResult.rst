@@ -30,7 +30,7 @@ Default
 Create a new analyzer result without arguments
 
    >>> from timeside.analyzer.core import AnalyzerResult
-   >>> res = AnalyzerResult()
+   >>> res = AnalyzerResult.factory()
 
 This default result has all the metadata and dataObject attribute
 
@@ -60,7 +60,7 @@ Four different time_mode can be specified :
 Framewise
 ---------
 
->>> res = AnalyzerResult(time_mode='framewise')
+>>> res = AnalyzerResult.factory(time_mode='framewise')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'frame_metadata', 'parameters']
 
@@ -70,7 +70,7 @@ Global
 No frame metadata information is needed for these modes.
 The 'frame_metadata' key/attribute is deleted.
 
->>> res = AnalyzerResult(time_mode='global')
+>>> res = AnalyzerResult.factory(time_mode='global')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
@@ -79,7 +79,7 @@ DataObject(value=array([], dtype=float64))
 Segment
 -------
 
->>> res = AnalyzerResult(time_mode='segment')
+>>> res = AnalyzerResult.factory(time_mode='segment')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
@@ -88,7 +88,7 @@ DataObject(value=array([], dtype=float64), time=array([], dtype=float64), durati
 Event
 -----
 
->>> res = AnalyzerResult(time_mode='event')
+>>> res = AnalyzerResult.factory(time_mode='event')
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
