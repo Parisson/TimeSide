@@ -68,7 +68,7 @@ def parse_args():
     parser.add_option("-a", "--analyzers", action = "store",
             dest = "analyzers", type = str,
             help="analyzers in the pipeline",
-            default = [],
+            default = 'Level',
             metavar = "<analyzers>")
     parser.add_option("-g", "--graphers", action = "store",
             dest = "graphers", type = str,
@@ -80,6 +80,17 @@ def parse_args():
             help="encoders in the pipeline",
             default = [],
             metavar = "<encoders>")
+
+    parser.add_option("-R", "--results-formats", action = "store",
+            dest = "r_formats", type = str,
+            help = "list of results output formats for the analyzers results",
+            default = 'yaml',
+            metavar = "<formats>")
+    parser.add_option("-I", "--images-formats", action = "store",
+            dest = "i_formats", type = str,
+            help = "list of graph output formats for the analyzers results",
+            default = 'png',
+            metavar = "<formats>")
 
     parser.add_option("-o", "--ouput-directory", action = "store",
             dest = "outputdir", type = str,
@@ -95,6 +106,18 @@ def parse_args():
         options.graphers = options.graphers.split(',')
     if options.encoders:
         options.encoders = options.encoders.split(',')
+    if options.r_formats:
+        options.r_formats = options.r_formats.split(',')
+        known_r_formats = ['json', 'yaml', 'xml', 'hdf5']
+        for f in options.r_formats:
+            if f not in known_r_formats:
+                raise ValueError("unknown result format %s, possible values %s" % (f, known_r_formats))
+    if options.i_formats:
+        options.i_formats = options.i_formats.split(',')
+        known_i_formats = ['png', 'jpg', 'tiff']
+        for f in options.i_formats:
+            if f not in known_i_formats:
+                raise ValueError("unknown graph output format %s, possible values %s" % (f, known_i_formats))
 
     if options.config_file:
         if not os.path.isfile(options.config_file):
@@ -128,6 +151,8 @@ if __name__ == '__main__':
     samplerate = options.samplerate
     blocksize = options.blocksize
     outputdir = options.outputdir
+    r_formats = options.r_formats
+    i_formats = options.i_formats
     analyzers = options.analyzers
     graphers = options.graphers
     encoders = options.encoders
@@ -143,7 +168,7 @@ if __name__ == '__main__':
         matches += filter(lambda x: hasattr(x,'file_extension') and x.file_extension() == id_or_class , processors)
         if not len(matches):
             msg  = 'ERROR: could not find \'%s\'.' % id_or_class
-            msg += ' possible values:' + repr(possible_names)
+            msg += ' possible values:' + repr(processors)
             raise ValueError(msg)
         elif len(matches) > 1:
             msg  = 'ERROR: too many matches for \'%s\'.' % id_or_class
@@ -181,19 +206,19 @@ if __name__ == '__main__':
         pipe.run()
 
         if len(_analyzers):
-            container = timeside.analyzer.core.AnalyzerResultContainer()
-            for a in _analyzers:
-                container.add(a.results.values())
-            result_path = os.path.join(outputdir, decoder.uuid() + '.hf5')
-            container.to_hdf5(result_path)
-            if verbose : print 'saved', result_path
+            results = pipe.results
+            for f in r_formats:
+                result_path = os.path.join(outputdir, decoder.uuid() + '.' + f)
+                getattr(results,'to_'+f)(result_path)
+                if verbose : print 'saved', result_path
         if len(_graphers):
             for g in _graphers:
-                graph_path = os.path.join(outputdir, decoder.uuid(), g.id() + '.png')
-                if not os.path.isdir(os.path.dirname(graph_path)):
-                    os.makedirs(os.path.dirname(graph_path))
-                g.render(graph_path)
-                if verbose : print 'saved', graph_path
+                for f in i_formats:
+                    graph_path = os.path.join(outputdir, decoder.uuid(), g.id() + '.' + f)
+                    if not os.path.isdir(os.path.dirname(graph_path)):
+                        os.makedirs(os.path.dirname(graph_path))
+                    g.render(graph_path)
+                    if verbose : print 'saved', graph_path
         if len(_encoders):
             for e in _encoders:
                 if verbose : print 'saved', e.filename
