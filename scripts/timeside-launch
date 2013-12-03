@@ -143,7 +143,7 @@ if __name__ == '__main__':
         matches += filter(lambda x: hasattr(x,'file_extension') and x.file_extension() == id_or_class , processors)
         if not len(matches):
             msg  = 'ERROR: could not find \'%s\'.' % id_or_class
-            msg += ' possible values:' + repr(possible_names)
+            msg += ' possible values:' + repr(processors)
             raise ValueError(msg)
         elif len(matches) > 1:
             msg  = 'ERROR: too many matches for \'%s\'.' % id_or_class
