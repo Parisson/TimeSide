@@ -89,7 +89,7 @@ def parse_args():
     parser.add_option("-I", "--images-formats", action = "store",
             dest = "i_formats", type = str,
             help = "list of graph output formats for the analyzers results",
-            default = 'yaml',
+            default = 'png',
             metavar = "<formats>")
 
     parser.add_option("-o", "--ouput-directory", action = "store",
