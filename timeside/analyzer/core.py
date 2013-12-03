@@ -29,6 +29,7 @@ import numpy
 from collections import OrderedDict
 import h5py
 import h5tools
+import os
 
 
 numpy_data_types = [
@@ -793,12 +794,12 @@ class AnalyzerResultContainer(dict):
     >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
 
     >>> a = timeside.analyzer.Analyzer()
-    >>> (d|a).run() #doctest: +SKIP
-    >>> a.new_result() #doctest: +SKIP
+    >>> (d|a).run() #doctest: %s
+    >>> a.new_result() #doctest: %s
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='http://...', start=1.0, duration=7..., is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
 
-    '''
+    ''' % (doctest_option, doctest_option)
 
     def __init__(self, analyzer_results=None):
         super(AnalyzerResultContainer, self).__init__()
