@@ -203,7 +203,7 @@ if __name__ == '__main__':
             pipe = pipe | g
         for e in _encoders:
             pipe = pipe | e
-        pipe.run()
+        pipe.run(channels = channels, samplerate = samplerate, blocksize = blocksize)
 
         if len(_analyzers):
             results = pipe.results
