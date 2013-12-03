@@ -806,13 +806,16 @@ class AnalyzerResultContainer(dict):
             self.add(analyzer_results)
 
     def add(self, analyzer_result):
-        if isinstance(analyzer_result, list):
+        if isinstance(analyzer_result, AnalyzerResultContainer):
+            self.update(analyzer_result)
+            return
+        elif isinstance(analyzer_result, list):
             for res in analyzer_result:
                 self.add(res)
             return
         # Check result
         if not isinstance(analyzer_result, AnalyzerResult):
-            raise TypeError('only AnalyzerResult can be added')
+            raise TypeError('Only AnalyzerResult can be added')
 
         self.__setitem__(analyzer_result.id_metadata.id,
                          analyzer_result)
@@ -1011,7 +1014,7 @@ class Analyzer(Processor):
         from datetime import datetime
 
         result = AnalyzerResult.factory(data_mode=data_mode,
-                                time_mode=time_mode)
+                                        time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
