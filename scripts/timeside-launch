@@ -41,6 +41,9 @@ def parse_args():
     parser.add_option("-v","--verbose",
             action="store_true", dest="verbose", default=False,
             help="be verbose")
+    parser.add_option("-q","--quiet",
+            action="store_true", dest="quiet", default=False,
+            help="be quiet")
     parser.add_option("-C", "--conf", action = "store",
             dest = "config_file",
             help="configuration file",
@@ -72,6 +75,11 @@ def parse_args():
             help="graphers in the pipeline",
             default = [],
             metavar = "<graphers>")
+    parser.add_option("-e", "--encoders", action = "store",
+            dest = "encoders", type = str,
+            help="encoders in the pipeline",
+            default = [],
+            metavar = "<encoders>")
 
     parser.add_option("-o", "--ouput-directory", action = "store",
             dest = "outputdir", type = str,
@@ -85,6 +93,8 @@ def parse_args():
         options.analyzers = options.analyzers.split(',')
     if options.graphers:
         options.graphers = options.graphers.split(',')
+    if options.encoders:
+        options.encoders = options.encoders.split(',')
 
     if options.config_file:
         if not os.path.isfile(options.config_file):
@@ -108,70 +118,85 @@ if __name__ == '__main__':
     # load timeside after parse_args, to avoid gstreamer hijacking
     import timeside
 
-    if 1: #options.verbose:
+    if not options.quiet:
         for a in dir(options):
             if not callable(getattr(options,a)) and not a.startswith('_'):
                 print a + ":", getattr(options,a)
+
+    verbose = options.verbose and not options.quiet
+    channels = options.channels
+    samplerate = options.samplerate
+    blocksize = options.blocksize
+    outputdir = options.outputdir
+    analyzers = options.analyzers
+    graphers = options.graphers
+    encoders = options.encoders
 
     all_decoders = timeside.core.processors(timeside.api.IDecoder)
     all_analyzers = timeside.core.processors(timeside.api.IAnalyzer)
     all_graphers = timeside.core.processors(timeside.api.IGrapher)
     all_encoders = timeside.core.processors(timeside.api.IEncoder)
 
-    channels = options.channels
-    samplerate = options.samplerate
-    blocksize = options.blocksize
-    analyzers = options.analyzers
-    graphers = options.graphers
-
     def match_id_or_class(id_or_class, processors):
-        class_matches = filter(lambda x: x.__name__ == id_or_class, processors)
-        id_matches = filter(lambda x: x.id() == id_or_class , processors)
-        if not len(id_matches) and not len(class_matches):
-            print 'ERROR: could not find %s, skipping' % id_or_class
-            print 'possible processors:', [a.__name__ for a in processors]
-            sys.exit(1)
-        elif len(id_matches) + len(class_matches) > 1:
-            print 'ERROR: too many matches for %s analyzer' % id_or_class
-            print 'matched values:', id_matches, class_matches
-            sys.exit(1)
+        matches = filter(lambda x: x.__name__ == id_or_class, processors)
+        matches += filter(lambda x: x.id() == id_or_class , processors)
+        matches += filter(lambda x: hasattr(x,'file_extension') and x.file_extension() == id_or_class , processors)
+        if not len(matches):
+            msg  = 'ERROR: could not find \'%s\'.' % id_or_class
+            msg += ' possible values:' + repr(possible_names)
+            raise ValueError(msg)
+        elif len(matches) > 1:
+            msg  = 'ERROR: too many matches for \'%s\'.' % id_or_class
+            msg += ' matched values:' + repr(matches)
+            raise ValueError(msg)
         else:
-            return (id_matches + class_matches)[0]()
+            return matches[0]
 
     def match_analyzer(id_or_class):
         return match_id_or_class(id_or_class, all_analyzers)
     def match_grapher(id_or_class):
         return match_id_or_class(id_or_class, all_graphers)
+    def match_encoder(id_or_class):
+        return match_id_or_class(id_or_class, all_encoders)
 
     # create instances of analyzers and graphers
-    _analyzers = map(match_analyzer, analyzers)
-    _graphers = map(match_grapher, graphers)
+    analyzers = map(match_analyzer, analyzers)
+    graphers = map(match_grapher, graphers)
+    encoders = map(match_encoder, encoders)
 
     def process_file(path):
         decoder = timeside.decoder.FileDecoder(path, start = 1)
         #pipe.setup(channels = channels, samplerate = samplerate, blocksize = blocksize)
         pipe = decoder
+        _analyzers = [a() for a in analyzers]
+        _graphers = [g() for g in graphers]
+        _encoders = [e(os.path.join(outputdir, decoder.uuid() + '.' + e.file_extension())) for e in encoders]
 
         for a in _analyzers:
             pipe = pipe | a
         for g in _graphers:
             pipe = pipe | g
+        for e in _encoders:
+            pipe = pipe | e
         pipe.run()
 
         if len(_analyzers):
             container = timeside.analyzer.core.AnalyzerResultContainer()
             for a in _analyzers:
                 container.add(a.results.values())
-            result_path = os.path.join(options.outputdir, decoder.uuid() + '.hf5')
+            result_path = os.path.join(outputdir, decoder.uuid() + '.hf5')
             container.to_hdf5(result_path)
-            if options.verbose : print 'saved', result_path
+            if verbose : print 'saved', result_path
         if len(_graphers):
             for g in _graphers:
-                graph_path = os.path.join(options.outputdir, decoder.uuid(), g.id() + '.png')
+                graph_path = os.path.join(outputdir, decoder.uuid(), g.id() + '.png')
                 if not os.path.isdir(os.path.dirname(graph_path)):
                     os.makedirs(os.path.dirname(graph_path))
                 g.render(graph_path)
-                if options.verbose : print 'saved', graph_path
+                if verbose : print 'saved', graph_path
+        if len(_encoders):
+            for e in _encoders:
+                if verbose : print 'saved', e.filename
 
     for path in args:
         process_file (path)
