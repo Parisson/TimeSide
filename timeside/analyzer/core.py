@@ -31,6 +31,11 @@ import h5py
 import h5tools
 import os
 
+if os.environ.has_key('DISPLAY'):
+    doctest_option = '+SKIP'
+else:
+    doctest_option = '+ELLIPSIS'
+
 
 numpy_data_types = [
     #'float128',
@@ -807,22 +812,19 @@ class AnalyzerResultContainer(dict):
             self.add(analyzer_results)
 
     def add(self, analyzer_result):
-        if isinstance(analyzer_result, AnalyzerResultContainer):
-            self.update(analyzer_result)
-            return
-        elif isinstance(analyzer_result, list):
+        if isinstance(analyzer_result, list):
             for res in analyzer_result:
                 self.add(res)
             return
         # Check result
         if not isinstance(analyzer_result, AnalyzerResult):
-            raise TypeError('Only AnalyzerResult can be added')
+            raise TypeError('only AnalyzerResult can be added')
 
         self.__setitem__(analyzer_result.id_metadata.id,
                          analyzer_result)
         #self.results += [analyzer_result]
 
-    def to_xml(self, output_file = None):
+    def to_xml(self):
 
         import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
@@ -832,9 +834,7 @@ class AnalyzerResultContainer(dict):
             if result is not None:
                 root.append(ET.fromstring(result.to_xml()))
 
-        xml_str = ET.tostring(root, encoding="utf-8", method="xml")
-        if output_file: open(output_file, 'w').write(xml_str)
-        else: return xml_str
+        return ET.tostring(root, encoding="utf-8", method="xml")
 
     @staticmethod
     def from_xml(xml_string):
@@ -850,7 +850,7 @@ class AnalyzerResultContainer(dict):
 
         return results
 
-    def to_json(self, output_file = None):
+    def to_json(self):
         #if data_list == None: data_list = self.results
         import simplejson as json
 
@@ -861,10 +861,8 @@ class AnalyzerResultContainer(dict):
                         'dtype': obj.dtype.__str__()}
             raise TypeError(repr(obj) + " is not JSON serializable")
 
-        json_str = json.dumps([res.as_dict() for res in self.values()],
+        return json.dumps([res.as_dict() for res in self.values()],
                           default=NumpyArrayEncoder)
-        if output_file: open(output_file, 'w').write(json_str)
-        else: return json_str
 
     @staticmethod
     def from_json(json_str):
@@ -892,7 +890,7 @@ class AnalyzerResultContainer(dict):
             results.add(res)
         return results
 
-    def to_yaml(self, output_file):
+    def to_yaml(self):
         #if data_list == None: data_list = self.results
         import yaml
 
@@ -904,9 +902,7 @@ class AnalyzerResultContainer(dict):
 
         yaml.add_representer(numpy.ndarray, numpyArray_representer)
 
-        yaml_str = yaml.dump([res.as_dict() for res in self.values()])
-        if output_file: open(output_file, 'w').write(yaml_str)
-        else: return yaml_str
+        return yaml.dump([res.as_dict() for res in self.values()])
 
     @staticmethod
     def from_yaml(yaml_str):
@@ -1021,7 +1017,7 @@ class Analyzer(Processor):
         from datetime import datetime
 
         result = AnalyzerResult.factory(data_mode=data_mode,
-                                        time_mode=time_mode)
+                                time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
