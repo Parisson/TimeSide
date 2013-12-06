@@ -23,10 +23,14 @@ from timeside.core import Processor, implements, interfacedoc
 from timeside.api import IEncoder
 from timeside.tools import *
 
+from gst import _gst as gst
 
 class GstEncoder(Processor):
 
     def __init__(self, output, streaming = False, overwrite = False):
+
+        super(GstEncoder, self).__init__()
+
         if isinstance(output, basestring):
             import os.path
             if os.path.isdir(output):
@@ -46,6 +50,7 @@ class GstEncoder(Processor):
 
         self.eod = False
         self.metadata = None
+        self.num_samples = 0
 
     def release(self):
         if hasattr(self, 'eod') and hasattr(self, 'mainloopthread'):
@@ -75,6 +80,7 @@ class GstEncoder(Processor):
         self.src.set_property('emit-signals', True)
         self.src.set_property('num-buffers', -1)
         self.src.set_property('block', True)
+        self.src.set_property('do-timestamp', True)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
@@ -104,6 +110,7 @@ class GstEncoder(Processor):
             self.end_reached = True
             self.end_cond.notify()
             self.end_cond.release()
+
         elif t == gst.MESSAGE_ERROR:
             self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
@@ -116,11 +123,14 @@ class GstEncoder(Processor):
 
     def process(self, frames, eod=False):
         self.eod = eod
-        buf = numpy_array_to_gst_buffer(frames)
+        if eod:
+            self.num_samples +=  frames.shape[0]
+        else:
+            self.num_samples += self.blocksize()
+        buf = numpy_array_to_gst_buffer(frames, self.blocksize(),self.num_samples, self.samplerate())
         self.src.emit('push-buffer', buf)
         if self.eod:
             self.src.emit('end-of-stream')
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
         return frames, eod
-

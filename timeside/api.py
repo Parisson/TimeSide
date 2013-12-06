@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007-2012 Parisson SARL
+# Copyright (C) 2007-2013 Parisson SARL
 # Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
 # Copyright (c) 2007-2009 Guillaume Pellerin <pellerin@parisson.com>
 #
@@ -75,11 +75,30 @@ class IProcessor(Interface):
 
         Warning: it is required to call setup() before this method."""
 
+    def post_process(self):
+        '''
+        Post-Process data after processign the input frames with process()
+
+        Processors such as analyzers will produce Results during the Post-Process
+        '''
+
     def release(self):
         """Release resources owned by this processor. The processor cannot
         be used anymore after calling this method."""
 
         # implementations should always call the parent method
+
+    def mediainfo(self):
+        """
+        Information about the media object
+        uri
+        start
+        duration
+        """
+
+    @staticmethod
+    def uuid():
+        """Return the UUID of the processor"""
 
 
 class IEncoder(IProcessor):
@@ -205,6 +224,10 @@ class IValueAnalyzer(IAnalyzer):
 
     def result():
         """Return the final result of the analysis performed over the data passed by
+        repeatedly calling process()"""
+
+    def results():
+        """Return the final results of the analysis performed over the data passed by
         repeatedly calling process()"""
 
     def __str__(self):

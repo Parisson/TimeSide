@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (c) 2009-2013 Parisson SARL
 # Copyright (c) 2009 Olivier Guilyardi <olivier@samalyse.com>
 #
 # This file is part of TimeSide.
@@ -23,6 +24,7 @@ from timeside.exceptions import Error, ApiError
 import re
 import time
 import numpy
+import uuid
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
@@ -42,8 +44,15 @@ class MetaProcessor(MetaComponent):
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
             if _processors.has_key(id):
-                raise ApiError("%s and %s have the same id: '%s'"
-                    % (new_class.__name__, _processors[id].__name__, id))
+                # Doctest test can duplicate a processor
+                # This can be identify by the conditon "module == '__main__'"
+                if new_class.__module__ == '__main__':
+                    new_class = _processors[id]
+                elif _processors[id].__module__ == '__main__':
+                    pass
+                else:
+                    raise ApiError("%s and %s have the same id: '%s'"
+                        % (new_class.__name__, _processors[id].__name__, id))
             if not MetaProcessor.valid_id.match(id):
                 raise ApiError("%s has a malformed id: '%s'"
                     % (new_class.__name__, id))
@@ -54,45 +63,85 @@ class MetaProcessor(MetaComponent):
 
 
 class Processor(Component):
-    """Base component class of all processors"""
+    """Base component class of all processors
+
+
+    Attributes:
+              parents :  List of parent Processors that must be processed
+                         before the current Processor
+              pipe :     The current ProcessPipe in which the Processor will run
+        """
     __metaclass__ = MetaProcessor
 
     abstract()
     implements(IProcessor)
 
+    def __init__(self):
+        super(Processor, self).__init__()
+
+        self.parents = []
+        self.source_mediainfo = None
+        self.pipe = None
+        self.UUID = uuid.uuid4()
+
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        self.input_channels     = channels
-        self.input_samplerate   = samplerate
-        self.input_blocksize    = blocksize
-        self.input_totalframes  = totalframes
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
+        self.source_channels     = channels
+        self.source_samplerate   = samplerate
+        self.source_blocksize    = blocksize
+        self.source_totalframes  = totalframes
+
+        # If empty Set default values for input_* attributes
+        # may be setted by the processor during __init__()
+        if not hasattr(self, 'input_channels'):
+            self.input_channels = self.source_channels
+        if not hasattr(self, 'input_samplerate'):
+            self.input_samplerate = self.source_samplerate
+        if not hasattr(self, 'input_blocksize'):
+            self.input_blocksize = self.source_blocksize
+        if not hasattr(self, 'input_stepsize'):
+            self.input_stepsize = self.source_blocksize
+
 
     # default channels(), samplerate() and blocksize() implementations returns
-    # the input characteristics, but processors may change this behaviour by
+    # the source characteristics, but processors may change this behaviour by
     # overloading those methods
     @interfacedoc
     def channels(self):
-        return self.input_channels
+        return self.source_channels
 
     @interfacedoc
     def samplerate(self):
-        return self.input_samplerate
+        return self.source_samplerate
 
     @interfacedoc
     def blocksize(self):
-        return self.input_blocksize
+        return self.source_blocksize
 
     @interfacedoc
     def totalframes(self):
-        return self.input_totalframes
+        return self.source_totalframes
 
     @interfacedoc
     def process(self, frames, eod):
         return frames, eod
 
     @interfacedoc
+    def post_process(self):
+        pass
+
+    @interfacedoc
     def release(self):
         pass
+
+    @interfacedoc
+    def mediainfo(self):
+        return self.source_mediainfo
+
+    @interfacedoc
+    def uuid(self):
+        return str(self.UUID)
 
     def __del__(self):
         self.release()
@@ -164,32 +213,48 @@ class FixedSizeInputAdapter(object):
             yield block, True
             self.len = 0
 
+
 def processors(interface=IProcessor, recurse=True):
     """Returns the processors implementing a given interface and, if recurse,
     any of the descendants of this interface."""
     return implementations(interface, recurse)
 
+
 def get_processor(processor_id):
     """Return a processor by its id"""
     if not _processors.has_key(processor_id):
         raise Error("No processor registered with id: '%s'"
-              % processor_id)
+                      % processor_id)
 
     return _processors[processor_id]
 
 
 class ProcessPipe(object):
-    """Handle a pipe of processors"""
+    """Handle a pipe of processors
+
+    Attributes:
+        processor: List of all processors in the Process pipe
+        results : Results Container for all the analyzers of the Pipe process
+"""
 
     def __init__(self, *others):
         self.processors = []
         self |= others
+
+        from timeside.analyzer.core import AnalyzerResultContainer
+        self.results = AnalyzerResultContainer()
+
+        for proc in self.processors:
+            proc.pipe = self
 
     def __or__(self, other):
         return ProcessPipe(self, other)
 
     def __ior__(self, other):
         if isinstance(other, Processor):
+            parents = other.parents
+            for parent in parents:
+                self |= parent
             self.processors.append(other)
         elif isinstance(other, ProcessPipe):
             self.processors.extend(other.processors)
@@ -204,22 +269,31 @@ class ProcessPipe(object):
 
         return self
 
+    def __repr__(self):
+        pipe = ''
+        for item in self.processors:
+            pipe += item.id()
+            if item != self.processors[-1]:
+                pipe += ' | '
+        return pipe
+
     def run(self):
         """Setup/reset all processors in cascade and stream audio data along
         the pipe. Also returns the pipe itself."""
 
         source = self.processors[0]
-        items  = self.processors[1:]
+        items = self.processors[1:]
         source.setup()
 
         last = source
 
         # setup/reset processors and configure properties throughout the pipe
         for item in items:
-            item.setup(channels = last.channels(),
-                       samplerate = last.samplerate(),
-                       blocksize = last.blocksize(),
-                       totalframes = last.totalframes())
+            item.setup(channels=last.channels(),
+                       samplerate=last.samplerate(),
+                       blocksize=last.blocksize(),
+                       totalframes=last.totalframes())
+            item.source_mediainfo = source.mediainfo()
             last = item
 
         # now stream audio data along the pipe
@@ -230,6 +304,7 @@ class ProcessPipe(object):
                 frames, eod = item.process(frames, eod)
 
         for item in items:
-            item.release()
+            item.post_process()
 
-        return self
+        for item in items:
+            item.release()

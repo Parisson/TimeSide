@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+
+ <head>
+  <meta charset="utf-8">
+
+  <title>TimeSide : open and fast web audio components</title>
+
+  <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+  <meta name="author" content="Hakim El Hattab">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <link rel="stylesheet" href="http://files.parisson.com/static/reveal.js/css/reveal.min.css">
+  <link rel="stylesheet" href="http://files.parisson.com/static/reveal.js/css/theme/night.css" id="theme">
+
+  <!-- For syntax highlighting -->
+  <link rel="stylesheet" href="http://files.parisson.com/static/reveal.js/lib/css/zenburn.css">
+
+  <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+  <script>
+   document.write( '<link rel="stylesheet" href="http://files.parisson.com/static/reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+ </head>
+
+ <body>
+
+  <div class="reveal">
+
+   <!-- Any section element inside of this container is displayed as a slide -->
+   <div class="slides">
+
+    <section>
+     <h1>TimeSide</h1>
+     <h3>open and fast web audio components</h3>
+     <p>
+      <small>created by <a href="http://fr.linkedin.com/in/guillaumepellerin">Guillaume Pellerin</a> / <a href="http://twitter.com/yomguy">@yomguy</a> at <a href="http://parisson.com" target="_blank">Parisson.com</a></small>
+     </p>
+     <iframe width='374' height='221' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://parisson.telemeta.org/archives/items/PRS_07_01_01/player/360x130'></iframe>
+    </section>
+<!--
+    <section>
+     <h2>Heads up</h2>
+     <p>
+      TimeSide is a set of python components enabling easy audio processing, transcoding, imaging and streaming.
+      <br/><br/>
+      Its simple architecture and high-level API have been design to process serial pipelines.
+      <br/><br/>
+      It includes a powerfull HTM5 interactive player which can be embedded in any web application to provide fancy waveforms, various analyzer results, synced time metadata display during playback (time-marking) and remote indexing.
+      <br/><br/>
+      The engine (server side) is fully written in Python, the player (client side) in HTML, CSS and JavaScript.
+     </p>
+
+     <aside class="notes">
+      Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+     </aside>
+    </section> #}
+-->
+    <section>
+     <h2>Goals</h2>
+     <p>We just <b>need</b> a python library to:</p>
+     <br/>
+     <ul>
+      <li>build an open <a href="http://python.org" target="_blank">python</a> framework to do scalable asynchronous audio processing</li>
+      <li>decode audio frames from <b>any</b> format into <a href="http://www.numpy.org/" target="_blank">numpy</a> arrays</li>
+      <li>stream the frames in various processors and do <b>numpy data analyzing</b></li>
+      <li>create various <b>image outputs</b> like waveforms, spectrograms, etc.. with numpy and PIL</li>
+      <li><b>transcode</b> the processed frames in various media formats and <b>stream it on the fly in realtime</b></li>
+      <li>provide a high-level <b>100% HTML5 user interface</b> to display the results <b>on demand</b> and <b>play sound</b> through the web</li>
+      <li><b>metadata indexing</b>, <b>time marking</b> and <b>store everything</b> on a web server (see <a href="http://telemeta.org" target="_blank">Telemeta project</a>)</li>
+     </ul>
+    </section>
+
+    <section>
+     <h2>Architecture</h2>
+     <img src="http://timeside.googlecode.com/git/doc/img/timeside_schema.png" alt="TimeSide architecture">
+    </section>
+
+    <section>
+     <h2>Quick processing example</h2>
+     <p>Define some processors:</p>
+     <pre><code data-trim class="python">
+import timeside.decoder
+import timeside.grapher
+import timeside.analyzer
+import timeside.encoder
+
+decoder = timeside.decoder.FileDecoder('tests/samples/sweep.wav')
+grapher = timeside.grapher.Waveform()
+analyzer = timeside.analyzer.Level()
+encoder = timeside.encoder.Mp3Encoder('tests/samples/sweep.mp3')
+     </code></pre>
+     <p>then, the <i>magic</i> pipeline:</p>
+     <pre><code data-trim>
+(decoder | grapher | analyzer | encoder).run()
+     </code></pre>
+     <p>get the results:</p>
+     <pre><code data-trim>
+grapher.render(output='image.png')
+print 'Level:', analyzer.results()
+     </code></pre>
+    </section>
+
+    <section>
+     <h2>Quick UI example</h2>
+     <iframe width='374' height='221' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://parisson.telemeta.org/archives/items/PRS_07_01_01/player/360x130'></iframe>
+     <br/><br/>
+     <p>Documentation : <a href="https://code.google.com/p/timeside/wiki/UiGuide">UiGuide</a></p>
+    </section>
+
+
+    <section>
+     <h2>Changelog (dev branch, 05/13)</h2>
+     <ul>
+      <li>finally fix all decoder memory leaks! (piem)</li>
+      <li>fix ogg vorbis and flac encoders (piem)</li>
+      <li>add various <a href="http://aubio.org" target="_blank">aubio</a> analyzers thanks to piem such as : </li>
+       <ul>
+        <li>pitch (f0)</li>
+        <li>onsets</li>
+        <li>tempo</li>
+        <li>various spectral descriptors like : hfc, complex, phase, specdiff, kl,
+                    mkl, specflux, centroid, slope, rolloff, spread, skewness, kurtosis, decrease</li>
+                   </ul>
+                  <li>new AnalyzerResultContainer and AnalyzerResult classes with various i/o formats : xml, json, yaml, numpy (piem)</li>
+                  <li>more unit tests (piem)</li>
+                  <li>UI : rewind player after ending + various bugfixes (yomguy)
+                  <li>separate hosting for test samples (yomguy)</li>
+     </ul>
+    </section>
+
+
+    <section>
+     <h2>Install for production</h2>
+     <p>for version 0.4.3 on Linux (Debian Stable 7.0)</p>
+     <pre><code data-trim class="bash">
+sudo apt-get update
+
+sudo apt-get install python python-pip python-setuptools python-gobject \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
+                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+                        gstreamer0.10-plugins-ugly gobject-introspection \
+                        python-numpy python-mutagen python-yaml python-imaging \
+                        python-simplejson
+
+sudo pip install timeside
+      </code></pre>
+    </section>
+
+    <section>
+     <h2>Install for development 1/2</h2>
+     <p>for version >= 0.5 + aubio 0.4dev on Linux (Debian Stable 7.0)</p>
+     <pre><code data-trim class="bash">
+sudo apt-get update
+
+sudo apt-get install python python-dev python-pip python-setuptools python-gobject \
+                        python-gst0.10 gstreamer0.10-plugins-base gir1.2-gstreamer-0.10 \
+                        gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+                        gstreamer0.10-plugins-ugly gobject-introspection python-numpy \
+                        python-yaml python-imaging python-simplejson python-mutagen
+                        libsndfile-dev libsamplerate-dev  libjack-jackd2-dev \
+                        liblash-compat-dev libfftw3-dev \
+                        docbook-to-man gcc git-core ipython \
+
+                    </code></pre>
+
+                    <p>install <a href="http://aubio.org" target="_blank">aubio</a> with "develop" branch</p>
+                    <pre><code data-trim class="bash">
+git clone git://git.aubio.org/git/aubio/
+
+cd aubio
+
+git checkout develop
+
+./waf configure
+./waf build
+sudo ./waf install
+
+cd python
+sudo python setup.py install
+      </code></pre>
+    </section>
+
+
+    <section>
+     <h2>Install for development 2/2</h2>
+
+     <pre><code data-trim class="bash">
+
+git clone https://github.com/yomguy/TimeSide.git
+
+cd TimeSide
+
+git checkout dev
+
+export PYTHONPATH=$PYTHONPATH:`pwd`
+
+tests/run_all_tests
+
+      </code></pre>
+
+     <h3>Ready!</h3>
+    </section>
+
+    <section>
+     <h2>API</h2>
+     <a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L26" target="_blank">IProcessor</a>
+     <pre><code data-trim class="python">
+class IProcessor(Interface):
+    """Common processor interface"""
+
+    @staticmethod
+    def id():
+        """Short alphanumeric, lower-case string which uniquely identify this
+        processor, suitable for use as an HTTP/GET argument value, in filenames,
+        etc..."""
+
+        # implementation: only letters and digits are allowed. An exception will
+        # be raised by MetaProcessor if the id is malformed or not unique amongst
+        # registered processors.
+
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        """Allocate internal resources and reset state, so that this processor is
+        ready for a new run.
+
+        The channels, samplerate and/or blocksize and/or totalframes arguments
+        may be required by processors which accept input. An error will occur if any of
+        these arguments is passed to an output-only processor such as a decoder.
+        """
+
+        # implementations should always call the parent method
+
+    def channels(self):
+        """Number of channels in the data returned by process(). May be different from
+        the number of channels passed to setup()"""
+
+    def samplerate(self):
+        """Samplerate of the data returned by process(). May be different from
+        the samplerate passed to setup()"""
+
+    def blocksize():
+        """The total number of frames that this processor can output for each step
+        in the pipeline, or None if the number is unknown."""
+
+    def totalframes():
+        """The total number of frames that this processor will output, or None if
+        the number is unknown."""
+
+    def process(self, frames=None, eod=False):
+        """Process input frames and return a (output_frames, eod) tuple.
+        Both input and output frames are 2D numpy arrays, where columns are
+        channels, and containing an undetermined number of frames.  eod=True
+        means that the end-of-data has been reached.
+
+        Output-only processors (such as decoders) will raise an exception if the
+        frames argument is not None. All processors (even encoders) return data,
+        even if that means returning the input unchanged.
+
+        Warning: it is required to call setup() before this method."""
+
+    def release(self):
+        """Release resources owned by this processor. The processor cannot
+        be used anymore after calling this method."""
+
+        # implementations should always call the parent method
+
+     </code></pre>
+    </section>
+
+
+    <section>
+     <h2>API</h2>
+     <a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L132" target="_blank">IDecoder</a>
+     <pre><code data-trim class="python">
+class IDecoder(IProcessor):
+    """Decoder driver interface. Decoders are different of encoders in that
+    a given driver may support several input formats, hence this interface doesn't
+    export any static method, all informations are dynamic."""
+
+    def __init__(self, filename):
+        """Create a new decoder for filename."""
+        # implementation: additional optionnal arguments are allowed
+
+    def format():
+        """Return a user-friendly file format string"""
+
+    def encoding():
+        """Return a user-friendly encoding string"""
+
+    def resolution():
+        """Return the sample width (8, 16, etc..) of original audio file/stream,
+           or None if not applicable/known"""
+
+    def metadata(self):
+        """Return the metadata embedded into the encoded stream, if any."""
+
+     </code></pre>
+    </section>
+
+
+    <section>
+     <h2>API</h2>
+     <a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/api.py#L180" target="_blank">IAnalyzer</a>
+     <pre><code data-trim class="python">
+class IAnalyzer(IProcessor):
+    """Media item analyzer driver interface. This interface is abstract, it doesn't
+    describe a particular type of analyzer but is rather meant to group analyzers.
+    In particular, the way the result is returned may greatly vary from sub-interface
+    to sub-interface. For example the IValueAnalyzer returns a final single numeric
+    result at the end of the whole analysis. But some other analyzers may return
+    numpy arrays, and this, either at the end of the analysis, or from process()
+    for each block of data (as in Vamp)."""
+
+    def __init__(self):
+        """Create a new analyzer."""
+        # implementation: additional optionnal arguments are allowed
+
+    @staticmethod
+    def name():
+        """Return the analyzer name, such as "Mean Level", "Max level",
+        "Total length, etc..  """
+
+    @staticmethod
+    def unit():
+        """Return the unit of the data such as "dB", "seconds", etc...  """
+     </code></pre>
+    </section>
+
+    <section>
+     <h2>API</h2>
+     <a href="https://github.com/yomguy/TimeSide/blob/dev/timeside/analyzer/core.py#L80" target="_blank">AnalyzerResultContainer</a>
+     <pre><code data-trim class="python">
+class AnalyzerResultContainer(object):
+
+    def __init__(self, analyzer_results = []):
+        self.results = analyzer_results
+
+    def __getitem__(self, i):
+        return self.results[i]
+
+    def __len__(self):
+        return len(self.results)
+
+    def __repr__(self):
+        return self.to_json()
+
+    def __eq__(self, that):
+        if hasattr(that, 'results'):
+            that = that.results
+        for a, b in zip(self.results, that):
+            if a != b: return False
+        return True
+
+    def add(self, analyzer_result):
+        if type(analyzer_result) == list:
+            for a in analyzer_result:
+                self.add(a)
+            return
+        if type(analyzer_result) != AnalyzerResult:
+            raise TypeError('only AnalyzerResult can be added')
+        self.results += [analyzer_result]
+
+    def to_xml(self, data_list = None):
+        if data_list == None: data_lit = self.results
+        import xml.dom.minidom
+        doc = xml.dom.minidom.Document()
+        root = doc.createElement('telemeta')
+        doc.appendChild(root)
+        for data in data_list:
+            node = doc.createElement('data')
+            for a in ['name', 'id', 'unit']:
+                node.setAttribute(a, str(data[a]) )
+            if type(data['value']) in [str, unicode]:
+                node.setAttribute('value', data['value'] )
+            else:
+                node.setAttribute('value', repr(data['value']) )
+            root.appendChild(node)
+        return xml.dom.minidom.Document.toprettyxml(doc)
+
+    def from_xml(self, xml_string):
+        import xml.dom.minidom
+        import ast
+        doc = xml.dom.minidom.parseString(xml_string)
+        root = doc.getElementsByTagName('telemeta')[0]
+        results = []
+        for child in root.childNodes:
+            if child.nodeType != child.ELEMENT_NODE: continue
+            child_dict = {}
+            for a in ['name', 'id', 'unit']:
+                child_dict[a] = str(child.getAttribute(a))
+            try:
+                child_dict['value'] = ast.literal_eval(child.getAttribute('value'))
+            except:
+                child_dict['value'] = child.getAttribute('value')
+            results.append(child_dict)
+        return results
+
+    def to_json(self, data_list = None):
+        if data_list == None: data_list = self.results
+        import simplejson as json
+        data_strings = []
+        for data in data_list:
+            data_dict = {}
+            for a in ['name', 'id', 'unit', 'value']:
+                data_dict[a] = data[a]
+            data_strings.append(data_dict)
+        return json.dumps(data_strings)
+
+    def from_json(self, json_str):
+        import simplejson as json
+        return json.loads(json_str)
+
+    def to_yaml(self, data_list = None):
+        if data_list == None: data_list = self.results
+        import yaml
+        data_strings = []
+        for f in data_list:
+            f_dict = {}
+            for a in f.keys():
+                f_dict[a] = f[a]
+            data_strings.append(f_dict)
+        return yaml.dump(data_strings)
+
+    def from_yaml(self, yaml_str):
+        import yaml
+        return yaml.load(yaml_str)
+
+    def to_numpy(self, output_file, data_list = None):
+        if data_list == None: data_list = self.results
+        import numpy
+        numpy.save(output_file, data_list)
+
+    def from_numpy(self, input_file):
+        import numpy
+        return numpy.load(input_file)
+     </code></pre>
+    </section>
+
+    <section>
+     <h2>Howto implement an analyzer plugin?</h2>
+     <p>start from this template</p>
+     <pre><code data-trim class="python">
+from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.analyzer.core import *
+from timeside.api import IAnalyzer
+
+import numpy
+
+class NewAnalyzer(Analyzer):
+    implements(IAnalyzer)
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+        super(NewAnalyzer, self).setup(channels, samplerate, blocksize, totalframes)
+        # do setup things...
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "new_analyzer"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "New analyzer"
+
+    def process(self, frames, eod=False):
+        # do process things...
+        # and maybe store some results :
+        # self.result_data = ...
+
+        return frames, eod
+
+    def results(self):
+
+        result = AnalyzerResult(id = self.id(), name = self.name(), unit = "something")
+        result.value = self.result_data
+        container.add(result)
+
+        # add other results in the container if needed...
+
+        return container
+
+     </code></pre>
+    </section>
+
+    <section>
+     <h2>Howto implement an analyzer plugin?</h2>
+     <ul>
+     <li>adapt the template</li>
+     <li>save the file in timeside/analyzer/
+     <br/>for instance : timeside/analyzer/new_analyzer.py</li>
+     <li>add it to timeside/analyzer/__init__.py like:</li>
+     </ul>
+     <pre><code data-trim class="python">
+from level import *
+from dc import *
+from aubio_temporal import *
+from aubio_pitch import *
+from aubio_mfcc import *
+from aubio_melenergy import *
+from aubio_specdesc import *
+from yaafe import * # TF : add Yaafe analyzer
+from spectrogram import Spectrogram
+from waveform import Waveform
+from vamp_plugin import VampSimpleHost
+from irit_speech_entropy import *
+from irit_speech_4hz import *
+from new_analyzer import * # << here
+     </code></pre>
+    </section>
+
+    <section>
+     <h2>Howto implement an analyzer plugin?</h2>
+     <p>then test it!
+     <pre><code data-trim class="python">
+import timeside
+
+decoder = timeside.decoder.FileDecoder('tests/samples/sweep.wav')
+analyzer = timeside.analyzer.NewAnalyzer()
+
+(decoder | analyzer).run()
+
+analyzer.results()
+     </code></pre>
+    </section>
+
+    <section>
+     <h2>Links</h2>
+     <ul>
+      <li><a href="https://code.google.com/p/timeside/" target="_blank">Official website and wiki</a></li>
+      <li><a href="https://github.com/yomguy/TimeSide" target="_blank">Source code on GitHub</a></li>
+                        <li><a href="http://files.parisson.com/api/timeside/" target="_blank">API</a></li>
+      <li><a href="http://telemeta.org" target="_blank">Telemeta project : web audio CMS</a></li>
+      <li><a href="http://aubio.org" target="_blank">Aubio project</a></li>
+      <li><a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public License</a></li>
+     </ul>
+    </section>
+
+    <section>
+     <h2>Thanks!</h2>
+     <p>by Guillaume Pellerin</p>
+     <p><a href="mailto:guillaume@parisson.com">guillaume@parisson.com</a></p>
+     <p><a href="https://twitter.com/yomguy" target="_blank">@yomguy</a></p>
+     <br/>
+     <p><small>This document is released under the terms of the contract Creative Commons <a href="http://creativecommons.org/licenses/by-nc-sa/2.0/fr/" target="_blank">by-nc-sa/2.0/fr</a></small></p>
+    </section>
+
+   </div>
+
+  </div>
+
+  <script src="http://files.parisson.com/static/reveal.js/lib/js/head.min.js"></script>
+  <script src="http://files.parisson.com/static/reveal.js/js/reveal.min.js"></script>
+
+  <script>
+
+   // Full list of configuration options available here:
+   // https://github.com/hakimel/reveal.js#configuration
+   Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+
+    // The "normal" size of the presentation, aspect ratio will be preserved
+       // when the presentation is scaled to fit different resolutions. Can be
+       // specified using percentage units.
+    width: 960,
+       height: 700,
+
+       // Factor of the display size that should remain empty around the content
+       margin: 0.1,
+
+       // Bounds for smallest/largest possible scale to apply to content
+       minScale: 0.2,
+       maxScale: 1.0,
+
+    theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+    transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+    // Optional libraries used to extend on reveal.js
+    dependencies: [
+     { src: 'http://files.parisson.com/static/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+     { src: 'http://files.parisson.com/static/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+     { src: 'http://files.parisson.com/static/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+     { src: 'http://files.parisson.com/static/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+     { src: 'http://files.parisson.com/static/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+     { src: 'http://files.parisson.com/static/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+     // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+     // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+    ]
+   });
+
+  </script>
+
+ </body>
+</html>

@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007-2012 Parisson SARL
 # Copyright (c) 2006-2012 Guillaume Pellerin <pellerin@parisson.com>
@@ -24,7 +24,7 @@
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 #          Paul Brossier <piem@piem.org>
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.tools import *
@@ -42,6 +42,7 @@ class Mp3Encoder(GstEncoder):
         self.pipe = '''appsrc name=src
                   ! audioconvert
                   ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard
+                  ! xingmux
                   ! id3v2mux
                   '''
 

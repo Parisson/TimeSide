@@ -1,24 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import os, sys
+import doctest
+import sys
 import time
-from tools import *
+from tools import check_samples
 
-class TestCase(unittest.TestCase):
-
-    def assertSameList(self, list1, list2):
-        "Test that two lists contain the same elements, in any order"
-        if len(list1) != len(list2):
-            self.fail("Lists length differ : %d != %d" % (len(list1), len(list2)))
-
-        for item in list1:
-            if not item in list2:
-                self.fail("%s is not in list2" % str(item))
-
-        for item in list2:
-            if not item in list1:
-                self.fail("%s is not in list1" % str(item))
 
 class _TextTestResult(unittest.TestResult):
     """A test result class that can print formatted text results to a stream.
@@ -73,6 +60,13 @@ class _TextTestResult(unittest.TestResult):
         elif self.dots:
             self.stream.write('F')
 
+    def addSkip(self, test, reason):
+        unittest.TestResult.addSkip(self, test, reason)
+        if self.showAll:
+            self.stream.writeln("SKIP : " + reason)
+        elif self.dots:
+            self.stream.write('S')
+
     def printErrors(self):
         if self.dots or self.showAll:
             self.stream.writeln()
@@ -82,22 +76,26 @@ class _TextTestResult(unittest.TestResult):
     def printErrorList(self, flavour, errors):
         for test, err in errors:
             self.stream.writeln(self.separator1)
-            self.stream.writeln("%s: %s" % (flavour,self.getDescription(test)))
+            self.stream.writeln("%s: [%s] --> %s "
+                                % (flavour,
+                                   test.__class__.__name__,
+                                   self.getDescription(test)))
             self.stream.writeln(self.separator2)
             self.stream.writeln("%s" % err)
 
 
 class _WritelnDecorator:
     """Used to decorate file-like objects with a handy 'writeln' method"""
-    def __init__(self,stream):
+    def __init__(self, stream):
         self.stream = stream
 
     def __getattr__(self, attr):
-        return getattr(self.stream,attr)
+        return getattr(self.stream, attr)
 
     def writeln(self, arg=None):
-        if arg: self.write(arg)
-        self.write('\n') # text-mode streams translate to \r\n if needed
+        if arg:
+            self.write(arg)
+        self.write('\n')  # text-mode streams translate to \r\n if needed
 
 
 class TestRunner:
@@ -135,7 +133,8 @@ class TestRunner:
             if failed:
                 self.stream.write("failures=%d" % failed)
             if errored:
-                if failed: self.stream.write(", ")
+                if failed:
+                    self.stream.write(", ")
                 self.stream.write("errors=%d" % errored)
             self.stream.writeln(")")
         else:
@@ -143,3 +142,14 @@ class TestRunner:
         return result
 
 
+def runTestModule(*modules):
+
+    suite = unittest.TestSuite()
+    finder = doctest.DocTestFinder(exclude_empty=False)  # finder for doctest
+
+    for module in modules:
+        # Doctest
+        suite.addTest(doctest.DocTestSuite(module, test_finder=finder))
+        # unittest
+        suite.addTest(unittest.loader.TestLoader().loadTestsFromModule(module))
+    TestRunner().run(suite)

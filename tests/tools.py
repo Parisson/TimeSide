@@ -1,6 +1,7 @@
 import os
 import urllib
 
+
 def check_samples():
     url = 'http://github.com/yomguy/timeside-samples/raw/master/samples/'
     samples = ['guitar.wav', 'sweep.wav', 'sweep_mono.wav', 'sweep_32000.wav', 'sweep.flac', 'sweep.ogg', 'sweep.mp3', 'sweep_source.wav']
@@ -18,3 +19,12 @@ def check_samples():
             u = urllib.urlopen(url+sample)
             f.write(u.read())
             f.close()
+
+
+def tmp_file_sink(prefix=None, suffix = None):
+    import tempfile
+    tmpfile = tempfile.NamedTemporaryFile(delete=True,
+                                          prefix=prefix,
+                                          suffix=suffix)
+    tmpfile.close()
+    return tmpfile.name

@@ -19,23 +19,28 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import *
+from timeside.core import implements, interfacedoc
+from timeside.analyzer.core import Analyzer
 from timeside.api import IValueAnalyzer
 import numpy
 
-class MeanDCShift(Processor):
+
+class MeanDCShift(Analyzer):
     implements(IValueAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(MeanDCShift, self).setup(channels, samplerate, blocksize, totalframes)
+    def setup(self, channels=None,
+              samplerate=None,
+              blocksize=None,
+              totalframes=None):
+        super(MeanDCShift, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.values = numpy.array([0])
 
     @staticmethod
     @interfacedoc
     def id():
-        return "dc"
+        return "mean_dc_shift"
 
     @staticmethod
     @interfacedoc
@@ -47,13 +52,13 @@ class MeanDCShift(Processor):
     def unit():
         return "%"
 
-    def __str__(self):
-        return "%s %s" % (str(self.value), unit())
-
     def process(self, frames, eod=False):
         if frames.size:
             self.values = numpy.append(self.values, numpy.mean(frames))
         return frames, eod
 
-    def result(self):
-        return numpy.round(100*numpy.mean(self.values),3)
+    def post_process(self):
+        dc_result = self.new_result(data_mode='value', time_mode='global')
+        dc_result.data_object.value = numpy.round(
+            numpy.mean(100 * self.values), 3)
+        self.pipe.results.add(dc_result)

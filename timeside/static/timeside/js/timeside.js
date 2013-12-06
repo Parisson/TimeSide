@@ -568,20 +568,15 @@ Timeside.load =function(config){
     var loadAll = function() {
 
 
-        //get the current script path (this file name is timeside.js?... or simplt timeside.js)
+        //get the current script path (this file name is timeside.js, or timeside.js?..., or even timeside.js.pagespeed.blah.js)
         var scripts = $J('script');
         var thisScriptPath = '';
         scripts.each(function(i,s){
             var src = $J(s).attr('src');
-            if(src){
-                var srcName = src.split(/\//);
-                if(srcName.length){
-                    srcName = srcName[srcName.length-1];
-                    //is this script ? consider the case here we are loading timeside.js?....
-                    if(srcName.replace(/\.js(?:\?[^\?]*)*$/,'.js') == 'timeside.js'){
-                        src[src.length-1] = '';
-                        thisScriptPath = src.replace(/\/[^\/]+$/, '');
-                    }
+            if(src) {
+                var m = src.match(/^([^?]*\/)timeside.js/);
+                if (m) {
+                    thisScriptPath = m[1];
                 }
             }
         });
