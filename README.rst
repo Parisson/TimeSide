@@ -3,7 +3,7 @@ TimeSide : open web audio processing framework
 ==============================================
 
 .. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
-    :target: http://travis-ci.org/yomguy/TimeSide/
+    :target: https://travis-ci.org/yomguy/TimeSide/
 
 TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API has been designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
 
@@ -46,6 +46,7 @@ IDecoder
 ---------
 
   * FileDecoder [gst_dec]
+  * ArrayDecoder [array_dec]
 
 IGrapher
 ---------
@@ -61,9 +62,8 @@ IGrapher
 IAnalyzer
 ---------
 
-  * IValueAnalyzer
-    - Level [level]
-    - MeanDCShift [mean_dc_shift]
+  * Level [level]
+  * MeanDCShift [mean_dc_shift]
   * AubioTemporal [aubio_temporal]
   * AubioPitch [aubio_pitch]
   * AubioMfcc [aubio_mfcc]
@@ -80,9 +80,22 @@ IAnalyzer
 News
 =====
 
+0.5.2
+
+ * Add a general launch script "timeside-launch" (see "User interface")
+ * Add some pre-processing decorators to downmix and filter inputs of processors (see analyzer.waveform for ex)
+ * Add a fake numpy decoder to setup multi-pass process pipes
+ * Add beat confidence to aubio_temporal
+ * Add AAC encoder (gstreamer voaacenc plugin needed)
+ * Add UUIDs to the file URI and to all processors
+ * Add a Debian repository with all dependencies for i386 and amd64 architectures
+ * Fix WebM encoder
+ * Fix MP3 muxing
+ * Fix various minor bugs
+
 0.5.1
 
- * Add *parent* procesor list to Processor
+ * Add *parent* processor list to Processor
  * Simplify and optimize the grapher system
  * Add Grapher abstract generic class
  * Add a UUID property to Processor
@@ -225,7 +238,7 @@ On Fedora and Red-Hat:
 
  $ sudo pip install timeside
 
-On other system, you'll need to install all dependencies and then::
+Otherwise, you can also install all dependencies and then use pip::
 
  $ sudo pip install timeside
 
@@ -235,7 +248,7 @@ Dependencies
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy
+python-scipy, python-matplotlib
 
 
 Platforms
@@ -299,7 +312,7 @@ Sponsors and Patners
     * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
     * `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
     * `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
-    * `Université Pierre et Marie Curie <http://www-upmc.fr>`_ (UPMC Paris, France)
+    * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
     * `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
     * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 

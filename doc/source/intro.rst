@@ -46,6 +46,7 @@ IDecoder
 ---------
 
   * FileDecoder [gst_dec]
+  * ArrayDecoder [array_dec]
 
 IGrapher
 ---------
@@ -61,9 +62,8 @@ IGrapher
 IAnalyzer
 ---------
 
-  * IValueAnalyzer
-    - Level [level]
-    - MeanDCShift [mean_dc_shift]
+  * Level [level]
+  * MeanDCShift [mean_dc_shift]
   * AubioTemporal [aubio_temporal]
   * AubioPitch [aubio_pitch]
   * AubioMfcc [aubio_mfcc]
