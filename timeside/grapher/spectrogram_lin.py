@@ -38,7 +38,7 @@ class SpectrogramLinear(SpectrogramLog):
     @staticmethod
     @interfacedoc
     def id():
-        return "spectrogram_linear"
+        return "spectrogram_lin"
 
     @staticmethod
     @interfacedoc
