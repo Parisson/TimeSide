@@ -141,6 +141,10 @@ if __name__ == '__main__':
     # load timeside after parse_args, to avoid gstreamer hijacking
     import timeside
 
+    if len(args) == 0:
+        print usage
+        sys.exit(1)
+
     if not options.quiet:
         for a in dir(options):
             if not callable(getattr(options,a)) and not a.startswith('_'):
