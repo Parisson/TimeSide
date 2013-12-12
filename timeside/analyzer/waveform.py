@@ -31,8 +31,8 @@ class Waveform(Analyzer):
 
     def __init__(self):
         super(Waveform, self).__init__()
-        self.input_blocksize = 2048
-        self.input_stepsize = self.input_blocksize / 2
+#        self.input_blocksize = 2048
+#        self.input_stepsize = self.input_blocksize / 2
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -58,13 +58,13 @@ class Waveform(Analyzer):
     def unit():
         return ""
 
-    @downmix_to_mono
-    @frames_adapter
+#    @downmix_to_mono
+#    @frames_adapter
     def process(self, frames, eod=False):
         self.values.append(frames)
         return frames, eod
 
     def post_process(self):
         waveform = self.new_result(data_mode='value', time_mode='framewise')
-        waveform.data_object.value = np.asarray(self.values).flatten()
+        waveform.data_object.value = np.vstack(self.values)
         self.pipe.results.add(waveform)

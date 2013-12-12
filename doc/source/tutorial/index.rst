@@ -13,5 +13,6 @@ Contents:
 
       Quick start <quick_start>
       Usage of AnalyzerResult <AnalyzerResult>
+      Running a pipe with previously decoded frames <ArrayDecoder>
 
 

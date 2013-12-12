@@ -22,7 +22,7 @@ We just **need** a python library to:
 * **Draw** various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embeds TimeSide).
 
 Here is a schematic diagram of the TimeSide engine architecture:
 
