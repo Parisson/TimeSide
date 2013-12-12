@@ -102,7 +102,7 @@ def get_uri(source):
 
         return get_uri(uri)
     else:
-        raise IOError('File not found!')
+        raise IOError('Failed getting uri for path %s: not such file or directoy' % source)
 
     return uri
 

@@ -141,6 +141,10 @@ if __name__ == '__main__':
     # load timeside after parse_args, to avoid gstreamer hijacking
     import timeside
 
+    if len(args) == 0:
+        print usage
+        sys.exit(1)
+
     if not options.quiet:
         for a in dir(options):
             if not callable(getattr(options,a)) and not a.startswith('_'):
@@ -190,12 +194,16 @@ if __name__ == '__main__':
     encoders = map(match_encoder, encoders)
 
     def process_file(path):
+        import uuid
+        from timeside.decoder.utils import get_uri
+        file_uuid = str(uuid.uuid5(uuid.NAMESPACE_URL, get_uri(path) ))
+
         decoder = timeside.decoder.FileDecoder(path, start = 1)
         #pipe.setup(channels = channels, samplerate = samplerate, blocksize = blocksize)
         pipe = decoder
         _analyzers = [a() for a in analyzers]
         _graphers = [g() for g in graphers]
-        _encoders = [e(os.path.join(outputdir, decoder.uuid() + '.' + e.file_extension())) for e in encoders]
+        _encoders = [e(os.path.join(outputdir, file_uuid + '.' + e.file_extension())) for e in encoders]
 
         for a in _analyzers:
             pipe = pipe | a
@@ -203,18 +211,18 @@ if __name__ == '__main__':
             pipe = pipe | g
         for e in _encoders:
             pipe = pipe | e
-        pipe.run()
+        pipe.run(channels = channels, samplerate = samplerate, blocksize = blocksize)
 
         if len(_analyzers):
             results = pipe.results
             for f in r_formats:
-                result_path = os.path.join(outputdir, decoder.uuid() + '.' + f)
+                result_path = os.path.join(outputdir, file_uuid + '.' + f)
                 getattr(results,'to_'+f)(result_path)
                 if verbose : print 'saved', result_path
         if len(_graphers):
             for g in _graphers:
                 for f in i_formats:
-                    graph_path = os.path.join(outputdir, decoder.uuid(), g.id() + '.' + f)
+                    graph_path = os.path.join(outputdir, file_uuid, g.id() + '.' + f)
                     if not os.path.isdir(os.path.dirname(graph_path)):
                         os.makedirs(os.path.dirname(graph_path))
                     g.render(graph_path)

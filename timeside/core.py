@@ -277,13 +277,13 @@ class ProcessPipe(object):
                 pipe += ' | '
         return pipe
 
-    def run(self):
+    def run(self, channels = None, samplerate = None, blocksize = None):
         """Setup/reset all processors in cascade and stream audio data along
         the pipe. Also returns the pipe itself."""
 
         source = self.processors[0]
         items = self.processors[1:]
-        source.setup()
+        source.setup(channels = channels, samplerate = samplerate, blocksize = blocksize)
 
         last = source
 

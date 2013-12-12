@@ -22,7 +22,7 @@ On Fedora and Red-Hat:
 
  $ sudo pip install timeside
 
-On other system, you'll need to install all dependencies and then::
+Otherwise, you can also install all dependencies and then use pip::
 
  $ sudo pip install timeside
 
@@ -32,7 +32,7 @@ Dependencies
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy
+python-scipy, python-matplotlib
 
 
 Platforms

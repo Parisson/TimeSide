@@ -29,6 +29,12 @@ import numpy
 from collections import OrderedDict
 import h5py
 import h5tools
+import os
+
+if os.environ.has_key('DISPLAY'):
+    doctest_option = '+SKIP'
+else:
+    doctest_option = '+ELLIPSIS'
 
 
 numpy_data_types = [
@@ -793,12 +799,12 @@ class AnalyzerResultContainer(dict):
     >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
 
     >>> a = timeside.analyzer.Analyzer()
-    >>> (d|a).run() #doctest: +SKIP
-    >>> a.new_result() #doctest: +SKIP
+    >>> (d|a).run() #doctest: %s
+    >>> a.new_result() #doctest: %s
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='http://...', start=1.0, duration=7..., is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
 
-    '''
+    ''' % (doctest_option, doctest_option)
 
     def __init__(self, analyzer_results=None):
         super(AnalyzerResultContainer, self).__init__()
@@ -806,22 +812,19 @@ class AnalyzerResultContainer(dict):
             self.add(analyzer_results)
 
     def add(self, analyzer_result):
-        if isinstance(analyzer_result, AnalyzerResultContainer):
-            self.update(analyzer_result)
-            return
-        elif isinstance(analyzer_result, list):
+        if isinstance(analyzer_result, list):
             for res in analyzer_result:
                 self.add(res)
             return
         # Check result
         if not isinstance(analyzer_result, AnalyzerResult):
-            raise TypeError('Only AnalyzerResult can be added')
+            raise TypeError('only AnalyzerResult can be added')
 
         self.__setitem__(analyzer_result.id_metadata.id,
                          analyzer_result)
         #self.results += [analyzer_result]
 
-    def to_xml(self, output_file = None):
+    def to_xml(self):
 
         import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
@@ -831,9 +834,7 @@ class AnalyzerResultContainer(dict):
             if result is not None:
                 root.append(ET.fromstring(result.to_xml()))
 
-        xml_str = ET.tostring(root, encoding="utf-8", method="xml")
-        if output_file: open(output_file, 'w').write(xml_str)
-        else: return xml_str
+        return ET.tostring(root, encoding="utf-8", method="xml")
 
     @staticmethod
     def from_xml(xml_string):
@@ -849,7 +850,7 @@ class AnalyzerResultContainer(dict):
 
         return results
 
-    def to_json(self, output_file = None):
+    def to_json(self):
         #if data_list == None: data_list = self.results
         import simplejson as json
 
@@ -860,10 +861,8 @@ class AnalyzerResultContainer(dict):
                         'dtype': obj.dtype.__str__()}
             raise TypeError(repr(obj) + " is not JSON serializable")
 
-        json_str = json.dumps([res.as_dict() for res in self.values()],
+        return json.dumps([res.as_dict() for res in self.values()],
                           default=NumpyArrayEncoder)
-        if output_file: open(output_file, 'w').write(json_str)
-        else: return json_str
 
     @staticmethod
     def from_json(json_str):
@@ -891,7 +890,7 @@ class AnalyzerResultContainer(dict):
             results.add(res)
         return results
 
-    def to_yaml(self, output_file):
+    def to_yaml(self):
         #if data_list == None: data_list = self.results
         import yaml
 
@@ -903,9 +902,7 @@ class AnalyzerResultContainer(dict):
 
         yaml.add_representer(numpy.ndarray, numpyArray_representer)
 
-        yaml_str = yaml.dump([res.as_dict() for res in self.values()])
-        if output_file: open(output_file, 'w').write(yaml_str)
-        else: return yaml_str
+        return yaml.dump([res.as_dict() for res in self.values()])
 
     @staticmethod
     def from_yaml(yaml_str):
@@ -1020,7 +1017,7 @@ class Analyzer(Processor):
         from datetime import datetime
 
         result = AnalyzerResult.factory(data_mode=data_mode,
-                                        time_mode=time_mode)
+                                time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
