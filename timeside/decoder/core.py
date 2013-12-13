@@ -62,7 +62,7 @@ class FileDecoder(Processor):
     def id():
         return "gst_dec"
 
-    def __init__(self, uri, start = 0, duration = None):
+    def __init__(self, uri, start=0, duration=None):
 
         """
         Construct a new FileDecoder
@@ -520,4 +520,3 @@ if __name__ == "__main__":
     from tests import test_decoding, test_array_decoding
 
     run_test_module([test_decoding, test_array_decoding])
-

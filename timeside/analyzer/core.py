@@ -984,7 +984,7 @@ class Analyzer(Processor):
     def results(self):
 
         return AnalyzerResultContainer(
-            [self.pipe.results[key] for key in self.pipe.results.keys()
+            [self.process_pipe.results[key] for key in self.process_pipe.results.keys()
              if key.split('.')[0] == self.id()])
 
     @staticmethod
