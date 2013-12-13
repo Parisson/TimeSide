@@ -5,7 +5,7 @@ TimeSide : open web audio processing framework
 .. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: https://travis-ci.org/yomguy/TimeSide/
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API has been designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
+TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
 
 It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
 
@@ -22,9 +22,13 @@ We just **need** a python library to:
 * **Draw** various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embeds TimeSide).
+* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
-Here is a schematic diagram of the TimeSide engine architecture:
+
+Architecture
+============
+
+The streaming architecture of TimeSide relies on 2 main parts: a process engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
 .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
 
