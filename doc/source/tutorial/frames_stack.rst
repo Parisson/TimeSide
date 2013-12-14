@@ -15,28 +15,28 @@ Example of use of the `stack` option in :func:`timeside.core.ProcessPipe.run` to
 Setup an arbitrary analyzer to check that decoding process from file and from stack are equivalent:
 
 >>> pitch_on_file = timeside.analyzer.AubioPitch()
->>> myPipe = (decoder | pitch_on_file)
->>> print myPipe.processors #doctest: +ELLIPSIS
+>>> pipe = (decoder | pitch_on_file)
+>>> print pipe.processors #doctest: +ELLIPSIS
 [<timeside.decoder.core.FileDecoder object at 0x...>, <timeside.analyzer.aubio_pitch.AubioPitch object at 0x...>]
 
 If the pipe is run with the default argument `stack=False`, the other processes of the pipe are released from the pipe after the run and only the  :class:`fileDecoder <timeside.decoder.core.FileDecoder>` is kept in the pipe:
 
->>> myPipe.run()
->>> print myPipe.processors #doctest: +ELLIPSIS
+>>> pipe.run()
+>>> print pipe.processors #doctest: +ELLIPSIS
 [<timeside.decoder.core.FileDecoder object at 0x...>]
 
 
 If the pipe is run with the argument `stack=True`, the processed frames are stored in the pipe attribute `frames_stack`.
 The other processes of the pipe are also released from the pipe after the run but the :class:`fileDecoder <timeside.decoder.core.FileDecoder>` is replaced by an :class:`ArrayDecoder <timeside.decoder.core.ArrayDecoder>`:
 
->>> myPipe = (decoder | pitch_on_file)
->>> myPipe.run(stack=True)
->>> print myPipe.processors #doctest: +ELLIPSIS
+>>> pipe = (decoder | pitch_on_file)
+>>> pipe.run(stack=True)
+>>> print pipe.processors #doctest: +ELLIPSIS
 [<timeside.decoder.core.ArrayDecoder object at 0x...>]
 
 The stack
 
->>> myPipe.frames_stack #doctest: +ELLIPSIS
+>>> pipe.frames_stack #doctest: +ELLIPSIS
 array([[...]], dtype=float32)
 
 
@@ -48,14 +48,14 @@ Define a second analyzer equivalent to the previous one:
 
 Add it to the pipe:
 
->>> myPipe |= pitch_on_stack
->>> print myPipe.processors #doctest: +ELLIPSIS
+>>> pipe |= pitch_on_stack
+>>> print pipe.processors #doctest: +ELLIPSIS
 [<timeside.decoder.core.ArrayDecoder object at 0x...>, <timeside.analyzer.aubio_pitch.AubioPitch object at 0x...>]
 
 
 Run the pipe:
 
->>> myPipe.run()
+>>> pipe.run()
 
 Assert that the frames passed to the two analyzers are the same, we check that the results of these analyzers are equivalent:
 
