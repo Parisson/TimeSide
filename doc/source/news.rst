@@ -3,7 +3,7 @@ News
 
 0.5.2
 
- * Add a general launch script "timeside-launch" (see "User interface")
+ * Add a general launch script "timeside-launch" (see "Shell interface")
  * Add some decorators to filter the inputs of processes (see analyzer.waveform for ex)
  * Add a "stack" option to the FileDecoder to accumulate audio data allowing multipass processes
  * Add beat confidence to aubio_temporal
