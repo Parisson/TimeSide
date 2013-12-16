@@ -48,7 +48,8 @@ class IRITSpeech4Hz(Analyzer):
     '''
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
         super(IRITSpeech4Hz, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.energy4hz = []
@@ -135,13 +136,16 @@ class IRITSpeech4Hz(Analyzer):
 
         modEnergy.data_object.value = conf
 
-        self._results.add(modEnergy)
+        self.process_pipe.results.add(modEnergy)
 
         # Segment
         convert = {False: 0, True: 1}
         label = {0: 'nonSpeech', 1: 'Speech'}
 
         segList = segmentFromValues(modEnergyValue > self.threshold)
+        # Hint : Median filtering could imrove smoothness of the result
+        # from scipy.signal import medfilt
+        # segList = segmentFromValues(medfilt(modEnergyValue > self.threshold, 31))
 
         segs = self.new_result(data_mode='label', time_mode='segment')
         segs.id_metadata.id += '.' + 'segments'
@@ -151,12 +155,12 @@ class IRITSpeech4Hz(Analyzer):
 
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
-                                  self.samplerate())
-                                  for s in segList]
+                                 self.samplerate())
+                                 for s in segList]
         segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
-                                  self.samplerate())
-                                  for s in segList]
+                                     self.samplerate())
+                                     for s in segList]
 
-        self._results.add(segs)
+        self.process_pipe.results.add(segs)
 
         return
