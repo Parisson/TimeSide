@@ -1,5 +1,5 @@
-Sponsors and Patners
-====================
+Sponsors and Partners
+=====================
 
     * `Parisson <http://parisson.com>`_
     * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
