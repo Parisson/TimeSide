@@ -61,7 +61,7 @@ IGrapher
   * WaveformContourBlack [waveform_contour_black]
   * WaveformContourWhite [waveform_contour_white]
   * SpectrogramLog [spectrogram_log]
-  * SpectrogramLinear [spectrogram_linear]
+  * SpectrogramLinear [spectrogram_lin]
 
 IAnalyzer
 ---------
