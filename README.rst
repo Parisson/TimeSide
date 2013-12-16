@@ -344,8 +344,8 @@ For versions >=0.5 on Debian Stable 7.0 Wheezy:
  $ export PYTHONPATH=$PYTHONPATH:`pwd`
  $ python tests/run_all_tests
 
-Sponsors and Patners
-====================
+Sponsors and Partners
+=====================
 
     * `Parisson <http://parisson.com>`_
     * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
