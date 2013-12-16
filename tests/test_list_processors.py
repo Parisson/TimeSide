@@ -9,8 +9,8 @@ class TestListCoreProcessors(unittest.TestCase):
 
     def testHasSomeDecoders(self):
         "has some decoders"
-        import timeside.encoder
-        procs = timeside.core.processors(timeside.api.IEncoder)
+        import timeside.decoder
+        procs = timeside.core.processors(timeside.api.IDecoder)
         self.assertNotEquals(len(procs), 0)
 
     def testHasSomeEncoders(self):

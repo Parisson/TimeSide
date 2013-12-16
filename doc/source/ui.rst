@@ -1,5 +1,40 @@
-User Interface
-===============
+Shell Interface
+================
+
+Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
+
+ $ timeside-launch -h
+ Usage: scripts/timeside-launch [options] -c file.conf file1.wav [file2.wav ...]
+  help: scripts/timeside-launch -h
+
+ Options:
+  -h, --help            show this help message and exit
+  -v, --verbose         be verbose
+  -q, --quiet           be quiet
+  -C <config_file>, --conf=<config_file>
+                        configuration file
+  -s <samplerate>, --samplerate=<samplerate>
+                        samplerate at which to run the pipeline
+  -c <channels>, --channels=<channels>
+                        number of channels to run the pipeline with
+  -b <blocksize>, --blocksize=<blocksize>
+                        blocksize at which to run the pipeline
+  -a <analyzers>, --analyzers=<analyzers>
+                        analyzers in the pipeline
+  -g <graphers>, --graphers=<graphers>
+                        graphers in the pipeline
+  -e <encoders>, --encoders=<encoders>
+                        encoders in the pipeline
+  -R <formats>, --results-formats=<formats>
+                        list of results output formats for the analyzers
+                        results
+  -I <formats>, --images-formats=<formats>
+                        list of graph output formats for the analyzers results
+  -o <outputdir>, --ouput-directory=<outputdir>
+                        output directory
+
+Web Interface
+==============
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 

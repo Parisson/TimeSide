@@ -72,4 +72,4 @@ class Spectrogram(Analyzer):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
         spectrogram.data_object.value = self.values
-        self.pipe.results.add(spectrogram)
+        self.process_pipe.results.add(spectrogram)

@@ -22,25 +22,25 @@ class TestTranscodingFromWav(unittest.TestCase):
         self.test_duration = True
         self.test_channels = True
 
-    def testToWav(self):
+    def testWav(self):
         "Test conversion to wav"
         self.encoder_function = WavEncoder
 
-    def testToMp3(self):
+    def testMp3(self):
         "Test conversion to mp3"
         self.encoder_function = Mp3Encoder
 
-    def testToOgg(self):
+    def testOgg(self):
         "Test conversion to ogg"
         self.encoder_function = VorbisEncoder
 
-    def testToWebM(self):
+    def testWebM(self):
         "Test conversion to webm"
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 
-    def testToM4a(self):
+    def testM4a(self):
         "Test conversion to m4a"
         self.encoder_function = AacEncoder
 
@@ -89,9 +89,9 @@ class TestTranscodingFromMonoWav(TestTranscodingFromWav):
         self.source = os.path.join(os.path.dirname(__file__),
                                    "samples/sweep_mono.wav")
 
-    def testToM4a(self):
+    def testM4a(self):
         "Test conversion to m4a"
-        super(TestTranscodingFromMonoWav, self).testToM4a()
+        super(TestTranscodingFromMonoWav, self).testM4a()
         self.test_channels = False  # voaacenc bug ? : always encode stereo
 
 

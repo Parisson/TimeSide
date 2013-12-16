@@ -46,7 +46,7 @@ class WaveformCentroid(Waveform):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectral centroid waveform"
+        return "Waveform spectral"
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):

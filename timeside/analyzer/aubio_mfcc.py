@@ -80,4 +80,4 @@ class AubioMfcc(Analyzer):
         mfcc.parameters = dict(n_filters=self.n_filters,
                                n_coeffs=self.n_coeffs)
         mfcc.data_object.value = self.mfcc_results
-        self.pipe.results.add(mfcc)
+        self.process_pipe.results.add(mfcc)

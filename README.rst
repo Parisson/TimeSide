@@ -3,9 +3,9 @@ TimeSide : open web audio processing framework
 ==============================================
 
 .. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
-    :target: http://travis-ci.org/yomguy/TimeSide/
+    :target: https://travis-ci.org/yomguy/TimeSide/
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API has been designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
+TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
 
 It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
 
@@ -24,7 +24,11 @@ We just **need** a python library to:
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
-Here is a schematic diagram of the TimeSide engine architecture:
+
+Architecture
+============
+
+The streaming architecture of TimeSide relies on 2 main parts: a process engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
 .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
 
@@ -46,6 +50,7 @@ IDecoder
 ---------
 
   * FileDecoder [gst_dec]
+  * ArrayDecoder [array_dec]
 
 IGrapher
 ---------
@@ -56,14 +61,13 @@ IGrapher
   * WaveformContourBlack [waveform_contour_black]
   * WaveformContourWhite [waveform_contour_white]
   * SpectrogramLog [spectrogram_log]
-  * SpectrogramLinear [spectrogram_linear]
+  * SpectrogramLinear [spectrogram_lin]
 
 IAnalyzer
 ---------
 
-  * IValueAnalyzer
-    - Level [level]
-    - MeanDCShift [mean_dc_shift]
+  * Level [level]
+  * MeanDCShift [mean_dc_shift]
   * AubioTemporal [aubio_temporal]
   * AubioPitch [aubio_pitch]
   * AubioMfcc [aubio_mfcc]
@@ -80,9 +84,22 @@ IAnalyzer
 News
 =====
 
+0.5.2
+
+ * Add a general launch script "timeside-launch" (see "Shell interface")
+ * Add some decorators to filter the inputs of processes (see analyzer.waveform for ex)
+ * Add a "stack" option to the FileDecoder to accumulate audio data allowing multipass processes
+ * Add beat confidence to aubio_temporal
+ * Add AAC encoder (gstreamer voaacenc plugin needed)
+ * Add UUIDs to the file URI and to all processors
+ * Add a Debian repository with all dependencies for i386 and amd64 architectures
+ * Fix buggy WebM encoder
+ * Fix buggy MP3 muxing
+ * Fix various minor bugs
+
 0.5.1
 
- * Add *parent* procesor list to Processor
+ * Add *parent* processor list to Processor
  * Simplify and optimize the grapher system
  * Add Grapher abstract generic class
  * Add a UUID property to Processor
@@ -198,7 +215,7 @@ API / Documentation
 ====================
 
 * General : http://files.parisson.com/timeside/doc/
-* Tutorial : http://files.parisson.com/timeside/doc/examples/index.html
+* Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
 
 Install
@@ -225,7 +242,7 @@ On Fedora and Red-Hat:
 
  $ sudo pip install timeside
 
-On other system, you'll need to install all dependencies and then::
+Otherwise, you can also install all dependencies and then use pip::
 
  $ sudo pip install timeside
 
@@ -235,7 +252,7 @@ Dependencies
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy
+python-scipy, python-matplotlib
 
 
 Platforms
@@ -246,8 +263,43 @@ MacOS X and Windows versions will soon be explorated.
 The player should work on any modern HTML5 enabled browser.
 Flash is needed for MP3 if the browser doesn't support it.
 
-User Interface
-===============
+Shell Interface
+================
+
+Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
+
+ $ timeside-launch -h
+ Usage: scripts/timeside-launch [options] -c file.conf file1.wav [file2.wav ...]
+  help: scripts/timeside-launch -h
+
+ Options:
+  -h, --help            show this help message and exit
+  -v, --verbose         be verbose
+  -q, --quiet           be quiet
+  -C <config_file>, --conf=<config_file>
+                        configuration file
+  -s <samplerate>, --samplerate=<samplerate>
+                        samplerate at which to run the pipeline
+  -c <channels>, --channels=<channels>
+                        number of channels to run the pipeline with
+  -b <blocksize>, --blocksize=<blocksize>
+                        blocksize at which to run the pipeline
+  -a <analyzers>, --analyzers=<analyzers>
+                        analyzers in the pipeline
+  -g <graphers>, --graphers=<graphers>
+                        graphers in the pipeline
+  -e <encoders>, --encoders=<encoders>
+                        encoders in the pipeline
+  -R <formats>, --results-formats=<formats>
+                        list of results output formats for the analyzers
+                        results
+  -I <formats>, --images-formats=<formats>
+                        list of graph output formats for the analyzers results
+  -o <outputdir>, --ouput-directory=<outputdir>
+                        output directory
+
+Web Interface
+==============
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -292,14 +344,14 @@ For versions >=0.5 on Debian Stable 7.0 Wheezy:
  $ export PYTHONPATH=$PYTHONPATH:`pwd`
  $ python tests/run_all_tests
 
-Sponsors and Patners
-====================
+Sponsors and Partners
+=====================
 
     * `Parisson <http://parisson.com>`_
     * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
     * `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
     * `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
-    * `Université Pierre et Marie Curie <http://www-upmc.fr>`_ (UPMC Paris, France)
+    * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
     * `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
     * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 

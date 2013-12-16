@@ -1,0 +1,235 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2007-2013 Parisson SARL
+
+# This file is part of TimeSide.
+
+# TimeSide is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
+# Authors:
+#   Paul Brossier <piem@piem.org>
+
+
+"""This script runs a timeside pipeline on a collection of media files. The
+pipeline can be configured using command line options or a configuration file.
+"""
+
+import sys, os.path
+
+usage = "usage: %s [options] -c file.conf file1.wav [file2.wav ...]" % sys.argv[0]
+usage += "\n help: %s -h" % sys.argv[0]
+
+def parse_config(path):
+    import yaml
+    return yaml.load(open(path))
+
+def parse_args():
+    from optparse import OptionParser
+    parser = OptionParser(usage = usage)
+    parser.add_option("-v","--verbose",
+            action="store_true", dest="verbose", default=False,
+            help="be verbose")
+    parser.add_option("-q","--quiet",
+            action="store_true", dest="quiet", default=False,
+            help="be quiet")
+    parser.add_option("-C", "--conf", action = "store",
+            dest = "config_file",
+            help="configuration file",
+            metavar = "<config_file>")
+
+    parser.add_option("-s", "--samplerate", action = "store",
+            dest = "samplerate", type = int,
+            help="samplerate at which to run the pipeline",
+            default = None,
+            metavar = "<samplerate>")
+    parser.add_option("-c", "--channels", action = "store",
+            dest = "channels", type = int,
+            help="number of channels to run the pipeline with",
+            default = None,
+            metavar = "<channels>")
+    parser.add_option("-b", "--blocksize", action = "store",
+            dest = "blocksize", type = int,
+            help="blocksize at which to run the pipeline",
+            default = None,
+            metavar = "<blocksize>")
+
+    parser.add_option("-a", "--analyzers", action = "store",
+            dest = "analyzers", type = str,
+            help="analyzers in the pipeline",
+            default = 'Level',
+            metavar = "<analyzers>")
+    parser.add_option("-g", "--graphers", action = "store",
+            dest = "graphers", type = str,
+            help="graphers in the pipeline",
+            default = [],
+            metavar = "<graphers>")
+    parser.add_option("-e", "--encoders", action = "store",
+            dest = "encoders", type = str,
+            help="encoders in the pipeline",
+            default = [],
+            metavar = "<encoders>")
+
+    parser.add_option("-R", "--results-formats", action = "store",
+            dest = "r_formats", type = str,
+            help = "list of results output formats for the analyzers results",
+            default = 'yaml',
+            metavar = "<formats>")
+    parser.add_option("-I", "--images-formats", action = "store",
+            dest = "i_formats", type = str,
+            help = "list of graph output formats for the analyzers results",
+            default = 'png',
+            metavar = "<formats>")
+
+    parser.add_option("-o", "--ouput-directory", action = "store",
+            dest = "outputdir", type = str,
+            help="output directory",
+            default = None,
+            metavar = "<outputdir>")
+
+    (options, args) = parser.parse_args()
+
+    if options.analyzers:
+        options.analyzers = options.analyzers.split(',')
+    if options.graphers:
+        options.graphers = options.graphers.split(',')
+    if options.encoders:
+        options.encoders = options.encoders.split(',')
+    if options.r_formats:
+        options.r_formats = options.r_formats.split(',')
+        known_r_formats = ['json', 'yaml', 'xml', 'hdf5']
+        for f in options.r_formats:
+            if f not in known_r_formats:
+                raise ValueError("unknown result format %s, possible values %s" % (f, known_r_formats))
+    if options.i_formats:
+        options.i_formats = options.i_formats.split(',')
+        known_i_formats = ['png', 'jpg', 'tiff']
+        for f in options.i_formats:
+            if f not in known_i_formats:
+                raise ValueError("unknown graph output format %s, possible values %s" % (f, known_i_formats))
+
+    if options.config_file:
+        if not os.path.isfile(options.config_file):
+            print "ERROR: configuration file not found:", options.config_file
+            sys.exit(1)
+        config = parse_config(options.config_file)
+        for key in config:
+            if not hasattr(options, key) or not getattr(options,key):
+                setattr(options, key, config[key])
+
+    if options.outputdir == None:
+        import tempfile
+        options.outputdir = tempfile.mkdtemp('-timeside')
+    if not os.path.isdir(options.outputdir):
+        os.makedirs(options.outputdir)
+
+    return options, args
+
+if __name__ == '__main__':
+    options, args = parse_args()
+    # load timeside after parse_args, to avoid gstreamer hijacking
+    import timeside
+
+    if len(args) == 0:
+        print usage
+        sys.exit(1)
+
+    if not options.quiet:
+        for a in dir(options):
+            if not callable(getattr(options,a)) and not a.startswith('_'):
+                print a + ":", getattr(options,a)
+
+    verbose = options.verbose and not options.quiet
+    channels = options.channels
+    samplerate = options.samplerate
+    blocksize = options.blocksize
+    outputdir = options.outputdir
+    r_formats = options.r_formats
+    i_formats = options.i_formats
+    analyzers = options.analyzers
+    graphers = options.graphers
+    encoders = options.encoders
+
+    all_decoders = timeside.core.processors(timeside.api.IDecoder)
+    all_analyzers = timeside.core.processors(timeside.api.IAnalyzer)
+    all_graphers = timeside.core.processors(timeside.api.IGrapher)
+    all_encoders = timeside.core.processors(timeside.api.IEncoder)
+
+    def match_id_or_class(id_or_class, processors):
+        matches = filter(lambda x: x.__name__ == id_or_class, processors)
+        matches += filter(lambda x: x.id() == id_or_class , processors)
+        matches += filter(lambda x: hasattr(x,'file_extension') and x.file_extension() == id_or_class , processors)
+        if not len(matches):
+            msg  = 'ERROR: could not find \'%s\'.' % id_or_class
+            msg += ' possible values:' + repr(processors)
+            raise ValueError(msg)
+        elif len(matches) > 1:
+            msg  = 'ERROR: too many matches for \'%s\'.' % id_or_class
+            msg += ' matched values:' + repr(matches)
+            raise ValueError(msg)
+        else:
+            return matches[0]
+
+    def match_analyzer(id_or_class):
+        return match_id_or_class(id_or_class, all_analyzers)
+    def match_grapher(id_or_class):
+        return match_id_or_class(id_or_class, all_graphers)
+    def match_encoder(id_or_class):
+        return match_id_or_class(id_or_class, all_encoders)
+
+    # create instances of analyzers and graphers
+    analyzers = map(match_analyzer, analyzers)
+    graphers = map(match_grapher, graphers)
+    encoders = map(match_encoder, encoders)
+
+    def process_file(path):
+        import uuid
+        from timeside.decoder.utils import get_uri
+        file_uuid = str(uuid.uuid5(uuid.NAMESPACE_URL, get_uri(path) ))
+
+        decoder = timeside.decoder.FileDecoder(path, start = 1)
+        #pipe.setup(channels = channels, samplerate = samplerate, blocksize = blocksize)
+        pipe = decoder
+        _analyzers = [a() for a in analyzers]
+        _graphers = [g() for g in graphers]
+        _encoders = [e(os.path.join(outputdir, file_uuid + '.' + e.file_extension())) for e in encoders]
+
+        for a in _analyzers:
+            pipe = pipe | a
+        for g in _graphers:
+            pipe = pipe | g
+        for e in _encoders:
+            pipe = pipe | e
+        pipe.run(channels = channels, samplerate = samplerate, blocksize = blocksize)
+
+        if len(_analyzers):
+            results = pipe.results
+            for f in r_formats:
+                result_path = os.path.join(outputdir, file_uuid + '.' + f)
+                getattr(results,'to_'+f)(result_path)
+                if verbose : print 'saved', result_path
+        if len(_graphers):
+            for g in _graphers:
+                for f in i_formats:
+                    graph_path = os.path.join(outputdir, file_uuid, g.id() + '.' + f)
+                    if not os.path.isdir(os.path.dirname(graph_path)):
+                        os.makedirs(os.path.dirname(graph_path))
+                    g.render(graph_path)
+                    if verbose : print 'saved', graph_path
+        if len(_encoders):
+            for e in _encoders:
+                if verbose : print 'saved', e.filename
+
+    for path in args:
+        process_file (path)

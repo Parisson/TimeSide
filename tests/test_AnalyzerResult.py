@@ -14,7 +14,8 @@ class TestAnalyzerResult(unittest.TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = analyzer_result_factory(data_mode='value', time_mode='framewise')
+        self.result = AnalyzerResult.factory(data_mode='value', time_mode='framewise')
+
         from datetime import datetime
         self.result.id_metadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
                                        version=__version__,
@@ -154,7 +155,7 @@ class TestAnalyzerResultNumpy(TestAnalyzerResult):
         if verbose:
             print '%15s' % 'from numpy:',
             print d_numpy
-        self.assertEquals(d_numpy, results)
+        self.assertEqual(d_numpy, results)
 
 
 class TestAnalyzerResultHdf5(TestAnalyzerResult):
@@ -167,7 +168,7 @@ class TestAnalyzerResultHdf5(TestAnalyzerResult):
         if verbose:
             print '%15s' % 'from hdf5:',
             print res_hdf5
-        self.assertEquals(res_hdf5, results)
+        self.assertEqual(results, res_hdf5)
 
 
 class TestAnalyzerResultYaml(TestAnalyzerResult):
@@ -183,7 +184,7 @@ class TestAnalyzerResultYaml(TestAnalyzerResult):
             print '%15s' % 'from yaml:',
             print d_yaml
         #for i in range(len(d_yaml)):
-        self.assertEquals(results, d_yaml)
+        self.assertEqual(results, d_yaml)
 
 
 class TestAnalyzerResultXml(TestAnalyzerResult):
@@ -201,7 +202,7 @@ class TestAnalyzerResultXml(TestAnalyzerResult):
             print d_xml
 
         #for i in range(len(d_xml)):
-        self.assertEquals(d_xml, results)
+        self.assertEqual(d_xml, results)
 
 
 class TestAnalyzerResultJson(TestAnalyzerResult):
@@ -222,7 +223,17 @@ class TestAnalyzerResultJson(TestAnalyzerResult):
             print '%15s' % 'from yaml:',
 
         #for i in range(len(d_json)):
-        self.assertEquals(d_json, results)
+        self.assertEqual(d_json, results)
+
+
+class TestAnalyzerResultAsDict(TestAnalyzerResult):
+    """ test AnalyzerResult as Dictionnary"""
+
+    def tearDown(self):
+
+        self.assertIsInstance(self.result.as_dict(), dict)
+        self.assertItemsEqual(self.result.keys() + ['data_mode', 'time_mode'],
+                              self.result.as_dict().keys())
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

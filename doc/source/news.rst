@@ -1,6 +1,19 @@
 News
 =====
 
+0.5.2
+
+ * Add a general launch script "timeside-launch" (see "Shell interface")
+ * Add some decorators to filter the inputs of processes (see analyzer.waveform for ex)
+ * Add a "stack" option to the FileDecoder to accumulate audio data allowing multipass processes
+ * Add beat confidence to aubio_temporal
+ * Add AAC encoder (gstreamer voaacenc plugin needed)
+ * Add UUIDs to the file URI and to all processors
+ * Add a Debian repository with all dependencies for i386 and amd64 architectures
+ * Fix buggy WebM encoder
+ * Fix buggy MP3 muxing
+ * Fix various minor bugs
+
 0.5.1
 
  * Add *parent* processor list to Processor

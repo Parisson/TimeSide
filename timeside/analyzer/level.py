@@ -72,7 +72,7 @@ class Level(Analyzer):
         max_level.id_metadata.name += ' ' + "Max"
 
         max_level.data_object.value = np.round(20*np.log10(self.max_value), 3)
-        self.pipe.results.add(max_level)
+        self.process_pipe.results.add(max_level)
 
         # RMS level
         rms_level = self.new_result(data_mode='value', time_mode='global')
@@ -81,5 +81,5 @@ class Level(Analyzer):
 
         rms_level.data_object.value = np.round(20*np.log10(
                                 np.sqrt(np.mean(self.mean_values))), 3)
-        self.pipe.results.add(rms_level)
+        self.process_pipe.results.add(rms_level)
 

@@ -142,14 +142,19 @@ class TestRunner:
         return result
 
 
-def runTestModule(*modules):
-
+def run_test_module(test_modules_list=None, test_prefix=None):
     suite = unittest.TestSuite()
     finder = doctest.DocTestFinder(exclude_empty=False)  # finder for doctest
-
-    for module in modules:
+    if test_prefix:
+        unittest.TestLoader.testMethodPrefix = test_prefix
+    if not test_modules_list:
+        test_modules_list = []
+    elif not isinstance(test_modules_list, list):
+        test_modules_list = [test_modules_list]
+    test_modules_list.append('__main__')
+    for test in test_modules_list:
         # Doctest
-        suite.addTest(doctest.DocTestSuite(module, test_finder=finder))
+        suite.addTest(doctest.DocTestSuite(test, test_finder=finder))
         # unittest
-        suite.addTest(unittest.loader.TestLoader().loadTestsFromModule(module))
+        suite.addTest(unittest.loader.TestLoader().loadTestsFromModule(test))
     TestRunner().run(suite)

@@ -27,6 +27,14 @@ from timeside.core import Processor
 from timeside.__init__ import __version__
 import numpy
 from collections import OrderedDict
+import h5py
+import h5tools
+import os
+
+if os.environ.has_key('DISPLAY'):
+    doctest_option = '+SKIP'
+else:
+    doctest_option = '+ELLIPSIS'
 
 
 numpy_data_types = [
@@ -173,6 +181,12 @@ class MetadataObject(object):
             if child.text:
                 self[key] = ast.literal_eval(child.text)
 
+    def to_hdf5(self, h5group):
+        h5tools.dict_to_hdf5(self, h5group)
+
+    def from_hdf5(self, h5group):
+        h5tools.dict_from_hdf5(self, h5group)
+
 
 class IdMetadata(MetadataObject):
 
@@ -274,6 +288,19 @@ class LabelMetadata(MetadataObject):
     _default_value = OrderedDict([('label', {}),
                                   ('description', {}),
                                   ('label_type', 'mono')])
+
+    def to_hdf5(self, h5group):
+        """
+        Save a dictionnary-like object inside a h5 file group
+        """
+        # Write attributes
+        name = 'label_type'
+        if self.__getattribute__(name) is not None:
+            h5group.attrs[name] = self.__getattribute__(name)
+
+        for name in ['label', 'description']:
+            subgroup = h5group.create_group(name)
+            h5tools.dict_to_hdf5(self.__getattribute__(name), subgroup)
 
 
 class FrameMetadata(MetadataObject):
@@ -389,8 +416,42 @@ class DataObject(MetadataObject):
                 self[key] = numpy.asarray(ast.literal_eval(child.text),
                                           dtype=child.get('dtype'))
 
+    def to_hdf5(self, h5group):
+        # Write Datasets
+        for key in self.keys():
+            if self.__getattribute__(key) is None:
+                continue
+            if self.__getattribute__(key).dtype == 'object':
+                # Handle numpy type = object as vlen string
+                h5group.create_dataset(key,
+                                       data=self.__getattribute__(
+                                           key).tolist().__repr__(),
+                                       dtype=h5py.special_dtype(vlen=str))
+            else:
+                h5group.create_dataset(key, data=self.__getattribute__(key))
+
+    def from_hdf5(self, h5group):
+        for key, dataset in h5group.items():
+            # Load value from the hdf5 dataset and store in data
+            # FIXME : the following conditional statement is to prevent
+            # reading an empty dataset.
+            # see : https://github.com/h5py/h5py/issues/281
+            # It should be fixed by the next h5py version
+            if dataset.shape != (0,):
+                if h5py.check_dtype(vlen=dataset.dtype):
+                    # to deal with VLEN data used for list of
+                    # list
+                    self.__setattr__(key, eval(dataset[...].tolist()))
+                else:
+                    self.__setattr__(key, dataset[...])
+            else:
+                self.__setattr__(key, [])
+
 
 class AnalyzerParameters(dict):
+
+    def as_dict(self):
+        return self
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
@@ -410,9 +471,11 @@ class AnalyzerParameters(dict):
             if child.text:
                 self.set(child.tag, ast.literal_eval(child.text))
 
-    def as_dict(self):
-        return self
+    def to_hdf5(self, subgroup):
+        h5tools.dict_to_hdf5(self, subgroup)
 
+    def from_hdf5(self, h5group):
+        h5tools.dict_from_hdf5(self, h5group)
 
 
 class AnalyzerResult(MetadataObject):
@@ -464,8 +527,19 @@ class AnalyzerResult(MetadataObject):
         self.label_metadata = LabelMetadata()
         self.parameters = AnalyzerParameters()
 
-        self._data_mode = data_mode
-        self._time_mode = time_mode
+    @staticmethod
+    def factory(data_mode='value', time_mode='framewise'):
+        """
+        Factory function for Analyzer result
+        """
+        for result_cls in AnalyzerResult.__subclasses__():
+            if (hasattr(result_cls, '_time_mode') and
+                hasattr(result_cls, '_data_mode') and
+                (result_cls._data_mode, result_cls._time_mode) == (data_mode,
+                                                                   time_mode)):
+                return result_cls()
+        print data_mode, time_mode
+        raise ValueError('Wrong arguments')
 
     def __setattr__(self, name, value):
         if name in ['_data_mode', '_time_mode']:
@@ -473,7 +547,7 @@ class AnalyzerResult(MetadataObject):
             return
 
         elif name in self.keys():
-            if isinstance(value, dict) and value :
+            if isinstance(value, dict) and value:
                 for (sub_name, sub_value) in value.items():
                     self[name][sub_name] = sub_value
                 return
@@ -518,14 +592,35 @@ class AnalyzerResult(MetadataObject):
 
         data_mode_child = root.find('data_mode')
         time_mode_child = root.find('time_mode')
-        result = analyzer_result_factory(data_mode=data_mode_child.text,
-                                         time_mode=time_mode_child.text)
+        result = AnalyzerResult.factory(data_mode=data_mode_child.text,
+                                        time_mode=time_mode_child.text)
         for child in root:
             key = child.tag
             if key not in ['data_mode', 'time_mode']:
                 child_string = ET.tostring(child)
                 result[key].from_xml(child_string)
 
+        return result
+
+    def to_hdf5(self, h5_file):
+        # Save results in HDF5 Dataset
+        group = h5_file.create_group(self.id_metadata.id)
+        group.attrs['data_mode'] = self.__getattribute__('data_mode')
+        group.attrs['time_mode'] = self.__getattribute__('time_mode')
+        for key in self.keys():
+            if key in ['data_mode', 'time_mode']:
+                continue
+            subgroup = group.create_group(key)
+            self.__getattribute__(key).to_hdf5(subgroup)
+
+    @staticmethod
+    def from_hdf5(h5group):
+        # Read Sub-Group
+        result = AnalyzerResult.factory(
+                                data_mode=h5group.attrs['data_mode'],
+                                time_mode=h5group.attrs['time_mode'])
+        for subgroup_name, h5subgroup in h5group.items():
+            result[subgroup_name].from_hdf5(h5subgroup)
         return result
 
     @property
@@ -561,7 +656,8 @@ class AnalyzerResult(MetadataObject):
         return self.id_metadata.unit
 
 
-class ValueObject(AnalyzerResult):
+class ValueObject(object):
+    _data_mode = 'value'
 
     def __init__(self):
         super(ValueObject, self).__init__()
@@ -583,7 +679,8 @@ class ValueObject(AnalyzerResult):
                     )
 
 
-class LabelObject(AnalyzerResult):
+class LabelObject(object):
+    _data_mode = 'label'
 
     def __init__(self):
         super(LabelObject, self).__init__()
@@ -594,7 +691,8 @@ class LabelObject(AnalyzerResult):
         return self.data_object.label
 
 
-class GlobalObject(AnalyzerResult):
+class GlobalObject(object):
+    _time_mode = 'global'
 
     def __init__(self):
         super(GlobalObject, self).__init__()
@@ -611,7 +709,8 @@ class GlobalObject(AnalyzerResult):
         return self.audio_metadata.duration
 
 
-class FramewiseObject(AnalyzerResult):
+class FramewiseObject(object):
+    _time_mode = 'framewise'
 
     def __init__(self):
         super(FramewiseObject, self).__init__()
@@ -631,7 +730,8 @@ class FramewiseObject(AnalyzerResult):
                 * numpy.ones(len(self)))
 
 
-class EventObject(AnalyzerResult):
+class EventObject(object):
+    _time_mode = 'event'
 
     def __init__(self):
         super(EventObject, self).__init__()
@@ -648,6 +748,7 @@ class EventObject(AnalyzerResult):
 
 
 class SegmentObject(EventObject):
+    _time_mode = 'segment'
 
     def __init__(self):
         super(EventObject, self).__init__()
@@ -658,91 +759,52 @@ class SegmentObject(EventObject):
         return self.data_object.duration
 
 
-class GlobalValueResult(ValueObject, GlobalObject):
+class GlobalValueResult(ValueObject, GlobalObject, AnalyzerResult):
     pass
 
 
-class GlobalLabelResult(LabelObject, GlobalObject):
+class GlobalLabelResult(LabelObject, GlobalObject, AnalyzerResult):
     pass
 
 
-class FrameValueResult(ValueObject, FramewiseObject):
+class FrameValueResult(ValueObject, FramewiseObject, AnalyzerResult):
     pass
 
 
-class FrameLabelResult(LabelObject, FramewiseObject):
+class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
     pass
 
 
-class EventValueResult(ValueObject, EventObject):
+class EventValueResult(ValueObject, EventObject, AnalyzerResult):
     pass
 
 
-class EventLabelResult(LabelObject, EventObject):
+class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
     pass
 
 
-class SegmentValueResult(ValueObject, SegmentObject):
+class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
     pass
 
 
-class SegmentLabelResult(LabelObject, SegmentObject):
+class SegmentLabelResult(LabelObject, SegmentObject, AnalyzerResult):
     pass
-
-
-def analyzer_result_factory(data_mode='value', time_mode='framewise'):
-    '''
-    Analyzer result Factory function
-    '''
-    if (data_mode, time_mode) == ('value', 'framewise'):
-        result = FrameValueResult()
-
-    elif (data_mode, time_mode) == ('label', 'framewise'):
-        result = FrameLabelResult()
-
-    elif (data_mode, time_mode) == ('value', 'global'):
-        result = GlobalValueResult()
-
-    elif (data_mode, time_mode) == ('label', 'global'):
-        result = GlobalLabelResult()
-
-    elif (data_mode, time_mode) == ('value', 'event'):
-        result = EventValueResult()
-
-    elif (data_mode, time_mode) == ('label', 'event'):
-        result = EventLabelResult()
-
-    elif (data_mode, time_mode) == ('value', 'segment'):
-        result = SegmentValueResult()
-
-    elif (data_mode, time_mode) == ('label', 'segment'):
-        result = SegmentLabelResult()
-
-    else:
-        raise ValueError('Wrong arguments')
-
-    result._time_mode = time_mode
-    result._data_mode = data_mode
-
-    return result
 
 
 class AnalyzerResultContainer(dict):
 
     '''
     >>> import timeside
-    >>> import os
-    >>> ModulePath =  os.path.dirname(os.path.realpath(timeside.analyzer.core.__file__))
-    >>> wavFile = os.path.join(ModulePath , '../../tests/samples/sweep.wav')
+    >>> wavFile = 'http://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'
     >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
 
     >>> a = timeside.analyzer.Analyzer()
-    >>> (d|a).run() #doctest: +ELLIPSIS
-    >>> a.new_result() #doctest: +ELLIPSIS
-    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='file:///...', start=1.0, duration=7.0, is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
+    >>> (d|a).run() #doctest: %s
+    >>> a.new_result() #doctest: %s
+    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='http://...', start=1.0, duration=7..., is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
 
-    '''
+    ''' % (doctest_option, doctest_option)
 
     def __init__(self, analyzer_results=None):
         super(AnalyzerResultContainer, self).__init__()
@@ -774,7 +836,8 @@ class AnalyzerResultContainer(dict):
 
         return ET.tostring(root, encoding="utf-8", method="xml")
 
-    def from_xml(self, xml_string):
+    @staticmethod
+    def from_xml(xml_string):
         import xml.etree.ElementTree as ET
 
         results = AnalyzerResultContainer()
@@ -801,7 +864,8 @@ class AnalyzerResultContainer(dict):
         return json.dumps([res.as_dict() for res in self.values()],
                           default=NumpyArrayEncoder)
 
-    def from_json(self, json_str):
+    @staticmethod
+    def from_json(json_str):
         import simplejson as json
 
         # Define Specialize JSON decoder for numpy array
@@ -817,8 +881,8 @@ class AnalyzerResultContainer(dict):
         results = AnalyzerResultContainer()
         for res_json in results_json:
 
-            res = analyzer_result_factory(data_mode=res_json['data_mode'],
-                                        time_mode=res_json['time_mode'])
+            res = AnalyzerResult.factory(data_mode=res_json['data_mode'],
+                                         time_mode=res_json['time_mode'])
             for key in res_json.keys():
                 if key not in ['data_mode', 'time_mode']:
                     res[key] = res_json[key]
@@ -840,7 +904,8 @@ class AnalyzerResultContainer(dict):
 
         return yaml.dump([res.as_dict() for res in self.values()])
 
-    def from_yaml(self, yaml_str):
+    @staticmethod
+    def from_yaml(yaml_str):
         import yaml
 
         # Define Specialize Yaml encoder for numpy array
@@ -853,8 +918,8 @@ class AnalyzerResultContainer(dict):
         results_yaml = yaml.load(yaml_str)
         results = AnalyzerResultContainer()
         for res_yaml in results_yaml:
-            res = analyzer_result_factory(data_mode=res_yaml['data_mode'],
-                                        time_mode=res_yaml['time_mode'])
+            res = AnalyzerResult.factory(data_mode=res_yaml['data_mode'],
+                                         time_mode=res_yaml['time_mode'])
             for key in res_yaml.keys():
                 if key not in ['data_mode', 'time_mode']:
                     res[key] = res_yaml[key]
@@ -864,89 +929,34 @@ class AnalyzerResultContainer(dict):
     def to_numpy(self, output_file):
         numpy.save(output_file, self)
 
-    def from_numpy(self, input_file):
+    @staticmethod
+    def from_numpy(input_file):
         return numpy.load(input_file)
 
     def to_hdf5(self, output_file):
-
-        import h5py
-
         # Open HDF5 file and save dataset (overwrite any existing file)
         with h5py.File(output_file, 'w') as h5_file:
             for res in self.values():
-                # Save results in HDF5 Dataset
-                group = h5_file.create_group(res.id_metadata.id)
-                group.attrs['data_mode'] = res['data_mode']
-                group.attrs['time_mode'] = res['time_mode']
-                for key in res.keys():
-                    if key not in ['data_mode', 'time_mode', 'data_object']:
-                        subgroup = group.create_group(key)
+                res.to_hdf5(h5_file)
 
-                        # Write attributes
-                        attrs = res[key].keys()
-                        for name in attrs:
-                            if res[key][name] is not None:
-                                subgroup.attrs[name] = res[key][name]
-
-                # Write Datasets
-                key = 'data_object'
-                subgroup = group.create_group(key)
-                for dsetName in res[key].keys():
-                    if res[key][dsetName] is not None:
-                        if res[key][dsetName].dtype == 'object':
-                            # Handle numpy type = object as vlen string
-                            subgroup.create_dataset(dsetName,
-                                                    data=res[key][
-                                                        dsetName].tolist(
-                                                    ).__repr__(),
-                                                    dtype=h5py.special_dtype(vlen=str))
-                        else:
-                            subgroup.create_dataset(dsetName,
-                                                    data=res[key][dsetName])
-
-    def from_hdf5(self, input_file):
+    @staticmethod
+    def from_hdf5(input_file):
         import h5py
         # TODO : enable import for yaafe hdf5 format
 
         # Open HDF5 file for reading and get results
         h5_file = h5py.File(input_file, 'r')
-        data_list = AnalyzerResultContainer()
+        results = AnalyzerResultContainer()
         try:
-            for (group_name, group) in h5_file.items():
-
-                result = analyzer_result_factory(data_mode=group.attrs['data_mode'],
-                                        time_mode=group.attrs['time_mode'])
-                # Read Sub-Group
-                for subgroup_name, subgroup in group.items():
-                    # Read attributes
-                    for name, value in subgroup.attrs.items():
-                            result[subgroup_name][name] = value
-
-                    if subgroup_name == 'data_object':
-                        for dsetName, dset in subgroup.items():
-                            # Load value from the hdf5 dataset and store in data
-                            # FIXME : the following conditional statement is to prevent
-                            # reading an empty dataset.
-                            # see : https://github.com/h5py/h5py/issues/281
-                            # It should be fixed by the next h5py version
-                            if dset.shape != (0,):
-                                if h5py.check_dtype(vlen=dset.dtype):
-                                    # to deal with VLEN data used for list of
-                                    # list
-                                    result[subgroup_name][dsetName] = eval(
-                                        dset[...].tolist())
-                                else:
-                                    result[subgroup_name][dsetName] = dset[...]
-                            else:
-                                result[subgroup_name][dsetName] = []
-
-                data_list.add(result)
+            for group in h5_file.values():
+                result = AnalyzerResult.from_hdf5(group)
+                results.add(result)
         except TypeError:
             print('TypeError for HDF5 serialization')
         finally:
             h5_file.close()  # Close the HDF5 file
 
-        return data_list
+        return results
 
 
 class Analyzer(Processor):
@@ -974,7 +984,7 @@ class Analyzer(Processor):
     def results(self):
 
         return AnalyzerResultContainer(
-            [self.pipe.results[key] for key in self.pipe.results.keys()
+            [self.process_pipe.results[key] for key in self.process_pipe.results.keys()
              if key.split('.')[0] == self.id()])
 
     @staticmethod
@@ -1006,8 +1016,8 @@ class Analyzer(Processor):
 
         from datetime import datetime
 
-        result = analyzer_result_factory(data_mode=data_mode,
-                                         time_mode=time_mode)
+        result = AnalyzerResult.factory(data_mode=data_mode,
+                                time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(

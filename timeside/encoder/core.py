@@ -20,14 +20,18 @@
 
 
 from timeside.core import Processor, implements, interfacedoc
+from timeside.component import implements, abstract
 from timeside.api import IEncoder
 from timeside.tools import *
 
 from gst import _gst as gst
 
-class GstEncoder(Processor):
 
-    def __init__(self, output, streaming = False, overwrite = False):
+class GstEncoder(Processor):
+    implements(IEncoder)
+    abstract()
+
+    def __init__(self, output, streaming=False, overwrite=False):
 
         super(GstEncoder, self).__init__()
 
@@ -52,6 +56,7 @@ class GstEncoder(Processor):
         self.metadata = None
         self.num_samples = 0
 
+    @interfacedoc
     def release(self):
         if hasattr(self, 'eod') and hasattr(self, 'mainloopthread'):
             self.end_cond.acquire()
@@ -121,16 +126,24 @@ class GstEncoder(Processor):
             self.end_cond.notify()
             self.end_cond.release()
 
+    @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
         if eod:
             self.num_samples +=  frames.shape[0]
         else:
             self.num_samples += self.blocksize()
-        buf = numpy_array_to_gst_buffer(frames, self.blocksize(),self.num_samples, self.samplerate())
+        buf = numpy_array_to_gst_buffer(frames, frames.shape[0],self.num_samples, self.samplerate())
         self.src.emit('push-buffer', buf)
         if self.eod:
             self.src.emit('end-of-stream')
         if self.streaming:
             self.chunk = self.app.emit('pull-buffer')
         return frames, eod
+
+
+if __name__ == "__main__":
+    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
+    from tests import test_encoding, test_transcoding
+    from tests.unit_timeside import run_test_module
+    run_test_module([test_encoding, test_transcoding])

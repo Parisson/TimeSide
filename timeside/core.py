@@ -21,6 +21,8 @@
 from timeside.component import *
 from timeside.api import IProcessor
 from timeside.exceptions import Error, ApiError
+
+
 import re
 import time
 import numpy
@@ -244,18 +246,15 @@ class ProcessPipe(object):
         from timeside.analyzer.core import AnalyzerResultContainer
         self.results = AnalyzerResultContainer()
 
-        for proc in self.processors:
-            proc.pipe = self
-
     def __or__(self, other):
         return ProcessPipe(self, other)
 
     def __ior__(self, other):
         if isinstance(other, Processor):
-            parents = other.parents
-            for parent in parents:
+            for parent in other.parents:
                 self |= parent
             self.processors.append(other)
+            other.process_pipe = self
         elif isinstance(other, ProcessPipe):
             self.processors.extend(other.processors)
         else:
@@ -277,34 +276,59 @@ class ProcessPipe(object):
                 pipe += ' | '
         return pipe
 
-    def run(self):
+    def run(self, channels=None, samplerate=None, blocksize=None, stack=None):
         """Setup/reset all processors in cascade and stream audio data along
         the pipe. Also returns the pipe itself."""
 
         source = self.processors[0]
         items = self.processors[1:]
-        source.setup()
+        source.setup(channels=channels, samplerate=samplerate,
+                     blocksize=blocksize)
+
+        if stack is None:
+                self.stack = False
+        else:
+            self.stack = stack
+
+        if self.stack:
+            self.frames_stack = []
 
         last = source
 
         # setup/reset processors and configure properties throughout the pipe
         for item in items:
+            item.source_mediainfo = source.mediainfo()
             item.setup(channels=last.channels(),
                        samplerate=last.samplerate(),
                        blocksize=last.blocksize(),
                        totalframes=last.totalframes())
-            item.source_mediainfo = source.mediainfo()
             last = item
 
         # now stream audio data along the pipe
         eod = False
         while not eod:
             frames, eod = source.process()
+            if self.stack:
+                self.frames_stack.append(frames)
             for item in items:
                 frames, eod = item.process(frames, eod)
 
+        # Post-processing
         for item in items:
             item.post_process()
 
+        # Release processors
+        if self.stack:
+            if not isinstance(self.frames_stack, numpy.ndarray):
+                self.frames_stack = numpy.vstack(self.frames_stack)
+            from timeside.decoder.core import ArrayDecoder
+            new_source = ArrayDecoder(samples=self.frames_stack,
+                                      samplerate=source.samplerate())
+            new_source.setup(channels=source.channels(),
+                             samplerate=source.samplerate(),
+                             blocksize=source.blocksize())
+            self.processors[0] = new_source
+
         for item in items:
             item.release()
+            self.processors.remove(item)

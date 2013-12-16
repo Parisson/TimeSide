@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ====================
-TimeSide : Tutorial
+TimeSide : Tutorials
 ====================
 Contents:
 
@@ -13,5 +13,6 @@ Contents:
 
       Quick start <quick_start>
       Usage of AnalyzerResult <AnalyzerResult>
+      Running a pipe with previously decoded frames <frames_stack>
 
 

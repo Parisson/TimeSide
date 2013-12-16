@@ -70,7 +70,7 @@ class OnsetDetectionFunction(Analyzer):
     def post_process(self):
 
         #spectrogram = self.parents()[0]['spectrogram_analyzer'].data
-        spectrogram = self.pipe.results['spectrogram_analyzer'].data
+        spectrogram = self.process_pipe.results['spectrogram_analyzer'].data
         #spectrogram = self.pipe._results[self.parents()[0].id]
 
         # Low-pass filtering of the spectrogram amplitude along the time axis
@@ -108,4 +108,4 @@ class OnsetDetectionFunction(Analyzer):
         odf = self.new_result(data_mode='value', time_mode='framewise')
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
         odf.data_object.value = odf_diff
-        self.pipe.results.add(odf)
+        self.process_pipe.results.add(odf)

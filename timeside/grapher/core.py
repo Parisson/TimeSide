@@ -163,7 +163,7 @@ class Grapher(Processor):
         return self.image
 
     def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
-        self.image = im_watermark(text, text, color=color, opacity=opacity, margin=margin)
+        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
 
     def draw_peaks(self, x, peaks, line_color):
         """Draw 2 peaks at x"""

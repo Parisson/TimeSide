@@ -51,7 +51,8 @@ class SpectrogramLog(Grapher):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(SpectrogramLog, self).setup(channels, samplerate, blocksize, totalframes)
-        self.image = Image.new("P", (self.image_height, self.image_width))
+        self.image = self.image.convert("P")
+        self.image = self.image.transpose(Image.ROTATE_90)
         self.image.putpalette(interpolate_colors(self.colors, True))
         self.set_scale()
 
@@ -91,5 +92,5 @@ class SpectrogramLog(Grapher):
     def post_process(self):
         """ Apply last 2D transforms"""
         self.image.putdata(self.pixels)
-        self.image.transpose(Image.ROTATE_90)
+        self.image = self.image.transpose(Image.ROTATE_90)
 

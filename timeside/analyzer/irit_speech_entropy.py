@@ -19,7 +19,7 @@
 
 # Author: Maxime Le Coz <lecoz@irit.fr>
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import entropy, computeModulation
 from timeside.analyzer.utils import segmentFromValues
@@ -32,7 +32,8 @@ class IRITSpeechEntropy(Analyzer):
     implements(IAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
         super(IRITSpeechEntropy, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.entropyValue = []
@@ -76,7 +77,7 @@ class IRITSpeechEntropy(Analyzer):
         conf.id_metadata.name += ' ' + 'Confidence'
 
         conf.data_object.value = confEntropy
-        self._results.add(conf)
+        self.process_pipe.results.add(conf)
 
         # Binary Entropy
         binaryEntropy = modulentropy > self.threshold
@@ -87,22 +88,20 @@ class IRITSpeechEntropy(Analyzer):
         label = {0: 'NonSpeech', 1: 'Speech'}
         segList = segmentFromValues(binaryEntropy)
 
-
-
         segs = self.new_result(data_mode='label', time_mode='segment')
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
 
-        segs.data_object.label = segList
+        segs.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
-                                  self.samplerate())
-                                  for s in segList]
+                                 self.samplerate())
+                                 for s in segList]
         segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
-                                  self.samplerate())
-                                  for s in segList]
+                                     self.samplerate())
+                                     for s in segList]
 
-        self._results.add(segs)
+        self.process_pipe.results.add(segs)
 
         return

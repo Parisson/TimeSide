@@ -62,7 +62,7 @@ class FileDecoder(Processor):
     def id():
         return "gst_dec"
 
-    def __init__(self, uri, start = 0, duration = None):
+    def __init__(self, uri, start=0, duration=None):
 
         """
         Construct a new FileDecoder
@@ -515,9 +515,8 @@ class ArrayDecoder(Processor):
 
 if __name__ == "__main__":
     # Run doctest from __main__ and unittest from tests
-    from tests.unit_timeside import runTestModule
+    from tests.unit_timeside import run_test_module
     # load corresponding tests
     from tests import test_decoding, test_array_decoding
 
-    runTestModule('__main__', test_decoding, test_array_decoding)
-
+    run_test_module([test_decoding, test_array_decoding])

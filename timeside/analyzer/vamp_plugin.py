@@ -110,7 +110,7 @@ class VampSimpleHost(Analyzer):
             plugin_res.id_metadata.name += ' ' + \
                 ' '.join(plugin_line[1:])
 
-            self.pipe.results.add(plugin_res)
+            self.process_pipe.results.add(plugin_res)
 
     @staticmethod
     def vamp_plugin(plugin, wavfile):
