@@ -13,4 +13,7 @@ from waveform import Waveform
 from vamp_plugin import VampSimpleHost
 from irit_speech_entropy import IRITSpeechEntropy
 from irit_speech_4hz import IRITSpeech4Hz
+from irit_monopoly import IRITMonopoly
+from irit_diverg import IRITDiverg
+
 from odf import OnsetDetectionFunction
