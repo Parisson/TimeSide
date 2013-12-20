@@ -237,7 +237,7 @@ def calculDistance(modeleLong,modeleCourt):
     return (2*modeleCourt.erreur_residuelle*modeleLong.erreur_residuelle/modeleLong.variance_erreur_residuelle-(1.0+QV)*modeleLong.erreur_residuelle**2/modeleLong.variance_erreur_residuelle+QV-1.0)/(2.0*QV)
 
 
-def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True,seuil_vois=None,withTrace = False):
+def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True):
     '''
     Fonction principale de segmentation.
     
@@ -249,9 +249,6 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True,se
         - lamb (float) : valeur de lambda pour la détection de chute de Wn. Par défaut = 40.0
         - biais (float) : valeur du bias à appliquer (en négatif). Par défaut = -0.2
         - with_backward (Bool) : Interrupteur du calcul ou non en backward. Par défaut = True
-        - seuil_vois (float) : Si fixé, défini les valeurs de lambda et du biais en fonction du voisement ou non du buffer initial du model court terme.
-                               (voisement_yin >  seuil_vois ==> Non voisé). Par défaut = None
-        - withTrace (Bool) : Enregistre ou non la trace de tous les calculs pour un affichage à postériori. Par défaut = False 
     
     '''
     # Initialisation
@@ -306,10 +303,6 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True,se
                 # Recherche de nouveau maximum
                 if Wn > maxi[0] :
                     maxi = (Wn,t)
-                
-                if withTrace :
-                    dynaWn += [Wn]
-                    tWn += [t]
                     
                 # Recherche de rupture par chute superieure à lambda
                 if (maxi[0] - Wn) > lamb :
@@ -325,30 +318,25 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True,se
         # Si une rupture à été detecté avec un modèle stable (Wn à croit)   
         if t_rupt > -1 :
             
-            m = 'forward'                
+            m = 1                
             if with_backward :
                 
                 bdata = data[t_rupt:rupt_last:-1]
                 
                 if len(bdata) > 0 :
                 
-                    front = segment(bdata,fe,ordre,float(Lmin)/fe,lamb,biais,with_backward=False,seuil_vois=seuil_vois,withTrace=withTrace)
+                    front = segment(bdata,fe,ordre,float(Lmin)/fe,lamb,biais,with_backward=False)
                     t_bs = [ t_rupt-tr for tr,_ in front]
                     
                     if len(t_bs) > 0 :
                         t_rupt = t_bs[-1]
-                        m ='backward'
+                        m =-1
                     
         # Sinon on crée un segment de longueur minimale
         else :
             t_rupt = rupt_last+Lmin
-            m = 'instable'
+            m = 0
             
-        if withTrace :
-            evnt['selected'] = t_rupt
-            evnt['comment'] = m
-            trace+=[evnt]
-
         # Mise à jour des frontières
         t = t_rupt 
         rupt_last = t_rupt
@@ -363,7 +351,10 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True,se
 class IRITDiverg(Analyzer):
     implements(IAnalyzer)
     '''
+    
+    
     '''
+    
     def __init__(self, blocksize=1024, stepsize=None) :
         super(IRITDiverg, self).__init__();
         self.parents.append(Waveform())
@@ -372,11 +363,8 @@ class IRITDiverg(Analyzer):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,blocksize=None, totalframes=None):
-        super(IRITDiverg, self).setup(channels,
-                                      samplerate,
-                                      blocksize,
-                                      totalframes)
-        self.parents.append(Waveform())
+        super(IRITDiverg, self).setup(channels,samplerate,blocksize,totalframes)
+    
     @staticmethod
     @interfacedoc
     def id():
@@ -402,10 +390,18 @@ class IRITDiverg(Analyzer):
         return frames, eod
 
     def post_process(self):
-        data = self.process_pipe.results['waveform_analyzer'].data       
+        data = list(self.process_pipe.results['waveform_analyzer'].data)
         frontieres = segment(data,self.samplerate(),self.ordre)
-        f = open('front.lab','w')
-        for t,m in frontieres :
-            f.write('%f\t%s\n'%(float(t)/self.samplerate(),m));
-        f.close()
-        print frontieres
+        
+
+        segs = self.new_result(data_mode='label', time_mode='event')
+        segs.id_metadata.id += '.' + 'segments'
+        segs.id_metadata.name += ' ' + 'Segments'
+        
+        label = {0: 'Instable', 1: 'Forward', -1: 'Backward'}
+        segs.label_metadata.label = label
+
+        segs.data_object.label    = [s[1] for s in frontieres]
+        segs.data_object.time     = [(float(s[0]) / self.samplerate()) for s in frontieres]
+        self.process_pipe.results.add(segs)
+        return 
