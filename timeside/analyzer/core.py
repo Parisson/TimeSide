@@ -894,7 +894,7 @@ class AnalyzerResultContainer(dict):
             results.add(res)
         return results
 
-    def to_yaml(self, output_file):
+    def to_yaml(self, output_file=None):
         #if data_list == None: data_list = self.results
         import yaml
 
@@ -932,8 +932,11 @@ class AnalyzerResultContainer(dict):
             results.add(res)
         return results
 
-    def to_numpy(self, output_file):
-        numpy.save(output_file, self)
+    def to_numpy(self, output_file=None):
+        if output_file:
+            numpy.save(output_file, self)
+        else:
+            return self
 
     @staticmethod
     def from_numpy(input_file):
