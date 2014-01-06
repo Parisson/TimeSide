@@ -2,7 +2,7 @@
 
 from __future__ import division
 
-from timeside.decoder.core import FileDecoder
+from timeside.decoder import FileDecoder
 from unit_timeside import *
 
 import os.path

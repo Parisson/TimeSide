@@ -29,6 +29,9 @@ import numpy as np
 class Spectrogram(Analyzer):
     implements(IAnalyzer)
 
+    values = []
+    FFT_SIZE = 2048
+
     def __init__(self, blocksize=2048, stepsize=None):
         super(Spectrogram, self).__init__()
 
@@ -43,9 +46,6 @@ class Spectrogram(Analyzer):
               blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate,
               blocksize, totalframes)
-
-        self.values = []
-        self.FFT_SIZE = 2048
 
     @staticmethod
     @interfacedoc
