@@ -284,7 +284,7 @@ class ProcessPipe(object):
         items = self.processors[1:]
         source.setup(channels=channels, samplerate=samplerate,
                      blocksize=blocksize)
-
+        source.SIG_STOP = False
         last = source
 
         # setup/reset processors and configure properties throughout the pipe
@@ -298,16 +298,29 @@ class ProcessPipe(object):
 
         # now stream audio data along the pipe
         eod = False
+
+        # Set handler for Interruption signal
+        import signal
+
+        def signal_handler(signum, frame):
+            source.stop()
+            signal.signal(signum, signal.SIG_DFL)
+
+        signal.signal(signal.SIGINT, signal_handler)
+
         while not eod:
             frames, eod = source.process()
             for item in items:
                 frames, eod = item.process(frames, eod)
 
+        # Restore default handler for Interruption signal
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+
         # Post-processing
         for item in items:
             item.post_process()
 
-        # Release processors
+       # Release processors
         for item in items:
             item.release()
             self.processors.remove(item)
