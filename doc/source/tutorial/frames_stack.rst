@@ -5,12 +5,17 @@
  Running a pipe with previously decoded frames
 ===============================================
 
-Example of use of the `stack` option in :func:`timeside.core.ProcessPipe.run` to run a pipe with previously decoded frames stacked in memory on a second pass.
+Example of use of the `stack` argument in :class:`timeside.decoder.core.FileDecoder` to run a pipe with previously decoded frames stacked in memory on a second pass.
+
+First, let's import everything and define the audio file source :
 
 >>> import timeside
 >>> import numpy as np
 >>> audio_file = 'http://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'
->>> decoder = timeside.decoder.FileDecoder(audio_file)
+
+Then let's setup a :class:`FileDecoder <timeside.decoder.core.FileDecoder>` with argument `stack=True` (default argument is `stack=False`) :
+
+>>> decoder = timeside.decoder.FileDecoder(audio_file, stack=True)
 
 Setup an arbitrary analyzer to check that decoding process from file and from stack are equivalent:
 
@@ -19,30 +24,29 @@ Setup an arbitrary analyzer to check that decoding process from file and from st
 >>> print pipe.processors #doctest: +ELLIPSIS
 [<timeside.decoder.core.FileDecoder object at 0x...>, <timeside.analyzer.aubio_pitch.AubioPitch object at 0x...>]
 
-If the pipe is run with the default argument `stack=False`, the other processes of the pipe are released from the pipe after the run and only the  :class:`fileDecoder <timeside.decoder.core.FileDecoder>` is kept in the pipe:
+After the pipe has been run, the other processes of the pipe are removed from the pipe and only the :class:`FileDecoder <timeside.decoder.core.FileDecoder>` is kept :
 
 >>> pipe.run()
 >>> print pipe.processors #doctest: +ELLIPSIS
 [<timeside.decoder.core.FileDecoder object at 0x...>]
 
+The processed frames are stored in the pipe attribute `frames_stack` as a list of frames :
 
-If the pipe is run with the argument `stack=True`, the processed frames are stored in the pipe attribute `frames_stack`.
-The other processes of the pipe are also released from the pipe after the run but the :class:`fileDecoder <timeside.decoder.core.FileDecoder>` is replaced by an :class:`ArrayDecoder <timeside.decoder.core.ArrayDecoder>`:
+>>> print type(pipe.frames_stack)
+<type 'list'>
 
->>> pipe = (decoder | pitch_on_file)
->>> pipe.run(stack=True)
->>> print pipe.processors #doctest: +ELLIPSIS
-[<timeside.decoder.core.ArrayDecoder object at 0x...>]
+First frame :
 
-The stack
+>>> print pipe.frames_stack[0] #doctest: +ELLIPSIS
+(array([[...]], dtype=float32), False)
 
->>> pipe.frames_stack #doctest: +ELLIPSIS
-array([[...]], dtype=float32)
+Last frame :
 
+>>> print pipe.frames_stack[-1] #doctest: +ELLIPSIS
+(array([[...]], dtype=float32), True)
 
-Then we can run a second pipe with the previously decoded frames and pass the frames to the same analyzer.
-
-Define a second analyzer equivalent to the previous one:
+If the pipe is used for a second run, the processed frames stored in the stack are passed to the other processors without decoding the audio source again.
+Let's define a second analyzer equivalent to the previous one:
 
 >>> pitch_on_stack = timeside.analyzer.AubioPitch()
 
@@ -50,10 +54,9 @@ Add it to the pipe:
 
 >>> pipe |= pitch_on_stack
 >>> print pipe.processors #doctest: +ELLIPSIS
-[<timeside.decoder.core.ArrayDecoder object at 0x...>, <timeside.analyzer.aubio_pitch.AubioPitch object at 0x...>]
+[<timeside.decoder.core.FileDecoder object at 0x...>, <timeside.analyzer.aubio_pitch.AubioPitch object at 0x...>]
 
-
-Run the pipe:
+And run the pipe:
 
 >>> pipe.run()
 

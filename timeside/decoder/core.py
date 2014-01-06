@@ -28,7 +28,7 @@
 
 from __future__ import division
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.api import IDecoder
 from timeside.tools import *
 
@@ -43,17 +43,92 @@ GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
 
 
-class FileDecoder(Processor):
+def stack(process_func):
+
+    import functools
+
+    @functools.wraps(process_func)
+    def wrapper(decoder):
+        # Processing
+        frames, eod = process_func(decoder)
+        if decoder.stack:
+            decoder.process_pipe.frames_stack.append((frames, eod))
+        return frames, eod
+    return wrapper
+
+
+class Decoder(Processor):
+    """General abstract base class for Decoder
+    """
+    implements(IDecoder)
+    abstract()
+
+    mimetype = ''
+    output_samplerate = None
+    output_channels = None
+
+    def __init__(self, start=0, duration=None):
+        super(Decoder, self).__init__()
+
+        self.uri_start = float(start)
+        if duration:
+            self.uri_duration = float(duration)
+        else:
+            self.uri_duration = duration
+
+        if start == 0 and duration is None:
+            self.is_segment = False
+        else:
+            self.is_segment = True
+
+    @interfacedoc
+    def channels(self):
+        return self.output_channels
+
+    @interfacedoc
+    def samplerate(self):
+        return self.output_samplerate
+
+    @interfacedoc
+    def blocksize(self):
+        return self.output_blocksize
+
+    @interfacedoc
+    def totalframes(self):
+        return self.input_totalframes
+
+    @interfacedoc
+    def release(self):
+        pass
+
+    @interfacedoc
+    def mediainfo(self):
+        return dict(uri=self.uri,
+                    duration=self.uri_duration,
+                    start=self.uri_start,
+                    is_segment=self.is_segment,
+                    samplerate=self.input_samplerate)
+
+    def __del__(self):
+        self.release()
+
+    @interfacedoc
+    def encoding(self):
+        return self.format().split('/')[-1]
+
+    @interfacedoc
+    def resolution(self):
+        return self.input_width
+
+
+class FileDecoder(Decoder):
     """ gstreamer-based decoder """
     implements(IDecoder)
 
-    mimetype = ''
-    output_blocksize  = 8*1024
-    output_samplerate = None
-    output_channels   = None
+    output_blocksize = 8*1024
 
-    pipeline          = None
-    mainloopthread    = None
+    pipeline = None
+    mainloopthread = None
 
     # IProcessor methods
 
@@ -62,7 +137,7 @@ class FileDecoder(Processor):
     def id():
         return "gst_dec"
 
-    def __init__(self, uri, start=0, duration=None):
+    def __init__(self, uri, start=0, duration=None, stack=False):
 
         """
         Construct a new FileDecoder
@@ -75,22 +150,15 @@ class FileDecoder(Processor):
             start time of the segment in seconds
         duration : float
             duration of the segment in seconds
+
         """
 
-        super(FileDecoder, self).__init__()
+        super(FileDecoder, self).__init__(start=start, duration=duration)
+
+        self.from_stack = False
+        self.stack = stack
 
         self.uri = get_uri(uri)
-
-        self.uri_start = float(start)
-        if duration:
-            self.uri_duration = float(duration)
-        else:
-            self.uri_duration = duration
-
-        if start==0 and duration is None:
-            self.is_segment = False
-        else:
-            self.is_segment = True
 
     def set_uri_default_duration(self):
         # Set the duration from the length of the file
@@ -98,6 +166,15 @@ class FileDecoder(Processor):
         self.uri_duration = uri_total_duration - self.uri_start
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
+
+        self.eod = False
+        self.last_buffer = None
+
+        if self.from_stack:
+            return
+
+        if self.stack:
+            self.process_pipe.frames_stack = []
 
         if self.uri_duration is None:
             self.set_uri_default_duration()
@@ -183,10 +260,6 @@ class FileDecoder(Processor):
         self.mainloopthread.start()
         #self.mainloopthread = get_loop_thread()
         ##self.mainloop = self.mainloopthread.mainloop
-
-        self.eod = False
-
-        self.last_buffer = None
 
         # start pipeline
         self.pipeline.set_state(gst.STATE_PLAYING)
@@ -282,24 +355,13 @@ class FileDecoder(Processor):
             self.queue.put([new_block, False])
 
     @interfacedoc
-    def process(self, frames=None, eod=False):
+    @stack
+    def process(self):
         buf = self.queue.get()
         if buf == gst.MESSAGE_EOS:
             return self.last_buffer, True
         frames, eod = buf
         return frames, eod
-
-    @interfacedoc
-    def channels(self):
-        return self.output_channels
-
-    @interfacedoc
-    def samplerate(self):
-        return self.output_samplerate
-
-    @interfacedoc
-    def blocksize(self):
-        return self.output_blocksize
 
     @interfacedoc
     def totalframes(self):
@@ -311,18 +373,10 @@ class FileDecoder(Processor):
 
     @interfacedoc
     def release(self):
+        if self.stack:
+            self.stack = False
+            self.from_stack = True
         pass
-
-    @interfacedoc
-    def mediainfo(self):
-        return dict(uri=self.uri,
-                    duration=self.uri_duration,
-                    start=self.uri_start,
-                    is_segment=self.is_segment,
-                    samplerate=self.input_samplerate)
-
-    def __del__(self):
-        self.release()
 
     ## IDecoder methods
 
@@ -349,14 +403,11 @@ class FileDecoder(Processor):
         return self.tags
 
 
-class ArrayDecoder(Processor):
+class ArrayDecoder(Decoder):
     """ Decoder taking Numpy array as input"""
     implements(IDecoder)
 
-    mimetype = ''
     output_blocksize = 8*1024
-    output_samplerate = None
-    output_channels = None
 
     # IProcessor methods
 
@@ -379,7 +430,7 @@ class ArrayDecoder(Processor):
             duration : float
                 duration of the segment in seconds
         '''
-        super(ArrayDecoder, self).__init__()
+        super(ArrayDecoder, self).__init__(start=start, duration=duration)
 
         # Check array dimension
         if samples.ndim > 2:
@@ -394,17 +445,6 @@ class ArrayDecoder(Processor):
         self.uri = '_'.join(['raw_audio_array',
                             'x'.join([str(dim) for dim in samples.shape]),
                              samples.dtype.type.__name__])
-
-        self.uri_start = float(start)
-        if duration:
-            self.uri_duration = float(duration)
-        else:
-            self.uri_duration = duration
-
-        if start == 0 and duration is None:
-            self.is_segment = False
-        else:
-            self.is_segment = True
 
         self.frames = self.get_frames()
 
@@ -454,44 +494,8 @@ class ArrayDecoder(Processor):
         yield (self.samples[nb_frames * self.output_blocksize:], True)
 
     @interfacedoc
-    def process(self, frames=None, eod=False):
-
+    def process(self):
         return self.frames.next()
-
-    @interfacedoc
-    def channels(self):
-        return self.output_channels
-
-    @interfacedoc
-    def samplerate(self):
-        return self.output_samplerate
-
-    @interfacedoc
-    def blocksize(self):
-        return self.output_blocksize
-
-    @interfacedoc
-    def totalframes(self):
-        if self.input_samplerate == self.output_samplerate:
-            return self.input_totalframes
-        else:
-            ratio = self.output_samplerate / self.input_samplerate
-            return int(self.input_totalframes * ratio)
-
-    @interfacedoc
-    def release(self):
-        pass
-
-    @interfacedoc
-    def mediainfo(self):
-        return dict(uri=self.uri,
-                    duration=self.uri_duration,
-                    start=self.uri_start,
-                    is_segment=self.is_segment,
-                    samplerate=self.input_samplerate)
-
-    def __del__(self):
-        self.release()
 
     ## IDecoder methods
     @interfacedoc
@@ -499,14 +503,6 @@ class ArrayDecoder(Processor):
         import re
         base_type = re.search('^[a-z]*', self.samples.dtype.name).group(0)
         return 'audio/x-raw-'+base_type
-
-    @interfacedoc
-    def encoding(self):
-        return self.format().split('/')[-1]
-
-    @interfacedoc
-    def resolution(self):
-        return self.input_width
 
     @interfacedoc
     def metadata(self):

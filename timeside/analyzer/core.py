@@ -824,7 +824,7 @@ class AnalyzerResultContainer(dict):
                          analyzer_result)
         #self.results += [analyzer_result]
 
-    def to_xml(self):
+    def to_xml(self, output_file = None):
 
         import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
@@ -834,7 +834,9 @@ class AnalyzerResultContainer(dict):
             if result is not None:
                 root.append(ET.fromstring(result.to_xml()))
 
-        return ET.tostring(root, encoding="utf-8", method="xml")
+        xml_str = ET.tostring(root, encoding="utf-8", method="xml")
+        if output_file: open(output_file, 'w').write(xml_str)
+        else: return xml_str
 
     @staticmethod
     def from_xml(xml_string):
@@ -850,7 +852,7 @@ class AnalyzerResultContainer(dict):
 
         return results
 
-    def to_json(self):
+    def to_json(self, output_file = None):
         #if data_list == None: data_list = self.results
         import simplejson as json
 
@@ -861,8 +863,10 @@ class AnalyzerResultContainer(dict):
                         'dtype': obj.dtype.__str__()}
             raise TypeError(repr(obj) + " is not JSON serializable")
 
-        return json.dumps([res.as_dict() for res in self.values()],
+        json_str = json.dumps([res.as_dict() for res in self.values()],
                           default=NumpyArrayEncoder)
+        if output_file: open(output_file, 'w').write(json_str)
+        else: return json_str
 
     @staticmethod
     def from_json(json_str):
@@ -890,7 +894,7 @@ class AnalyzerResultContainer(dict):
             results.add(res)
         return results
 
-    def to_yaml(self):
+    def to_yaml(self, output_file=None):
         #if data_list == None: data_list = self.results
         import yaml
 
@@ -902,7 +906,9 @@ class AnalyzerResultContainer(dict):
 
         yaml.add_representer(numpy.ndarray, numpyArray_representer)
 
-        return yaml.dump([res.as_dict() for res in self.values()])
+        yaml_str = yaml.dump([res.as_dict() for res in self.values()])
+        if output_file: open(output_file, 'w').write(yaml_str)
+        else: return yaml_str
 
     @staticmethod
     def from_yaml(yaml_str):
@@ -926,8 +932,11 @@ class AnalyzerResultContainer(dict):
             results.add(res)
         return results
 
-    def to_numpy(self, output_file):
-        numpy.save(output_file, self)
+    def to_numpy(self, output_file=None):
+        if output_file:
+            numpy.save(output_file, self)
+        else:
+            return self
 
     @staticmethod
     def from_numpy(input_file):

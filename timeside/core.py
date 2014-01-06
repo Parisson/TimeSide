@@ -276,22 +276,14 @@ class ProcessPipe(object):
                 pipe += ' | '
         return pipe
 
-    def run(self, channels=None, samplerate=None, blocksize=None, stack=None):
+    def run(self, channels=None, samplerate=None, blocksize=None):
         """Setup/reset all processors in cascade and stream audio data along
-        the pipe. Also returns the pipe itself."""
+        the pipe."""
 
         source = self.processors[0]
         items = self.processors[1:]
         source.setup(channels=channels, samplerate=samplerate,
                      blocksize=blocksize)
-
-        if stack is None:
-                self.stack = False
-        else:
-            self.stack = stack
-
-        if self.stack:
-            self.frames_stack = []
 
         last = source
 
@@ -308,8 +300,6 @@ class ProcessPipe(object):
         eod = False
         while not eod:
             frames, eod = source.process()
-            if self.stack:
-                self.frames_stack.append(frames)
             for item in items:
                 frames, eod = item.process(frames, eod)
 
@@ -318,17 +308,6 @@ class ProcessPipe(object):
             item.post_process()
 
         # Release processors
-        if self.stack:
-            if not isinstance(self.frames_stack, numpy.ndarray):
-                self.frames_stack = numpy.vstack(self.frames_stack)
-            from timeside.decoder.core import ArrayDecoder
-            new_source = ArrayDecoder(samples=self.frames_stack,
-                                      samplerate=source.samplerate())
-            new_source.setup(channels=source.channels(),
-                             samplerate=source.samplerate(),
-                             blocksize=source.blocksize())
-            self.processors[0] = new_source
-
         for item in items:
             item.release()
             self.processors.remove(item)
