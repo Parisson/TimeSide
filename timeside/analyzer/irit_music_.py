@@ -38,11 +38,11 @@ class IRITMusicLDN(Analyzer):
         self.wLen 	= 1.0
         self.wStep 	= 0.1
         self.threshold = 20
-        
+
     @staticmethod
     @interfacedoc
     def id():
-        return "irit_music_sln"
+        return "irit_music_ldn"
 
     @staticmethod
     @interfacedoc
@@ -58,27 +58,27 @@ class IRITMusicLDN(Analyzer):
         return "Music confidence indexes"
 
     def process(self, frames, eod=False):
-		
+
 		return frames,eod
-		
-		
+
+
     def post_process(self):
         '''
 
         '''
-        
-        segList = self.process_pipe.results['irit_diverg.segments'].time  
+
+        segList = self.process_pipe.results['irit_diverg.segments'].time
         w = self.wLen/ 2;
         end = segList[-1]
         tLine =  arange(0,end,self.wStep)
-        
+
         segLen = array([0]*len(tLine))
-        
+
         for i,t in enumerate(tLine):
             idx = nonzero(logical_and(segList>(t-w) ,segList<(t+w)))[0]
             segLen[i]= len(idx)
-        
-        
+
+
         plot(tLine,segLen)
         show()
 		# Confidence Index
