@@ -24,3 +24,11 @@ Array Decoder
    :members:
    :undoc-members:
    :show-inheritance:
+
+Live Decoder
+=============
+
+.. autoclass:: LiveDecoder
+   :members:
+   :undoc-members:
+   :show-inheritance:

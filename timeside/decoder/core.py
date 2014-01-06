@@ -432,8 +432,24 @@ class LiveDecoder(Decoder):
         ----------
         num_buffers :
             Number of buffers to output before sending EOS (-1 = unlimited).
-            Allowed values: >= -1
-            Default value: -1
+            (Allowed values: >= -1, Default value: -1)
+
+
+        Examples
+        --------
+
+        >>> import timeside
+
+        >>> live = timeside.decoder.LiveDecoder(num_buffers=25)
+        >>> a = timeside.analyzer.Waveform()
+        >>> e = timeside.encoder.Mp3Encoder('test_live.mp3', overwrite=True)
+        >>> pipe = (live | a | e)
+        >>> pipe.run()
+
+        >>> import matplotlib.pyplot as plt # doctest: +SKIP
+        >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
+                 a.results['waveform_analyzer'].data) # doctest: +SKIP
+        >>> plt.show() # doctest: +SKIP
 
         """
 

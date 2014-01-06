@@ -304,7 +304,6 @@ class ProcessPipe(object):
 
         def signal_handler(signum, frame):
             source.stop()
-            signal.signal(signum, signal.SIG_DFL)
 
         signal.signal(signal.SIGINT, signal_handler)
 
