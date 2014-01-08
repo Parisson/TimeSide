@@ -43,7 +43,7 @@ class Spectrogram(Analyzer):
         else:
             self.FFT_SIZE = fft_size
 
-        values = []
+        self.values = []
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
