@@ -382,8 +382,6 @@ class DataObject(MetadataObject):
                     all([numpy.array_equal(self[key], other[key])
                          for key in self.keys()]))
         except AttributeError:
-            # print self
-            # print [self[key] == other[key] for key in self.keys()]
             return (isinstance(other, self.__class__) and
                     all([bool(numpy.logical_and.reduce((self[key] == other[key]).ravel()))
                          for key in self.keys()]))
@@ -616,9 +614,8 @@ class AnalyzerResult(MetadataObject):
     @staticmethod
     def from_hdf5(h5group):
         # Read Sub-Group
-        result = AnalyzerResult.factory(
-                                data_mode=h5group.attrs['data_mode'],
-                                time_mode=h5group.attrs['time_mode'])
+        result = AnalyzerResult.factory(data_mode=h5group.attrs['data_mode'],
+                                        time_mode=h5group.attrs['time_mode'])
         for subgroup_name, h5subgroup in h5group.items():
             result[subgroup_name].from_hdf5(h5subgroup)
         return result
@@ -824,7 +821,7 @@ class AnalyzerResultContainer(dict):
                          analyzer_result)
         #self.results += [analyzer_result]
 
-    def to_xml(self, output_file = None):
+    def to_xml(self, output_file=None):
 
         import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
@@ -835,8 +832,10 @@ class AnalyzerResultContainer(dict):
                 root.append(ET.fromstring(result.to_xml()))
 
         xml_str = ET.tostring(root, encoding="utf-8", method="xml")
-        if output_file: open(output_file, 'w').write(xml_str)
-        else: return xml_str
+        if output_file:
+            open(output_file, 'w').write(xml_str)
+        else:
+            return xml_str
 
     @staticmethod
     def from_xml(xml_string):
@@ -852,7 +851,7 @@ class AnalyzerResultContainer(dict):
 
         return results
 
-    def to_json(self, output_file = None):
+    def to_json(self, output_file=None):
         #if data_list == None: data_list = self.results
         import simplejson as json
 
@@ -864,9 +863,11 @@ class AnalyzerResultContainer(dict):
             raise TypeError(repr(obj) + " is not JSON serializable")
 
         json_str = json.dumps([res.as_dict() for res in self.values()],
-                          default=NumpyArrayEncoder)
-        if output_file: open(output_file, 'w').write(json_str)
-        else: return json_str
+                              default=NumpyArrayEncoder)
+        if output_file:
+            open(output_file, 'w').write(json_str)
+        else:
+            return json_str
 
     @staticmethod
     def from_json(json_str):
@@ -907,8 +908,10 @@ class AnalyzerResultContainer(dict):
         yaml.add_representer(numpy.ndarray, numpyArray_representer)
 
         yaml_str = yaml.dump([res.as_dict() for res in self.values()])
-        if output_file: open(output_file, 'w').write(yaml_str)
-        else: return yaml_str
+        if output_file:
+            open(output_file, 'w').write(yaml_str)
+        else:
+            return yaml_str
 
     @staticmethod
     def from_yaml(yaml_str):
@@ -991,7 +994,6 @@ class Analyzer(Processor):
 
     @property
     def results(self):
-
         return AnalyzerResultContainer(
             [self.process_pipe.results[key] for key in self.process_pipe.results.keys()
              if key.split('.')[0] == self.id()])
@@ -1026,7 +1028,7 @@ class Analyzer(Processor):
         from datetime import datetime
 
         result = AnalyzerResult.factory(data_mode=data_mode,
-                                time_mode=time_mode)
+                                        time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(

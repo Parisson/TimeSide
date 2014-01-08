@@ -247,7 +247,8 @@ class ProcessPipe(object):
         self.results = AnalyzerResultContainer()
 
     def __or__(self, other):
-        return ProcessPipe(self, other)
+        self |= other
+        return self
 
     def __ior__(self, other):
         if isinstance(other, Processor):
