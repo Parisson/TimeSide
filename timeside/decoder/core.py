@@ -159,11 +159,7 @@ class FileDecoder(Decoder):
         self.stack = stack
 
         self.uri = get_uri(uri)
-
-    def set_uri_default_duration(self):
-        # Set the duration from the length of the file
-        uri_total_duration = get_media_uri_info(self.uri)['duration']
-        self.uri_duration = uri_total_duration - self.uri_start
+        self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
@@ -177,7 +173,18 @@ class FileDecoder(Decoder):
             self.process_pipe.frames_stack = []
 
         if self.uri_duration is None:
-            self.set_uri_default_duration()
+            # Set the duration from the length of the file
+            self.uri_duration = self.uri_total_duration - self.uri_start
+
+        if self.is_segment:
+            # Check start and duration value
+            if self.uri_start > self.uri_total_duration:
+                raise ValueError(('Segment start time value exceed media ' +
+                                  'duration'))
+
+            if self.uri_start + self.uri_duration > self.uri_total_duration:
+                    raise ValueError("""Segment duration value is too large \
+                                        given the media duration""")
 
         # a lock to wait wait for gstreamer thread to be ready
         import threading
