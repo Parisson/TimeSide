@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from core import *
 from ogg import VorbisEncoder
 from wav import WavEncoder
 from mp3 import Mp3Encoder

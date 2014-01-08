@@ -2,8 +2,9 @@
 
 from __future__ import division
 
-from timeside.decoder.core import FileDecoder
+from timeside.decoder import FileDecoder
 from timeside.core import ProcessPipe
+
 from unit_timeside import *
 
 import os.path
