@@ -6,7 +6,7 @@ Decoder package
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: timeside.decoder.core
+.. automodule:: timeside.decoder
    
 
 File Decoder
