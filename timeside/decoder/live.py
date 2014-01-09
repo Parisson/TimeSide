@@ -39,14 +39,13 @@ class LiveDecoder(Decoder):
 
     pipeline = None
     mainloopthread = None
-    input_src = 'alsasrc'
 
     @staticmethod
     @interfacedoc
     def id():
         return "gst_live_dec"
 
-    def __init__(self, num_buffers=-1):
+    def __init__(self, num_buffers=-1, input_src='autoaudiosrc'):
 
         """
         Construct a new LiveDecoder capturing audio from alsasrc
@@ -82,6 +81,7 @@ class LiveDecoder(Decoder):
         self.uri_start = 0
         self.uri_duration = None
         self.is_segment = False
+        self.input_src = input_src
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
