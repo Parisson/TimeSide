@@ -66,7 +66,7 @@ class LiveDecoder(Decoder):
         >>> a = timeside.analyzer.Waveform()
         >>> e = timeside.encoder.Mp3Encoder('test_live.mp3', overwrite=True)
         >>> pipe = (live | a | e)
-        >>> pipe.run()
+        >>> pipe.run() # doctest: +SKIP    
 
         >>> import matplotlib.pyplot as plt # doctest: +SKIP
         >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
