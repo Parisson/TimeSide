@@ -20,7 +20,8 @@
 
 # Authors:
 #   Thomas Fillon <thomas  at parisson.com>
-from unit_timeside import *
+import unittest
+from unit_timeside import TestRunner
 import doctest
 import timeside
 import pkgutil
@@ -43,4 +44,7 @@ def load_tests(loader, tests, ignore):
 
 
 if __name__ == '__main__':
-    unittest.main(testRunner=TestRunner())
+    import os
+     # Do not run doctest for environment without a display (e.g. server)
+    if 'DISPLAY' in os.environ:
+        unittest.main(testRunner=TestRunner())
