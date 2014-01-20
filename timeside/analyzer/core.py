@@ -29,6 +29,7 @@ import numpy
 from collections import OrderedDict
 import h5py
 import h5tools
+import matplotlib.pyplot as plt
 
 numpy_data_types = [
     #'float128',
@@ -758,7 +759,22 @@ class GlobalLabelResult(LabelObject, GlobalObject, AnalyzerResult):
 
 
 class FrameValueResult(ValueObject, FramewiseObject, AnalyzerResult):
-    pass
+    def render(self, size=(1024, 256), dpi=80):
+
+        image_width, image_height = size
+
+        xSize = image_width / dpi
+        ySize = image_height / dpi
+
+        fig = plt.figure(figsize=(xSize, ySize), dpi=dpi)
+
+        ax = plt.Axes(fig, [0, 0, 1, 0.9])
+        ax.set_frame_on(False)
+        ax.plot(self.time, self.data)
+        ax.axis('off')
+        fig.add_axes(ax)
+
+        return fig
 
 
 class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
