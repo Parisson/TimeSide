@@ -68,6 +68,7 @@ class LiveDecoder(Decoder):
         ...                                 overwrite=True)
         >>> pipe = (live | a | e)
         >>> pipe.run() # doctest: +SKIP
+        >>> pipe.run() # doctest: +SKIP
 
         >>> import matplotlib.pyplot as plt # doctest: +SKIP
         >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
