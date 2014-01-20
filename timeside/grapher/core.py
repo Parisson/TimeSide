@@ -158,7 +158,11 @@ class Grapher(Processor):
     @interfacedoc
     def render(self, output=None):
         if output:
-            self.image.save(output)
+            try:
+                self.image.save(output)
+            except AttributeError:
+                print "Pixel %s x %d" % (self.image_width, self.image_height)
+                self.image.savefig(output, dpi=341)
             return
         return self.image
 

@@ -83,7 +83,7 @@ class Processor(Component):
 
         self.parents = []
         self.source_mediainfo = None
-        self.pipe = None
+        self.process_pipe = None
         self.UUID = uuid.uuid4()
 
     @interfacedoc
