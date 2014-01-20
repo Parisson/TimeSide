@@ -81,4 +81,4 @@ class DisplayAubioPitch(DisplayAnalyzers):
     @staticmethod
     @interfacedoc
     def name():
-        return "Grapher for Aubio Pitch"
+        return "Aubio Pitch"

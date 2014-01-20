@@ -46,7 +46,7 @@ class SpectrogramLog(Grapher):
     @staticmethod
     @interfacedoc
     def name():
-        return "SpectrogramLog"
+        return "Spectrogram Log"
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
