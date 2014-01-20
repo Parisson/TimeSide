@@ -25,7 +25,6 @@ from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.tools import *
 
-
 class AudioSink(GstEncoder):
     """
     gstreamer-based Audio Sink
@@ -43,8 +42,7 @@ class AudioSink(GstEncoder):
     implements(IEncoder)
 
     def __init__(self, output_sink='autoaudiosink'):
-        """
-        """
+
         super(GstEncoder, self).__init__()
         self.streaming = False
 

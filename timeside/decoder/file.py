@@ -111,7 +111,7 @@ class FileDecoder(Decoder):
 
         if self.is_segment:
             # Create the pipe with Gnonlin gnlurisource
-            self.pipe = ''' gnlurisource uri={uri}
+            self.pipe = ''' gnlurisource name=src uri={uri}
                             start=0
                             duration={uri_duration}
                             media-start={uri_start}
@@ -125,7 +125,7 @@ class FileDecoder(Decoder):
                                        # convert uri_start and uri_duration to nanoseconds
         else:
             # Create the pipe with standard Gstreamer uridecodbin
-            self.pipe = ''' uridecodebin name=uridecodebin uri={uri}
+            self.pipe = ''' uridecodebin name=src uri={uri}
                            ! audioconvert name=audioconvert
                            ! audioresample
                            ! appsink name=sink sync=False async=True
@@ -147,6 +147,7 @@ class FileDecoder(Decoder):
             width=(int)32,
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
+        self.src = self.pipeline.get_by_name('src')
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
 
