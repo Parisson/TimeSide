@@ -300,21 +300,23 @@ class ProcessPipe(object):
         # now stream audio data along the pipe
         eod = False
 
-        # Set handler for Interruption signal
-        import signal
+        if source.id() == 'gst_live_dec':
+            # Set handler for Interruption signal
+            import signal
 
-        def signal_handler(signum, frame):
-            source.stop()
+            def signal_handler(signum, frame):
+                source.stop()
 
-        signal.signal(signal.SIGINT, signal_handler)
+            signal.signal(signal.SIGINT, signal_handler)
 
         while not eod:
             frames, eod = source.process()
             for item in items:
                 frames, eod = item.process(frames, eod)
 
-        # Restore default handler for Interruption signal
-        signal.signal(signal.SIGINT, signal.SIG_DFL)
+        if source.id() == 'gst_live_dec':
+            # Restore default handler for Interruption signal
+            signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         # Post-processing
         for item in items:
