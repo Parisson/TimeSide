@@ -29,6 +29,8 @@ from numpy import logical_and,array, hamming, dot, mean, float, arange, nonzero
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 from pylab import plot,show
+
+
 class IRITMusicLDN(Analyzer):
     implements(IAnalyzer)
 
@@ -58,13 +60,10 @@ class IRITMusicLDN(Analyzer):
         return "Music confidence indexes"
 
     def process(self, frames, eod=False):
-
 		return frames,eod
-
 
     def post_process(self):
         '''
-
         '''
 
         segList = self.process_pipe.results['irit_diverg.segments'].time

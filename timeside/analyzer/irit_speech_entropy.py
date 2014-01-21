@@ -64,7 +64,6 @@ class IRITSpeechEntropy(Analyzer):
         return frames, eod
 
     def post_process(self):
-
         entropyValue = array(self.entropyValue)
         w = self.modulLen * self.samplerate() / self.blocksize()
         modulentropy = computeModulation(entropyValue, w, False)

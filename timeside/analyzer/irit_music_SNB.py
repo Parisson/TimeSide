@@ -30,7 +30,9 @@ from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 from pylab import plot,show
 
+
 class IRITMusicSNB(Analyzer):
+    
     implements(IAnalyzer)
 
     def __init__(self, blocksize=1024, stepsize=None) :
@@ -59,9 +61,7 @@ class IRITMusicSNB(Analyzer):
         return "Music confidence indexes"
 
     def process(self, frames, eod=False):
-		
 		return frames,eod
-		
 		
     def post_process(self):
         '''

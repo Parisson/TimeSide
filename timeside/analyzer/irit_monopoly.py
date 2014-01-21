@@ -25,6 +25,8 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from aubio import pitch
 import numpy
+
+
 class IRITMonopoly(Analyzer):
     implements(IAnalyzer)
     '''
@@ -66,10 +68,6 @@ class IRITMonopoly(Analyzer):
         return "Labeled Monophonic/Polyphonic segments"
 
     def process(self, frames, eod=False):
-        '''
-
-        '''
-        
         self.decisionLen = 1.0;# in seconds
         pf =  self.aubio_pitch(frames.T[0])
         self.pitches += [pf[0]]

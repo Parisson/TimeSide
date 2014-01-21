@@ -86,10 +86,6 @@ class IRITSpeech4Hz(Analyzer):
         return "Speech confidences indexes"
 
     def process(self, frames, eod=False):
-        '''
-
-        '''
-
         frames = frames.T[0]
         # windowing of the frame (could be a changeable property)
         w = frames * hamming(len(frames))
@@ -99,7 +95,7 @@ class IRITSpeech4Hz(Analyzer):
         e = dot(f ** 2, self.melFilter)
 
         self.energy4hz.append(e)
-
+        
         return frames, eod
 
     def post_process(self):
