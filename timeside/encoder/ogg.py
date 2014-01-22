@@ -32,7 +32,7 @@ class VorbisEncoder(GstEncoder):
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(VorbisEncoder, self).setup(channels, samplerate, blocksize, totalframes)
         self.pipe = ''' appsrc name=src
-                  ! audioconvert
+                  ! audioconvert ! audioresample
                   ! vorbisenc quality=0.9
                   ! oggmux
                   '''
