@@ -29,6 +29,13 @@ import numpy
 from collections import OrderedDict
 import h5py
 import h5tools
+
+import os
+
+if 'DISPLAY' not in os.environ:
+    import matplotlib
+    matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 
 numpy_data_types = [
@@ -614,6 +621,28 @@ class AnalyzerResult(MetadataObject):
             result[subgroup_name].from_hdf5(h5subgroup)
         return result
 
+    def _render_plot(self, ax):
+        return NotImplemented
+
+    def render(self, size=(1024, 256), dpi=80):
+
+        image_width, image_height = size
+
+        xSize = image_width / dpi
+        ySize = image_height / dpi
+
+        fig = plt.figure(figsize=(xSize, ySize), dpi=dpi)
+
+        ax = plt.Axes(fig, [0, 0, 1, 0.9])
+        ax.set_frame_on(False)
+
+        self._render_plot(ax)
+
+        ax.axis('off')
+        fig.add_axes(ax)
+
+        return fig
+
     @property
     def data_mode(self):
         return self._data_mode
@@ -759,42 +788,35 @@ class GlobalLabelResult(LabelObject, GlobalObject, AnalyzerResult):
 
 
 class FrameValueResult(ValueObject, FramewiseObject, AnalyzerResult):
-    def render(self, size=(1024, 256), dpi=80):
-
-        image_width, image_height = size
-
-        xSize = image_width / dpi
-        ySize = image_height / dpi
-
-        fig = plt.figure(figsize=(xSize, ySize), dpi=dpi)
-
-        ax = plt.Axes(fig, [0, 0, 1, 0.9])
-        ax.set_frame_on(False)
+    def _render_plot(self, ax):
         ax.plot(self.time, self.data)
-        ax.axis('off')
-        fig.add_axes(ax)
-
-        return fig
 
 
 class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
-    pass
+    def _render_plot(self, ax):
+        pass
 
 
 class EventValueResult(ValueObject, EventObject, AnalyzerResult):
-    pass
+    def _render_plot(self, ax):
+        for time, value in (self.time, self.data):
+            ax.axvline(time, ymin=0, ymax=value, color='r')
+            # TODO : check value shape !!!
 
 
 class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
-    pass
+    def _render_plot(self, ax):
+        pass
 
 
 class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
-    pass
+    def _render_plot(self, ax):
+        pass
 
 
 class SegmentLabelResult(LabelObject, SegmentObject, AnalyzerResult):
-    pass
+    def _render_plot(self, ax):
+        pass
 
 
 class AnalyzerResultContainer(dict):
@@ -802,12 +824,12 @@ class AnalyzerResultContainer(dict):
     '''
     >>> import timeside
     >>> wavFile = 'http://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'
-    >>> d = timeside.decoder.FileDecoder(wavFile, start=1)
+    >>> d = timeside.decoder.FileDecoder(wavFile)
 
     >>> a = timeside.analyzer.Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
-    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='http://...', start=1.0, duration=7..., is_segment=True, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
+    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
 
     '''
