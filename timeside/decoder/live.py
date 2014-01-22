@@ -119,7 +119,7 @@ class LiveDecoder(Decoder):
         if self.output_samplerate:
             caps_samplerate = int(self.output_samplerate)
         else:
-            caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000 }"
+            caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 96000 }"
         sink_caps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
