@@ -29,7 +29,7 @@ import numpy as np
 class Spectrogram(Analyzer):
     implements(IAnalyzer)
 
-    def __init__(self, blocksize=2048, stepsize=None):
+    def __init__(self, blocksize=2048, stepsize=None, fft_size=None):
         super(Spectrogram, self).__init__()
 
         self.input_blocksize = blocksize
@@ -38,15 +38,19 @@ class Spectrogram(Analyzer):
         else:
             self.input_stepsize = blocksize / 2
 
+        if not fft_size:
+            self.FFT_SIZE = blocksize
+        else:
+            self.FFT_SIZE = fft_size
+
+        self.values = []
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate,
               blocksize, totalframes)
-
-        self.values = []
-        self.FFT_SIZE = 2048
-
+        
     @staticmethod
     @interfacedoc
     def id():

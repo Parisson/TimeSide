@@ -33,7 +33,7 @@ setup(
         'mutagen',
         'pil',
         'h5py',
-        'yaml',
+        'pyyaml',
         'simplejson',
         'scipy',
         ],

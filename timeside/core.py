@@ -83,7 +83,7 @@ class Processor(Component):
 
         self.parents = []
         self.source_mediainfo = None
-        self.pipe = None
+        self.process_pipe = None
         self.UUID = uuid.uuid4()
 
     @interfacedoc
@@ -247,7 +247,8 @@ class ProcessPipe(object):
         self.results = AnalyzerResultContainer()
 
     def __or__(self, other):
-        return ProcessPipe(self, other)
+        self |= other
+        return self
 
     def __ior__(self, other):
         if isinstance(other, Processor):
@@ -284,7 +285,7 @@ class ProcessPipe(object):
         items = self.processors[1:]
         source.setup(channels=channels, samplerate=samplerate,
                      blocksize=blocksize)
-
+        source.SIG_STOP = False
         last = source
 
         # setup/reset processors and configure properties throughout the pipe
@@ -298,16 +299,30 @@ class ProcessPipe(object):
 
         # now stream audio data along the pipe
         eod = False
+
+        if source.id() == 'gst_live_dec':
+            # Set handler for Interruption signal
+            import signal
+
+            def signal_handler(signum, frame):
+                source.stop()
+
+            signal.signal(signal.SIGINT, signal_handler)
+
         while not eod:
             frames, eod = source.process()
             for item in items:
                 frames, eod = item.process(frames, eod)
 
+        if source.id() == 'gst_live_dec':
+            # Restore default handler for Interruption signal
+            signal.signal(signal.SIGINT, signal.SIG_DFL)
+
         # Post-processing
         for item in items:
             item.post_process()
 
-        # Release processors
+       # Release processors
         for item in items:
             item.release()
             self.processors.remove(item)

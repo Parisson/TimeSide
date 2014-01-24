@@ -52,7 +52,10 @@ class Waveform(Grapher):
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
-            buffer = frames[:,0]
+            if len(frames.shape) > 1:
+                buffer = frames[:,0]
+            else:
+                buffer = frames
             buffer.shape = (len(buffer),1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width-1:
