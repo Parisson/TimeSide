@@ -19,9 +19,9 @@
 
 # Author: Paul Brossier <piem@piem.org>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.analyzer.core import Analyzer
-from timeside.api import IAnalyzer
+from ..core import implements, interfacedoc
+from .core import Analyzer
+from ..api import IAnalyzer
 from preprocessors import downmix_to_mono, frames_adapter
 from aubio import pitch
 
