@@ -24,7 +24,7 @@
 from __future__ import division
 
 from timeside.core import Processor
-from timeside.__init__ import __version__
+import timeside #import __version__
 import numpy
 from collections import OrderedDict
 import h5py
@@ -633,12 +633,13 @@ class AnalyzerResult(MetadataObject):
 
         fig = plt.figure(figsize=(xSize, ySize), dpi=dpi)
 
-        ax = plt.Axes(fig, [0, 0, 1, 0.9])
+        ax = plt.Axes(fig, [0, 0, 1, 1])
         ax.set_frame_on(False)
-
         self._render_plot(ax)
 
-        ax.axis('off')
+#        ax.axis('off')
+       # ax.axis('tight')
+        ax.autoscale(axis='x', tight=True)
         fig.add_axes(ax)
 
         return fig
@@ -1065,7 +1066,7 @@ class Analyzer(Processor):
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
             microsecond=0).isoformat(' ')
-        result.id_metadata.version = __version__
+        result.id_metadata.version = timeside.__version__
         result.id_metadata.author = 'TimeSide'
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()
