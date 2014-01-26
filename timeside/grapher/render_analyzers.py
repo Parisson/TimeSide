@@ -94,6 +94,8 @@ class DisplayAnalyzer(Grapher):
             def name():
                 return grapher_name
 
+            __doc__ = """Builds a PIL image representing """ + grapher_name
+
         NewGrapher.__name__ = 'Display'+result_id
 
         return NewGrapher
@@ -119,3 +121,8 @@ DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                                        result_id='waveform_analyzer',
                                                        grapher_id='grapher_waveform',
                                                        grapher_name='Waveform from Analyzer')
+irit4hz = analyzer.IRITSpeech4Hz()
+Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
+                                                      result_id='irit_speech_4hz.segments',
+                                                      grapher_id='grapher_irit_speech_4hz_segments',
+                                                      grapher_name='Irit 4Hz Speech Segmentation')
