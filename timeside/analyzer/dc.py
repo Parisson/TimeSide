@@ -26,6 +26,7 @@ import numpy
 
 
 class MeanDCShift(Analyzer):
+    """Mean DC shift analyzer"""
     implements(IValueAnalyzer)
 
     @interfacedoc

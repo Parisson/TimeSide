@@ -29,6 +29,7 @@ from scipy import signal
 
 
 class OnsetDetectionFunction(Analyzer):
+    """Onset Detection Function analyzer"""
     implements(IAnalyzer)
 
     def __init__(self, blocksize=1024, stepsize=None):

@@ -29,6 +29,7 @@ from aubio import filterbank, pvoc
 
 
 class AubioMelEnergy(Analyzer):
+    """Aubio Mel Energy analyzer"""
     implements(IAnalyzer)
 
     def __init__(self):

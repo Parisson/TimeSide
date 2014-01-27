@@ -29,6 +29,8 @@ from scipy.ndimage.morphology import binary_opening
 
 
 class IRITSpeechEntropy(Analyzer):
+    """Speech Segmentor based on Entropy analysis."""
+
     implements(IAnalyzer)
 
     @interfacedoc
