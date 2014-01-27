@@ -767,6 +767,9 @@ class EventObject(object):
     def duration(self):
         return numpy.zeros(len(self))
 
+    def _render_plot(self, ax):
+        ax.stem(self.time, self.data)
+
 
 class SegmentObject(EventObject):
     _time_mode = 'segment'
@@ -799,25 +802,29 @@ class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
 
 
 class EventValueResult(ValueObject, EventObject, AnalyzerResult):
+    pass
+
+class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
+    pass
+
+class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
     def _render_plot(self, ax):
+        import itertools
+        colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         for time, value in (self.time, self.data):
             ax.axvline(time, ymin=0, ymax=value, color='r')
             # TODO : check value shape !!!
 
 
-class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
-    def _render_plot(self, ax):
-        pass
-
-
-class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
-    def _render_plot(self, ax):
-        pass
-
-
 class SegmentLabelResult(LabelObject, SegmentObject, AnalyzerResult):
     def _render_plot(self, ax):
-        pass
+        import itertools
+        colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
+        ax_color = {}
+        for key in self.label_metadata.label.keys():
+            ax_color[key] = colors.next()
+        for time, duration, label in zip(self.time, self.duration, self.data):
+            ax.axvspan(time, time+duration, color=ax_color[label], alpha=0.3)
 
 
 class AnalyzerResultContainer(dict):
@@ -832,7 +839,6 @@ class AnalyzerResultContainer(dict):
     >>> a.new_result() #doctest: +ELLIPSIS
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
-
     '''
 
 
