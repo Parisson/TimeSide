@@ -28,7 +28,7 @@ We just **need** a python library to:
 Architecture
 ============
 
-The streaming architecture of TimeSide relies on 2 main parts: a process engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
+The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
 .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
 
@@ -84,6 +84,17 @@ IAnalyzer
 News
 =====
 
+0.5.3
+
+ * Make Analyzer rendering more generic and easy to implement
+ * Analyzer : refactoring the results rendering method. + Capability to use matplotlib in environnement with no display
+ * Decoder : add support for 96kHz sapling rate
+ * Encoder: live AudioSink encoder, encoder that plays the audio stream through the sounbdcard
+ * Grapher : add a generic Class to display Analyzers through their 'render' method. Add the new grapher file
+ * Core : add a condition to catch signal only if a LiveDecoder source is used
+ * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
+ * Various bugfixes
+ 
 0.5.2
 
  * Add a general launch script "timeside-launch" (see "Shell interface")
