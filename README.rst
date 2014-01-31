@@ -45,41 +45,53 @@ IEncoder
   * FlacEncoder [gst_flac_enc]
   * AacEncoder [gst_aac_enc]
   * WebMEncoder [gst_webm_enc]
+  * AudioSink [gst_audio_sink_enc]
 
 IDecoder
 ---------
 
   * FileDecoder [gst_dec]
   * ArrayDecoder [array_dec]
+  * LiveDecoder [gst_live_dec]
 
 IGrapher
 ---------
 
-  * Waveform [waveform_simple]
-  * WaveformCentroid [waveform_centroid]
-  * WaveformTransparent [waveform_transparent]
-  * WaveformContourBlack [waveform_contour_black]
-  * WaveformContourWhite [waveform_contour_white]
-  * SpectrogramLog [spectrogram_log]
-  * SpectrogramLinear [spectrogram_lin]
+  *  Waveform [waveform_simple]
+  *  WaveformCentroid [waveform_centroid]
+  *  WaveformTransparent [waveform_transparent]
+  *  WaveformContourBlack [waveform_contour_black]
+  *  WaveformContourWhite [waveform_contour_white]
+  *  SpectrogramLog [spectrogram_log]
+  *  SpectrogramLinear [spectrogram_lin]
+  *  Displayaubio_pitch.pitch [grapher_aubio_pitch]
+  *  Displayodf [grapher_odf]
+  *  Displaywaveform_analyzer [grapher_waveform]
+  *  Displayirit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
+
 
 IAnalyzer
 ---------
 
+  *  AubioTemporal [aubio_temporal]
+  *  AubioPitch [aubio_pitch]
+  *  AubioMfcc [aubio_mfcc]
+  *  AubioMelEnergy [aubio_melenergy]
+  *  AubioSpecdesc [aubio_specdesc]
+  *  Yaafe [yaafe]
+  *  Spectrogram [spectrogram_analyzer]
+  *  Waveform [waveform_analyzer]
+  *  VampSimpleHost [vamp_simple_host]
+  *  IRITSpeechEntropy [irit_speech_entropy]
+  *  IRITSpeech4Hz [irit_speech_4hz]
+  *  OnsetDetectionFunction [odf]
+
+IValueAnalyzer
+---------------
+
   * Level [level]
   * MeanDCShift [mean_dc_shift]
-  * AubioTemporal [aubio_temporal]
-  * AubioPitch [aubio_pitch]
-  * AubioMfcc [aubio_mfcc]
-  * AubioMelEnergy [aubio_melenergy]
-  * AubioSpecdesc [aubio_specdesc]
-  * Yaafe [yaafe]
-  * Spectrogram [spectrogram_analyzer]
-  * Waveform [waveform_analyzer]
-  * VampSimpleHost [vamp_simple_host]
-  * IRITSpeechEntropy [irit_speech_entropy]
-  * IRITSpeech4Hz [irit_speech_4hz]
-  * OnsetDetectionFunction [odf]
+
 
 News
 =====
@@ -87,12 +99,14 @@ News
 0.5.3
 
  * Make Analyzer rendering more generic and easy to implement
+ * Analyzer : implement rendering capability for event and segment + add some more analyzer graphers
  * Analyzer : refactoring the results rendering method. + Capability to use matplotlib in environnement with no display
- * Decoder : add support for 96kHz sapling rate
- * Encoder: live AudioSink encoder, encoder that plays the audio stream through the sounbdcard
+ * Decoder : Add a Live decoder to get data from the soudcard
+ * Decoder : add support for 96kHz sampling rate
+ * Encoder: live AudioSink encoder, encoder that plays the audio stream through the sounbcard
  * Grapher : add a generic Class to display Analyzers through their 'render' method. Add the new grapher file
- * Core : add a condition to catch signal only if a LiveDecoder source is used
  * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
+ * Core : add a condition to catch signal only if a LiveDecoder source is used
  * Various bugfixes
  
 0.5.2
@@ -263,7 +277,7 @@ Dependencies
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy, python-matplotlib
+python-scipy, python-matplotlib, python-matplotlib
 
 
 Platforms
@@ -375,14 +389,13 @@ Related projects
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
 
-
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2013 Parisson SARL
-* Copyright (c) 2006, 2013 Guillaume Pellerin
-* Copyright (c) 2010, 2013 Paul Brossier
-* Copyright (c) 2013 Thomas Fillon
+* Copyright (c) 2006, 2014 Parisson SARL
+* Copyright (c) 2006, 2014 Guillaume Pellerin
+* Copyright (c) 2010, 2014 Paul Brossier
+* Copyright (c) 2013, 2014 Thomas Fillon
 * Copyright (c) 2006, 2010 Samalyse SARL
 
 
