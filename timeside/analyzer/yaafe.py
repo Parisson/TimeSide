@@ -32,6 +32,7 @@ import numpy
 
 
 class Yaafe(Analyzer):
+    """Yaafe feature extraction library interface analyzer"""
     implements(IAnalyzer)
 
     def __init__(self, yaafeSpecification=None):

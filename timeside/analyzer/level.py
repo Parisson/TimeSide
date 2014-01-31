@@ -27,6 +27,7 @@ import numpy as np
 
 
 class Level(Analyzer):
+    """RMS level analyzer"""
     implements(IValueAnalyzer)
 
     @interfacedoc

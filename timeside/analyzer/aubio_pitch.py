@@ -27,6 +27,7 @@ from aubio import pitch
 
 
 class AubioPitch(Analyzer):
+    """Aubio Pitch estimation analyzer"""
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):

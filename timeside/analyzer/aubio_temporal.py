@@ -29,6 +29,7 @@ import numpy
 
 
 class AubioTemporal(Analyzer):
+    """Aubio Temporal analyzer"""
     implements(IAnalyzer)
 
     def __init__(self):
