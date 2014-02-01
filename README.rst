@@ -5,9 +5,9 @@ TimeSide : open web audio processing framework
 .. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: https://travis-ci.org/yomguy/TimeSide/
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
+TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big audio or video datasets. Its simple plugin architecture can be adapted to various usecases.
 
-It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
+It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and realtime streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
 
 
 Goals
@@ -91,7 +91,6 @@ IValueAnalyzer
 
   * Level [level]
   * MeanDCShift [mean_dc_shift]
-
 
 News
 =====
@@ -235,13 +234,17 @@ get the results::
  >>> grapher.render(output='waveform.png')
  >>> print 'Level:', analyzer.results
 
-
 API / Documentation
 ====================
 
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
+* Examples:
+
+  - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
+  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
+  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
 
 Install
 =======
@@ -271,14 +274,12 @@ Otherwise, you can also install all dependencies and then use pip::
 
  $ sudo pip install timeside
 
-
 Dependencies
 ============
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
 python-scipy, python-matplotlib, python-matplotlib
-
 
 Platforms
 ==========
