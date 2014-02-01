@@ -240,6 +240,7 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
+* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web Interface")
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
@@ -324,8 +325,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web Interface
-==============
+Web Interface (the player)
+==========================
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
