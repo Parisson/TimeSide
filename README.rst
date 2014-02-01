@@ -390,7 +390,6 @@ Related projects
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
-
 Copyrights
 ==========
 
@@ -398,8 +397,8 @@ Copyrights
 * Copyright (c) 2006, 2014 Guillaume Pellerin
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Thomas Fillon
+* Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2006, 2010 Samalyse SARL
-
 
 License
 =======
