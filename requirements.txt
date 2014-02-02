@@ -1,1 +1,8 @@
 setuptools
+numpy
+mutagen
+pillow
+h5py
+pyyaml
+simplejson
+scipy

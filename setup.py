@@ -31,7 +31,7 @@ setup(
         'setuptools',
         'numpy',
         'mutagen',
-        'pil',
+        'pillow',
         'h5py',
         'pyyaml',
         'simplejson',
