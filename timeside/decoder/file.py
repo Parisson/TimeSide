@@ -233,7 +233,8 @@ class FileDecoder(Decoder):
                 self.input_width = caps[0]["width"]
             else:
                 self.input_width = caps[0]["depth"]
-            self.mimetype = caps.to_string().split(',')[0]
+            import mimetypes
+            self.mimetype = mimetypes.guess_type(self.uri)[0]
 
         self.discovered = True
         self.discovered_cond.notify()
