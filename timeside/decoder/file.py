@@ -233,6 +233,8 @@ class FileDecoder(Decoder):
                 self.input_width = caps[0]["width"]
             else:
                 self.input_width = caps[0]["depth"]
+            import mimetypes
+            self.mimetype = mimetypes.guess_type(self.uri)[0]
 
         self.discovered = True
         self.discovered_cond.notify()
@@ -303,6 +305,10 @@ class FileDecoder(Decoder):
         # TODO check
         if self.mimetype == 'application/x-id3':
             self.mimetype = 'audio/mpeg'
+        return self.mimetype
+
+    @interfacedoc
+    def mime_type(self):
         return self.mimetype
 
     @interfacedoc
