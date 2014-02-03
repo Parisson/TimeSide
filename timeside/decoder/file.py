@@ -71,6 +71,8 @@ class FileDecoder(Decoder):
         self.uri = get_uri(uri)
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
+        self.mimetype = None
+
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
         self.eod = False
@@ -148,6 +150,12 @@ class FileDecoder(Decoder):
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.src = self.pipeline.get_by_name('src')
+        if not self.is_segment:
+            self.src.connect("autoplug-continue", self._autoplug_cb)
+        else:
+            uridecodebin = self.src.get_by_name('internal-uridecodebin')
+            uridecodebin.connect("autoplug-continue", self._autoplug_cb)
+
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
 
@@ -194,6 +202,13 @@ class FileDecoder(Decoder):
             else:
                 raise IOError('no known audio stream found')
 
+    def _autoplug_cb(self, src, arg0, arg1):
+        # use the autoplug-continue callback from uridecodebin
+        # to get the mimetype string
+        if not self.mimetype:
+            self.mimetype = arg1.to_string().split(',')[0]
+        return True
+
     def _notify_caps_cb(self, pad, args):
         self.discovered_cond.acquire()
 
@@ -233,8 +248,6 @@ class FileDecoder(Decoder):
                 self.input_width = caps[0]["width"]
             else:
                 self.input_width = caps[0]["depth"]
-            import mimetypes
-            self.mimetype = mimetypes.guess_type(self.uri)[0]
 
         self.discovered = True
         self.discovered_cond.notify()
