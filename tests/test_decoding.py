@@ -27,6 +27,7 @@ class TestDecoding(unittest.TestCase):
         self.expected_totalframes = 352800
         self.test_exact_duration = True
         self.source_duration = 8
+        self.expected_mime_type = 'audio/x-wav'
 
     def testWav(self):
         "Test wav decoding"
@@ -55,6 +56,7 @@ class TestDecoding(unittest.TestCase):
         "Test flac decoding"
         self.source = os.path.join(os.path.dirname(__file__),
                                    "samples/sweep.flac")
+        self.expected_mime_type = 'audio/flac'
 
     def testOgg(self):
         "Test ogg decoding"
@@ -62,6 +64,7 @@ class TestDecoding(unittest.TestCase):
                                    "samples/sweep.ogg")
 
         self.expected_totalframes = 352832
+        self.expected_mime_type = 'audio/ogg'
         self.test_exact_duration = False
 
     def testMp3(self):
@@ -70,6 +73,7 @@ class TestDecoding(unittest.TestCase):
                                    "samples/sweep.mp3")
 
         self.expected_totalframes = 353664
+        self.expected_mime_type = 'audio/mpeg'
         self.test_exact_duration = False
 
     def tearDown(self):
@@ -97,6 +101,7 @@ class TestDecoding(unittest.TestCase):
             print "input / output_channels:", decoder.input_channels, decoder.output_channels
             print "input_duration:", decoder.input_duration
             print "input_totalframes:", decoder.input_totalframes
+            print "mime_type", decoder.mime_type()
 
         if self.channels:
             # when specified, check that the channels are the ones requested
@@ -117,6 +122,8 @@ class TestDecoding(unittest.TestCase):
             if self.expected_samplerate:
                 self.assertEqual(
                     self.expected_samplerate, decoder.output_samplerate)
+
+        self.assertEqual(decoder.mime_type(), self.expected_mime_type)
 
         self.assertEqual(totalframes, self.expected_totalframes)
         input_duration = decoder.input_totalframes / decoder.input_samplerate
