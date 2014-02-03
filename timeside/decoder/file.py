@@ -126,7 +126,7 @@ class FileDecoder(Decoder):
                                        uri_duration = np.int64(round(self.uri_duration * gst.SECOND)))
                                        # convert uri_start and uri_duration to nanoseconds
         else:
-            # Create the pipe with standard Gstreamer uridecodbin
+            # Create the pipe with standard Gstreamer uridecodebin
             self.pipe = ''' uridecodebin name=src uri={uri}
                            ! audioconvert name=audioconvert
                            ! audioresample
