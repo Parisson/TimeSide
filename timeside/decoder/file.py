@@ -315,19 +315,18 @@ class FileDecoder(Decoder):
 
     @interfacedoc
     def format(self):
-        # TODO check
+        return self.mime_type()
+
+    @interfacedoc
+    def mime_type(self):
         if self.mimetype == 'application/x-id3':
             self.mimetype = 'audio/mpeg'
         return self.mimetype
 
     @interfacedoc
-    def mime_type(self):
-        return self.mimetype
-
-    @interfacedoc
     def encoding(self):
         # TODO check
-        return self.mimetype.split('/')[-1]
+        return self.mime_type().split('/')[-1]
 
     @interfacedoc
     def resolution(self):
