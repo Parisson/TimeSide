@@ -100,9 +100,9 @@ News
  * Make Analyzer rendering more generic and easy to implement
  * Analyzer : implement rendering capability for event and segment + add some more analyzer graphers
  * Analyzer : refactoring the results rendering method. + Capability to use matplotlib in environnement with no display
- * Decoder : Add a Live decoder to get data from the soudcard
+ * Decoder : Add a Live decoder to get data from the soundcard
  * Decoder : add support for 96kHz sampling rate
- * Encoder: live AudioSink encoder, encoder that plays the audio stream through the sounbcard
+ * Encoder: live AudioSink encoder, encoder that plays the audio stream through the soundcard
  * Grapher : add a generic Class to display Analyzers through their 'render' method. Add the new grapher file
  * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
  * Core : add a condition to catch signal only if a LiveDecoder source is used
