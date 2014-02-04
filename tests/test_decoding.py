@@ -56,7 +56,7 @@ class TestDecoding(unittest.TestCase):
         "Test flac decoding"
         self.source = os.path.join(os.path.dirname(__file__),
                                    "samples/sweep.flac")
-        self.expected_mime_type = 'audio/flac'
+        self.expected_mime_type = 'audio/x-flac'
 
     def testOgg(self):
         "Test ogg decoding"
@@ -64,7 +64,7 @@ class TestDecoding(unittest.TestCase):
                                    "samples/sweep.ogg")
 
         self.expected_totalframes = 352832
-        self.expected_mime_type = 'audio/ogg'
+        self.expected_mime_type = 'application/ogg'
         self.test_exact_duration = False
 
     def testMp3(self):
