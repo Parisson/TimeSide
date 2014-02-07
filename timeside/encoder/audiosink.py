@@ -26,8 +26,7 @@ from timeside.api import IEncoder
 from timeside.tools import *
 
 class AudioSink(GstEncoder):
-    """
-    gstreamer-based Audio Sink
+    """gstreamer-based Audio Sink
 
     This encoder plays the decoded audio stream to the sound card
 

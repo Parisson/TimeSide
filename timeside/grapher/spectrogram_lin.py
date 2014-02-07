@@ -43,7 +43,7 @@ class SpectrogramLinear(SpectrogramLog):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectrogram linear"
+        return "Spectrogram Lin"
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):

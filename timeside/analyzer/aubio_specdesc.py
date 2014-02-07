@@ -28,6 +28,7 @@ from aubio import specdesc, pvoc
 
 
 class AubioSpecdesc(Analyzer):
+    """Aubio Spectral Descriptors collection analyzer"""
     implements(IAnalyzer)
 
     def __init__(self):

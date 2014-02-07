@@ -40,7 +40,7 @@ class Mp3Encoder(GstEncoder):
         super(Mp3Encoder, self).setup(channels, samplerate, blocksize, totalframes)
 
         self.pipe = '''appsrc name=src
-                  ! audioconvert
+                  ! audioconvert ! audioresample
                   ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard
                   ! xingmux
                   ! id3v2mux

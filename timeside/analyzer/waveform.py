@@ -27,6 +27,7 @@ import numpy as np
 from preprocessors import downmix_to_mono, frames_adapter
 
 class Waveform(Analyzer):
+    """Waveform analyzer"""
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):

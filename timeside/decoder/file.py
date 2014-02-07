@@ -71,6 +71,8 @@ class FileDecoder(Decoder):
         self.uri = get_uri(uri)
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
+        self.mimetype = None
+
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
         self.eod = False
@@ -124,7 +126,7 @@ class FileDecoder(Decoder):
                                        uri_duration = np.int64(round(self.uri_duration * gst.SECOND)))
                                        # convert uri_start and uri_duration to nanoseconds
         else:
-            # Create the pipe with standard Gstreamer uridecodbin
+            # Create the pipe with standard Gstreamer uridecodebin
             self.pipe = ''' uridecodebin name=src uri={uri}
                            ! audioconvert name=audioconvert
                            ! audioresample
@@ -140,7 +142,7 @@ class FileDecoder(Decoder):
         if self.output_samplerate:
             caps_samplerate = int(self.output_samplerate)
         else:
-            caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000 }"
+            caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 96000 }"
         sink_caps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
             channels=(int)%s,
@@ -148,6 +150,12 @@ class FileDecoder(Decoder):
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.src = self.pipeline.get_by_name('src')
+        if not self.is_segment:
+            self.src.connect("autoplug-continue", self._autoplug_cb)
+        else:
+            uridecodebin = self.src.get_by_name('internal-uridecodebin')
+            uridecodebin.connect("autoplug-continue", self._autoplug_cb)
+
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
 
@@ -193,6 +201,13 @@ class FileDecoder(Decoder):
                 raise IOError(self.error_msg)
             else:
                 raise IOError('no known audio stream found')
+
+    def _autoplug_cb(self, src, arg0, arg1):
+        # use the autoplug-continue callback from uridecodebin
+        # to get the mimetype string
+        if not self.mimetype:
+            self.mimetype = arg1.to_string().split(',')[0]
+        return True
 
     def _notify_caps_cb(self, pad, args):
         self.discovered_cond.acquire()
@@ -300,7 +315,10 @@ class FileDecoder(Decoder):
 
     @interfacedoc
     def format(self):
-        # TODO check
+        return self.mime_type()
+
+    @interfacedoc
+    def mime_type(self):
         if self.mimetype == 'application/x-id3':
             self.mimetype = 'audio/mpeg'
         return self.mimetype
@@ -308,7 +326,7 @@ class FileDecoder(Decoder):
     @interfacedoc
     def encoding(self):
         # TODO check
-        return self.mimetype.split('/')[-1]
+        return self.mime_type().split('/')[-1]
 
     @interfacedoc
     def resolution(self):

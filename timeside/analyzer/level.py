@@ -27,6 +27,7 @@ import numpy as np
 
 
 class Level(Analyzer):
+    """RMS level analyzer"""
     implements(IValueAnalyzer)
 
     @interfacedoc
@@ -46,7 +47,7 @@ class Level(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Level Analyzer"
+        return "Level"
 
     @staticmethod
     @interfacedoc
