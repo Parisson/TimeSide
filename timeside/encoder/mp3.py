@@ -29,7 +29,6 @@ from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 from timeside.tools import *
 
-import mutagen
 
 class Mp3Encoder(GstEncoder):
     """ gstreamer-based mp3 encoder """
@@ -84,13 +83,11 @@ class Mp3Encoder(GstEncoder):
     def mime_type():
         return "audio/mpeg"
 
-    @interfacedoc
-    def set_metadata(self, metadata):
-        self.metadata = metadata
-
     def write_metadata(self):
         """Write all ID3v2.4 tags to file from self.metadata"""
+        import mutagen
         from mutagen import id3
+
         id3 = id3.ID3(self.filename)
         for tag in self.metadata.keys():
             value = self.metadata[tag]
@@ -103,5 +100,3 @@ class Mp3Encoder(GstEncoder):
             id3.save()
         except:
             raise IOError('EncoderError: cannot write tags')
-
-

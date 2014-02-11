@@ -25,6 +25,17 @@ from timeside.api import IEncoder
 from timeside.tools import *
 
 from gst import _gst as gst
+import threading
+
+
+class MainloopThread(threading.Thread):
+
+    def __init__(self, mainloop):
+        threading.Thread.__init__(self)
+        self.mainloop = mainloop
+
+    def run(self):
+        self.mainloop.run()
 
 
 class GstEncoder(Processor):
@@ -49,9 +60,7 @@ class GstEncoder(Processor):
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
-        import threading
         self.end_cond = threading.Condition(threading.Lock())
-
         self.eod = False
         self.metadata = None
         self.num_samples = 0
@@ -91,14 +100,6 @@ class GstEncoder(Processor):
         self.bus.add_signal_watch()
         self.bus.connect("message", self._on_message_cb)
 
-        import threading
-        class MainloopThread(threading.Thread):
-            def __init__(self, mainloop):
-                threading.Thread.__init__(self)
-                self.mainloop = mainloop
-
-            def run(self):
-                self.mainloop.run()
         self.mainloop = gobject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
@@ -127,13 +128,17 @@ class GstEncoder(Processor):
             self.end_cond.release()
 
     @interfacedoc
+    def set_metadata(self, metadata):
+        self.metadata = metadata
+
+    @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
         if eod:
             self.num_samples +=  frames.shape[0]
         else:
             self.num_samples += self.blocksize()
-        buf = numpy_array_to_gst_buffer(frames, frames.shape[0],self.num_samples, self.samplerate())
+        buf = numpy_array_to_gst_buffer(frames, frames.shape[0], self.num_samples, self.samplerate())
         self.src.emit('push-buffer', buf)
         if self.eod:
             self.src.emit('end-of-stream')

@@ -7,14 +7,13 @@ import gobject
 gobject.threads_init()
 
 
-def numpy_array_to_gst_buffer(frames, CHUNK_SIZE, num_samples, SAMPLE_RATE):
+def numpy_array_to_gst_buffer(frames, chunk_size, num_samples, sample_rate):
     from gst import Buffer
     """ gstreamer buffer to numpy array conversion """
     buf = Buffer(getbuffer(frames.astype("float32")))
     #Set its timestamp and duration
-    buf.timestamp = gst.util_uint64_scale(num_samples, gst.SECOND, SAMPLE_RATE)
-    buf.duration = gst.util_uint64_scale(CHUNK_SIZE, gst.SECOND, SAMPLE_RATE)
-
+    buf.timestamp = gst.util_uint64_scale(num_samples, gst.SECOND, sample_rate)
+    buf.duration = gst.util_uint64_scale(chunk_size, gst.SECOND, sample_rate)
     return buf
 
 
