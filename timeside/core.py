@@ -310,9 +310,8 @@ class ProcessPipe(object):
             signal.signal(signal.SIGINT, signal_handler)
 
         while not eod:
-            frames, eod = source.process()
             for item in items:
-                frames, eod = item.process(frames, eod)
+                frames, eod = item.process(*source.process())
 
         if source.id() == 'gst_live_dec':
             # Restore default handler for Interruption signal

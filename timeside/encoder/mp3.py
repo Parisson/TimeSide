@@ -104,3 +104,4 @@ class Mp3Encoder(GstEncoder):
         except:
             raise IOError('EncoderError: cannot write tags')
 
+
