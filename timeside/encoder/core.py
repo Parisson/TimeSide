@@ -95,7 +95,7 @@ class GstEncoder(Processor):
             self.app.set_property("drop", False)
             self.app.set_property('emit-signals', True)
             self.app.connect("new-buffer", self._on_new_buffer_streaming)
-            self.app.connect('new-preroll', self._on_new_preroll_streaming)
+            #self.app.connect('new-preroll', self._on_new_preroll_streaming)
 
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
@@ -113,6 +113,7 @@ class GstEncoder(Processor):
         self.bus.connect("message", self._on_message_cb)
 
         import threading
+
         class MainloopThread(threading.Thread):
             def __init__(self, mainloop):
                 threading.Thread.__init__(self)
@@ -130,11 +131,10 @@ class GstEncoder(Processor):
     def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
-
+            self.end_cond.acquire()
             if self.streaming:
                 self._streaming_queue.put(gst.MESSAGE_EOS)
 
-            self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
             self.mainloop.quit()
             self.end_reached = True
@@ -154,19 +154,10 @@ class GstEncoder(Processor):
     def _on_new_buffer_streaming(self, appsink):
         #print 'pull-buffer'
         chunk = appsink.emit('pull-buffer')
-        if chunk == gst.MESSAGE_EOS:
-            print 'chunk is eos *************'
-            raise TypeError
-        else:
-            self._chunk_len += len(chunk)
-            print 'new buffer', self._chunk_len
-
-        if appsink.get_property('eos'):
-            print 'property EOS'
-        #print 'put buffer in queue'
         self._streaming_queue.put(chunk)
-        #print 'qsize : %d' % self._streaming_queue.qsize()
-        #print 'put ok'
+        chunk_len = len(chunk)
+        self._chunk_len += chunk_len
+        print 'new buffer length:', self._chunk_len
 
     def _on_new_preroll_streaming(self, appsink):
         print 'preroll'
@@ -177,30 +168,25 @@ class GstEncoder(Processor):
     def process(self, frames, eod=False):
         self.eod = eod
         if eod:
-            self.num_samples +=  frames.shape[0]
+            self.num_samples += frames.shape[0]
         else:
             self.num_samples += self.blocksize()
-        buf = numpy_array_to_gst_buffer(frames, frames.shape[0],self.num_samples, self.samplerate())
+        buf = numpy_array_to_gst_buffer(frames, frames.shape[0],
+                                        self.num_samples, self.samplerate())
         self.src.emit('push-buffer', buf)
         if self.eod:
             self.src.emit('end-of-stream')
-        if self.streaming:
-            pass #self.chunk = self.app.emit('pull-buffer')
+
         return frames, eod
 
     def get_stream_chunk(self):
         if self.streaming:
-            #if not self.app.get_property('eos'):
-            #print 'get chunk from queue'
-            #print 'qsize : %d' % self._streaming_queue.qsize()
             chunk = self._streaming_queue.get(block=True)
-            if  chunk == gst.MESSAGE_EOS:
+            if chunk == gst.MESSAGE_EOS:
                 return None
             else:
                 self._streaming_queue.task_done()
                 return chunk
-
-            print 'new buffer', self._chunk_len
 
         else:
             raise TypeError('function only available in streaming mode')

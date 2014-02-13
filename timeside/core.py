@@ -376,19 +376,14 @@ class ProcessPipe(object):
 
         if self._streamer is None:
             raise TypeError('Function only available in streaming mode')
-        print 'streaming'
 
         while pipe_thread.is_alive():
             #yield count
             chunk = self._streamer.get_stream_chunk()
-            #time.sleep(0.1)
             if chunk is not None:
-                yield chunk  # print len(chunk)
+                yield chunk
             else:
                 break
-
-
-        return
 
     def _register_streamer(self, processor):
         if hasattr(processor, 'streaming') and processor.streaming:
