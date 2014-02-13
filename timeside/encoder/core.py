@@ -24,7 +24,17 @@ from timeside.component import implements, abstract
 from timeside.api import IEncoder
 from timeside.tools import *
 
-from gst import _gst as gst
+#from gst import _gst as gst
+import pygst
+pygst.require('0.10')
+import gst
+
+import gobject
+gobject.threads_init()
+
+# Streaming queue configuration
+QUEUE_SIZE = 10
+GST_APPSINK_MAX_BUFFERS = 10
 
 
 class GstEncoder(Processor):
@@ -56,6 +66,8 @@ class GstEncoder(Processor):
         self.metadata = None
         self.num_samples = 0
 
+        self._chunk_len = 0
+
     @interfacedoc
     def release(self):
         if hasattr(self, 'eod') and hasattr(self, 'mainloopthread'):
@@ -73,8 +85,17 @@ class GstEncoder(Processor):
         self.pipeline = gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
-        # store a pointer to appsink in our encoder object
-        self.app = self.pipeline.get_by_name('app')
+
+        if self.streaming:
+            import Queue
+            self._streaming_queue = Queue.Queue(QUEUE_SIZE)
+            # store a pointer to appsink in our encoder object
+            self.app = self.pipeline.get_by_name('app')
+            self.app.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
+            self.app.set_property("drop", False)
+            self.app.set_property('emit-signals', True)
+            self.app.connect("new-buffer", self._on_new_buffer_streaming)
+            self.app.connect('new-preroll', self._on_new_preroll_streaming)
 
         srccaps = gst.Caps("""audio/x-raw-float,
             endianness=(int)1234,
@@ -109,6 +130,10 @@ class GstEncoder(Processor):
     def _on_message_cb(self, bus, message):
         t = message.type
         if t == gst.MESSAGE_EOS:
+
+            if self.streaming:
+                self._streaming_queue.put(gst.MESSAGE_EOS)
+
             self.end_cond.acquire()
             self.pipeline.set_state(gst.STATE_NULL)
             self.mainloop.quit()
@@ -126,6 +151,28 @@ class GstEncoder(Processor):
             self.end_cond.notify()
             self.end_cond.release()
 
+    def _on_new_buffer_streaming(self, appsink):
+        #print 'pull-buffer'
+        chunk = appsink.emit('pull-buffer')
+        if chunk == gst.MESSAGE_EOS:
+            print 'chunk is eos *************'
+            raise TypeError
+        else:
+            self._chunk_len += len(chunk)
+            print 'new buffer', self._chunk_len
+
+        if appsink.get_property('eos'):
+            print 'property EOS'
+        #print 'put buffer in queue'
+        self._streaming_queue.put(chunk)
+        #print 'qsize : %d' % self._streaming_queue.qsize()
+        #print 'put ok'
+
+    def _on_new_preroll_streaming(self, appsink):
+        print 'preroll'
+        chunk = appsink.emit('pull-preroll')
+        self._streaming_queue.put(chunk)
+
     @interfacedoc
     def process(self, frames, eod=False):
         self.eod = eod
@@ -138,9 +185,25 @@ class GstEncoder(Processor):
         if self.eod:
             self.src.emit('end-of-stream')
         if self.streaming:
-            self.chunk = self.app.emit('pull-buffer')
+            pass #self.chunk = self.app.emit('pull-buffer')
         return frames, eod
 
+    def get_stream_chunk(self):
+        if self.streaming:
+            #if not self.app.get_property('eos'):
+            #print 'get chunk from queue'
+            #print 'qsize : %d' % self._streaming_queue.qsize()
+            chunk = self._streaming_queue.get(block=True)
+            if  chunk == gst.MESSAGE_EOS:
+                return None
+            else:
+                self._streaming_queue.task_done()
+                return chunk
+
+            print 'new buffer', self._chunk_len
+
+        else:
+            raise TypeError('function only available in streaming mode')
 
 if __name__ == "__main__":
     # Run doctest from __main__ and unittest from test_analyzer_preprocessors
