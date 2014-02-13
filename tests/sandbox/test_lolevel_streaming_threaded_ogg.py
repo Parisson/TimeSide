@@ -2,7 +2,7 @@
 
 from timeside.core import *
 from timeside.decoder import FileDecoder
-from timeside.encoder import Mp3Encoder
+from timeside.encoder import Mp3Encoder, VorbisEncoder
 
 import sys
 if len(sys.argv) > 1:
@@ -16,13 +16,13 @@ decoder = FileDecoder(audio_file)
 
 print "Creating decoder with id=%s for: %s" % (decoder.id(), audio_file)
 
-dest1 = "/tmp/test_filesink.mp3"
-dest2 = "/tmp/test_appsink.mp3"
+dest1 = "/tmp/test_filesink.ogg"
+dest2 = "/tmp/test_appsink.ogg"
 f = open(dest2, 'w')
 
 
 streaming = True
-encoder = Mp3Encoder(dest1, streaming=streaming, overwrite=True)
+encoder = VorbisEncoder(dest1, streaming=streaming, overwrite=True)
 
 pipe = (decoder | encoder)
 print pipe
@@ -52,6 +52,3 @@ assert os.path.getsize(dest1) == os.path.getsize(dest2)
 # Appsink file is always 1 buffer longer than filesink
 # TODO : Try to transcode with a pure gstreamer pipe to see the file length
 # maybe appsink is fine but filesink not ? just to be checked
-
-# INFO : sweep.mp3 transcoded with pure gst from sweep.flac with the same parameters 
-# as in the timeside mp3 encoder gives 70535 bytes
