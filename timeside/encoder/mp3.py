@@ -55,7 +55,7 @@ class Mp3Encoder(GstEncoder):
         elif self.filename :
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! queue ! appsink name=app sync=False async=True'
+            self.pipe += '! queue ! appsink name=app sync=False'
 
         self.start_pipeline(channels, samplerate)
 
