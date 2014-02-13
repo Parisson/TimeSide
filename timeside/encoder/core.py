@@ -155,12 +155,9 @@ class GstEncoder(Processor):
         #print 'pull-buffer'
         chunk = appsink.emit('pull-buffer')
         self._streaming_queue.put(chunk)
-        chunk_len = len(chunk)
-        self._chunk_len += chunk_len
-        print 'new buffer length:', self._chunk_len
 
     def _on_new_preroll_streaming(self, appsink):
-        print 'preroll'
+        # print 'preroll'
         chunk = appsink.emit('pull-preroll')
         self._streaming_queue.put(chunk)
 
