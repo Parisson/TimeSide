@@ -1,10 +1,12 @@
-from numpy import array, getbuffer, frombuffer
+from numpy import getbuffer, frombuffer
 
 import pygst
 pygst.require('0.10')
 import gst
 import gobject
 gobject.threads_init()
+
+import threading
 
 
 def numpy_array_to_gst_buffer(frames, chunk_size, num_samples, sample_rate):
@@ -22,3 +24,12 @@ def gst_buffer_to_numpy_array(buf, chan):
     samples = frombuffer(buf.data, dtype='float32')
     samples.resize([len(samples)/chan, chan])
     return samples
+
+
+class MainloopThread(threading.Thread):
+    def __init__(self, mainloop):
+        threading.Thread.__init__(self)
+        self.mainloop = mainloop
+
+    def run(self):
+        self.mainloop.run()
