@@ -18,3 +18,4 @@ from irit_music_SLN import IRITMusicSLN
 from irit_music_SNB import IRITMusicSNB
 #~ from irit_monopoly import IRITMonopoly
 from odf import OnsetDetectionFunction
+from limsi_sad import LimsiSad

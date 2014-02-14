@@ -188,7 +188,5 @@ class GstEncoder(Processor):
             raise TypeError('function only available in streaming mode')
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
-    from tests import test_encoding, test_transcoding
-    from tests.unit_timeside import run_test_module
-    run_test_module([test_encoding, test_transcoding])
+    import doctest
+    doctest.testmod()

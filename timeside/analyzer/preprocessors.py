@@ -179,7 +179,5 @@ def frames_adapter(process_func):
 
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
-    from tests import test_analyzer_preprocessors
-    from tests.unit_timeside import run_test_module
-    run_test_module(test_analyzer_preprocessors)
+    import doctest
+    doctest.testmod()
