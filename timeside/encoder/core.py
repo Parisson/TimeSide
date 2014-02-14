@@ -1,7 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2012 Paul Brossier <piem@piem.org>
+# Copyright (C) 2007-2014 Parisson SARL
+# Copyright (c) 2006-2014 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2010-2014 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013-2014 Thomas Fillon <thomas@parisson.com>
 
 # This file is part of TimeSide.
 
@@ -20,9 +23,9 @@
 
 
 from timeside.core import Processor, implements, interfacedoc
-from timeside.component import implements, abstract
+from timeside.component import abstract
 from timeside.api import IEncoder
-from timeside.tools import *
+from timeside.tools import numpy_array_to_gst_buffer
 
 #from gst import _gst as gst
 import pygst
