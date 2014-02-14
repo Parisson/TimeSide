@@ -344,17 +344,8 @@ class ProcessPipe(object):
 
     def stream(self):
         self._stream_thread = True
-        import threading
-        class MainloopThread(threading.Thread):
-            def __init__(self, mainloop):
-                threading.Thread.__init__(self)
-                self.mainloop = mainloop
 
-            def run(self):
-                self.mainloop.run()
-        self.mainloop = gobject.MainLoop()
-        self.mainloopthread = MainloopThread(self.mainloop)
-        self.mainloopthread.start()
+        import threading
 
         class PipeThread(threading.Thread):
             def __init__(self, process_pipe):
@@ -391,5 +382,3 @@ class ProcessPipe(object):
                 self._streamer = processor
             else:
                 raise TypeError('More than one streaming processor in pipe')
-            print self._streamer
-
