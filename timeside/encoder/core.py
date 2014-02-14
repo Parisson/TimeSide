@@ -25,7 +25,7 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.component import abstract
 from timeside.api import IEncoder
-from timeside.tools import numpy_array_to_gst_buffer
+from timeside.tools import numpy_array_to_gst_buffer, MainloopThread
 
 #from gst import _gst as gst
 import pygst
@@ -34,6 +34,8 @@ import gst
 
 import gobject
 gobject.threads_init()
+
+import threading
 
 # Streaming queue configuration
 QUEUE_SIZE = 10
@@ -62,7 +64,6 @@ class GstEncoder(Processor):
         if not self.filename and not self.streaming:
             raise Exception('Must give an output')
 
-        import threading
         self.end_cond = threading.Condition(threading.Lock())
 
         self.eod = False
@@ -115,15 +116,6 @@ class GstEncoder(Processor):
         self.bus.add_signal_watch()
         self.bus.connect("message", self._on_message_cb)
 
-        import threading
-
-        class MainloopThread(threading.Thread):
-            def __init__(self, mainloop):
-                threading.Thread.__init__(self)
-                self.mainloop = mainloop
-
-            def run(self):
-                self.mainloop.run()
         self.mainloop = gobject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()

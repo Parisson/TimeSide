@@ -29,7 +29,8 @@
 from __future__ import division
 
 from timeside.decoder.core import *
-
+from timeside.tools.gstutils import MainloopThread
+import threading
 
 class FileDecoder(Decoder):
     """ gstreamer-based decoder """
@@ -99,7 +100,6 @@ class FileDecoder(Decoder):
                                         given the media duration""")
 
         # a lock to wait wait for gstreamer thread to be ready
-        import threading
         self.discovered_cond = threading.Condition(threading.Lock())
         self.discovered = False
 
@@ -172,15 +172,6 @@ class FileDecoder(Decoder):
 
         self.queue = Queue.Queue(QUEUE_SIZE)
 
-        import threading
-
-        class MainloopThread(threading.Thread):
-            def __init__(self, mainloop):
-                threading.Thread.__init__(self)
-                self.mainloop = mainloop
-
-            def run(self):
-                self.mainloop.run()
         self.mainloop = gobject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
