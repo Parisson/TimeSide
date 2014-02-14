@@ -14,3 +14,4 @@ from vamp_plugin import VampSimpleHost
 from irit_speech_entropy import IRITSpeechEntropy
 from irit_speech_4hz import IRITSpeech4Hz
 from odf import OnsetDetectionFunction
+from limsi_sad import LimsiSad
