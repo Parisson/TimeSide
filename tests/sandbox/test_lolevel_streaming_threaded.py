@@ -48,11 +48,3 @@ dest2_size = os.path.getsize(dest2)
 print "Filesink filesize: %d" % dest1_size
 print "Appsink filesize: %d" % dest2_size
 #assert os.path.getsize(dest1) == os.path.getsize(dest2)
-
-# Sometime randomly freeze
-# Appsink file is always 1 buffer longer than filesink
-# TODO : Try to transcode with a pure gstreamer pipe to see the file length
-# maybe appsink is fine but filesink not ? just to be checked
-
-# INFO : sweep.mp3 transcoded with pure gst from sweep.flac with the same parameters
-# as in the timeside mp3 encoder gives 70535 bytes
