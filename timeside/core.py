@@ -28,6 +28,9 @@ import time
 import numpy
 import uuid
 
+import gobject
+gobject.threads_init()
+
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
            'FixedSizeInputAdapter']
@@ -241,6 +244,10 @@ class ProcessPipe(object):
 
     def __init__(self, *others):
         self.processors = []
+        self._streamer = None
+        self._stream_thread = False
+        self._is_running = False
+
         self |= others
 
         from timeside.analyzer.core import AnalyzerResultContainer
@@ -278,8 +285,7 @@ class ProcessPipe(object):
         return pipe
 
     def run(self, channels=None, samplerate=None, blocksize=None):
-        """Setup/reset all processors in cascade and stream audio data along
-        the pipe."""
+        """Setup/reset all processors in cascade"""
 
         source = self.processors[0]
         items = self.processors[1:]
@@ -295,9 +301,17 @@ class ProcessPipe(object):
                        samplerate=last.samplerate(),
                        blocksize=last.blocksize(),
                        totalframes=last.totalframes())
+            self._register_streamer(item)
             last = item
 
         # now stream audio data along the pipe
+        if self._stream_thread:
+            self._running_cond.acquire()
+        self._is_running = True
+        if self._stream_thread:
+            self._running_cond.notify()
+            self._running_cond.release()
+
         eod = False
 
         if source.id() == 'gst_live_dec':
@@ -326,3 +340,46 @@ class ProcessPipe(object):
         for item in items:
             item.release()
             self.processors.remove(item)
+
+        self._is_running = False
+
+    def stream(self):
+        self._stream_thread = True
+
+        import threading
+
+        class PipeThread(threading.Thread):
+            def __init__(self, process_pipe):
+                super(PipeThread, self).__init__(name='pipe_thread')
+                self.process_pipe = process_pipe
+
+            def run(self):
+                self.process_pipe.run()
+
+        pipe_thread = PipeThread(self)
+        pipe_thread.start()
+
+        # wait for pipe thread to be ready to stream
+        self._running_cond = threading.Condition(threading.Lock())
+        self._running_cond.acquire()
+        while not self._is_running:
+            self._running_cond.wait()
+        self._running_cond.release()
+
+        if self._streamer is None:
+            raise TypeError('Function only available in streaming mode')
+
+        while pipe_thread.is_alive():
+            #yield count
+            chunk = self._streamer.get_stream_chunk()
+            if chunk is not None:
+                yield chunk
+            else:
+                break
+
+    def _register_streamer(self, processor):
+        if hasattr(processor, 'streaming') and processor.streaming:
+            if self._streamer is None:
+                self._streamer = processor
+            else:
+                raise TypeError('More than one streaming processor in pipe')
