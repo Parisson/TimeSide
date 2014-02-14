@@ -1093,9 +1093,5 @@ class Analyzer(Processor):
 
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from tests
-    from tests.unit_timeside import run_test_module
-    # load corresponding tests
-    from tests import test_AnalyzerResult
-
-    run_test_module([test_AnalyzerResult])
+    import doctest
+    doctest.testmod()

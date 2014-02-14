@@ -286,7 +286,6 @@ class Grapher(Processor):
                 self.previous_x, self.previous_y = x, y
 
 
-
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

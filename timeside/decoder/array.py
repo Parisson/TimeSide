@@ -137,9 +137,5 @@ class ArrayDecoder(Decoder):
 
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from tests
-    from tests.unit_timeside import run_test_module
-    # load corresponding tests
-    from tests import test_array_decoding
-
-    run_test_module([test_array_decoding])
+    import doctest
+    doctest.testmod()
