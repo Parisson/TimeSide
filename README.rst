@@ -77,7 +77,6 @@ IGrapher
   *  Displaywaveform_analyzer [grapher_waveform]
   *  Displayirit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
 
-
 IAnalyzer
 ---------
 
@@ -93,6 +92,7 @@ IAnalyzer
   *  IRITSpeechEntropy [irit_speech_entropy]
   *  IRITSpeech4Hz [irit_speech_4hz]
   *  OnsetDetectionFunction [odf]
+  *  LimsiSad [limsi_sad]
 
 IValueAnalyzer
 ---------------
@@ -103,6 +103,14 @@ IValueAnalyzer
 News
 =====
 
+0.5.4
+
+ * Bugfix realease
+ * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
+ * Analyzer : update VAMP plugin example in sandbox
+ * Analyzer : NEW experimental plugin : Limsi Speech Activity Detection Systems (limsi_sad)
+ * Install : fix some setup requirements
+ 
 0.5.3
 
  * Make Analyzer rendering more generic and easy to implement
