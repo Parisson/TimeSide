@@ -2,9 +2,9 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big audio or video datasets. Its simple plugin architecture can be adapted to various usecases.
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big audio or video datasets of any format. Its simple plugin architecture can be adapted to various usecases.
 
-It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and realtime streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
+TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchonized with audio events. It is embeddable in any web application.
 
 Build status
 ============
@@ -19,9 +19,7 @@ Build status
 
 
 Goals
-=====
-
-We just **need** a python library to:
+======
 
 * **Do** asynchronous and fast audio processing with Python,
 * **Decode** audio frames from **any** audio or video media format into numpy arrays,
@@ -107,7 +105,7 @@ News
 
  * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
  * Analyzer : update VAMP plugin example in sandbox
- * Analyzer : new experimental plugin : Limsi Speech Activity Detection Systems (limsi_sad)
+ * Analyzer : new *experimental* plugin : Limsi Speech Activity Detection Systems (limsi_sad)
  * Decoder : process any media in streaming mode giving its URL 
  * Install : fix some setup requirements
  
