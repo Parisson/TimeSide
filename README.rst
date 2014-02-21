@@ -2,9 +2,9 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big audio or video datasets. Its simple plugin architecture can be adapted to various usecases.
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big audio or video datasets of any format. Its simple plugin architecture can be adapted to various usecases.
 
-It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and realtime streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
+TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchonized with audio events. It is embeddable in any web application.
 
 Build status
 ============
@@ -19,15 +19,13 @@ Build status
 
 
 Goals
-=====
-
-We just **need** a python library to:
+======
 
 * **Do** asynchronous and fast audio processing with Python,
-* **Decode** audio frames from ANY format into numpy arrays,
+* **Decode** audio frames from **any** audio or video media format into numpy arrays,
 * **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
 * **Organize**, serialize and save analysis metadata through various formats,
-* **Draw** various fancy waveforms, spectrograms and other cool graphers,
+* **Draw** various fancy waveforms, spectrograms and other cool visualizers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
@@ -105,10 +103,10 @@ News
 
 0.5.4
 
- * Bugfix realease
  * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
  * Analyzer : update VAMP plugin example in sandbox
- * Analyzer : NEW experimental plugin : Limsi Speech Activity Detection Systems (limsi_sad)
+ * Analyzer : new *experimental* plugin : Limsi Speech Activity Detection Systems (limsi_sad)
+ * Decoder : process any media in streaming mode giving its URL 
  * Install : fix some setup requirements
  
 0.5.3
@@ -266,6 +264,9 @@ API / Documentation
 Install
 =======
 
+The TimeSide engine is intended to work on all Unix / Linux platforms.
+MacOS X and Windows versions will soon be explorated.
+
 TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems.
 
 On Debian, Ubuntu, etc:
@@ -287,7 +288,7 @@ On Fedora and Red-Hat:
 
  $ sudo pip install timeside
 
-Otherwise, you can also install all dependencies and then use pip::
+On other Linux platforms, you can also install all dependencies and then use pip::
 
  $ sudo pip install timeside
 
@@ -298,13 +299,6 @@ python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, g
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
 python-scipy, python-matplotlib, python-matplotlib
 
-Platforms
-==========
-
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
-The player should work on any modern HTML5 enabled browser.
-Flash is needed for MP3 if the browser doesn't support it.
 
 Shell Interface
 ================
@@ -367,6 +361,9 @@ TODO list:
     * embed a light http server to get commands through something like JSON RPC
     * zoom
     * layers
+
+The player should work on any modern HTML5 enabled browser.
+Flash is needed for MP3 if the browser doesn't support it.
 
 Development
 ===========
