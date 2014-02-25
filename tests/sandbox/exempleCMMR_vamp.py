@@ -36,8 +36,8 @@ print my_plugin
 
 #
 # Vamp plugin Analyzer
-#vamp = timeside.analyzer.VampSimpleHost([my_plugin])
-vamp = timeside.analyzer.VampSimpleHost()
+vamp = timeside.analyzer.VampSimpleHost([my_plugin])
+#vamp = timeside.analyzer.VampSimpleHost()
 
 #
 myPipe = (d | vamp | specgram | waveform).run()

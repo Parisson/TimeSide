@@ -158,7 +158,11 @@ class Grapher(Processor):
     @interfacedoc
     def render(self, output=None):
         if output:
-            self.image.save(output)
+            try:
+                self.image.save(output)
+            except AttributeError:
+                print "Pixel %s x %d" % (self.image_width, self.image_height)
+                self.image.savefig(output, dpi=341)
             return
         return self.image
 
@@ -280,7 +284,6 @@ class Grapher(Processor):
                     else:
                         self.draw.point((x, y+height), line_color)
                 self.previous_x, self.previous_y = x, y
-
 
 
 if __name__ == "__main__":

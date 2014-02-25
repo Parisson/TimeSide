@@ -27,7 +27,6 @@ from timeside.api import IAnalyzer
 from numpy import array, hamming, dot, mean, float
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
-from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITSpeech4Hz(Analyzer):
@@ -48,20 +47,14 @@ class IRITSpeech4Hz(Analyzer):
         - modulLen			(float)		: Length (in second) of the modulation computation window
     '''
 
-    @interfacedoc    
+    @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
         super(IRITSpeech4Hz, self).setup(
             channels, samplerate, blocksize, totalframes)
-            
         self.energy4hz = []
         # Classification
         self.threshold = 2.0
-        
-        self.wLen 	= 1.0
-        self.wStep 	= 0.1
-        self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)        
 
         # Pass-band Filter
         self.frequency_center = 4.0
@@ -92,7 +85,6 @@ class IRITSpeech4Hz(Analyzer):
     def __str__(self):
         return "Speech confidences indexes"
 
-    @frames_adapter
     def process(self, frames, eod=False):
         '''
 
@@ -131,7 +123,7 @@ class IRITSpeech4Hz(Analyzer):
 
         # Energy Modulation
         frameLenModulation = int(
-            self.modulLen * self.samplerate() / self.input_blocksize)
+            self.modulLen * self.samplerate() / self.blocksize())
         modEnergyValue = computeModulation(energy, frameLenModulation, True)
 
         # Confidence Index
@@ -162,10 +154,10 @@ class IRITSpeech4Hz(Analyzer):
         segs.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
-        segs.data_object.time = [(float(s[0]) * self.input_blocksize /
+        segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                  self.samplerate())
                                  for s in segList]
-        segs.data_object.duration = [(float(s[1]-s[0]) * self.input_blocksize /
+        segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
                                      self.samplerate())
                                      for s in segList]
 

@@ -137,12 +137,20 @@ def get_media_uri_info(uri):
     return info
 
 
+def stack(process_func):
+
+    import functools
+
+    @functools.wraps(process_func)
+    def wrapper(decoder):
+        # Processing
+        frames, eod = process_func(decoder)
+        if decoder.stack:
+            decoder.process_pipe.frames_stack.append((frames, eod))
+        return frames, eod
+    return wrapper
+
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from tests
-    from tests.unit_timeside import run_test_module
-    # load corresponding tests
-    from tests import test_decoder_utils
-
-    run_test_module(test_decoder_utils)
-
+    import doctest
+    doctest.testmod()

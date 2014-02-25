@@ -26,17 +26,12 @@ from timeside.api import IAnalyzer
 from numpy import spacing
 from collections import deque
 
+
 class ModelLongTerm(object):
     '''
     '''
 
     def __init__(self,ordre,echantillon):
-        '''
-        
-        Constructor
-        
-        '''
-        
         self.ordre                      = ordre
         self.ft                         = [0]*(ordre+2)
         self.ftm1                       = [0]*(ordre+2)
@@ -59,7 +54,7 @@ class ModelLongTerm(object):
         self.erreur_residuelle = self.et[ik]
         self.variance_erreur_residuelle =self.variance_f[ik]
 
-    def miseAJour(self,echantillon):
+    def update(self,echantillon):
         '''
         
         '''
@@ -73,7 +68,6 @@ class ModelLongTerm(object):
         self.variance_f[0] = self.variance_f[0]+oubli*(echantillon**2-self.variance_f[0])
         self.variance_b[0] = self.variance_f[0]      
         ik = min([self.ordre,self.length-1])
-        
         
         for n in xrange(ik+1) :
             oubli =1.0/float(self.length-n) 
@@ -93,10 +87,6 @@ class ModelLongTerm(object):
         self.variance_erreur_residuelle =self.variance_f[ik+1] 
 
     def __str__(self):
-        '''
-        
-        '''
-        
         s  = 'Model Long Terme\n'
         s += '\tOrdre\t\t%d\n'%self.ordre
         s += '\tLongueur\t%d\n'%self.length
@@ -125,18 +115,11 @@ class ModelLongTerm(object):
         return s
 
 
-        
 class ModelCourtTrerm(object):
     '''
     '''
     
     def __init__(self,ordre,buff):
-        '''
-        
-        Constructor
-        
-        '''
-        
         self.N = len(buff)
         self.ordre = ordre
         self.erreur_residuelle = 0
@@ -192,7 +175,7 @@ class ModelCourtTrerm(object):
             for i in range(self.ordre+1) :
                 self.erreur_residuelle = self.erreur_residuelle +self.AI[i]*self.buff[self.N-i-1]        
                 
-    def miseAJour(self,echantillon):
+    def update(self,echantillon):
         self.dernier_echantillon = self.buff.popleft()
         self.buff.append(echantillon)
         for tau in xrange(1,self.ordre+1):
@@ -277,13 +260,12 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True):
         echantillon= data[t]
         longTerme = ModelLongTerm(ordre,echantillon)
             
-        while (not rupture) and t < long_signal-1  : 
-            
+        while (not rupture) and t < long_signal-1  :             
             t+=1
             
             # Mise à jour du long terme
             echantillon = data[t]
-            longTerme.miseAJour(echantillon)
+            longTerme.update(echantillon)
 
             # Si l'ecart avec la dernière rupture est suffisant
             # pour utiliser le modèle court terme 
@@ -295,7 +277,7 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True):
                     
                 # Mise à jour du modèle court terme                               
                 if t-rupt_last > Lmin :
-                    courtTerme.miseAJour(echantillon)
+                    courtTerme.update(echantillon)
                 
                 # mise à jour du critère
                 Wn = Wn+calculDistance(longTerme,courtTerme)-biais
@@ -314,7 +296,6 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True):
         # Positionnement de la rupture au dernier point maximum        
         t_rupt = maxi[1]
         
-                
         # Si une rupture à été detecté avec un modèle stable (Wn à croit)   
         if t_rupt > -1 :
             
@@ -351,15 +332,12 @@ def segment(data,fe,ordre=2,Lmin=0.02,lamb=40.0,biais=-0.2,with_backward=True):
 class IRITDiverg(Analyzer):
     implements(IAnalyzer)
     '''
-    
-    
     '''
     
     def __init__(self, blocksize=1024, stepsize=None) :
         super(IRITDiverg, self).__init__();
         self.parents.append(Waveform())
         self.ordre = 2
-
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,blocksize=None, totalframes=None):
@@ -384,16 +362,12 @@ class IRITDiverg(Analyzer):
         return "Stationnary Segments"
 
     def process(self, frames, eod=False):
-        '''
-
-        '''
         return frames, eod
 
     def post_process(self):
         data = list(self.process_pipe.results['waveform_analyzer'].data)
         frontieres = segment(data,self.samplerate(),self.ordre)
         
-
         segs = self.new_result(data_mode='label', time_mode='event')
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'

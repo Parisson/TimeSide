@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-if not '.wav' in sys.argv[-1]:
+if not sys.argv[-1]:
     wav_file = 'toto.wav'
 else:
     wav_file = sys.argv[-1]
@@ -24,9 +24,11 @@ specgram = timeside.analyzer.Spectrogram()
 waveform = timeside.analyzer.Waveform()
 #g  =  timeside.grapher.Spectrogram()
 
-pipe = (decoder | aubio_pitch | aubio_temporal | specgram | waveform).run()
+pipe = (decoder | aubio_pitch | aubio_temporal | specgram | waveform)
+print pipe
+pipe.run()
 
-pipe.results.keys()
+print pipe.results.keys()
 
 # Display Spectrogram + Aubio Pitch + Aubio Beat
 plt.figure(1)
@@ -39,7 +41,7 @@ plt.imshow(20 * np.log10(spec_res.data.T),
                    (N // 2 + 1) / N * spec_res.frame_metadata.samplerate],
            aspect='auto')
 
-res_pitch = aubio_pitch.results['aubio_pitch']
+res_pitch = aubio_pitch.results['aubio_pitch.pitch']
 plt.plot(res_pitch.time, res_pitch.data)
 
 

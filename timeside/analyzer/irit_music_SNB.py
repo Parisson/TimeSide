@@ -30,7 +30,9 @@ from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 from timeside.analyzer.preprocessors import frames_adapter
 
+
 class IRITMusicSNB(Analyzer):
+    
     implements(IAnalyzer)
 
     def __init__(self, blocksize=1024, stepsize=None, samplerate=None) :
@@ -70,9 +72,7 @@ class IRITMusicSNB(Analyzer):
         
     @frames_adapter
     def process(self, frames, eod=False):
-		
 		return frames,eod
-		
 		
     def post_process(self):
         '''

@@ -30,6 +30,7 @@ from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 from timeside.analyzer.preprocessors import frames_adapter
 
+
 class IRITMusicSLN(Analyzer):
     implements(IAnalyzer)
 
@@ -71,9 +72,7 @@ class IRITMusicSLN(Analyzer):
         
     @frames_adapter
     def process(self, frames, eod=False):
-		
 		return frames,eod
-		
 		
     def post_process(self):
         '''

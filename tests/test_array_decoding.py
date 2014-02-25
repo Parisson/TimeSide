@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 from __future__ import division
 
-from timeside.decoder.core import ArrayDecoder
+from timeside.decoder import ArrayDecoder
 from unit_timeside import *
 
 

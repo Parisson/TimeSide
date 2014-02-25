@@ -28,6 +28,8 @@ import numpy as np
 
 
 class VampSimpleHost(Analyzer):
+    """Vamp plugins library interface analyzer"""
+
     implements(IAnalyzer)
 
     def __init__(self, plugin_list=None):

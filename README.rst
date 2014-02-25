@@ -2,24 +2,30 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-.. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big audio or video datasets of any format. Its simple plugin architecture can be adapted to various usecases.
+
+TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchonized with audio events. It is embeddable in any web application.
+
+Build status
+============
+- Branch **master** : |travis_master|
+- Branch **dev** : |travis_dev|
+
+.. |travis_master| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: https://travis-ci.org/yomguy/TimeSide/
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
-
-It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
+.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
+    :target: https://travis-ci.org/yomguy/TimeSide/
 
 
 Goals
-=====
-
-We just **need** a python library to:
+======
 
 * **Do** asynchronous and fast audio processing with Python,
-* **Decode** audio frames from ANY format into numpy arrays,
+* **Decode** audio frames from **any** audio or video media format into numpy arrays,
 * **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
 * **Organize**, serialize and save analysis metadata through various formats,
-* **Draw** various fancy waveforms, spectrograms and other cool graphers,
+* **Draw** various fancy waveforms, spectrograms and other cool visualizers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
@@ -28,7 +34,7 @@ We just **need** a python library to:
 Architecture
 ============
 
-The streaming architecture of TimeSide relies on 2 main parts: a process engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
+The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
 .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
 
@@ -45,45 +51,77 @@ IEncoder
   * FlacEncoder [gst_flac_enc]
   * AacEncoder [gst_aac_enc]
   * WebMEncoder [gst_webm_enc]
+  * AudioSink [gst_audio_sink_enc]
 
 IDecoder
 ---------
 
   * FileDecoder [gst_dec]
   * ArrayDecoder [array_dec]
+  * LiveDecoder [gst_live_dec]
 
 IGrapher
 ---------
 
-  * Waveform [waveform_simple]
-  * WaveformCentroid [waveform_centroid]
-  * WaveformTransparent [waveform_transparent]
-  * WaveformContourBlack [waveform_contour_black]
-  * WaveformContourWhite [waveform_contour_white]
-  * SpectrogramLog [spectrogram_log]
-  * SpectrogramLinear [spectrogram_lin]
+  *  Waveform [waveform_simple]
+  *  WaveformCentroid [waveform_centroid]
+  *  WaveformTransparent [waveform_transparent]
+  *  WaveformContourBlack [waveform_contour_black]
+  *  WaveformContourWhite [waveform_contour_white]
+  *  SpectrogramLog [spectrogram_log]
+  *  SpectrogramLinear [spectrogram_lin]
+  *  Displayaubio_pitch.pitch [grapher_aubio_pitch]
+  *  Displayodf [grapher_odf]
+  *  Displaywaveform_analyzer [grapher_waveform]
+  *  Displayirit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
 
 IAnalyzer
 ---------
 
+  *  AubioTemporal [aubio_temporal]
+  *  AubioPitch [aubio_pitch]
+  *  AubioMfcc [aubio_mfcc]
+  *  AubioMelEnergy [aubio_melenergy]
+  *  AubioSpecdesc [aubio_specdesc]
+  *  Yaafe [yaafe]
+  *  Spectrogram [spectrogram_analyzer]
+  *  Waveform [waveform_analyzer]
+  *  VampSimpleHost [vamp_simple_host]
+  *  IRITSpeechEntropy [irit_speech_entropy]
+  *  IRITSpeech4Hz [irit_speech_4hz]
+  *  OnsetDetectionFunction [odf]
+  *  LimsiSad [limsi_sad]
+
+IValueAnalyzer
+---------------
+
   * Level [level]
   * MeanDCShift [mean_dc_shift]
-  * AubioTemporal [aubio_temporal]
-  * AubioPitch [aubio_pitch]
-  * AubioMfcc [aubio_mfcc]
-  * AubioMelEnergy [aubio_melenergy]
-  * AubioSpecdesc [aubio_specdesc]
-  * Yaafe [yaafe]
-  * Spectrogram [spectrogram_analyzer]
-  * Waveform [waveform_analyzer]
-  * VampSimpleHost [vamp_simple_host]
-  * IRITSpeechEntropy [irit_speech_entropy]
-  * IRITSpeech4Hz [irit_speech_4hz]
-  * OnsetDetectionFunction [odf]
 
 News
 =====
 
+0.5.4
+
+ * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
+ * Analyzer : update VAMP plugin example in sandbox
+ * Analyzer : new *experimental* plugin : Limsi Speech Activity Detection Systems (limsi_sad)
+ * Decoder : process any media in streaming mode giving its URL 
+ * Install : fix some setup requirements
+ 
+0.5.3
+
+ * Make Analyzer rendering more generic and easy to implement
+ * Analyzer : implement rendering capability for event and segment + add some more analyzer graphers
+ * Analyzer : refactoring the results rendering method. + Capability to use matplotlib in environnement with no display
+ * Decoder : Add a Live decoder to get data from the soundcard
+ * Decoder : add support for 96kHz sampling rate
+ * Encoder: live AudioSink encoder, encoder that plays the audio stream through the soundcard
+ * Grapher : add a generic Class to display Analyzers through their 'render' method. Add the new grapher file
+ * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
+ * Core : add a condition to catch signal only if a LiveDecoder source is used
+ * Various bugfixes
+ 
 0.5.2
 
  * Add a general launch script "timeside-launch" (see "Shell interface")
@@ -210,16 +248,24 @@ get the results::
  >>> grapher.render(output='waveform.png')
  >>> print 'Level:', analyzer.results
 
-
 API / Documentation
 ====================
 
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
+* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web Interface")
+* Examples:
+
+  - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
+  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
+  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
 
 Install
 =======
+
+The TimeSide engine is intended to work on all Unix / Linux platforms.
+MacOS X and Windows versions will soon be explorated.
 
 TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems.
 
@@ -242,26 +288,17 @@ On Fedora and Red-Hat:
 
  $ sudo pip install timeside
 
-Otherwise, you can also install all dependencies and then use pip::
+On other Linux platforms, you can also install all dependencies and then use pip::
 
  $ sudo pip install timeside
-
 
 Dependencies
 ============
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy, python-matplotlib
+python-scipy, python-matplotlib, python-matplotlib
 
-
-Platforms
-==========
-
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
-The player should work on any modern HTML5 enabled browser.
-Flash is needed for MP3 if the browser doesn't support it.
 
 Shell Interface
 ================
@@ -298,8 +335,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web Interface
-==============
+Web Interface (the player)
+==========================
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -324,6 +361,9 @@ TODO list:
     * embed a light http server to get commands through something like JSON RPC
     * zoom
     * layers
+
+The player should work on any modern HTML5 enabled browser.
+Flash is needed for MP3 if the browser doesn't support it.
 
 Development
 ===========
@@ -363,17 +403,15 @@ Related projects
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
-
-
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2013 Parisson SARL
-* Copyright (c) 2006, 2013 Guillaume Pellerin
-* Copyright (c) 2010, 2013 Paul Brossier
-* Copyright (c) 2013 Thomas Fillon
+* Copyright (c) 2006, 2014 Parisson SARL
+* Copyright (c) 2006, 2014 Guillaume Pellerin
+* Copyright (c) 2010, 2014 Paul Brossier
+* Copyright (c) 2013, 2014 Thomas Fillon
+* Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2006, 2010 Samalyse SARL
-
 
 License
 =======
