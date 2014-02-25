@@ -56,7 +56,7 @@ class LimsiSad(Analyzer):
     For each frame, it computes the log likelihood difference between a speech model and a non speech model. 
     The highest is the estimate, the largest is the probability that the frame corresponds to speech.
     The initialization of the analyzer requires to chose a model between 'etape' and 'maya'
-    'etape' models were obtained on data collected by LIMSI in the framework of ETAPE ANR project
+    'etape' models were trained on data distributed in the framework of the ETAPE campaign (http://www.afcp-parole.org/etape.html)
     'maya' models were obtained on data collected by EREA – Centre Enseignement et Recherche en Ethnologie Amerindienne
     """
     implements(IAnalyzer)
