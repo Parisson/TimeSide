@@ -28,18 +28,29 @@ from timeside.api import IAnalyzer
 from numpy import logical_and,array, hamming, dot, mean, float, arange, nonzero
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
-from pylab import plot,show
+from timeside.analyzer.preprocessors import frames_adapter
 
 class IRITMusicSLN(Analyzer):
     implements(IAnalyzer)
 
-    def __init__(self, blocksize=1024, stepsize=None) :
+    def __init__(self, blocksize=None, stepsize=None) :
         super(IRITMusicSLN, self).__init__();
+        
         self.parents.append(IRITDiverg())
         self.wLen 	= 1.0
         self.wStep 	= 0.1
         self.threshold = 20
-        
+        self.input_blocksize = 0;
+        self.input_stepsize = 0;      
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
+        super(IRITMusicSLN, self).setup(
+            channels, samplerate, blocksize, totalframes)
+        self.input_blocksize = int(self.wLen * samplerate)
+        self.input_stepsize = int(self.wStep * samplerate)            
+
     @staticmethod
     @interfacedoc
     def id():
@@ -57,7 +68,8 @@ class IRITMusicSLN(Analyzer):
 
     def __str__(self):
         return "Music confidence indexes"
-
+        
+    @frames_adapter
     def process(self, frames, eod=False):
 		
 		return frames,eod
@@ -79,9 +91,6 @@ class IRITMusicSLN(Analyzer):
             idx = nonzero(logical_and(segList>(t-w) ,segList<(t+w)))[0]
             segLen[i]= len(idx)
         
-        
-        plot(tLine,segLen)
-        show()
 		# Confidence Index
         conf = array(segLen - self.threshold) / self.threshold
         conf[conf > 1] = 1
