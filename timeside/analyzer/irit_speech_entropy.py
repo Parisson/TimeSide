@@ -40,11 +40,12 @@ class IRITSpeechEntropy(Analyzer):
         super(IRITSpeechEntropy, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.entropyValue = []
-        self.threshold = 0.4
-        self.smoothLen = 5
-        self.modulLen = 2
-        self.wLen 	= 1.0
-        self.wStep 	= 0.1
+        self.threshold 	= 0.4
+        self.smoothLen 	= 5
+        self.modulLen 	= 2
+        self.wLen 	= 0.016
+        self.wStep 	= 0.008
+
         self.input_blocksize = int(self.wLen * samplerate)
         self.input_stepsize = int(self.wStep * samplerate)        
 
@@ -73,8 +74,14 @@ class IRITSpeechEntropy(Analyzer):
 
     def post_process(self):
         entropyValue = array(self.entropyValue)
-        w = self.modulLen * self.samplerate() / self.input_blocksize
+        w = self.modulLen/self.wStep
+	print w,len(entropyValue)
         modulentropy = computeModulation(entropyValue, w, False)
+
+	import pylab
+	pylab.plot(modulentropy)
+	pylab.show()
+
         confEntropy = array(modulentropy - self.threshold) / self.threshold
         confEntropy[confEntropy > 1] = 1
 
@@ -105,11 +112,8 @@ class IRITSpeechEntropy(Analyzer):
         segs.data_object.time = [(float(s[0]) * self.input_blocksize /
                                  self.samplerate())
                                  for s in segList]
-<<<<<<< HEAD
-        segs.data_object.duration = [(float(s[1]-s[0]) * self.input_blocksize /
-=======
+
         segs.data_object.duration = [(float(s[1]-s[0]+1) * self.blocksize() /
->>>>>>> 7c3ccb1c5b87c4639fee32df595cca1991265657
                                      self.samplerate())
                                      for s in segList]
 

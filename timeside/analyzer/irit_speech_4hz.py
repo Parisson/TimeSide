@@ -27,7 +27,7 @@ from timeside.api import IAnalyzer
 from numpy import array, hamming, dot, mean, float
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
-
+from timeside.analyzer.preprocessors import frames_adapter
 
 class IRITSpeech4Hz(Analyzer):
     implements(IAnalyzer)
@@ -66,6 +66,10 @@ class IRITSpeech4Hz(Analyzer):
         self.nbFilters = 30
         self.modulLen = 2.0
         self.melFilter = melFilterBank(self.nbFilters, self.nFFT, samplerate)
+        self.wLen 	= 0.016
+        self.wStep 	= 0.008
+        self.input_blocksize = int(self.wLen * samplerate)
+        self.input_stepsize = int(self.wStep * samplerate)        
 
     @staticmethod
     @interfacedoc
@@ -85,6 +89,7 @@ class IRITSpeech4Hz(Analyzer):
     def __str__(self):
         return "Speech confidences indexes"
 
+    @frames_adapter
     def process(self, frames, eod=False):
         '''
 
@@ -121,9 +126,9 @@ class IRITSpeech4Hz(Analyzer):
         if self.normalizeEnergy:
             energy = energy / mean(energy)
 
+	
         # Energy Modulation
-        frameLenModulation = int(
-            self.modulLen * self.samplerate() / self.blocksize())
+        frameLenModulation = self.modulLen/self.wStep 
         modEnergyValue = computeModulation(energy, frameLenModulation, True)
 
         # Confidence Index
@@ -154,11 +159,9 @@ class IRITSpeech4Hz(Analyzer):
         segs.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
-        segs.data_object.time = [(float(s[0]) * self.blocksize() /
-                                 self.samplerate())
+        segs.data_object.time = [float(s[0]) * self.wStep
                                  for s in segList]
-        segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
-                                     self.samplerate())
+        segs.data_object.duration = [float(s[1]-s[0]) * self.wStep
                                      for s in segList]
 
         self.process_pipe.results.add(segs)
