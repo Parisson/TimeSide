@@ -31,7 +31,7 @@ from timeside.api import IEncoder
 
 
 class OpusEncoder(GstEncoder):
-    """ gstreamer-based mp3 encoder """
+    """ gstreamer-based Opus encoder """
     implements(IEncoder)
 
     @interfacedoc
@@ -82,7 +82,7 @@ class OpusEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def mime_type():
-        return "audio/mpeg"
+        return "audio/ogg"
 
     @interfacedoc
     def set_metadata(self, metadata):
