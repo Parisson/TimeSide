@@ -31,10 +31,15 @@ import h5py
 import h5tools
 
 import os
+import matplotlib
+matplotlib.use('Agg')
 
-if 'DISPLAY' not in os.environ:
-    import matplotlib
-    matplotlib.use('Agg')
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+#if 'DISPLAY' not in os.environ:
+#    import matplotlib
+#    matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 
@@ -624,25 +629,29 @@ class AnalyzerResult(MetadataObject):
     def _render_plot(self, ax):
         return NotImplemented
 
-    def render(self, size=(1024, 256), dpi=80):
-
+    def _render_PIL(self, size=(1024, 256), dpi=80):
+        from ..grapher.core import Image
         image_width, image_height = size
 
         xSize = image_width / dpi
         ySize = image_height / dpi
 
-        fig = plt.figure(figsize=(xSize, ySize), dpi=dpi)
+        fig = Figure(figsize=(xSize, ySize), dpi=dpi)
 
-        ax = plt.Axes(fig, [0, 0, 1, 1])
-        ax.set_frame_on(False)
+        ax = fig.add_axes([0, 0, 1, 1], frame_on=False)
+
         self._render_plot(ax)
 
-#        ax.axis('off')
-       # ax.axis('tight')
         ax.autoscale(axis='x', tight=True)
-        fig.add_axes(ax)
 
-        return fig
+        # Export to PIL image
+        from StringIO import StringIO
+        imgdata = StringIO()
+        canvas = FigureCanvas(fig)
+        canvas.print_png(imgdata, dpi=dpi)
+        imgdata.seek(0)  # rewind the data
+
+        return Image.open(imgdata)
 
     @property
     def data_mode(self):
