@@ -151,6 +151,39 @@ def stack(process_func):
     return wrapper
 
 
+class frames_buffer(object):
+    '''
+    '''
+    def __init__(self, blocksize, channels):
+        self._blocksize = blocksize
+        self._channels = channels
+        self._buffer = numpy.zeros((blocksize, channels), dtype='float32')
+        self._empty = self._blocksize
+
+    def current(self):
+        return self._blocksize - self._empty
+
+    #@profile
+    def append(self, new_buffer):
+        available = new_buffer.shape[0]
+        if available <= self._empty:
+            self._buffer[self.current():self.current()+available] = new_buffer
+            self._empty -= available
+
+            if self._empty == 0:
+                frames = [self._buffer.copy()]
+                self._empty = self._blocksize
+                return frames
+        else:
+            pos = self._empty
+            frames = self.append(new_buffer[:pos])
+            frames.extend(self.append(new_buffer[pos:]))
+            return frames
+        return []
+
+    def flush(self):
+        return self._buffer[:self.current()]
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

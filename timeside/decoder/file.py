@@ -30,7 +30,10 @@ from __future__ import division
 
 from timeside.decoder.core import *
 from timeside.tools.gstutils import MainloopThread
+from timeside.decoder.utils import frames_buffer
 import threading
+
+
 
 class FileDecoder(Decoder):
     """ gstreamer-based decoder """
@@ -77,7 +80,6 @@ class FileDecoder(Decoder):
     def setup(self, channels=None, samplerate=None, blocksize=None):
 
         self.eod = False
-        self.last_buffer = None
 
         if self.from_stack:
             return
@@ -128,7 +130,7 @@ class FileDecoder(Decoder):
         else:
             # Create the pipe with standard Gstreamer uridecodebin
             self.pipe = ''' uridecodebin name=src uri={uri}
-                           ! audioconvert name=audioconvert
+                           ! audioconvert name=audioconvert buffer-size=512
                            ! audioresample
                            ! appsink name=sink sync=False async=True
                            '''.format(uri = self.uri)
@@ -156,6 +158,8 @@ class FileDecoder(Decoder):
             uridecodebin = self.src.get_by_name('internal-uridecodebin')
             uridecodebin.connect("autoplug-continue", self._autoplug_cb)
 
+
+
         self.conv = self.pipeline.get_by_name('audioconvert')
         self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
 
@@ -164,6 +168,7 @@ class FileDecoder(Decoder):
         self.sink.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
         self.sink.set_property("drop", False)
         self.sink.set_property('emit-signals', True)
+
         self.sink.connect("new-buffer", self._on_new_buffer_cb)
 
         self.bus = self.pipeline.get_bus()
@@ -192,6 +197,8 @@ class FileDecoder(Decoder):
                 raise IOError(self.error_msg)
             else:
                 raise IOError('no known audio stream found')
+        self._buffer = frames_buffer(blocksize=self.output_blocksize,
+                                     channels=self.output_channels)
 
     def _autoplug_cb(self, src, arg0, arg1):
         # use the autoplug-continue callback from uridecodebin
@@ -225,6 +232,7 @@ class FileDecoder(Decoder):
             gst.warning("duration query failed")
 
         # We store the caps and length in the proper location
+        print caps.to_string()
         if "audio" in caps.to_string():
             self.input_samplerate = caps[0]["rate"]
             if not self.output_samplerate:
@@ -264,26 +272,21 @@ class FileDecoder(Decoder):
             # msg.parse_tags()
             pass
 
+    #@profile
     def _on_new_buffer_cb(self, sink):
         buf = sink.emit('pull-buffer')
         new_array = gst_buffer_to_numpy_array(buf, self.output_channels)
         #print 'processing new buffer', new_array.shape
-        if self.last_buffer is None:
-            self.last_buffer = new_array
-        else:
-            self.last_buffer = np.concatenate((self.last_buffer, new_array), axis=0)
-        while self.last_buffer.shape[0] >= self.output_blocksize:
-            new_block = self.last_buffer[:self.output_blocksize]
-            self.last_buffer = self.last_buffer[self.output_blocksize:]
-            #print 'queueing', new_block.shape, 'remaining', self.last_buffer.shape
-            self.queue.put([new_block, False])
+        print new_array.shape
+        for frames in self._buffer.append(new_array):
+            self.queue.put([frames, False])
 
     @interfacedoc
     @stack
     def process(self):
         buf = self.queue.get()
         if buf == gst.MESSAGE_EOS:
-            return self.last_buffer, True
+            return self._buffer.flush(), True
         frames, eod = buf
         return frames, eod
 
