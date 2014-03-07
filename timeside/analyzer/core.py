@@ -21,6 +21,7 @@
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
 #   Thomas Fillon <thomas  at parisson.com>
+
 from __future__ import division
 
 from timeside.core import Processor
@@ -31,17 +32,14 @@ import h5py
 import h5tools
 
 import os
-import matplotlib
-matplotlib.use('Agg')
 
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-
-#if 'DISPLAY' not in os.environ:
-#    import matplotlib
-#    matplotlib.use('Agg')
+if 'DISPLAY' not in os.environ:
+    import matplotlib
+    matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 numpy_data_types = [
     #'float128',
@@ -629,6 +627,20 @@ class AnalyzerResult(MetadataObject):
     def _render_plot(self, ax):
         return NotImplemented
 
+    def render(self):
+        '''Render a matplotlib figure from the analyzer result
+
+           Return the figure, use fig.show() to display if neeeded
+        '''
+        # TODO : this may crash if the data array is too large
+        # possible workaround downsampled the data
+        #  and plot center, min, max values
+        # see http://stackoverflow.com/a/8881973
+
+        fig, ax = plt.subplots()
+        self._render_plot(ax)
+        return fig
+
     def _render_PIL(self, size=(1024, 256), dpi=80):
         from ..grapher.core import Image
         image_width, image_height = size
@@ -813,13 +825,13 @@ class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
 class EventValueResult(ValueObject, EventObject, AnalyzerResult):
     pass
 
+
 class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
     pass
 
+
 class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
     def _render_plot(self, ax):
-        import itertools
-        colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         for time, value in (self.time, self.data):
             ax.axvline(time, ymin=0, ymax=value, color='r')
             # TODO : check value shape !!!
@@ -849,7 +861,6 @@ class AnalyzerResultContainer(dict):
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
     '''
-
 
     def __init__(self, analyzer_results=None):
         super(AnalyzerResultContainer, self).__init__()
