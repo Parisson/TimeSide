@@ -1072,7 +1072,7 @@ class Analyzer(Processor):
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
             microsecond=0).isoformat(' ')
-        result.id_metadata.version = timeside.__version__
+        #result.id_metadata.version = timeside.__version__
         result.id_metadata.author = 'TimeSide'
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()

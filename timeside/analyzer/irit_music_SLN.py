@@ -25,9 +25,7 @@ from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.analyzer import IRITDiverg
 from timeside.api import IAnalyzer
-from numpy import logical_and,array, hamming, dot, mean, float, arange, nonzero
-from numpy.fft import rfft
-from scipy.signal import firwin, lfilter
+from numpy import mean, diff, arange
 from timeside.analyzer.preprocessors import frames_adapter
 
 
@@ -40,10 +38,10 @@ class IRITMusicSLN(Analyzer):
         self.parents.append(IRITDiverg())
         self.wLen 	= 1.0
         self.wStep 	= 0.1
-        self.threshold = 20
+        self.threshold = 0.05
         self.input_blocksize = 0;
-        self.input_stepsize = 0;      
-
+        self.input_stepsize = 0;
+        self.maxSegForLength = 7
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
@@ -78,21 +76,19 @@ class IRITMusicSLN(Analyzer):
         '''
 
         '''
+
+        segList = self.process_pipe.results['irit_diverg.segments'].time
         
-        segList = self.process_pipe.results['irit_diverg.segments'].time  
-        w = self.wLen/ 2;
+        w = self.wLen/ 2
         end = segList[-1]
-        tLine =  arange(0,end,self.wStep)
         
-        segLen = array([0]*len(tLine))
+        tLine = arange(w,end-w,self.wStep)
         
-        for i,t in enumerate(tLine):
-            idx = nonzero(logical_and(segList>(t-w) ,segList<(t+w)))[0]
-            segLen[i]= len(idx)
-        
+        #  Les plus petits  ! <> article
+        segLen 	= [mean(diff(getBoundariesInInterval(t-w, t+w, segList))) for t in tLine]
+
 		# Confidence Index
-        conf = array(segLen - self.threshold) / self.threshold
-        conf[conf > 1] = 1
+        conf = [(s - self.threshold) / self.threshold if s < 2*self.threshold else 1 for s in segLen]
 
         segLenRes = self.new_result(data_mode='value', time_mode='framewise')
         segLenRes.id_metadata.id += '.' + 'energy_confidence'
@@ -106,7 +102,7 @@ class IRITMusicSLN(Analyzer):
         convert = {False: 0, True: 1}
         label = {0: 'nonMusic', 1: 'Music'}
 
-        segList = segmentFromValues(segLen > self.threshold)
+        segList = segmentFromValues([s > self.threshold for s in segLen])
         # Hint : Median filtering could imrove smoothness of the result
         # from scipy.signal import medfilt
         # segList = segmentFromValues(medfilt(modEnergyValue > self.threshold, 31))
@@ -123,3 +119,9 @@ class IRITMusicSLN(Analyzer):
 
         self.process_pipe.results.add(segs)
         return
+
+
+def getBoundariesInInterval(start,stop,boundaries) :
+    return [t for t in boundaries if t >= start and t<= stop]
+
+

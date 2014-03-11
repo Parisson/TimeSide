@@ -25,9 +25,7 @@ from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.analyzer import IRITDiverg
 from timeside.api import IAnalyzer
-from numpy import logical_and,array, hamming, dot, mean, float, arange, nonzero
-from numpy.fft import rfft
-from scipy.signal import firwin, lfilter
+from numpy import array, mean, arange, nonzero
 from timeside.analyzer.preprocessors import frames_adapter
 
 
@@ -80,26 +78,19 @@ class IRITMusicSNB(Analyzer):
         '''
         
         segList = self.process_pipe.results['irit_diverg.segments'].time  
-        w = self.wLen/ 2;
+        w = self.wLen/ 2
         end = segList[-1]
-        tLine =  arange(0,end,self.wStep)
+        tLine = arange(0, end, self.wStep)
         
-        segLen = array([0]*len(tLine))
-        
-        for i,t in enumerate(tLine):
-            idx = nonzero(logical_and(segList>(t-w) ,segList<(t+w)))[0]
-            l = [tLine[t1]-tLine[t2] for t1,t2 in zip()]
-            segLen[i]= len(idx)
+        segNB = [ len(getBoundariesInInterval(t-w,t+w,segList)) for t in tLine ]
         
       	# Confidence Index
-        conf = array(segLen - self.threshold) / self.threshold
-        conf[conf > 1] = 1
-
+        conf = [float(v - self.threshold) / float(self.threshold) if v < 2*self.threshold else 1.0 for v in segNB]
         segLenRes = self.new_result(data_mode='value', time_mode='framewise')
         segLenRes.id_metadata.id += '.' + 'energy_confidence'
         segLenRes.id_metadata.name += ' ' + 'Energy Confidence'
 
-        segLenRes.data_object.value = segLen
+        segLenRes.data_object.value = conf
 
         self.process_pipe.results.add(segLenRes)
 
@@ -107,7 +98,7 @@ class IRITMusicSNB(Analyzer):
         convert = {False: 0, True: 1}
         label = {0: 'nonMusic', 1: 'Music'}
 
-        segList = segmentFromValues(segLen > self.threshold)
+        segList = segmentFromValues([c > 0 for c in conf])
         # Hint : Median filtering could imrove smoothness of the result
         # from scipy.signal import medfilt
         # segList = segmentFromValues(medfilt(modEnergyValue > self.threshold, 31))
@@ -124,3 +115,7 @@ class IRITMusicSNB(Analyzer):
 
         self.process_pipe.results.add(segs)
         return
+
+def getBoundariesInInterval(start, stop, boundaries) :
+    return [t for t in boundaries if t >= start and t<= stop]
+
