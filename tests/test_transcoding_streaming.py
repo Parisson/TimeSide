@@ -22,6 +22,7 @@ class TestTranscodingStreaming(unittest.TestCase):
         self.test_duration = True
         self.test_channels = True
         self.filesize_delta = None
+        self.expected_sample_rate = None
 
     def testMp3(self):
         "Test conversion to mp3"
@@ -31,6 +32,11 @@ class TestTranscodingStreaming(unittest.TestCase):
     def testOgg(self):
         "Test conversion to ogg"
         self.encoder_function = VorbisEncoder
+
+    def testOpus(self):
+        "Test conversion to opus"
+        self.encoder_function = OpusEncoder
+        self.expected_sample_rate = 48000
 
     def testWebM(self):
         "Test conversion to webm"
@@ -75,7 +81,9 @@ class TestTranscodingStreaming(unittest.TestCase):
         else:
             self.assertEqual(2, decoder_encoded.channels())  # voaacenc bug ?
 
-        self.assertEqual(decoder.samplerate(),
+        if not self.expected_sample_rate:
+            self.expected_sample_rate = decoder.samplerate()
+        self.assertEqual(self.expected_sample_rate,
                          decoder_encoded.samplerate())
 
         if self.test_duration:

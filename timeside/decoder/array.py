@@ -65,7 +65,7 @@ class ArrayDecoder(Decoder):
         if samples.ndim == 1:
             samples = samples[:, np.newaxis]  # reshape to 2D array
 
-        self.samples = samples  # Create a 2 dimensions array
+        self.samples = samples.astype('float32')  # Create a 2 dimensions array
         self.input_samplerate = samplerate
         self.input_channels = self.samples.shape[1]
 
@@ -135,6 +135,9 @@ class ArrayDecoder(Decoder):
     def metadata(self):
         return None
 
+    @interfacedoc
+    def release(self):
+        self.frames = self.get_frames()
 
 if __name__ == "__main__":
     import doctest

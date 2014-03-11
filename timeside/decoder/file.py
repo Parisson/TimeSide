@@ -300,7 +300,6 @@ class FileDecoder(Decoder):
         if self.stack:
             self.stack = False
             self.from_stack = True
-        pass
 
     ## IDecoder methods
 
