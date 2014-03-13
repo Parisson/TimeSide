@@ -1103,6 +1103,7 @@ class Analyzer(Processor):
         result.audio_metadata.start = self.mediainfo()['start']
         result.audio_metadata.duration = self.mediainfo()['duration']
         result.audio_metadata.is_segment = self.mediainfo()['is_segment']
+        result.audio_metadata.channels = self.channels()
 
         if time_mode == 'framewise':
             result.frame_metadata.samplerate = self.result_samplerate
