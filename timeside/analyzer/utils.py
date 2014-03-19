@@ -21,6 +21,8 @@
 
 import numpy as np
 
+MACHINE_EPSILON = np.finfo(np.float32).eps
+
 def downsample_blocking(frames, hop_s, dtype='float32'):
     # downmixing to one channel
     if len(frames.shape) != 1:
@@ -53,15 +55,12 @@ def computeModulation(serie, wLen, withLog=True):
         modul = np.zeros((sLen,))
         w = int(wLen/2)
 
-        if withLog:
-            machine_epsilon = np.finfo(np.float32).eps
-
         for i in range(w, sLen-w):
 
             d = serie[i-w:i+w]
             if withLog:
                 if not (d > 0).all():
-                    d[d <= 0] = machine_epsilon  # prevent log(0)=inf
+                    d[d <= 0] = MACHINE_EPSILON  # prevent log(0)=inf
                 d = np.log(d)
 
             modul[i] = np.var(d)

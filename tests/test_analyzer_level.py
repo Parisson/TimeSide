@@ -22,7 +22,7 @@ class TestAnalyzerLevel(unittest.TestCase):
         "runs on guitar"
         self.source = os.path.join (os.path.dirname(__file__),  "samples", "guitar.wav")
 
-        max_level_value = -4.258
+        max_level_value = -4.054
         rms_level_value = -21.945
 
         self.expected = {'level.max':max_level_value , 'level.rms':rms_level_value }
