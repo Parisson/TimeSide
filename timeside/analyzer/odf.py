@@ -104,7 +104,9 @@ class OnsetDetectionFunction(Analyzer):
 
         # Summation along the frequency axis
         odf_diff = S_diff.sum(axis=1)
-        odf_diff = odf_diff / np.median(odf_diff)  # Normalize
+        odf_median = np.median(odf_diff)
+        if odf_median:
+            odf_diff = odf_diff / odf_median  # Normalize
 
         odf = self.new_result(data_mode='value', time_mode='framewise')
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
