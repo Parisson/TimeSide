@@ -73,13 +73,13 @@ skip_reasons = {'VampSimpleHost': ('VampSimpleHost bypasses the decoder '
 
 # For each analyzer in TimeSide, test with constant input
 _tests_factory(test_class=TestAnalyzers_withDC,
-               test_doc="test if %s returns NaN",
+               test_doc="Stress test for %s",
                list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
 # For each analyzer in TimeSide, test with null input
 _tests_factory(test_class=TestAnalyzers_with_zeros,
-               test_doc="test if %s returns NaN",
+               test_doc="Stress test for %s",
                list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
