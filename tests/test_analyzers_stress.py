@@ -27,8 +27,12 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
         pipe.run()
         for key, result in pipe.results.items():
             if 'value' in result.data_object.keys():
+                # Test for NaN
                 self.assertFalse(np.any(np.isnan(result.data)),
                                  'NaN in %s data value' % result.name)
+                # Test for Inf
+                self.assertFalse(np.any(np.isinf(result.data)),
+                                 'Inf in %s data value' % result.name)
 
 
 class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
