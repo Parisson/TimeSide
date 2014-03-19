@@ -57,7 +57,7 @@ class Level(Analyzer):
     def process(self, frames, eod=False):
         if frames.size:
             # max_level
-            max_value = frames.max()
+            max_value = np.abs(frames).max()
             if max_value > self.max_value:
                 self.max_value = max_value
             # rms_level
