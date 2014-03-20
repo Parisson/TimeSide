@@ -38,7 +38,13 @@ def load_tests(loader, tests, ignore):
                     onerror=lambda x: None)]
 
     for module in modules_list:
-        tests.addTests(doctest.DocTestSuite(module, test_finder=finder))
+        _tmp = __import__(module, fromlist=['DOCTEST_ALIAS'])
+        try:
+            DOCTEST_ALIAS = _tmp.DOCTEST_ALIAS
+        except AttributeError:
+            DOCTEST_ALIAS = {}
+        tests.addTests(doctest.DocTestSuite(module, extraglobs=DOCTEST_ALIAS,
+                                            test_finder=finder))
 
     return tests
 
