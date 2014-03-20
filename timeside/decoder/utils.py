@@ -231,7 +231,7 @@ def sha1sum_numpy(np_array):
 
 import os
 DOCTEST_ALIAS = {'wav_file': os.path.join(os.path.dirname(__file__),
-                                           '../../tests/samples/guitar.wav')}
+                                          '../../tests/samples/guitar.wav')}
 
 if __name__ == "__main__":
     import doctest
