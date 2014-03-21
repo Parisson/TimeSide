@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import time
 import timeside
 
@@ -13,10 +14,9 @@ metadata = {'TIT2': 'title',  #title2
 #             'COMM': 'blabla',  #comment
              }
 
-decoder  =  timeside.decoder.FileDecoder('/home/momo/dev/telemeta/sandboxes/sandbox_lam/media/items/2012/09/26/LAM_ETUD_01_01_004.wav')
+decoder  =  timeside.decoder.FileDecoder(sys.argv[-1])
 
-encoder  =  timeside.encoder.Mp3Encoder('/tmp/output.mp3')
+encoder  =  timeside.encoder.Mp3Encoder('/tmp/output.mp3', overwrite=True)
 encoder.set_metadata(metadata)
 
 (decoder | encoder).run()
-

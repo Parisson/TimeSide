@@ -88,6 +88,13 @@ class TestEncoding(unittest.TestCase):
                                                  overwrite=self.overwrite,
                                                  video=True)
 
+    def testOpus(self):
+        "Test opus encoding"
+        from timeside.encoder.opus import OpusEncoder
+        self.encoder_function = OpusEncoder
+        self.delta = 0.1
+        self.samplerate = 48000  # 44100 is not supported by opusenc
+
     def tearDown(self):
 
         # Source through ArrayDecoder

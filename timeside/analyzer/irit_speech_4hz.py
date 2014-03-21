@@ -30,9 +30,7 @@ from scipy.signal import firwin, lfilter
 
 
 class IRITSpeech4Hz(Analyzer):
-    implements(IAnalyzer)
-    '''
-    Segmentor based on the analysis of the 4Hz energy modulation.
+    '''Speech Segmentor based on the 4Hz energy modulation analysis.
 
     Properties:
         - energy4hz 		(list) 		: List of the 4Hz energy by frame for the modulation computation
@@ -46,6 +44,8 @@ class IRITSpeech4Hz(Analyzer):
         - melFilter		(numpy array)	: Mel Filter bank
         - modulLen			(float)		: Length (in second) of the modulation computation window
     '''
+
+    implements(IAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -157,7 +157,7 @@ class IRITSpeech4Hz(Analyzer):
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                  self.samplerate())
                                  for s in segList]
-        segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
+        segs.data_object.duration = [(float(s[1]-s[0]+1) * self.blocksize() /
                                      self.samplerate())
                                      for s in segList]
 

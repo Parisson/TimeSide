@@ -170,6 +170,9 @@ class IDecoder(IProcessor):
     def metadata(self):
         """Return the metadata embedded into the encoded stream, if any."""
 
+    def mime_type():
+        """Return the mime type corresponding to this decoded format"""
+
 class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 

@@ -25,14 +25,14 @@ from timeside.api import IEncoder
 from timeside.tools import *
 
 class VorbisEncoder(GstEncoder):
-    """ gstreamer-based vorbis encoder """
+    """ gstreamer-based OGG Vorbis encoder """
     implements(IEncoder)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(VorbisEncoder, self).setup(channels, samplerate, blocksize, totalframes)
         self.pipe = ''' appsrc name=src
-                  ! audioconvert
+                  ! audioconvert ! audioresample
                   ! vorbisenc quality=0.9
                   ! oggmux
                   '''

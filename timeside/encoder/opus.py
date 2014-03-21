@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2010 Paul Brossier <piem@piem.org>
-# Copyright (c) 2010 Guillaume Pellerin <yomguy@parisson.com>
+# Copyright (C) 2007-2014 Parisson SARL
+# Copyright (c) 2006-2014 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2010-2014 Paul Brossier <piem@piem.org>
+# Copyright (c) 2009-2010 Olivier Guilyardi <olivier@samalyse.com>
+# Copyright (c) 2013-2014 Thomas Fillon <thomas@parisson.com>
 
 # This file is part of TimeSide.
 
@@ -18,80 +21,69 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
+# Authors: Guillaume Pellerin <yomguy@parisson.com>
+#          Paul Brossier <piem@piem.org>
+#          Thomas Fillon <thomas@parisson.com>
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
 
-class WebMEncoder(GstEncoder):
-    """ gstreamer-based WebM encoder """
+class OpusEncoder(GstEncoder):
+    """ gstreamer-based Opus encoder """
     implements(IEncoder)
-
-    def __init__(self, output, streaming=False, overwrite=False, video=False):
-        super(WebMEncoder, self).__init__(output, streaming, overwrite)
-        self.video = video
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
-        super(WebMEncoder, self).setup(channels, samplerate, blocksize,
+        super(OpusEncoder, self).setup(channels, samplerate, blocksize,
                                        totalframes)
-        from numpy import ceil
-        framerate = 30
-        num_buffers = ceil(self.mediainfo()['duration'] *
-                           framerate).astype(int)
-        self.pipe = ''
-        if self.video:
-            self.pipe += '''videotestsrc pattern=black num_buffers=%d ! ffmpegcolorspace ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
-                         ''' % num_buffers
-        self.pipe += '''
-              appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
-              webmmux streamable=true name=mux
+
+        self.pipe = '''appsrc name=src
+                  ! audioconvert ! audioresample
+                  ! opusenc audio=true
+                  ! oggmux
                   '''
+
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s
-            t. ! queue ! appsink name=app sync=False
+            t. ! queue! appsink name=app sync=False
             ''' % self.filename
 
         elif self.filename:
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! queue ! appsink name=app sync=False '
+            self.pipe += '! queue ! appsink name=app sync=False'
 
         self.start_pipeline(channels, samplerate)
 
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_webm_enc"
+        return "gst_opus_enc"
 
     @staticmethod
     @interfacedoc
     def description():
-        return "WebM GStreamer based encoder"
+        return "Opus GStreamer based encoder"
 
     @staticmethod
     @interfacedoc
     def format():
-        return "WebM"
+        return "Opus"
 
     @staticmethod
     @interfacedoc
     def file_extension():
-        return "webm"
+        return "opus"
 
     @staticmethod
     @interfacedoc
     def mime_type():
-        return "video/webm"
+        return "audio/ogg"
 
     @interfacedoc
     def set_metadata(self, metadata):
         self.metadata = metadata
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

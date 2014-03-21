@@ -75,6 +75,7 @@
 
 .ts-player .ts-control {
     background: url('img/controlbg.png');
+    font-size: 90%;
 }
 
  /** display (inline-block) and overflow of a is set inside javascript*/

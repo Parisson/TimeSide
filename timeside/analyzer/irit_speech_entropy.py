@@ -29,6 +29,8 @@ from scipy.ndimage.morphology import binary_opening
 
 
 class IRITSpeechEntropy(Analyzer):
+    """Speech Segmentor based on Entropy analysis."""
+
     implements(IAnalyzer)
 
     @interfacedoc
@@ -98,7 +100,7 @@ class IRITSpeechEntropy(Analyzer):
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                  self.samplerate())
                                  for s in segList]
-        segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
+        segs.data_object.duration = [(float(s[1]-s[0]+1) * self.blocksize() /
                                      self.samplerate())
                                      for s in segList]
 
