@@ -296,6 +296,8 @@ On other Linux platforms, you can also install all dependencies and then use pip
 Dependencies
 ============
 
+Note that TimeSide >=0.5 needs Python >=2.7 and is incompatible with previous versions of Python.
+
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
 python-scipy, python-matplotlib, python-matplotlib
