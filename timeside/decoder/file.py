@@ -70,6 +70,8 @@ class FileDecoder(Decoder):
         self.stack = stack
 
         self.uri = get_uri(uri)
+        self._sha1 = get_sha1(uri)
+
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
         self.mimetype = None
@@ -300,7 +302,6 @@ class FileDecoder(Decoder):
         if self.stack:
             self.stack = False
             self.from_stack = True
-        pass
 
     ## IDecoder methods
 

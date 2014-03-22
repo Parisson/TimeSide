@@ -42,7 +42,7 @@ class OpusEncoder(GstEncoder):
 
         self.pipe = '''appsrc name=src
                   ! audioconvert ! audioresample
-                  ! opusenc audio=true
+                  ! opusenc audio=true bitrate=128000
                   ! oggmux
                   '''
 

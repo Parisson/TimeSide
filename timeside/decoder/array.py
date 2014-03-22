@@ -65,14 +65,15 @@ class ArrayDecoder(Decoder):
         if samples.ndim == 1:
             samples = samples[:, np.newaxis]  # reshape to 2D array
 
-        self.samples = samples  # Create a 2 dimensions array
+        self.samples = samples.astype('float32')  # Create a 2 dimensions array
         self.input_samplerate = samplerate
         self.input_channels = self.samples.shape[1]
 
         self.uri = '_'.join(['raw_audio_array',
                             'x'.join([str(dim) for dim in samples.shape]),
                              samples.dtype.type.__name__])
-
+        from .utils import sha1sum_numpy
+        self._sha1 = sha1sum_numpy(self.samples)
         self.frames = self.get_frames()
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
@@ -135,6 +136,9 @@ class ArrayDecoder(Decoder):
     def metadata(self):
         return None
 
+    @interfacedoc
+    def release(self):
+        self.frames = self.get_frames()
 
 if __name__ == "__main__":
     import doctest

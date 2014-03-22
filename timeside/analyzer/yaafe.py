@@ -29,6 +29,7 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from yaafelib import *
 import numpy
+from timeside.analyzer.preprocessors import downmix_to_mono
 
 
 class Yaafe(Analyzer):
@@ -83,14 +84,13 @@ class Yaafe(Analyzer):
     def unit():
         return ''
 
+    @downmix_to_mono
     def process(self, frames, eod=False):
         # do process things...
-        # Downmixing to mono and convert to float64 for compatibility with
-        # Yaafe
-        yaafe_frames = frames.sum(
-            axis=-1, dtype=numpy.float64) / frames.shape[-1]
-        # Reshape for compatibility with Yaafe input format
-        yaafe_frames.shape = (1, yaafe_frames.shape[0])
+        # Convert to float64and reshape
+        # for compatibility with Yaafe engine
+        yaafe_frames = frames.astype(numpy.float64).reshape(1,-1)
+
         # write audio array on 'audio' input
         self.yaafe_engine.writeInput('audio', yaafe_frames)
         # process available data

@@ -21,8 +21,7 @@ def numpy_array_to_gst_buffer(frames, chunk_size, num_samples, sample_rate):
 
 def gst_buffer_to_numpy_array(buf, chan):
     """ gstreamer buffer to numpy array conversion """
-    samples = frombuffer(buf.data, dtype='float32')
-    samples.resize([len(samples)/chan, chan])
+    samples = frombuffer(buf.data, dtype='float32').reshape((-1, chan))
     return samples
 
 

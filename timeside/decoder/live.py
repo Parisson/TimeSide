@@ -85,6 +85,7 @@ class LiveDecoder(Decoder):
         self.uri_duration = None
         self.is_segment = False
         self.input_src = input_src
+        self._sha1 = ''
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
 

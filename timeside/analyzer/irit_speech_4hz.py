@@ -24,7 +24,7 @@ from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
-from numpy import array, hamming, dot, mean, float
+from numpy import array, hamming, dot, mean, float, isnan
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 
@@ -118,7 +118,7 @@ class IRITSpeech4Hz(Analyzer):
         energy = sum(energy)
 
         # Normalization
-        if self.normalizeEnergy:
+        if self.normalizeEnergy and energy.any():
             energy = energy / mean(energy)
 
         # Energy Modulation

@@ -40,8 +40,7 @@ class DisplayAnalyzer(Grapher):
     def __init__(self, width=1024, height=256, bg_color=(0, 0, 0),
                  color_scheme='default'):
         super(DisplayAnalyzer, self).__init__(width, height, bg_color,
-                                               color_scheme)
-        #self.dpi = 72
+                                              color_scheme)
 
         self._result_id = None
         self._id = NotImplemented
@@ -55,21 +54,13 @@ class DisplayAnalyzer(Grapher):
     def post_process(self):
         parent_result = self.process_pipe.results[self._result_id]
 
-        fig = parent_result.render((self.image_width,
-                                    self.image_height), self.dpi)
-
-        # Export to PIL image
-        import StringIO
-        imgdata = StringIO.StringIO()
-        fig.savefig(imgdata, format='png', dpi=self.dpi)
-        imgdata.seek(0)  # rewind the data
-        self.image = Image.open(imgdata)
+        self.image = parent_result._render_PIL((self.image_width,
+                                                self.image_height), self.dpi)
 
     @classmethod
     def create(cls, analyzer, result_id, grapher_id, grapher_name):
 
         class NewGrapher(cls):
-
 
             _id = grapher_id
 
