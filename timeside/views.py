@@ -28,37 +28,7 @@ class IndexView(ListView):
         return super(IndexView, self).dispatch(*args, **kwargs)
 
 
-class ItemGraphView(DetailView):
+class ItemGrapherView(DetailView):
 
+	model = Item
 
-
-    def item_visualize(self, request, public_id, grapher_id, width, height):
-        item = MediaItem.objects.get(public_id=public_id)
-        mime_type = 'image/png'
-        grapher = self.get_grapher(grapher_id)
-        
-        if grapher.id() != grapher_id:
-            raise Http404
-
-        size = width + '_' + height
-        image_file = '.'.join([public_id, grapher_id, size, 'png'])
-
-        # FIX waveform grapher name change
-        old_image_file = '.'.join([public_id, 'waveform', size, 'png'])
-        if 'waveform_centroid' in grapher_id and self.cache_data.exists(old_image_file):
-            image_file = old_image_file
-
-        if not self.cache_data.exists(image_file):
-            source = item.get_source()
-            if source:
-                path = self.cache_data.dir + os.sep + image_file
-                decoder  = timeside.decoder.FileDecoder(source)
-                graph = grapher(width = int(width), height = int(height))
-                (decoder | graph).run()
-                graph.watermark('timeside', opacity=.6, margin=(5,5))
-                f = open(path, 'w')
-                graph.render(output=path)
-                f.close()
-
-        response = HttpResponse(self.cache_data.read_stream_bin(image_file), mimetype=mime_type)
-        return response
