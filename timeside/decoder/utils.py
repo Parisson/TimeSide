@@ -154,10 +154,14 @@ def stack(process_func):
     @functools.wraps(process_func)
     def wrapper(decoder):
         # Processing
-        frames, eod = process_func(decoder)
-        if decoder.stack:
-            decoder.process_pipe.frames_stack.append((frames, eod))
-        return frames, eod
+        if not decoder.from_stack:
+            frames, eod = process_func(decoder)
+            if decoder.stack:
+                decoder.process_pipe.frames_stack.append((frames, eod))
+            return frames, eod
+        else:
+            return decoder._frames_iterator.next()
+
     return wrapper
 
 
