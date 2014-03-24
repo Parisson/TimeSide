@@ -72,7 +72,8 @@ class ArrayDecoder(Decoder):
         self.uri = '_'.join(['raw_audio_array',
                             'x'.join([str(dim) for dim in samples.shape]),
                              samples.dtype.type.__name__])
-
+        from .utils import sha1sum_numpy
+        self._sha1 = sha1sum_numpy(self.samples)
         self.frames = self.get_frames()
 
     def setup(self, channels=None, samplerate=None, blocksize=None):

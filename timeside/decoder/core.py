@@ -32,7 +32,7 @@ from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.api import IDecoder
 from timeside.tools import *
 
-from utils import get_uri, get_media_uri_info, stack
+from utils import get_uri, get_media_uri_info, stack, get_sha1
 
 import Queue
 from gst import _gst as gst
@@ -93,7 +93,12 @@ class Decoder(Processor):
                     duration=self.uri_duration,
                     start=self.uri_start,
                     is_segment=self.is_segment,
-                    samplerate=self.input_samplerate)
+                    samplerate=self.input_samplerate,
+                    sha1=self.sha1)
+
+    @property
+    def sha1(self):
+        return self._sha1
 
     def __del__(self):
         self.release()

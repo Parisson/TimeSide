@@ -241,6 +241,10 @@ class AudioMetadata(MetadataObject):
             Start time of the segment in seconds
         duration : float
             Duration of the segment in seconds
+        is_segment : boolean
+            Is the media a segment of an audio source
+        sha1 : str
+            Sha1 hexadecimal digest of the audio source
         channels : int
             Number of channels
         channelsManagement : str
@@ -257,6 +261,7 @@ class AudioMetadata(MetadataObject):
                                   ('start', 0),
                                   ('duration', None),
                                   ('is_segment', None),
+                                  ('sha1', ''),
                                   ('channels', None),
                                   ('channelsManagement', '')])
 
@@ -858,7 +863,7 @@ class AnalyzerResultContainer(dict):
     >>> a = timeside.analyzer.Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
-    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, channels=None, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
+    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
     '''
 
@@ -1100,9 +1105,11 @@ class Analyzer(Processor):
         result.id_metadata.uuid = self.uuid()
 
         result.audio_metadata.uri = self.mediainfo()['uri']
+        result.audio_metadata.sha1 = self.mediainfo()['sha1']
         result.audio_metadata.start = self.mediainfo()['start']
         result.audio_metadata.duration = self.mediainfo()['duration']
         result.audio_metadata.is_segment = self.mediainfo()['is_segment']
+        result.audio_metadata.channels = self.channels()
 
         if time_mode == 'framewise':
             result.frame_metadata.samplerate = self.result_samplerate

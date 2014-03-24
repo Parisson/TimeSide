@@ -11,8 +11,8 @@ before_install:
  - sudo apt-get install -qq python-numpy python-scipy
 
 # command to install dependencies
-install: 
- - "pip install -r requirements.txt --use-mirrors"
+#install: 
+# - "pip install -r requirements.txt --use-mirrors"
 
 # command to run tests
 script:

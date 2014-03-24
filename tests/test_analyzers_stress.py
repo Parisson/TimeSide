@@ -27,8 +27,12 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
         pipe.run()
         for key, result in pipe.results.items():
             if 'value' in result.data_object.keys():
+                # Test for NaN
                 self.assertFalse(np.any(np.isnan(result.data)),
                                  'NaN in %s data value' % result.name)
+                # Test for Inf
+                self.assertFalse(np.any(np.isinf(result.data)),
+                                 'Inf in %s data value' % result.name)
 
 
 class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
@@ -67,15 +71,15 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 skip_reasons = {'VampSimpleHost': ('VampSimpleHost bypasses the decoder '
                                    'and requires a file input')}
 
-# For each analyzer in TimeSide, define a "NaN test"
+# For each analyzer in TimeSide, test with constant input
 _tests_factory(test_class=TestAnalyzers_withDC,
-               test_doc="test if %s returns NaN",
+               test_doc="Stress test for %s",
                list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
-# For each analyzer in TimeSide, define a "NaN test"
+# For each analyzer in TimeSide, test with null input
 _tests_factory(test_class=TestAnalyzers_with_zeros,
-               test_doc="test if %s returns NaN",
+               test_doc="Stress test for %s",
                list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
