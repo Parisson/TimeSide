@@ -8,126 +8,36 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Item'
-        db.create_table('timeside_items', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=512)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=512, blank=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=1024, blank=True)),
-            ('url', self.gf('django.db.models.fields.URLField')(max_length=1024, blank=True)),
-            ('sha1', self.gf('django.db.models.fields.CharField')(unique=True, max_length=512, blank=True)),
-            ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=256, null=True)),
-        ))
-        db.send_create_signal('timeside', ['Item'])
-
-        # Adding model 'Analyzer'
-        db.create_table('timeside_analyzers', (
+        # Adding model 'Decoder'
+        db.create_table('timeside_decoders', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('pid', self.gf('django.db.models.fields.CharField')(max_length=256)),
             ('parameters', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('version', self.gf('django.db.models.fields.CharField')(max_length=64, blank=True)),
             ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
         ))
-        db.send_create_signal('timeside', ['Analyzer'])
+        db.send_create_signal('timeside', ['Decoder'])
 
-        # Adding model 'Grapher'
-        db.create_table('timeside_graphers', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('pid', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('parameters', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('version', self.gf('django.db.models.fields.CharField')(max_length=64, blank=True)),
-            ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=1024, db_column='file')),
-            ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=256, null=True)),
-            ('height', self.gf('django.db.models.fields.IntegerField')(default=180)),
-            ('width', self.gf('django.db.models.fields.IntegerField')(default=320)),
-        ))
-        db.send_create_signal('timeside', ['Grapher'])
+        # Adding field 'Experience.decoder'
+        db.add_column('timeside_experiences', 'decoder',
+                      self.gf('django.db.models.fields.related.ForeignKey')(related_name='experience', null=True, to=orm['timeside.Decoder']),
+                      keep_default=False)
 
-        # Adding model 'Encoder'
-        db.create_table('timeside_encoders', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('pid', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('parameters', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('version', self.gf('django.db.models.fields.CharField')(max_length=64, blank=True)),
-            ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=1024, db_column='file')),
-            ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=256, null=True)),
-        ))
-        db.send_create_signal('timeside', ['Encoder'])
-
-        # Adding model 'Experience'
-        db.create_table('timeside_experiences', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('item', self.gf('django.db.models.fields.related.ForeignKey')(related_name='experience', null=True, on_delete=models.SET_NULL, to=orm['timeside.Item'])),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=512, blank=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
-            ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='experience', null=True, to=orm['auth.User'])),
-            ('begin_time', self.gf('django.db.models.fields.FloatField')(default=0, blank=True)),
-            ('end_time', self.gf('django.db.models.fields.FloatField')(blank=True)),
-            ('low_frequency', self.gf('django.db.models.fields.FloatField')(blank=True)),
-            ('high_frequency', self.gf('django.db.models.fields.FloatField')(blank=True)),
-            ('hdf5', self.gf('django.db.models.fields.files.FileField')(max_length=1024, db_column='hdf5')),
-        ))
-        db.send_create_signal('timeside', ['Experience'])
-
-        # Adding M2M table for field analyzers on 'Experience'
-        m2m_table_name = db.shorten_name('timeside_experiences_analyzers')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('experience', models.ForeignKey(orm['timeside.experience'], null=False)),
-            ('analyzer', models.ForeignKey(orm['timeside.analyzer'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['experience_id', 'analyzer_id'])
-
-        # Adding M2M table for field graphers on 'Experience'
-        m2m_table_name = db.shorten_name('timeside_experiences_graphers')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('experience', models.ForeignKey(orm['timeside.experience'], null=False)),
-            ('grapher', models.ForeignKey(orm['timeside.grapher'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['experience_id', 'grapher_id'])
-
-        # Adding M2M table for field encoders on 'Experience'
-        m2m_table_name = db.shorten_name('timeside_experiences_encoders')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('experience', models.ForeignKey(orm['timeside.experience'], null=False)),
-            ('encoder', models.ForeignKey(orm['timeside.encoder'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['experience_id', 'encoder_id'])
+        # Adding field 'Experience.json'
+        db.add_column('timeside_experiences', 'json',
+                      self.gf('django.db.models.fields.files.FileField')(default=1, max_length=1024, db_column='json'),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'Item'
-        db.delete_table('timeside_items')
+        # Deleting model 'Decoder'
+        db.delete_table('timeside_decoders')
 
-        # Deleting model 'Analyzer'
-        db.delete_table('timeside_analyzers')
+        # Deleting field 'Experience.decoder'
+        db.delete_column('timeside_experiences', 'decoder_id')
 
-        # Deleting model 'Grapher'
-        db.delete_table('timeside_graphers')
-
-        # Deleting model 'Encoder'
-        db.delete_table('timeside_encoders')
-
-        # Deleting model 'Experience'
-        db.delete_table('timeside_experiences')
-
-        # Removing M2M table for field analyzers on 'Experience'
-        db.delete_table(db.shorten_name('timeside_experiences_analyzers'))
-
-        # Removing M2M table for field graphers on 'Experience'
-        db.delete_table(db.shorten_name('timeside_experiences_graphers'))
-
-        # Removing M2M table for field encoders on 'Experience'
-        db.delete_table(db.shorten_name('timeside_experiences_encoders'))
+        # Deleting field 'Experience.json'
+        db.delete_column('timeside_experiences', 'json')
 
 
     models = {
@@ -175,6 +85,14 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'version': ('django.db.models.fields.CharField', [], {'max_length': '64', 'blank': 'True'})
         },
+        'timeside.decoder': {
+            'Meta': {'object_name': 'Decoder', 'db_table': "'timeside_decoders'"},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'parameters': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'pid': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
+            'status': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
+            'version': ('django.db.models.fields.CharField', [], {'max_length': '64', 'blank': 'True'})
+        },
         'timeside.encoder': {
             'Meta': {'object_name': 'Encoder', 'db_table': "'timeside_encoders'"},
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '1024', 'db_column': "'file'"}),
@@ -192,6 +110,7 @@ class Migration(SchemaMigration):
             'begin_time': ('django.db.models.fields.FloatField', [], {'default': '0', 'blank': 'True'}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'decoder': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'experience'", 'null': 'True', 'to': "orm['timeside.Decoder']"}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'encoders': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'experience'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['timeside.Encoder']"}),
             'end_time': ('django.db.models.fields.FloatField', [], {'blank': 'True'}),
@@ -200,6 +119,7 @@ class Migration(SchemaMigration):
             'high_frequency': ('django.db.models.fields.FloatField', [], {'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'item': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'experience'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['timeside.Item']"}),
+            'json': ('django.db.models.fields.files.FileField', [], {'max_length': '1024', 'db_column': "'json'"}),
             'low_frequency': ('django.db.models.fields.FloatField', [], {'blank': 'True'}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),

@@ -173,6 +173,7 @@ class IDecoder(IProcessor):
     def mime_type():
         """Return the mime type corresponding to this decoded format"""
 
+
 class IGrapher(IProcessor):
     """Media item visualizer driver interface"""
 
