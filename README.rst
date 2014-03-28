@@ -382,7 +382,7 @@ For versions >=0.5 on Debian Stable 7.0 Wheezy:
  $ git clone https://github.com/yomguy/TimeSide.git
  $ cd TimeSide
  $ git checkout dev
- $ export PYTHONPATH=$PYTHONPATH:`pwd`
+ $ sudo pip install -e .
  $ python tests/run_all_tests
 
 Sponsors and Partners

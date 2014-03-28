@@ -36,6 +36,8 @@ setup(
         'pyyaml',
         'simplejson',
         'scipy',
+        'django',
+        'jsonfield',
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',

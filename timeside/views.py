@@ -6,11 +6,15 @@ from django.views.generic import *
 from timeside.models import *
 
 
-decoders = timeside.core.processors(timeside.api.IDecoder)
-analyzers = timeside.core.processors(timeside.api.IAnalyzer)
-graphers = timeside.core.processors(timeside.api.IGrapher)
-encoders = timeside.core.processors(timeside.api.IEncoder)
-value_analyzers = timeside.core.processors(timeside.api.IValueAnalyzer)
+def stream_from_file(__file):
+    chunk_size = 0x10000
+    f = open(__file, 'r')
+    while True:
+        __chunk = f.read(chunk_size)
+        if not len(__chunk):
+            f.close()
+            break
+        yield __chunk
 
 
 class IndexView(ListView):
@@ -31,4 +35,32 @@ class IndexView(ListView):
 class ItemGrapherView(DetailView):
 
 	model = Item
+	mime_type = 'image/png'
+	
 
+class ItemJsonAnalyzerView(DetailView):
+
+	model = Item
+
+    def results(self):
+    	item = self.get_object()
+    	experience = Experience.objects.get(id=experience_id)
+        results = AnalyzerResult()
+        return results.from_hdf5(self.hdf5).to_json()
+        
+    def get_context_data(self, **kwargs):
+        context = super(ItemJsonAnalyzerView, self).get_context_data(**kwargs)
+        item = self.get_object()
+        context['experiences'] = item.experiences.all().filter(author=self.request.user)
+        return context
+
+    def render_to_response(self, context):
+        mimetype = mimetypes.guess_type(document.file.path)[0]
+        extension = mimetypes.guess_extension(mimetype)
+        response = HttpResponse(results, mimetype=mimetype)
+        response['Content-Disposition'] = "attachment; filename=%s%s" % \
+                                             (document.title.encode('utf8'), extension)
+        return response
+
+    @jsonrpc_method('timeside.stop_conference'):
+    def stop(request, public_id):
