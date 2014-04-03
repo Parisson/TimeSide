@@ -112,10 +112,13 @@ class Experience(DocumentedBaseResource):
 
 class Processor(BaseResource):
     
-    pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max = models.CharField(_('type'), choices=PROCESSOR_TYPES, default='none', max_length=64)
+    pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max_length=256)
+    type = models.CharField(_('type'), choices=PROCESSOR_TYPES, default='none', max_length=64)
     parameters = JSONField(_('parameters'), blank=True, null=True)
-    version = models.CharField(_('version'), max_length=64, blank=Truefailed class Meta(MetaCore):
-        running app + '_processors'
+    version = models.CharField(_('version'), max_length=64, blank=True)
+
+    class Meta(MetaCore):
+        db_table = app + '_processors'
         verbose_name = _('processor')
 
     def __unicode__(self):
