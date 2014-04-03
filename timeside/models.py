@@ -174,7 +174,7 @@ class Task(models.Model):
                 item.hdf5 =  path + item.uuid + '.hdf5'
             pipe = FileDecoder(item.file)
             proc_dict = {}
-            for processor in self.preset.processors.all():
+            for processor in self.experience.processors.all():
                 proc = get_processor(processor.id)
                 #TODO: add parameters
                 proc_dict[processor] = proc
