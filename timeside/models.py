@@ -15,12 +15,12 @@ app = 'timeside'
 
 processors = timeside.core.processors(timeside.api.IProcessor)
 
-processors_pids = [(processor.id(), processor.id())  for processor in processors]
+PROCESSOR_PIDS = [(processor.id(), processor.id())  for processor in processors]
 
-PROCESSOR_TYPES = (('none', _('none')), ('decoder', _('decoder')), ('analyzer', _('analyzer')),
+PROCESSOR_TYPES = (('decoder', _('decoder')), ('analyzer', _('analyzer')),
                    ('grapher', _('grapher')), ('encoder', _('encoder')))
 
-STATUS = ((0, _('broken')), (1, _('pending')), (2, _('processing')),
+STATUS = ((0, _('failed')), (1, _('pending')), (2, _('running')),
                          (3, _('done')), (4, _('ready')))
 
 def get_mime_type(path):
@@ -112,13 +112,10 @@ class Experience(DocumentedBaseResource):
 
 class Processor(BaseResource):
     
-    pid = models.CharField(_('pid'), choices=processors_pids, max_length=256)
-    type = models.CharField(_('type'), choices=PROCESSOR_TYPES, default='none', max_length=64)
+    pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max = models.CharField(_('type'), choices=PROCESSOR_TYPES, default='none', max_length=64)
     parameters = JSONField(_('parameters'), blank=True, null=True)
-    version = models.CharField(_('version'), max_length=64, blank=True)
-
-    class Meta(MetaCore):
-        db_table = app + '_processors'
+    version = models.CharField(_('version'), max_length=64, blank=Truefailed class Meta(MetaCore):
+        running app + '_processors'
         verbose_name = _('processor')
 
     def __unicode__(self):
