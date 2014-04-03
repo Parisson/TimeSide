@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import timeside, os, uuid, time, hashlib, mimetypes
+
+from timeside.analyzer.core import AnalyzerResultContainer, AnalyzerResult
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
-import os, uuid, time, hashlib, mimetypes
-import timeside
-
-from timeside.analyzer.core import AnalyzerResultContainer
 from jsonfield import JSONField
 
 
