@@ -49,9 +49,9 @@ class BaseResource(models.Model):
         abstract = True
     
     def save(self, **kwargs):
-        super(BaseResource, self).save(**kwargs)
         if not self.uuid:
             self.uuid = uuid.uuid4()
+        super(BaseResource, self).save(**kwargs)
 
 
 class DocumentedBaseResource(BaseResource):
@@ -91,11 +91,11 @@ class Item(DocumentedBaseResource):
         verbose_name = _('item')
 
     def save(self, **kwargs):
-        super(Item, self).save(**kwargs)
         if self.file:
             self.mime_type = get_mime_type(self.file.path)
         if not self.sha1:
             pass
+        super(Item, self).save(**kwargs)
 
     def results(self):
         return [result for result in self.results.all()]
@@ -126,9 +126,9 @@ class Processor(BaseResource):
         return '_'.join([self.type, self.pid, str(self.id)])
     
     def save(self, **kwargs):
-        super(Processor, self).save(**kwargs)
         if not self.version:
-            self.version = timeside.__version__    
+            self.version = timeside.__version__
+        super(Processor, self).save(**kwargs)
 
 
 class Result(BaseResource):
@@ -149,9 +149,9 @@ class Result(BaseResource):
         return '_'.join([self.item.title, unicode(self.processor)])
 
     def save(self, **kwargs):
-        super(Result, self).save(**kwargs)
         if self.output:
-            self.output_mime_type = get_mime_type(self.output.path)    
+            self.output_mime_type = get_mime_type(self.output.path)
+        super(Result, self).save(**kwargs)
 
 
 class Task(models.Model):
