@@ -51,16 +51,32 @@ class Collection(Model):
         verbose_name = _('collections')
 
 
-class Item(Model):
+class Media(models.Model):
 
-    code = CharField(_('code'), unique=True, max_length=512)
     title = CharField(_('title'), blank=True, max_length=512)
-    description = TextField(_('description'), blank=True)    
+    description = TextField(_('description'), blank=True)
     file = FileField(_('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
     url = URLField(_('URL'), blank=True, max_length=1024)
     sha1 = CharField(_('sha1'), unique=True, blank=True, max_length=512)
     mime_type = CharField(_('mime type'), null=True, max_length=256)
-    experiences = ManyToManyField('Experience', related_name="items", verbose_name=_('experiences'), blank=True, null=True)
+    
+    class Meta:
+        verbose_name = _('Media')
+        verbose_name_plural = _('Medias')
+
+    def __unicode__(self):
+        pass
+    )
+
+class Item(Model):
+
+    code = CharField(_('code'), unique=True, max_length=512)
+    title = CharField(_('title'), blank=True, max_length=512)
+    description = TextField(_('description'), blank=True)        
+    results = OneToManyField('Result', related_name="item", verbose_name=_('results'), blank=True, null=True)
+    hdf5 = FileField(_('file'), upload_to='cache/%Y/%m/%d', db_column="file", max_length=1024)
+    lock = BooleanField(default=False)
+
 
     class Meta(MetaCore):
         db_table = app + '_items'
@@ -74,6 +90,9 @@ class Item(Model):
         super(Item, self).save(**kwargs)
         if self.file:
             self.mime_type = get_mime_type(self.file.path)
+
+    def results(self):
+        return [result for self.experiences.all()
 
 
 class Experience(Model):
@@ -97,8 +116,11 @@ class Experience(Model):
             self.uuid = uuid.uuid4()
 
     def run(self, collection):        
-        for item in collections.item.all():
+        for item in collection.item.all():
             item.experiences.add(self)
+            path = settings.MEDIA_ROOT + 'results' + os.sep + item.code + os.sep
+            item.hdf5 =  path + item.code + '.hdf5'
+
             pipe = FileDecoder(item.file)
             proc_dict = {}
             for processor in self.processors:
@@ -106,12 +128,30 @@ class Experience(Model):
                 #TODO: add parameters
                 proc_dict[processor] = proc
                 pipe = pipe | proc
-            pipe.run()
+            
+            while item.lock:
+                time.sleep(30)
+    
+            # pipe.run(item.hdf5)
+            pipe.results.to_hdf5(item.hdf5)
+
             for processor in proc_dict.keys():
-                processor.file = settings.MEDIA_ROOT + processor.uuid + '.' + processor.mime_type.split('/')[1]
-                proc_dict[processor].results.to_hdf5(processor.file)
-                processor.save()
+                proc = proc_dict[processor]
+                
+                results = Result.objects.filter(processor=processor, uuid=proc.UUID)
+
+                if not results:
+                    result = Result(processor=processor, uuid=proc.UUID)
+                    item.results.add(result)
+                else:
+                    result = results[0]
+
+                result.hdf5 = path + item.code + '_' + proc.UUID + '.hdf5'
+                proc.results.to_hdf5(result.hdf5)
+                result.save()
+        del proc
         del pipe
+
 
 
 class Processor(Model):
@@ -120,12 +160,8 @@ class Processor(Model):
     type = CharField(_('type'), choices=PROCESSOR_TYPES, default='none', max_length=64)
     parameters = JSONField(_('parameters'), blank=True)
     version = CharField(_('version'), max_length=64, blank=True)
-    uuid = CharField(_('uuid'), max_length=512)
     status = IntegerField(_('status'), choices=STATUS, default=1)
-    file = FileField(_('file'), upload_to='cache/%Y/%m/%d', db_column="file", max_length=1024)
-    mime_type = CharField(_('mime type'), null=True, max_length=256)
-    results = JSONField(_('results'), blank=True)
-
+    
     class Meta(MetaCore):
         db_table = app + '_processors'
         verbose_name = _('processor')
@@ -138,4 +174,23 @@ class Processor(Model):
             self.mime_type = get_mime_type(self.file.path)
         if not self.uuid:
             self.uuid = uuid.uuid4()
+
+
+class Result(models.Model):
+
+    processor = ForeignKey('Processor', related_name="experience", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+    uuid = CharField(_('uuid'), max_length=512)
+    output = FileField(_('file'), upload_to='cache/%Y/%m/%d', db_column="file", max_length=1024)
+    mime_type = CharField(_('mime type'), null=True, max_length=256)
+    json = JSONField(_('results'), blank=True)
+    hdf5 = FileField(_('file'), upload_to='cache/%Y/%m/%d', db_column="file", max_length=1024)
+
+    class Meta:
+        verbose_name = _('Result')
+        verbose_name_plural = _('Results')
+
+    def __unicode__(self):
+        pass
+
+
 
