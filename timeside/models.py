@@ -35,6 +35,7 @@ def get_processor(pid):
 
 
 class MetaCore:
+
     app_label = app
 
 
@@ -44,7 +45,7 @@ class BaseResource(models.Model):
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
     uuid = models.CharField(_('uuid'), blank=True, max_length=512, )
 
-    class Meta:
+    class Meta(MetaCore):
         abstract = True
     
     def save(self, **kwargs):
@@ -61,7 +62,7 @@ class DocumentedBaseResource(BaseResource):
     def __unicode__(self):
         return self.title    
     
-    class Meta:
+    class Meta(MetaCore):
         abstract = True
     
 
@@ -139,7 +140,7 @@ class Result(BaseResource):
     output = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     output_mime_type = models.CharField(_('Output mime type'), blank=True, max_length=256)
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app + '_results'
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
@@ -159,7 +160,7 @@ class Task(models.Model):
     items = models.ManyToManyField('Item', related_name="task", verbose_name=_('items'), blank=True, null=True)
     status = models.IntegerField(_('status'), choices=STATUS, default=1)
     
-    class Meta:
+    class Meta(MetaCore):
         db_table = app + '_tasks'
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
