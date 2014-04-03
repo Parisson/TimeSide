@@ -24,43 +24,31 @@ class IndexView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        item = self.get_object()
+        context['experiences'] = item.experiences.all().filter(author=self.request.user)
         return context
 
-    #@method_decorator(permission_required('is_superuser'))
-    #@method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(IndexView, self).dispatch(*args, **kwargs)
 
 
 class ItemGrapherView(DetailView):
 
-	model = Item
-	mime_type = 'image/png'
-	
+    model = Item
+    mime_type = 'image/png'
 
-class ItemJsonAnalyzerView(DetailView):
 
-	model = Item
+class ItemAnalyzerView(DetailView):
+    
+    model = Item
 
     def results(self):
-    	item = self.get_object()
-    	experience = Experience.objects.get(id=experience_id)
+        item = self.get_object()
         results = AnalyzerResult()
         return results.from_hdf5(self.hdf5).to_json()
-        
+    
     def get_context_data(self, **kwargs):
         context = super(ItemJsonAnalyzerView, self).get_context_data(**kwargs)
-        item = self.get_object()
-        context['experiences'] = item.experiences.all().filter(author=self.request.user)
         return context
-
-    def render_to_response(self, context):
-        mimetype = mimetypes.guess_type(document.file.path)[0]
-        extension = mimetypes.guess_extension(mimetype)
-        response = HttpResponse(results, mimetype=mimetype)
-        response['Content-Disposition'] = "attachment; filename=%s%s" % \
-                                             (document.title.encode('utf8'), extension)
-        return response
-
-    @jsonrpc_method('timeside.stop_conference'):
-    def stop(request, public_id):
+    
+    
