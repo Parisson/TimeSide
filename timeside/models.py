@@ -3,6 +3,7 @@
 import timeside, os, uuid, time, hashlib, mimetypes
 
 from timeside.analyzer.core import AnalyzerResultContainer, AnalyzerResult
+from timeside.decoder.utils import sha1sum_file
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -92,9 +93,10 @@ class Item(DocumentedBaseResource):
 
     def save(self, **kwargs):
         if self.file:
-            self.mime_type = get_mime_type(self.file.path)
-        if not self.sha1:
-            pass
+            if not self.mime_type:
+                self.mime_type = get_mime_type(self.file.path)
+            if not self.sha1:
+                self.sha1 = sha1sum_file(self.file)
         super(Item, self).save(**kwargs)
 
     def results(self):
