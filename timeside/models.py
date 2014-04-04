@@ -55,7 +55,7 @@ class BaseResource(models.Model):
         super(BaseResource, self).save(**kwargs)
 
 
-class DocumentedBaseResource(BaseResource):
+class DocBaseResource(BaseResource):
 
     title = models.CharField(_('title'), blank=True, max_length=512)
     description = models.TextField(_('description'), blank=True)
@@ -67,7 +67,7 @@ class DocumentedBaseResource(BaseResource):
         abstract = True
     
 
-class Collection(DocumentedBaseResource):
+class Collection(DocBaseResource):
 
     items = models.ManyToManyField('Item', related_name="collections", verbose_name=_('items'), blank=True, null=True)
 
@@ -77,7 +77,7 @@ class Collection(DocumentedBaseResource):
         verbose_name = _('collection')
 
 
-class Item(DocumentedBaseResource):
+class Item(DocBaseResource):
 
     file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
     url = models.URLField(_('URL'), blank=True, max_length=1024)
@@ -103,7 +103,7 @@ class Item(DocumentedBaseResource):
         return [result for result in self.results.all()]
 
 
-class Experience(DocumentedBaseResource):
+class Experience(DocBaseResource):
 
     processors = models.ManyToManyField('Processor', related_name="experiences", verbose_name=_('processors'), blank=True, null=True)
     author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -131,7 +131,7 @@ class Processor(BaseResource):
         if not self.version:
             self.version = timeside.__version__
         super(Processor, self).save(**kwargs)
-
+        
 
 class Result(BaseResource):
 
