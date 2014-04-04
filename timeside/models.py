@@ -174,7 +174,7 @@ class Task(models.Model):
 
     def run(self):
         for item in self.items:
-            pipe = FileDecoder(item.file)
+            pipe = timeside.decoder.FileDecoder(item.file)
             proc_dict = {}
             for processor in self.experience.processors.all():
                 proc = get_processor(processor.id)
