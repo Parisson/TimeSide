@@ -168,6 +168,10 @@ class Task(models.Model):
     def __unicode__(self):
         return '_'.join([unicode(self.experience), unicode(self.id)])
 
+    def status_setter(self, status):
+        self.status = status
+        self.save()
+
     def run(self):
         for item in self.items:
             path = settings.MEDIA_ROOT + 'results' + os.sep + item.uuid + os.sep
@@ -183,19 +187,25 @@ class Task(models.Model):
             while item.lock:
                 time.sleep(30)
     
-            pipe.run()
-            pipe.results.to_hdf5(item.hdf5)
-
-            for processor in proc_dict.keys():
-                proc = proc_dict[processor]
-                results = Result.objects.filter(processor=processor, uuid=proc.UUID)
-                if not results:
-                    result = Result(processor=processor, uuid=proc.UUID)
-                    item.results.add(result)
-                else:
-                    result = results[0]
-                result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
-                proc.results.to_hdf5(result.hdf5)
-                result.save()
+            try:
+                self.status_setter(2)
+                pipe.run()
+                pipe.results.to_hdf5(item.hdf5)
+            except:
+                self.status_setter(0)
+        
+            if sef.status == 2:    
+                for processor in proc_dict.keys():
+                    proc = proc_dict[processor]
+                    results = Result.objects.filter(processor=processor, uuid=proc.UUID)
+                    if not results:
+                        result = Result(processor=processor, uuid=proc.UUID, item=item)
+                    else:
+                        result = results[0]
+                    result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
+                    proc.results.to_hdf5(result.hdf5)
+                    result.save()
+        
         del proc
         del pipe
+        self.status_setter(3)
