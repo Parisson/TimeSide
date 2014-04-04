@@ -175,6 +175,8 @@ class Task(models.Model):
         self.save()
 
     def run(self):
+        self.status_setter(2)
+
         for item in self.items:
             pipe = timeside.decoder.FileDecoder(item.file)
             proc_dict = {}
@@ -193,13 +195,9 @@ class Task(models.Model):
                 item.save()
             
             try:
-                self.status_setter(2)
                 pipe.run()
                 pipe.results.to_hdf5(item.hdf5)
-            except:
-                self.status_setter(0)
-        
-            if sef.status == 2:    
+                
                 for processor in proc_dict.keys():
                     proc = proc_dict[processor]
                     results = Result.objects.filter(processor=processor, uuid=proc.UUID)
@@ -210,7 +208,11 @@ class Task(models.Model):
                     result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
                     proc.results.to_hdf5(result.hdf5)
                     result.save()
+            except:
+                self.status_setter(0)
+                break
         
+        self.status_setter(3)
         del proc
         del pipe
-        self.status_setter(3)
+
