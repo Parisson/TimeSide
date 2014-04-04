@@ -174,9 +174,6 @@ class Task(models.Model):
 
     def run(self):
         for item in self.items:
-            path = settings.MEDIA_ROOT + 'results' + os.sep + item.uuid + os.sep
-            if not item.hdf5:
-                item.hdf5 =  path + item.uuid + '.hdf5'
             pipe = FileDecoder(item.file)
             proc_dict = {}
             for processor in self.experience.processors.all():
@@ -184,9 +181,15 @@ class Task(models.Model):
                 #TODO: add parameters
                 proc_dict[processor] = proc
                 pipe = pipe | proc
+
             while item.lock:
                 time.sleep(30)
-    
+            
+            path = settings.MEDIA_ROOT + 'results' + os.sep + item.uuid + os.sep
+            if not item.hdf5:
+                item.hdf5 =  path + item.uuid + '.hdf5'
+                item.save()
+            
             try:
                 self.status_setter(2)
                 pipe.run()
