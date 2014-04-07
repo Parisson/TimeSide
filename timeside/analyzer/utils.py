@@ -45,7 +45,7 @@ def computeModulation(serie, wLen, withLog=True):
         Args :
             - serie       : list or numpy array containing the serie.
             - wLen        : Length of the analyzis window in samples.
-            - withLog     : Whether compute the var() or log(var()) .
+            - withLog     : Whether compute the var() or var(log()) .
 
         Returns :
             - modul       : Modulation of the serie.
