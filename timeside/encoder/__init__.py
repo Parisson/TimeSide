@@ -7,3 +7,4 @@ from flac import FlacEncoder
 from m4a import AacEncoder
 from webm import WebMEncoder
 from audiosink import AudioSink
+from opus import OpusEncoder

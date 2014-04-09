@@ -336,7 +336,9 @@ class ProcessPipe(object):
         for item in items:
             item.post_process()
 
-       # Release processors
+        # Release source
+        source.release()
+        # Release processors
         for item in items:
             item.release()
             self.processors.remove(item)

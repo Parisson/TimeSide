@@ -53,16 +53,16 @@ class LimsiSad(Analyzer):
     """
     Limsi Speech Activity Detection Systems
     LimsiSad performs frame level speech activity detection based on GMM models
-    For each frame, it computes the log likelihood difference between a speech model and a non speech model. 
+    For each frame, it computes the log likelihood difference between a speech model and a non speech model.
     The highest is the estimate, the largest is the probability that the frame corresponds to speech.
     The initialization of the analyzer requires to chose a model between 'etape' and 'maya'
-    'etape' models were obtained on data collected by LIMSI in the framework of ETAPE ANR project
+    'etape' models were trained on data distributed in the framework of the ETAPE campaign (http://www.afcp-parole.org/etape.html)
     'maya' models were obtained on data collected by EREA – Centre Enseignement et Recherche en Ethnologie Amerindienne
     """
     implements(IAnalyzer)
-    
 
-    def __init__(self, sad_model):
+
+    def __init__(self, sad_model='etape'):
         """
         Parameters:
         ----------
@@ -79,7 +79,7 @@ class LimsiSad(Analyzer):
         spec.addFeature('mfccd1: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=1')
         spec.addFeature('mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2')
         spec.addFeature('zcr: ZCR blockSize=1024 stepSize=256')
-        parent_analyzer = Yaafe(spec)        
+        parent_analyzer = Yaafe(spec)
         self.parents.append(parent_analyzer)
 
         # informative parameters
