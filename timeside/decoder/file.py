@@ -82,6 +82,7 @@ class FileDecoder(Decoder):
         self.last_buffer = None
 
         if self.from_stack:
+            self._frames_iterator = iter(self.process_pipe.frames_stack)
             return
 
         if self.stack:

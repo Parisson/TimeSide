@@ -857,8 +857,8 @@ class AnalyzerResultContainer(dict):
 
     '''
     >>> import timeside
-    >>> wavFile = 'http://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'
-    >>> d = timeside.decoder.FileDecoder(wavFile)
+    >>> wav_file = 'tests/samples/sweep.mp3' # doctest: +SKIP
+    >>> d = timeside.decoder.FileDecoder(wav_file)
 
     >>> a = timeside.analyzer.Analyzer()
     >>> (d|a).run()
@@ -1118,7 +1118,11 @@ class Analyzer(Processor):
 
         return result
 
+import os
+DOCTEST_ALIAS = {'wav_file': os.path.join(os.path.dirname(__file__),
+                                          '../../tests/samples/sweep.mp3')}
+
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
+    doctest.testmod(extraglobs=DOCTEST_ALIAS)
