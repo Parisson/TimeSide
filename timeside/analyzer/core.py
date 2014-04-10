@@ -54,8 +54,9 @@ numpy_data_types = [
     'uint32',
     'uint16',
     'uint8',
+    #'unicode_', Strings should be handled through label_metadata
+    #'string_',
     'object_',
-    'string_',
     'longlong',
     #'timedelta64',
     #'datetime64',
