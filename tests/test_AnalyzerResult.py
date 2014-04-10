@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 
-from unit_timeside import *
-from timeside.analyzer.core import *
+from unit_timeside import unittest, TestRunner
+from timeside.analyzer.core import AnalyzerResult, AnalyzerResultContainer
 from timeside.__init__ import __version__
-from numpy import ones, array
+import numpy as np
 from math import pi
 
 
@@ -14,37 +14,27 @@ class TestAnalyzerResult(unittest.TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = AnalyzerResult.factory(data_mode='value', time_mode='framewise')
+        self.result = AnalyzerResult.factory(data_mode='value',
+                                             time_mode='framewise')
 
         from datetime import datetime
-        self.result.id_metadata = dict(date=datetime.now().replace(microsecond=0).isoformat(' '),
+        res_date = datetime.now().replace(microsecond=0).isoformat(' ')
+        self.result.id_metadata = dict(date=res_date,
                                        version=__version__,
                                        author='TimeSide',
                                        id="foo_bar",
                                        name="Foo bar",
                                        unit="foo")
         self.result.audio_metadata = dict(uri='Foo.wav',
-                                         start=0, duration=20,
-                                         channels=2)
+                                          start=0, duration=20,
+                                          channels=2)
 
     def tearDown(self):
         pass
 
-#good_numpy_data_types = [
-#    'float64',
-#    'float32',
-##    'float16',
-#    'int64',
-#    'int16',
-#    'int32',
-#    'int8',
-#    'uint16',
-#    'uint32',
-#    'uint64',
-#    'uint8',
-#]
-from timeside.analyzer.core import numpy_data_types as good_numpy_data_types
-
+# Get good and bad types for AnalyzerResult.data_object.data.value
+from timeside.analyzer.core import numpy_data_types as good_dtypes
+good_numpy_data_types = [str(dtype)[13:-2] for dtype in good_dtypes]
 bad_numpy_data_types = [
     # not understood by json or yaml
     'float128',
@@ -62,26 +52,30 @@ bad_numpy_data_types = [
     ]
 
 
-def create_good_method_func(numpy_data_type):
-    def method(self):
-        "numpy %s" % str(numpy_data_type)[7:-1]
-        self.result.data_object.value = numpy_data_type(pi)
-    return method
-
-
-def create_bad_method_func(numpy_data_type):
-    def method(self):
-        "numpy %s" % numpy_data_type
-        try:
-            data = getattr(numpy, numpy_data_type)(pi)
-        except ValueError:
-            data = getattr(numpy, numpy_data_type)()
-        self.assertRaises(TypeError, self.result.data_object.__setattr__, 'value', data)
-    return method
-
 class TestAnalyzerResultBadType(TestAnalyzerResult):
     """ test AnalyzerResult on bad data type"""
-    pass
+
+    def method(self, numpy_data_type):
+        try:
+            data = getattr(np, numpy_data_type)(pi)
+        except ValueError:
+            data = getattr(np, numpy_data_type)()
+
+        self.assertRaises(TypeError,
+                          self.result.data_object.__setattr__,
+                          'value', data)
+
+    @classmethod
+    def add_method(cls, numpy_data_type):
+        test_method = lambda self: self.method(numpy_data_type)
+        test_method.__name__ = 'testOnNumpy_%s' % numpy_data_type
+        test_method.__doc__ = 'gasps on numpy %s' % numpy_data_type
+        setattr(cls, test_method.__name__, test_method)
+
+# Add tests for each type in bad_numpy_data_types
+for numpy_data_type in bad_numpy_data_types:
+    TestAnalyzerResultBadType.add_method(numpy_data_type)
+
 
 class TestAnalyzerResultGoodType(TestAnalyzerResult):
     """ test AnalyzerResult on good data type"""
@@ -113,20 +107,20 @@ class TestAnalyzerResultGoodType(TestAnalyzerResult):
 
     def testOnNumpyVectorOfFloat(self):
         "numpy vector of float"
-        self.result.data_object.value = ones(2, dtype='float') * pi
+        self.result.data_object.value = np.ones(2, dtype='float') * pi
 
     def testOnNumpy2DArrayOfFloat64(self):
         "numpy 2d array of float64"
-        self.result.data_object.value = ones([2, 3], dtype='float64') * pi
+        self.result.data_object.value = np.ones([2, 3], dtype='float64') * pi
 
     def testOnNumpy3DArrayOfInt32(self):
         "numpy 3d array of int32"
-        self.result.data_object.value = ones([2, 3, 2], dtype='int32')
+        self.result.data_object.value = np.ones([2, 3, 2], dtype='int32')
 
-    @unittest.skip("String have to be handled through label metadata")    
+    @unittest.skip("String have to be handled through label metadata")
     def testOnNumpyArrayOfStrings(self):
         "numpy array of strings"
-        self.result.data_object.value = array(['hello', 'hola'])
+        self.result.data_object.value = np.array(['hello', 'hola'])
 
     def testOnEmptyList(self):
         "empty list"
@@ -141,29 +135,28 @@ class TestAnalyzerResultGoodType(TestAnalyzerResult):
         "Unicode"
         self.result.data_object.value = u'\u0107'
 
+    def method(self, numpy_data_type):
+        "numpy %s" % numpy_data_type
+        self.result.data_object.value = getattr(np, numpy_data_type)(pi)
 
-        
+    @classmethod
+    def add_method(cls, numpy_data_type):
+        test_method = lambda self: self.method(numpy_data_type)
+        test_method.__name__ = 'testOnNumpy_%s' % numpy_data_type
+        test_method.__doc__ = 'groks on numpy %s' % numpy_data_type
+        setattr(cls, test_method.__name__, test_method)
+
+# Add tests for each type in good_numpy_data_types
 for numpy_data_type in good_numpy_data_types:
-    test_method = create_good_method_func(numpy_data_type)
-    str_type = str(numpy_data_type)[13:-2] # keep only type string
-    test_method.__name__ = 'testOnNumpy_%s' % str_type
-    test_method.__doc__ = 'groks a numpy %s' % str_type
-    setattr(TestAnalyzerResultGoodType, test_method.__name__, test_method)
-
-for numpy_data_type in bad_numpy_data_types:
-    test_method = create_bad_method_func(numpy_data_type)
-    test_method.__name__ = 'testOnNumpy_%s' % numpy_data_type
-    test_method.__doc__ = 'gasps on numpy %s' % numpy_data_type
-    setattr(TestAnalyzerResultBadType, test_method.__name__, test_method)
+    TestAnalyzerResultGoodType.add_method(numpy_data_type)
 
 
-    
 class TestAnalyzerResultNumpy(TestAnalyzerResultGoodType):
     """ test AnalyzerResult numpy serialize """
 
     def tearDown(self):
         results = AnalyzerResultContainer([self.result])
-        r_numpy = results.to_numpy('/tmp/t.npy')
+        results.to_numpy('/tmp/t.npy')
         d_numpy = results.from_numpy('/tmp/t.npy')
         if verbose:
             print '%15s' % 'from numpy:',
