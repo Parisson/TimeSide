@@ -53,7 +53,7 @@ bad_numpy_data_types = [
 
 
 class TestAnalyzerResultBadType(TestAnalyzerResult):
-    """ test AnalyzerResult on bad data type"""
+    """ test AnalyzerResult on bad numpy data type"""
 
     def method(self, numpy_data_type):
         try:
@@ -69,7 +69,7 @@ class TestAnalyzerResultBadType(TestAnalyzerResult):
     def add_method(cls, numpy_data_type):
         test_method = lambda self: self.method(numpy_data_type)
         test_method.__name__ = 'testOnNumpy_%s' % numpy_data_type
-        test_method.__doc__ = 'gasps on numpy %s' % numpy_data_type
+        test_method.__doc__ = 'TypeError on numpy %s' % numpy_data_type
         setattr(cls, test_method.__name__, test_method)
 
 # Add tests for each type in bad_numpy_data_types
@@ -78,7 +78,7 @@ for numpy_data_type in bad_numpy_data_types:
 
 
 class TestAnalyzerResultGoodType(TestAnalyzerResult):
-    """ test AnalyzerResult on good data type"""
+    """ test AnalyzerResult on good numpy data type"""
     def testOnFloat(self):
         "float result"
         self.result.data_object.value = 1.2
@@ -136,14 +136,14 @@ class TestAnalyzerResultGoodType(TestAnalyzerResult):
         self.result.data_object.value = u'\u0107'
 
     def method(self, numpy_data_type):
-        "numpy %s" % numpy_data_type
+        """Good numpy data type"""
         self.result.data_object.value = getattr(np, numpy_data_type)(pi)
 
     @classmethod
     def add_method(cls, numpy_data_type):
         test_method = lambda self: self.method(numpy_data_type)
         test_method.__name__ = 'testOnNumpy_%s' % numpy_data_type
-        test_method.__doc__ = 'groks on numpy %s' % numpy_data_type
+        test_method.__doc__ = 'Support numpy %s' % numpy_data_type
         setattr(cls, test_method.__name__, test_method)
 
 # Add tests for each type in good_numpy_data_types
