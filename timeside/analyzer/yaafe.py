@@ -27,7 +27,9 @@ Created on Thu Jun 13 16:05:02 2013
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from yaafelib import *
+from timeside.analyzer import WITH_YAAFE
+if WITH_YAAFE:
+    from yaafelib import *
 import numpy
 from timeside.analyzer.preprocessors import downmix_to_mono
 

@@ -23,8 +23,10 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import timeside
-from yaafe import Yaafe
-import yaafelib
+from timeside.analyzer import WITH_YAAFE
+if WITH_YAAFE:
+    from yaafe import Yaafe
+    import yaafelib
 import numpy as N
 import pickle
 import os.path
