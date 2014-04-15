@@ -17,8 +17,9 @@ before_install:
 # command to install dependencies
 #install: 
 # - "pip install -r requirements.txt --use-mirrors"
+ - python setup.py install
 
 # command to run tests
 script:
- - "python setup.py install"
- - "python setup.py test"
+ - py.test tests --ignore tests/sandbox
+# - "python setup.py test"
