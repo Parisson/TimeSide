@@ -1,6 +1,6 @@
 language: python
 python:
-  - "2.6"
+#  - "2.6"
   - "2.7"
 virtualenv:
   system_site_packages: true
@@ -16,7 +16,7 @@ before_install:
  - sudo apt-get install -qq python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
 
 # command to install dependencies
-#install: 
+install: 
 # - "pip install -r requirements.txt --use-mirrors"
  - python setup.py install
 
