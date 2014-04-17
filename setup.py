@@ -15,8 +15,11 @@ class PyTest(TestCommand):
         #import here, cause outside the eggs aren't loaded
         import pytest
 
-        from tests.tools import check_samples
-        check_samples
+        import os
+        os.chdir('tests')
+        from tools import check_samples
+        check_samples()
+        os.chdir('..')
         
         errno = pytest.main(self.test_args)
         sys.exit(errno)
