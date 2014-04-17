@@ -22,5 +22,5 @@ before_install:
 
 # command to run tests
 script:
- - py.test tests --ignore tests/sandbox
-# - "python setup.py test"
+# - py.test tests --ignore tests/sandbox
+ - python setup.py test
