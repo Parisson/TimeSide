@@ -52,7 +52,6 @@ setup(
   author_email = "yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
   version = '0.5.5',
   install_requires = [
-        'setuptools',
         'numpy',
         'mutagen',
         'pillow',
@@ -69,6 +68,6 @@ setup(
   include_package_data = True,
   zip_safe = False,
   scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
-  tests_require=['pytest'],
+  tests_require=['pytest','setuptools'],
   cmdclass = {'test': PyTest},
     )
