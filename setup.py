@@ -68,6 +68,6 @@ setup(
   include_package_data = True,
   zip_safe = False,
   scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
-  tests_require=['pytest','setuptools'],
+  tests_require=['pytest'],
   cmdclass = {'test': PyTest},
     )
