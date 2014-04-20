@@ -21,6 +21,9 @@ install:
  - python setup.py install
 
 # command to run tests
+before_script:
+- python tests/get_samples.py
+
 script:
 # - py.test tests --ignore tests/sandbox
  - python setup.py test
