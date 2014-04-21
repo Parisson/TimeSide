@@ -1,6 +1,7 @@
 from timeside.models import *
 from rest_framework import serializers
 import django.db.models
+from django.contrib.auth.models import User
 
 
 class SelectionSerializer(serializers.ModelSerializer):
@@ -50,4 +51,11 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'experience', 'selection', 'status', 'author')
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+
 

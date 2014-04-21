@@ -86,3 +86,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     
     model = Task
     serializer_class = TaskSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    
+    model = User
+    serializer_class = UserSerializer

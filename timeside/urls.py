@@ -15,6 +15,7 @@ api_router.register(r'processors', views.ProcessorViewSet)
 api_router.register(r'results', views.ResultViewSet)
 api_router.register(r'parameters', views.ParametersViewSet)
 api_router.register(r'tasks', views.TaskViewSet)
+api_router.register(r'users', views.UserViewSet)
 
 urlpatterns = patterns('',
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),
