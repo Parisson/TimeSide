@@ -15,9 +15,6 @@ processors = timeside.core.processors(timeside.api.IProcessor)
 
 PROCESSOR_PIDS = [(processor.id(), processor.id())  for processor in processors]
 
-PROCESSOR_TYPES = (('decoder', _('decoder')), ('analyzer', _('analyzer')),
-                   ('grapher', _('grapher')), ('encoder', _('encoder')))
-
 STATUS = ((0, _('failed')), (1, _('pending')), (2, _('running')),
                          (3, _('done')), (4, _('ready')))
 
@@ -116,7 +113,6 @@ class Experience(DocBaseResource):
 class Processor(models.Model):
     
     pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max_length=256)
-    type = models.CharField(_('type'), choices=PROCESSOR_TYPES, default='none', max_length=64)
     version = models.CharField(_('version'), max_length=64, blank=True)
 
     class Meta(MetaCore):
@@ -124,7 +120,7 @@ class Processor(models.Model):
         verbose_name = _('processor')
 
     def __unicode__(self):
-        return '_'.join([self.type, self.pid, str(self.id)])
+        return '_'.join([self.pid, str(self.id)])
     
     def save(self, **kwargs):
         if not self.version:

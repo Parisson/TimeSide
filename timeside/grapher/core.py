@@ -108,6 +108,8 @@ class Grapher(Processor):
     Generic abstract class for the graphers
     '''
 
+    type = 'grapher'
+
     fft_size = 0x1000
     frame_cursor = 0
     pixel_cursor = 0
