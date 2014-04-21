@@ -9,6 +9,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.conf import settings
 
 app = 'timeside'
 
@@ -24,7 +25,7 @@ def get_mime_type(path):
 
 def get_processor(pid):
     for proc in processors:
-        if proc.id == pid:
+        if proc.id() == pid:
             return proc()
     raise ValueError('Processor %s does not exists' % pid) 
 
@@ -204,13 +205,13 @@ class Task(models.Model):
 
         self.status_setter(2)
 
-        for item in self.selection.items:
+        for item in self.selection.items.all():
             path = results_root + os.sep + item.uuid + os.sep
-            pipe = timeside.decoder.FileDecoder(item.file)
+            pipe = timeside.decoder.FileDecoder(item.file.path)
             proc_dict = {}
 
             for processor in self.experience.processors.all():
-                proc = get_processor(processor.id)
+                proc = get_processor(processor.pid)
                 #TODO: add parameters
                 proc_dict[processor] = proc
                 pipe = pipe | proc
@@ -222,23 +223,24 @@ class Task(models.Model):
                 item.hdf5 =  path + item.uuid + '.hdf5'
                 item.save()
             
-            try:
-                item.lock_setter(True)
-                pipe.run()
-                pipe.results.to_hdf5(item.hdf5)
-                item.lock_setter(False)
-                
-                for processor in proc_dict.keys():
-                    proc = proc_dict[processor]
+        
+            item.lock_setter(True)
+            pipe.run()
+            pipe.results.to_hdf5(item.hdf5)
+            item.lock_setter(False)
+            
+            for processor in proc_dict.keys():
+                proc = proc_dict[processor]
+                if proc.type == 'analyzer':
                     result = Result.objects.get_or_create(processor=processor, uuid=proc.UUID, item=item)
                     result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
                     proc.results.to_hdf5(result.hdf5)
                     result.save()
-            
-            except:
-                self.status_setter(0)
-                item.lock_setter(False)
-                break
+        
+            # except:
+            #     self.status_setter(0)
+            #     item.lock_setter(False)
+            #     break
         
         self.status_setter(3)
         del proc
