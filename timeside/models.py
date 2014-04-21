@@ -8,6 +8,7 @@ from timeside.decoder.utils import sha1sum_file
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 app = 'timeside'
 
@@ -86,20 +87,24 @@ class Item(DocBaseResource):
         ordering = ['title']
         verbose_name = _('item')
 
-    def save(self, **kwargs):
-        if self.file:
-            if not self.mime_type:
-                self.mime_type = get_mime_type(self.file.path)
-            if not self.sha1:
-                self.sha1 = sha1sum_file(self.file.path)
-        super(Item, self).save(**kwargs)
-
     def results(self):
         return [result for result in self.results.all()]
 
     def lock_setter(self, lock):
         self.lock = lock
         self.save()
+
+
+def update_file_properties(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file:
+        if not instance.mime_type:
+            instance.mime_type = get_mime_type(instance.file.path)
+        if not instance.sha1:
+            instance.sha1 = sha1sum_file(instance.file.path)
+
+post_save.connect(update_file_properties, sender=Item)
+
 
 class Experience(DocBaseResource):
 
@@ -193,11 +198,17 @@ class Task(models.Model):
         self.save()
 
     def run(self):
+        results_root = settings.MEDIA_ROOT + 'results'
+        if not os.path.exists(results_root):
+            os.makedirs(results_root)
+
         self.status_setter(2)
 
         for item in self.selection.items:
+            path = results_root + os.sep + item.uuid + os.sep
             pipe = timeside.decoder.FileDecoder(item.file)
             proc_dict = {}
+
             for processor in self.experience.processors.all():
                 proc = get_processor(processor.id)
                 #TODO: add parameters
@@ -207,7 +218,6 @@ class Task(models.Model):
             while item.lock:
                 time.sleep(30)
             
-            path = settings.MEDIA_ROOT + 'results' + os.sep + item.uuid + os.sep
             if not item.hdf5:
                 item.hdf5 =  path + item.uuid + '.hdf5'
                 item.save()
@@ -224,6 +234,7 @@ class Task(models.Model):
                     result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
                     proc.results.to_hdf5(result.hdf5)
                     result.save()
+            
             except:
                 self.status_setter(0)
                 item.lock_setter(False)
