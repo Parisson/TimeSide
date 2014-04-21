@@ -161,7 +161,7 @@ class Result(BaseResource):
 
 class Parameters(models.Model):
 
-    processor = models.ForeignKey('Experience', related_name="parameters", verbose_name=_('processor'), blank=True, null=True)
+    processor = models.ForeignKey('Processor', related_name="parameters", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True)
     is_preset = models.BooleanField(default=False)
 
