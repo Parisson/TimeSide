@@ -8,7 +8,7 @@ virtualenv:
 
 # command to prepare the system to install prerequisites or dependencies
 before_install:
- - sudo add-apt-repository -y ppa:gstreamer-developers
+ - sudo add-apt-repository -y ppa:gstreamer-developers/ppa
  - sudo apt-get -qq update
  - sudo apt-get install -qq libhdf5-serial-dev python-h5py
  - sudo apt-get install -qq libatlas-dev libatlas-base-dev gfortran
