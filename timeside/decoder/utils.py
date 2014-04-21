@@ -154,10 +154,14 @@ def stack(process_func):
     @functools.wraps(process_func)
     def wrapper(decoder):
         # Processing
-        frames, eod = process_func(decoder)
-        if decoder.stack:
-            decoder.process_pipe.frames_stack.append((frames, eod))
-        return frames, eod
+        if not decoder.from_stack:
+            frames, eod = process_func(decoder)
+            if decoder.stack:
+                decoder.process_pipe.frames_stack.append((frames, eod))
+            return frames, eod
+        else:
+            return decoder._frames_iterator.next()
+
     return wrapper
 
 
@@ -174,7 +178,7 @@ def sha1sum_file(filename):
     '''
     Return the secure hash digest with sha1 algorithm for a given file
 
-    >>> wav_file = '../../tests/samples/guitar.wav' # doctest: +SKIP
+    >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
     >>> print sha1sum_file(wav_file)
     08301c3f9a8d60926f31e253825cc74263e52ad1
     '''
@@ -196,7 +200,7 @@ def sha1sum_url(url):
     >>> url = 'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'
     >>> print sha1sum_url(url)
     08301c3f9a8d60926f31e253825cc74263e52ad1
-    >>> wav_file = '../../tests/samples/guitar.wav' # doctest: +SKIP
+    >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
     >>> uri = get_uri(wav_file)
     >>> print sha1sum_url(uri)
     08301c3f9a8d60926f31e253825cc74263e52ad1
@@ -229,6 +233,8 @@ def sha1sum_numpy(np_array):
     import hashlib
     return hashlib.sha1(np_array.view(np.uint8)).hexdigest()
 
+
+# Define global variables for use with doctest
 import os
 DOCTEST_ALIAS = {'wav_file': os.path.join(os.path.dirname(__file__),
                                           '../../tests/samples/guitar.wav')}

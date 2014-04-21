@@ -42,7 +42,7 @@ This default result has all the metadata and dataObject attribute
    ...
    id_metadata : {'description': '', 'author': '', 'uuid': '', 'version': '', 'date': '', 'id': '', 'unit': '', 'name': ''}
    data_object : {'value': array([], dtype=float64)}
-   audio_metadata : {'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
+   audio_metadata : {'sha1': '', 'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
    frame_metadata : {'blocksize': None, 'samplerate': None, 'stepsize': None}
    parameters : {}
 
