@@ -436,7 +436,11 @@ class DataObject(MetadataObject):
                                            key).tolist().__repr__(),
                                        dtype=h5py.special_dtype(vlen=str))
             else:
-                h5group.create_dataset(key, data=self.__getattribute__(key))
+                if numpy.prod(self.__getattribute__(key).shape):
+                    maxshape = None
+                else:
+                    maxshape = (None,)
+                h5group.create_dataset(key, data=self.__getattribute__(key), maxshape = maxshape)
 
     def from_hdf5(self, h5group):
         for key, dataset in h5group.items():
