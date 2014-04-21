@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import timeside
-
-from django.views.generic import *
 from timeside.models import *
+from rest_framework import viewsets
+from django.views.generic import *
+from timeside.serializers import *
 
 
 def stream_from_file(__file):
@@ -24,18 +25,10 @@ class IndexView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        item = self.get_object()
-        context['experiences'] = item.experiences.all().filter(author=self.request.user)
         return context
 
     def dispatch(self, *args, **kwargs):
         return super(IndexView, self).dispatch(*args, **kwargs)
-
-
-class ItemGrapherView(DetailView):
-
-    model = Item
-    mime_type = 'image/png'
 
 
 class ItemAnalyzerView(DetailView):
@@ -51,4 +44,18 @@ class ItemAnalyzerView(DetailView):
         context = super(ItemJsonAnalyzerView, self).get_context_data(**kwargs)
         return context
     
+
+
+class ItemViewSet(viewsets.ModelViewSet):
     
+    model = Item
+    serializer_class = ItemSerializer
+
+
+class SelectionViewSet(viewsets.ModelViewSet):
+    
+    model = Selection
+    serializer_class = SelectionSerializer
+
+
+

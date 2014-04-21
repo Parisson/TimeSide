@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import api
-import core
-import decoder
-import analyzer
-import grapher
-import encoder
+from . import api
+from . import core
+from . import decoder
+from . import analyzer
+from . import grapher
+from . import encoder
 
 __version__ = '0.5.5'
