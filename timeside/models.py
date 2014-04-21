@@ -97,6 +97,9 @@ class Item(DocBaseResource):
     def results(self):
         return [result for result in self.results.all()]
 
+    def lock_setter(self, lock):
+        self.lock = lock
+        self.save()
 
 class Experience(DocBaseResource):
 
@@ -210,8 +213,10 @@ class Task(models.Model):
                 item.save()
             
             try:
+                item.lock_setter(True)
                 pipe.run()
                 pipe.results.to_hdf5(item.hdf5)
+                item.lock_setter(False)
                 
                 for processor in proc_dict.keys():
                     proc = proc_dict[processor]
@@ -221,6 +226,7 @@ class Task(models.Model):
                     result.save()
             except:
                 self.status_setter(0)
+                item.lock_setter(False)
                 break
         
         self.status_setter(3)
