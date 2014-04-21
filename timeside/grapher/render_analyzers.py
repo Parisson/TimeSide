@@ -92,14 +92,13 @@ class DisplayAnalyzer(Grapher):
         return NewGrapher
 
 
-
 # From here define new Grapher based on Analyzers
-
-aubiopitch = analyzer.AubioPitch()
-DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
-                                           result_id='aubio_pitch.pitch',
-                                           grapher_id='grapher_aubio_pitch',
-                                           grapher_name='Aubio Pitch')
+if analyzer.WITH_AUBIO:
+    aubiopitch = analyzer.AubioPitch()
+    DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
+                                               result_id='aubio_pitch.pitch',
+                                               grapher_id='grapher_aubio_pitch',
+                                               grapher_name='Aubio Pitch')
 
 
 odf = analyzer.OnsetDetectionFunction()

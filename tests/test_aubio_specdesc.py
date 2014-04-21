@@ -2,8 +2,12 @@
 
 from unit_timeside import *
 from timeside.decoder import *
-from timeside.analyzer.aubio_specdesc import AubioSpecdesc
+from timeside.analyzer import WITH_AUBIO
+if WITH_AUBIO:
+    from timeside.analyzer.aubio_specdesc import AubioSpecdesc
 
+
+@unittest.skipIf(not WITH_AUBIO, 'Aubio library is not available')
 class TestAubioSpecdesc(unittest.TestCase):
 
     def setUp(self):

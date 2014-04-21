@@ -54,8 +54,9 @@ numpy_data_types = [
     'uint32',
     'uint16',
     'uint8',
+    #'unicode_', Strings should be handled through label_metadata
+    #'string_',
     'object_',
-    'string_',
     'longlong',
     #'timedelta64',
     #'datetime64',
@@ -435,7 +436,11 @@ class DataObject(MetadataObject):
                                            key).tolist().__repr__(),
                                        dtype=h5py.special_dtype(vlen=str))
             else:
-                h5group.create_dataset(key, data=self.__getattribute__(key))
+                if numpy.prod(self.__getattribute__(key).shape):
+                    maxshape = None
+                else:
+                    maxshape = (None,)
+                h5group.create_dataset(key, data=self.__getattribute__(key), maxshape = maxshape)
 
     def from_hdf5(self, h5group):
         for key, dataset in h5group.items():
