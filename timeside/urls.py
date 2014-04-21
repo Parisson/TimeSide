@@ -8,8 +8,13 @@ from timeside import views
 admin.autodiscover()
 
 api_router = routers.DefaultRouter()
-api_router.register(r'items', views.ItemViewSet)
 api_router.register(r'selections', views.SelectionViewSet)
+api_router.register(r'items', views.ItemViewSet)
+api_router.register(r'experiences', views.ExperienceViewSet)
+api_router.register(r'processors', views.ProcessorViewSet)
+api_router.register(r'results', views.ResultViewSet)
+api_router.register(r'parameters', views.ParametersViewSet)
+api_router.register(r'tasks', views.TaskViewSet)
 
 urlpatterns = patterns('',
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),

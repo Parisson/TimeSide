@@ -46,16 +46,43 @@ class ItemAnalyzerView(DetailView):
     
 
 
-class ItemViewSet(viewsets.ModelViewSet):
-    
-    model = Item
-    serializer_class = ItemSerializer
-
-
 class SelectionViewSet(viewsets.ModelViewSet):
     
     model = Selection
     serializer_class = SelectionSerializer
 
 
+class ItemViewSet(viewsets.ModelViewSet):
+    
+    model = Item
+    serializer_class = ItemSerializer
 
+
+class ExperienceViewSet(viewsets.ModelViewSet):
+    
+    model = Experience
+    serializer_class = ExperienceSerializer
+
+
+class ProcessorViewSet(viewsets.ModelViewSet):
+    
+    model = Processor
+    serializer_class = ProcessorSerializer
+
+
+class ResultViewSet(viewsets.ModelViewSet):
+    
+    model = Result
+    serializer_class = ResultSerializer
+
+
+class ParametersViewSet(viewsets.ModelViewSet):
+    
+    model = Parameters
+    serializer_class = ParametersSerializer
+
+
+class TaskViewSet(viewsets.ModelViewSet):
+    
+    model = Task
+    serializer_class = TaskSerializer
