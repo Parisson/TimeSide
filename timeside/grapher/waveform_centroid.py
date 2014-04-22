@@ -26,14 +26,16 @@ from timeside.grapher.waveform_simple import Waveform
 
 
 class WaveformCentroid(Waveform):
+
     """ Builds a PIL image representing a waveform of the audio stream.
     Peaks are colored relatively to the spectral centroids of each frame buffer. """
 
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
-        super(WaveformCentroid, self).__init__(width, height, bg_color, color_scheme)
+    def __init__(self, width=1024, height=256, bg_color=(0, 0, 0), color_scheme='default'):
+        super(WaveformCentroid, self).__init__(
+            width, height, bg_color, color_scheme)
         self.lower_freq = 200
         colors = default_color_schemes[color_scheme]['waveform']
         self.color_lookup = interpolate_colors(colors)
@@ -50,17 +52,21 @@ class WaveformCentroid(Waveform):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(WaveformCentroid, self).setup(channels, samplerate, blocksize, totalframes)
+        super(WaveformCentroid, self).setup(
+            channels, samplerate, blocksize, totalframes)
 
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
-            buffer = frames[:,0].copy()
-            buffer.shape = (len(buffer),1)
+            buffer = frames[:, 0].copy()
+            buffer.shape = (len(buffer), 1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width:
-                    (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
-                    line_color = self.color_lookup[int(spectral_centroid*255.0)]
-                    self.draw_peaks(self.pixel_cursor, peaks(samples), line_color)
+                    (spectral_centroid, db_spectrum) = self.spectrum.process(
+                        samples, True)
+                    line_color = self.color_lookup[
+                        int(spectral_centroid * 255.0)]
+                    self.draw_peaks(
+                        self.pixel_cursor, peaks(samples), line_color)
                     self.pixel_cursor += 1
         return frames, eod
