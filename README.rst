@@ -37,7 +37,7 @@ Architecture
 
 The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
-.. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
+.. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
 
 
 Processors

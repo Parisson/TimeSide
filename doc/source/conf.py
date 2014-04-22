@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'TimeSide'
-copyright = u'2013, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -106,7 +106,10 @@ modindex_common_prefix = ['timeside.']
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+# html_theme = 'default'
+import sphinx_rtd_theme
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -265,7 +268,7 @@ texinfo_documents = [
 epub_title = u'TimeSide'
 epub_author = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 epub_publisher = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
-epub_copyright = u'2013, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+epub_copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
