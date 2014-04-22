@@ -26,7 +26,7 @@ before_script:
 
 script:
 # - py.test tests --ignore tests/sandbox
- - coverage run --source=timeside python setup.py test
+ - coverage run --source=timeside setup.py test
 
 after_success:
  - pip install coveralls
