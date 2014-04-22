@@ -26,8 +26,7 @@ before_script:
 - python tests/get_samples.py
 
 script:
-# - py.test tests --ignore tests/sandbox
- - coverage run --source=timeside setup.py test
+ - coverage run --source=timeside --omit=timeside/analyzer/aubio_*.py --omit=timeside/analyzer/yaafe.py --omit=timeside/analyzer/limsi_sad.py setup.py test
 
 after_success:
  - coveralls
