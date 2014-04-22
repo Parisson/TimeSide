@@ -29,6 +29,17 @@ def get_processor(pid):
             return proc()
     raise ValueError('Processor %s does not exists' % pid) 
 
+def set_mimetype(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file:
+        if not instance.mime_type:
+            instance.mime_type = get_mime_type(instance.file.path)
+
+def set_hash(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file:
+        if not instance.sha1:
+            instance.sha1 = sha1sum_file(instance.file.path)
 
 class MetaCore:
 
@@ -96,17 +107,6 @@ class Item(DocBaseResource):
         self.save()
 
 
-def update_file_properties(sender, **kwargs):
-    instance = kwargs['instance']
-    if instance.file:
-        if not instance.mime_type:
-            instance.mime_type = get_mime_type(instance.file.path)
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
-
-post_save.connect(update_file_properties, sender=Item)
-
-
 class Experience(DocBaseResource):
 
     processors = models.ManyToManyField('Processor', related_name="experiences", verbose_name=_('processors'), blank=True, null=True)
@@ -142,8 +142,8 @@ class Result(BaseResource):
     item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
     parameters = models.ForeignKey('Parameters', related_name="results", verbose_name=_('parameters'), blank=True, null=True, on_delete=models.SET_NULL)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
-    output = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
-    output_mime_type = models.CharField(_('Output mime type'), blank=True, max_length=256)
+    file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
+    mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=1)
     
     class Meta(MetaCore):
@@ -156,12 +156,7 @@ class Result(BaseResource):
         self.save()
 
     def __unicode__(self):
-        return '_'.join([self.item.title, unicode(self.processor)])
-
-    def save(self, **kwargs):
-        if self.output:
-            self.output_mime_type = get_mime_type(self.output.path)
-        super(Result, self).save(**kwargs)
+        return '_'.join([self.item.title, unicode(self.parameters.processor)])
 
 
 class Parameters(models.Model):
@@ -227,17 +222,26 @@ class Task(models.Model):
 
             item.lock_setter(True)
             pipe.run()
-            pipe.results.to_hdf5(item.hdf5.path)
+            #pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
             
             for processor in proc_dict.keys():
                 proc = proc_dict[processor]
+
                 if proc.type == 'analyzer':
-                    parameters = '{}'
-                    parameters = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
-                    result = Result.objects.get_or_create(parameters=parameters, item=item)
-                    result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
-                    proc.results.to_hdf5(result.hdf5.path)
+                    for analyzer_id in proc.results.keys():
+                        parameters = proc.results[analyzer_id].parameters
+                        parameters, c = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                        result, c = Result.objects.get_or_create(parameters=parameters, item=item)
+                        result.hdf5 = path + item.uuid + '_' + str(proc.UUID) + '.hdf5'
+                        #proc.results.to_hdf5(result.hdf5.path)
+                        result.save()
+        
+                if proc.type == 'grapher':
+                    parameters, c = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                    result, c = Result.objects.get_or_create(parameters=parameters, item=item)
+                    result.output= path + item.uuid + '_' + str(proc.UUID) + '.png'
+                    proc.render(output=result.output)
                     result.save()
         
             # except:
@@ -248,4 +252,10 @@ class Task(models.Model):
         self.status_setter(3)
         del proc
         del pipe
+
+
+
+post_save.connect(set_mimetype, sender=Item)
+post_save.connect(set_hash, sender=Item)
+post_save.connect(set_mimetype, sender=Result)
 
