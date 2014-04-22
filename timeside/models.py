@@ -140,7 +140,7 @@ class Processor(models.Model):
 class Result(BaseResource):
 
     item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
-    processor = models.ForeignKey('Processor', related_name="results", verbose_name=_('processor'), blank=True, null=True, on_delete=models.SET_NULL)
+    parameters = models.ForeignKey('Parameters', related_name="results", verbose_name=_('parameters'), blank=True, null=True, on_delete=models.SET_NULL)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     output = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     output_mime_type = models.CharField(_('Output mime type'), blank=True, max_length=256)
