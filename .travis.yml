@@ -17,6 +17,7 @@ before_install:
 install: 
 # - "pip install -r requirements.txt --use-mirrors"
 - pip install coverage
+- pip install coveralls
 - python setup.py install
 
 
@@ -29,5 +30,4 @@ script:
  - coverage run --source=timeside setup.py test
 
 after_success:
- - pip install coveralls
  - coveralls
