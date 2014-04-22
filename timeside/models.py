@@ -79,7 +79,7 @@ class Item(DocBaseResource):
     url = models.URLField(_('URL'), blank=True, max_length=1024)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
-    hdf5 = models.FileField(_('HDF5 result file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
+    hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
     author = models.ForeignKey(User, related_name="items", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -176,7 +176,7 @@ class Parameters(models.Model):
         verbose_name_plural = _('Parameters')
 
     def __unicode__(self):
-        pass
+        return '_'.join([unicode(self.processor), str(self.id)])
 
     
 class Task(models.Model):
@@ -199,14 +199,16 @@ class Task(models.Model):
         self.save()
 
     def run(self):
-        results_root = settings.MEDIA_ROOT + 'results'
-        if not os.path.exists(results_root):
-            os.makedirs(results_root)
+        results_root = 'results'
+        if not os.path.exists(settings.MEDIA_ROOT + results_root):
+            os.makedirs(settings.MEDIA_ROOT + results_root)
 
         self.status_setter(2)
 
         for item in self.selection.items.all():
             path = results_root + os.sep + item.uuid + os.sep
+            if not os.path.exists(settings.MEDIA_ROOT + os.sep + path):
+                os.makedirs(settings.MEDIA_ROOT + os.sep + path)
             pipe = timeside.decoder.FileDecoder(item.file.path)
             proc_dict = {}
 
@@ -216,25 +218,26 @@ class Task(models.Model):
                 proc_dict[processor] = proc
                 pipe = pipe | proc
 
-            while item.lock:
-                time.sleep(30)
+            # while item.lock:
+            #     time.sleep(30)
             
             if not item.hdf5:
                 item.hdf5 =  path + item.uuid + '.hdf5'
                 item.save()
-            
-        
+
             item.lock_setter(True)
             pipe.run()
-            pipe.results.to_hdf5(item.hdf5)
+            pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
             
             for processor in proc_dict.keys():
                 proc = proc_dict[processor]
                 if proc.type == 'analyzer':
-                    result = Result.objects.get_or_create(processor=processor, uuid=proc.UUID, item=item)
+                    parameters = '{}'
+                    parameters = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                    result = Result.objects.get_or_create(parameters=parameters, item=item)
                     result.hdf5 = path + item.uuid + '_' + proc.UUID + '.hdf5'
-                    proc.results.to_hdf5(result.hdf5)
+                    proc.results.to_hdf5(result.hdf5.path)
                     result.save()
         
             # except:
