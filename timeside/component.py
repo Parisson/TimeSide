@@ -45,17 +45,22 @@
 __all__ = ['Component', 'MetaComponent', 'implements', 'abstract',
            'interfacedoc', 'Interface', 'implementations', 'ComponentError']
 
+
 class Interface(object):
+
     """Marker base class for interfaces."""
+
 
 def implements(*interfaces):
     """Registers the interfaces implemented by a component when placed in the
     class header"""
     MetaComponent.implements.extend(interfaces)
 
+
 def abstract():
     """Declare a component as abstract when placed in the class header"""
     MetaComponent.abstract = True
+
 
 def implementations(interface, recurse=True, abstract=False):
     """Returns the components implementing interface, and if recurse, any of
@@ -65,22 +70,26 @@ def implementations(interface, recurse=True, abstract=False):
     find_implementations(interface, recurse, abstract, result)
     return result
 
+
 def interfacedoc(func):
     if isinstance(func, staticmethod):
-        raise ComponentError("@interfacedoc can't handle staticmethod (try to put @staticmethod above @interfacedoc)")
+        raise ComponentError(
+            "@interfacedoc can't handle staticmethod (try to put @staticmethod above @interfacedoc)")
 
     if not func.__doc__:
         func.__doc__ = "@interfacedoc"
         func._interfacedoc = True
     return func
 
+
 class MetaComponent(type):
+
     """Metaclass of the Component class, used mainly to register the interface
     declared to be implemented by a component."""
 
-    implementations     = []
-    implements          = []
-    abstract            = False
+    implementations = []
+    implements = []
+    abstract = False
 
     def __new__(cls, name, bases, d):
         new_class = type.__new__(cls, name, bases, d)
@@ -110,13 +119,16 @@ class MetaComponent(type):
                 member.__doc__ = if_member.__doc__
 
         MetaComponent.implements = []
-        MetaComponent.abstract   = False
+        MetaComponent.abstract = False
 
         return new_class
 
+
 class Component(object):
+
     """Base class of all components"""
     __metaclass__ = MetaComponent
+
 
 def extend_unique(list1, list2):
     """Extend list1 with list2 as list.extend(), but doesn't append duplicates
@@ -124,6 +136,7 @@ def extend_unique(list1, list2):
     for item in list2:
         if item not in list1:
             list1.append(item)
+
 
 def find_implementations(interface, recurse, abstract, result):
     """Find implementations of an interface or of one of its descendants and
@@ -137,6 +150,7 @@ def find_implementations(interface, recurse, abstract, result):
         if subinterfaces:
             for i in subinterfaces:
                 find_implementations(i, recurse, abstract, result)
+
 
 class ComponentError(Exception):
     pass

@@ -17,13 +17,19 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
+
 class Error(Exception):
+
     """Exception base class for errors in TimeSide."""
+
 
 class ApiError(Exception):
+
     """Exception base class for errors in TimeSide."""
 
+
 class SubProcessError(Error):
+
     """Exception for reporting errors from a subprocess"""
 
     def __init__(self, message, command, subprocess):
