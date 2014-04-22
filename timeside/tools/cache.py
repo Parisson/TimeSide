@@ -41,23 +41,23 @@ import xml.dom.minidom
 
 
 class Cache(object):
-    
+
     def __init__(self, dir, params=None):
         self.dir = dir
         self.params = params
         self.files = self.get_files()
-        
+
     def get_files(self):
         list = []
         for root, dirs, files in os.walk(self.dir):
             for file in files:
                 list.append(file)
         return list
-    
+
     def exists(self, file):
         self.files = self.get_files()
         return file in self.files
-            
+
     def write_bin(self, data, file):
         path = self.dir + os.sep + file
         f = open(path, 'w')
@@ -70,7 +70,7 @@ class Cache(object):
         data = f.read()
         f.close()
         return data
-        
+
     def read_stream_bin(self, file):
         path = self.dir + os.sep + file
         chunk_size = 0x1000
@@ -89,14 +89,14 @@ class Cache(object):
         list = []
         path = self.dir + os.sep + file
         doc = xml.dom.minidom.parse(path)
-        for data in doc.documentElement.getElementsByTagName('data') :
+        for data in doc.documentElement.getElementsByTagName('data'):
             name = data.getAttribute('name')
             id = data.getAttribute('id')
             unit = data.getAttribute('unit')
             value = data.getAttribute('value')
             list.append({'name': name, 'id': id, 'unit': unit, 'value': value})
         return list
-        
+
     def write_analyzer_xml(self, data_list, file):
         path = self.dir + os.sep + file
         doc = xml.dom.minidom.Document()
