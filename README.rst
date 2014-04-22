@@ -9,14 +9,21 @@ TimeSide also includes a smart interactive HTML5 player which provides various s
 
 Build status
 ============
-- Branch **master** : |travis_master|
-- Branch **dev** : |travis_dev|
+- Branch **master** : |travis_master| |coveralls_master|
+- Branch **dev** : |travis_dev| |coveralls_dev|
 
 .. |travis_master| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: https://travis-ci.org/yomguy/TimeSide/
 
 .. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
     :target: https://travis-ci.org/yomguy/TimeSide/
+
+.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+
+.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+
 
 
 Goals
