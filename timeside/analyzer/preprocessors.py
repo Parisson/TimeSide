@@ -28,6 +28,7 @@
             of the analyzer
 '''
 
+
 def downmix_to_mono(process_func):
     '''
     Pre-processing decorator that downmixes frames from multi-channel to mono
@@ -160,8 +161,8 @@ def frames_adapter(process_func):
             if eod and len(eod_list):
                 eod_list[-1] = eod
 
-            for index, eod in zip(xrange(0, nb_frames*self.stepsize, self.stepsize), eod_list):
-                yield (stack[index:index + self.blocksize],eod)
+            for index, eod in zip(xrange(0, nb_frames * self.stepsize, self.stepsize), eod_list):
+                yield (stack[index:index + self.blocksize], eod)
 
     @functools.wraps(process_func)
     def wrapper(analyzer, frames, eod):

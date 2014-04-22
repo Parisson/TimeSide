@@ -27,6 +27,7 @@ import numpy as np
 
 
 class Spectrogram(Analyzer):
+
     """Spectrogram analyzer"""
     implements(IAnalyzer)
 
@@ -50,7 +51,7 @@ class Spectrogram(Analyzer):
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate,
-              blocksize, totalframes)
+                                       blocksize, totalframes)
 
     @staticmethod
     @interfacedoc

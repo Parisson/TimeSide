@@ -35,17 +35,19 @@ from timeside.analyzer.preprocessors import downmix_to_mono
 
 
 class Yaafe(Analyzer):
+
     """Yaafe feature extraction library interface analyzer"""
     implements(IAnalyzer)
 
     def __init__(self, yaafeSpecification=None):
-        super(Yaafe,self).__init__()
+        super(Yaafe, self).__init__()
 
         # Check arguments
         if yaafeSpecification is None:
             yaafeSpecification = FeaturePlan(sample_rate=32000)
             # add feature definitions manually
-            yaafeSpecification.addFeature('mfcc: MFCC blockSize=512 stepSize=256')
+            yaafeSpecification.addFeature(
+                'mfcc: MFCC blockSize=512 stepSize=256')
 
         if isinstance(yaafeSpecification, DataFlow):
             self.dataFlow = yaafeSpecification
@@ -58,7 +60,6 @@ class Yaafe(Analyzer):
                              str(DataFlow),
                              str(FeaturePlan)))
         self.yaafe_engine = None
-
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -91,7 +92,7 @@ class Yaafe(Analyzer):
         # do process things...
         # Convert to float64and reshape
         # for compatibility with Yaafe engine
-        yaafe_frames = frames.astype(numpy.float64).reshape(1,-1)
+        yaafe_frames = frames.astype(numpy.float64).reshape(1, -1)
 
         # write audio array on 'audio' input
         self.yaafe_engine.writeInput('audio', yaafe_frames)
