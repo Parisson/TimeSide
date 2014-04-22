@@ -38,7 +38,7 @@ class SubProcessError(Error):
         self.subprocess = subprocess
 
     def __str__(self):
-        if self.subprocess.stderr != None:
+        if self.subprocess.stderr is not None:
             error = self.subprocess.stderr.read()
         else:
             error = ''

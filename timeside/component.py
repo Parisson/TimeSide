@@ -99,8 +99,8 @@ class MetaComponent(type):
             for i in MetaComponent.implements:
                 MetaComponent.implementations.append({
                     'interface': i,
-                    'class':     new_class,
-                    'abstract':  MetaComponent.abstract})
+                    'class': new_class,
+                    'abstract': MetaComponent.abstract})
 
         # Propagate @interfacedoc
         for name in new_class.__dict__:

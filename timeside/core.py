@@ -49,7 +49,7 @@ class MetaProcessor(MetaComponent):
         new_class = MetaComponent.__new__(cls, name, bases, d)
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
-            if _processors.has_key(id):
+            if id in _processors:
                 # Doctest test can duplicate a processor
                 # This can be identify by the conditon "module == '__main__'"
                 if new_class.__module__ == '__main__':
@@ -229,7 +229,7 @@ def processors(interface=IProcessor, recurse=True):
 
 def get_processor(processor_id):
     """Return a processor by its id"""
-    if not _processors.has_key(processor_id):
+    if not processor_id in _processors:
         raise Error("No processor registered with id: '%s'"
                     % processor_id)
 

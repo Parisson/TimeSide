@@ -66,7 +66,7 @@ class Cache(object):
 
     def read_bin(self, file):
         path = self.dir + os.sep + file
-        f = open(path,  'r')
+        f = open(path, 'r')
         data = f.read()
         f.close()
         return data
@@ -74,7 +74,7 @@ class Cache(object):
     def read_stream_bin(self, file):
         path = self.dir + os.sep + file
         chunk_size = 0x1000
-        f = open(path,  'r')
+        f = open(path, 'r')
         while True:
             _chunk = f.read(chunk_size)
             if not len(_chunk):

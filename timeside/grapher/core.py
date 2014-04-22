@@ -102,7 +102,7 @@ class Spectrum(object):
 
         if energy > 1e-20:
             # calculate the spectral centroid
-            if self.spectrum_range == None:
+            if self.spectrum_range is None:
                 self.spectrum_range = numpy.arange(length)
             spectral_centroid = (spectrum * self.spectrum_range).sum() / \
                 (energy * (length - 1)) * \
