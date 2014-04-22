@@ -33,10 +33,11 @@ from timeside.tools.gstutils import MainloopThread
 
 
 class LiveDecoder(Decoder):
+
     """ gstreamer-based decoder from live source"""
     implements(IDecoder)
 
-    output_blocksize = 8*1024
+    output_blocksize = 8 * 1024
 
     pipeline = None
     mainloopthread = None
@@ -47,7 +48,6 @@ class LiveDecoder(Decoder):
         return "gst_live_dec"
 
     def __init__(self, num_buffers=-1, input_src='autoaudiosrc'):
-
         """
         Construct a new LiveDecoder capturing audio from alsasrc
 
@@ -156,7 +156,7 @@ class LiveDecoder(Decoder):
 
         self.discovered_cond.acquire()
         while not self.discovered:
-            #print 'waiting'
+            # print 'waiting'
             self.discovered_cond.wait()
         self.discovered_cond.release()
 
@@ -200,7 +200,8 @@ class LiveDecoder(Decoder):
                 self.output_channels = self.input_channels
             self.input_duration = length / 1.e9
 
-            self.input_totalframes = int(self.input_duration * self.input_samplerate)
+            self.input_totalframes = int(
+                self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
                 self.input_width = caps[0]["width"]
             else:
@@ -234,15 +235,17 @@ class LiveDecoder(Decoder):
         buf = sink.emit('pull-buffer')
         new_array = gst_buffer_to_numpy_array(buf, self.output_channels)
 
-        #print 'processing new buffer', new_array.shape
+        # print 'processing new buffer', new_array.shape
         if self.last_buffer is None:
             self.last_buffer = new_array
         else:
-            self.last_buffer = np.concatenate((self.last_buffer, new_array), axis=0)
+            self.last_buffer = np.concatenate(
+                (self.last_buffer, new_array), axis=0)
         while self.last_buffer.shape[0] >= self.output_blocksize:
             new_block = self.last_buffer[:self.output_blocksize]
             self.last_buffer = self.last_buffer[self.output_blocksize:]
-            #print 'queueing', new_block.shape, 'remaining', self.last_buffer.shape
+            # print 'queueing', new_block.shape, 'remaining',
+            # self.last_buffer.shape
             self.queue.put([new_block, False])
 
     @interfacedoc
@@ -269,7 +272,7 @@ class LiveDecoder(Decoder):
             self.from_stack = True
         pass
 
-    ## IDecoder methods
+    # IDecoder methods
 
     @interfacedoc
     def format(self):
@@ -292,4 +295,3 @@ class LiveDecoder(Decoder):
     def metadata(self):
         # TODO check
         return self.tags
-
