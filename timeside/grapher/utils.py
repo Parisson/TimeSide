@@ -116,7 +116,7 @@ def smooth(x, window_len=10, window='hanning'):
     --------
 
     >>> import numpy as np
-    >>> from timeside.grapher import smooth
+    >>> from timeside.grapher.utils import smooth
     >>> t = np.arange(-2,2,0.1)
     >>> x = np.sin(t)+np.random.randn(len(t))*0.1
     >>> y = smooth(x)

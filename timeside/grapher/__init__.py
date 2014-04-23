@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from waveform_simple import *
-from waveform_centroid import *
-from waveform_transparent import *
-from waveform_contour import *
-from spectrogram_log import *
-from spectrogram_lin import *
-from render_analyzers import *
+from waveform_simple import Waveform
+from waveform_centroid import WaveformCentroid
+from waveform_transparent import WaveformTransparent
+from waveform_contour import WaveformContourBlack, WaveformContourWhite
+from spectrogram_log import SpectrogramLog
+from spectrogram_lin import SpectrogramLinear
+from render_analyzers import DisplayOnsetDetectionFunction, DisplayWaveform
+from render_analyzers import Display4hzSpeechSegmentation
+
+__all__ = ['Waveform', 'WaveformCentroid', 'WaveformTransparent',
+           'WaveformContourBlack', 'WaveformContourWhite',
+           'SpectrogramLog', 'SpectrogramLinear',
+           'DisplayOnsetDetectionFunction', 'DisplayWaveform',
+           'Display4hzSpeechSegmentation']

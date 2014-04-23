@@ -6,16 +6,16 @@ try:
     WITH_AUBIO = True
     from aubio_temporal import AubioTemporal
     from aubio_pitch import AubioPitch
-    from aubio_mfcc import *
-    from aubio_melenergy import *
-    from aubio_specdesc import *
+    from aubio_mfcc import AubioMfcc
+    from aubio_melenergy import AubioMelEnergy
+    from aubio_specdesc import AubioSpecdesc
 except ImportError:
     WITH_AUBIO = False
 
 # Yaafe
 try:
     WITH_YAAFE = True
-    from yaafe import *
+    from yaafe import Yaafe
 
 except ImportError:
     WITH_YAAFE = False
