@@ -222,7 +222,7 @@ class Task(models.Model):
 
             item.lock_setter(True)
             pipe.run()
-            #pipe.results.to_hdf5(item.hdf5.path)
+            pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
             
             for processor in proc_dict.keys():
@@ -234,7 +234,7 @@ class Task(models.Model):
                         parameters, c = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
                         result, c = Result.objects.get_or_create(parameters=parameters, item=item)
                         result.hdf5 = path + item.uuid + '_' + str(proc.UUID) + '.hdf5'
-                        #proc.results.to_hdf5(result.hdf5.path)
+                        proc.results.to_hdf5(result.hdf5.path)
                         result.save()
         
                 if proc.type == 'grapher':

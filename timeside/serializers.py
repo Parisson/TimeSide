@@ -36,7 +36,7 @@ class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id', 'item', 'processor', 'status')
+        fields = ('id', 'item', 'parameters', 'status')
 
 
 class ParametersSerializer(serializers.ModelSerializer):
