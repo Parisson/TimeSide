@@ -38,10 +38,10 @@ class ResultViewSet(viewsets.ModelViewSet):
     serializer_class = ResultSerializer
 
 
-class ParametersViewSet(viewsets.ModelViewSet):
+class PresetViewSet(viewsets.ModelViewSet):
     
-    model = Parameters
-    serializer_class = ParametersSerializer
+    model = Preset
+    serializer_class = PresetSerializer
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -81,14 +81,14 @@ class IndexView(ListView):
         return super(IndexView, self).dispatch(*args, **kwargs)
 
 
-class ItemAnalyzerView(DetailView):
+class ResultAnalyzerView(DetailView):
     
-    model = Item
+    model = Result
 
     def results(self):
-        item = self.get_object()
+        result = self.get_object()
         results = AnalyzerResult()
-        return results.from_hdf5(self.hdf5).to_json()
+        return results.from_hdf5(result.hdf5).to_json()
     
     def get_context_data(self, **kwargs):
         context = super(ItemJsonAnalyzerView, self).get_context_data(**kwargs)

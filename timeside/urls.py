@@ -13,7 +13,7 @@ api_router.register(r'items', views.ItemViewSet)
 api_router.register(r'experiences', views.ExperienceViewSet)
 api_router.register(r'processors', views.ProcessorViewSet)
 api_router.register(r'results', views.ResultViewSet)
-api_router.register(r'parameters', views.ParametersViewSet)
+api_router.register(r'presets', views.PresetViewSet)
 api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 

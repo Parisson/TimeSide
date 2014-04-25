@@ -109,15 +109,16 @@ class Item(DocBaseResource):
 
 class Experience(DocBaseResource):
 
-    processors = models.ManyToManyField('Processor', related_name="experiences", verbose_name=_('processors'), blank=True, null=True)
+    presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True, null=True)
     author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True, null=True)
-    is_preset = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
 
     class Meta(MetaCore):
         db_table = app + '_experiences'
         verbose_name = _('Experience')
 
+    
 
 class Processor(models.Model):
     
@@ -137,10 +138,25 @@ class Processor(models.Model):
         super(Processor, self).save(**kwargs)
         
 
+class Preset(models.Model):
+
+    processor = models.ForeignKey('Processor', related_name="preset", verbose_name=_('processor'), blank=True, null=True)
+    parameters = models.TextField(_('Parameters'), blank=True)
+    is_public = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = app + '_presets'
+        verbose_name = _('Preset')
+        verbose_name_plural = _('Presets')
+
+    def __unicode__(self):
+        return '_'.join([unicode(self.processor), str(self.id)])
+
+    
 class Result(BaseResource):
 
     item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
-    parameters = models.ForeignKey('Parameters', related_name="results", verbose_name=_('parameters'), blank=True, null=True, on_delete=models.SET_NULL)
+    preset = models.ForeignKey('Preset', related_name="results", verbose_name=_('preset'), blank=True, null=True, on_delete=models.SET_NULL)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
@@ -159,21 +175,6 @@ class Result(BaseResource):
         return '_'.join([self.item.title, unicode(self.parameters.processor)])
 
 
-class Parameters(models.Model):
-
-    processor = models.ForeignKey('Processor', related_name="parameters", verbose_name=_('processor'), blank=True, null=True)
-    parameters = models.TextField(_('Parameters'), blank=True)
-    is_preset = models.BooleanField(default=False)
-
-    class Meta:
-        db_table = app + '_parameters'
-        verbose_name = _('Parameters')
-        verbose_name_plural = _('Parameters')
-
-    def __unicode__(self):
-        return '_'.join([unicode(self.processor), str(self.id)])
-
-    
 class Task(models.Model):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
@@ -204,13 +205,16 @@ class Task(models.Model):
             path = results_root + os.sep + item.uuid + os.sep
             if not os.path.exists(settings.MEDIA_ROOT + os.sep + path):
                 os.makedirs(settings.MEDIA_ROOT + os.sep + path)
+            
+            # pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
             pipe = timeside.decoder.FileDecoder(item.file.path)
+            
             proc_dict = {}
 
-            for processor in self.experience.processors.all():
-                proc = get_processor(processor.pid)
-                #TODO: add parameters
-                proc_dict[processor] = proc
+            for preset in self.experience.presets.all():
+                proc = get_processor(preset.processor.pid)
+                proc_dict[preset.processor] = proc
+                #proc.set_parameters(preset.parameters)
                 pipe = pipe | proc
 
             # while item.lock:
@@ -220,30 +224,29 @@ class Task(models.Model):
                 item.hdf5 =  path + item.uuid + '.hdf5'
                 item.save()
 
-            item.lock_setter(True)
             pipe.run()
+            item.lock_setter(True)
             pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
             
             for processor in proc_dict.keys():
                 proc = proc_dict[processor]
 
-                if proc.type == 'analyzer':
-                    for analyzer_id in proc.results.keys():
-                        parameters = proc.results[analyzer_id].parameters
-                        parameters, c = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
-                        result, c = Result.objects.get_or_create(parameters=parameters, item=item)
+                for processor_id in proc.results.keys():
+                    parameters = proc.results[processor_id].parameters
+                    preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                    result, c = Result.objects.get_or_create(preset=preset, item=item)
+                
+                    if proc.type == 'analyzer':
                         result.hdf5 = path + item.uuid + '_' + str(proc.UUID) + '.hdf5'
                         proc.results.to_hdf5(result.hdf5.path)
-                        result.save()
-        
-                if proc.type == 'grapher':
-                    parameters, c = Parameters.objects.get_or_create(processor=processor, parameters=unicode(parameters))
-                    result, c = Result.objects.get_or_create(parameters=parameters, item=item)
-                    result.output= path + item.uuid + '_' + str(proc.UUID) + '.png'
-                    proc.render(output=result.output)
+                        
+                    if proc.type == 'grapher':
+                        result.file = path + item.uuid + '_' + str(proc.UUID) + '.png'
+                        proc.render(output=result.file)
+                    
                     result.save()
-        
+            
             # except:
             #     self.status_setter(0)
             #     item.lock_setter(False)
@@ -252,7 +255,6 @@ class Task(models.Model):
         self.status_setter(3)
         del proc
         del pipe
-
 
 
 post_save.connect(set_mimetype, sender=Item)
