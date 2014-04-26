@@ -924,6 +924,9 @@ class AnalyzerResultContainer(dict):
             if isinstance(obj, numpy.ndarray):
                 return {'numpyArray': obj.tolist(),
                         'dtype': obj.dtype.__str__()}
+            else:
+                return {'value': obj.tolist(),
+                        'dtype': obj.dtype.__str__()}
             raise TypeError(repr(obj) + " is not JSON serializable")
 
         json_str = json.dumps([res.as_dict() for res in self.values()],
