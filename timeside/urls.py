@@ -18,7 +18,8 @@ api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 
 urlpatterns = patterns('',
-    url(r'^$', views.IndexView.as_view(), name="timeside-index"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_router.urls)),
+    url(r'^$', views.IndexView.as_view(), name="timeside-index"),
+    url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(), name="timeside-result-json"),
 )

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from django.views.generic import *
+from django.http import HttpResponse, HttpResponseRedirect
+
+from rest_framework import viewsets
+
 import timeside
 from timeside.models import *
-from rest_framework import viewsets
-from django.views.generic import *
 from timeside.serializers import *
-
 
 
 class SelectionViewSet(viewsets.ModelViewSet):
@@ -81,15 +83,12 @@ class IndexView(ListView):
         return super(IndexView, self).dispatch(*args, **kwargs)
 
 
-class ResultAnalyzerView(DetailView):
+class ResultAnalyzerView(View):
     
     model = Result
 
-    def results(self):
-        result = self.get_object()
-        results = AnalyzerResult()
-        return results.from_hdf5(result.hdf5).to_json()
+    def get(self, request, *args, **kwargs):
+        result = Result.objects.get(pk=kwargs['pk'])
+        container = AnalyzerResultContainer()
+        return HttpResponse(container.from_hdf5(result.hdf5.path).to_json(), mimetype='application/json')
     
-    def get_context_data(self, **kwargs):
-        context = super(ItemJsonAnalyzerView, self).get_context_data(**kwargs)
-        return context
