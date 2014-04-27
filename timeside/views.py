@@ -58,18 +58,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-
-def stream_from_file(__file):
-    chunk_size = 0x10000
-    f = open(__file, 'r')
-    while True:
-        __chunk = f.read(chunk_size)
-        if not len(__chunk):
-            f.close()
-            break
-        yield __chunk
-
-
 class IndexView(ListView):
 
     model = Item
