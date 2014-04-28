@@ -3,7 +3,7 @@
 from __future__ import division
 
 from timeside.core import *
-from timeside.decoder import *
+from timeside.decoder.file import FileDecoder
 from timeside.analyzer import *
 from timeside.encoder import *
 from timeside.component import *

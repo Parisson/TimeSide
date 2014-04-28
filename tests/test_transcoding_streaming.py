@@ -2,11 +2,11 @@
 
 from __future__ import division
 
-from timeside.core import *
-from timeside.decoder import *
-from timeside.analyzer import *
+#from timeside.core import *
+from timeside.decoder.file import FileDecoder
+#from timeside.analyzer import *
 from timeside.encoder import *
-from timeside.component import *
+#from timeside.component import *
 
 from unit_timeside import *
 from tools import tmp_file_sink

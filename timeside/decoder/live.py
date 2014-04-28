@@ -63,9 +63,9 @@ class LiveDecoder(Decoder):
 
         >>> import timeside
 
-        >>> live = timeside.decoder.LiveDecoder(num_buffers=5)
+        >>> live = timeside.decoder.live.LiveDecoder(num_buffers=5)
         >>> a = timeside.analyzer.Waveform()
-        >>> e = timeside.encoder.Mp3Encoder('/tmp/test_live.mp3',
+        >>> e = timeside.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
         ...                                 overwrite=True)
         >>> pipe = (live | a | e)
         >>> pipe.run() # doctest: +SKIP

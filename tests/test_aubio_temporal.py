@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import FileDecoder
+from timeside.decoder.file import FileDecoder
 from timeside.analyzer import WITH_AUBIO
 if WITH_AUBIO:
     from timeside.analyzer.aubio_temporal import AubioTemporal

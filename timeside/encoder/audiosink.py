@@ -35,8 +35,8 @@ class AudioSink(GstEncoder):
 
     >>> import timeside
     >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> d = timeside.decoder.FileDecoder(wav_file)
-    >>> e = timeside.encoder.AudioSink()
+    >>> d = timeside.decoder.file.FileDecoder(wav_file)
+    >>> e = timeside.encoder.audiosink.AudioSink()
     >>> (d|e).run() # doctest: +SKIP
     """
 
