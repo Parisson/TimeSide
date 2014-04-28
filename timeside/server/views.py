@@ -6,8 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework import viewsets
 
 import timeside
-from timeside.models import *
-from timeside.serializers import *
+from timeside.server.models import *
+from timeside.server.serializers import *
 
 
 class SelectionViewSet(viewsets.ModelViewSet):

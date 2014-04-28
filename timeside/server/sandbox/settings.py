@@ -131,7 +131,9 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_extensions',
     'south',
-    'timeside',
+    # 'timeside',
+    'timeside.server',
+    'timeside.player',
     'rest_framework',
 )
 

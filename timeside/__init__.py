@@ -7,4 +7,5 @@ from . import analyzer
 from . import grapher
 from . import encoder
 
+
 __version__ = '0.5.5'

@@ -1,6 +1,6 @@
 
 from django.contrib import admin
-from timeside.models import *
+from timeside.server.models import *
 
 admin.site.register(Selection)
 admin.site.register(Item)

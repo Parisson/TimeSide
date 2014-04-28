@@ -118,7 +118,6 @@ class Experience(DocBaseResource):
         db_table = app + '_experiences'
         verbose_name = _('Experience')
 
-    
 
 class Processor(models.Model):
     
@@ -140,11 +139,11 @@ class Processor(models.Model):
 
 class Preset(models.Model):
 
-    processor = models.ForeignKey('Processor', related_name="preset", verbose_name=_('processor'), blank=True, null=True)
+    processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True)
     is_public = models.BooleanField(default=False)
 
-    class Meta:
+    class Meta(MetaCore):
         db_table = app + '_presets'
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')

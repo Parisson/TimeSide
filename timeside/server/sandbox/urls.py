@@ -6,7 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^', include('timeside.urls')),
+    url(r'^', include('timeside.server.urls')),
 
     # Examples:
     # url(r'^$', 'server.views.home', name='home'),
