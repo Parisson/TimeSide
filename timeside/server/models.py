@@ -17,8 +17,8 @@ processors = timeside.core.processors(timeside.api.IProcessor)
 
 PROCESSOR_PIDS = [(processor.id(), processor.id())  for processor in processors]
 
-STATUS = ((0, _('failed')), (1, _('pending')), (2, _('running')),
-                         (3, _('done')), (4, _('ready')))
+STATUS = ((0, _('failed')), (1, _('draft')), (2, _('pending')),
+                         (3, _('running')), (4, _('done')))
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
@@ -29,17 +29,6 @@ def get_processor(pid):
             return proc()
     raise ValueError('Processor %s does not exists' % pid) 
 
-def set_mimetype(sender, **kwargs):
-    instance = kwargs['instance']
-    if instance.file:
-        if not instance.mime_type:
-            instance.mime_type = get_mime_type(instance.file.path)
-
-def set_hash(sender, **kwargs):
-    instance = kwargs['instance']
-    if instance.file:
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
 
 class MetaCore:
 
@@ -198,7 +187,7 @@ class Task(models.Model):
         if not os.path.exists(settings.MEDIA_ROOT + results_root):
             os.makedirs(settings.MEDIA_ROOT + results_root)
 
-        self.status_setter(2)
+        self.status_setter(3)
 
         for item in self.selection.items.all():
             path = results_root + os.sep + item.uuid + os.sep
@@ -220,7 +209,7 @@ class Task(models.Model):
             #     time.sleep(30)
             
             if not item.hdf5:
-                item.hdf5 =  path + item.uuid + '.hdf5'
+                item.hdf5 =  path + str(self.experience.uuid) + '.hdf5'
                 item.save()
 
             pipe.run()
@@ -231,32 +220,52 @@ class Task(models.Model):
             for processor in proc_dict.keys():
                 proc = proc_dict[processor]
 
-                for processor_id in proc.results.keys():
-                    parameters = proc.results[processor_id].parameters
+                if proc.type == 'analyzer':                    
+                    for processor_id in proc.results.keys():
+                        parameters = proc.results[processor_id].parameters
+                        preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                        result, c = Result.objects.get_or_create(preset=preset, item=item)
+                        result.hdf5 = path + str(result.uuid) + '.hdf5'
+                        proc.results.to_hdf5(result.hdf5.path)
+                        result.status_setter(4)
+
+                if proc.type == 'grapher':
                     preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
                     result, c = Result.objects.get_or_create(preset=preset, item=item)
-                
-                    if proc.type == 'analyzer':
-                        result.hdf5 = path + item.uuid + '_' + str(proc.UUID) + '.hdf5'
-                        proc.results.to_hdf5(result.hdf5.path)
-                        
-                    if proc.type == 'grapher':
-                        result.file = path + item.uuid + '_' + str(proc.UUID) + '.png'
-                        proc.render(output=result.file)
-                    
-                    result.save()
-            
+                    result.file = path + str(result.uuid) + '.png'
+                    proc.render(output=result.file.path)
+                    result.status_setter(4)
+        
             # except:
             #     self.status_setter(0)
             #     item.lock_setter(False)
             #     break
         
-        self.status_setter(3)
+        self.status_setter(4)
         del proc
         del pipe
 
 
+
+def set_mimetype(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file:
+        if not instance.mime_type:
+            instance.mime_type = get_mime_type(instance.file.path)
+
+def set_hash(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file:
+        if not instance.sha1:
+            instance.sha1 = sha1sum_file(instance.file.path)
+
+def run(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.status == 2:
+        instance.run()
+
 post_save.connect(set_mimetype, sender=Item)
 post_save.connect(set_hash, sender=Item)
 post_save.connect(set_mimetype, sender=Result)
+post_save.connect(run, sender=Task)
 
