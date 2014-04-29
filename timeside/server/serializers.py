@@ -8,49 +8,49 @@ class SelectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Selection
-        fields = ('id', 'items', 'selections', 'author')
+        # fields = ('id', 'items', 'selections', 'author')
 
 
 class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'title', 'file', 'mime_type', 'author')
+        # fields = ('id', 'title', 'file', 'mime_type', 'author')
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Experience
-        fields = ('id', 'presets', 'experiences', 'is_public', 'author')
+        # fields = ('id', 'presets', 'experiences', 'is_public', 'author')
 
 
 class ProcessorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Processor
-        fields = ('id', 'pid', 'version')
+        # fields = ('id', 'pid', 'version')
 
 
 class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Result
-        fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
+        # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
 
 
 class PresetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Preset
-        fields = ('id', 'processor', 'parameters', 'is_public')
+        # fields = ('id', 'processor', 'parameters', 'is_public')
 
 
 class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ('id', 'experience', 'selection', 'status', 'author')
+        # fields = ('id', 'experience', 'selection', 'status', 'author')
 
 
 class UserSerializer(serializers.ModelSerializer):
