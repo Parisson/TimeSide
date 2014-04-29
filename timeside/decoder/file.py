@@ -70,12 +70,12 @@ class FileDecoder(Decoder):
         self.from_stack = False
         self.stack = stack
 
-        self.uri = get_uri(uri)
+        self.uri = get_uri(uri).encode('utf8')
 
         if not sha1:
             self._sha1 = get_sha1(uri)
         else:
-            self._sha1 = sha1
+            self._sha1 = sha1.encode('utf8')
 
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
