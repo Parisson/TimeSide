@@ -50,7 +50,7 @@ class FileDecoder(Decoder):
     def id():
         return "gst_dec"
 
-    def __init__(self, uri, start=0, duration=None, stack=False):
+    def __init__(self, uri, start=0, duration=None, stack=False, sha1=None):
         """
         Construct a new FileDecoder
 
@@ -71,7 +71,11 @@ class FileDecoder(Decoder):
         self.stack = stack
 
         self.uri = get_uri(uri)
-        self._sha1 = get_sha1(uri)
+
+        if not sha1:
+            self._sha1 = get_sha1(uri)
+        else:
+            self._sha1 = sha1
 
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
