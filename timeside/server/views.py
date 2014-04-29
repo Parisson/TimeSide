@@ -10,6 +10,17 @@ from timeside.server.models import *
 from timeside.server.serializers import *
 
 
+def stream_from_file(file):
+    chunk_size = 0x10000
+    f = open(file, 'r')
+    while True:
+        chunk = f.read(chunk_size)
+        if not len(chunk):
+            f.close()
+            break
+        yield chunk
+
+
 class SelectionViewSet(viewsets.ModelViewSet):
 
     model = Selection
@@ -84,8 +95,8 @@ class ResultAnalyzerView(View):
 
 class ResultGrapherView(View):
 
-    model = Item
+    model = Result
 
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
-        return HttpResponse(result.file, mimetype='image/png')
+        return HttpResponse(stream_from_file(result.file.path), mimetype='image/png')

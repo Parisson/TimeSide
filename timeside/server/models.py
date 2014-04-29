@@ -237,6 +237,14 @@ class Task(BaseResource):
                     proc.render(output=result.file.path)
                     result.status_setter(4)
                 
+                if proc.type == 'encoder':
+                    parameters = {}
+                    preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                    result, c = Result.objects.get_or_create(preset=preset, item=item)
+                    result.file = path + str(result.uuid) + '.' + proc.file_extension
+                    proc.render(output=result.file.path)
+                    result.status_setter(4)
+
                 del proc
             
             # except:
