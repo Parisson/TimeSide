@@ -26,6 +26,7 @@ from timeside.grapher.waveform_simple import Waveform
 
 
 class WaveformTransparent(Waveform):
+
     """ Builds a PIL image representing a transparent waveform of the audio stream.
     """
 
@@ -33,8 +34,9 @@ class WaveformTransparent(Waveform):
 
     @interfacedoc
     def __init__(self, width=1024, height=256, bg_color=None, color_scheme='default'):
-        super(WaveformTransparent, self).__init__(width, height, bg_color, color_scheme)
-        self.line_color = (255,255,255)
+        super(WaveformTransparent, self).__init__(
+            width, height, bg_color, color_scheme)
+        self.line_color = (255, 255, 255)
 
     @staticmethod
     @interfacedoc
@@ -48,18 +50,21 @@ class WaveformTransparent(Waveform):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(WaveformTransparent, self).setup(channels, samplerate, blocksize, totalframes)
+        super(WaveformTransparent, self).setup(
+            channels, samplerate, blocksize, totalframes)
 
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
-            buffer = frames[:,0]
-            buffer.shape = (len(buffer),1)
+            buffer = frames[:, 0]
+            buffer.shape = (len(buffer), 1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
-                if self.pixel_cursor < self.image_width-1:
-                    self.draw_peaks_inverted(self.pixel_cursor, peaks(samples), self.line_color)
+                if self.pixel_cursor < self.image_width - 1:
+                    self.draw_peaks_inverted(
+                        self.pixel_cursor, peaks(samples), self.line_color)
                     self.pixel_cursor += 1
-            if self.pixel_cursor == self.image_width-1:
-                self.draw_peaks_inverted(self.pixel_cursor, peaks(samples), self.line_color)
+            if self.pixel_cursor == self.image_width - 1:
+                self.draw_peaks_inverted(
+                    self.pixel_cursor, peaks(samples), self.line_color)
                 self.pixel_cursor += 1
         return frames, eod

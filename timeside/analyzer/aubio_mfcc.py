@@ -29,6 +29,7 @@ from aubio import mfcc, pvoc
 
 
 class AubioMfcc(Analyzer):
+
     """Aubio MFCC analyzer"""
     implements(IAnalyzer)
 

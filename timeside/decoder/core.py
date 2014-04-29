@@ -44,6 +44,7 @@ QUEUE_SIZE = 10
 
 
 class Decoder(Processor):
+
     """General abstract base class for Decoder
     """
     implements(IDecoder)
@@ -115,4 +116,3 @@ class Decoder(Processor):
 
     def stop(self):
         self.src.send_event(gst.event_new_eos())
-

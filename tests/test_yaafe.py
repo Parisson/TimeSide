@@ -1,10 +1,15 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import *
-from timeside.analyzer import Yaafe
-from yaafelib import DataFlow,FeaturePlan
+from timeside.decoder import FileDecoder
+from timeside.analyzer import WITH_YAAFE
+if WITH_YAAFE:
+    from timeside.analyzer import Yaafe
+    from yaafelib import DataFlow, FeaturePlan
+import os
 
+
+@unittest.skipIf(not WITH_YAAFE, 'Yaafe library is not available')
 class TestYaafe(unittest.TestCase):
 
     def setUp(self):

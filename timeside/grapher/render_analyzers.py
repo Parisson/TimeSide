@@ -27,6 +27,7 @@ from timeside import analyzer
 
 
 class DisplayAnalyzer(Grapher):
+
     """
     Builds a PIL image from analyzer result
     This is an Abstract base class
@@ -73,7 +74,8 @@ class DisplayAnalyzer(Grapher):
                                                  color_scheme)
 
                 self.parents.append(analyzer)
-                self._result_id = result_id  # TODO : make it generic when analyzer will be "atomize"
+                # TODO : make it generic when analyzer will be "atomize"
+                self._result_id = result_id
 
             @staticmethod
             @interfacedoc
@@ -87,19 +89,18 @@ class DisplayAnalyzer(Grapher):
 
             __doc__ = """Builds a PIL image representing """ + grapher_name
 
-        NewGrapher.__name__ = 'Display'+result_id
+        NewGrapher.__name__ = 'Display' + result_id
 
         return NewGrapher
 
 
-
 # From here define new Grapher based on Analyzers
-
-aubiopitch = analyzer.AubioPitch()
-DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
-                                           result_id='aubio_pitch.pitch',
-                                           grapher_id='grapher_aubio_pitch',
-                                           grapher_name='Aubio Pitch')
+if analyzer.WITH_AUBIO:
+    aubiopitch = analyzer.AubioPitch()
+    DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
+                                               result_id='aubio_pitch.pitch',
+                                               grapher_id='grapher_aubio_pitch',
+                                               grapher_name='Aubio Pitch')
 
 
 odf = analyzer.OnsetDetectionFunction()
@@ -109,9 +110,9 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(analyzer=odf,
                                                        grapher_name='Onset detection function')
 wav = analyzer.Waveform()
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
-                                                       result_id='waveform_analyzer',
-                                                       grapher_id='grapher_waveform',
-                                                       grapher_name='Waveform from Analyzer')
+                                         result_id='waveform_analyzer',
+                                         grapher_id='grapher_waveform',
+                                         grapher_name='Waveform from Analyzer')
 irit4hz = analyzer.IRITSpeech4Hz()
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
                                                       result_id='irit_speech_4hz.segments',

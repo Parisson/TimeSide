@@ -25,14 +25,16 @@ from timeside.grapher.core import *
 
 
 class SpectrogramLog(Grapher):
+
     """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
 
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
-        super(SpectrogramLog, self).__init__(width, height, bg_color, color_scheme)
+    def __init__(self, width=1024, height=256, bg_color=(0, 0, 0), color_scheme='default'):
+        super(SpectrogramLog, self).__init__(
+            width, height, bg_color, color_scheme)
         self.lower_freq = 100
         self.colors = default_color_schemes[color_scheme]['spectrogram']
         self.pixels = []
@@ -50,7 +52,8 @@ class SpectrogramLog(Grapher):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(SpectrogramLog, self).setup(channels, samplerate, blocksize, totalframes)
+        super(SpectrogramLog, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.image = self.image.convert("P")
         self.image = self.image.transpose(Image.ROTATE_90)
         self.image.putpalette(interpolate_colors(self.colors, True))
@@ -64,26 +67,29 @@ class SpectrogramLog(Grapher):
         y_min = math.log10(f_min)
         y_max = math.log10(f_max)
         for y in range(self.image_height):
-            freq = math.pow(10.0, y_min + y / (self.image_height - 1.0) *(y_max - y_min))
-            fft_bin = freq / f_max * (self.fft_size/2 + 1)
-            if fft_bin < self.fft_size/2:
+            freq = math.pow(
+                10.0, y_min + y / (self.image_height - 1.0) * (y_max - y_min))
+            fft_bin = freq / f_max * (self.fft_size / 2 + 1)
+            if fft_bin < self.fft_size / 2:
                 alpha = fft_bin - int(fft_bin)
                 self.y_to_bin.append((int(fft_bin), alpha * 255))
 
     def draw_spectrum(self, x, spectrum):
         for (index, alpha) in self.y_to_bin:
-            self.pixels.append( int( ((255.0-alpha) * spectrum[index] + alpha * spectrum[index + 1] )) )
+            self.pixels.append(
+                int(((255.0 - alpha) * spectrum[index] + alpha * spectrum[index + 1])))
         for y in range(len(self.y_to_bin), self.image_height):
             self.pixels.append(0)
 
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
-            chunk = frames[:,0].copy()
-            chunk.shape = (len(chunk),1)
+            chunk = frames[:, 0].copy()
+            chunk.shape = (len(chunk), 1)
             for samples, end in self.pixels_adapter.process(chunk, eod):
                 if self.pixel_cursor < self.image_width:
-                    (spectral_centroid, db_spectrum) = self.spectrum.process(samples, True)
+                    (spectral_centroid, db_spectrum) = self.spectrum.process(
+                        samples, True)
                     self.draw_spectrum(self.pixel_cursor, db_spectrum)
                     self.pixel_cursor += 1
         return frames, eod
@@ -93,4 +99,3 @@ class SpectrogramLog(Grapher):
         """ Apply last 2D transforms"""
         self.image.putdata(self.pixels)
         self.image = self.image.transpose(Image.ROTATE_90)
-

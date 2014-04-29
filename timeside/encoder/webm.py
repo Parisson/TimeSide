@@ -26,6 +26,7 @@ from timeside.tools import *
 
 
 class WebMEncoder(GstEncoder):
+
     """ gstreamer-based WebM encoder """
     implements(IEncoder)
 

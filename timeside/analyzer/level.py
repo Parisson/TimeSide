@@ -26,7 +26,9 @@ from timeside.api import IValueAnalyzer
 import numpy as np
 from .utils import MACHINE_EPSILON
 
+
 class Level(Analyzer):
+
     """RMS level analyzer"""
     implements(IValueAnalyzer)
 
@@ -75,7 +77,8 @@ class Level(Analyzer):
         if self.max_value == 0:  # Prevent np.log10(0) = Inf
             self.max_value = MACHINE_EPSILON
 
-        max_level.data_object.value = np.round(20*np.log10(self.max_value), 3)
+        max_level.data_object.value = np.round(
+            20 * np.log10(self.max_value), 3)
         self.process_pipe.results.add(max_level)
 
         # RMS level
@@ -88,5 +91,5 @@ class Level(Analyzer):
         if rms_val == 0:
             rms_val = MACHINE_EPSILON
 
-        rms_level.data_object.value = np.round(20*np.log10(rms_val), 3)
+        rms_level.data_object.value = np.round(20 * np.log10(rms_val), 3)
         self.process_pipe.results.add(rms_level)
