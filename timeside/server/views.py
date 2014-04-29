@@ -11,49 +11,49 @@ from timeside.server.serializers import *
 
 
 class SelectionViewSet(viewsets.ModelViewSet):
-    
+
     model = Selection
     serializer_class = SelectionSerializer
 
 
 class ItemViewSet(viewsets.ModelViewSet):
-    
+
     model = Item
     serializer_class = ItemSerializer
 
 
 class ExperienceViewSet(viewsets.ModelViewSet):
-    
+
     model = Experience
     serializer_class = ExperienceSerializer
 
 
 class ProcessorViewSet(viewsets.ModelViewSet):
-    
+
     model = Processor
     serializer_class = ProcessorSerializer
 
 
 class ResultViewSet(viewsets.ModelViewSet):
-    
+
     model = Result
     serializer_class = ResultSerializer
 
 
 class PresetViewSet(viewsets.ModelViewSet):
-    
+
     model = Preset
     serializer_class = PresetSerializer
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-    
+
     model = Task
     serializer_class = TaskSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    
+
     model = User
     serializer_class = UserSerializer
 
@@ -61,7 +61,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class IndexView(ListView):
 
     model = Item
-    template_name='timeside/index.html'
+    template_name = 'timeside/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -72,11 +72,20 @@ class IndexView(ListView):
 
 
 class ResultAnalyzerView(View):
-    
+
     model = Result
 
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
         container = AnalyzerResultContainer()
-        return HttpResponse(container.from_hdf5(result.hdf5.path).to_json(), mimetype='application/json')
-    
+        return HttpResponse(container.from_hdf5(result.hdf5.path).to_json(),
+                            mimetype='application/json')
+
+
+class ResultGrapherView(View):
+
+    model = Item
+
+    def get(self, request, *args, **kwargs):
+        result = Result.objects.get(pk=kwargs['pk'])
+        return HttpResponse(result.file, mimetype='image/png')
