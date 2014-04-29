@@ -32,8 +32,8 @@ def get_processor(pid):
 
 class MetaCore:
 
-    app_label = app
-
+    app_label = 'server'
+ 
 
 class BaseResource(models.Model):
 
@@ -65,8 +65,8 @@ class DocBaseResource(BaseResource):
 class Selection(DocBaseResource):
 
     items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True, null=True)
-    author = models.ForeignKey(User, related_name="selections", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True, null=True)
+    author = models.ForeignKey(User, related_name="selections", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
         db_table = app + '_selections'
@@ -80,8 +80,8 @@ class Item(DocBaseResource):
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
-    lock = models.BooleanField(default=False)
     author = models.ForeignKey(User, related_name="items", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+    lock = models.BooleanField(default=False)
 
     class Meta(MetaCore):
         db_table = app + '_items'
@@ -99,8 +99,8 @@ class Item(DocBaseResource):
 class Experience(DocBaseResource):
 
     presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True, null=True)
-    author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True, null=True)
+    author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
     is_public = models.BooleanField(default=False)
 
     class Meta(MetaCore):
@@ -126,10 +126,11 @@ class Processor(models.Model):
         super(Processor, self).save(**kwargs)
         
 
-class Preset(models.Model):
+class Preset(BaseResource):
 
     processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True)
+    author = models.ForeignKey(User, related_name="presets", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
     is_public = models.BooleanField(default=False)
 
     class Meta(MetaCore):
@@ -149,7 +150,8 @@ class Result(BaseResource):
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=1)
-    
+    author = models.ForeignKey(User, related_name="results", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
+
     class Meta(MetaCore):
         db_table = app + '_results'
         verbose_name = _('Result')
@@ -163,7 +165,7 @@ class Result(BaseResource):
         return '_'.join([self.item.title, unicode(self.parameters.processor)])
 
 
-class Task(models.Model):
+class Task(BaseResource):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
     selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
@@ -183,11 +185,11 @@ class Task(models.Model):
         self.save()
 
     def run(self):
+        self.status_setter(3)
+
         results_root = 'results'
         if not os.path.exists(settings.MEDIA_ROOT + results_root):
             os.makedirs(settings.MEDIA_ROOT + results_root)
-
-        self.status_setter(3)
 
         for item in self.selection.items.all():
             path = results_root + os.sep + item.uuid + os.sep
@@ -198,7 +200,6 @@ class Task(models.Model):
             pipe = timeside.decoder.FileDecoder(item.file.path)
             
             proc_dict = {}
-
             for preset in self.experience.presets.all():
                 proc = get_processor(preset.processor.pid)
                 proc_dict[preset.processor] = proc
@@ -235,16 +236,16 @@ class Task(models.Model):
                     result.file = path + str(result.uuid) + '.png'
                     proc.render(output=result.file.path)
                     result.status_setter(4)
-        
+                
+                del proc
+            
             # except:
             #     self.status_setter(0)
             #     item.lock_setter(False)
             #     break
         
         self.status_setter(4)
-        del proc
         del pipe
-
 
 
 def set_mimetype(sender, **kwargs):
@@ -263,6 +264,7 @@ def run(sender, **kwargs):
     instance = kwargs['instance']
     if instance.status == 2:
         instance.run()
+
 
 post_save.connect(set_mimetype, sender=Item)
 post_save.connect(set_hash, sender=Item)

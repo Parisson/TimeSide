@@ -18,14 +18,14 @@ class Migration(SchemaMigration):
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='selections', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
         ))
-        db.send_create_signal('timeside', ['Selection'])
+        db.send_create_signal('server', ['Selection'])
 
         # Adding M2M table for field items on 'Selection'
         m2m_table_name = db.shorten_name('timeside_selections_items')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('selection', models.ForeignKey(orm['timeside.selection'], null=False)),
-            ('item', models.ForeignKey(orm['timeside.item'], null=False))
+            ('selection', models.ForeignKey(orm['server.selection'], null=False)),
+            ('item', models.ForeignKey(orm['server.item'], null=False))
         ))
         db.create_unique(m2m_table_name, ['selection_id', 'item_id'])
 
@@ -33,8 +33,8 @@ class Migration(SchemaMigration):
         m2m_table_name = db.shorten_name('timeside_selections_selections')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('from_selection', models.ForeignKey(orm['timeside.selection'], null=False)),
-            ('to_selection', models.ForeignKey(orm['timeside.selection'], null=False))
+            ('from_selection', models.ForeignKey(orm['server.selection'], null=False)),
+            ('to_selection', models.ForeignKey(orm['server.selection'], null=False))
         ))
         db.create_unique(m2m_table_name, ['from_selection_id', 'to_selection_id'])
 
@@ -51,10 +51,10 @@ class Migration(SchemaMigration):
             ('sha1', self.gf('django.db.models.fields.CharField')(max_length=512, blank=True)),
             ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=256, blank=True)),
             ('hdf5', self.gf('django.db.models.fields.files.FileField')(max_length=1024, blank=True)),
-            ('lock', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='items', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
+            ('lock', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal('timeside', ['Item'])
+        db.send_create_signal('server', ['Item'])
 
         # Adding model 'Experience'
         db.create_table('timeside_experiences', (
@@ -65,25 +65,25 @@ class Migration(SchemaMigration):
             ('title', self.gf('django.db.models.fields.CharField')(max_length=512, blank=True)),
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='experiences', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
-            ('is_preset', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('is_public', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
-        db.send_create_signal('timeside', ['Experience'])
+        db.send_create_signal('server', ['Experience'])
 
-        # Adding M2M table for field processors on 'Experience'
-        m2m_table_name = db.shorten_name('timeside_experiences_processors')
+        # Adding M2M table for field presets on 'Experience'
+        m2m_table_name = db.shorten_name('timeside_experiences_presets')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('experience', models.ForeignKey(orm['timeside.experience'], null=False)),
-            ('processor', models.ForeignKey(orm['timeside.processor'], null=False))
+            ('experience', models.ForeignKey(orm['server.experience'], null=False)),
+            ('preset', models.ForeignKey(orm['server.preset'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['experience_id', 'processor_id'])
+        db.create_unique(m2m_table_name, ['experience_id', 'preset_id'])
 
         # Adding M2M table for field experiences on 'Experience'
         m2m_table_name = db.shorten_name('timeside_experiences_experiences')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('from_experience', models.ForeignKey(orm['timeside.experience'], null=False)),
-            ('to_experience', models.ForeignKey(orm['timeside.experience'], null=False))
+            ('from_experience', models.ForeignKey(orm['server.experience'], null=False)),
+            ('to_experience', models.ForeignKey(orm['server.experience'], null=False))
         ))
         db.create_unique(m2m_table_name, ['from_experience_id', 'to_experience_id'])
 
@@ -91,10 +91,22 @@ class Migration(SchemaMigration):
         db.create_table('timeside_processors', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('pid', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('type', self.gf('django.db.models.fields.CharField')(default='none', max_length=64)),
             ('version', self.gf('django.db.models.fields.CharField')(max_length=64, blank=True)),
         ))
-        db.send_create_signal('timeside', ['Processor'])
+        db.send_create_signal('server', ['Processor'])
+
+        # Adding model 'Preset'
+        db.create_table('timeside_presets', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=512, blank=True)),
+            ('processor', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='presets', null=True, to=orm['server.Processor'])),
+            ('parameters', self.gf('django.db.models.fields.TextField')(blank=True)),
+            ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='presets', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
+            ('is_public', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('server', ['Preset'])
 
         # Adding model 'Result'
         db.create_table('timeside_results', (
@@ -102,33 +114,28 @@ class Migration(SchemaMigration):
             ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=512, blank=True)),
-            ('item', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='results', null=True, on_delete=models.SET_NULL, to=orm['timeside.Item'])),
-            ('processor', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='results', null=True, on_delete=models.SET_NULL, to=orm['timeside.Processor'])),
+            ('item', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='results', null=True, on_delete=models.SET_NULL, to=orm['server.Item'])),
+            ('preset', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='results', null=True, on_delete=models.SET_NULL, to=orm['server.Preset'])),
             ('hdf5', self.gf('django.db.models.fields.files.FileField')(max_length=1024, blank=True)),
-            ('output', self.gf('django.db.models.fields.files.FileField')(max_length=1024, blank=True)),
-            ('output_mime_type', self.gf('django.db.models.fields.CharField')(max_length=256, blank=True)),
+            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=1024, blank=True)),
+            ('mime_type', self.gf('django.db.models.fields.CharField')(max_length=256, blank=True)),
             ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
+            ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='results', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
         ))
-        db.send_create_signal('timeside', ['Result'])
-
-        # Adding model 'Parameters'
-        db.create_table('timeside_parameters', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('processor', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='parameters', null=True, to=orm['timeside.Experience'])),
-            ('parameters', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('is_preset', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('timeside', ['Parameters'])
+        db.send_create_signal('server', ['Result'])
 
         # Adding model 'Task'
         db.create_table('timeside_tasks', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('experience', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='task', null=True, to=orm['timeside.Experience'])),
-            ('selection', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='task', null=True, to=orm['timeside.Selection'])),
+            ('date_added', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('date_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, null=True, blank=True)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=512, blank=True)),
+            ('experience', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='task', null=True, to=orm['server.Experience'])),
+            ('selection', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='task', null=True, to=orm['server.Selection'])),
             ('status', self.gf('django.db.models.fields.IntegerField')(default=1)),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='tasks', null=True, on_delete=models.SET_NULL, to=orm['auth.User'])),
         ))
-        db.send_create_signal('timeside', ['Task'])
+        db.send_create_signal('server', ['Task'])
 
 
     def backwards(self, orm):
@@ -147,8 +154,8 @@ class Migration(SchemaMigration):
         # Deleting model 'Experience'
         db.delete_table('timeside_experiences')
 
-        # Removing M2M table for field processors on 'Experience'
-        db.delete_table(db.shorten_name('timeside_experiences_processors'))
+        # Removing M2M table for field presets on 'Experience'
+        db.delete_table(db.shorten_name('timeside_experiences_presets'))
 
         # Removing M2M table for field experiences on 'Experience'
         db.delete_table(db.shorten_name('timeside_experiences_experiences'))
@@ -156,11 +163,11 @@ class Migration(SchemaMigration):
         # Deleting model 'Processor'
         db.delete_table('timeside_processors')
 
+        # Deleting model 'Preset'
+        db.delete_table('timeside_presets')
+
         # Deleting model 'Result'
         db.delete_table('timeside_results')
-
-        # Deleting model 'Parameters'
-        db.delete_table('timeside_parameters')
 
         # Deleting model 'Task'
         db.delete_table('timeside_tasks')
@@ -203,20 +210,20 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'timeside.experience': {
+        'server.experience': {
             'Meta': {'object_name': 'Experience', 'db_table': "'timeside_experiences'"},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'experiences'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['auth.User']"}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'experiences': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'other_experiences'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['timeside.Experience']"}),
+            'experiences': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'other_experiences'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['server.Experience']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_preset': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'processors': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'experiences'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['timeside.Processor']"}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'presets': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'experiences'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['server.Preset']"}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
             'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '512', 'blank': 'True'})
         },
-        'timeside.item': {
+        'server.item': {
             'Meta': {'ordering': "['title']", 'object_name': 'Item', 'db_table': "'timeside_items'"},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'items'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['auth.User']"}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -232,53 +239,60 @@ class Migration(SchemaMigration):
             'url': ('django.db.models.fields.URLField', [], {'max_length': '1024', 'blank': 'True'}),
             'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '512', 'blank': 'True'})
         },
-        'timeside.parameters': {
-            'Meta': {'object_name': 'Parameters'},
+        'server.preset': {
+            'Meta': {'object_name': 'Preset', 'db_table': "'timeside_presets'"},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'presets'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['auth.User']"}),
+            'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_preset': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'is_public': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'parameters': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'processor': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'parameters'", 'null': 'True', 'to': "orm['timeside.Experience']"})
+            'processor': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'presets'", 'null': 'True', 'to': "orm['server.Processor']"}),
+            'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '512', 'blank': 'True'})
         },
-        'timeside.processor': {
+        'server.processor': {
             'Meta': {'object_name': 'Processor', 'db_table': "'timeside_processors'"},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'pid': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'type': ('django.db.models.fields.CharField', [], {'default': "'none'", 'max_length': '64'}),
             'version': ('django.db.models.fields.CharField', [], {'max_length': '64', 'blank': 'True'})
         },
-        'timeside.result': {
+        'server.result': {
             'Meta': {'object_name': 'Result', 'db_table': "'timeside_results'"},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'results'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['auth.User']"}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'file': ('django.db.models.fields.files.FileField', [], {'max_length': '1024', 'blank': 'True'}),
             'hdf5': ('django.db.models.fields.files.FileField', [], {'max_length': '1024', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'item': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'results'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['timeside.Item']"}),
-            'output': ('django.db.models.fields.files.FileField', [], {'max_length': '1024', 'blank': 'True'}),
-            'output_mime_type': ('django.db.models.fields.CharField', [], {'max_length': '256', 'blank': 'True'}),
-            'processor': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'results'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['timeside.Processor']"}),
+            'item': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'results'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['server.Item']"}),
+            'mime_type': ('django.db.models.fields.CharField', [], {'max_length': '256', 'blank': 'True'}),
+            'preset': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'results'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['server.Preset']"}),
             'status': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
             'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '512', 'blank': 'True'})
         },
-        'timeside.selection': {
+        'server.selection': {
             'Meta': {'object_name': 'Selection', 'db_table': "'timeside_selections'"},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'selections'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['auth.User']"}),
             'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'items': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'selections'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['timeside.Item']"}),
-            'selections': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'other_selections'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['timeside.Selection']"}),
+            'items': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'selections'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['server.Item']"}),
+            'selections': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'other_selections'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['server.Selection']"}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '512', 'blank': 'True'}),
             'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '512', 'blank': 'True'})
         },
-        'timeside.task': {
+        'server.task': {
             'Meta': {'object_name': 'Task', 'db_table': "'timeside_tasks'"},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'tasks'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': "orm['auth.User']"}),
-            'experience': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'task'", 'null': 'True', 'to': "orm['timeside.Experience']"}),
+            'date_added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'experience': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'task'", 'null': 'True', 'to': "orm['server.Experience']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'selection': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'task'", 'null': 'True', 'to': "orm['timeside.Selection']"}),
-            'status': ('django.db.models.fields.IntegerField', [], {'default': '1'})
+            'selection': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'task'", 'null': 'True', 'to': "orm['server.Selection']"}),
+            'status': ('django.db.models.fields.IntegerField', [], {'default': '1'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '512', 'blank': 'True'})
         }
     }
 
-    complete_apps = ['timeside']
+    complete_apps = ['server']
