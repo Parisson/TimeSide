@@ -39,7 +39,7 @@ class BaseResource(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=512, editable=False)
+    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=512)
 
     class Meta(MetaCore):
         abstract = True
