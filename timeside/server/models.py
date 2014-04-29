@@ -196,8 +196,7 @@ class Task(BaseResource):
             if not os.path.exists(settings.MEDIA_ROOT + os.sep + path):
                 os.makedirs(settings.MEDIA_ROOT + os.sep + path)
             
-            # pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
-            pipe = timeside.decoder.FileDecoder(item.file.path)
+            pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
             
             proc_dict = {}
             for preset in self.experience.presets.all():
@@ -231,6 +230,7 @@ class Task(BaseResource):
                         result.status_setter(4)
 
                 if proc.type == 'grapher':
+                    parameters = {}
                     preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
                     result, c = Result.objects.get_or_create(preset=preset, item=item)
                     result.file = path + str(result.uuid) + '.png'
