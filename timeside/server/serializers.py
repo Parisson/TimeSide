@@ -1,4 +1,4 @@
-from timeside.models import *
+from timeside.server.models import *
 from rest_framework import serializers
 import django.db.models
 from django.contrib.auth.models import User
