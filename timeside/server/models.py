@@ -26,7 +26,7 @@ def get_mime_type(path):
 def get_processor(pid):
     for proc in processors:
         if proc.id() == pid:
-            return proc()
+            return proc
     raise ValueError('Processor %s does not exists' % pid) 
 
 
@@ -198,11 +198,18 @@ class Task(BaseResource):
             
             pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
             
-            proc_dict = {}
+            presets = {}
             for preset in self.experience.presets.all():
                 proc = get_processor(preset.processor.pid)
-                proc_dict[preset.processor] = proc
+                if proc.type == 'encoder':
+                    result, c = Result.objects.get_or_create(preset=preset, item=item)
+                    result.file = path + str(result.uuid) + '.' + proc.file_extension()
+                    result.save()
+                    proc = proc(result.file.path, overwrite=True)
+                else:
+                    proc = proc()
                 #proc.set_parameters(preset.parameters)
+                presets[preset] = proc
                 pipe = pipe | proc
 
             # while item.lock:
@@ -217,34 +224,25 @@ class Task(BaseResource):
             pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
             
-            for processor in proc_dict.keys():
-                proc = proc_dict[processor]
-
+            for preset in presets.keys():
+                proc = presets[preset]
                 if proc.type == 'analyzer':                    
                     for processor_id in proc.results.keys():
                         parameters = proc.results[processor_id].parameters
-                        preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
+                        preset, c = Preset.objects.get_or_create(processor=preset.processor, parameters=unicode(parameters))
                         result, c = Result.objects.get_or_create(preset=preset, item=item)
                         result.hdf5 = path + str(result.uuid) + '.hdf5'
                         proc.results.to_hdf5(result.hdf5.path)
                         result.status_setter(4)
-
-                if proc.type == 'grapher':
+                elif proc.type == 'grapher':
                     parameters = {}
-                    preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
                     result, c = Result.objects.get_or_create(preset=preset, item=item)
                     result.file = path + str(result.uuid) + '.png'
                     proc.render(output=result.file.path)
                     result.status_setter(4)
-                
-                if proc.type == 'encoder':
-                    parameters = {}
-                    preset, c = Preset.objects.get_or_create(processor=processor, parameters=unicode(parameters))
-                    result, c = Result.objects.get_or_create(preset=preset, item=item)
-                    result.file = path + str(result.uuid) + '.' + proc.file_extension
-                    proc.render(output=result.file.path)
+                elif proc.type == 'encoder':
+                    result = Result.objects.get(preset=preset, item=item)
                     result.status_setter(4)
-
                 del proc
             
             # except:
