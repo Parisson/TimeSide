@@ -99,4 +99,6 @@ class ResultGrapherView(View):
 
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
-        return HttpResponse(stream_from_file(result.file.path), mimetype='image/png')
+        return HttpResponse(stream_from_file(result.file.path), 
+                            mimetype='image/png')
+
