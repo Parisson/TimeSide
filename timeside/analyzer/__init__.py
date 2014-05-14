@@ -1,41 +1,29 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 
 # ----- Load external libraries ------
 # Aubio
 try:
     WITH_AUBIO = True
-    from aubio_temporal import AubioTemporal
-    from aubio_pitch import AubioPitch
-    from aubio_mfcc import *
-    from aubio_melenergy import *
-    from aubio_specdesc import *
+    import aubio
 except ImportError:
     WITH_AUBIO = False
+else:
+    del aubio
 
 # Yaafe
 try:
     WITH_YAAFE = True
-    from yaafe import *
-
+    import yaafelib
 except ImportError:
     WITH_YAAFE = False
+else:
+    del yaafelib
 
 # Vamp Plugins
 try:
-    from vamp_plugin import VampSimpleHost
+    from . vamp_plugin import VampSimpleHost
     VampSimpleHost.SimpleHostProcess(['-v'])
     WITH_VAMP = True
 except OSError:
     WITH_VAMP = False
-
-
-# ----- Load timeside analyzers ------
-from level import Level
-from dc import MeanDCShift
-from spectrogram import Spectrogram
-from waveform import Waveform
-from irit_speech_entropy import IRITSpeechEntropy
-from irit_speech_4hz import IRITSpeech4Hz
-from odf import OnsetDetectionFunction
-if WITH_YAAFE:
-    from limsi_sad import LimsiSad

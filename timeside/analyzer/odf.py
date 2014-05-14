@@ -21,7 +21,7 @@
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
-from timeside.analyzer import Spectrogram
+from .spectrogram import Spectrogram
 from timeside.api import IAnalyzer
 import numpy as np
 from numpy import pi as Pi
@@ -29,6 +29,7 @@ from scipy import signal
 
 
 class OnsetDetectionFunction(Analyzer):
+
     """Onset Detection Function analyzer"""
     implements(IAnalyzer)
 
@@ -76,12 +77,6 @@ class OnsetDetectionFunction(Analyzer):
 
         # Low-pass filtering of the spectrogram amplitude along the time axis
         S = signal.lfilter(signal.hann(15)[8:], 1, abs(spectrogram), axis=0)
-
-
-        import matplotlib.pyplot as plt
-#        plt.figure()
-#        plt.imshow(np.log10(abs(spectrogram)), origin='lower', aspect='auto', interpolation='nearest')
-
 
         # Clip small value to a minimal threshold
         np.maximum(S, 1e-9, out=S)

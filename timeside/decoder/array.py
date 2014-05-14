@@ -26,15 +26,17 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-
-from timeside.decoder.core import *
+from timeside.core import implements, interfacedoc
+from timeside.decoder.core import Decoder, IDecoder
+import numpy as np
 
 
 class ArrayDecoder(Decoder):
+
     """ Decoder taking Numpy array as input"""
     implements(IDecoder)
 
-    output_blocksize = 8*1024
+    output_blocksize = 8 * 1024
 
     # IProcessor methods
 
@@ -117,7 +119,7 @@ class ArrayDecoder(Decoder):
         for index in xrange(0,
                             nb_frames * self.output_blocksize,
                             self.output_blocksize):
-            yield (self.samples[index:index+self.output_blocksize], False)
+            yield (self.samples[index:index + self.output_blocksize], False)
 
         yield (self.samples[nb_frames * self.output_blocksize:], True)
 
@@ -125,12 +127,12 @@ class ArrayDecoder(Decoder):
     def process(self):
         return self.frames.next()
 
-    ## IDecoder methods
+    # IDecoder methods
     @interfacedoc
     def format(self):
         import re
         base_type = re.search('^[a-z]*', self.samples.dtype.name).group(0)
-        return 'audio/x-raw-'+base_type
+        return 'audio/x-raw-' + base_type
 
     @interfacedoc
     def metadata(self):

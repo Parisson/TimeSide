@@ -9,14 +9,21 @@ TimeSide also includes a smart interactive HTML5 player which provides various s
 
 Build status
 ============
-- Branch **master** : |travis_master|
-- Branch **dev** : |travis_dev|
+- Branch **master** : |travis_master| |coveralls_master|
+- Branch **dev** : |travis_dev| |coveralls_dev|
 
 .. |travis_master| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: https://travis-ci.org/yomguy/TimeSide/
 
 .. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
     :target: https://travis-ci.org/yomguy/TimeSide/
+
+.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+
+.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+
 
 
 Goals
@@ -107,9 +114,9 @@ News
  * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
  * Analyzer : update VAMP plugin example in sandbox
  * Analyzer : new *experimental* plugin : Limsi Speech Activity Detection Systems (limsi_sad)
- * Decoder : process any media in streaming mode giving its URL 
+ * Decoder : process any media in streaming mode giving its URL
  * Install : fix some setup requirements
- 
+
 0.5.3
 
  * Make Analyzer rendering more generic and easy to implement
@@ -122,7 +129,7 @@ News
  * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
  * Core : add a condition to catch signal only if a LiveDecoder source is used
  * Various bugfixes
- 
+
 0.5.2
 
  * Add a general launch script "timeside-launch" (see "Shell interface")
@@ -235,7 +242,7 @@ Dive in
 Define some processors::
 
  >>> import timeside
- >>> decoder  =  timeside.decoder.FileDecoder('sweep.wav')
+ >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
  >>> grapher  =  timeside.grapher.Waveform()
  >>> analyzer =  timeside.analyzer.Level()
  >>> encoder  =  timeside.encoder.VorbisEncoder('sweep.ogg')

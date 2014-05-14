@@ -18,12 +18,14 @@
 
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import absolute_import
 
 
-from timeside.component import Interface
+from .component import Interface
 
 
 class IProcessor(Interface):
+
     """Common processor interface"""
 
     @staticmethod
@@ -102,6 +104,7 @@ class IProcessor(Interface):
 
 
 class IEncoder(IProcessor):
+
     """Encoder driver interface. Each encoder is expected to support a specific
     format."""
 
@@ -114,7 +117,8 @@ class IEncoder(IProcessor):
         True when end-of-data is reached."""
 
         # implementation: the constructor must always accept the output argument. It may
-        # accept extra arguments such as bitrate, depth, etc.., but these must be optionnal
+        # accept extra arguments such as bitrate, depth, etc.., but these must
+        # be optionnal
 
     @staticmethod
     def format():
@@ -149,6 +153,7 @@ class IEncoder(IProcessor):
 
 
 class IDecoder(IProcessor):
+
     """Decoder driver interface. Decoders are different of encoders in that
     a given driver may support several input formats, hence this interface doesn't
     export any static method, all informations are dynamic."""
@@ -173,7 +178,9 @@ class IDecoder(IProcessor):
     def mime_type():
         """Return the mime type corresponding to this decoded format"""
 
+
 class IGrapher(IProcessor):
+
     """Media item visualizer driver interface"""
 
     # implementation: graphers which need to know the total number of frames
@@ -200,6 +207,7 @@ class IGrapher(IProcessor):
 
 
 class IAnalyzer(IProcessor):
+
     """Media item analyzer driver interface. This interface is abstract, it doesn't
     describe a particular type of analyzer but is rather meant to group analyzers.
     In particular, the way the result is returned may greatly vary from sub-interface
@@ -223,6 +231,7 @@ class IAnalyzer(IProcessor):
 
 
 class IValueAnalyzer(IAnalyzer):
+
     """Interface for analyzers which return a single numeric value from result()"""
 
     def result():
@@ -239,6 +248,7 @@ class IValueAnalyzer(IAnalyzer):
 
 
 class IEffect(IProcessor):
+
     """Effect processor interface"""
 
     def __init__(self):
@@ -248,4 +258,3 @@ class IEffect(IProcessor):
     @staticmethod
     def name():
         """Return the effect name"""
-

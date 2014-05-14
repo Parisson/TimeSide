@@ -19,15 +19,16 @@
 
 # Author: Paul Brossier <piem@piem.org>
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from preprocessors import downmix_to_mono, frames_adapter
+from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 
 from aubio import specdesc, pvoc
 
 
 class AubioSpecdesc(Analyzer):
+
     """Aubio Spectral Descriptors collection analyzer"""
     implements(IAnalyzer)
 

@@ -1,29 +1,32 @@
 language: python
 python:
-#  - "2.6"
   - "2.7"
 virtualenv:
   system_site_packages: true
-
 
 # command to prepare the system to install prerequisites or dependencies
 before_install:
  - sudo add-apt-repository -y ppa:donk/gstreamer
  - sudo apt-get -qq update
+ - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
  - sudo apt-get install -qq libhdf5-serial-dev python-h5py
  - sudo apt-get install -qq libatlas-dev libatlas-base-dev gfortran
- - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
  - sudo apt-get install -qq python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
 
 # command to install dependencies
 install: 
 # - "pip install -r requirements.txt --use-mirrors"
- - python setup.py install
+- pip install coverage
+- pip install coveralls
+- python setup.py install
+
 
 # command to run tests
 before_script:
 - python tests/get_samples.py
 
 script:
-# - py.test tests --ignore tests/sandbox
- - python setup.py test
+ - coverage run --source=timeside --omit=timeside/analyzer/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
+
+after_success:
+ - coveralls

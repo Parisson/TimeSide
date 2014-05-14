@@ -19,13 +19,13 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
 
 class WebMEncoder(GstEncoder):
+
     """ gstreamer-based WebM encoder """
     implements(IEncoder)
 

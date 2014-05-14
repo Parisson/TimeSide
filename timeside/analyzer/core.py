@@ -25,7 +25,7 @@
 from __future__ import division
 
 from timeside.core import Processor
-import timeside #import __version__
+import timeside  # import __version__
 import numpy
 from collections import OrderedDict
 import h5py
@@ -440,7 +440,8 @@ class DataObject(MetadataObject):
                     maxshape = None
                 else:
                     maxshape = (None,)
-                h5group.create_dataset(key, data=self.__getattribute__(key), maxshape = maxshape)
+                h5group.create_dataset(
+                    key, data=self.__getattribute__(key), maxshape=maxshape)
 
     def from_hdf5(self, h5group):
         for key, dataset in h5group.items():
@@ -823,11 +824,13 @@ class GlobalLabelResult(LabelObject, GlobalObject, AnalyzerResult):
 
 
 class FrameValueResult(ValueObject, FramewiseObject, AnalyzerResult):
+
     def _render_plot(self, ax):
         ax.plot(self.time, self.data)
 
 
 class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
+
     def _render_plot(self, ax):
         pass
 
@@ -841,6 +844,7 @@ class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
 
 
 class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
+
     def _render_plot(self, ax):
         for time, value in (self.time, self.data):
             ax.axvline(time, ymin=0, ymax=value, color='r')
@@ -848,6 +852,7 @@ class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
 
 
 class SegmentLabelResult(LabelObject, SegmentObject, AnalyzerResult):
+
     def _render_plot(self, ax):
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
@@ -855,17 +860,18 @@ class SegmentLabelResult(LabelObject, SegmentObject, AnalyzerResult):
         for key in self.label_metadata.label.keys():
             ax_color[key] = colors.next()
         for time, duration, label in zip(self.time, self.duration, self.data):
-            ax.axvspan(time, time+duration, color=ax_color[label], alpha=0.3)
+            ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 
 
 class AnalyzerResultContainer(dict):
 
     '''
     >>> import timeside
+    >>> from timeside.analyzer.core import Analyzer
     >>> wav_file = 'tests/samples/sweep.mp3' # doctest: +SKIP
-    >>> d = timeside.decoder.FileDecoder(wav_file)
+    >>> d = timeside.decoder.file.FileDecoder(wav_file)
 
-    >>> a = timeside.analyzer.Analyzer()
+    >>> a = Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
     FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
@@ -929,7 +935,12 @@ class AnalyzerResultContainer(dict):
             if isinstance(obj, numpy.ndarray):
                 return {'numpyArray': obj.tolist(),
                         'dtype': obj.dtype.__str__()}
-            raise TypeError(repr(obj) + " is not JSON serializable")
+            elif isinstance(obj, numpy.generic):
+                return numpy.asscalar(obj)
+            else:
+                print obj
+                print type(obj)
+                raise TypeError(repr(obj) + " is not JSON serializable")
 
         json_str = json.dumps([res.as_dict() for res in self.values()],
                               default=NumpyArrayEncoder)

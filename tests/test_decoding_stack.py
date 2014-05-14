@@ -2,10 +2,9 @@
 
 from __future__ import division
 
-from timeside.decoder import FileDecoder
-from timeside.analyzer import Level
+from timeside.decoder.file import FileDecoder
+from timeside.analyzer.level import Level
 from timeside.core import ProcessPipe
-import numpy as np
 from unit_timeside import *
 
 import os.path

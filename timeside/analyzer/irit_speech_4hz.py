@@ -24,12 +24,13 @@ from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
-from numpy import array, hamming, dot, mean, float, isnan
+from numpy import array, hamming, dot, mean, float
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 
 
 class IRITSpeech4Hz(Analyzer):
+
     '''Speech Segmentor based on the 4Hz energy modulation analysis.
 
     Properties:
@@ -157,7 +158,7 @@ class IRITSpeech4Hz(Analyzer):
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                  self.samplerate())
                                  for s in segList]
-        segs.data_object.duration = [(float(s[1]-s[0]+1) * self.blocksize() /
+        segs.data_object.duration = [(float(s[1] - s[0] + 1) * self.blocksize() /
                                      self.samplerate())
                                      for s in segList]
 

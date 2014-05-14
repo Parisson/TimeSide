@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from timeside.decoder import FileDecoder
+from timeside.decoder.file import FileDecoder
 from unit_timeside import *
 
 import os.path

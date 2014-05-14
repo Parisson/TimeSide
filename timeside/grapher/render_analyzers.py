@@ -20,13 +20,14 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import division
 
-from timeside.core import implements, interfacedoc, abstract
+from timeside.core import implements, interfacedoc, abstract, get_processor
 from timeside.api import IGrapher
-from core import Grapher, Image
-from timeside import analyzer
+from core import Grapher
+from .. import analyzer
 
 
 class DisplayAnalyzer(Grapher):
+
     """
     Builds a PIL image from analyzer result
     This is an Abstract base class
@@ -73,7 +74,8 @@ class DisplayAnalyzer(Grapher):
                                                  color_scheme)
 
                 self.parents.append(analyzer)
-                self._result_id = result_id  # TODO : make it generic when analyzer will be "atomize"
+                # TODO : make it generic when analyzer will be "atomize"
+                self._result_id = result_id
 
             @staticmethod
             @interfacedoc
@@ -87,31 +89,31 @@ class DisplayAnalyzer(Grapher):
 
             __doc__ = """Builds a PIL image representing """ + grapher_name
 
-        NewGrapher.__name__ = 'Display'+result_id
+        NewGrapher.__name__ = 'Display' + result_id
 
         return NewGrapher
 
 
 # From here define new Grapher based on Analyzers
 if analyzer.WITH_AUBIO:
-    aubiopitch = analyzer.AubioPitch()
+    aubiopitch = get_processor('aubio_pitch')
     DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
                                                result_id='aubio_pitch.pitch',
                                                grapher_id='grapher_aubio_pitch',
                                                grapher_name='Aubio Pitch')
 
 
-odf = analyzer.OnsetDetectionFunction()
+odf = get_processor('odf')
 DisplayOnsetDetectionFunction = DisplayAnalyzer.create(analyzer=odf,
                                                        result_id='odf',
                                                        grapher_id='grapher_odf',
                                                        grapher_name='Onset detection function')
-wav = analyzer.Waveform()
+wav = get_processor('waveform_analyzer')
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
-                                                       result_id='waveform_analyzer',
-                                                       grapher_id='grapher_waveform',
-                                                       grapher_name='Waveform from Analyzer')
-irit4hz = analyzer.IRITSpeech4Hz()
+                                         result_id='waveform_analyzer',
+                                         grapher_id='grapher_waveform',
+                                         grapher_name='Waveform from Analyzer')
+irit4hz = get_processor('irit_speech_4hz')
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
                                                       result_id='irit_speech_4hz.segments',
                                                       grapher_id='grapher_irit_speech_4hz_segments',

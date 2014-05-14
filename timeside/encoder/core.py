@@ -25,7 +25,7 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.component import abstract
 from timeside.api import IEncoder
-from timeside.tools import numpy_array_to_gst_buffer, MainloopThread
+from timeside.tools.gstutils import numpy_array_to_gst_buffer, MainloopThread
 
 import pygst
 pygst.require('0.10')
@@ -54,7 +54,8 @@ class GstEncoder(Processor):
             if os.path.isdir(output):
                 raise IOError("Encoder output must be a file, not a directory")
             elif os.path.isfile(output) and not overwrite:
-                raise IOError("Encoder output %s exists, but overwrite set to False")
+                raise IOError(
+                    "Encoder output %s exists, but overwrite set to False")
             self.filename = output
         else:
             self.filename = None
@@ -145,7 +146,7 @@ class GstEncoder(Processor):
             self.end_cond.release()
 
     def _on_new_buffer_streaming(self, appsink):
-        #print 'pull-buffer'
+        # print 'pull-buffer'
         chunk = appsink.emit('pull-buffer')
         self._streaming_queue.put(chunk)
 

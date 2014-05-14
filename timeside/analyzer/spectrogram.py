@@ -22,11 +22,12 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from preprocessors import downmix_to_mono, frames_adapter
+from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 import numpy as np
 
 
 class Spectrogram(Analyzer):
+
     """Spectrogram analyzer"""
     implements(IAnalyzer)
 
@@ -50,7 +51,7 @@ class Spectrogram(Analyzer):
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate,
-              blocksize, totalframes)
+                                       blocksize, totalframes)
 
     @staticmethod
     @interfacedoc
