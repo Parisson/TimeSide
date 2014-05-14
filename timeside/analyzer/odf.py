@@ -21,7 +21,7 @@
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
-from timeside.analyzer import Spectrogram
+from .spectrogram import Spectrogram
 from timeside.api import IAnalyzer
 import numpy as np
 from numpy import pi as Pi

@@ -1,37 +1,46 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 
-import api
-import core
-import decoder
-import analyzer
-import grapher
-import encoder
+from . import api
+from . import core
+from . import decoder
+from . import analyzer
+from . import grapher
+from . import encoder
 
 __version__ = '0.5.5'
 
 __all__ = ['api', 'core', 'decoder', 'analyzer', 'grapher', 'encoder']
 
-print __file__
-print __name__
 
 def _discover_modules():
     import sys
     import pkgutil
     import importlib
-    pkg = 'timeside'
+
+    #pkg_path = os.path.abspath()
+
     #__import__(pkg)
-    package = sys.modules[pkg]
-    prefix = pkg + "."
 
-    for importer, modname, ispkg in pkgutil.iter_modules(package.__path__,
-                                                          prefix):
-        #print modname
-        if modname.split('.')[1] in ['decoder', 'analyzer', 'encoder', 'grapher']:
-            print modname
-            mod = importlib.import_module(modname)
+    proc_modules = ['decoder', 'analyzer', 'encoder', 'grapher']
 
-            del mod
-        del modname
+    for module in proc_modules:
+        pkg = '.'.join([__name__, module])
+        importlib.import_module(pkg)
+        package = sys.modules[pkg]
+        prefix = pkg + "."
 
+        for importer, modname, ispkg in pkgutil.walk_packages(package.__path__,
+                                                              prefix):
+            try:
+                importlib.import_module(modname)
+                #__import__(modname)
+            except ImportError as e:
+                if e.message.find('yaafelib'):
+                    print 'No Yaafe'
+                elif e.message.find('aubio'):
+                    print 'No aubio'
+                else:
+                    raise e
 
 _discover_modules()

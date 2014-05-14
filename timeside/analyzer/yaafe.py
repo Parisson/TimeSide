@@ -27,7 +27,8 @@ Created on Thu Jun 13 16:05:02 2013
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from timeside.analyzer import WITH_YAAFE
+#from timeside.analyzer import WITH_YAAFE
+WITH_YAAFE = True
 if WITH_YAAFE:
     from yaafelib import *
 import numpy

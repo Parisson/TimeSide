@@ -28,7 +28,7 @@
 
 
 from timeside.decoder.core import *
-
+import numpy as np
 
 class ArrayDecoder(Decoder):
 

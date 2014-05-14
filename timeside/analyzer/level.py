@@ -24,7 +24,7 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IValueAnalyzer
 import numpy as np
-from .utils import MACHINE_EPSILON
+from timeside.analyzer.utils import MACHINE_EPSILON
 
 
 class Level(Analyzer):

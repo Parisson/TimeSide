@@ -31,6 +31,13 @@ from __future__ import division
 from timeside.decoder.core import *
 from timeside.tools.gstutils import MainloopThread
 
+import Queue
+from gst import _gst as gst
+
+
+GST_APPSINK_MAX_BUFFERS = 10
+QUEUE_SIZE = 10
+
 
 class LiveDecoder(Decoder):
 

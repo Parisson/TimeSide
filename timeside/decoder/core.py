@@ -32,16 +32,6 @@ from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.api import IDecoder
 from timeside.tools import *
 
-from utils import get_uri, get_media_uri_info, stack, get_sha1
-
-import Queue
-from gst import _gst as gst
-import numpy as np
-
-
-GST_APPSINK_MAX_BUFFERS = 10
-QUEUE_SIZE = 10
-
 
 class Decoder(Processor):
 
