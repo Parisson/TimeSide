@@ -26,10 +26,8 @@
 #   Guillaume Pellerin <yomguy@parisson.com>
 
 try:
-    from PIL import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+    from PIL import Image, ImageDraw, ImageColor, ImageEnhance
 except ImportError:
-    import ImageFilter
-    import ImageChops
     import Image
     import ImageDraw
     import ImageColor

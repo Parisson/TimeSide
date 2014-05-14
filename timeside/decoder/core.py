@@ -30,7 +30,6 @@ from __future__ import division
 
 from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.api import IDecoder
-from timeside.tools import *
 
 
 class Decoder(Processor):
@@ -101,6 +100,3 @@ class Decoder(Processor):
     @interfacedoc
     def resolution(self):
         return self.input_width
-
-    def stop(self):
-        self.src.send_event(gst.event_new_eos())

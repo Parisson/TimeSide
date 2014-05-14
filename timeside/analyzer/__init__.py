@@ -10,6 +10,7 @@ except ImportError:
     WITH_AUBIO = False
 else:
     del aubio
+
 # Yaafe
 try:
     WITH_YAAFE = True
@@ -18,6 +19,7 @@ except ImportError:
     WITH_YAAFE = False
 else:
     del yaafelib
+
 # Vamp Plugins
 try:
     from . vamp_plugin import VampSimpleHost

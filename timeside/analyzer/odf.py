@@ -78,10 +78,6 @@ class OnsetDetectionFunction(Analyzer):
         # Low-pass filtering of the spectrogram amplitude along the time axis
         S = signal.lfilter(signal.hann(15)[8:], 1, abs(spectrogram), axis=0)
 
-        import matplotlib.pyplot as plt
-#        plt.figure()
-#        plt.imshow(np.log10(abs(spectrogram)), origin='lower', aspect='auto', interpolation='nearest')
-
         # Clip small value to a minimal threshold
         np.maximum(S, 1e-9, out=S)
 

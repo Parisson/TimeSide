@@ -22,32 +22,27 @@
 #   Guillaume Pellerin <yomguy@parisson.com>
 
 
-import optparse
 import math
-import sys
 import numpy
 
 try:
-    from PIL import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+    from PIL import Image, ImageDraw
 except ImportError:
-    import ImageFilter
-    import ImageChops
     import Image
     import ImageDraw
-    import ImageColor
-    import ImageEnhance
 
-from timeside.core import *
+from timeside.core import Processor, implements, interfacedoc, abstract
+from timeside.core import FixedSizeInputAdapter
 from timeside.api import IGrapher
-from timeside.grapher.color_schemes import default_color_schemes
-from utils import *
+from . utils import smooth, im_watermark, normalize
 
 
 class Spectrum(object):
 
     """ FFT based frequency analysis of audio frames."""
 
-    def __init__(self, fft_size, samplerate, blocksize, totalframes, lower, higher, window_function=None):
+    def __init__(self, fft_size, samplerate, blocksize,
+                 totalframes, lower, higher, window_function=None):
         self.fft_size = fft_size
         self.window = window_function(self.fft_size)
         self.window_function = window_function
@@ -70,7 +65,8 @@ class Spectrum(object):
             self.window = self.window_function(self.blocksize)
 
     def process(self, frames, eod, spec_range=120.0):
-        """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
+        """ Returns a tuple containing the spectral centroid and
+        the spectrum (dB scales) of the input audio frames.
         FFT window sizes are adatable to the input frame size."""
 
         samples = frames[:, 0]
@@ -108,8 +104,11 @@ class Spectrum(object):
                 (energy * (length - 1)) * \
                 self.samplerate * 0.5
             # clip > log10 > scale between 0 and 1
-            spectral_centroid = (math.log10(self.clip(spectral_centroid, self.lower, self.higher)) -
-                                 self.lower_log) / (self.higher_log - self.lower_log)
+            spectral_centroid = (math.log10(self.clip(spectral_centroid,
+                                                      self.lower,
+                                                      self.higher)) -
+                                 self.lower_log) / (self.higher_log -
+                                                    self.lower_log)
 
         return (spectral_centroid, db_spectrum)
 

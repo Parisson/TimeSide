@@ -22,7 +22,7 @@ from __future__ import division
 
 from timeside.core import implements, interfacedoc, abstract, get_processor
 from timeside.api import IGrapher
-from core import Grapher, Image
+from core import Grapher
 from .. import analyzer
 
 
