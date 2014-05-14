@@ -20,10 +20,8 @@
 # Author : Thomas Fillon <thomas@parisson.com>
 """
 Module Yaafe Analyzer
-Created on Thu Jun 13 16:05:02 2013
-
-@author: Thomas Fillon
 """
+
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
