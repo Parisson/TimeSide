@@ -21,7 +21,7 @@
 
 from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
-from timeside.grapher.core import *
+#from timeside.grapher.core import *
 from timeside.grapher.spectrogram_log import SpectrogramLog
 
 

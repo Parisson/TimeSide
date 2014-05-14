@@ -20,22 +20,20 @@
 # Author : Thomas Fillon <thomas@parisson.com>
 """
 Module Yaafe Analyzer
-Created on Thu Jun 13 16:05:02 2013
-
-@author: Thomas Fillon
 """
+
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from timeside.analyzer import WITH_YAAFE
+#from timeside.analyzer import WITH_YAAFE
+WITH_YAAFE = True
 if WITH_YAAFE:
-    from yaafelib import *
+    import yaafelib
 import numpy
 from timeside.analyzer.preprocessors import downmix_to_mono
 
 
 class Yaafe(Analyzer):
-
     """Yaafe feature extraction library interface analyzer"""
     implements(IAnalyzer)
 
@@ -44,21 +42,21 @@ class Yaafe(Analyzer):
 
         # Check arguments
         if yaafeSpecification is None:
-            yaafeSpecification = FeaturePlan(sample_rate=32000)
+            yaafeSpecification = yaafelib.FeaturePlan(sample_rate=32000)
             # add feature definitions manually
             yaafeSpecification.addFeature(
                 'mfcc: MFCC blockSize=512 stepSize=256')
 
-        if isinstance(yaafeSpecification, DataFlow):
+        if isinstance(yaafeSpecification, yaafelib.DataFlow):
             self.dataFlow = yaafeSpecification
-        elif isinstance(yaafeSpecification, FeaturePlan):
+        elif isinstance(yaafeSpecification, yaafelib.FeaturePlan):
             self.featurePlan = yaafeSpecification
             self.dataFlow = self.featurePlan.getDataFlow()
         else:
             raise TypeError("'%s' Type must be either '%s' or '%s'" %
                             (str(yaafeSpecification),
-                             str(DataFlow),
-                             str(FeaturePlan)))
+                             str(yaafelib.DataFlow),
+                             str(yaafelib.FeaturePlan)))
         self.yaafe_engine = None
 
     @interfacedoc
@@ -66,7 +64,7 @@ class Yaafe(Analyzer):
               blocksize=None, totalframes=None):
         super(Yaafe, self).setup(channels, samplerate, blocksize, totalframes)
         # Configure a YAAFE engine
-        self.yaafe_engine = Engine()
+        self.yaafe_engine = yaafelib.Engine()
         self.yaafe_engine.load(self.dataFlow)
         self.yaafe_engine.reset()
         self.input_samplerate = samplerate

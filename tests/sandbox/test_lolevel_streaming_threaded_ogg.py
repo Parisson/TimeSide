@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from timeside.core import *
-from timeside.decoder import FileDecoder
+from timeside.decoder.file import FileDecoder
 from timeside.encoder import Mp3Encoder, VorbisEncoder
 
 import sys

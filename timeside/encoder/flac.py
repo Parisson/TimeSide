@@ -19,10 +19,9 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
 
 class FlacEncoder(GstEncoder):

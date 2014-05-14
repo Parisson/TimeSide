@@ -24,8 +24,6 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import numpy as np
 
-from preprocessors import downmix_to_mono, frames_adapter
-
 
 class Waveform(Analyzer):
 

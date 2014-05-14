@@ -19,21 +19,24 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
-from timeside.grapher.core import *
+#from timeside.grapher.core import *
 from timeside.grapher.waveform_simple import Waveform
+from . utils import peaks
 
 
 class WaveformTransparent(Waveform):
 
-    """ Builds a PIL image representing a transparent waveform of the audio stream.
+    """ Builds a PIL image representing a transparent waveform
+    of the audio stream.
     """
 
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=None, color_scheme='default'):
+    def __init__(self, width=1024, height=256, bg_color=None,
+                 color_scheme='default'):
         super(WaveformTransparent, self).__init__(
             width, height, bg_color, color_scheme)
         self.line_color = (255, 255, 255)
@@ -49,7 +52,8 @@ class WaveformTransparent(Waveform):
         return "Waveform transparent"
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
         super(WaveformTransparent, self).setup(
             channels, samplerate, blocksize, totalframes)
 

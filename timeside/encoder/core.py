@@ -25,7 +25,7 @@
 from timeside.core import Processor, implements, interfacedoc
 from timeside.component import abstract
 from timeside.api import IEncoder
-from timeside.tools import numpy_array_to_gst_buffer, MainloopThread
+from timeside.tools.gstutils import numpy_array_to_gst_buffer, MainloopThread
 
 import pygst
 pygst.require('0.10')

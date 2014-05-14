@@ -869,7 +869,7 @@ class AnalyzerResultContainer(dict):
     >>> import timeside
     >>> from timeside.analyzer.core import Analyzer
     >>> wav_file = 'tests/samples/sweep.mp3' # doctest: +SKIP
-    >>> d = timeside.decoder.FileDecoder(wav_file)
+    >>> d = timeside.decoder.file.FileDecoder(wav_file)
 
     >>> a = Analyzer()
     >>> (d|a).run()

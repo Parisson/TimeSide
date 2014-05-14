@@ -2,7 +2,7 @@
 
 from __future__ import division
 
-from timeside.decoder import FileDecoder
+from timeside.decoder.file import FileDecoder
 from timeside.core import ProcessPipe
 
 from unit_timeside import *
@@ -127,7 +127,7 @@ class TestDecoding(unittest.TestCase):
 
         expected_totalframes = [self.expected_totalframes, self.expected_totalframes +32]  # +32 to handle some issue with ogg
         self.assertIn(totalframes, expected_totalframes)
-        
+
         input_duration = decoder.input_totalframes / decoder.input_samplerate
         output_duration = decoder.totalframes() / decoder.output_samplerate
         if self.test_exact_duration:

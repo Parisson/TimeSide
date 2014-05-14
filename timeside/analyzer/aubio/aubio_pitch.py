@@ -19,10 +19,10 @@
 
 # Author: Paul Brossier <piem@piem.org>
 
-from ..core import implements, interfacedoc
-from .core import Analyzer
-from ..api import IAnalyzer
-from preprocessors import downmix_to_mono, frames_adapter
+from timeside.core import implements, interfacedoc
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
+from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 from aubio import pitch
 import numpy as np
 

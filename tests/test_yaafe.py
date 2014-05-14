@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import FileDecoder
+from timeside.decoder.file import FileDecoder
 from timeside.analyzer import WITH_YAAFE
 if WITH_YAAFE:
-    from timeside.analyzer import Yaafe
+    from timeside.analyzer.yaafe import Yaafe
     from yaafelib import DataFlow, FeaturePlan
 import os
 
