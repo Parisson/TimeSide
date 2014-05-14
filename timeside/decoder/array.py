@@ -30,6 +30,7 @@
 from timeside.decoder.core import *
 import numpy as np
 
+
 class ArrayDecoder(Decoder):
 
     """ Decoder taking Numpy array as input"""
