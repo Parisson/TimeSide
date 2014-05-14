@@ -18,6 +18,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Paul Brossier <piem@piem.org>
+from __future__ import absolute_import
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
