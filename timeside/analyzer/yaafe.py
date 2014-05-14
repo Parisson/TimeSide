@@ -36,7 +36,6 @@ from timeside.analyzer.preprocessors import downmix_to_mono
 
 
 class Yaafe(Analyzer):
-
     """Yaafe feature extraction library interface analyzer"""
     implements(IAnalyzer)
 
