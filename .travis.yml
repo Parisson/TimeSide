@@ -26,7 +26,7 @@ before_script:
 - python tests/get_samples.py
 
 script:
- - coverage run --source=timeside --omit=timeside/analyzer/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
+ - coverage run --source=timeside --omit=timeside/analyzer/aubio/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
 
 after_success:
  - coveralls
