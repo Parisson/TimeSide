@@ -19,10 +19,13 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
-from timeside.grapher.core import *
-from timeside.grapher.waveform_simple import Waveform
+#from timeside.grapher.core import *
+from . waveform_simple import Waveform
+from . utils import peaks
+
+import numpy
 
 
 class WaveformContourBlack(Waveform):

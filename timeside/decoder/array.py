@@ -26,8 +26,9 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-
-from timeside.decoder.core import *
+from timeside.core import implements, interfacedoc
+from timeside.decoder.core import Decoder, IDecoder
+import numpy as np
 
 
 class ArrayDecoder(Decoder):

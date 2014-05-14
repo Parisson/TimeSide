@@ -18,13 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-from timeside.component import *
-from timeside.api import IProcessor
-from timeside.exceptions import Error, ApiError
-
+from .component import Component, MetaComponent, abstract
+from .component import implements, implementations, interfacedoc
+from .api import IProcessor
+from .exceptions import Error, ApiError
 
 import re
-import time
 import numpy
 import uuid
 
@@ -39,9 +38,8 @@ _processors = {}
 
 
 class MetaProcessor(MetaComponent):
-
-    """Metaclass of the Processor class, used mainly for ensuring that processor
-    id's are wellformed and unique"""
+    """Metaclass of the Processor class, used mainly for ensuring
+    that processor id's are wellformed and unique"""
 
     valid_id = re.compile("^[a-z][_a-z0-9]*$")
 
@@ -58,7 +56,8 @@ class MetaProcessor(MetaComponent):
                     pass
                 else:
                     raise ApiError("%s and %s have the same id: '%s'"
-                                   % (new_class.__name__, _processors[id].__name__, id))
+                                   % (new_class.__name__,
+                                      _processors[id].__name__, id))
             if not MetaProcessor.valid_id.match(id):
                 raise ApiError("%s has a malformed id: '%s'"
                                % (new_class.__name__, id))
@@ -76,7 +75,7 @@ class Processor(Component):
     Attributes:
               parents :  List of parent Processors that must be processed
                          before the current Processor
-              pipe :     The current ProcessPipe in which the Processor will run
+              pipe :     The ProcessPipe in which the Processor will run
         """
     __metaclass__ = MetaProcessor
 

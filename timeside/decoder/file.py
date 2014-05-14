@@ -28,9 +28,20 @@
 
 from __future__ import division
 
-from timeside.decoder.core import *
-from timeside.tools.gstutils import MainloopThread
+from timeside.decoder.core import Decoder, IDecoder, implements, interfacedoc
+from timeside.tools.gstutils import MainloopThread, gobject
+from timeside.tools.gstutils import gst_buffer_to_numpy_array
 import threading
+
+from timeside.decoder.utils import get_uri, get_media_uri_info, stack, get_sha1
+
+import Queue
+from gst import _gst as gst
+
+GST_APPSINK_MAX_BUFFERS = 10
+QUEUE_SIZE = 10
+
+import numpy as np
 
 
 class FileDecoder(Decoder):
@@ -341,6 +352,8 @@ class FileDecoder(Decoder):
         # TODO check
         return self.tags
 
+    def stop(self):
+        self.src.send_event(gst.event_new_eos())
 
 if __name__ == "__main__":
     import doctest

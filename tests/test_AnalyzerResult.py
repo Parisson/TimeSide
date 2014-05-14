@@ -2,7 +2,7 @@
 
 from unit_timeside import unittest, TestRunner
 from timeside.analyzer.core import AnalyzerResult, AnalyzerResultContainer
-from timeside.__init__ import __version__
+from timeside import __version__
 import numpy as np
 from math import pi
 

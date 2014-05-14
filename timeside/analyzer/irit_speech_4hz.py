@@ -24,7 +24,7 @@ from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
-from numpy import array, hamming, dot, mean, float, isnan
+from numpy import array, hamming, dot, mean, float
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 

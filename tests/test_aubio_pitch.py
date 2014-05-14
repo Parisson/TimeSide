@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import *
+from timeside.decoder.file import FileDecoder
 from timeside.analyzer import WITH_AUBIO
 if WITH_AUBIO:
-    from timeside.analyzer.aubio_pitch import AubioPitch
+    from timeside.analyzer.aubio.aubio_pitch import AubioPitch
 import os
 
 

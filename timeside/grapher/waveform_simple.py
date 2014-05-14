@@ -19,9 +19,10 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
-from timeside.grapher.core import *
+from timeside.grapher.core import Grapher
+from . utils import peaks
 
 
 class Waveform(Grapher):
