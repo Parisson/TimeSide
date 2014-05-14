@@ -36,10 +36,10 @@ def _discover_modules():
                 importlib.import_module(modname)
                 #__import__(modname)
             except ImportError as e:
-                if e.message.find('yaafelib'):
+                if e.message.count('yaafelib'):
                     print 'No Yaafe'
-                elif e.message.find('aubio'):
-                    print 'No aubio'
+                elif e.message.count('aubio'):
+                    print 'No Aubio'
                 else:
                     raise e
 
