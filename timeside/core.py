@@ -18,13 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-from timeside.component import *
-from timeside.api import IProcessor
-from timeside.exceptions import Error, ApiError
-
+from .component import Component, MetaComponent, abstract
+from .component import implements, implementations, interfacedoc
+from .api import IProcessor
+from .exceptions import Error, ApiError
 
 import re
-import time
 import numpy
 import uuid
 
@@ -39,8 +38,8 @@ _processors = {}
 
 
 class MetaProcessor(MetaComponent):
-    """Metaclass of the Processor class, used mainly for ensuring that processor
-    id's are wellformed and unique"""
+    """Metaclass of the Processor class, used mainly for ensuring
+    that processor id's are wellformed and unique"""
 
     valid_id = re.compile("^[a-z][_a-z0-9]*$")
 
@@ -48,7 +47,7 @@ class MetaProcessor(MetaComponent):
         new_class = MetaComponent.__new__(cls, name, bases, d)
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
-            if _processors.has_key(id):
+            if id in _processors:
                 # Doctest test can duplicate a processor
                 # This can be identify by the conditon "module == '__main__'"
                 if new_class.__module__ == '__main__':
@@ -57,10 +56,11 @@ class MetaProcessor(MetaComponent):
                     pass
                 else:
                     raise ApiError("%s and %s have the same id: '%s'"
-                        % (new_class.__name__, _processors[id].__name__, id))
+                                   % (new_class.__name__,
+                                      _processors[id].__name__, id))
             if not MetaProcessor.valid_id.match(id):
                 raise ApiError("%s has a malformed id: '%s'"
-                    % (new_class.__name__, id))
+                               % (new_class.__name__, id))
 
             _processors[id] = new_class
 
@@ -68,13 +68,14 @@ class MetaProcessor(MetaComponent):
 
 
 class Processor(Component):
+
     """Base component class of all processors
 
 
     Attributes:
               parents :  List of parent Processors that must be processed
                          before the current Processor
-              pipe :     The current ProcessPipe in which the Processor will run
+              pipe :     The ProcessPipe in which the Processor will run
         """
     __metaclass__ = MetaProcessor
 
@@ -92,10 +93,10 @@ class Processor(Component):
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
-        self.source_channels     = channels
-        self.source_samplerate   = samplerate
-        self.source_blocksize    = blocksize
-        self.source_totalframes  = totalframes
+        self.source_channels = channels
+        self.source_samplerate = samplerate
+        self.source_blocksize = blocksize
+        self.source_totalframes = totalframes
 
         # If empty Set default values for input_* attributes
         # may be setted by the processor during __init__()
@@ -107,7 +108,6 @@ class Processor(Component):
             self.input_blocksize = self.source_blocksize
         if not hasattr(self, 'input_stepsize'):
             self.input_stepsize = self.source_blocksize
-
 
     # default channels(), samplerate() and blocksize() implementations returns
     # the source characteristics, but processors may change this behaviour by
@@ -156,6 +156,7 @@ class Processor(Component):
 
 
 class FixedSizeInputAdapter(object):
+
     """Utility to make it easier to write processors which require fixed-sized
     input buffers."""
 
@@ -164,10 +165,10 @@ class FixedSizeInputAdapter(object):
         channels the number of channels, and pad indicates whether the last block should
         be padded with zeros."""
 
-        self.buffer      = numpy.empty((buffer_size, channels))
+        self.buffer = numpy.empty((buffer_size, channels))
         self.buffer_size = buffer_size
-        self.len         = 0
-        self.pad         = pad
+        self.len = 0
+        self.pad = pad
 
     def blocksize(self, input_totalframes):
         """Return the total number of frames that this adapter will output according to the
@@ -190,9 +191,9 @@ class FixedSizeInputAdapter(object):
         remaining = len(frames)
 
         while remaining:
-            space   = self.buffer_size - self.len
+            space = self.buffer_size - self.len
             copylen = remaining < space and remaining or space
-            src     = frames[src_index:src_index + copylen]
+            src = frames[src_index:src_index + copylen]
             if self.len == 0 and copylen == self.buffer_size:
                 # avoid unnecessary copy
                 buffer = src
@@ -202,7 +203,7 @@ class FixedSizeInputAdapter(object):
 
             remaining -= copylen
             src_index += copylen
-            self.len  += copylen
+            self.len += copylen
 
             if self.len == self.buffer_size:
                 yield buffer, (eod and not remaining)
@@ -227,14 +228,15 @@ def processors(interface=IProcessor, recurse=True):
 
 def get_processor(processor_id):
     """Return a processor by its id"""
-    if not _processors.has_key(processor_id):
+    if not processor_id in _processors:
         raise Error("No processor registered with id: '%s'"
-                      % processor_id)
+                    % processor_id)
 
     return _processors[processor_id]
 
 
 class ProcessPipe(object):
+
     """Handle a pipe of processors
 
     Attributes:
@@ -269,7 +271,8 @@ class ProcessPipe(object):
             try:
                 iter(other)
             except TypeError:
-                raise Error("Can not add this type of object to a pipe: %s", str(other))
+                raise Error(
+                    "Can not add this type of object to a pipe: %s", str(other))
 
             for item in other:
                 self |= item
@@ -351,6 +354,7 @@ class ProcessPipe(object):
         import threading
 
         class PipeThread(threading.Thread):
+
             def __init__(self, process_pipe):
                 super(PipeThread, self).__init__(name='pipe_thread')
                 self.process_pipe = process_pipe
@@ -372,7 +376,7 @@ class ProcessPipe(object):
             raise TypeError('Function only available in streaming mode')
 
         while pipe_thread.is_alive():
-            #yield count
+            # yield count
             chunk = self._streamer.get_stream_chunk()
             if chunk is not None:
                 yield chunk

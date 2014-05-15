@@ -30,8 +30,8 @@ from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 
 
-
 class Mp3Encoder(GstEncoder):
+
     """ gstreamer-based MP3 encoder """
     implements(IEncoder)
 
@@ -98,7 +98,7 @@ class Mp3Encoder(GstEncoder):
             try:
                 id3.add(frame)
             except:
-                raise IOError('EncoderError: cannot tag "'+tag+'"')
+                raise IOError('EncoderError: cannot tag "' + tag + '"')
         try:
             id3.save()
         except:

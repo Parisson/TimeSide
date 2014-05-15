@@ -1,9 +1,14 @@
 #! /usr/bin/env python
 
 from unit_timeside import *
-from timeside.decoder import *
-from timeside.analyzer.aubio_temporal import AubioTemporal
+from timeside.decoder.file import FileDecoder
+from timeside.analyzer import WITH_AUBIO
+if WITH_AUBIO:
+    from timeside.analyzer.aubio.aubio_temporal import AubioTemporal
+import os
 
+
+@unittest.skipIf(not WITH_AUBIO, 'Aubio library is not available')
 class TestAubioTemporal(unittest.TestCase):
 
     def setUp(self):

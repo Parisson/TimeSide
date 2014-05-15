@@ -23,9 +23,10 @@
 from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
+
 
 class AudioSink(GstEncoder):
+
     """gstreamer-based Audio Sink
 
     This encoder plays the decoded audio stream to the sound card
@@ -33,8 +34,8 @@ class AudioSink(GstEncoder):
 
     >>> import timeside
     >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> d = timeside.decoder.FileDecoder(wav_file)
-    >>> e = timeside.encoder.AudioSink()
+    >>> d = timeside.decoder.file.FileDecoder(wav_file)
+    >>> e = timeside.encoder.audiosink.AudioSink()
     >>> (d|e).run() # doctest: +SKIP
     """
 

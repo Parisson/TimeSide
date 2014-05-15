@@ -2,10 +2,8 @@
 
 from __future__ import division
 
-from timeside.core import *
-from timeside.decoder import *
-from timeside.analyzer import *
-from timeside.encoder import *
+from timeside.core import get_processor, ProcessPipe
+from timeside.decoder.file import FileDecoder
 from timeside.component import *
 
 from unit_timeside import *
@@ -24,43 +22,42 @@ class TestTranscodingFromWav(unittest.TestCase):
 
     def testWav(self):
         "Test conversion to wav"
-        self.encoder_function = WavEncoder
+        self.encoder_id = 'gst_wav_enc'
 
     def testMp3(self):
         "Test conversion to mp3"
-        self.encoder_function = Mp3Encoder
+        self.encoder_id = 'gst_mp3_enc'
 
     def testOgg(self):
         "Test conversion to ogg"
-        self.encoder_function = VorbisEncoder
+        self.encoder_id = 'gst_vorbis_enc'
 
     def testWebM(self):
         "Test conversion to webm"
-        self.encoder_function = WebMEncoder
+        self.encoder_id = 'gst_webm_enc'
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 
     def testM4a(self):
         "Test conversion to m4a"
-        self.encoder_function = AacEncoder
+        self.encoder_id = 'gst_aac_enc'
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
 
+        encoder_cls = get_processor(self.encoder_id)
 
-
-        file_extension = '.' + self.encoder_function.file_extension()
+        file_extension = '.' + encoder_cls.file_extension()
 
         self.target = tmp_file_sink(prefix=self.__class__.__name__,
                                   suffix=file_extension)
-        encoder = self.encoder_function(self.target)
+        encoder = encoder_cls(self.target)
         (decoder | encoder).run()
 
         decoder_encoded = FileDecoder(self.target)
 
-        from timeside.analyzer import Waveform
-        a = Waveform()  # Arbitrary analyzer for running the next pipe
-        (decoder_encoded | a).run()
+        pipe = ProcessPipe(decoder_encoded)
+        pipe.run()
 
         import os
         os.unlink(self.target)

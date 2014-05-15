@@ -30,6 +30,7 @@ from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITSpeechEntropy(Analyzer):
+
     """Speech Segmentor based on Entropy analysis."""
 
     implements(IAnalyzer)
@@ -114,7 +115,7 @@ class IRITSpeechEntropy(Analyzer):
                                  self.samplerate())
                                  for s in segList]
 
-        segs.data_object.duration = [(float(s[1]-s[0]+1) * self.blocksize() /
+        segs.data_object.duration = [(float(s[1] - s[0] + 1) * self.blocksize() /
                                      self.samplerate())
                                      for s in segList]
 

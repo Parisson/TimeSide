@@ -18,15 +18,18 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Paul Brossier <piem@piem.org>
+from __future__ import absolute_import
 
-from ..core import implements, interfacedoc
-from .core import Analyzer
-from ..api import IAnalyzer
-from preprocessors import downmix_to_mono, frames_adapter
+from timeside.core import implements, interfacedoc
+from timeside.analyzer.core import Analyzer
+from timeside.api import IAnalyzer
+from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 from aubio import pitch
 import numpy as np
 
+
 class AubioPitch(Analyzer):
+
     """Aubio Pitch estimation analyzer"""
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
@@ -42,8 +45,9 @@ class AubioPitch(Analyzer):
                                       samplerate,
                                       blocksize,
                                       totalframes)
-        self.aubio_pitch = pitch("default", self.input_blocksize, self.input_stepsize,
-                       samplerate)
+        self.aubio_pitch = pitch(
+            "default", self.input_blocksize, self.input_stepsize,
+            samplerate)
         self.aubio_pitch.set_unit("freq")
         self.block_read = 0
         self.pitches = []
@@ -72,7 +76,8 @@ class AubioPitch(Analyzer):
     def process(self, frames, eod=False):
         #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
         self.pitches += [self.aubio_pitch(frames)[0]]
-        self.pitch_confidences += [np.nan_to_num(self.aubio_pitch.get_confidence())]
+        self.pitch_confidences += [
+            np.nan_to_num(self.aubio_pitch.get_confidence())]
         self.block_read += 1
         return frames, eod
 
@@ -88,7 +93,8 @@ class AubioPitch(Analyzer):
         pitch.data_object.value = self.pitches
         self.process_pipe.results.add(pitch)
 
-        pitch_confidence = self.new_result(data_mode='value', time_mode='framewise')
+        pitch_confidence = self.new_result(
+            data_mode='value', time_mode='framewise')
         pitch_confidence.id_metadata.id += '.' + "pitch_confidence"
         pitch_confidence.id_metadata.name += ' ' + "pitch confidence"
         pitch_confidence.id_metadata.unit = None

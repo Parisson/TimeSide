@@ -23,16 +23,19 @@ import numpy as np
 
 MACHINE_EPSILON = np.finfo(np.float32).eps
 
+
 def downsample_blocking(frames, hop_s, dtype='float32'):
     # downmixing to one channel
     if len(frames.shape) != 1:
-        downsampled = frames.sum(axis = -1) / frames.shape[-1]
+        downsampled = frames.sum(axis=-1) / frames.shape[-1]
     else:
         downsampled = frames
     # zero padding to have a multiple of hop_s
     if downsampled.shape[0] % hop_s != 0:
-        pad_length = hop_s + downsampled.shape[0] / hop_s * hop_s - downsampled.shape[0]
-        downsampled = np.hstack([downsampled, np.zeros(pad_length, dtype = dtype)])
+        pad_length = hop_s + \
+            downsampled.shape[0] / hop_s * hop_s - downsampled.shape[0]
+        downsampled = np.hstack(
+            [downsampled, np.zeros(pad_length, dtype=dtype)])
     # blocking
     return downsampled.reshape(downsampled.shape[0] / hop_s, hop_s)
 
@@ -53,11 +56,11 @@ def computeModulation(serie, wLen, withLog=True):
         '''
         sLen = len(serie)
         modul = np.zeros((sLen,))
-        w = int(wLen/2)
+        w = int(wLen / 2)
 
-        for i in range(w, sLen-w):
+        for i in range(w, sLen - w):
 
-            d = serie[i-w:i+w]
+            d = serie[i - w:i + w]
             if withLog:
                 if not (d > 0).all():
                     d[d <= 0] = MACHINE_EPSILON  # prevent log(0)=inf
@@ -66,7 +69,7 @@ def computeModulation(serie, wLen, withLog=True):
             modul[i] = np.var(d)
 
         modul[:w] = modul[w]
-        modul[-w:] = modul[-w-1]
+        modul[-w:] = modul[-w - 1]
 
         return modul
 
@@ -76,16 +79,16 @@ def segmentFromValues(values, offset=0):
 
     '''
 
-    seg = [offset,-1,values[0]]
+    seg = [offset, -1, values[0]]
     segList = []
-    for i,v in enumerate(values) :
+    for i, v in enumerate(values):
 
-        if not (v == seg[2]) :
-            seg[1] = i+offset-1
+        if not (v == seg[2]):
+            seg[1] = i + offset - 1
             segList.append(tuple(seg))
-            seg = [i+offset,-1,v]
+            seg = [i + offset, -1, v]
 
-    seg[1] = i+offset
+    seg[1] = i + offset
     segList.append(tuple(seg))
 
     return segList
@@ -97,7 +100,7 @@ def segmentFromValues(values, offset=0):
 # Double emploi avec le calcul mfcc d'aubio. Voir pour la fusion...
 #                         Maxime
 
-def melFilterBank(nbFilters,fftLen,sr) :
+def melFilterBank(nbFilters, fftLen, sr):
     '''
     Grenerate a Mel Filter-Bank
 
@@ -111,33 +114,33 @@ def melFilterBank(nbFilters,fftLen,sr) :
                         (Use numpy *dot* function).
     '''
 
-    fh = float(sr)/2.0
-    mh = 2595*np.log10(1+fh/700)
+    fh = float(sr) / 2.0
+    mh = 2595 * np.log10(1 + fh / 700)
 
-    step = mh/nbFilters;
+    step = mh / nbFilters
 
-    mcenter = np.arange(step,mh,step)
+    mcenter = np.arange(step, mh, step)
 
-    fcenter = 700*(10**(mcenter/2595)-1)
+    fcenter = 700 * (10 ** (mcenter / 2595) - 1)
 
-    filterbank = np.zeros((fftLen,nbFilters));
+    filterbank = np.zeros((fftLen, nbFilters))
 
-    for i,_ in enumerate(fcenter) :
+    for i, _ in enumerate(fcenter):
 
-        if i == 0 :
+        if i == 0:
             fmin = 0.0
-        else :
-            fmin = fcenter[i-1]
+        else:
+            fmin = fcenter[i - 1]
 
-        if i == len(fcenter)-1 :
+        if i == len(fcenter) - 1:
             fmax = fh
-        else :
-            fmax = fcenter[i+1]
+        else:
+            fmax = fcenter[i + 1]
 
-        imin = np.ceil(fmin/fh*fftLen)
-        imax = np.ceil(fmax/fh*fftLen)
+        imin = np.ceil(fmin / fh * fftLen)
+        imax = np.ceil(fmax / fh * fftLen)
 
-        filterbank[imin:imax,i] = triangle(imax-imin)
+        filterbank[imin:imax, i] = triangle(imax - imin)
 
     return filterbank
 
@@ -152,15 +155,15 @@ def triangle(length):
         - triangle : triangle filter.
 
     '''
-    triangle = np.zeros((1,length))[0]
-    climax= np.ceil(length/2)
+    triangle = np.zeros((1, length))[0]
+    climax = np.ceil(length / 2)
 
-    triangle[0:climax] = np.linspace(0,1,climax)
-    triangle[climax:length] = np.linspace(1,0,length-climax)
+    triangle[0:climax] = np.linspace(0, 1, climax)
+    triangle[climax:length] = np.linspace(1, 0, length - climax)
     return triangle
 
 
-def entropy(serie,nbins=10,base=np.exp(1),approach='unbiased'):
+def entropy(serie, nbins=10, base=np.exp(1), approach='unbiased'):
         '''
         Compute entropy of a serie using the histogram method.
 
@@ -184,41 +187,39 @@ def entropy(serie,nbins=10,base=np.exp(1),approach='unbiased'):
 
         estimate = 0
         sigma = 0
-        bins,edges = np.histogram(serie,nbins);
+        bins, edges = np.histogram(serie, nbins)
         ncell = len(bins)
-        norm = (np.max(edges)-np.min(edges))/len(bins)
+        norm = (np.max(edges) - np.min(edges)) / len(bins)
 
-
-        for b in bins :
-            if b == 0 :
+        for b in bins:
+            if b == 0:
                 logf = 0
-            else :
+            else:
                 logf = np.log(b)
-            estimate = estimate - b*logf
-            sigma = sigma + b * logf**2
+            estimate = estimate - b * logf
+            sigma = sigma + b * logf ** 2
 
         count = np.sum(bins)
-        estimate=estimate/count;
-        sigma=np.sqrt( (sigma/count-estimate**2)/float(count-1) );
-        estimate=estimate+np.log(count)+np.log(norm);
-        nbias=-(ncell-1)/(2*count);
+        estimate = estimate / count
+        sigma = np.sqrt((sigma / count - estimate ** 2) / float(count - 1))
+        estimate = estimate + np.log(count) + np.log(norm)
+        nbias = -(ncell - 1) / (2 * count)
 
-        if approach =='unbiased' :
-            estimate=estimate-nbias;
-            nbias=0;
+        if approach == 'unbiased':
+            estimate = estimate - nbias
+            nbias = 0
 
-        elif approach =='mmse' :
-            estimate=estimate-nbias;
-            nbias=0;
-            lambda_value=estimate^2/(estimate^2+sigma^2);
-            nbias   =(1-lambda_value)*estimate;
-            estimate=lambda_value*estimate;
-            sigma   =lambda_value*sigma;
-        else :
+        elif approach == 'mmse':
+            estimate = estimate - nbias
+            nbias = 0
+            lambda_value = estimate ^ 2 / (estimate ^ 2 + sigma ^ 2)
+            nbias = (1 - lambda_value) * estimate
+            estimate = lambda_value * estimate
+            sigma = lambda_value * sigma
+        else:
             return 0
 
-        estimate=estimate/np.log(base);
-        nbias   =nbias   /np.log(base);
-        sigma   =sigma   /np.log(base);
+        estimate = estimate / np.log(base)
+        nbias = nbias / np.log(base)
+        sigma = sigma / np.log(base)
         return estimate
-

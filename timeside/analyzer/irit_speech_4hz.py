@@ -24,15 +24,14 @@ from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
-from numpy import array, hamming, dot, mean, float, isnan
+from numpy import array, hamming, dot, mean, float
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
-from timeside.analyzer.preprocessors import frames_adapter
+
 
 class IRITSpeech4Hz(Analyzer):
-    implements(IAnalyzer)
-    '''
-    Segmentor based on the analysis of the 4Hz energy modulation.
+
+    '''Speech Segmentor based on the 4Hz energy modulation analysis.
 
     Properties:
         - energy4hz 		(list) 		: List of the 4Hz energy by frame for the modulation computation
@@ -46,6 +45,8 @@ class IRITSpeech4Hz(Analyzer):
         - melFilter		(numpy array)	: Mel Filter bank
         - modulLen			(float)		: Length (in second) of the modulation computation window
     '''
+
+    implements(IAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -66,10 +67,6 @@ class IRITSpeech4Hz(Analyzer):
         self.nbFilters = 30
         self.modulLen = 2.0
         self.melFilter = melFilterBank(self.nbFilters, self.nFFT, samplerate)
-        self.wLen 	= 0.016
-        self.wStep 	= 0.008
-        self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)        
 
     @staticmethod
     @interfacedoc
@@ -89,7 +86,6 @@ class IRITSpeech4Hz(Analyzer):
     def __str__(self):
         return "Speech confidences indexes"
 
-    @frames_adapter
     def process(self, frames, eod=False):
         '''
 
@@ -126,9 +122,9 @@ class IRITSpeech4Hz(Analyzer):
         if self.normalizeEnergy and energy.any():
             energy = energy / mean(energy)
 
-	
         # Energy Modulation
-        frameLenModulation = self.modulLen/self.wStep 
+        frameLenModulation = int(
+            self.modulLen * self.samplerate() / self.blocksize())
         modEnergyValue = computeModulation(energy, frameLenModulation, True)
 
         # Confidence Index
@@ -159,9 +155,11 @@ class IRITSpeech4Hz(Analyzer):
         segs.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
-        segs.data_object.time = [float(s[0]) * self.wStep
+        segs.data_object.time = [(float(s[0]) * self.blocksize() /
+                                 self.samplerate())
                                  for s in segList]
-        segs.data_object.duration = [float(s[1]-s[0]) * self.wStep
+        segs.data_object.duration = [(float(s[1] - s[0] + 1) * self.blocksize() /
+                                     self.samplerate())
                                      for s in segList]
 
         self.process_pipe.results.add(segs)

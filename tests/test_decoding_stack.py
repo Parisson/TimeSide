@@ -2,10 +2,9 @@
 
 from __future__ import division
 
-from timeside.decoder import FileDecoder
-from timeside.analyzer import AubioPitch
+from timeside.decoder.file import FileDecoder
+from timeside.analyzer.level import Level
 from timeside.core import ProcessPipe
-import numpy as np
 from unit_timeside import *
 
 import os.path
@@ -58,30 +57,30 @@ class TestDecodingFromStack(unittest.TestCase):
                               start=self.start,
                               duration=self.duration,
                               stack=True)
-        pitch_on_file = AubioPitch()
-        pipe = (decoder | pitch_on_file)
+        level_on_file = Level()
+        pipe = (decoder | level_on_file)
 
         pipe.run()
 
         self.assertIsInstance(pipe.frames_stack, list)
 
-        pitch_results_on_file = pipe.results['aubio_pitch.pitch'].data.copy()
+        results_on_file = pipe.results['level.rms'].data.copy()
 
         # If the pipe is used for a second run, the processed frames stored
         # in the stack are passed to the other processors
         # without decoding the audio source again.
         #Let's define a second analyzer equivalent to the previous one:
 
-        pitch_on_stack = AubioPitch()
-        pipe |= pitch_on_stack
+        level_on_stack = Level()
+        pipe |= level_on_stack
         pipe.run()
 
         # to assert that the frames passed to the two analyzers are the same,
         # we check that the results of these analyzers are equivalent:
-        pitch_results_on_stack = pipe.results['aubio_pitch.pitch'].data
+        results_on_stack = pipe.results['level.rms'].data
 
-        self.assertTrue(np.array_equal(pitch_results_on_stack,
-                                       pitch_results_on_file))
+        self.assertEqual(results_on_stack,
+                         results_on_file)
 
 
 if __name__ == '__main__':

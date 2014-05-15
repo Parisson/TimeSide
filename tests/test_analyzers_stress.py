@@ -16,8 +16,8 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
         samples = np.zeros((duration * samplerate, 1))
-        self.decoder = timeside.decoder.ArrayDecoder(samples,
-                                                     samplerate=samplerate)
+        decoder_cls = timeside.core.get_processor('array_dec')
+        self.decoder = decoder_cls(samples, samplerate=samplerate)
 
     def _perform_test(self, analyzer_cls):
         """Internal function that test if there is NaN in the results
@@ -43,8 +43,8 @@ class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
         samples = -1000*np.ones((duration * samplerate, 1))
-        self.decoder = timeside.decoder.ArrayDecoder(samples,
-                                                     samplerate=samplerate)
+        decoder_cls = timeside.core.get_processor('array_dec')
+        self.decoder = decoder_cls(samples, samplerate=samplerate)
 
 
 def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
