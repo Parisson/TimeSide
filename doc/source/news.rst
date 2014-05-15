@@ -1,6 +1,38 @@
 News
 =====
 
+0.5.5
+
+ * All processor folder (analyzer, grapher, etc...) are now a real plugin repositoris : you can now drop processors in them and play !
+ * Encoder : add an Opus encoder
+ * Experimental : add a django web server with a REST API (see Interface : web server)
+ * AubioPitch: prevent NaN in result by converting them to zero
+ * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
+ * LimsiSad: add a default value for parameter sad_model
+ * Full Travis integration
+ * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
+
+0.5.4
+
+ * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
+ * Analyzer : update VAMP plugin example in sandbox
+ * Analyzer : new *experimental* plugin : Limsi Speech Activity Detection Systems (limsi_sad)
+ * Decoder : process any media in streaming mode giving its URL
+ * Install : fix some setup requirements
+
+0.5.3
+
+ * Make Analyzer rendering more generic and easy to implement
+ * Analyzer : implement rendering capability for event and segment + add some more analyzer graphers
+ * Analyzer : refactoring the results rendering method. + Capability to use matplotlib in environnement with no display
+ * Decoder : Add a Live decoder to get data from the soundcard
+ * Decoder : add support for 96kHz sampling rate
+ * Encoder: live AudioSink encoder, encoder that plays the audio stream through the soundcard
+ * Grapher : add a generic Class to display Analyzers through their 'render' method. Add the new grapher file
+ * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
+ * Core : add a condition to catch signal only if a LiveDecoder source is used
+ * Various bugfixes
+
 0.5.2
 
  * Add a general launch script "timeside-launch" (see "Shell interface")
@@ -106,4 +138,5 @@ News
  * add experimental WebM encoder
  * duration analysis goes to decoder.duration property
  * bugfixes
+
 

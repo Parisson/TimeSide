@@ -1,9 +1,12 @@
 Install
 =======
 
-TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems.
+The TimeSide engine is intended to work on all Unix / Linux platforms.
+MacOS X and Windows versions will soon be explorated.
 
-On Debian, Ubuntu, etc:
+TimeSide needs some other python modules and other compiled librairies like GStreamer, Aubio and Yaafe to run. So, before installing the module, you'll need to install dependencies before.
+
+For Debian based distributions, we provide a safe repository to install all in one line:
 
 .. code-block:: bash
 
@@ -11,35 +14,23 @@ On Debian, Ubuntu, etc:
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-On Fedora and Red-Hat:
-
-.. code-block:: bash
-
- $ sudo yum install gcc python python-devel gstreamer pygobject2 \
-                   gstreamer-python gstreamer gstreamer-plugins-bad-free \
-                   gstreamer-plugins-bad-free-extras \
-                   gstreamer-plugins-base gstreamer-plugins-good
-
+On other Linux platforms, you can also install all dependencies (see list bellow to find your equivalent package in your distribution) and then use pip::
+ 
  $ sudo pip install timeside
 
-Otherwise, you can also install all dependencies and then use pip::
-
- $ sudo pip install timeside
+The install on MacOS X platform is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release (0.5.6).
 
 
 Dependencies
 ============
 
+Inside Debian::
+
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy, python-matplotlib
+python-scipy, python-matplotlib, python-matplotlib, python-django, python-django-south 
 
+Outside Debian::
 
-Platforms
-==========
-
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
-The player should work on any modern HTML5 enabled browser.
-Flash is needed for MP3 if the browser doesn't support it.
+djangorestframework, django-extensions
 

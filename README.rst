@@ -50,38 +50,12 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 Processors
 ==========
 
-IEncoder
----------
-
-  * VorbisEncoder [gst_vorbis_enc]
-  * WavEncoder [gst_wav_enc]
-  * Mp3Encoder [gst_mp3_enc]
-  * FlacEncoder [gst_flac_enc]
-  * AacEncoder [gst_aac_enc]
-  * WebMEncoder [gst_webm_enc]
-  * AudioSink [gst_audio_sink_enc]
-
 IDecoder
 ---------
 
   * FileDecoder [gst_dec]
   * ArrayDecoder [array_dec]
   * LiveDecoder [gst_live_dec]
-
-IGrapher
----------
-
-  *  Waveform [waveform_simple]
-  *  WaveformCentroid [waveform_centroid]
-  *  WaveformTransparent [waveform_transparent]
-  *  WaveformContourBlack [waveform_contour_black]
-  *  WaveformContourWhite [waveform_contour_white]
-  *  SpectrogramLog [spectrogram_log]
-  *  SpectrogramLinear [spectrogram_lin]
-  *  Displayaubio_pitch.pitch [grapher_aubio_pitch]
-  *  Displayodf [grapher_odf]
-  *  Displaywaveform_analyzer [grapher_waveform]
-  *  Displayirit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
 
 IAnalyzer
 ---------
@@ -106,8 +80,46 @@ IValueAnalyzer
   * Level [level]
   * MeanDCShift [mean_dc_shift]
 
+IGrapher
+---------
+
+  *  Waveform [waveform_simple]
+  *  WaveformCentroid [waveform_centroid]
+  *  WaveformTransparent [waveform_transparent]
+  *  WaveformContourBlack [waveform_contour_black]
+  *  WaveformContourWhite [waveform_contour_white]
+  *  SpectrogramLog [spectrogram_log]
+  *  SpectrogramLinear [spectrogram_lin]
+  *  Display.aubio_pitch.pitch [grapher_aubio_pitch]
+  *  Display.odf [grapher_odf]
+  *  Display.waveform_analyzer [grapher_waveform]
+  *  Display.irit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
+
+IEncoder
+---------
+
+  * VorbisEncoder [gst_vorbis_enc]
+  * WavEncoder [gst_wav_enc]
+  * Mp3Encoder [gst_mp3_enc]
+  * FlacEncoder [gst_flac_enc]
+  * AacEncoder [gst_aac_enc]
+  * WebMEncoder [gst_webm_enc]
+  * OpusEncoder [gst_opus_enc]
+  * AudioSink [gst_audio_sink_enc]
+
 News
 =====
+
+0.5.5
+
+ * All processor folder (analyzer, grapher, etc...) are now a real plugin repositoris : you can now drop processors in them and play !
+ * Encoder : add an Opus encoder
+ * Experimental : add a django web server with a REST API (see Interface : web server)
+ * AubioPitch: prevent NaN in result by converting them to zero
+ * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
+ * LimsiSad: add a default value for parameter sad_model
+ * Full Travis integration
+ * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
 
 0.5.4
 
@@ -236,13 +248,14 @@ News
  * duration analysis goes to decoder.duration property
  * bugfixes
 
+
 Dive in
 ========
 
 Define some processors::
 
  >>> import timeside
- >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
+ >>> decoder  =  timeside.decoder.FileDecoder('sweep.wav')
  >>> grapher  =  timeside.grapher.Waveform()
  >>> analyzer =  timeside.analyzer.Level()
  >>> encoder  =  timeside.encoder.VorbisEncoder('sweep.ogg')
@@ -255,6 +268,7 @@ get the results::
 
  >>> grapher.render(output='waveform.png')
  >>> print 'Level:', analyzer.results
+
 
 API / Documentation
 ====================
@@ -275,9 +289,9 @@ Install
 The TimeSide engine is intended to work on all Unix / Linux platforms.
 MacOS X and Windows versions will soon be explorated.
 
-TimeSide needs some other python modules to run. The following methods explain how to install all dependencies on various Linux based systems.
+TimeSide needs some other python modules and other compiled librairies like GStreamer, Aubio and Yaafe to run. So, before installing the module, you'll need to install dependencies before.
 
-On Debian, Ubuntu, etc:
+For Debian based distributions, we provide a safe repository to install all in one line:
 
 .. code-block:: bash
 
@@ -285,30 +299,25 @@ On Debian, Ubuntu, etc:
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-On Fedora and Red-Hat:
-
-.. code-block:: bash
-
- $ sudo yum install gcc python python-devel gstreamer pygobject2 \
-                   gstreamer-python gstreamer gstreamer-plugins-bad-free \
-                   gstreamer-plugins-bad-free-extras \
-                   gstreamer-plugins-base gstreamer-plugins-good
-
+On other Linux platforms, you can also install all dependencies (see list bellow to find your equivalent package in your distribution) and then use pip::
+ 
  $ sudo pip install timeside
 
-On other Linux platforms, you can also install all dependencies and then use pip::
+The install on MacOS X platform is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release (0.5.6).
 
- $ sudo pip install timeside
 
 Dependencies
 ============
 
-Note that TimeSide >=0.5 needs Python >=2.7 and is incompatible with previous versions of Python.
+Inside Debian::
 
 python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
 gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy, python-matplotlib, python-matplotlib
+python-scipy, python-matplotlib, python-matplotlib, python-django, python-django-south 
 
+Outside Debian::
+
+djangorestframework, django-extensions
 
 Shell Interface
 ================
@@ -345,8 +354,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web Interface (the player)
-==========================
+Web Interface
+==============
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -368,12 +377,28 @@ Development documentation:
     * https://github.com/yomguy/TimeSide/wiki/Ui-Guide
 
 TODO list:
-    * embed a light http server to get commands through something like JSON RPC
     * zoom
     * layers
 
-The player should work on any modern HTML5 enabled browser.
-Flash is needed for MP3 if the browser doesn't support it.
+
+Web server interface
+====================
+
+An experimental web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
+
+A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
+
+.. code-block:: bash
+
+  $ cd timeside/server/sandbox
+  $ ./manage.py syncdb
+  $ ./manage.py migrate
+  $ ./manage.py runserver
+
+and browse http://localhost:8000/api/
+
+This server is not currently connected to the player but this will be done soon so that TimeSide can provide a completely autonomous service on the web (the server side as well as the server side).
+
 
 Development
 ===========
@@ -413,6 +438,8 @@ Related projects
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
+
+
 Copyrights
 ==========
 
@@ -421,7 +448,9 @@ Copyrights
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Thomas Fillon
 * Copyright (c) 2013, 2014 Maxime Lecoz
+* Copyright (c) 2013, 2014 David Doukhan
 * Copyright (c) 2006, 2010 Samalyse SARL
+
 
 License
 =======
@@ -437,3 +466,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 See LICENSE for more details.
+

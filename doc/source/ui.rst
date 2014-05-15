@@ -56,7 +56,26 @@ Development documentation:
     * https://github.com/yomguy/TimeSide/wiki/Ui-Guide
 
 TODO list:
-    * embed a light http server to get commands through something like JSON RPC
     * zoom
     * layers
+
+
+Web server interface
+====================
+
+An experimental web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
+
+A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
+
+.. code-block:: bash
+
+  $ cd timeside/server/sandbox
+  $ ./manage.py syncdb
+  $ ./manage.py migrate
+  $ ./manage.py runserver
+
+and browse http://localhost:8000/api/
+
+This server is not currently connected to the player but this will be done soon so that TimeSide can provide a completely autonomous service on the web (the server side as well as the server side).
+
 

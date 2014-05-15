@@ -89,7 +89,7 @@ class DisplayAnalyzer(Grapher):
 
             __doc__ = """Builds a PIL image representing """ + grapher_name
 
-        NewGrapher.__name__ = 'Display' + result_id
+        NewGrapher.__name__ = 'Display' + '.' + result_id
 
         return NewGrapher
 
