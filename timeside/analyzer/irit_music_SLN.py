@@ -23,7 +23,7 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
-from timeside.analyzer import IRITDiverg
+from timeside.analyzer.irit_diverg import IRITDiverg
 from timeside.api import IAnalyzer
 from numpy import mean, diff, arange
 from timeside.analyzer.preprocessors import frames_adapter
@@ -34,7 +34,7 @@ class IRITMusicSLN(Analyzer):
 
     def __init__(self, blocksize=None, stepsize=None) :
         super(IRITMusicSLN, self).__init__();
-        
+
         self.parents.append(IRITDiverg())
         self.wLen 	= 1.0
         self.wStep 	= 0.1
@@ -48,7 +48,7 @@ class IRITMusicSLN(Analyzer):
         super(IRITMusicSLN, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)            
+        self.input_stepsize = int(self.wStep * samplerate)
 
     @staticmethod
     @interfacedoc
@@ -67,23 +67,23 @@ class IRITMusicSLN(Analyzer):
 
     def __str__(self):
         return "Music confidence indexes"
-        
+
     @frames_adapter
     def process(self, frames, eod=False):
 		return frames,eod
-		
+
     def post_process(self):
         '''
 
         '''
 
         segList = self.process_pipe.results['irit_diverg.segments'].time
-        
+
         w = self.wLen/ 2
         end = segList[-1]
-        
+
         tLine = arange(w,end-w,self.wStep)
-        
+
         #  Les plus petits  ! <> article
         segLen 	= [mean(diff(getBoundariesInInterval(t-w, t+w, segList))) for t in tLine]
 

@@ -21,7 +21,7 @@
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
-from timeside.analyzer import Waveform
+from timeside.analyzer.waveform import Waveform
 from timeside.api import IAnalyzer
 from numpy import spacing
 from collections import deque
@@ -76,7 +76,6 @@ class ModelLongTerm(object):
             self.cor[n] = self.cor[n] + oubli*(self.ftm1[n]*self.et[n]-self.cor[n])
 
             knplus1 = 2*self.cor[n]/(self.variance_f[n] + self.variance_b[n])
-
             self.et[n+1] = self.et[n]-knplus1*self.ftm1[n]
             self.ft[n+1] = self.ftm1[n]-knplus1*self.et[n]
 

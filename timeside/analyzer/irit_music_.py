@@ -23,7 +23,7 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
-from timeside.analyzer import IRITDiverg
+from timeside.analyzer.irit_diverg import IRITDiverg
 from timeside.api import IAnalyzer
 from numpy import logical_and,array, hamming, dot, mean, float, arange, nonzero
 from numpy.fft import rfft

@@ -23,14 +23,14 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
-from timeside.analyzer import IRITDiverg
+from timeside.analyzer.irit_diverg import IRITDiverg
 from timeside.api import IAnalyzer
 from numpy import array, mean, arange, nonzero
 from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITMusicSNB(Analyzer):
-    
+
     implements(IAnalyzer)
 
     def __init__(self, blocksize=1024, stepsize=None, samplerate=None) :
@@ -39,7 +39,7 @@ class IRITMusicSNB(Analyzer):
         self.wLen 	= 1.0
         self.wStep 	= 0.1
         self.input_blocksize = 0;
-        self.input_stepsize = 0;      
+        self.input_stepsize = 0;
         self.threshold = 20
 
     @interfacedoc
@@ -48,8 +48,8 @@ class IRITMusicSNB(Analyzer):
         super(IRITMusicSNB, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)     
-        
+        self.input_stepsize = int(self.wStep * samplerate)
+
     @staticmethod
     @interfacedoc
     def id():
@@ -67,23 +67,23 @@ class IRITMusicSNB(Analyzer):
 
     def __str__(self):
         return "Music confidence indexes"
-        
+
     @frames_adapter
     def process(self, frames, eod=False):
 		return frames,eod
-		
+
     def post_process(self):
         '''
 
         '''
-        
-        segList = self.process_pipe.results['irit_diverg.segments'].time  
+
+        segList = self.process_pipe.results['irit_diverg.segments'].time
         w = self.wLen/ 2
         end = segList[-1]
         tLine = arange(0, end, self.wStep)
-        
+
         segNB = [ len(getBoundariesInInterval(t-w,t+w,segList)) for t in tLine ]
-        
+
       	# Confidence Index
         conf = [float(v - self.threshold) / float(self.threshold) if v < 2*self.threshold else 1.0 for v in segNB]
         segLenRes = self.new_result(data_mode='value', time_mode='framewise')

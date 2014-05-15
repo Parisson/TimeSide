@@ -18,6 +18,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Maxime Le Coz <lecoz@irit.fr>
+from __future__ import absolute_import
 
 from timeside.analyzer.utils import segmentFromValues
 from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
@@ -48,7 +49,7 @@ class IRITMonopoly(Analyzer):
         self.block_read = 0
         self.pitches = []
         self.pitch_confidences = []
-                
+
     @staticmethod
     @interfacedoc
     def id():
@@ -79,7 +80,7 @@ class IRITMonopoly(Analyzer):
         '''
 
         '''
-        frameLenModulation = int(self.decisionLen * self.samplerate() / self.blocksize())        
+        frameLenModulation = int(self.decisionLen * self.samplerate() / self.blocksize())
         epsilon = numpy.spacing(self.pitch_confidences[0])
 
         w = int(self.decisionLen * self.samplerate() /(self.blocksize()*2))
@@ -88,19 +89,19 @@ class IRITMonopoly(Analyzer):
             d = self.pitch_confidences[i-w:i+w]
             conf_mean= numpy.mean(d)
             conf_var = numpy.var(d+epsilon)
-            if self.monoLikelihood(conf_mean,conf_var) > self.polyLikelihood(conf_mean,conf_var) : 
+            if self.monoLikelihood(conf_mean,conf_var) > self.polyLikelihood(conf_mean,conf_var) :
                 is_mono += [True]
             else :
 				is_mono += [False]
-				        
-        conf = self.new_result(data_mode='value', time_mode='framewise')        
+
+        conf = self.new_result(data_mode='value', time_mode='framewise')
         conf = self.new_result(data_mode='value', time_mode='framewise')
         conf.id_metadata.id += '.' + 'yin_confidence'
         conf.id_metadata.name += ' ' + 'Yin Confidence'
         conf.data_object.value = self.pitch_confidences
-        
+
         self.process_pipe.results.add(conf)
-        
+
         convert = {False: 0, True: 1}
         label = {0: 'Poly', 1: 'Mono'}
         segList = segmentFromValues(is_mono)
@@ -110,7 +111,7 @@ class IRITMonopoly(Analyzer):
 
         segs.label_metadata.label = label
 
-        
+
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                   self.samplerate())
@@ -119,17 +120,17 @@ class IRITMonopoly(Analyzer):
                                   self.samplerate())
                                   for s in segList]
         self.process_pipe.results.add(segs)
-        
+
     def monoLikelihood(self,m,v):
-		
+
         theta1=0.1007;
         theta2=0.0029;
         beta1=0.5955;
         beta2=0.2821;
         delta=0.848;
         return self.weibullLikelihood(m,v,theta1,theta2,beta1,beta2,delta)
-    
-       
+
+
     def polyLikelihood(self,m,v):
         theta1=0.3224;
         theta2=0.0121;
@@ -137,11 +138,11 @@ class IRITMonopoly(Analyzer):
         beta2=0.8705;
         delta=0.644;
         return self.weibullLikelihood(m,v,theta1,theta2,beta1,beta2,delta)
-               
+
     def weibullLikelihood(self,m,v,theta1,theta2,beta1,beta2,delta):
         m = numpy.array(m)
         v= numpy.array(v)
-        
+
         c0=numpy.log(beta1*beta2/(theta1*theta2));
         a1=m/theta1;
         b1=a1**(beta1/delta);
@@ -151,5 +152,5 @@ class IRITMonopoly(Analyzer):
         c2=numpy.log(a2);
         somme1=(b1+b2)**delta;
         Pxy=c0+(beta1/delta-1)*c1+(beta2/delta-1)*c2+(delta-2)*numpy.log(b1+b2)+numpy.log(somme1+1/delta-1)-somme1;
-        
+
         return numpy.mean(Pxy)
