@@ -319,7 +319,7 @@ Outside Debian::
 
 djangorestframework, django-extensions
 
-Shell Interface
+Shell interface
 ================
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
@@ -354,8 +354,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web Interface
-==============
+Web player interface
+=====================
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
