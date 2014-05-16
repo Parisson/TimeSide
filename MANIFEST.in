@@ -3,7 +3,7 @@ include LICENSE
 include README.rst
 include requirements.txt
 recursive-include doc *
-recursive-include timeside/static *
+recursive-include timeside/player/static *
 recursive-include tests *
 recursive-exclude * *.pyc
 recursive-exclude * *.swp

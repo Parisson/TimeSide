@@ -1,4 +1,4 @@
-Shell Interface
+Shell interface
 ================
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
@@ -33,8 +33,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web Interface
-==============
+Web player interface
+=====================
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -76,6 +76,6 @@ A sandbox is provide in timeside/server/sandbox and you can initialize it and te
 
 and browse http://localhost:8000/api/
 
-This server is not currently connected to the player but this will be done soon so that TimeSide can provide a completely autonomous service on the web (the server side as well as the server side).
+This server is not currently connected to the player but this will be done soon so that TimeSide can provide a complete autonomous service on the web (a server side and a client side).
 
 
