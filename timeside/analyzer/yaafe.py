@@ -25,10 +25,8 @@ Module Yaafe Analyzer
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-#from timeside.analyzer import WITH_YAAFE
-WITH_YAAFE = True
-if WITH_YAAFE:
-    import yaafelib
+
+import yaafelib
 import numpy
 from timeside.analyzer.preprocessors import downmix_to_mono
 

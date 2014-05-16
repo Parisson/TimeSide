@@ -3,45 +3,27 @@ from __future__ import absolute_import
 
 from . import api
 from . import core
-from . import decoder
-from . import analyzer
-from . import grapher
-from . import encoder
 
 
 __version__ = '0.5.5'
 
-__all__ = ['api', 'core', 'decoder', 'analyzer', 'grapher', 'encoder']
+# Check Availability of external Audio feature extraction librairies
+from .tools import package as ts_package
+_WITH_AUBIO = ts_package.check_aubio()
+_WITH_YAAFE = ts_package.check_yaafe()
+_WITH_VAMP = ts_package.check_vamp()
 
 
-def _discover_modules():
-    import sys
-    import pkgutil
-    import importlib
+_packages_with_processors = ['decoder', 'analyzer', 'encoder', 'grapher']
 
-    #pkg_path = os.path.abspath()
+__all__ = ['api', 'core']
+__all__.extend(_packages_with_processors)
 
-    #__import__(pkg)
+for _sub_pkg in _packages_with_processors:
+    ts_package.discover_modules(_sub_pkg, __name__)
 
-    proc_modules = ['decoder', 'analyzer', 'encoder', 'grapher']
-
-    for module in proc_modules:
-        pkg = '.'.join([__name__, module])
-        importlib.import_module(pkg)
-        package = sys.modules[pkg]
-        prefix = pkg + "."
-
-        for importer, modname, ispkg in pkgutil.walk_packages(package.__path__,
-                                                              prefix):
-            try:
-                importlib.import_module(modname)
-                #__import__(modname)
-            except ImportError as e:
-                if e.message.count('yaafelib'):
-                    print 'No Yaafe'
-                elif e.message.count('aubio'):
-                    print 'No Aubio'
-                else:
-                    raise e
-
-_discover_modules()
+# Clean-up
+del ts_package
+del _packages_with_processors
+del _sub_pkg
+del absolute_import
