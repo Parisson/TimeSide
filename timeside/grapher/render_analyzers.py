@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007-2014 Guillaume Pellerin <yomguy@parisson.com>
-# Copyright (c) 2010 Olivier Guilyardi <olivier@samalyse.com>
 # Copyright (c) 2013-2014 Thomas Fillon <thomas@parisson.com>
 
 # This file is part of TimeSide.
@@ -18,6 +17,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
 from __future__ import division
 
 from ..core import implements, interfacedoc, abstract, get_processor
