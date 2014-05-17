@@ -4,10 +4,10 @@ Dive in
 Define some processors::
 
  >>> import timeside
- >>> decoder  =  timeside.decoder.FileDecoder('sweep.wav')
- >>> grapher  =  timeside.grapher.Waveform()
- >>> analyzer =  timeside.analyzer.Level()
- >>> encoder  =  timeside.encoder.VorbisEncoder('sweep.ogg')
+ >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
+ >>> grapher  =  timeside.grapher.waveform_simple.Waveform()
+ >>> analyzer =  timeside.analyzer.level.Level()
+ >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
 
 then, the *magic* pipeline::
 
@@ -18,4 +18,5 @@ get the results::
  >>> grapher.render(output='waveform.png')
  >>> print 'Level:', analyzer.results
 
+For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
 

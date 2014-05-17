@@ -73,6 +73,10 @@ class FileDecoder(Decoder):
             start time of the segment in seconds
         duration : float
             duration of the segment in seconds
+        stack : boolean
+            keep decoded data in the stack
+        sha1 : boolean
+            compute the sha1 hash of the data
 
         """
 

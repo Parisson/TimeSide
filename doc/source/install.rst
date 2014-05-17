@@ -1,8 +1,7 @@
 Install
 =======
 
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
+The TimeSide engine is intended to work on all Unix and Linux platforms.
 
 TimeSide needs some other python modules and other compiled librairies like GStreamer, Aubio and Yaafe to run. So, before installing the module, you'll need to install dependencies before.
 
