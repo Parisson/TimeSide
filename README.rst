@@ -294,7 +294,7 @@ The TimeSide engine is intended to work on all Linux and Unix like platforms.
 It depends on several other python modules and compiled librairies like GStreamer. 
 
 Debian, Ubuntu
-++++++++++++++
+---------------
 
 For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
 
@@ -306,37 +306,42 @@ For Debian based distributions, we provide a safe repository which provides all 
 
 This method is known to be compatible with Debian 7 Wheezy and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
 
-Note you can also use pip if you already have all the dependencies::
+Note you can also use pip if you already have already satisfied all the dependencies::
 
  $ sudo pip install timeside
 
 Other Linux distributions
-+++++++++++++++++++++++++
+--------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the next paragraph. Eventually, you will need to find all equivalent package names for your distribution. 
+On other Linux platforms, you need to install all dependencies listed in the paragraph named "Dependencies" (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
  $ sudo pip install timeside
 
 OSX
-++++
+---
 
 The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
 
 Dependencies
-++++++++++++
+-------------
 
 Needed::
 
-python (>=2.7), python-setuptools, python-numpy, python-gst0.10, gstreamer0.10-gnonlin, gstreamer0.10-plugins-good, gstreamer0.10-plugins-bad, gstreamer0.10-plugins-ugly, python-simplejson, python-yaml, python-h5py, libhdf5-serial-dev, python-scipy, python-matplotlib, python-django, python-django-south, djangorestframework, django-extensions
+ python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
+ python-simplejson python-yaml libhdf5-serial-dev python-gst0.10 gstreamer0.10-gnonlin 
+ gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 
-aubio, yaafe, python-aubio, python-yaafe, vamp-examples
+ aubio yaafe python-aubio python-yaafe vamp-examples
+ django django-south djangorestframework django-extensions
+User Interfaces
+===============
 
-Shell interface
-================
+Shell
+------
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
 
@@ -370,8 +375,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web player interface
-=====================
+Web player
+-----------
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -397,10 +402,10 @@ TODO list:
     * layers
 
 
-Web server interface
-====================
+Web server
+-----------
 
-An experimental web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
+An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
 A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
 
@@ -413,7 +418,7 @@ A sandbox is provide in timeside/server/sandbox and you can initialize it and te
 
 and browse http://localhost:8000/api/
 
-This server is not currently connected to the player but this will be done soon so that TimeSide can provide a complete autonomous service on the web (a server side and a client side).
+At the moment, this server is NOT connected to the player using TimeSide alone. Please use Telemeta.
 
 
 Development
