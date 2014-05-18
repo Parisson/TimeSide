@@ -53,7 +53,7 @@ setup(
         'pyyaml',
         'simplejson',
         'scipy',
-        'django>=1.4.10',
+        'django>=1.4',
         'django-extensions',
         'djangorestframework',
         'south',

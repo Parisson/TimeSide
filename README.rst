@@ -112,14 +112,16 @@ News
 
 0.5.5
 
- * All processor folder (analyzer, grapher, etc...) are now a real plugin repositoris : you can now drop processors in them and play !
- * Encoder : add an Opus encoder
+ * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
+ * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
  * Experimental : add a django web server with a REST API (see Interface : web server)
+ * Encoder : add an Opus encoder
  * AubioPitch: prevent NaN in result by converting them to zero
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
- * Full Travis integration
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
+ * Full Travis integration
+ * Thanks to all contributors!
 
 0.5.4
 
@@ -255,10 +257,10 @@ Dive in
 Define some processors::
 
  >>> import timeside
- >>> decoder  =  timeside.decoder.FileDecoder('sweep.wav')
- >>> grapher  =  timeside.grapher.Waveform()
- >>> analyzer =  timeside.analyzer.Level()
- >>> encoder  =  timeside.encoder.VorbisEncoder('sweep.ogg')
+ >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
+ >>> grapher  =  timeside.grapher.waveform_simple.Waveform()
+ >>> analyzer =  timeside.analyzer.level.Level()
+ >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
 
 then, the *magic* pipeline::
 
@@ -269,6 +271,7 @@ get the results::
  >>> grapher.render(output='waveform.png')
  >>> print 'Level:', analyzer.results
 
+For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
 
 API / Documentation
 ====================
@@ -286,12 +289,14 @@ API / Documentation
 Install
 =======
 
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
+The TimeSide engine is intended to work on all Linux and Unix like platforms.
 
-TimeSide needs some other python modules and other compiled librairies like GStreamer, Aubio and Yaafe to run. So, before installing the module, you'll need to install dependencies before.
+It depends on several other python modules and compiled librairies like GStreamer. 
 
-For Debian based distributions, we provide a safe repository to install all in one line:
+Debian, Ubuntu
+++++++++++++++
+
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
 
 .. code-block:: bash
 
@@ -299,25 +304,36 @@ For Debian based distributions, we provide a safe repository to install all in o
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-On other Linux platforms, you can also install all dependencies (see list bellow to find your equivalent package in your distribution) and then use pip::
+This method is known to be compatible with Debian 7 Wheezy and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
+
+Note you can also use pip if you already have all the dependencies::
+
+ $ sudo pip install timeside
+
+Other Linux distributions
++++++++++++++++++++++++++
+
+On other Linux platforms, you need to install all dependencies listed in the next paragraph. Eventually, you will need to find all equivalent package names for your distribution. 
+
+Then, use pip::
  
  $ sudo pip install timeside
 
-The install on MacOS X platform is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release (0.5.6).
+OSX
+++++
 
+The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
 
 Dependencies
-============
+++++++++++++
 
-Inside Debian::
+Needed::
 
-python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-gnonlin,
-gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py,
-python-scipy, python-matplotlib, python-matplotlib, python-django, python-django-south 
+python (>=2.7), python-setuptools, python-numpy, python-gst0.10, gstreamer0.10-gnonlin, gstreamer0.10-plugins-good, gstreamer0.10-plugins-bad, gstreamer0.10-plugins-ugly, python-simplejson, python-yaml, python-h5py, libhdf5-serial-dev, python-scipy, python-matplotlib, python-django, python-django-south, djangorestframework, django-extensions
 
-Outside Debian::
+Optional::
 
-djangorestframework, django-extensions
+aubio, yaafe, python-aubio, python-yaafe, vamp-examples
 
 Shell interface
 ================
@@ -397,7 +413,7 @@ A sandbox is provide in timeside/server/sandbox and you can initialize it and te
 
 and browse http://localhost:8000/api/
 
-This server is not currently connected to the player but this will be done soon so that TimeSide can provide a completely autonomous service on the web (the server side as well as the server side).
+This server is not currently connected to the player but this will be done soon so that TimeSide can provide a complete autonomous service on the web (a server side and a client side).
 
 
 Development
@@ -434,7 +450,7 @@ Sponsors and Partners
 Related projects
 =================
 
-    * `Telemeta <http://telemeta.org>`_ : open source web audio CMS
+    * `Telemeta <http://telemeta.org>`_ : open web audio platform
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
