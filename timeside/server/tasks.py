@@ -1,7 +1,8 @@
 
 from __future__ import absolute_import
 
-from timeside.webserver.celery import app
+from timeside.server.celery import app
+
 
 @app.task
 def process(pipe):

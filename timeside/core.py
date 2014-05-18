@@ -21,7 +21,7 @@
 from .component import Component, MetaComponent, abstract
 from .component import implements, implementations, interfacedoc
 from .api import IProcessor
-from .exceptions import Error, ApiError
+from .exceptions import Error, PIDError, ApiError
 
 import re
 import numpy
@@ -229,7 +229,7 @@ def processors(interface=IProcessor, recurse=True):
 def get_processor(processor_id):
     """Return a processor by its id"""
     if not processor_id in _processors:
-        raise Error("No processor registered with id: '%s'"
+        raise PIDError("No processor registered with id: '%s'"
                     % processor_id)
 
     return _processors[processor_id]
