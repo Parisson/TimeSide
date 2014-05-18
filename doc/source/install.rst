@@ -6,7 +6,7 @@ The TimeSide engine is intended to work on all Linux and Unix like platforms.
 It depends on several other python modules and compiled librairies like GStreamer. 
 
 Debian, Ubuntu
-++++++++++++++
+---------------
 
 For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
 
@@ -23,21 +23,21 @@ Note you can also use pip if you already have already satisfied all the dependen
  $ sudo pip install timeside
 
 Other Linux distributions
-+++++++++++++++++++++++++
+--------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the next paragraph (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed in the paragraph named "Dependencies" (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
  $ sudo pip install timeside
 
 OSX
-++++
+---
 
 The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
 
 Dependencies
-++++++++++++
+-------------
 
 Needed::
 

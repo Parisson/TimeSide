@@ -1,5 +1,8 @@
-Shell interface
-================
+User Interfaces
+===============
+
+Shell
+------
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
 
@@ -33,8 +36,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web player interface
-=====================
+Web player
+-----------
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -60,8 +63,8 @@ TODO list:
     * layers
 
 
-Web server interface
-====================
+Web server
+-----------
 
 An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
