@@ -2,7 +2,7 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in  architecture can be adapted to various use cases.
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
 
 TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
 
@@ -31,12 +31,12 @@ Goals
 
 * **Do** asynchronous and fast audio processing with Python,
 * **Decode** audio frames from **any** audio or video media format into numpy arrays,
-* **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
-* **Organize**, serialize and save analysis metadata through various formats,
-* **Draw** various fancy waveforms, spectrograms and other cool visualizers,
+* **Analyze** audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors
+* **Visualize** the sound with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
+* **Organize**, **serialize** and **save** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **annotate** sound with semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 
 Architecture

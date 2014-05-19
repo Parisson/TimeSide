@@ -1,7 +1,7 @@
 Development
 ===========
 
-For versions >=0.5 on Debian Stable 7.0 Wheezy:
+For versions >=0.5 on Debian 7 Wheezy:
 
 .. code-block:: bash
 

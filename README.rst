@@ -2,7 +2,7 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in  architecture can be adapted to various use cases.
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
 
 TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
 
@@ -114,14 +114,15 @@ News
 
  * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
  * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
- * Experimental : add a django web server with a REST API (see Interface : web server)
  * Encoder : add an Opus encoder
+ * Experimental : add a django web server with a REST API (see `Web server <#web-server>`_)
  * AubioPitch: prevent NaN in result by converting them to zero
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
  * Full Travis integration
  * Thanks to all contributors!
+ * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). It now advised to use the timeside.core.get_processor() method to instantiate the processors.
 
 0.5.4
 
@@ -187,90 +188,44 @@ News
  * Comptatible with Python >=2.7
  * WARNING : no longer compatible with Telemeta 1.4.5
 
-0.4.5
-
- * (re)fix Pillow support (#12)
- * fix some Python package rules
- * add a Debian package directory (thanks to piem, in git repo only)
-
-0.4.4
-
- * Only setup bugfixes
- * Last compatible version with Python 2.6
- * Next version 0.5 will integrate serious new analyzer features (aubio, yaafe and more)
-
-0.4.3
-
- * finally fix decoder leaks and de-synchronizations (thanks to piem)
- * this also fixes bad variable encoder file lengths
- * fix OGG and FLAC encoders (closes: #8)
- * fix multi-channels streaming (closes: #13)
- * add support for Pillow (closes: #12)
- * temporally desactivate AAC and WebM encoders (need to add some limits for them)
- * WARNING : we now need to add overwrite=True to encoder kwargs instances in order to overwrite the destination file, i.e. e=Mp3Encoder(path, overwrite=True)
-
-0.4.2
-
- * many releases these days, but there are some patches which are really worth to be HOT released : we just need them in production..
- * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms
- * *mv* gstutils to timeside.gstutils
- * cleanup various processes
- * Ogg, Aac and Flac encoders not really working now (some frames missing) :( Will be fixed in next release.
-
-0.4.1
-
- * move UI static files from ui/ to static/timeside/ (for better django compatibility)
- * upgrade js scripts from telemeta 1.4.4
- * upgrade SoundManager2 to v297a-20120916
-
-0.4.0
-
- * finally fixed an old decoder bug to prevent memory leaks during hard process (thanks to piem)
- * add blocksize property to the processor API
- * add many unit tests (check tests/alltests.py)
- * re-add UI files (sorry, was missing in the last packages)
- * various bugfixes
- * encoders not all much tested on big files, please test!
- * piem is now preparing some aubio analyzers :P
-
-0.3.3
-
- * mostly a transitional developer and mantainer version, no new cool features
- * but add "ts-waveforms" script for waveform batching
- * fix some tests
- * removed but download audio samples
- * fix setup
- * update README
-
-0.3.2
-
- * move mainloop to its own thread to avoid memory hogging on large files
- * add condition values to prepare running gst mainloop in a thread
- * add experimental WebM encoder
- * duration analysis goes to decoder.duration property
- * bugfixes
-
 
 Dive in
 ========
 
-Define some processors::
+To list all available plugins::
 
  >>> import timeside
+ >>> timeside.core.list_processors()
+
+Define some processors::
+
+ >>> from timeside.core import get_processor
+ >>> decoder  =  get_processor('gst_dec')('sweep.wav')
+ >>> grapher  =  get_processor('waveform_simple')
+ >>> analyzer =  get_processor('level')
+ >>> encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
+
+Then run the *magic* pipeline::
+
+ >>> (decoder | grapher | analyzer | encoder).run()
+
+Render the grapher results::
+
+ >>> grapher.render(output='waveform.png')
+
+Show the analyzer results::
+
+ >>> print 'Level:', analyzer.results
+
+The encoded OGG file should also be there...
+
+Note you can also instanciate each processor with its own class::
+ 
  >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
  >>> grapher  =  timeside.grapher.waveform_simple.Waveform()
  >>> analyzer =  timeside.analyzer.level.Level()
  >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
-
-then, the *magic* pipeline::
-
- >>> (decoder | grapher | analyzer | encoder).run()
-
-get the results::
-
- >>> grapher.render(output='waveform.png')
- >>> print 'Level:', analyzer.results
-
+ 
 For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
 
 API / Documentation
@@ -313,7 +268,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the paragraph named "Dependencies" (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed at the paragraph `Dependencies <#dependencies>`_ (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
@@ -405,7 +360,7 @@ TODO list:
 Web server
 -----------
 
-An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
+An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.5. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
 A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
 
@@ -424,7 +379,7 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-For versions >=0.5 on Debian Stable 7.0 Wheezy:
+For versions >=0.5 on Debian 7 Wheezy:
 
 .. code-block:: bash
 
