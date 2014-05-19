@@ -31,12 +31,12 @@ Goals
 
 * **Do** asynchronous and fast audio processing with Python,
 * **Decode** audio frames from **any** audio or video media format into numpy arrays,
-* **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
-* **Organize**, serialize and save analysis metadata through various formats,
-* **Draw** various fancy waveforms, spectrograms and other cool visualizers,
+* **Analyze** audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors
+* **Visualize** the sound with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
+* **Organize**, **serialize** and **save** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **annotate** sound with semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 
 Architecture
@@ -362,7 +362,7 @@ Web server
 
 An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.5. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
-A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
+A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this:
 
 .. code-block:: bash
 
