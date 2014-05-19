@@ -96,7 +96,7 @@ class LimsiSad(Analyzer):
             raise ValueError(
                 "argument sad_model %s not supported. Supported values are 'etape' or 'maya'" % sad_model)
         picfname = os.path.join(
-            timeside.__path__[0], 'trained_models', 'limsi_sad_%s.pkl' % sad_model)
+            timeside.__path__[0], 'analyzer', 'trained_models', 'limsi_sad_%s.pkl' % sad_model)
         self.gmms = pickle.load(open(picfname, 'rb'))
 
     @staticmethod
