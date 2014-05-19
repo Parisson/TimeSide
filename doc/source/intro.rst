@@ -32,11 +32,11 @@ Goals
 * **Do** asynchronous and fast audio processing with Python,
 * **Decode** audio frames from **any** audio or video media format into numpy arrays,
 * **Analyze** audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors
-* **Visualize** the sound with various fancy waveforms, spectrograms and other cool graphers,
+* **Visualize** sounds with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Organize**, **serialize** and **save** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **annotate** sound with semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
 
 
 Architecture
