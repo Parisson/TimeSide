@@ -226,7 +226,7 @@ class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
         d_json = results.from_json(r_json)
         if verbose:
             print d_json
-            print '%15s' % 'from yaml:',
+            print '%15s' % 'from json:',
 
         #for i in range(len(d_json)):
         self.assertEqual(d_json, results)

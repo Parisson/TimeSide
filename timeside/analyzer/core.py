@@ -1057,6 +1057,8 @@ class Analyzer(Processor):
     Generic class for the analyzers
     '''
 
+    type = 'analyzer'
+
     def __init__(self):
         super(Analyzer, self).__init__()
 

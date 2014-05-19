@@ -45,6 +45,8 @@ class GstEncoder(Processor):
     implements(IEncoder)
     abstract()
 
+    type = 'encoder'
+
     def __init__(self, output, streaming=False, overwrite=False):
 
         super(GstEncoder, self).__init__()

@@ -39,6 +39,8 @@ class Decoder(Processor):
     implements(IDecoder)
     abstract()
 
+    type = 'decoder'
+
     mimetype = ''
     output_samplerate = None
     output_channels = None

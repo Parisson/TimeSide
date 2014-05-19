@@ -45,3 +45,11 @@ class SubProcessError(Error):
         return "%s ; command: %s; error: %s" % (self.message,
                                                 self.command,
                                                 error)
+
+
+class PIDError(KeyError):
+    "Exception for reporting missing Processor ID in registered processors"
+
+
+class VampImportError(ImportError):
+    "Can't import module depending on Vamp because vamp host is missing"
