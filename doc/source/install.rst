@@ -42,8 +42,8 @@ Dependencies
 Needed::
 
  python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
- python-simplejson python-yaml libhdf5-serial-dev python-gst0.10 gstreamer0.10-gnonlin 
- gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
+ python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
+ gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 

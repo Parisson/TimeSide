@@ -234,7 +234,7 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
-* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web Interface")
+* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also `Web player <#web-player>`_)
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
@@ -285,8 +285,8 @@ Dependencies
 Needed::
 
  python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
- python-simplejson python-yaml libhdf5-serial-dev python-gst0.10 gstreamer0.10-gnonlin 
- gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
+ python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
+ gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 
