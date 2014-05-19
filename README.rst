@@ -330,7 +330,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed at the paragraph `Dependencies <#Dependencies>`_ (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed at the paragraph `dependencies <#Dependencies>`_ (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
