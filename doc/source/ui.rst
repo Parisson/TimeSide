@@ -1,5 +1,8 @@
-Shell interface
-================
+User Interfaces
+===============
+
+Shell
+------
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
 
@@ -33,8 +36,8 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
-Web player interface
-=====================
+Web player
+-----------
 
 TimeSide comes with a smart and pure **HTML5** audio player.
 
@@ -60,10 +63,10 @@ TODO list:
     * layers
 
 
-Web server interface
-====================
+Web server
+-----------
 
-An experimental web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
+An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.4. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
 A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
 
@@ -76,6 +79,6 @@ A sandbox is provide in timeside/server/sandbox and you can initialize it and te
 
 and browse http://localhost:8000/api/
 
-This server is not currently connected to the player but this will be done soon so that TimeSide can provide a complete autonomous service on the web (a server side and a client side).
+At the moment, this server is NOT connected to the player using TimeSide alone. Please use Telemeta.
 
 

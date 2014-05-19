@@ -1,12 +1,14 @@
 Install
 =======
 
-The TimeSide engine is intended to work on all Unix / Linux platforms.
-MacOS X and Windows versions will soon be explorated.
+The TimeSide engine is intended to work on all Linux and Unix like platforms.
 
-TimeSide needs some other python modules and other compiled librairies like GStreamer, Aubio and Yaafe to run. So, before installing the module, you'll need to install dependencies before.
+It depends on several other python modules and compiled librairies like GStreamer. 
 
-For Debian based distributions, we provide a safe repository to install all in 3 lines:
+Debian, Ubuntu
+---------------
+
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
 
 .. code-block:: bash
 
@@ -14,21 +16,36 @@ For Debian based distributions, we provide a safe repository to install all in 3
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-On other Linux platforms, you can also install all binary dependencies (see list bellow to find all equivalent packages for your distribution) and then use pip::
+This method is known to be compatible with Debian 7 Wheezy and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
+
+Note you can also use pip if you already have already satisfied all the dependencies::
+
+ $ sudo pip install timeside
+
+Other Linux distributions
+--------------------------
+
+On other Linux platforms, you need to install all dependencies listed in the paragraph named "Dependencies" (find all equivalent package names for your distribution). 
+
+Then, use pip::
  
  $ sudo pip install timeside
 
-The install on MacOS X platform is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release (0.5.6).
+OSX
+---
 
+The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
 
 Dependencies
-============
+-------------
 
-Inside Debian::
+Needed::
 
-python (>=2.7), python-setuptools, python-gst0.10, gstreamer0.10-plugins-good, gstreamer0.10-plugins-bad, gstreamer0.10-gnonlin, gstreamer0.10-plugins-ugly, python-aubio, python-yaafe, python-simplejson, python-yaml, python-h5py, python-scipy, python-matplotlib, python-matplotlib, python-django, python-django-south
+ python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
+ python-simplejson python-yaml libhdf5-serial-dev python-gst0.10 gstreamer0.10-gnonlin 
+ gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
-Outside Debian::
+Optional::
 
-djangorestframework, django-extensions
-
+ aubio yaafe python-aubio python-yaafe vamp-examples
+ django django-south djangorestframework django-extensions
