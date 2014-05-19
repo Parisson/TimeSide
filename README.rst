@@ -114,14 +114,15 @@ News
 
  * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
  * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
- * Experimental : add a django web server with a REST API (see Interface : web server)
  * Encoder : add an Opus encoder
+ * Experimental : add a django web server with a REST API (see `Web server <#web-server>`_)
  * AubioPitch: prevent NaN in result by converting them to zero
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
  * Full Travis integration
  * Thanks to all contributors!
+ * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). It now advised to use the timeside.core.get_processor() method to instantiate the processors.
 
 0.5.4
 
