@@ -29,6 +29,7 @@ def dict_to_hdf5(dict_like, h5group):
     attrs = dict_like.keys()
     for name in attrs:
         if dict_like[name] is not None:
+            print (name, dict_like[name])
             h5group.attrs[str(name)] = dict_like[name]
 
 

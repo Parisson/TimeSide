@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Author : Thomas fillon <thomas@parisson.fr>
+# Author : Thomas fillon <thomas@parisson.com>
 '''
     Collections of preprocessors to use as decorators for the analyzers process
 

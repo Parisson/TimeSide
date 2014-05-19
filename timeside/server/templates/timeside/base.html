@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+<html lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<title></title>
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block extra_stylesheets %}{% endblock %}
+
+{% block javascript %}
+    <script src="{{ STATIC_URL }}timeside/js/libs/soundmanager2-nodebug-jsmin.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}timeside/js/timeside.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block extra_javascript %}{% endblock %}
+</head>
+
+<body>
+{% block layout %}
+<div id="layout">
+
+{% block content %}
+{% endblock content %}
+
+</div>
+{% endblock layout %}
+
+{% block analytics %}
+{% endblock analytics %}
+
+</body>
+</html>

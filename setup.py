@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from setuptools import setup, find_packages
 import sys
 from setuptools.command.test import test as TestCommand
@@ -34,7 +35,7 @@ CLASSIFIERS = [
     'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 
-KEYWORDS = 'audio analysis features extraction transcoding graph plot HTML5 player metadata'
+KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize plot HTML5 interactive metadata player'
 
 setup(
   name = "TimeSide",
@@ -52,6 +53,10 @@ setup(
         'pyyaml',
         'simplejson',
         'scipy',
+        'django>=1.4',
+        'django-extensions',
+        'djangorestframework',
+        'south',
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',

@@ -1,46 +1,50 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2014 Thomas Fillon <thomas@parisson.com>
+
+# This file is part of TimeSide.
+
+# TimeSide is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Authors:
+# Thomas Fillon <thomas@parisson.com>
+
 from __future__ import absolute_import
 
 from . import api
 from . import core
-from . import decoder
-from . import analyzer
-from . import grapher
-from . import encoder
+
 
 __version__ = '0.5.5'
 
-__all__ = ['api', 'core', 'decoder', 'analyzer', 'grapher', 'encoder']
+# Check Availability of external Audio feature extraction librairies
+from .tools import package as ts_package
+_WITH_AUBIO = ts_package.check_aubio()
+_WITH_YAAFE = ts_package.check_yaafe()
+_WITH_VAMP = ts_package.check_vamp()
 
 
-def _discover_modules():
-    import sys
-    import pkgutil
-    import importlib
+_packages_with_processors = ['decoder', 'analyzer', 'encoder', 'grapher']
 
-    #pkg_path = os.path.abspath()
+__all__ = ['api', 'core']
+__all__.extend(_packages_with_processors)
 
-    #__import__(pkg)
+for _sub_pkg in _packages_with_processors:
+    ts_package.discover_modules(_sub_pkg, __name__)
 
-    proc_modules = ['decoder', 'analyzer', 'encoder', 'grapher']
-
-    for module in proc_modules:
-        pkg = '.'.join([__name__, module])
-        importlib.import_module(pkg)
-        package = sys.modules[pkg]
-        prefix = pkg + "."
-
-        for importer, modname, ispkg in pkgutil.walk_packages(package.__path__,
-                                                              prefix):
-            try:
-                importlib.import_module(modname)
-                #__import__(modname)
-            except ImportError as e:
-                if e.message.count('yaafelib'):
-                    print 'No Yaafe'
-                elif e.message.count('aubio'):
-                    print 'No Aubio'
-                else:
-                    raise e
-
-_discover_modules()
+# Clean-up
+del ts_package
+del _packages_with_processors
+del _sub_pkg
+del absolute_import

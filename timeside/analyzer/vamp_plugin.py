@@ -27,6 +27,29 @@ import subprocess
 import numpy as np
 
 
+def simple_host_process(argslist):
+    """Call vamp-simple-host"""
+
+    vamp_host = 'vamp-simple-host'
+    command = [vamp_host]
+    command.extend(argslist)
+    # try ?
+    stdout = subprocess.check_output(
+        command, stderr=subprocess.STDOUT).splitlines()
+
+    return stdout
+
+
+# Raise an exception if Vamp Host is missing
+from ..exceptions import VampImportError
+try:
+    simple_host_process(['-v'])
+    WITH_VAMP = True
+except OSError:
+    WITH_VAMP = False
+    raise VampImportError
+
+
 class VampSimpleHost(Analyzer):
 
     """Vamp plugins library interface analyzer"""
@@ -120,7 +143,7 @@ class VampSimpleHost(Analyzer):
 
         args = [plugin, wavfile]
 
-        stdout = VampSimpleHost.SimpleHostProcess(args)  # run vamp-simple-host
+        stdout = simple_host_process(args)  # run vamp-simple-host
 
         stderr = stdout[0:8]  # stderr containing file and process information
         res = stdout[8:]  # stdout containg the feature data
@@ -158,19 +181,6 @@ class VampSimpleHost(Analyzer):
     @staticmethod
     def get_plugins_list():
         arg = ['--list-outputs']
-        stdout = VampSimpleHost.SimpleHostProcess(arg)
+        stdout = simple_host_process(arg)
 
         return [line.split(':')[1:] for line in stdout]
-
-    @staticmethod
-    def SimpleHostProcess(argslist):
-        """Call vamp-simple-host"""
-
-        vamp_host = 'vamp-simple-host'
-        command = [vamp_host]
-        command.extend(argslist)
-        # try ?
-        stdout = subprocess.check_output(
-            command, stderr=subprocess.STDOUT).splitlines()
-
-        return stdout

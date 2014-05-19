@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007-2014 Guillaume Pellerin <yomguy@parisson.com>
-# Copyright (c) 2010 Olivier Guilyardi <olivier@samalyse.com>
 # Copyright (c) 2013-2014 Thomas Fillon <thomas@parisson.com>
 
 # This file is part of TimeSide.
@@ -12,18 +11,19 @@
 # (at your option) any later version.
 
 # TimeSide is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# but _WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
 from __future__ import division
 
-from timeside.core import implements, interfacedoc, abstract, get_processor
-from timeside.api import IGrapher
-from core import Grapher
-from .. import analyzer
+from ..core import implements, interfacedoc, abstract, get_processor
+from ..api import IGrapher
+from .core import Grapher
+from ..exceptions import PIDError
 
 
 class DisplayAnalyzer(Grapher):
@@ -89,19 +89,20 @@ class DisplayAnalyzer(Grapher):
 
             __doc__ = """Builds a PIL image representing """ + grapher_name
 
-        NewGrapher.__name__ = 'Display' + result_id
+        NewGrapher.__name__ = 'Display' + '.' + result_id
 
         return NewGrapher
 
 
 # From here define new Grapher based on Analyzers
-if analyzer.WITH_AUBIO:
+try:
     aubiopitch = get_processor('aubio_pitch')
     DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
                                                result_id='aubio_pitch.pitch',
                                                grapher_id='grapher_aubio_pitch',
                                                grapher_name='Aubio Pitch')
-
+except PIDError:
+    pass
 
 odf = get_processor('odf')
 DisplayOnsetDetectionFunction = DisplayAnalyzer.create(analyzer=odf,
@@ -113,6 +114,7 @@ DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
                                          grapher_name='Waveform from Analyzer')
+
 irit4hz = get_processor('irit_speech_4hz')
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
                                                       result_id='irit_speech_4hz.segments',
