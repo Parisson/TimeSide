@@ -2,7 +2,7 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in  architecture can be adapted to various use cases.
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
 
 TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
 
@@ -254,23 +254,40 @@ News
 Dive in
 ========
 
-Define some processors::
+To list all available plugins::
 
  >>> import timeside
+ >>> timeside.core.list_processors()
+
+Define some processors::
+
+ >>> from timeside.core import get_processor
+ >>> decoder  =  get_processor('gst_dec')('sweep.wav')
+ >>> grapher  =  get_processor('waveform_simple')
+ >>> analyzer =  get_processor('level')
+ >>> encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
+
+Then run the *magic* pipeline::
+
+ >>> (decoder | grapher | analyzer | encoder).run()
+
+Render the grapher results::
+
+ >>> grapher.render(output='waveform.png')
+
+Show the analyzer results::
+
+ >>> print 'Level:', analyzer.results
+
+The encoded OGG file should also be there...
+
+Note you can also instanciate each processor with its own class::
+ 
  >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
  >>> grapher  =  timeside.grapher.waveform_simple.Waveform()
  >>> analyzer =  timeside.analyzer.level.Level()
  >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
-
-then, the *magic* pipeline::
-
- >>> (decoder | grapher | analyzer | encoder).run()
-
-get the results::
-
- >>> grapher.render(output='waveform.png')
- >>> print 'Level:', analyzer.results
-
+ 
 For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
 
 API / Documentation
@@ -313,7 +330,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the paragraph named "Dependencies" (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed at the paragraph #Dependencies (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
@@ -424,7 +441,7 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-For versions >=0.5 on Debian Stable 7.0 Wheezy:
+For versions >=0.5 on Debian 7 Wheezy:
 
 .. code-block:: bash
 
