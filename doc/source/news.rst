@@ -13,7 +13,9 @@ News
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
  * Full Travis integration
  * Thanks to all contributors!
+ 
  * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). It now advised to use the timeside.core.get_processor() method to instantiate the processors.
+ * UPGRADING from the sources: please cleanup your repository with: $ find ./ -name "*.pyc" -exec rm {} \;
 
 0.5.4
 

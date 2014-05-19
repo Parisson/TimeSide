@@ -122,7 +122,9 @@ News
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
  * Full Travis integration
  * Thanks to all contributors!
+ 
  * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). It now advised to use the timeside.core.get_processor() method to instantiate the processors.
+ * UPGRADING from the sources: please cleanup your repository with: $ find ./ -name "*.pyc" -exec rm {} \;
 
 0.5.4
 
@@ -259,7 +261,7 @@ For Debian based distributions, we provide a safe repository which provides all 
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-This method is known to be compatible with Debian 7 Wheezy and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
+This method is known to be compatible with Debian 7 Wheezy with backports and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
 
 Note you can also use pip if you already have already satisfied all the dependencies::
 
