@@ -30,7 +30,7 @@ import numpy as np
 def simple_host_process(argslist):
     """Call vamp-simple-host"""
 
-    vamp_host = 'vamp-simple-hostqq'
+    vamp_host = 'vamp-simple-host'
     command = [vamp_host]
     command.extend(argslist)
     # try ?
