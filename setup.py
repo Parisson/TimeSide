@@ -53,6 +53,7 @@ setup(
         'pyyaml',
         'simplejson',
         'scipy',
+        'matplotlib',
         'django>=1.4',
         'django-extensions',
         'djangorestframework',
