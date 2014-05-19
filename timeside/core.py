@@ -235,6 +235,16 @@ def get_processor(processor_id):
     return _processors[processor_id]
 
 
+def list_processors(interface=IProcessor, prefix=""):
+    print prefix + interface.__name__
+    subinterfaces = interface.__subclasses__()
+    for i in subinterfaces:
+        list_processors(interface=i, prefix=prefix + "  ")
+    procs = processors(interface, False)
+    for p in procs:
+        print prefix + "  %s [%s]" % (p.__name__, p.id())
+
+
 class ProcessPipe(object):
 
     """Handle a pipe of processors
