@@ -238,9 +238,9 @@ def sha1sum_numpy(np_array):
 
 
 # Define global variables for use with doctest
-import os
-DOCTEST_ALIAS = {'wav_file': os.path.join(os.path.dirname(__file__),
-                                          '../../tests/samples/guitar.wav')}
+DOCTEST_ALIAS = {'wav_file':
+                 'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'}
+
 
 if __name__ == "__main__":
     import doctest
