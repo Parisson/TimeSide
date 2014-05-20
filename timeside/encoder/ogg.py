@@ -19,18 +19,20 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
+
 
 class VorbisEncoder(GstEncoder):
+
     """ gstreamer-based OGG Vorbis encoder """
     implements(IEncoder)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(VorbisEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+        super(VorbisEncoder, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.pipe = ''' appsrc name=src
                   ! audioconvert ! audioresample
                   ! vorbisenc quality=0.9
@@ -43,13 +45,12 @@ class VorbisEncoder(GstEncoder):
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
 
-        elif self.filename :
+        elif self.filename:
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
             self.pipe += '! queue ! appsink name=app sync=False '
 
         self.start_pipeline(channels, samplerate)
-
 
     @staticmethod
     @interfacedoc
@@ -79,4 +80,3 @@ class VorbisEncoder(GstEncoder):
     @interfacedoc
     def set_metadata(self, metadata):
         self.metadata = metadata
-

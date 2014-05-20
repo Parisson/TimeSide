@@ -6,7 +6,7 @@ from math import pi
 import numpy as np
 from unit_timeside import *
 from timeside.decoder.utils import get_uri, get_media_uri_info
-from timeside.decoder import ArrayDecoder
+from timeside.decoder.array import ArrayDecoder
 import os
 from tools import tmp_file_sink
 

@@ -27,7 +27,31 @@ import subprocess
 import numpy as np
 
 
+def simple_host_process(argslist):
+    """Call vamp-simple-host"""
+
+    vamp_host = 'vamp-simple-host'
+    command = [vamp_host]
+    command.extend(argslist)
+    # try ?
+    stdout = subprocess.check_output(
+        command, stderr=subprocess.STDOUT).splitlines()
+
+    return stdout
+
+
+# Raise an exception if Vamp Host is missing
+from ..exceptions import VampImportError
+try:
+    simple_host_process(['-v'])
+    WITH_VAMP = True
+except OSError:
+    WITH_VAMP = False
+    raise VampImportError
+
+
 class VampSimpleHost(Analyzer):
+
     """Vamp plugins library interface analyzer"""
 
     implements(IAnalyzer)
@@ -78,16 +102,17 @@ class VampSimpleHost(Analyzer):
                 return
 
             if duration is not None:
-                plugin_res = self.new_result(data_mode='value', time_mode='segment')
+                plugin_res = self.new_result(
+                    data_mode='value', time_mode='segment')
                 plugin_res.data_object.duration = duration
             else:
-                plugin_res = self.new_result(data_mode='value', time_mode='event')
+                plugin_res = self.new_result(
+                    data_mode='value', time_mode='event')
 
             plugin_res.data_object.time = time
             plugin_res.data_object.value = value
 
-
-#            # Fix strat, duration issues if audio is a segment
+# Fix strat, duration issues if audio is a segment
 #            if self.mediainfo()['is_segment']:
 #                start_index = np.floor(self.mediainfo()['start'] *
 #                                       self.result_samplerate /
@@ -107,7 +132,6 @@ class VampSimpleHost(Analyzer):
 #                plugin_res.audio_metadata.duration = fixed_duration
 #
 #                value = value[start_index:stop_index + 1]
-
             plugin_res.id_metadata.id += '.' + '.'.join(plugin_line[1:])
             plugin_res.id_metadata.name += ' ' + \
                 ' '.join(plugin_line[1:])
@@ -119,7 +143,7 @@ class VampSimpleHost(Analyzer):
 
         args = [plugin, wavfile]
 
-        stdout = VampSimpleHost.SimpleHostProcess(args)  # run vamp-simple-host
+        stdout = simple_host_process(args)  # run vamp-simple-host
 
         stderr = stdout[0:8]  # stderr containing file and process information
         res = stdout[8:]  # stdout containg the feature data
@@ -139,7 +163,8 @@ class VampSimpleHost(Analyzer):
         stepsize = int(m.groups()[1])
         # Get the results
 
-        value = np.asfarray([line.split(': ')[1].split(' ') for line in res if (len(line.split(': ')) > 1)])
+        value = np.asfarray([line.split(': ')[1].split(' ')
+                            for line in res if (len(line.split(': ')) > 1)])
         time = np.asfarray([r.split(':')[0].split(',')[0] for r in res])
 
         time_len = len(res[0].split(':')[0].split(','))
@@ -148,26 +173,14 @@ class VampSimpleHost(Analyzer):
             duration = None
         elif time_len == 2:
             # segment
-            duration = np.asfarray([r.split(':')[0].split(',')[1] for r in res])
+            duration = np.asfarray(
+                [r.split(':')[0].split(',')[1] for r in res])
 
         return (time, duration, value)
 
     @staticmethod
     def get_plugins_list():
         arg = ['--list-outputs']
-        stdout = VampSimpleHost.SimpleHostProcess(arg)
+        stdout = simple_host_process(arg)
 
         return [line.split(':')[1:] for line in stdout]
-
-    @staticmethod
-    def SimpleHostProcess(argslist):
-        """Call vamp-simple-host"""
-
-        vamp_host = 'vamp-simple-host'
-        command = [vamp_host]
-        command.extend(argslist)
-        # try ?
-        stdout = subprocess.check_output(
-            command, stderr=subprocess.STDOUT).splitlines()
-
-        return stdout

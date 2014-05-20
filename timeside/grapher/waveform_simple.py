@@ -19,21 +19,23 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
-from timeside.grapher.core import *
+from timeside.grapher.core import Grapher
+from . utils import peaks
 
 
 class Waveform(Grapher):
+
     """ Builds a PIL image representing a simple waveform of the audio stream.
     """
 
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(255,255,255), color_scheme='default'):
+    def __init__(self, width=1024, height=256, bg_color=(255, 255, 255), color_scheme='default'):
         super(Waveform, self).__init__(width, height, bg_color, color_scheme)
-        self.line_color = (0,0,0)
+        self.line_color = (0, 0, 0)
 
     @staticmethod
     @interfacedoc
@@ -47,22 +49,25 @@ class Waveform(Grapher):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(Waveform, self).setup(channels, samplerate, blocksize, totalframes)
+        super(Waveform, self).setup(
+            channels, samplerate, blocksize, totalframes)
 
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
             if len(frames.shape) > 1:
-                buffer = frames[:,0]
+                buffer = frames[:, 0]
             else:
                 buffer = frames
-            buffer.shape = (len(buffer),1)
+            buffer.shape = (len(buffer), 1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
-                if self.pixel_cursor < self.image_width-1:
-                    self.draw_peaks(self.pixel_cursor, peaks(samples), self.line_color)
+                if self.pixel_cursor < self.image_width - 1:
+                    self.draw_peaks(
+                        self.pixel_cursor, peaks(samples), self.line_color)
                     self.pixel_cursor += 1
-            if self.pixel_cursor == self.image_width-1:
-                self.draw_peaks(self.pixel_cursor, peaks(samples), self.line_color)
+            if self.pixel_cursor == self.image_width - 1:
+                self.draw_peaks(
+                    self.pixel_cursor, peaks(samples), self.line_color)
                 self.pixel_cursor += 1
         return frames, eod
 
@@ -70,5 +75,5 @@ class Waveform(Grapher):
     def post_process(self, output=None):
         a = 1
         for x in range(self.image_width):
-            self.pixel[x, self.image_height/2] = tuple(map(lambda p: p+a, self.pixel[x, self.image_height/2]))
-
+            self.pixel[x, self.image_height / 2] = tuple(
+                map(lambda p: p + a, self.pixel[x, self.image_height / 2]))

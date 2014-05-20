@@ -22,21 +22,22 @@
 from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
 
 class AacEncoder(GstEncoder):
+
     """ gstreamer-based AAC encoder """
     implements(IEncoder)
 
-    def __init__(self, output, streaming = False, overwrite = False):
+    def __init__(self, output, streaming=False, overwrite=False):
         super(AacEncoder, self).__init__(output, streaming, overwrite)
         if self.streaming:
             raise Exception("Streaming not supported")
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(AacEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+        super(AacEncoder, self).setup(
+            channels, samplerate, blocksize, totalframes)
 
         self.streaming = False
         self.pipe = ''' appsrc name=src
@@ -51,13 +52,12 @@ class AacEncoder(GstEncoder):
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
 
-        elif self.filename :
+        elif self.filename:
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
             self.pipe += '! queue ! appsink name=app sync=False '
 
         self.start_pipeline(channels, samplerate)
-
 
     @staticmethod
     @interfacedoc

@@ -22,23 +22,27 @@
 #   Guillaume Pellerin <yomguy@parisson.com>
 
 
-import optparse, math, sys, numpy
+import math
+import numpy
 
 try:
-    from PIL import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+    from PIL import Image, ImageDraw
 except ImportError:
-    import ImageFilter, ImageChops, Image, ImageDraw, ImageColor, ImageEnhance
+    import Image
+    import ImageDraw
 
-from timeside.core import *
+from timeside.core import Processor, implements, interfacedoc, abstract
+from timeside.core import FixedSizeInputAdapter
 from timeside.api import IGrapher
-from timeside.grapher.color_schemes import default_color_schemes
-from utils import *
+from . utils import smooth, im_watermark, normalize
 
 
 class Spectrum(object):
+
     """ FFT based frequency analysis of audio frames."""
 
-    def __init__(self, fft_size, samplerate, blocksize, totalframes, lower, higher, window_function=None):
+    def __init__(self, fft_size, samplerate, blocksize,
+                 totalframes, lower, higher, window_function=None):
         self.fft_size = fft_size
         self.window = window_function(self.fft_size)
         self.window_function = window_function
@@ -60,13 +64,13 @@ class Spectrum(object):
             self.window_function = numpy.hanning
             self.window = self.window_function(self.blocksize)
 
-
     def process(self, frames, eod, spec_range=120.0):
-        """ Returns a tuple containing the spectral centroid and the spectrum (dB scales) of the input audio frames.
+        """ Returns a tuple containing the spectral centroid and
+        the spectrum (dB scales) of the input audio frames.
         FFT window sizes are adatable to the input frame size."""
 
-        samples = frames[:,0]
-        nsamples = len(frames[:,0])
+        samples = frames[:, 0]
+        nsamples = len(frames[:, 0])
         if nsamples != self.blocksize:
             self.window = self.window_function(nsamples)
         samples *= self.window
@@ -74,11 +78,11 @@ class Spectrum(object):
         while nsamples > self.fft_size:
             self.fft_size = 2 * self.fft_size
 
-        zeros_p = numpy.zeros(self.fft_size/2-int(nsamples/2))
+        zeros_p = numpy.zeros(self.fft_size / 2 - int(nsamples / 2))
         if nsamples % 2:
-            zeros_n = numpy.zeros(self.fft_size/2-int(nsamples/2)-1)
+            zeros_n = numpy.zeros(self.fft_size / 2 - int(nsamples / 2) - 1)
         else:
-            zeros_n = numpy.zeros(self.fft_size/2-int(nsamples/2))
+            zeros_n = numpy.zeros(self.fft_size / 2 - int(nsamples / 2))
         samples = numpy.concatenate((zeros_p, samples, zeros_n), axis=0)
 
         fft = numpy.fft.fft(samples)
@@ -87,26 +91,35 @@ class Spectrum(object):
         length = numpy.float64(spectrum.shape[0])
 
         # scale the db spectrum from [- spec_range db ... 0 db] > [0..1]
-        db_spectrum = ((20*(numpy.log10(spectrum + 1e-30))).clip(-spec_range, 0.0) + spec_range)/spec_range
+        db_spectrum = ((20 * (numpy.log10(spectrum + 1e-30)))
+                       .clip(-spec_range, 0.0) + spec_range) / spec_range
         energy = spectrum.sum()
         spectral_centroid = 0
 
         if energy > 1e-20:
             # calculate the spectral centroid
-            if self.spectrum_range == None:
+            if self.spectrum_range is None:
                 self.spectrum_range = numpy.arange(length)
-            spectral_centroid = (spectrum * self.spectrum_range).sum() / (energy * (length - 1)) * self.samplerate * 0.5
+            spectral_centroid = (spectrum * self.spectrum_range).sum() / \
+                (energy * (length - 1)) * \
+                self.samplerate * 0.5
             # clip > log10 > scale between 0 and 1
-            spectral_centroid = (math.log10(self.clip(spectral_centroid, self.lower, self.higher)) - \
-                                self.lower_log) / (self.higher_log - self.lower_log)
+            spectral_centroid = (math.log10(self.clip(spectral_centroid,
+                                                      self.lower,
+                                                      self.higher)) -
+                                 self.lower_log) / (self.higher_log -
+                                                    self.lower_log)
 
         return (spectral_centroid, db_spectrum)
 
 
 class Grapher(Processor):
+
     '''
     Generic abstract class for the graphers
     '''
+
+    type = 'grapher'
 
     fft_size = 0x1000
     frame_cursor = 0
@@ -140,18 +153,23 @@ class Grapher(Processor):
         self.color_color_scheme = color_scheme
 
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(Grapher, self).setup(channels, samplerate, blocksize, totalframes)
+        super(Grapher, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.sample_rate = samplerate
-        self.higher_freq = self.sample_rate/2
+        self.higher_freq = self.sample_rate / 2
         self.block_size = blocksize
         self.total_frames = totalframes
-        self.image = Image.new("RGBA", (self.image_width, self.image_height), self.bg_color)
+        self.image = Image.new(
+            "RGBA", (self.image_width, self.image_height), self.bg_color)
         self.samples_per_pixel = self.total_frames / float(self.image_width)
         self.buffer_size = int(round(self.samples_per_pixel, 0))
-        self.pixels_adapter = FixedSizeInputAdapter(self.buffer_size, 1, pad=False)
-        self.pixels_adapter_totalframes = self.pixels_adapter.blocksize(self.total_frames)
-        self.spectrum = Spectrum(self.fft_size, self.sample_rate, self.block_size, self.total_frames,
-                                 self.lower_freq, self.higher_freq, numpy.hanning)
+        self.pixels_adapter = FixedSizeInputAdapter(
+            self.buffer_size, 1, pad=False)
+        self.pixels_adapter_totalframes = self.pixels_adapter.blocksize(
+            self.total_frames)
+        self.spectrum = Spectrum(
+            self.fft_size, self.sample_rate, self.block_size, self.total_frames,
+            self.lower_freq, self.higher_freq, numpy.hanning)
         self.pixel = self.image.load()
         self.draw = ImageDraw.Draw(self.image)
 
@@ -166,8 +184,9 @@ class Grapher(Processor):
             return
         return self.image
 
-    def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5,5)):
-        self.image = im_watermark(self.image, text, color=color, opacity=opacity, margin=margin)
+    def watermark(self, text, font=None, color=(255, 255, 255), opacity=.6, margin=(5, 5)):
+        self.image = im_watermark(
+            self.image, text, color=color, opacity=opacity, margin=margin)
 
     def draw_peaks(self, x, peaks, line_color):
         """Draw 2 peaks at x"""
@@ -176,7 +195,8 @@ class Grapher(Processor):
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
 
         if self.previous_y:
-            self.draw.line([self.previous_x, self.previous_y, x, y1, x, y2], line_color)
+            self.draw.line(
+                [self.previous_x, self.previous_y, x, y1, x, y2], line_color)
         else:
             self.draw.line([x, y1, x, y2], line_color)
 
@@ -189,13 +209,13 @@ class Grapher(Processor):
         y1 = self.image_height * 0.5 - peaks[0] * (self.image_height - 4) * 0.5
         y2 = self.image_height * 0.5 - peaks[1] * (self.image_height - 4) * 0.5
 
-        if self.previous_y and x < self.image_width-1:
+        if self.previous_y and x < self.image_width - 1:
             if y1 < y2:
                 self.draw.line((x, 0, x, y1), line_color)
-                self.draw.line((x, self.image_height , x, y2), line_color)
+                self.draw.line((x, self.image_height, x, y2), line_color)
             else:
                 self.draw.line((x, 0, x, y2), line_color)
-                self.draw.line((x, self.image_height , x, y1), line_color)
+                self.draw.line((x, self.image_height, x, y1), line_color)
         else:
             self.draw.line((x, 0, x, self.image_height), line_color)
         self.draw_anti_aliased_pixels(x, y1, y2, line_color)
@@ -210,10 +230,10 @@ class Grapher(Processor):
 
         if alpha > 0.0 and alpha < 1.0 and y_max_int + 1 < self.image_height:
             current_pix = self.pixel[int(x), y_max_int + 1]
-            r = int((1-alpha)*current_pix[0] + alpha*color[0])
-            g = int((1-alpha)*current_pix[1] + alpha*color[1])
-            b = int((1-alpha)*current_pix[2] + alpha*color[2])
-            self.pixel[x, y_max_int + 1] = (r,g,b)
+            r = int((1 - alpha) * current_pix[0] + alpha * color[0])
+            g = int((1 - alpha) * current_pix[1] + alpha * color[1])
+            b = int((1 - alpha) * current_pix[2] + alpha * color[2])
+            self.pixel[x, y_max_int + 1] = (r, g, b)
 
         y_min = min(y1, y2)
         y_min_int = int(y_min)
@@ -221,10 +241,10 @@ class Grapher(Processor):
 
         if alpha > 0.0 and alpha < 1.0 and y_min_int - 1 >= 0:
             current_pix = self.pixel[x, y_min_int - 1]
-            r = int((1-alpha)*current_pix[0] + alpha*color[0])
-            g = int((1-alpha)*current_pix[1] + alpha*color[1])
-            b = int((1-alpha)*current_pix[2] + alpha*color[2])
-            self.pixel[x, y_min_int - 1] = (r,g,b)
+            r = int((1 - alpha) * current_pix[0] + alpha * color[0])
+            g = int((1 - alpha) * current_pix[1] + alpha * color[1])
+            b = int((1 - alpha) * current_pix[2] + alpha * color[2])
+            self.pixel[x, y_min_int - 1] = (r, g, b)
 
     def draw_peaks_contour(self):
         contour = self.contour.copy()
@@ -234,36 +254,37 @@ class Grapher(Processor):
         # Scaling
         #ratio = numpy.mean(contour)/numpy.sqrt(2)
         ratio = 1
-        contour = normalize(numpy.expm1(contour/ratio))*(1-10**-6)
+        contour = normalize(numpy.expm1(contour / ratio)) * (1 - 10 ** -6)
 
         # Spline
         #contour = cspline1d(contour)
         #contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])
 
         if self.symetry:
-            height = int(self.image_height/2)
+            height = int(self.image_height / 2)
         else:
             height = self.image_height
 
         # Multicurve rotating
-        for i in range(0,self.ndiv):
+        for i in range(0, self.ndiv):
             self.previous_x, self.previous_y = None, None
 
-            bright_color = int(255*(1-float(i)/(self.ndiv*2)))
-            bright_color = 255-bright_color+self.color_offset
+            bright_color = int(255 * (1 - float(i) / (self.ndiv * 2)))
+            bright_color = 255 - bright_color + self.color_offset
             #line_color = self.color_lookup[int(self.centroids[j]*255.0)]
-            line_color = (bright_color,bright_color,bright_color)
+            line_color = (bright_color, bright_color, bright_color)
 
             # Linear
             #contour = contour*(1.0-float(i)/self.ndiv)
             #contour = contour*(1-float(i)/self.ndiv)
 
             # Cosinus
-            contour = contour*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi
+            contour = contour * \
+                numpy.arccos(float(i) / self.ndiv) * 2 / numpy.pi
             #contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)
             #contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))
 
-            curve = (height-1)*contour
+            curve = (height - 1) * contour
             #curve = contour*(height-2)/2+height/2
 
             for x in self.x:
@@ -271,18 +292,23 @@ class Grapher(Processor):
                 y = curve[x]
                 if not x == 0:
                     if not self.symetry:
-                        self.draw.line([self.previous_x, self.previous_y, x, y], line_color)
+                        self.draw.line(
+                            [self.previous_x, self.previous_y, x, y], line_color)
                         self.draw_anti_aliased_pixels(x, y, y, line_color)
                     else:
-                        self.draw.line([self.previous_x, self.previous_y+height, x, y+height], line_color)
-                        self.draw_anti_aliased_pixels(x, y+height, y+height, line_color)
-                        self.draw.line([self.previous_x, -self.previous_y+height, x, -y+height], line_color)
-                        self.draw_anti_aliased_pixels(x, -y+height, -y+height, line_color)
+                        self.draw.line(
+                            [self.previous_x, self.previous_y + height, x, y + height], line_color)
+                        self.draw_anti_aliased_pixels(
+                            x, y + height, y + height, line_color)
+                        self.draw.line(
+                            [self.previous_x, -self.previous_y + height, x, -y + height], line_color)
+                        self.draw_anti_aliased_pixels(
+                            x, -y + height, -y + height, line_color)
                 else:
                     if not self.symetry:
                         self.draw.point((x, y), line_color)
                     else:
-                        self.draw.point((x, y+height), line_color)
+                        self.draw.point((x, y + height), line_color)
                 self.previous_x, self.previous_y = x, y
 
 

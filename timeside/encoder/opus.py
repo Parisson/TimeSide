@@ -31,6 +31,7 @@ from timeside.api import IEncoder
 
 
 class OpusEncoder(GstEncoder):
+
     """ gstreamer-based Opus encoder """
     implements(IEncoder)
 

@@ -1,10 +1,12 @@
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2013 Parisson SARL
-* Copyright (c) 2006, 2013 Guillaume Pellerin
-* Copyright (c) 2010, 2013 Paul Brossier
-* Copyright (c) 2013 Thomas Fillon
+* Copyright (c) 2006, 2014 Parisson SARL
+* Copyright (c) 2006, 2014 Guillaume Pellerin
+* Copyright (c) 2010, 2014 Paul Brossier
+* Copyright (c) 2013, 2014 Thomas Fillon
+* Copyright (c) 2013, 2014 Maxime Lecoz
+* Copyright (c) 2013, 2014 David Doukhan
 * Copyright (c) 2006, 2010 Samalyse SARL
 
 
@@ -22,3 +24,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 See LICENSE for more details.
+

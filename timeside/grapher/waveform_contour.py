@@ -19,24 +19,29 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.api import IGrapher
-from timeside.grapher.core import *
-from timeside.grapher.waveform_simple import Waveform
+#from timeside.grapher.core import *
+from . waveform_simple import Waveform
+from . utils import peaks
+
+import numpy
 
 
 class WaveformContourBlack(Waveform):
+
     """ Builds a PIL image representing an amplitude coutour (envelop) of the audio stream.
     """
 
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(0,0,0), color_scheme='default'):
-        super(WaveformContourBlack, self).__init__(width, height, bg_color, color_scheme)
+    def __init__(self, width=1024, height=256, bg_color=(0, 0, 0), color_scheme='default'):
+        super(WaveformContourBlack, self).__init__(
+            width, height, bg_color, color_scheme)
         self.contour = numpy.zeros(self.image_width)
         self.ndiv = 4
-        self.x = numpy.r_[0:self.image_width-1:1]
+        self.x = numpy.r_[0:self.image_width - 1:1]
         self.symetry = True
         self.color_offset = 160
 
@@ -52,13 +57,14 @@ class WaveformContourBlack(Waveform):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(WaveformContourBlack, self).setup(channels, samplerate, blocksize, totalframes)
+        super(WaveformContourBlack, self).setup(
+            channels, samplerate, blocksize, totalframes)
 
     @interfacedoc
     def process(self, frames, eod=False):
         if len(frames) != 1:
-            buffer = frames[:,0].copy()
-            buffer.shape = (len(buffer),1)
+            buffer = frames[:, 0].copy()
+            buffer.shape = (len(buffer), 1)
             for samples, end in self.pixels_adapter.process(buffer, eod):
                 if self.pixel_cursor < self.image_width:
                     self.contour[self.pixel_cursor] = numpy.max(peaks(samples))
@@ -66,7 +72,6 @@ class WaveformContourBlack(Waveform):
         if eod:
             self.draw_peaks_contour()
         return frames, eod
-
 
 
 class WaveformContourWhite(WaveformContourBlack):
@@ -77,8 +82,9 @@ class WaveformContourWhite(WaveformContourBlack):
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=1024, height=256, bg_color=(255,255,255), color_scheme='default'):
-        super(WaveformContourWhite, self).__init__(width, height, bg_color, color_scheme)
+    def __init__(self, width=1024, height=256, bg_color=(255, 255, 255), color_scheme='default'):
+        super(WaveformContourWhite, self).__init__(
+            width, height, bg_color, color_scheme)
         self.color_offset = 60
 
     @staticmethod

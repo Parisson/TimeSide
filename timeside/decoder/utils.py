@@ -28,7 +28,9 @@ from __future__ import division
 
 import numpy as np
 
+
 class Noise(object):
+
     """A class that mimics audiolab.sndfile but generates noise instead of reading
     a wave file. Additionally it can be told to have a "broken" header and thus crashing
     in the middle of the file. Also useful for testing ultra-short files of 20 samples."""
@@ -60,7 +62,7 @@ class Noise(object):
         else:
             will_read = frames_to_read
         self.seekpoint += will_read
-        return np.random.random(will_read)*2 - 1
+        return np.random.random(will_read) * 2 - 1
 
 
 def path2uri(path):
@@ -73,7 +75,8 @@ def path2uri(path):
     >>> path2uri('C:\Windows\my_file.wav')
     'file:///C%3A%5CWindows%5Cmy_file.wav'
     """
-    import urlparse, urllib
+    import urlparse
+    import urllib
 
     return urlparse.urljoin('file:', urllib.pathname2url(path))
 
@@ -126,7 +129,7 @@ def get_media_uri_info(uri):
     uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
     try:
         uri_info = uri_discoverer.discover_uri(uri)
-    except  GError as e:
+    except GError as e:
         raise IOError(e)
     info = dict()
 
@@ -136,9 +139,9 @@ def get_media_uri_info(uri):
     audio_streams = uri_info.get_audio_streams()
     info['streams'] = []
     for stream in audio_streams:
-        stream_info = {'bitrate': stream.get_bitrate (),
-                       'channels': stream.get_channels (),
-                       'depth': stream.get_depth (),
+        stream_info = {'bitrate': stream.get_bitrate(),
+                       'channels': stream.get_channels(),
+                       'depth': stream.get_depth(),
                        'max_bitrate': stream.get_max_bitrate(),
                        'samplerate': stream.get_sample_rate()
                        }
@@ -179,8 +182,8 @@ def sha1sum_file(filename):
     Return the secure hash digest with sha1 algorithm for a given file
 
     >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> print sha1sum_file(wav_file)
-    08301c3f9a8d60926f31e253825cc74263e52ad1
+    >>> print sha1sum_file(wav_file) # doctest: +SKIP
+    #08301c3f9a8d60926f31e253825cc74263e52ad1
     '''
     import hashlib
     import io
@@ -213,7 +216,7 @@ def sha1sum_url(url):
     sha1 = hashlib.sha1()
     chunk_size = sha1.block_size * 8192
 
-    max_file_size = 10*1024*1024  # 10Mo limit in case of very large file
+    max_file_size = 10 * 1024 * 1024  # 10Mo limit in case of very large file
 
     total_read = 0
     with closing(urllib.urlopen(url)) as url_obj:
@@ -235,9 +238,8 @@ def sha1sum_numpy(np_array):
 
 
 # Define global variables for use with doctest
-import os
-DOCTEST_ALIAS = {'wav_file': os.path.join(os.path.dirname(__file__),
-                                          '../../tests/samples/guitar.wav')}
+DOCTEST_ALIAS = {'wav_file':
+                 'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'}
 
 if __name__ == "__main__":
     import doctest

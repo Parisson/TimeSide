@@ -2,11 +2,11 @@
 
 from __future__ import division
 
-from timeside.core import *
-from timeside.decoder import *
-from timeside.analyzer import *
-from timeside.encoder import *
-from timeside.component import *
+from timeside.core import get_processor, ProcessPipe
+from timeside.decoder.file import FileDecoder
+#from timeside.analyzer import *
+#from timeside.encoder import *
+#from timeside.component import *
 
 from unit_timeside import *
 from tools import tmp_file_sink
@@ -26,28 +26,29 @@ class TestTranscodingStreaming(unittest.TestCase):
 
     def testMp3(self):
         "Test conversion to mp3"
-        self.encoder_function = Mp3Encoder
+        self.encoder_id = 'gst_mp3_enc'
         self.filesize_delta = 156
 
     def testOgg(self):
         "Test conversion to ogg"
-        self.encoder_function = VorbisEncoder
+        self.encoder_id = 'gst_vorbis_enc'
 
     def testOpus(self):
         "Test conversion to opus"
-        self.encoder_function = OpusEncoder
+        self.encoder_id = 'gst_opus_enc'
         self.expected_sample_rate = 48000
 
     def testWebM(self):
         "Test conversion to webm"
-        self.encoder_function = WebMEncoder
+        self.encoder_id = 'gst_webm_enc'
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
+        encoder_cls = get_processor(self.encoder_id)
 
-        file_extension = '.' + self.encoder_function.file_extension()
+        file_extension = '.' + encoder_cls.file_extension()
 
         self.target_filesink = tmp_file_sink(prefix=self.__class__.__name__,
                                              suffix=file_extension)
@@ -55,7 +56,7 @@ class TestTranscodingStreaming(unittest.TestCase):
         self.target_appsink = tmp_file_sink(prefix=self.__class__.__name__,
                                             suffix=file_extension)
 
-        encoder = self.encoder_function(self.target_filesink, streaming=True)
+        encoder = encoder_cls(self.target_filesink, streaming=True)
         pipe = (decoder | encoder)
 
         with open(self.target_appsink, 'w') as f:

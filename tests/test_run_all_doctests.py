@@ -24,7 +24,7 @@ import unittest
 from unit_timeside import TestRunner
 import doctest
 import timeside
-import pkgutil
+from timeside.tools.package import discover_modules
 
 
 def load_tests(loader, tests, ignore):
@@ -32,10 +32,7 @@ def load_tests(loader, tests, ignore):
     finder = doctest.DocTestFinder(exclude_empty=False)
 
     # Create tests for doctest in timeside modules and sub-modules
-    modules_list = [modname for _, modname, _ in pkgutil.walk_packages(
-                    path=timeside.__path__,
-                    prefix=timeside.__name__ + '.',
-                    onerror=lambda x: None)]
+    modules_list = discover_modules(timeside.__name__)
 
     for module in modules_list:
         _tmp = __import__(module, fromlist=['DOCTEST_ALIAS'])
@@ -43,6 +40,7 @@ def load_tests(loader, tests, ignore):
             DOCTEST_ALIAS = _tmp.DOCTEST_ALIAS
         except AttributeError:
             DOCTEST_ALIAS = {}
+
         tests.addTests(doctest.DocTestSuite(module, extraglobs=DOCTEST_ALIAS,
                                             test_finder=finder))
 

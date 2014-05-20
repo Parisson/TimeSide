@@ -28,15 +28,28 @@
 
 from __future__ import division
 
-from timeside.decoder.core import *
-from timeside.tools.gstutils import MainloopThread
+from timeside.decoder.core import Decoder, IDecoder, implements, interfacedoc
+from timeside.tools.gstutils import MainloopThread, gobject
+from timeside.tools.gstutils import gst_buffer_to_numpy_array
 import threading
 
+from timeside.decoder.utils import get_uri, get_media_uri_info, stack, get_sha1
+
+import Queue
+from gst import _gst as gst
+
+GST_APPSINK_MAX_BUFFERS = 10
+QUEUE_SIZE = 10
+
+import numpy as np
+
+
 class FileDecoder(Decoder):
+
     """ gstreamer-based decoder """
     implements(IDecoder)
 
-    output_blocksize = 8*1024
+    output_blocksize = 8 * 1024
 
     pipeline = None
     mainloopthread = None
@@ -48,8 +61,7 @@ class FileDecoder(Decoder):
     def id():
         return "gst_dec"
 
-    def __init__(self, uri, start=0, duration=None, stack=False):
-
+    def __init__(self, uri, start=0, duration=None, stack=False, sha1=None):
         """
         Construct a new FileDecoder
 
@@ -61,6 +73,10 @@ class FileDecoder(Decoder):
             start time of the segment in seconds
         duration : float
             duration of the segment in seconds
+        stack : boolean
+            keep decoded data in the stack
+        sha1 : boolean
+            compute the sha1 hash of the data
 
         """
 
@@ -69,8 +85,12 @@ class FileDecoder(Decoder):
         self.from_stack = False
         self.stack = stack
 
-        self.uri = get_uri(uri)
-        self._sha1 = get_sha1(uri)
+        self.uri = get_uri(uri).encode('utf8')
+
+        if not sha1:
+            self._sha1 = get_sha1(uri)
+        else:
+            self._sha1 = sha1.encode('utf8')
 
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
 
@@ -124,17 +144,19 @@ class FileDecoder(Decoder):
                             ! audioconvert name=audioconvert
                             ! audioresample
                             ! appsink name=sink sync=False async=True
-                            '''.format(uri = self.uri,
-                                       uri_start = np.uint64(round(self.uri_start * gst.SECOND)),
-                                       uri_duration = np.int64(round(self.uri_duration * gst.SECOND)))
-                                       # convert uri_start and uri_duration to nanoseconds
+                            '''.format(uri=self.uri,
+                                       uri_start=np.uint64(
+                                           round(self.uri_start * gst.SECOND)),
+                                       uri_duration=np.int64(round(self.uri_duration * gst.SECOND)))
+                                       # convert uri_start and uri_duration to
+                                       # nanoseconds
         else:
             # Create the pipe with standard Gstreamer uridecodebin
             self.pipe = ''' uridecodebin name=src uri={uri}
                            ! audioconvert name=audioconvert
                            ! audioresample
                            ! appsink name=sink sync=False async=True
-                           '''.format(uri = self.uri)
+                           '''.format(uri=self.uri)
 
         self.pipeline = gst.parse_launch(self.pipe)
 
@@ -186,7 +208,7 @@ class FileDecoder(Decoder):
 
         self.discovered_cond.acquire()
         while not self.discovered:
-            #print 'waiting'
+            # print 'waiting'
             self.discovered_cond.wait()
         self.discovered_cond.release()
 
@@ -237,7 +259,8 @@ class FileDecoder(Decoder):
                 self.output_channels = self.input_channels
             self.input_duration = length / 1.e9
 
-            self.input_totalframes = int(self.input_duration * self.input_samplerate)
+            self.input_totalframes = int(
+                self.input_duration * self.input_samplerate)
             if "x-raw-float" in caps.to_string():
                 self.input_width = caps[0]["width"]
             else:
@@ -270,15 +293,17 @@ class FileDecoder(Decoder):
     def _on_new_buffer_cb(self, sink):
         buf = sink.emit('pull-buffer')
         new_array = gst_buffer_to_numpy_array(buf, self.output_channels)
-        #print 'processing new buffer', new_array.shape
+        # print 'processing new buffer', new_array.shape
         if self.last_buffer is None:
             self.last_buffer = new_array
         else:
-            self.last_buffer = np.concatenate((self.last_buffer, new_array), axis=0)
+            self.last_buffer = np.concatenate(
+                (self.last_buffer, new_array), axis=0)
         while self.last_buffer.shape[0] >= self.output_blocksize:
             new_block = self.last_buffer[:self.output_blocksize]
             self.last_buffer = self.last_buffer[self.output_blocksize:]
-            #print 'queueing', new_block.shape, 'remaining', self.last_buffer.shape
+            # print 'queueing', new_block.shape, 'remaining',
+            # self.last_buffer.shape
             self.queue.put([new_block, False])
 
     @interfacedoc
@@ -304,7 +329,7 @@ class FileDecoder(Decoder):
             self.stack = False
             self.from_stack = True
 
-    ## IDecoder methods
+    # IDecoder methods
 
     @interfacedoc
     def format(self):
@@ -331,6 +356,8 @@ class FileDecoder(Decoder):
         # TODO check
         return self.tags
 
+    def stop(self):
+        self.src.send_event(gst.event_new_eos())
 
 if __name__ == "__main__":
     import doctest

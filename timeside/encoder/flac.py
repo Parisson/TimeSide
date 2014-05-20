@@ -19,19 +19,20 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
 
 class FlacEncoder(GstEncoder):
+
     """ gstreamer-based FLAC encoder """
     implements(IEncoder)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(FlacEncoder, self).setup(channels, samplerate, blocksize, totalframes)
+        super(FlacEncoder, self).setup(
+            channels, samplerate, blocksize, totalframes)
 
         self.pipe = ''' appsrc name=src ! audioconvert
                         ! flacenc '''
@@ -42,13 +43,12 @@ class FlacEncoder(GstEncoder):
             t. ! queue ! appsink name=app sync=False
             ''' % self.filename
 
-        elif self.filename :
+        elif self.filename:
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
             self.pipe += '! queue ! appsink name=app sync=False '
 
         self.start_pipeline(channels, samplerate)
-
 
     @staticmethod
     @interfacedoc

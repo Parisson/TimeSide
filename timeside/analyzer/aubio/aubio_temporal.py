@@ -18,17 +18,19 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Paul Brossier <piem@piem.org>
+from __future__ import absolute_import
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from preprocessors import downmix_to_mono, frames_adapter
+from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 from aubio import onset, tempo
 
 import numpy
 
 
 class AubioTemporal(Analyzer):
+
     """Aubio Temporal analyzer"""
     implements(IAnalyzer)
 
@@ -71,7 +73,6 @@ class AubioTemporal(Analyzer):
 
     def __str__(self):
         return "%s %s" % (str(self.value), self.unit())
-
 
     @downmix_to_mono
     @frames_adapter
@@ -134,7 +135,8 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         #  Beat confidences: Event (time, value)
         #---------------------------------
-        beat_confidences = self.new_result(data_mode='value', time_mode='event')
+        beat_confidences = self.new_result(
+            data_mode='value', time_mode='event')
         beat_confidences.id_metadata.id += '.' + "beat_confidence"
         beat_confidences.id_metadata.name += " " + "Beat confidences"
         beat_confidences.id_metadata.unit = None

@@ -12,7 +12,7 @@ Decoder package
 File Decoder
 ===========
 
-.. autoclass:: FileDecoder
+.. autoclass:: timeside.decoder.file.FileDecoder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,7 +20,7 @@ File Decoder
 Array Decoder
 =============
 
-.. autoclass:: ArrayDecoder
+.. autoclass:: timeside.decoder.array.ArrayDecoder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,7 +28,7 @@ Array Decoder
 Live Decoder
 =============
 
-.. autoclass:: LiveDecoder
+.. autoclass:: timeside.decoder.live.LiveDecoder
    :members:
    :undoc-members:
    :show-inheritance:
