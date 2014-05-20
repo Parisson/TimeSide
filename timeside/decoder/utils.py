@@ -182,8 +182,8 @@ def sha1sum_file(filename):
     Return the secure hash digest with sha1 algorithm for a given file
 
     >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> print sha1sum_file(wav_file)
-    08301c3f9a8d60926f31e253825cc74263e52ad1
+    >>> print sha1sum_file(wav_file) # doctest: +SKIP
+    #08301c3f9a8d60926f31e253825cc74263e52ad1
     '''
     import hashlib
     import io
@@ -240,7 +240,6 @@ def sha1sum_numpy(np_array):
 # Define global variables for use with doctest
 DOCTEST_ALIAS = {'wav_file':
                  'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'}
-
 
 if __name__ == "__main__":
     import doctest
