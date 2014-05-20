@@ -938,7 +938,6 @@ class AnalyzerResultContainer(dict):
             elif isinstance(obj, numpy.generic):
                 return numpy.asscalar(obj)
             else:
-                print obj
                 print type(obj)
                 raise TypeError(repr(obj) + " is not JSON serializable")
 
