@@ -1,9 +1,7 @@
 Development
 ===========
 
-For versions >=0.5 on Debian 7 Wheezy:
-
-.. code-block:: bash
+For versions >=0.5 on Debian 7 Wheezy::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
