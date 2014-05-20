@@ -63,7 +63,7 @@ setup(
   license='Gnu Public License V2',
   classifiers = CLASSIFIERS,
   keywords = KEYWORDS,
-  packages = find_packages(),
+  packages = ['timeside'],
   include_package_data = True,
   zip_safe = False,
   scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],

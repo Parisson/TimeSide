@@ -41,11 +41,11 @@ Dependencies
 
 Needed::
 
- python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
+ python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
  python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
  gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 
- aubio yaafe python-aubio python-yaafe vamp-examples
- django django-south djangorestframework django-extensions
+ aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
+ django (>=1.4) django-south djangorestframework django-extensions
