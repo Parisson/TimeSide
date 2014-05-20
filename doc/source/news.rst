@@ -14,7 +14,7 @@ News
  * Full `Travis integration <https://travis-ci.org/yomguy/TimeSide/>`_ with tests and test coverage through `coveralls.io <https://coveralls.io/r/yomguy/TimeSide>`_
  * Thanks to all contributors!
  * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). Note that it is now advised to use the timeside.core.get_processor() method to instantiate the processors with their respective id as argument.
- * UPGRADING from the sources: please cleanup your repository with: $ find ./ -name "*.pyc" -exec rm {} \;
+ * UPGRADING from the sources: please remove all .pyc files from your repository.
 
 0.5.4
 
