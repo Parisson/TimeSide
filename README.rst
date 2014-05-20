@@ -120,10 +120,9 @@ News
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
- * Full Travis integration
+ * Full `Travis integration <https://travis-ci.org/yomguy/TimeSide/>`_ with tests and test coverage through `coveralls.io <https://coveralls.io/r/yomguy/TimeSide>`_
  * Thanks to all contributors!
- 
- * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). It now advised to use the timeside.core.get_processor() method to instantiate the processors.
+ * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). Note that it is now advised to use the timeside.core.get_processor() method to instantiate the processors with their respective id as argument.
  * UPGRADING from the sources: please cleanup your repository with: $ find ./ -name "*.pyc" -exec rm {} \;
 
 0.5.4
@@ -286,14 +285,14 @@ Dependencies
 
 Needed::
 
- python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
+ python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
  python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
  gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 
- aubio yaafe python-aubio python-yaafe vamp-examples
- django django-south djangorestframework django-extensions
+ aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
+ django (>=1.4) django-south djangorestframework django-extensions
 User Interfaces
 ===============
 
