@@ -22,6 +22,7 @@ from .component import Component, MetaComponent, abstract
 from .component import implements, implementations, interfacedoc
 from .api import IProcessor
 from .exceptions import Error, PIDError, ApiError
+from .tools.parameters import HasParam
 
 import re
 import numpy
@@ -44,7 +45,7 @@ class MetaProcessor(MetaComponent):
     valid_id = re.compile("^[a-z][_a-z0-9]*$")
 
     def __new__(cls, name, bases, d):
-        new_class = MetaComponent.__new__(cls, name, bases, d)
+        new_class = super(MetaProcessor, cls).__new__(cls, name, bases, d)
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
             if id in _processors:
@@ -67,7 +68,7 @@ class MetaProcessor(MetaComponent):
         return new_class
 
 
-class Processor(Component):
+class Processor(Component, HasParam):
 
     """Base component class of all processors
 
