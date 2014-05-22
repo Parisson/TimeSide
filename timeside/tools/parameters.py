@@ -71,18 +71,10 @@ class HasParam(object):
         elif name in self._parameters.trait_names():
             self._parameters.trait_setq(**{name: value})
             # Copy attributes as a regular attribute at class level
-            super(HasParam, self).__setattr__(name,
-                                              self._parameters.get(name))
+            _value = self._parameters.__getattribute__(name)
+            super(HasParam, self).__setattr__(name, _value)
         else:
             super(HasParam, self).__setattr__(name, value)
-
-#    def __getattribute__(self, name):
-#        if name in ['_parameters', '_Param']:
-#            return super(HasParam, self).__getattribute__(name)
-#        elif name in self._parameters.trait_names():
-#            return self._parameters.trait_get(name)
-#        else:
-#            return super(HasParam, self).__getattribute__(name)
 
     def get_parameters(self):
         list_traits = self._parameters.editable_traits()
