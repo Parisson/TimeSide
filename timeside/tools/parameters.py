@@ -69,7 +69,7 @@ class HasParam(object):
         if name is '_parameters':
             super(HasParam, self).__setattr__(name, value)
         elif name in self._parameters.trait_names():
-            self._parameters.trait_setq(**{name: value})
+            self._parameters.__setattr__(name, value)
             # Copy attributes as a regular attribute at class level
             _value = self._parameters.__getattribute__(name)
             super(HasParam, self).__setattr__(name, _value)
