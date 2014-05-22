@@ -53,10 +53,10 @@ class HasParam(object):
     {"param4": 8, "param3": 0.5, "param2": 7, "param1": "plop"}
     >>> v = p.param_view()
     >>> print v
-    {'param4': {'default': 3, 'type': 'range'}, \
-'param3': {'default': 0.0, 'type': 'float'}, \
-'param2': {'default': 0, 'type': 'int'}, \
-'param1': {'default': u'', 'type': 'str'}}
+    {"param4": {"default": 3, "type": "range"}, \
+"param3": {"default": 0.0, "type": "float"}, \
+"param2": {"default": 0, "type": "int"}, \
+"param1": {"default": "", "type": "str"}}
     """
     class _Param(HasTraits):
         pass
@@ -79,8 +79,7 @@ class HasParam(object):
     def get_parameters(self):
         list_traits = self._parameters.editable_traits()
         param_dict = self._parameters.get(list_traits)
-        param_str = json.dumps(param_dict)
-        return param_str
+        return json.dumps(param_dict)
 
     def set_parameters(self, param_str):
         param_dict = json.loads(param_str)
@@ -95,7 +94,7 @@ class HasParam(object):
             d = {'type': TRAIT_TYPES[trait_type],
                  'default': default}
             view[key] = d
-        return view
+        return json.dumps(view)
 
 
 if __name__ == "__main__":
