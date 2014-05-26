@@ -23,6 +23,8 @@
 
 
 from traits.api import HasTraits, Unicode, Int, Float, Range
+from traits.api import TraitError
+
 import simplejson as json
 
 
@@ -81,9 +83,32 @@ class HasParam(object):
         param_dict = self._parameters.get(list_traits)
         return json.dumps(param_dict)
 
-    def set_parameters(self, param_str):
-        param_dict = json.loads(param_str)
-        self._parameters.set(**param_dict)
+    def set_parameters(self, parameters):
+        if isinstance(parameters, basestring):
+            self.set_parameters(json.loads(parameters))
+        else:
+            self._parameters.set(**parameters)
+
+    def validate_parameters(self, parameters):
+        """Validate parameters format against Traits specification
+        Input can be either a dictionary or a JSON string
+        Returns the validated parameters or raises a ValueError"""
+
+        if isinstance(parameters, basestring):
+            return self.validate_parameters(json.loads(parameters))
+        # Check key against traits name
+        traits_name = self._parameters.editable_traits()
+        for name in parameters:
+            if name not in traits_name:
+                raise KeyError(name)
+
+        try:
+            valid_params = {name: self._parameters.validate_trait(name, value)
+                            for name, value in parameters.items()}
+        except TraitError as e:
+            raise ValueError(str(e))
+
+        return valid_params
 
     def param_view(self):
         list_traits = self._parameters.editable_traits()
