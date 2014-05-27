@@ -196,7 +196,7 @@ class MetadataObject(object):
 class IdMetadata(MetadataObject):
 
     '''
-    Metadata object to handle Audio related Metadata
+    Metadata object to handle ID related Metadata
 
         Attributes
         ----------
@@ -617,7 +617,7 @@ class AnalyzerResult(MetadataObject):
 
     def to_hdf5(self, h5_file):
         # Save results in HDF5 Dataset
-        group = h5_file.create_group(self.id_metadata.id)
+        group = h5_file.create_group(self.id_metadata.uuid)
         group.attrs['data_mode'] = self.__getattribute__('data_mode')
         group.attrs['time_mode'] = self.__getattribute__('time_mode')
         for key in self.keys():
@@ -892,9 +892,16 @@ class AnalyzerResultContainer(dict):
         if not isinstance(analyzer_result, AnalyzerResult):
             raise TypeError('only AnalyzerResult can be added')
 
-        self.__setitem__(analyzer_result.id_metadata.id,
-                         analyzer_result)
-        #self.results += [analyzer_result]
+        # Update result uuid by adding a suffix uuid
+        # It enable to deal with multiple results for the same processor uuid
+        uuid = analyzer_result.id_metadata.uuid
+        count = 0
+        for res_uuid in self.keys():
+            count += res_uuid.startswith(uuid)
+        res_uuid = '-'.join([uuid, format(count, '02x')])
+        analyzer_result.id_metadata.uuid = res_uuid
+
+        self.__setitem__(res_uuid, analyzer_result)
 
     def to_xml(self, output_file=None):
 
@@ -1076,8 +1083,9 @@ class Analyzer(Processor):
     @property
     def results(self):
         return AnalyzerResultContainer(
-            [self.process_pipe.results[key] for key in self.process_pipe.results.keys()
-             if key.split('.')[0] == self.id()])
+            [self.process_pipe.results[key]
+             for key in self.process_pipe.results.keys()
+             if key.startswith(self.uuid())])
 
     @staticmethod
     def id():
