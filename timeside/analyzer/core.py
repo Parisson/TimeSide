@@ -938,7 +938,6 @@ class AnalyzerResultContainer(dict):
             elif isinstance(obj, numpy.generic):
                 return numpy.asscalar(obj)
             else:
-                print obj
                 print type(obj)
                 raise TypeError(repr(obj) + " is not JSON serializable")
 
@@ -1136,9 +1135,8 @@ class Analyzer(Processor):
 
         return result
 
-import os
-DOCTEST_ALIAS = {'wav_file': os.path.join(os.path.dirname(__file__),
-                                          '../../tests/samples/sweep.mp3')}
+DOCTEST_ALIAS = {'wav_file':
+                 'https://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'}
 
 
 if __name__ == "__main__":

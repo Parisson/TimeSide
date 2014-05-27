@@ -8,15 +8,13 @@ It depends on several other python modules and compiled librairies like GStreame
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
-
-.. code-block:: bash
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-This method is known to be compatible with Debian 7 Wheezy and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
+This method is known to be compatible with Debian 7 Wheezy with backports and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
 
 Note you can also use pip if you already have already satisfied all the dependencies::
 
@@ -25,7 +23,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed at the paragraph `Dependencies <#dependencies>`_ (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
@@ -41,11 +39,13 @@ Dependencies
 
 Needed::
 
- python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
- python-simplejson python-yaml libhdf5-serial-dev python-gst0.10 gstreamer0.10-gnonlin 
- gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
+ python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
+ python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
+ gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 
- aubio yaafe python-aubio python-yaafe vamp-examples
- django django-south djangorestframework django-extensions
+ aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
+ django (>=1.4) django-south djangorestframework django-extensions
+
+

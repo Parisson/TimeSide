@@ -4,7 +4,9 @@ include README.rst
 include requirements.txt
 recursive-include doc *
 recursive-include timeside/player/static *
+recursive-include timeside/analyzer/trained_models *
 recursive-include tests *
+recursive-exclude tests/sandbox *
 recursive-exclude * *.pyc
 recursive-exclude * *.swp
 recursive-exclude dist *

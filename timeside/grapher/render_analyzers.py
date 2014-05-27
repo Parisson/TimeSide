@@ -104,18 +104,18 @@ try:
 except PIDError:
     pass
 
-odf = get_processor('odf')
+odf = get_processor('odf')()
 DisplayOnsetDetectionFunction = DisplayAnalyzer.create(analyzer=odf,
                                                        result_id='odf',
                                                        grapher_id='grapher_odf',
                                                        grapher_name='Onset detection function')
-wav = get_processor('waveform_analyzer')
+wav = get_processor('waveform_analyzer')()
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
                                          grapher_name='Waveform from Analyzer')
 
-irit4hz = get_processor('irit_speech_4hz')
+irit4hz = get_processor('irit_speech_4hz')()
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
                                                       result_id='irit_speech_4hz.segments',
                                                       grapher_id='grapher_irit_speech_4hz_segments',

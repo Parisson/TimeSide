@@ -31,12 +31,12 @@ Goals
 
 * **Do** asynchronous and fast audio processing with Python,
 * **Decode** audio frames from **any** audio or video media format into numpy arrays,
-* **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
-* **Organize**, serialize and save analysis metadata through various formats,
-* **Draw** various fancy waveforms, spectrograms and other cool visualizers,
+* **Analyze** audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors
+* **Visualize** sounds with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
+* **Organize**, **serialize** and **save** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 
 
 Architecture
@@ -45,6 +45,7 @@ Architecture
 The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
+  :width: 800 px
 
 
 Processors
@@ -115,14 +116,15 @@ News
  * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
  * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
  * Encoder : add an Opus encoder
- * Experimental : add a django web server with a REST API (see `Web server <#web-server>`_)
+ * Experimental : add a django web server with a REST API (see "Web server")
  * AubioPitch: prevent NaN in result by converting them to zero
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
- * Full Travis integration
+ * Full `Travis integration <https://travis-ci.org/yomguy/TimeSide/>`_ with tests and test coverage through `coveralls.io <https://coveralls.io/r/yomguy/TimeSide>`_
  * Thanks to all contributors!
- * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). It now advised to use the timeside.core.get_processor() method to instantiate the processors.
+ * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). Note that it is now advised to use the timeside.core.get_processor() method to instantiate the processors with their respective id as argument.
+ * UPGRADING from the sources: please remove all .pyc files from your repository.
 
 0.5.4
 
@@ -226,7 +228,7 @@ Note you can also instanciate each processor with its own class::
  >>> analyzer =  timeside.analyzer.level.Level()
  >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
  
-For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
+For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
 
 API / Documentation
 ====================
@@ -234,7 +236,7 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
-* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web Interface")
+* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
@@ -251,15 +253,13 @@ It depends on several other python modules and compiled librairies like GStreame
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
-
-.. code-block:: bash
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
  $ sudo apt-get install python-timeside
 
-This method is known to be compatible with Debian 7 Wheezy and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
+This method is known to be compatible with Debian 7 Wheezy with backports and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
 
 Note you can also use pip if you already have already satisfied all the dependencies::
 
@@ -268,7 +268,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed at the paragraph `Dependencies <#dependencies>`_ (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
@@ -284,14 +284,16 @@ Dependencies
 
 Needed::
 
- python python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
- python-simplejson python-yaml libhdf5-serial-dev python-gst0.10 gstreamer0.10-gnonlin 
- gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
+ python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
+ python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
+ gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
 
 Optional::
 
- aubio yaafe python-aubio python-yaafe vamp-examples
- django django-south djangorestframework django-extensions
+ aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
+ django (>=1.4) django-south djangorestframework django-extensions
+
+
 User Interfaces
 ===============
 
@@ -362,9 +364,7 @@ Web server
 
 An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.5. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
-A sandbox is provide in timeside/server/sandbox and you can initialize it and test it like this:
-
-.. code-block:: bash
+A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
   $ cd timeside/server/sandbox
   $ ./manage.py syncdb
@@ -379,9 +379,7 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-For versions >=0.5 on Debian 7 Wheezy:
-
-.. code-block:: bash
+For versions >=0.5 on Debian 7 Wheezy::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
@@ -410,7 +408,7 @@ Sponsors and Partners
 Related projects
 =================
 
-    * `Telemeta <http://telemeta.org>`_ : open web audio platform
+    * `Telemeta <http://telemeta.org>`__ : open web audio platform
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
