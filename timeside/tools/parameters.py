@@ -87,7 +87,8 @@ class HasParam(object):
         if isinstance(parameters, basestring):
             self.set_parameters(json.loads(parameters))
         else:
-            self._parameters.set(**parameters)
+            for name, value in parameters.items():
+                self.__setattr__(name, value)
 
     def validate_parameters(self, parameters):
         """Validate parameters format against Traits specification

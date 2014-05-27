@@ -39,11 +39,15 @@ class TestHasParam(unittest.TestCase):
         param_json = self.has_param_cls.get_parameters()
         param_dict = json.loads(param_json)
         self.assertEqual(param_dict, new_param_dict)
+        for name, value in new_param_dict.items():
+            self.assertEqual(self.has_param_cls.__getattribute__(name), value)
         # set from JSON
         self.has_param_cls.set_parameters(new_param_json)
         param_json = self.has_param_cls.get_parameters()
         param_dict = json.loads(param_json)
         self.assertEqual(param_dict, new_param_dict)
+        for name, value in new_param_dict.items():
+            self.assertEqual(self.has_param_cls.__getattribute__(name), value)
 
     def test_param_view(self):
         "param_view method"
