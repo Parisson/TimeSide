@@ -38,13 +38,25 @@ app = 'timeside'
 
 processors = timeside.core.processors(timeside.api.IProcessor)
 
-PROCESSOR_PIDS = [(processor.id(), processor.id())  for processor in processors]
+_processor_types = {'Analyzers': timeside.api.IAnalyzer,
+                    'Encoders': timeside.api.IEncoder,
+                    'Graphers': timeside.api.IGrapher}
 
-STATUS = ((0, _('failed')), (1, _('draft')), (2, _('pending')),
-                         (3, _('running')), (4, _('done')))
+PROCESSOR_PIDS = [(name, [(processor.id(), processor.id())
+                          for processor
+                          in timeside.core.processors(proc_type)])
+                  for name, proc_type in _processor_types.items()]
+
+# Status
+_FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
+STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
+          (_PENDING, _('pending')), (_RUNNING, _('running')),
+          (_DONE, _('done')))
+
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
+
 
 def get_processor(pid):
     for proc in processors:
@@ -172,7 +184,7 @@ class Result(BaseResource):
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
-    status = models.IntegerField(_('status'), choices=STATUS, default=1)
+    status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
     author = models.ForeignKey(User, related_name="results", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
@@ -192,7 +204,7 @@ class Task(BaseResource):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
     selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
-    status = models.IntegerField(_('status'), choices=STATUS, default=1)
+    status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
     author = models.ForeignKey(User, related_name="tasks", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
@@ -208,7 +220,7 @@ class Task(BaseResource):
         self.save()
 
     def run(self):
-        self.status_setter(3)
+        self.status_setter(_RUNNING)
 
         results_root = 'results'
         if not os.path.exists(settings.MEDIA_ROOT + results_root):
@@ -219,7 +231,7 @@ class Task(BaseResource):
             if not os.path.exists(settings.MEDIA_ROOT + os.sep + path):
                 os.makedirs(settings.MEDIA_ROOT + os.sep + path)
 
-            pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
+            pipe = timeside.decoder.file.FileDecoder(item.file.path, sha1=item.sha1)
 
             presets = {}
             for preset in self.experience.presets.all():
@@ -231,7 +243,8 @@ class Task(BaseResource):
                     proc = proc(result.file.path, overwrite=True)
                 else:
                     proc = proc()
-                #proc.set_parameters(preset.parameters)
+                proc.set_parameters(preset.parameters)
+                print proc.get_parameters()
                 presets[preset] = proc
                 pipe = pipe | proc
 
@@ -241,9 +254,10 @@ class Task(BaseResource):
             if not item.hdf5:
                 item.hdf5 =  path + str(self.experience.uuid) + '.hdf5'
                 item.save()
-
+            print pipe
             pipe.run()
             item.lock_setter(True)
+            print item.hdf5.path
             pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
 
@@ -255,17 +269,19 @@ class Task(BaseResource):
                         preset, c = Preset.objects.get_or_create(processor=preset.processor, parameters=unicode(parameters))
                         result, c = Result.objects.get_or_create(preset=preset, item=item)
                         result.hdf5 = path + str(result.uuid) + '.hdf5'
+                        print result.hdf5
                         proc.results.to_hdf5(result.hdf5.path)
-                        result.status_setter(4)
+                        result.status_setter(_DONE)
+                        print '*****************DONE*****************'
                 elif proc.type == 'grapher':
                     parameters = {}
                     result, c = Result.objects.get_or_create(preset=preset, item=item)
                     result.file = path + str(result.uuid) + '.png'
                     proc.render(output=result.file.path)
-                    result.status_setter(4)
+                    result.status_setter(_DONE)
                 elif proc.type == 'encoder':
                     result = Result.objects.get(preset=preset, item=item)
-                    result.status_setter(4)
+                    result.status_setter(_DONE)
                 del proc
 
             # except:
@@ -273,7 +289,7 @@ class Task(BaseResource):
             #     item.lock_setter(False)
             #     break
 
-        self.status_setter(4)
+        self.status_setter(_DONE)
         del pipe
 
 
