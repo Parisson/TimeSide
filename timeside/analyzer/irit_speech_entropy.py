@@ -41,14 +41,14 @@ class IRITSpeechEntropy(Analyzer):
         super(IRITSpeechEntropy, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.entropyValue = []
-        self.threshold 	= 0.4
-        self.smoothLen 	= 5
-        self.modulLen 	= 2
-        self.wLen 	= 0.016
-        self.wStep 	= 0.008
+        self.threshold = 0.4
+        self.smoothLen = 5
+        self.modulLen = 2
+        self.wLen = 0.016
+        self.wStep = 0.008
 
         self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)        
+        self.input_stepsize = int(self.wStep * samplerate)
 
     @staticmethod
     @interfacedoc
@@ -67,7 +67,7 @@ class IRITSpeechEntropy(Analyzer):
 
     def __str__(self):
         return "Speech confidences indexes"
-        
+
     @frames_adapter
     def process(self, frames, eod=False):
         self.entropyValue.append(entropy(frames))
@@ -76,13 +76,11 @@ class IRITSpeechEntropy(Analyzer):
     def post_process(self):
         entropyValue = array(self.entropyValue)
 
-	import pylab
-	pylab.plot(entropyValue)
-	pylab.show() 
-        w = self.modulLen/self.wStep
+        import pylab
+        pylab.plot(entropyValue)
+        pylab.show()
+        w = self.modulLen / self.wStep
         modulentropy = computeModulation(entropyValue, w, False)
-
-
 
         confEntropy = array(modulentropy - self.threshold) / self.threshold
         confEntropy[confEntropy > 1] = 1

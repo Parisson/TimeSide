@@ -25,20 +25,20 @@ from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.analyzer.irit_diverg import IRITDiverg
 from timeside.api import IAnalyzer
-from numpy import logical_and,array, hamming, dot, mean, float, arange, nonzero
+from numpy import logical_and, array, hamming, dot, mean, float, arange, nonzero
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
-from pylab import plot,show
+from pylab import plot, show
 
 
 class IRITMusicLDN(Analyzer):
     implements(IAnalyzer)
 
-    def __init__(self, blocksize=1024, stepsize=None) :
-        super(IRITMusicLDN, self).__init__();
+    def __init__(self, blocksize=1024, stepsize=None):
+        super(IRITMusicLDN, self).__init__()
         self.parents.append(IRITDiverg())
-        self.wLen 	= 1.0
-        self.wStep 	= 0.1
+        self.wLen = 1.0
+        self.wStep = 0.1
         self.threshold = 20
 
     @staticmethod
@@ -60,27 +60,26 @@ class IRITMusicLDN(Analyzer):
         return "Music confidence indexes"
 
     def process(self, frames, eod=False):
-		return frames,eod
+        return frames, eod
 
     def post_process(self):
         '''
         '''
 
         segList = self.process_pipe.results['irit_diverg.segments'].time
-        w = self.wLen/ 2;
+        w = self.wLen / 2
         end = segList[-1]
-        tLine =  arange(0,end,self.wStep)
+        tLine = arange(0, end, self.wStep)
 
-        segLen = array([0]*len(tLine))
+        segLen = array([0] * len(tLine))
 
-        for i,t in enumerate(tLine):
-            idx = nonzero(logical_and(segList>(t-w) ,segList<(t+w)))[0]
-            segLen[i]= len(idx)
+        for i, t in enumerate(tLine):
+            idx = nonzero(logical_and(segList > (t - w), segList < (t + w)))[0]
+            segLen[i] = len(idx)
 
-
-        plot(tLine,segLen)
+        plot(tLine, segLen)
         show()
-		# Confidence Index
+        # Confidence Index
         conf = array(segLen - self.threshold) / self.threshold
         conf[conf > 1] = 1
 
@@ -109,7 +108,8 @@ class IRITMusicLDN(Analyzer):
 
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [tLine[s[0]] for s in segList]
-        segs.data_object.duration = [tLine[s[1]]-tLine[s[0]] for s in segList]
+        segs.data_object.duration = [tLine[s[1]] - tLine[s[0]]
+                                     for s in segList]
 
         self.process_pipe.results.add(segs)
         return

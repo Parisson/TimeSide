@@ -21,7 +21,7 @@
 from __future__ import absolute_import
 
 from timeside.analyzer.utils import segmentFromValues
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from aubio import pitch
@@ -40,11 +40,12 @@ class IRITMonopoly(Analyzer):
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(IRITMonopoly, self).setup(channels,
-                                      samplerate,
-                                      blocksize,
-                                      totalframes)
-        self.aubio_pitch = pitch("default", self.input_blocksize, self.input_stepsize,
-                       samplerate)
+                                        samplerate,
+                                        blocksize,
+                                        totalframes)
+        self.aubio_pitch = pitch(
+            "default", self.input_blocksize, self.input_stepsize,
+            samplerate)
         self.aubio_pitch.set_unit("freq")
         self.block_read = 0
         self.pitches = []
@@ -69,8 +70,9 @@ class IRITMonopoly(Analyzer):
         return "Labeled Monophonic/Polyphonic segments"
 
     def process(self, frames, eod=False):
-        self.decisionLen = 1.0;# in seconds
-        pf =  self.aubio_pitch(frames.T[0])
+        self.decisionLen = 1.0
+        # in seconds
+        pf = self.aubio_pitch(frames.T[0])
         self.pitches += [pf[0]]
         self.pitch_confidences += [self.aubio_pitch.get_confidence()]
         self.block_read += 1
@@ -80,19 +82,20 @@ class IRITMonopoly(Analyzer):
         '''
 
         '''
-        frameLenModulation = int(self.decisionLen * self.samplerate() / self.blocksize())
+        frameLenModulation = int(
+            self.decisionLen * self.samplerate() / self.blocksize())
         epsilon = numpy.spacing(self.pitch_confidences[0])
 
-        w = int(self.decisionLen * self.samplerate() /(self.blocksize()*2))
+        w = int(self.decisionLen * self.samplerate() / (self.blocksize() * 2))
         is_mono = []
-        for i in range(w,len(self.pitch_confidences)-w,frameLenModulation):
-            d = self.pitch_confidences[i-w:i+w]
-            conf_mean= numpy.mean(d)
-            conf_var = numpy.var(d+epsilon)
-            if self.monoLikelihood(conf_mean,conf_var) > self.polyLikelihood(conf_mean,conf_var) :
+        for i in range(w, len(self.pitch_confidences) - w, frameLenModulation):
+            d = self.pitch_confidences[i - w:i + w]
+            conf_mean = numpy.mean(d)
+            conf_var = numpy.var(d + epsilon)
+            if self.monoLikelihood(conf_mean, conf_var) > self.polyLikelihood(conf_mean, conf_var):
                 is_mono += [True]
-            else :
-				is_mono += [False]
+            else:
+                is_mono += [False]
 
         conf = self.new_result(data_mode='value', time_mode='framewise')
         conf = self.new_result(data_mode='value', time_mode='framewise')
@@ -111,46 +114,45 @@ class IRITMonopoly(Analyzer):
 
         segs.label_metadata.label = label
 
-
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                   self.samplerate())
-                                  for s in segList]
-        segs.data_object.duration = [(float(s[1]-s[0]) * self.blocksize() /
-                                  self.samplerate())
-                                  for s in segList]
+                                 for s in segList]
+        segs.data_object.duration = [(float(s[1] - s[0]) * self.blocksize() /
+                                      self.samplerate())
+                                     for s in segList]
         self.process_pipe.results.add(segs)
 
-    def monoLikelihood(self,m,v):
+    def monoLikelihood(self, m, v):
 
-        theta1=0.1007;
-        theta2=0.0029;
-        beta1=0.5955;
-        beta2=0.2821;
-        delta=0.848;
-        return self.weibullLikelihood(m,v,theta1,theta2,beta1,beta2,delta)
+        theta1 = 0.1007
+        theta2 = 0.0029
+        beta1 = 0.5955
+        beta2 = 0.2821
+        delta = 0.848
+        return self.weibullLikelihood(m, v, theta1, theta2, beta1, beta2, delta)
 
+    def polyLikelihood(self, m, v):
+        theta1 = 0.3224
+        theta2 = 0.0121
+        beta1 = 1.889
+        beta2 = 0.8705
+        delta = 0.644
+        return self.weibullLikelihood(m, v, theta1, theta2, beta1, beta2, delta)
 
-    def polyLikelihood(self,m,v):
-        theta1=0.3224;
-        theta2=0.0121;
-        beta1=1.889;
-        beta2=0.8705;
-        delta=0.644;
-        return self.weibullLikelihood(m,v,theta1,theta2,beta1,beta2,delta)
-
-    def weibullLikelihood(self,m,v,theta1,theta2,beta1,beta2,delta):
+    def weibullLikelihood(self, m, v, theta1, theta2, beta1, beta2, delta):
         m = numpy.array(m)
-        v= numpy.array(v)
+        v = numpy.array(v)
 
-        c0=numpy.log(beta1*beta2/(theta1*theta2));
-        a1=m/theta1;
-        b1=a1**(beta1/delta);
-        c1=numpy.log(a1);
-        a2=v/theta2;
-        b2=a2**(beta2/delta);
-        c2=numpy.log(a2);
-        somme1=(b1+b2)**delta;
-        Pxy=c0+(beta1/delta-1)*c1+(beta2/delta-1)*c2+(delta-2)*numpy.log(b1+b2)+numpy.log(somme1+1/delta-1)-somme1;
+        c0 = numpy.log(beta1 * beta2 / (theta1 * theta2))
+        a1 = m / theta1
+        b1 = a1 ** (beta1 / delta)
+        c1 = numpy.log(a1)
+        a2 = v / theta2
+        b2 = a2 ** (beta2 / delta)
+        c2 = numpy.log(a2)
+        somme1 = (b1 + b2) ** delta
+        Pxy = c0 + (beta1 / delta - 1) * c1 + (beta2 / delta - 1) * c2 + (delta - 2) * \
+            numpy.log(b1 + b2) + numpy.log(somme1 + 1 / delta - 1) - somme1
 
         return numpy.mean(Pxy)

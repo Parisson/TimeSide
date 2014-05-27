@@ -33,13 +33,13 @@ class IRITMusicSNB(Analyzer):
 
     implements(IAnalyzer)
 
-    def __init__(self, blocksize=1024, stepsize=None, samplerate=None) :
-        super(IRITMusicSNB, self).__init__();
+    def __init__(self, blocksize=1024, stepsize=None, samplerate=None):
+        super(IRITMusicSNB, self).__init__()
         self.parents.append(IRITDiverg())
-        self.wLen 	= 1.0
-        self.wStep 	= 0.1
-        self.input_blocksize = 0;
-        self.input_stepsize = 0;
+        self.wLen = 1.0
+        self.wStep = 0.1
+        self.input_blocksize = 0
+        self.input_stepsize = 0
         self.threshold = 20
 
     @interfacedoc
@@ -70,7 +70,7 @@ class IRITMusicSNB(Analyzer):
 
     @frames_adapter
     def process(self, frames, eod=False):
-		return frames,eod
+        return frames, eod
 
     def post_process(self):
         '''
@@ -78,14 +78,16 @@ class IRITMusicSNB(Analyzer):
         '''
 
         segList = self.process_pipe.results['irit_diverg.segments'].time
-        w = self.wLen/ 2
+        w = self.wLen / 2
         end = segList[-1]
         tLine = arange(0, end, self.wStep)
 
-        segNB = [ len(getBoundariesInInterval(t-w,t+w,segList)) for t in tLine ]
+        segNB = [len(getBoundariesInInterval(t - w, t + w, segList))
+                 for t in tLine]
 
-      	# Confidence Index
-        conf = [float(v - self.threshold) / float(self.threshold) if v < 2*self.threshold else 1.0 for v in segNB]
+        # Confidence Index
+        conf = [float(v - self.threshold) / float(self.threshold)
+                if v < 2 * self.threshold else 1.0 for v in segNB]
         segLenRes = self.new_result(data_mode='value', time_mode='framewise')
         segLenRes.id_metadata.id += '.' + 'energy_confidence'
         segLenRes.id_metadata.name += ' ' + 'Energy Confidence'
@@ -111,11 +113,12 @@ class IRITMusicSNB(Analyzer):
 
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [tLine[s[0]] for s in segList]
-        segs.data_object.duration = [tLine[s[1]]-tLine[s[0]] for s in segList]
+        segs.data_object.duration = [tLine[s[1]] - tLine[s[0]]
+                                     for s in segList]
 
         self.process_pipe.results.add(segs)
         return
 
-def getBoundariesInInterval(start, stop, boundaries) :
-    return [t for t in boundaries if t >= start and t<= stop]
 
+def getBoundariesInInterval(start, stop, boundaries):
+    return [t for t in boundaries if t >= start and t <= stop]
