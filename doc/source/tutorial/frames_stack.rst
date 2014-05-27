@@ -63,7 +63,7 @@ And run the pipe:
 
 Assert that the frames passed to the two analyzers are the same, we check that the results of these analyzers are equivalent:
 
->>> np.allclose(pitch_on_file.results['aubio_pitch.pitch'].data,
-...                    pitch_on_stack.results['aubio_pitch.pitch'].data)
+>>> np.allclose(pitch_on_file.results.get_result_by_id('aubio_pitch.pitch').data,
+...                    pitch_on_stack.results.get_result_by_id('aubio_pitch.pitch').data)
 True
 
