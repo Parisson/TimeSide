@@ -244,7 +244,6 @@ class Task(BaseResource):
                 else:
                     proc = proc()
                 proc.set_parameters(preset.parameters)
-                print proc.get_parameters()
                 presets[preset] = proc
                 pipe = pipe | proc
 
@@ -254,25 +253,21 @@ class Task(BaseResource):
             if not item.hdf5:
                 item.hdf5 =  path + str(self.experience.uuid) + '.hdf5'
                 item.save()
-            print pipe
             pipe.run()
             item.lock_setter(True)
-            print item.hdf5.path
             pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
 
             for preset in presets.keys():
                 proc = presets[preset]
                 if proc.type == 'analyzer':
-                    for processor_id in proc.results.keys():
-                        parameters = proc.results[processor_id].parameters
+                    for result_id in proc.results.keys():
+                        parameters = proc.results[result_id].parameters
                         preset, c = Preset.objects.get_or_create(processor=preset.processor, parameters=unicode(parameters))
                         result, c = Result.objects.get_or_create(preset=preset, item=item)
                         result.hdf5 = path + str(result.uuid) + '.hdf5'
-                        print result.hdf5
                         proc.results.to_hdf5(result.hdf5.path)
                         result.status_setter(_DONE)
-                        print '*****************DONE*****************'
                 elif proc.type == 'grapher':
                     parameters = {}
                     result, c = Result.objects.get_or_create(preset=preset, item=item)

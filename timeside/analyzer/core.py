@@ -208,7 +208,8 @@ class IdMetadata(MetadataObject):
             date and time in ISO  8601 format YYYY-MM-DDTHH:MM:SS
         version : str
         author : str
-        uuid : str
+        proc_uuid : str
+        res_uuid : str
     '''
     # TODO :
     # - (long) description --> à mettre dans l'API Processor
@@ -221,7 +222,8 @@ class IdMetadata(MetadataObject):
                                   ('date', None),
                                   ('version', None),
                                   ('author', None),
-                                  ('uuid', None)])
+                                  ('proc_uuid', None),
+                                  ('res_uuid', None)])
 
     def __setattr__(self, name, value):
         if value is None:
@@ -617,7 +619,7 @@ class AnalyzerResult(MetadataObject):
 
     def to_hdf5(self, h5_file):
         # Save results in HDF5 Dataset
-        group = h5_file.create_group(self.id_metadata.uuid)
+        group = h5_file.create_group(self.id_metadata.res_uuid)
         group.attrs['data_mode'] = self.__getattribute__('data_mode')
         group.attrs['time_mode'] = self.__getattribute__('time_mode')
         for key in self.keys():
@@ -894,12 +896,12 @@ class AnalyzerResultContainer(dict):
 
         # Update result uuid by adding a suffix uuid
         # It enable to deal with multiple results for the same processor uuid
-        uuid = analyzer_result.id_metadata.uuid
+        uuid = analyzer_result.id_metadata.proc_uuid
         count = 0
         for res_uuid in self.keys():
             count += res_uuid.startswith(uuid)
         res_uuid = '-'.join([uuid, format(count, '02x')])
-        analyzer_result.id_metadata.uuid = res_uuid
+        analyzer_result.id_metadata.res_uuid = res_uuid
 
         self.__setitem__(res_uuid, analyzer_result)
 
@@ -1127,7 +1129,7 @@ class Analyzer(Processor):
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()
         result.id_metadata.unit = self.unit()
-        result.id_metadata.uuid = self.uuid()
+        result.id_metadata.proc_uuid = self.uuid()
 
         result.audio_metadata.uri = self.mediainfo()['uri']
         result.audio_metadata.sha1 = self.mediainfo()['sha1']
