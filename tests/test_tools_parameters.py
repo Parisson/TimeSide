@@ -90,21 +90,23 @@ class TestHasParam(unittest.TestCase):
         self.assertNotIn(name, _parameters.trait_names())
 
     def test_validate_True(self):
-        "Validate parameters format against Traits specification : pass"
+        "Validate parameters with good format"
         # Validate from dict
         self.assertEqual(self.param_dict,
-                         self.has_param_cls.validate_parameters(self.param_dict))
+                         self.has_param_cls.validate_parameters(
+                             self.param_dict))
         # Validate from JSON
         param_json = json.dumps(self.param_dict)
         self.assertEqual(self.param_dict,
                          self.has_param_cls.validate_parameters(param_json))
 
     def test_validate_False(self):
-        "Validate parameters format against Traits specification : reject"
+        "Validate parameters with bad format"
         bad_param = {"param1": "", "param2": 0, "param3": 0.0,
                      "param4": 3.3}  # Param4 is a Float (it should be a int)
         # Validate from dict
-        self.assertRaises(ValueError, self.has_param_cls.validate_parameters, bad_param)
+        self.assertRaises(ValueError, self.has_param_cls.validate_parameters,
+                          bad_param)
         # Validate from JSON
         bad_param_json = json.dumps(bad_param)
         self.assertRaises(ValueError, self.has_param_cls.validate_parameters,
