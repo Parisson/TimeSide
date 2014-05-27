@@ -8,9 +8,7 @@ It depends on several other python modules and compiled librairies like GStreame
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
-
-.. code-block:: bash
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
@@ -25,7 +23,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed at the paragraph `Dependencies <#dependencies>`_ (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution). 
 
 Then, use pip::
  

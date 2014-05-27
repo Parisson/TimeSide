@@ -6,7 +6,7 @@ News
  * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
  * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
  * Encoder : add an Opus encoder
- * Experimental : add a django web server with a REST API (see `Web server <#web-server>`_)
+ * Experimental : add a django web server with a REST API (see "Web server")
  * AubioPitch: prevent NaN in result by converting them to zero
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model

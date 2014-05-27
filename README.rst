@@ -36,7 +36,7 @@ Goals
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Organize**, **serialize** and **save** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 
 
 Architecture
@@ -45,6 +45,7 @@ Architecture
 The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
+  :width: 800 px
 
 
 Processors
@@ -115,7 +116,7 @@ News
  * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
  * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
  * Encoder : add an Opus encoder
- * Experimental : add a django web server with a REST API (see `Web server <#web-server>`_)
+ * Experimental : add a django web server with a REST API (see "Web server")
  * AubioPitch: prevent NaN in result by converting them to zero
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
@@ -227,7 +228,7 @@ Note you can also instanciate each processor with its own class::
  >>> analyzer =  timeside.analyzer.level.Level()
  >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
  
-For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
+For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
 
 API / Documentation
 ====================
@@ -235,7 +236,7 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
-* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also `Web player <#web-player>`_)
+* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
@@ -252,9 +253,7 @@ It depends on several other python modules and compiled librairies like GStreame
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet:
-
-.. code-block:: bash
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
@@ -269,7 +268,7 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed at the paragraph `Dependencies <#dependencies>`_ (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution). 
 
 Then, use pip::
  
@@ -365,9 +364,7 @@ Web server
 
 An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.5. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
-A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this:
-
-.. code-block:: bash
+A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
   $ cd timeside/server/sandbox
   $ ./manage.py syncdb
@@ -382,9 +379,7 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-For versions >=0.5 on Debian 7 Wheezy:
-
-.. code-block:: bash
+For versions >=0.5 on Debian 7 Wheezy::
 
  $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
  $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
@@ -413,7 +408,7 @@ Sponsors and Partners
 Related projects
 =================
 
-    * `Telemeta <http://telemeta.org>`_ : open web audio platform
+    * `Telemeta <http://telemeta.org>`__ : open web audio platform
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 

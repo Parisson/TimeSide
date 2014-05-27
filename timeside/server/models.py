@@ -50,13 +50,13 @@ def get_processor(pid):
     for proc in processors:
         if proc.id() == pid:
             return proc
-    raise ValueError('Processor %s does not exists' % pid) 
+    raise ValueError('Processor %s does not exists' % pid)
 
 
 class MetaCore:
 
     app_label = 'server'
- 
+
 
 class BaseResource(models.Model):
 
@@ -66,7 +66,7 @@ class BaseResource(models.Model):
 
     class Meta(MetaCore):
         abstract = True
-    
+
     def save(self, **kwargs):
         if not self.uuid:
             self.uuid = uuid.uuid4()
@@ -79,11 +79,11 @@ class DocBaseResource(BaseResource):
     description = models.TextField(_('description'), blank=True)
 
     def __unicode__(self):
-        return self.title    
-    
+        return self.title
+
     class Meta(MetaCore):
         abstract = True
-    
+
 
 class Selection(DocBaseResource):
 
@@ -97,6 +97,8 @@ class Selection(DocBaseResource):
 
 
 class Item(DocBaseResource):
+
+    element_type = 'timeside_item'
 
     file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
     url = models.URLField(_('URL'), blank=True, max_length=1024)
@@ -123,7 +125,7 @@ class Experience(DocBaseResource):
 
     presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True, null=True)
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True, null=True)
-    author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
+    author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=False)
 
     class Meta(MetaCore):
@@ -132,7 +134,7 @@ class Experience(DocBaseResource):
 
 
 class Processor(models.Model):
-    
+
     pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max_length=256)
     version = models.CharField(_('version'), max_length=64, blank=True)
 
@@ -142,18 +144,18 @@ class Processor(models.Model):
 
     def __unicode__(self):
         return '_'.join([self.pid, str(self.id)])
-    
+
     def save(self, **kwargs):
         if not self.version:
             self.version = timeside.__version__
         super(Processor, self).save(**kwargs)
-        
+
 
 class Preset(BaseResource):
 
     processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True)
-    author = models.ForeignKey(User, related_name="presets", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
+    author = models.ForeignKey(User, related_name="presets", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=False)
 
     class Meta(MetaCore):
@@ -164,7 +166,7 @@ class Preset(BaseResource):
     def __unicode__(self):
         return '_'.join([unicode(self.processor), str(self.id)])
 
-    
+
 class Result(BaseResource):
 
     item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -173,7 +175,7 @@ class Result(BaseResource):
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=1)
-    author = models.ForeignKey(User, related_name="results", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
+    author = models.ForeignKey(User, related_name="results", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
         db_table = app + '_results'
@@ -193,7 +195,7 @@ class Task(BaseResource):
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
     selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
     status = models.IntegerField(_('status'), choices=STATUS, default=1)
-    author = models.ForeignKey(User, related_name="tasks", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)    
+    author = models.ForeignKey(User, related_name="tasks", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta(MetaCore):
         db_table = app + '_tasks'
@@ -218,9 +220,9 @@ class Task(BaseResource):
             path = results_root + os.sep + item.uuid + os.sep
             if not os.path.exists(settings.MEDIA_ROOT + os.sep + path):
                 os.makedirs(settings.MEDIA_ROOT + os.sep + path)
-            
+
             pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
-            
+
             presets = {}
             for preset in self.experience.presets.all():
                 proc = get_processor(preset.processor.pid)
@@ -237,7 +239,7 @@ class Task(BaseResource):
 
             # while item.lock:
             #     time.sleep(30)
-            
+
             if not item.hdf5:
                 item.hdf5 =  path + str(self.experience.uuid) + '.hdf5'
                 item.save()
@@ -246,10 +248,10 @@ class Task(BaseResource):
             item.lock_setter(True)
             pipe.results.to_hdf5(item.hdf5.path)
             item.lock_setter(False)
-            
+
             for preset in presets.keys():
                 proc = presets[preset]
-                if proc.type == 'analyzer':                    
+                if proc.type == 'analyzer':
                     for processor_id in proc.results.keys():
                         parameters = proc.results[processor_id].parameters
                         preset, c = Preset.objects.get_or_create(processor=preset.processor, parameters=unicode(parameters))
@@ -267,12 +269,12 @@ class Task(BaseResource):
                     result = Result.objects.get(preset=preset, item=item)
                     result.status_setter(4)
                 del proc
-            
+
             # except:
             #     self.status_setter(0)
             #     item.lock_setter(False)
             #     break
-        
+
         self.status_setter(4)
         del pipe
 

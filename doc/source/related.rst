@@ -13,7 +13,7 @@ Sponsors and Partners
 Related projects
 =================
 
-    * `Telemeta <http://telemeta.org>`_ : open web audio platform
+    * `Telemeta <http://telemeta.org>`__ : open web audio platform
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 

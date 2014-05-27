@@ -35,5 +35,5 @@ Note you can also instanciate each processor with its own class::
  >>> analyzer =  timeside.analyzer.level.Level()
  >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
  
-For more extensive examples, please see the `http://files.parisson.com/timeside/doc/ <full documentation>`_.
+For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
 
