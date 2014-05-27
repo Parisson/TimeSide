@@ -68,18 +68,20 @@ class PresetSerializer(serializers.ModelSerializer):
     def validate_parameters(self, attrs, source):
 
         import timeside
-        processor = timeside.core.get_processor(attrs['processor'].pid)()
-        default_params = processor.get_parameters()
-        default_msg = "Defaut parameters:\n%s" % default_params
+        proc = timeside.core.get_processor(attrs['processor'].pid)
+        if proc.type == 'analyzer':
+            processor = proc()
+            default_params = processor.get_parameters()
+            default_msg = "Defaut parameters:\n%s" % default_params
 
-        try:
-            processor.validate_parameters(attrs[source])
-        except ValueError as e:
-            msg = '\n'.join([str(e), default_msg])
-            raise serializers.ValidationError(msg)
-        except KeyError as e:
-            msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
-            raise serializers.ValidationError(msg)
+            try:
+                processor.validate_parameters(attrs[source])
+            except ValueError as e:
+                msg = '\n'.join([str(e), default_msg])
+                raise serializers.ValidationError(msg)
+            except KeyError as e:
+                msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
+                raise serializers.ValidationError(msg)
 
         return attrs
 
