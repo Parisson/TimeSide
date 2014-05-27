@@ -68,9 +68,7 @@ Web server
 
 An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.5. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
-A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this:
-
-.. code-block:: bash
+A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
   $ cd timeside/server/sandbox
   $ ./manage.py syncdb
