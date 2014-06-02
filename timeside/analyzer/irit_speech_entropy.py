@@ -26,7 +26,6 @@ from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
 from numpy import array
 from scipy.ndimage.morphology import binary_opening
-from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITSpeechEntropy(Analyzer):
@@ -44,11 +43,6 @@ class IRITSpeechEntropy(Analyzer):
         self.threshold = 0.4
         self.smoothLen = 5
         self.modulLen = 2
-        self.wLen = 0.016
-        self.wStep = 0.008
-
-        self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)
 
     @staticmethod
     @interfacedoc
@@ -68,20 +62,15 @@ class IRITSpeechEntropy(Analyzer):
     def __str__(self):
         return "Speech confidences indexes"
 
-    @frames_adapter
     def process(self, frames, eod=False):
         self.entropyValue.append(entropy(frames))
         return frames, eod
 
     def post_process(self):
+
         entropyValue = array(self.entropyValue)
-
-        import pylab
-        pylab.plot(entropyValue)
-        pylab.show()
-        w = self.modulLen / self.wStep
+        w = self.modulLen * self.samplerate() / self.blocksize()
         modulentropy = computeModulation(entropyValue, w, False)
-
         confEntropy = array(modulentropy - self.threshold) / self.threshold
         confEntropy[confEntropy > 1] = 1
 
@@ -109,10 +98,9 @@ class IRITSpeechEntropy(Analyzer):
         segs.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
-        segs.data_object.time = [(float(s[0]) * self.input_blocksize /
+        segs.data_object.time = [(float(s[0]) * self.blocksize() /
                                  self.samplerate())
                                  for s in segList]
-
         segs.data_object.duration = [(float(s[1] - s[0] + 1) * self.blocksize() /
                                      self.samplerate())
                                      for s in segList]
