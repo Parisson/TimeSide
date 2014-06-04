@@ -96,7 +96,7 @@ class DisplayAnalyzer(Grapher):
 
 # From here define new Grapher based on Analyzers
 try:
-    aubiopitch = get_processor('aubio_pitch')
+    aubiopitch = get_processor('aubio_pitch')()
     DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
                                                result_id='aubio_pitch.pitch',
                                                grapher_id='grapher_aubio_pitch',
