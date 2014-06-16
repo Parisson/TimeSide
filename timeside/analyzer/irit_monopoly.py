@@ -19,22 +19,22 @@
 
 # Author: Maxime Le Coz <lecoz@irit.fr>
 from __future__ import absolute_import
-
 from timeside.analyzer.utils import segmentFromValues
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from aubio import pitch
 import numpy
+from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITMonopoly(Analyzer):
-    implements(IAnalyzer)
-    '''
-    Segmentor MOnophony/Polyphony based on the analalysis of yin confidence.
+    """
+    Segmentor Monophony/Polyphony based on the analysis of yin confidence.
 
     Properties:
-    '''
+    """
+    implements(IAnalyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -50,6 +50,12 @@ class IRITMonopoly(Analyzer):
         self.block_read = 0
         self.pitches = []
         self.pitch_confidences = []
+        self.decisionLen = 1.0
+
+        self.wLen = 0.1
+        self.wStep = 0.05
+        self.input_blocksize = int(self.wLen * samplerate)
+        self.input_stepsize = int(self.wStep * samplerate)
 
     @staticmethod
     @interfacedoc
@@ -69,10 +75,10 @@ class IRITMonopoly(Analyzer):
     def __str__(self):
         return "Labeled Monophonic/Polyphonic segments"
 
+    @frames_adapter
     def process(self, frames, eod=False):
-        self.decisionLen = 1.0
         # in seconds
-        pf = self.aubio_pitch(frames.T[0])
+        pf = self.aubio_pitch(frames[0])
         self.pitches += [pf[0]]
         self.pitch_confidences += [self.aubio_pitch.get_confidence()]
         self.block_read += 1
@@ -82,13 +88,12 @@ class IRITMonopoly(Analyzer):
         '''
 
         '''
-        frameLenModulation = int(
-            self.decisionLen * self.samplerate() / self.blocksize())
+        nb_frameDecision = int(self.decisionLen / self.wStep)
         epsilon = numpy.spacing(self.pitch_confidences[0])
+        w = int(nb_frameDecision/2)
 
-        w = int(self.decisionLen * self.samplerate() / (self.blocksize() * 2))
         is_mono = []
-        for i in range(w, len(self.pitch_confidences) - w, frameLenModulation):
+        for i in range(w, len(self.pitch_confidences) - w, nb_frameDecision):
             d = self.pitch_confidences[i - w:i + w]
             conf_mean = numpy.mean(d)
             conf_var = numpy.var(d + epsilon)
@@ -113,15 +118,14 @@ class IRITMonopoly(Analyzer):
         segs.id_metadata.name += ' ' + 'Segments'
 
         segs.label_metadata.label = label
-
         segs.data_object.label = [convert[s[2]] for s in segList]
-        segs.data_object.time = [(float(s[0]) * self.blocksize() /
-                                  self.samplerate())
+        segs.data_object.time = [(float(s[0]+0.5) *  self.decisionLen)
                                  for s in segList]
-        segs.data_object.duration = [(float(s[1] - s[0]) * self.blocksize() /
-                                      self.samplerate())
+
+        segs.data_object.duration = [(float(s[1] - s[0]+1) * self.decisionLen)
                                      for s in segList]
         self.process_pipe.results.add(segs)
+        return
 
     def monoLikelihood(self, m, v):
 

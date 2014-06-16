@@ -27,6 +27,7 @@ from timeside.api import IAnalyzer
 from numpy import array, hamming, dot, mean, float
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
+from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITSpeech4Hz(Analyzer):
@@ -68,6 +69,11 @@ class IRITSpeech4Hz(Analyzer):
         self.modulLen = 2.0
         self.melFilter = melFilterBank(self.nbFilters, self.nFFT, samplerate)
 
+        self.wLen = 0.016
+        self.wStep = 0.008
+        self.input_blocksize = int(self.wLen * samplerate)
+        self.input_stepsize = int(self.wStep * samplerate)
+
     @staticmethod
     @interfacedoc
     def id():
@@ -86,6 +92,7 @@ class IRITSpeech4Hz(Analyzer):
     def __str__(self):
         return "Speech confidences indexes"
 
+    @frames_adapter
     def process(self, frames, eod=False):
         '''
 

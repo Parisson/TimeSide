@@ -25,7 +25,6 @@ from timeside.analyzer.waveform import Waveform
 from timeside.api import IAnalyzer
 from numpy import spacing
 from collections import deque
-from timeside.analyzer.preprocessors import downmix_to_mono
 
 
 class ModelLongTerm(object):
