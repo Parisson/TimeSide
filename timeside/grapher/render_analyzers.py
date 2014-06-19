@@ -68,7 +68,8 @@ class DisplayAnalyzer(Grapher):
             self.image = fg_image
 
     @classmethod
-    def create(cls, analyzer, result_id, grapher_id, grapher_name, background=None):
+    def create(cls, analyzer, result_id, grapher_id, grapher_name,
+               background=None):
 
         class NewGrapher(cls):
 
@@ -81,7 +82,7 @@ class DisplayAnalyzer(Grapher):
                          color_scheme='default'):
                 super(NewGrapher, self).__init__(width, height, bg_color,
                                                  color_scheme)
-                
+
                 # Add a parent waveform analyzer
                 if background == 'waveform':
                     self._background = True
@@ -90,7 +91,7 @@ class DisplayAnalyzer(Grapher):
                     self.parents.append(bg_analyzer)
                 else:
                     self._background = None
-                
+
                 self.parents.append(analyzer)
                 # TODO : make it generic when analyzer will be "atomize"
                 self._result_id = result_id
@@ -115,18 +116,21 @@ class DisplayAnalyzer(Grapher):
 # From here define new Grapher based on Analyzers
 try:
     aubiopitch = get_processor('aubio_pitch')()
-    DisplayAubioPitch = DisplayAnalyzer.create(analyzer=aubiopitch,
-                                               result_id='aubio_pitch.pitch',
-                                               grapher_id='grapher_aubio_pitch',
-                                               grapher_name='Aubio Pitch')
+    DisplayAubioPitch = DisplayAnalyzer.create(
+        analyzer=aubiopitch,
+        result_id='aubio_pitch.pitch',
+        grapher_id='grapher_aubio_pitch',
+        grapher_name='Aubio Pitch')
 except PIDError:
     pass
 
 odf = get_processor('odf')()
-DisplayOnsetDetectionFunction = DisplayAnalyzer.create(analyzer=odf,
-                                                       result_id='odf',
-                                                       grapher_id='grapher_odf',
-                                                       grapher_name='Onset detection function')
+DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
+    analyzer=odf,
+    result_id='odf',
+    grapher_id='grapher_odf',
+    grapher_name='Onset detection function')
+
 wav = get_processor('waveform_analyzer')()
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
@@ -134,16 +138,19 @@ DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          grapher_name='Waveform from Analyzer')
 
 irit4hz = get_processor('irit_speech_4hz')()
-Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
-                                                      result_id='irit_speech_4hz.segments',
-                                                      grapher_id='grapher_irit_speech_4hz_segments',
-                                                      grapher_name='Irit 4Hz Speech Segmentation',
-                                                      background='waveform')
-
-iritmonopoly = get_processor('irit_monopoly')()
-DisplayMonopoly = DisplayAnalyzer.create(analyzer=iritmonopoly,
-                                         result_id='irit_monopoly.segments',
-                                         grapher_id='grapher_monopoly_segments',
-                                         grapher_name='Irit Monopoly Segmentation',
-                                         background='waveform')
-
+Display4hzSpeechSegmentation = DisplayAnalyzer.create(
+    analyzer=irit4hz,
+    result_id='irit_speech_4hz.segments',
+    grapher_id='grapher_irit_speech_4hz_segments',
+    grapher_name='Irit 4Hz Speech Segmentation',
+    background='waveform')
+try:
+    iritmonopoly = get_processor('irit_monopoly')()
+    DisplayMonopoly = DisplayAnalyzer.create(
+        analyzer=iritmonopoly,
+        result_id='irit_monopoly.segments',
+        grapher_id='grapher_monopoly_segments',
+        grapher_name='Irit Monopoly Segmentation',
+        background='waveform')
+except PIDError:
+    pass
