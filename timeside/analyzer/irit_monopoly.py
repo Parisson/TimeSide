@@ -40,12 +40,14 @@ class IRITMonopoly(Analyzer):
     def __init__(self):
         super(IRITMonopoly, self).__init__()
 
-        self.parents.append(AubioPitch())
-
         # Irit Monopoly parameters
         self.decisionLen = 1.0
         self.wLen = 0.1
         self.wStep = 0.05
+
+        self._aubio_pitch_analyzer = AubioPitch(blocksize_s=self.wLen,
+                                                stepsize_s=self.wStep)
+        self.parents.append(self._aubio_pitch_analyzer)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -55,8 +57,8 @@ class IRITMonopoly(Analyzer):
                                         blocksize,
                                         totalframes)
 
-        self.input_blocksize = int(self.wLen * samplerate)
-        self.input_stepsize = int(self.wStep * samplerate)
+        self.input_blocksize = self._aubio_pitch_analyzer.input_blocksize
+        self.input_stepsize = self._aubio_pitch_analyzer.input_stepsize
 
     @staticmethod
     @interfacedoc
@@ -118,7 +120,7 @@ class IRITMonopoly(Analyzer):
 
         segs.label_metadata.label = label
         segs.data_object.label = [convert[s[2]] for s in segList]
-        segs.data_object.time = [(float(s[0]+0.5) *  self.decisionLen)
+        segs.data_object.time = [(float(s[0]+0.5) * self.decisionLen)
                                  for s in segList]
 
         segs.data_object.duration = [(float(s[1] - s[0]+1) * self.decisionLen)
@@ -133,7 +135,8 @@ class IRITMonopoly(Analyzer):
         beta1 = 0.5955
         beta2 = 0.2821
         delta = 0.848
-        return self.weibullLikelihood(m, v, theta1, theta2, beta1, beta2, delta)
+        return self.weibullLikelihood(m, v, theta1, theta2, beta1, beta2,
+                                      delta)
 
     def polyLikelihood(self, m, v):
         theta1 = 0.3224
@@ -141,7 +144,8 @@ class IRITMonopoly(Analyzer):
         beta1 = 1.889
         beta2 = 0.8705
         delta = 0.644
-        return self.weibullLikelihood(m, v, theta1, theta2, beta1, beta2, delta)
+        return self.weibullLikelihood(m, v, theta1, theta2, beta1, beta2,
+                                      delta)
 
     def weibullLikelihood(self, m, v, theta1, theta2, beta1, beta2, delta):
         m = numpy.array(m)
@@ -151,11 +155,13 @@ class IRITMonopoly(Analyzer):
         a1 = m / theta1
         b1 = a1 ** (beta1 / delta)
         c1 = numpy.log(a1)
+
         a2 = v / theta2
         b2 = a2 ** (beta2 / delta)
         c2 = numpy.log(a2)
         somme1 = (b1 + b2) ** delta
-        Pxy = c0 + (beta1 / delta - 1) * c1 + (beta2 / delta - 1) * c2 + (delta - 2) * \
-            numpy.log(b1 + b2) + numpy.log(somme1 + 1 / delta - 1) - somme1
+        Pxy = c0 + (beta1 / delta - 1) * c1 + (beta2 / delta - 1) * c2 +\
+            (delta - 2) * numpy.log(b1 + b2) +\
+            numpy.log(somme1 + 1 / delta - 1) - somme1
 
         return numpy.mean(Pxy)
