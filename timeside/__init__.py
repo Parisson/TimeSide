@@ -26,7 +26,7 @@ from . import api
 from . import core
 
 
-__version__ = '0.5.6'
+__version__ = '0.5.7'
 
 # Check Availability of external Audio feature extraction librairies
 from .tools import package as ts_package

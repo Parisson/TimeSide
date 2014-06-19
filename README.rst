@@ -111,6 +111,11 @@ IEncoder
 News
 =====
 
+0.5.6
+
+  * Bugfix release
+  * Fix analyzer instanciation as parent for some graphers
+
 0.5.5
 
  * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
@@ -222,12 +227,12 @@ Show the analyzer results::
 The encoded OGG file should also be there...
 
 Note you can also instanciate each processor with its own class::
- 
+
  >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
  >>> grapher  =  timeside.grapher.waveform_simple.Waveform()
  >>> analyzer =  timeside.analyzer.level.Level()
  >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
- 
+
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
 
 API / Documentation
@@ -248,7 +253,7 @@ Install
 
 The TimeSide engine is intended to work on all Linux and Unix like platforms.
 
-It depends on several other python modules and compiled librairies like GStreamer. 
+It depends on several other python modules and compiled librairies like GStreamer.
 
 Debian, Ubuntu
 ---------------
@@ -268,10 +273,10 @@ Note you can also use pip if you already have already satisfied all the dependen
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution). 
+On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution).
 
 Then, use pip::
- 
+
  $ sudo pip install timeside
 
 OSX
@@ -284,9 +289,9 @@ Dependencies
 
 Needed::
 
- python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow 
- python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10 
- gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly 
+ python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib pillow
+ python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10
+ gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 
 Optional::
 

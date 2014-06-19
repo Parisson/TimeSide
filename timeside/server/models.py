@@ -221,7 +221,7 @@ class Task(BaseResource):
             if not os.path.exists(settings.MEDIA_ROOT + os.sep + path):
                 os.makedirs(settings.MEDIA_ROOT + os.sep + path)
 
-            pipe = timeside.decoder.FileDecoder(item.file.path, sha1=item.sha1)
+            pipe = timeside.decoder.file.FileDecoder(item.file.path, sha1=item.sha1)
 
             presets = {}
             for preset in self.experience.presets.all():
