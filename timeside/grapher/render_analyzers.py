@@ -53,13 +53,22 @@ class DisplayAnalyzer(Grapher):
 
     @interfacedoc
     def post_process(self):
+
         parent_result = self.process_pipe.results[self._result_id]
 
-        self.image = parent_result._render_PIL((self.image_width,
-                                                self.image_height), self.dpi)
+        fg_image = parent_result._render_PIL((self.image_width,
+                                              self.image_height), self.dpi)
+        if self._background:
+            bg_result = self.process_pipe.results[self._bg_id]
+            bg_image = bg_result._render_PIL((self.image_width,
+                                              self.image_height), self.dpi)
+            bg_image.paste(fg_image, (0, 0), fg_image)
+            self.image = bg_image
+        else:
+            self.image = fg_image
 
     @classmethod
-    def create(cls, analyzer, result_id, grapher_id, grapher_name):
+    def create(cls, analyzer, result_id, grapher_id, grapher_name, background=None):
 
         class NewGrapher(cls):
 
@@ -72,7 +81,16 @@ class DisplayAnalyzer(Grapher):
                          color_scheme='default'):
                 super(NewGrapher, self).__init__(width, height, bg_color,
                                                  color_scheme)
-
+                
+                # Add a parent waveform analyzer
+                if background == 'waveform':
+                    self._background = True
+                    bg_analyzer = get_processor('waveform_analyzer')()
+                    self._bg_id = bg_analyzer.id()
+                    self.parents.append(bg_analyzer)
+                else:
+                    self._background = None
+                
                 self.parents.append(analyzer)
                 # TODO : make it generic when analyzer will be "atomize"
                 self._result_id = result_id
@@ -119,4 +137,5 @@ irit4hz = get_processor('irit_speech_4hz')()
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
                                                       result_id='irit_speech_4hz.segments',
                                                       grapher_id='grapher_irit_speech_4hz_segments',
-                                                      grapher_name='Irit 4Hz Speech Segmentation')
+                                                      grapher_name='Irit 4Hz Speech Segmentation',
+                                                      background='waveform')
