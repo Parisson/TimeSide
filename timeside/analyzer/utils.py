@@ -231,3 +231,15 @@ def smoothing(data, number_of_points=3, smoothing_function=np.mean):
 
     w = number_of_points/2
     return [0.0]*w + [smoothing_function(data[i-w:i+w]) for i in range(w, len(data)-w)] + [0.0]*w
+
+
+def nextpow2(value):
+    """Compute the nearest power of two greater or equal to the input value"""
+    if value >= 1:
+        return 2**np.ceil(np.log2(value)).astype(int)
+    elif value > 0:
+        return 1
+    elif value == 0:
+        return 0
+    else:
+        raise ValueError('Value must be positive')
