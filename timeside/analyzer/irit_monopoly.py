@@ -20,11 +20,12 @@
 # Author: Maxime Le Coz <lecoz@irit.fr>
 from __future__ import absolute_import
 from timeside.analyzer.utils import segmentFromValues
-from timeside.core import implements, interfacedoc, get_processor
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import numpy
 from timeside.analyzer.preprocessors import frames_adapter
+from timeside.analyzer.aubio.aubio_pitch import AubioPitch
 
 
 class IRITMonopoly(Analyzer):
@@ -39,7 +40,7 @@ class IRITMonopoly(Analyzer):
     def __init__(self):
         super(IRITMonopoly, self).__init__()
 
-        self.parents.append(get_processor('aubio_pitch')())
+        self.parents.append(AubioPitch())
 
         # Irit Monopoly parameters
         self.decisionLen = 1.0
