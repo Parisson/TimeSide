@@ -139,3 +139,11 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(analyzer=irit4hz,
                                                       grapher_id='grapher_irit_speech_4hz_segments',
                                                       grapher_name='Irit 4Hz Speech Segmentation',
                                                       background='waveform')
+
+iritmonopoly = get_processor('irit_monopoly')()
+DisplayMonopoly = DisplayAnalyzer.create(analyzer=iritmonopoly,
+                                         result_id='irit_monopoly.segments',
+                                         grapher_id='grapher_monopoly_segments',
+                                         grapher_name='Irit Monopoly Segmentation',
+                                         background='waveform')
+
