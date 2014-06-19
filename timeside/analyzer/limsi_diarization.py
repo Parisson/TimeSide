@@ -26,7 +26,7 @@ from timeside.api import IAnalyzer
 # from timeside.analyzer import IRITSpeech4Hz
 from yaafe import Yaafe
 import yaafelib
-from timeside.analyzer import LimsiSad
+from timeside.analyzer.limsi_sad import LimsiSad
 import numpy as N
 import sys
 
