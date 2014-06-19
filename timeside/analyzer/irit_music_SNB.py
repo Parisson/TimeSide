@@ -26,7 +26,6 @@ from timeside.analyzer.utils import segmentFromValues
 from timeside.analyzer.irit_diverg import IRITDiverg
 from timeside.api import IAnalyzer
 from numpy import array, mean, arange, nonzero
-from timeside.analyzer.preprocessors import frames_adapter
 
 
 class IRITMusicSNB(Analyzer):
@@ -38,8 +37,6 @@ class IRITMusicSNB(Analyzer):
         self.parents.append(IRITDiverg())
         self.wLen = 1.0
         self.wStep = 0.1
-        self.input_blocksize = 0
-        self.input_stepsize = 0
         self.threshold = 20
 
     @interfacedoc
@@ -68,7 +65,6 @@ class IRITMusicSNB(Analyzer):
     def __str__(self):
         return "Music confidence indexes"
 
-    @frames_adapter
     def process(self, frames, eod=False):
         return frames, eod
 
