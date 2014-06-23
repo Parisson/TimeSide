@@ -62,10 +62,14 @@ class DisplayAnalyzer(Grapher):
             bg_result = self.process_pipe.results[self._bg_id]
             bg_image = bg_result._render_PIL((self.image_width,
                                               self.image_height), self.dpi)
-            bg_image.paste(fg_image, (0, 0), fg_image)
-            self.image = bg_image
-        else:
-            self.image = fg_image
+            # convert image to grayscale
+            bg_image = bg_image.convert('LA').convert('RGBA')
+
+            # Merge background and foreground images
+            from PIL.Image import blend
+            fg_image = blend(fg_image, bg_image, 0.25)
+
+        self.image = fg_image
 
     @classmethod
     def create(cls, analyzer, result_id, grapher_id, grapher_name,
