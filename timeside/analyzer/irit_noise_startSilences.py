@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2013 Maxime Le Coz <lecoz@irit.fr>
+# Copyright (c) 2013-2014 Maxime Le Coz <lecoz@irit.fr>
 
 # This file is part of TimeSide.
 
@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 # Author: Maxime Le Coz <lecoz@irit.fr>
+
 from __future__ import absolute_import
 
 from timeside.core import implements, interfacedoc
@@ -35,6 +36,16 @@ class IRITStartSeg(Analyzer):
 
     Properties:
     '''
+    @interfacedoc
+    def __init__(self, save_lab=False):
+        super(IRITStartSeg, self).__init__()
+
+        self._save_lab = save_lab
+
+        self.energy = []
+        self.maxenergy = 0.002
+        self.min_overlap = 20
+        self.threshold = 0.1
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -54,10 +65,6 @@ class IRITStartSeg(Analyzer):
         f1 = lowFreq / sr
         f2 = highFreq / sr
         self.filtre = firwin(10, [f1, f2], pass_zero=False)
-        self.energy = []
-        self.maxenergy = 0.002
-        self.min_overlap = 20
-        self.threshold = 0.1
 
     @staticmethod
     @interfacedoc
@@ -100,6 +107,7 @@ class IRITStartSeg(Analyzer):
 
         prototype = numpy.load('timeside/analyzer/protoStart2.dat')
         prototype2 = numpy.load('timeside/analyzer/protoStart3.dat')
+
         # Lissage pour éliminer les petits segments dans un sens ou l'autre
         struct = [1] * len(prototype)
         silences = binary_closing(silences, struct)
@@ -130,15 +138,19 @@ class IRITStartSeg(Analyzer):
                     segsList.append(s)
 
         label = {0: 'Start', 1: 'Session'}
-        with open('out.lab', 'w') as f:
-            for s in segsList:
-                f.write(
-                    '%.2f\t%.2f\t%s\n' %
-                    (s[0] * step, s[1] * step, label[s[2]]))
 
-        with open('cand.lab', 'w') as f:
-            for s in candidates:
-                f.write('%.2f\t%.2f\t%f\n' % (s[0] * step, s[1] * step, s[2]))
+        if self._save_lab:
+            with open('out.lab', 'w') as f:
+                for s in segsList:
+                    f.write(
+                        '%.2f\t%.2f\t%s\n' %
+                        (s[0] * step, s[1] * step, label[s[2]]))
+
+            with open('cand.lab', 'w') as f:
+                for s in candidates:
+                    f.write('%.2f\t%.2f\t%f\n' % (s[0] * step,
+                                                  s[1] * step,
+                                                  s[2]))
 
         segs = self.new_result(data_mode='label', time_mode='segment')
         segs.id_metadata.id += '.' + 'segments'
