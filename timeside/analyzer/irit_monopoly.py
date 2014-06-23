@@ -118,7 +118,7 @@ class IRITMonopoly(Analyzer):
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
 
-        segs.label_metadata.label = label
+        segs.data_object.label_metadata.label = label
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]+0.5) * self.decisionLen)
                                  for s in segList]

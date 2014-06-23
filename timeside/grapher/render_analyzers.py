@@ -93,6 +93,12 @@ class DisplayAnalyzer(Grapher):
                     bg_analyzer = get_processor('waveform_analyzer')()
                     self._bg_id = bg_analyzer.id()
                     self.parents.append(bg_analyzer)
+                elif background == 'spectrogram':
+                    self._background = True
+                    bg_analyzer = get_processor('spectrogram_analyzer')()
+                    self._bg_id = bg_analyzer.id()
+                    self.parents.append(bg_analyzer)
+
                 else:
                     self._background = None
 
@@ -124,7 +130,8 @@ try:
         analyzer=aubiopitch,
         result_id='aubio_pitch.pitch',
         grapher_id='grapher_aubio_pitch',
-        grapher_name='Aubio Pitch')
+        grapher_name='Aubio Pitch',
+        background='spectrogram')
 except PIDError:
     pass
 

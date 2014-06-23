@@ -114,9 +114,9 @@ class Yaafe(Analyzer):
             result.data_object.value = self.yaafe_engine.readOutput(featName)
 
             yaafe_metadata = self.yaafe_engine.getOutputs()[featName]
-            result.frame_metadata.blocksize = yaafe_metadata['frameLength']
-            result.frame_metadata.stepsize = yaafe_metadata['sampleStep']
-            result.frame_metadata.samplerate = yaafe_metadata['sampleRate']
+            result.data_object.frame_metadata.blocksize = yaafe_metadata['frameLength']
+            result.data_object.frame_metadata.stepsize = yaafe_metadata['sampleStep']
+            result.data_object.frame_metadata.samplerate = yaafe_metadata['sampleRate']
 
             # Store results in Container
             if len(result.data_object.value):
