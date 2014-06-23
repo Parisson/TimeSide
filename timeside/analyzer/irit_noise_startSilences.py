@@ -19,17 +19,13 @@
 # Author: Maxime Le Coz <lecoz@irit.fr>
 from __future__ import absolute_import
 
-
-from timeside.analyzer.utils import segmentFromValues
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
+from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.preprocessors import frames_adapter
 from timeside.api import IAnalyzer
-from aubio import pitch
 import numpy
 from scipy.signal import firwin, lfilter
 from scipy.ndimage.morphology import binary_opening, binary_closing
-import pylab
 
 
 class IRITStartSeg(Analyzer):
@@ -87,8 +83,9 @@ class IRITStartSeg(Analyzer):
 
         '''
 
-        self.energy += [
-            numpy.sqrt(numpy.mean(lfilter(self.filtre, 1.0, frames.T[0]) ** 2))]
+        self.energy += [numpy.sqrt(numpy.mean(lfilter(self.filtre,
+                                                      1.0,
+                                                      frames.T[0]) ** 2))]
         return frames, eod
 
     def post_process(self):
@@ -100,7 +97,6 @@ class IRITStartSeg(Analyzer):
         silences[self.energy < self.maxenergy] = 1
 
         step = float(self.input_stepsize) / float(self.samplerate())
-        tL = numpy.arange(len(silences)) * step
 
         prototype = numpy.load('timeside/analyzer/protoStart2.dat')
         prototype2 = numpy.load('timeside/analyzer/protoStart3.dat')
@@ -119,21 +115,17 @@ class IRITStartSeg(Analyzer):
         silencesList.append(tuple(seg))
         segsList = []
         candidates = []
-        l = len(prototype)
-        #import pylab
+
         for s in silencesList:
             if s[2] == 1:
                 shape = numpy.array(self.energy[s[0]:s[1]])
-                #shape = shape/numpy.max(shape)
 
                 d1, _ = computeDist2(prototype, shape)
                 d2, _ = computeDist2(prototype2, shape)
                 dist = min([d1, d2])
 
                 candidates.append((s[0], s[1], dist))
-                # pylab.plot(shape)
-                # pylab.plot(range(decal,decal+l),prototype)
-                # pylab.show()
+
                 if dist < self.threshold:
                     segsList.append(s)
 
@@ -164,7 +156,8 @@ def computeDist2(proto, serie):
     l = len(proto)
     r = range(len(serie))
     serie = numpy.array(list(serie) + [0] * (l - 1))
-    v = [numpy.mean(numpy.abs((serie[i:i + l] / numpy.max(serie[i:i + l])) - proto))
+    v = [numpy.mean(numpy.abs((serie[i:i + l] / numpy.max(serie[i:i + l])) -
+                              proto))
          for i in r]
     return numpy.min(v), numpy.argmin(v)
 
