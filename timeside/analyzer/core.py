@@ -676,7 +676,7 @@ class AnalyzerResult(MetadataObject):
         # see http://stackoverflow.com/a/8881973
 
         fig, ax = plt.subplots()
-        self._render_plot(ax)
+        self.data_object._render_plot(ax)
         return fig
 
     def _render_PIL(self, size=(1024, 256), dpi=80):
@@ -690,7 +690,7 @@ class AnalyzerResult(MetadataObject):
 
         ax = fig.add_axes([0, 0, 1, 1], frame_on=False)
 
-        self._render_plot(ax)
+        self.data_object._render_plot(ax)
 
         ax.autoscale(axis='x', tight=True)
 
@@ -887,10 +887,15 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
-        for key in self.label_metadata.label.keys():
+        artist = {}
+        for key, label in self.label_metadata.label.items():
             ax_color[key] = colors.next()
+            artist[key] = plt.Line2D((0, 1), (0, 0), color=ax_color[key])
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
+
+        #Create legend from custom artist/label lists
+        ax.legend(artist.values(), self.label_metadata.label.values())
 
 
 class AnalyzerResultContainer(dict):

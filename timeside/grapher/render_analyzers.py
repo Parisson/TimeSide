@@ -122,9 +122,12 @@ class DisplayAnalyzer(Grapher):
 
         return NewGrapher
 
+#-------------------------------------------------
+# From here define new Graphers based on Analyzers
+#-------------------------------------------------
 
-# From here define new Grapher based on Analyzers
-try:
+# Aubio Pitch
+try: # because of the dependencies on the Aubio librairy
     aubiopitch = get_processor('aubio_pitch')()
     DisplayAubioPitch = DisplayAnalyzer.create(
         analyzer=aubiopitch,
@@ -135,6 +138,7 @@ try:
 except PIDError:
     pass
 
+# Onset Detection Function
 odf = get_processor('odf')()
 DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=odf,
@@ -142,12 +146,14 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     grapher_id='grapher_odf',
     grapher_name='Onset detection function')
 
+# Waveform
 wav = get_processor('waveform_analyzer')()
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
                                          grapher_name='Waveform from Analyzer')
 
+# IRIT 4Hz
 irit4hz = get_processor('irit_speech_4hz')()
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
@@ -155,7 +161,9 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     grapher_id='grapher_irit_speech_4hz_segments',
     grapher_name='Irit 4Hz Speech Segmentation',
     background='waveform')
-try:
+
+# IRIT Monopoly
+try: # because of the dependencies on Aubio Pitch
     iritmonopoly = get_processor('irit_monopoly')()
     DisplayMonopoly = DisplayAnalyzer.create(
         analyzer=iritmonopoly,
@@ -163,5 +171,26 @@ try:
         grapher_id='grapher_monopoly_segments',
         grapher_name='Irit Monopoly Segmentation',
         background='waveform')
+except PIDError:
+    pass
+
+# Limsi SAD : 2 models
+try:
+    limsi_sad_etape = get_processor('limsi_sad')(sad_model='etape')
+    limsi_sad_maya = get_processor('limsi_sad')(sad_model='maya')
+    DisplayLIMSI_SAD_etape = DisplayAnalyzer.create(
+        analyzer=limsi_sad_etape,
+        result_id='limsi_sad.sad_lhh_diff',
+        grapher_id='grapher_limsi_sad_etape',
+        grapher_name='LIMSI SAD with ETAPE model',
+        background='waveform')
+
+    DisplayLIMSI_SAD_maya = DisplayAnalyzer.create(
+        analyzer=limsi_sad_maya,
+        result_id='limsi_sad.sad_lhh_diff',
+        grapher_id='grapher_limsi_sad_maya',
+        grapher_name='LIMSI SAD with Mayan model',
+        background='waveform')
+
 except PIDError:
     pass
