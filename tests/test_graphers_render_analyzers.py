@@ -8,7 +8,7 @@ import numpy as np
 from tempfile import NamedTemporaryFile
 import os
 
-PLOT = False
+PLOT = True
 
 
 class Test_graphers_analyzers(unittest.TestCase):
@@ -40,23 +40,25 @@ class Test_graphers_analyzers(unittest.TestCase):
         # Clean-up : delete temp file
         os.unlink(self.temp_file.name)
 
+
+def _tests_factory(grapher_analyzers):
+    for grapher in grapher_analyzers:
+
+        def _test_func_factory(grapher):
+            test_func = lambda self: self._perform_test(grapher)
+            test_func.__doc__ = 'Test Graphers : %s' % grapher.name()
+            return test_func
+
+        test_func_name = "test_%s" % grapher.name()
+        test_func = _test_func_factory(grapher)
+
+        setattr(Test_graphers_analyzers, test_func_name, test_func)
+
 list_graphers = timeside.core.processors(timeside.api.IGrapher)
 module = 'timeside.grapher.render_analyzers'
 grapher_analyzers = [grapher for grapher in list_graphers
                      if grapher.__module__ == module]
-
-for grapher in grapher_analyzers:
-
-    def _test_func_factory(grapher):
-        test_func = lambda self: self._perform_test(grapher)
-        test_func.__doc__ = 'Test Graphers : %s' % grapher.name()
-        return test_func
-
-    test_func_name = "test_%s" % grapher.name()
-    test_func = _test_func_factory(grapher)
-
-    setattr(Test_graphers_analyzers, test_func_name, test_func)
-
+_tests_factory(grapher_analyzers)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
