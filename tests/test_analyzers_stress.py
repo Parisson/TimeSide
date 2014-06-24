@@ -60,8 +60,7 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
         test_func = test_func_factory(analyzer)
 
         if analyzer.__name__ not in skip_reasons:
-            setattr(test_class, test_func_name,
-                    test_func_factory(analyzer))
+            setattr(test_class, test_func_name, test_func)
         else:  # Decorate with unittest.skip to skip test
             setattr(test_class, test_func_name,
                     unittest.skip(skip_reasons[analyzer.__name__])(test_func))
