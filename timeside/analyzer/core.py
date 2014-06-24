@@ -26,7 +26,7 @@ from __future__ import division
 
 from timeside.core import Processor
 import timeside  # import __version__
-import numpy
+import numpy as np
 from collections import OrderedDict
 import h5py
 import h5tools
@@ -63,8 +63,8 @@ numpy_data_types = [
     #'complex128',
     #'complex64',
 ]
-numpy_data_types = map(lambda x: getattr(numpy, x), numpy_data_types)
-#numpy_data_types += [numpy.ndarray]
+numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
+#numpy_data_types += [np.ndarray]
 
 
 class MetadataObject(object):
@@ -362,7 +362,7 @@ class DataObject(MetadataObject):
 
         # Set Data with the proper type
         if name == 'value':
-            value = numpy.asarray(value)
+            value = np.asarray(value)
             if value.dtype.type not in numpy_data_types:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
@@ -372,15 +372,15 @@ class DataObject(MetadataObject):
 
         elif name == 'label':
             try:
-                value = numpy.asarray(value, dtype='int')
+                value = np.asarray(value, dtype='int')
             except ValueError:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
                     (value.dtype.type, name))
 
-        elif name in ['time', 'duration', 'y_value', 'y_unit']:
+        elif name in ['time', 'duration', 'y_value']:
             try:
-                value = numpy.asfarray(value)
+                value = np.asfarray(value)
             except ValueError:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
@@ -394,16 +394,16 @@ class DataObject(MetadataObject):
         # TODO fix this
         try:
             return (isinstance(other, self.__class__) and
-                    all([numpy.array_equal(self[key], other[key])
+                    all([np.array_equal(self[key], other[key])
                          for key in self.keys()]))
         except AttributeError:
             return (isinstance(other, self.__class__) and
-                    all([bool(numpy.logical_and.reduce((self[key] == other[key]).ravel()))
+                    all([bool(np.logical_and.reduce((self[key] == other[key]).ravel()))
                          for key in self.keys()]))
 
     def __ne__(self, other):
         return not(isinstance(other, self.__class__) or
-                   any([numpy.array_equal(self[key], other[key])
+                   any([np.array_equal(self[key], other[key])
                         for key in self.keys()]))
 
     def as_dict(self):
@@ -436,7 +436,7 @@ class DataObject(MetadataObject):
         for child in root:
             key = child.tag
             if child.text:
-                self[key] = numpy.asarray(ast.literal_eval(child.text),
+                self[key] = np.asarray(ast.literal_eval(child.text),
                                           dtype=child.get('dtype'))
 
     def to_hdf5(self, h5group):
@@ -454,7 +454,7 @@ class DataObject(MetadataObject):
                                            key).tolist().__repr__(),
                                        dtype=h5py.special_dtype(vlen=str))
             else:
-                if numpy.prod(self.__getattribute__(key).shape):
+                if np.prod(self.__getattribute__(key).shape):
                     maxshape = None
                 else:
                     maxshape = (None,)
@@ -750,11 +750,11 @@ class ValueObject(DataObject):
 
     @property
     def properties(self):
-        return dict(mean=numpy.mean(self.data, axis=0),
-                    std=numpy.std(self.data, axis=0, ddof=1),
-                    median=numpy.median(self.data, axis=0),
-                    max=numpy.max(self.data, axis=0),
-                    min=numpy.min(self.data, axis=0),
+        return dict(mean=np.mean(self.data, axis=0),
+                    std=np.std(self.data, axis=0, ddof=1),
+                    median=np.median(self.data, axis=0),
+                    max=np.max(self.data, axis=0),
+                    min=np.min(self.data, axis=0),
                     shape=self.data.shape,
                     )
 
@@ -789,21 +789,21 @@ class FramewiseObject(DataObject):
 
     @property
     def time(self):
-        return (numpy.arange(0, len(self.data)*self.frame_metadata.stepsize,
+        return (np.arange(0, len(self.data)*self.frame_metadata.stepsize,
                              self.frame_metadata.stepsize) /
                 self.frame_metadata.samplerate)
 
     @property
     def duration(self):
         return (self.frame_metadata.blocksize / self.frame_metadata.samplerate
-                * numpy.ones(len(self.data)))
+                * np.ones(len(self.data)))
 
 
 class EventObject(DataObject):
 
     @property
     def duration(self):
-        return numpy.zeros(len(self.data))
+        return np.zeros(len(self.data))
 
     def _render_plot(self, ax):
         ax.stem(self.time, self.data)
@@ -834,7 +834,14 @@ class FrameValueObject(ValueObject, FramewiseObject):
                                   ('frame_metadata', None)])
 
     def _render_plot(self, ax):
-        ax.plot(self.time, self.data)
+        if not self.y_value.size:
+            ax.plot(self.time, self.data)
+        else:
+            ax.imshow(20 * np.log10(self.data.T),
+                      origin='lower',
+                      extent=[self.time[0], self.time[-1],
+                              self.y_value[0], self.y_value[-1]],
+                      aspect='auto')
 
 
 class FrameLabelObject(LabelObject, FramewiseObject):
@@ -967,11 +974,11 @@ class AnalyzerResultContainer(dict):
 
         # Define Specialize JSON encoder for numpy array
         def NumpyArrayEncoder(obj):
-            if isinstance(obj, numpy.ndarray):
+            if isinstance(obj, np.ndarray):
                 return {'numpyArray': obj.tolist(),
                         'dtype': obj.dtype.__str__()}
-            elif isinstance(obj, numpy.generic):
-                return numpy.asscalar(obj)
+            elif isinstance(obj, np.generic):
+                return np.asscalar(obj)
             else:
                 print type(obj)
                 raise TypeError(repr(obj) + " is not JSON serializable")
@@ -990,7 +997,7 @@ class AnalyzerResultContainer(dict):
         # Define Specialize JSON decoder for numpy array
         def NumpyArrayDecoder(obj):
             if isinstance(obj, dict) and 'numpyArray' in obj:
-                numpy_obj = numpy.asarray(obj['numpyArray'],
+                numpy_obj = np.asarray(obj['numpyArray'],
                                           dtype=obj['dtype'])
                 return numpy_obj
             else:
@@ -1019,7 +1026,7 @@ class AnalyzerResultContainer(dict):
                                             {'dtype': obj.dtype.__str__(),
                                              'array': obj.tolist()})
 
-        yaml.add_representer(numpy.ndarray, numpyArray_representer)
+        yaml.add_representer(np.ndarray, numpyArray_representer)
 
         yaml_str = yaml.dump([res.as_dict() for res in self.values()])
         if output_file:
@@ -1034,7 +1041,7 @@ class AnalyzerResultContainer(dict):
         # Define Specialize Yaml encoder for numpy array
         def numpyArray_constructor(loader, node):
             mapping = loader.construct_mapping(node, deep=True)
-            return numpy.asarray(mapping['array'], dtype=mapping['dtype'])
+            return np.asarray(mapping['array'], dtype=mapping['dtype'])
 
         yaml.add_constructor(u'!numpyArray', numpyArray_constructor)
 
@@ -1051,13 +1058,13 @@ class AnalyzerResultContainer(dict):
 
     def to_numpy(self, output_file=None):
         if output_file:
-            numpy.save(output_file, self)
+            np.save(output_file, self)
         else:
             return self
 
     @staticmethod
     def from_numpy(input_file):
-        return numpy.load(input_file)
+        return np.load(input_file)
 
     def to_hdf5(self, output_file):
         # Open HDF5 file and save dataset (overwrite any existing file)
