@@ -897,7 +897,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         artist = {}
         for key, label in self.label_metadata.label.items():
             ax_color[key] = colors.next()
-            artist[key] = plt.Line2D((0, 1), (0, 0), color=ax_color[key])
+            artist[key] = plt.axvspan(0, 0, color=ax_color[key], alpha=0.3)
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 
