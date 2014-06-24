@@ -46,7 +46,7 @@ def _tests_factory(grapher_analyzers):
 
         def _test_func_factory(grapher):
             test_func = lambda self: self._perform_test(grapher)
-            test_func.__doc__ = 'Test Graphers : %s' % grapher.name()
+            test_func.__doc__ = 'Test Graphers: %s' % grapher.name()
             return test_func
 
         test_func_name = "test_%s" % grapher.name()

@@ -80,5 +80,4 @@ class Spectrogram(Analyzer):
         spectrogram.data_object.y_value = np.arange(0, self.samplerate() / 2,
                                                     self.samplerate() /
                                                     self.FFT_SIZE)
-        spectrogram.data_object.y_unit = 'Hz'
         self.process_pipe.results.add(spectrogram)

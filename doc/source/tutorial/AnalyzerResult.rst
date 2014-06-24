@@ -41,7 +41,7 @@ Create a new analyzer result without default arguments
    ...     print '%s : %s' % (key, value)
    ...
    id_metadata : {'description': '', 'author': '', 'uuid': '', 'version': '', 'date': '', 'id': '', 'unit': '', 'name': ''}
-   data_object : {'y_value': array([], dtype=float64), 'y_unit': array([], dtype=float64), 'value': array([], dtype=float64), 'frame_metadata': {'blocksize': None, 'samplerate': None, 'stepsize': None}}
+   data_object : {'y_value': array([], dtype=float64), 'value': array([], dtype=float64), 'frame_metadata': {'blocksize': None, 'samplerate': None, 'stepsize': None}}
    audio_metadata : {'sha1': '', 'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
    parameters : {}
 
@@ -61,7 +61,7 @@ Framewise
 
 >>> res = AnalyzerResult(time_mode='framewise')
 >>> res.data_object.keys()
-['value', 'y_value', 'y_unit', 'frame_metadata']
+['value', 'y_value', 'frame_metadata']
 
 
 Global
@@ -72,10 +72,10 @@ The 'frame_metadata' key/attribute is deleted.
 
 >>> res = AnalyzerResult(time_mode='global')
 >>> res.data_object.keys()
-['value', 'y_value', 'y_unit']
+['value', 'y_value']
 
 >>> res.data_object
-GlobalValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), y_unit=array([], dtype=float64))
+GlobalValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64))
 
 
 Segment
@@ -85,7 +85,7 @@ Segment
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
-SegmentValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), y_unit=array([], dtype=float64), time=array([], dtype=float64), duration=array([], dtype=float64))
+SegmentValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), time=array([], dtype=float64), duration=array([], dtype=float64))
 
 Event
 -----
@@ -94,7 +94,7 @@ Event
 >>> res.keys()
 ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 >>> res.data_object
-EventValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), y_unit=array([], dtype=float64), time=array([], dtype=float64))
+EventValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), time=array([], dtype=float64))
 
 Specification of data_mode
 ==========================
@@ -108,12 +108,12 @@ Value
 
 >>> res = AnalyzerResult(data_mode='value')
 >>> res.data_object.keys()
-['value', 'y_value', 'y_unit', 'frame_metadata']
+['value', 'y_value', 'frame_metadata']
 
 In the dataObject key, the 'value' key is kept and the 'label' key is deleted.
 
 >>> res.data_object
-FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), y_unit=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))
+FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))
 
 Label
 -----

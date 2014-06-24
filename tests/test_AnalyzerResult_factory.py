@@ -34,7 +34,7 @@ class TestAnalyzerResult_classes(unittest.TestCase):
         "Data structure for Global & Value Result"
         self.time_mode = 'global'
         self.data_mode = 'value'
-        self.data_object_keys = ['value', 'y_value', 'y_unit']
+        self.data_object_keys = ['value', 'y_value']
 
     def test_GlobalLabelResult(self):
         "Data structure for Global & Label Result"
@@ -46,7 +46,7 @@ class TestAnalyzerResult_classes(unittest.TestCase):
         "Data structure for Framewise & Value Result"
         self.time_mode = 'framewise'
         self.data_mode = 'value'
-        self.data_object_keys = ['value', 'y_value', 'y_unit',
+        self.data_object_keys = ['value', 'y_value',
                                  'frame_metadata']
 
     def test_FrameLabelResult(self):
@@ -59,7 +59,7 @@ class TestAnalyzerResult_classes(unittest.TestCase):
         "Data structure for Event & Value Result"
         self.time_mode = 'event'
         self.data_mode = 'value'
-        self.data_object_keys = ['value', 'y_value', 'y_unit', 'time']
+        self.data_object_keys = ['value', 'y_value', 'time']
 
     def test_EventLabelResult(self):
         "Data structure for Event & Label Result"
@@ -71,7 +71,7 @@ class TestAnalyzerResult_classes(unittest.TestCase):
         "Data structure for Segment & Value Result"
         self.time_mode = 'segment'
         self.data_mode = 'value'
-        self.data_object_keys = ['value', 'y_value', 'y_unit',
+        self.data_object_keys = ['value', 'y_value',
                                  'time', 'duration']
 
     def test_SegmentLabelResult(self):
