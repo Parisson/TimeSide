@@ -38,7 +38,8 @@ class Test_graphers_analyzers(unittest.TestCase):
 
     def tearDown(self):
         # Clean-up : delete temp file
-        os.unlink(self.temp_file.name)
+        if not PLOT:
+            os.unlink(self.temp_file.name)
 
 
 def _tests_factory(grapher_analyzers):

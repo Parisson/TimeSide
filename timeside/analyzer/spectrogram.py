@@ -77,7 +77,8 @@ class Spectrogram(Analyzer):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
         spectrogram.data_object.value = self.values
-        spectrogram.data_object.y_value = np.arange(0, self.samplerate() / 2,
-                                                    self.samplerate() /
-                                                    self.FFT_SIZE)
+        nb_freq = spectrogram.data_object.value.shape[1]
+        spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
+                                           self.samplerate() / self.FFT_SIZE)
+
         self.process_pipe.results.add(spectrogram)
