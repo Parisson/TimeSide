@@ -8,7 +8,7 @@ import numpy as np
 from tempfile import NamedTemporaryFile
 import os
 
-PLOT = False
+PLOT = True
 
 
 class Test_graphers_analyzers(unittest.TestCase):

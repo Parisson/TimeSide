@@ -127,7 +127,7 @@ class DisplayAnalyzer(Grapher):
 #-------------------------------------------------
 
 # Aubio Pitch
-try: # because of the dependencies on the Aubio librairy
+try:  # because of the dependencies on the Aubio librairy
     aubiopitch = get_processor('aubio_pitch')()
     DisplayAubioPitch = DisplayAnalyzer.create(
         analyzer=aubiopitch,
@@ -162,8 +162,18 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     grapher_name='Irit 4Hz Speech Segmentation',
     background='waveform')
 
+
+# IRIT 4Hz with median filter
+irit4hz = get_processor('irit_speech_4hz')()
+Display4hzSpeechSegmentation = DisplayAnalyzer.create(
+    analyzer=irit4hz,
+    result_id='irit_speech_4hz.segments_median',
+    grapher_id='grapher_irit_speech_4hz_segments_median',
+    grapher_name='Irit 4Hz Speech Segmentation with median filter',
+    background='waveform')
+
 # IRIT Monopoly
-try: # because of the dependencies on Aubio Pitch
+try:  # because of the dependencies on Aubio Pitch
     iritmonopoly = get_processor('irit_monopoly')()
     DisplayMonopoly = DisplayAnalyzer.create(
         analyzer=iritmonopoly,
