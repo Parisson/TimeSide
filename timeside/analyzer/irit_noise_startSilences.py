@@ -20,6 +20,7 @@
 
 from __future__ import absolute_import
 
+import timeside
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.preprocessors import frames_adapter
@@ -27,12 +28,13 @@ from timeside.api import IAnalyzer
 import numpy
 from scipy.signal import firwin, lfilter
 from scipy.ndimage.morphology import binary_opening, binary_closing
+import os
 
 
 class IRITStartSeg(Analyzer):
     implements(IAnalyzer)
     '''
-    Segmentor MOnophony/Polyphony based on the analalysis of yin confidence.
+    Segmentation of recording sessions into 'start' and 'session' segments
 
     Properties:
     '''
@@ -74,7 +76,7 @@ class IRITStartSeg(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "IRIT Monophony / Polyphony classification"
+        return "IRIT Start/Session segmentation"
 
     @staticmethod
     @interfacedoc
@@ -82,7 +84,7 @@ class IRITStartSeg(Analyzer):
         return ""
 
     def __str__(self):
-        return "Labeled Monophonic/Polyphonic segments"
+        return "Labeled Start/session segments"
 
     @frames_adapter
     def process(self, frames, eod=False):
@@ -105,8 +107,13 @@ class IRITStartSeg(Analyzer):
 
         step = float(self.input_stepsize) / float(self.samplerate())
 
-        prototype = numpy.load('timeside/analyzer/protoStart2.dat')
-        prototype2 = numpy.load('timeside/analyzer/protoStart3.dat')
+        models_dir = os.path.join(timeside.__path__[0],
+                                  'analyzer', 'trained_models')
+        prototype1_file = os.path.join(models_dir, 'protoStart1.dat')
+        prototype2_file = os.path.join(models_dir, 'protoStart2.dat')
+
+        prototype = numpy.load(prototype1_file)
+        prototype2 = numpy.load(prototype2_file)
 
         # Lissage pour éliminer les petits segments dans un sens ou l'autre
         struct = [1] * len(prototype)
