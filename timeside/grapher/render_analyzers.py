@@ -204,3 +204,12 @@ try:
 
 except PIDError:
     pass
+
+# IRIT Start Seg
+irit_startseg = get_processor('irit_startseg')()
+DisplayIRIT_Start = DisplayAnalyzer.create(
+    analyzer=irit_startseg,
+    result_id='irit_startseg.segments',
+    grapher_id='grapher_irit_startseg',
+    grapher_name='IRIT Start Noise',
+    background='waveform')
