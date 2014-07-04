@@ -381,7 +381,6 @@ class ProcessPipe(object):
         # Release processors
         for item in items:
             item.release()
-            self.processors.remove(item)
 
         self._is_running = False
 
