@@ -292,7 +292,7 @@ Dependencies
 Needed::
 
  python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib python-imaging
- python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-gst0.10
+ python-simplejson python-yaml python-mutagen libhdf5-serial-dev pytables python-gst0.10
  gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 
 Optional::

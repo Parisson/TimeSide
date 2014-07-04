@@ -10,7 +10,7 @@ before_install:
  - sudo apt-get -qq update
  - sudo apt-get install python-setuptools
  - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
- - sudo apt-get install -qq libhdf5-serial-dev python-h5py
+ - sudo apt-get install -qq libhdf5-serial-dev python-h5py pytables
  - sudo apt-get install -qq python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
 
 # command to install dependencies
