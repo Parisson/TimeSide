@@ -16,6 +16,7 @@ before_install:
 # command to install dependencies
 install: 
 # - "pip install -r requirements.txt --use-mirrors"
+- sudo pip install numexpr
 - python setup.py install
 
 
