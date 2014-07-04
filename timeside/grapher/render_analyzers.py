@@ -72,7 +72,8 @@ class DisplayAnalyzer(Grapher):
         self.image = fg_image
 
     @classmethod
-    def create(cls, analyzer, result_id, grapher_id, grapher_name,
+    def create(cls, analyzer, analyzer_parameters={}, result_id=None,
+               grapher_id=None, grapher_name=None,
                background=None):
 
         class NewGrapher(cls):
@@ -102,7 +103,7 @@ class DisplayAnalyzer(Grapher):
                 else:
                     self._background = None
 
-                self.parents.append(analyzer)
+                self.parents.append(analyzer(**analyzer_parameters))
                 # TODO : make it generic when analyzer will be "atomize"
                 self._result_id = result_id
 
@@ -128,7 +129,7 @@ class DisplayAnalyzer(Grapher):
 
 # Aubio Pitch
 try:  # because of the dependencies on the Aubio librairy
-    aubiopitch = get_processor('aubio_pitch')()
+    aubiopitch = get_processor('aubio_pitch')
     DisplayAubioPitch = DisplayAnalyzer.create(
         analyzer=aubiopitch,
         result_id='aubio_pitch.pitch',
@@ -139,7 +140,7 @@ except PIDError:
     pass
 
 # Onset Detection Function
-odf = get_processor('odf')()
+odf = get_processor('odf')
 DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=odf,
     result_id='odf',
@@ -147,14 +148,14 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     grapher_name='Onset detection function')
 
 # Waveform
-wav = get_processor('waveform_analyzer')()
+wav = get_processor('waveform_analyzer')
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
                                          grapher_name='Waveform from Analyzer')
 
 # IRIT 4Hz
-irit4hz = get_processor('irit_speech_4hz')()
+irit4hz = get_processor('irit_speech_4hz')
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
     result_id='irit_speech_4hz.segments',
@@ -164,7 +165,7 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
 
 
 # IRIT 4Hz with median filter
-irit4hz = get_processor('irit_speech_4hz')()
+irit4hz = get_processor('irit_speech_4hz')
 Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
     result_id='irit_speech_4hz.segments_median',
@@ -174,7 +175,7 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
 
 # IRIT Monopoly
 try:  # because of the dependencies on Aubio Pitch
-    iritmonopoly = get_processor('irit_monopoly')()
+    iritmonopoly = get_processor('irit_monopoly')
     DisplayMonopoly = DisplayAnalyzer.create(
         analyzer=iritmonopoly,
         result_id='irit_monopoly.segments',
@@ -186,17 +187,19 @@ except PIDError:
 
 # Limsi SAD : 2 models
 try:
-    limsi_sad_etape = get_processor('limsi_sad')(sad_model='etape')
-    limsi_sad_maya = get_processor('limsi_sad')(sad_model='maya')
+    limsi_sad = get_processor('limsi_sad')
+
     DisplayLIMSI_SAD_etape = DisplayAnalyzer.create(
-        analyzer=limsi_sad_etape,
+        analyzer=limsi_sad,
+        analyzer_parameters={'sad_model': 'etape'},
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_etape',
         grapher_name='LIMSI SAD with ETAPE model',
         background='waveform')
 
     DisplayLIMSI_SAD_maya = DisplayAnalyzer.create(
-        analyzer=limsi_sad_maya,
+        analyzer=limsi_sad,
+        analyzer_parameters={'sad_model': 'maya'},
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_maya',
         grapher_name='LIMSI SAD with Mayan model',
@@ -206,7 +209,7 @@ except PIDError:
     pass
 
 # IRIT Start Seg
-irit_startseg = get_processor('irit_startseg')()
+irit_startseg = get_processor('irit_startseg')
 DisplayIRIT_Start = DisplayAnalyzer.create(
     analyzer=irit_startseg,
     result_id='irit_startseg.segments',
