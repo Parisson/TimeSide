@@ -7,7 +7,7 @@ virtualenv:
 # command to prepare the system to install prerequisites or dependencies
 before_install:
  - sudo add-apt-repository -y ppa:donk/gstreamer
- - sudo add-apt-repository -y ppa:a.valentino/eotools  # because numexpr packages is too old in Ubuntu repository 
+ - sudo add-apt-repository -y ppa:bradner-computation/pipeline  # because numexpr packages is too old in Ubuntu repository 
  - sudo apt-get -qq update
  - sudo apt-get install python-setuptools
  - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
