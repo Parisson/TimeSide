@@ -50,7 +50,7 @@ setup(
         'mutagen',
         'pillow',
         'h5py',
-        'numexpr>=2.0.0'
+        'numexpr>=2.0.0',
         'tables',
         'pyyaml',
         'simplejson',
