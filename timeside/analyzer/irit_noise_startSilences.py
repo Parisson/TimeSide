@@ -26,9 +26,11 @@ from timeside.analyzer.core import Analyzer
 from timeside.analyzer.preprocessors import frames_adapter
 from timeside.api import IAnalyzer
 from timeside.analyzer.utils import MACHINE_EPSILON
+from timeside.tools.buffering import BufferTable
+
 
 import numpy
-from scipy.signal import firwin, lfilter
+from scipy.signal import firwin, lfilter, lfiltic
 from scipy.ndimage.morphology import binary_opening, binary_closing
 import os
 
@@ -46,7 +48,12 @@ class IRITStartSeg(Analyzer):
 
         self._save_lab = save_lab
 
-        self.energy = []
+        self._buffer = BufferTable()
+
+        # self.energy = []
+
+
+
         self.maxenergy = 0.002
         self.min_overlap = 20
         self.threshold = 0.1
@@ -59,16 +66,19 @@ class IRITStartSeg(Analyzer):
                                         samplerate,
                                         blocksize,
                                         totalframes)
-        lowFreq = 100.0
 
         self.input_blocksize = int(0.02 * samplerate)
         self.input_stepsize = int(0.008 * samplerate)
 
+
         sr = float(samplerate)
+        lowFreq = 100.0
         highFreq = sr / 2
         f1 = lowFreq / sr
         f2 = highFreq / sr
-        self.filtre = firwin(10, [f1, f2], pass_zero=False)
+        numtaps = 10
+        self.filtre = firwin(numtaps=numtaps, cutoff=[f1, f2], pass_zero=False)
+        self.filtre_z = lfiltic(b=self.filtre, a=1, y=0)  # Initial conditions
 
     @staticmethod
     @interfacedoc
@@ -94,9 +104,15 @@ class IRITStartSeg(Analyzer):
 
         '''
 
-        self.energy += [numpy.sqrt(numpy.mean(lfilter(self.filtre,
-                                                      1.0,
-                                                      frames.T[0]) ** 2))]
+        #self.energy += [numpy.sqrt(numpy.mean(lfilter(self.filtre,
+        #                                              1.0,
+        #                                              frames.T[0]) ** 2))]
+        # Compute energy
+        env, self.filtre_z = lfilter(b=self.filtre, a=1.0, axis=0,
+                                     x=frames[:, 0],
+                                     zi=self.filtre_z)
+        self._buffer.append('energy', numpy.sqrt(numpy.mean(env ** 2)))
+
         return frames, eod
 
     def post_process(self):
@@ -104,7 +120,7 @@ class IRITStartSeg(Analyzer):
 
         '''
         # Normalize energy
-        self.energy = numpy.array(self.energy)
+        self.energy = self._buffer['energy'][:]
         if self.energy.max():
             self.energy = self.energy / self.energy.max()
 
@@ -177,6 +193,9 @@ class IRITStartSeg(Analyzer):
         segs.data_object.duration = [(float(s[1] - s[0]) * step)
                                      for s in segsList]
         self.process_pipe.results.add(segs)
+
+    def release(self):
+        self._buffer.close()
 
 
 def computeDist2(proto, serie):
