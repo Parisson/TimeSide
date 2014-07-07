@@ -258,17 +258,11 @@ It depends on several other python modules and compiled librairies like GStreame
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet::
+For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on this page::
 
- $ echo "deb http://ftp.debian.org/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
- $ echo "deb http://debian.parisson.com/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
+ http://debian.parisson.com/debian/
 
- $ sudo apt-get update
- $ sudo apt-get install -t wheezy-backports python-timeside
-
-This method is known to be compatible with Debian 7 Wheezy with backports and Ubuntu 14.04 LTS. It will install additional binary packages from several audio feature extraction librairies like Aubio and Yaafe for which TimeSide has some nice processors.
-
-Note you can also use pip if you already have already satisfied all the binary dependencies::
+Note you can also use pip if you already have already satisfied all the dependencies::
 
  $ sudo pip install timeside
 
