@@ -58,7 +58,9 @@ setup(
         'django-extensions',
         'djangorestframework',
         'south',
+        'py_sonicvisualiser',
         ],
+
   platforms=['OS Independent'],
   license='Gnu Public License V2',
   classifiers = CLASSIFIERS,

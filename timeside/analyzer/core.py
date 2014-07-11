@@ -21,6 +21,7 @@
 #   Guillaume Pellerin <yomguy at parisson.com>
 #   Paul Brossier <piem@piem.org>
 #   Thomas Fillon <thomas  at parisson.com>
+#   David Doukhan <doukhan at limsi.fr>
 
 from __future__ import division
 
@@ -30,7 +31,7 @@ import numpy
 from collections import OrderedDict
 import h5py
 import h5tools
-
+from py_sonicvisualiser import SVEnv
 import os
 
 if 'DISPLAY' not in os.environ:
@@ -1049,6 +1050,28 @@ class AnalyzerResultContainer(dict):
 
         return results
 
+    def to_sonicvisualiser(self, output_file):
+        assert(len(self) > 0)
+        uri = self[self.keys()[0]].audio_metadata['uri']
+        assert(len(uri) > 7 and uri[:7] == 'file://')
+        sve = SVEnv.init_from_wave_file(uri[7:])
+        for k in self:
+            res = self[k]
+            time = res.time
+            data = res.data
+            if res.data_mode == 'value':
+                labels = None
+            elif res.data_mode == 'label':
+                labdic = res.label_metadata.label
+                labels = [labdic[k] for k in data]
+            else:
+                raise NotImplementedError()
+            if res.time_mode != 'segment':
+                sve.add_continuous_annotations(time, res.data, presentationName=k)
+            else:
+                sve.add_interval_annotations(time, res.duration, labels, values=res.data, presentationName=k)
+
+        sve.save(output_file)
 
 class Analyzer(Processor):
 
