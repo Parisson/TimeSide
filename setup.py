@@ -36,6 +36,7 @@ setup(
         'yaml',
         'simplejson',
         'scipy',
+        'py_sonicvisualiser',
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
