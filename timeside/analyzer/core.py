@@ -965,8 +965,8 @@ class AnalyzerResultContainer(dict):
         uri = self[self.keys()[0]].audio_metadata['uri']
         assert(len(uri) > 7 and uri[:7] == 'file://')
         sve = SVEnv.init_from_wave_file(uri[7:])
-        for k in self:
-            res = self[k]
+        for kres in self:
+            res = self[kres]
             time = res.time
             data = res.data
             if res.data_mode == 'value':
@@ -977,9 +977,9 @@ class AnalyzerResultContainer(dict):
             else:
                 raise NotImplementedError()
             if res.time_mode != 'segment':
-                sve.add_continuous_annotations(time, res.data, presentationName=k)
+                sve.add_continuous_annotations(time, res.data, presentationName=kres)
             else:
-                sve.add_interval_annotations(time, res.duration, labels, values=res.data, presentationName=k)
+                sve.add_interval_annotations(time, res.duration, labels, values=res.data, presentationName=kres)
 
         sve.save(output_file)
 
