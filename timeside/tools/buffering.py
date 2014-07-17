@@ -53,12 +53,12 @@ class BufferTable(object):
         except tables.exceptions.NoSuchNodeError:
             if name not in self.array_names:
                 self.array_names.append(name)
-            self.fileh.create_earray(where=self.fileh.root,
+            self.fileh.createEArray(where=self.fileh.root,
                                      name=name,
                                      obj=[new_array])
 
     def close(self):
         for name in self.array_names:
-            self.fileh.remove_node(self.fileh.root, name)
+            self.fileh.removeNode(self.fileh.root, name)
         self.fileh.close()
         self._tempfile.close()
