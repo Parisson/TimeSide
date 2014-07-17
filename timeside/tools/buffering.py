@@ -29,7 +29,7 @@ class BufferTable(object):
         self._tempfile = NamedTemporaryFile(mode='w', suffix='.h5',
                                             prefix='ts_buf_',
                                             delete=True)
-        self.fileh = tables.open_file(self._tempfile.name, mode='w')
+        self.fileh = tables.openFile(self._tempfile.name, mode='w')
 
         if not array_names:
             array_names = []
