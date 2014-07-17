@@ -14,7 +14,7 @@ class TestAnalyzerResult(unittest.TestCase):
     """ test AnalyzerResult """
 
     def setUp(self):
-        self.result = AnalyzerResult.factory(data_mode='value',
+        self.result = AnalyzerResult(data_mode='value',
                                              time_mode='framewise')
 
         from datetime import datetime
@@ -190,7 +190,10 @@ class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
             print '%15s' % 'from yaml:',
             print d_yaml
         #for i in range(len(d_yaml)):
-        self.assertEqual(results, d_yaml)
+        for res in results:
+            for key in res:
+                self.assertEqual(results[res][key],
+                                     d_yaml[res][key])
 
 
 class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
@@ -229,7 +232,10 @@ class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
             print '%15s' % 'from json:',
 
         #for i in range(len(d_json)):
-        self.assertEqual(d_json, results)
+        for res in results:
+            for key in res:
+                self.assertEqual(results[res][key],
+                                     d_json[res][key])
 
 
 class TestAnalyzerResultAsDict(TestAnalyzerResultGoodType):

@@ -113,7 +113,6 @@ def melFilterBank(nbFilters, fftLen, sr):
                         The filter bank can be applied by matrix multiplication
                         (Use numpy *dot* function).
     '''
-
     fh = float(sr) / 2.0
     mh = 2595 * np.log10(1 + fh / 700)
 
@@ -223,3 +222,15 @@ def entropy(serie, nbins=10, base=np.exp(1), approach='unbiased'):
         nbias = nbias / np.log(base)
         sigma = sigma / np.log(base)
         return estimate
+
+
+def nextpow2(value):
+    """Compute the nearest power of two greater or equal to the input value"""
+    if value >= 1:
+        return 2**np.ceil(np.log2(value)).astype(int)
+    elif value > 0:
+        return 1
+    elif value == 0:
+        return 0
+    else:
+        raise ValueError('Value must be positive')

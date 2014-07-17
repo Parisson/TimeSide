@@ -24,7 +24,7 @@ from timeside.analyzer.core import Analyzer
 from timeside.analyzer.utils import melFilterBank, computeModulation
 from timeside.analyzer.utils import segmentFromValues
 from timeside.api import IAnalyzer
-from numpy import array, hamming, dot, mean, float
+from numpy import array, hamming, dot, mean, float, mod
 from numpy.fft import rfft
 from scipy.signal import firwin, lfilter
 
@@ -49,11 +49,10 @@ class IRITSpeech4Hz(Analyzer):
     implements(IAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None,
-              totalframes=None):
-        super(IRITSpeech4Hz, self).setup(
-            channels, samplerate, blocksize, totalframes)
+    def __init__(self, medfilt_duration=5):
+        super(IRITSpeech4Hz, self).__init__()
         self.energy4hz = []
+
         # Classification
         self.threshold = 2.0
 
@@ -63,9 +62,18 @@ class IRITSpeech4Hz(Analyzer):
         self.orderFilter = 100
 
         self.normalizeEnergy = True
+        self.modulLen = 2.0
+
+        # Median filter duration in second
+        self.medfilt_duration = medfilt_duration
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
+        super(IRITSpeech4Hz, self).setup(
+            channels, samplerate, blocksize, totalframes)
         self.nFFT = 2048
         self.nbFilters = 30
-        self.modulLen = 2.0
         self.melFilter = melFilterBank(self.nbFilters, self.nFFT, samplerate)
 
     @staticmethod
@@ -143,16 +151,21 @@ class IRITSpeech4Hz(Analyzer):
         convert = {False: 0, True: 1}
         label = {0: 'nonSpeech', 1: 'Speech'}
 
-        segList = segmentFromValues(modEnergyValue > self.threshold)
+        decision = modEnergyValue > self.threshold
+
+        segList = segmentFromValues(decision)
         # Hint : Median filtering could imrove smoothness of the result
-        # from scipy.signal import medfilt
-        # segList = segmentFromValues(medfilt(modEnergyValue > self.threshold, 31))
+        from scipy.signal import medfilt
+        output_samplerate = float(self.samplerate()) / self.input_stepsize
+        N = self.medfilt_duration * output_samplerate
+        N += 1 - mod(N, 2)  # Make N odd
+        segList_filt = segmentFromValues(medfilt(decision, N))
 
         segs = self.new_result(data_mode='label', time_mode='segment')
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
 
-        segs.label_metadata.label = label
+        segs.data_object.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]) * self.blocksize() /
@@ -163,5 +176,24 @@ class IRITSpeech4Hz(Analyzer):
                                      for s in segList]
 
         self.process_pipe.results.add(segs)
+
+        # Median filter on decision
+        segs = self.new_result(data_mode='label', time_mode='segment')
+        segs.id_metadata.id += '.' + 'segments_median'
+        segs.id_metadata.name += ' ' + 'Segments after Median filtering'
+
+        segs.data_object.label_metadata.label = label
+
+        segs.data_object.label = [convert[s[2]] for s in segList_filt]
+        segs.data_object.time = [(float(s[0]) * self.blocksize() /
+                                 self.samplerate())
+                                 for s in segList_filt]
+        segs.data_object.duration = [(float(s[1] - s[0] + 1) * self.blocksize() /
+                                     self.samplerate())
+                                     for s in segList_filt]
+
+        self.process_pipe.results.add(segs)
+
+
 
         return

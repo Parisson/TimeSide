@@ -115,11 +115,11 @@ class LimsiSad(Analyzer):
         # return the unit of the data dB, St, ...
         return "Log Probability difference"
 
+    @property
+    def force_samplerate(self):
+        return 16000
+
     def process(self, frames, eod=False):
-        if self.input_samplerate != 16000:
-            raise Exception(
-                '%s requires 16000 input sample rate: %d provided' %
-                (self.__class__.__name__, self.input_samplerate))
         return frames, eod
 
     def post_process(self):

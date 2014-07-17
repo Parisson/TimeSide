@@ -96,7 +96,7 @@ class AubioTemporal(Analyzer):
         onsets.id_metadata.unit = 's'
         onsets.data_object.time = self.onsets
         onsets.data_object.label = numpy.ones(len(self.onsets))
-        onsets.label_metadata.label = {1: 'Onset'}
+        onsets.data_object.label_metadata.label = {1: 'Onset'}
 
         self.process_pipe.results.add(onsets)
 
@@ -128,7 +128,7 @@ class AubioTemporal(Analyzer):
         beats.id_metadata.unit = "s"
         beats.data_object.time = self.beats
         beats.data_object.label = numpy.ones(len(self.beats))
-        beats.label_metadata.label = {1: 'Beat'}
+        beats.data_object.label_metadata.label = {1: 'Beat'}
 
         self.process_pipe.results.add(beats)
 
