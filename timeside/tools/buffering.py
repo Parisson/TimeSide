@@ -53,9 +53,20 @@ class BufferTable(object):
         except tables.exceptions.NoSuchNodeError:
             if name not in self.array_names:
                 self.array_names.append(name)
+             # The following is compatible with pytables 3 only
+             #self.fileh.create_earray(where=self.fileh.root,
+             #                         name=name,
+             #                         obj=[new_array])
+            atom = tables.Atom.from_dtype(new_array.dtype)
+            if len(new_array.shape) > 1:
+                shape = (0, new_array.shape[1])
+            else:
+                shape = (0,)
             self.fileh.createEArray(where=self.fileh.root,
-                                     name=name,
-                                     obj=[new_array])
+                                    name=name,
+                                    atom=atom,
+                                    shape=shape)
+            self.append(name, new_array)
 
     def close(self):
         for name in self.array_names:
