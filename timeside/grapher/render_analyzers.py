@@ -59,7 +59,7 @@ class DisplayAnalyzer(Grapher):
         fg_image = parent_result._render_PIL((self.image_width,
                                               self.image_height), self.dpi)
         if self._background:
-            bg_result = self.process_pipe.results[self._bg_id]
+            bg_result = pipe_result.get_result_by_id(self._bg_id)
             bg_image = bg_result._render_PIL((self.image_width,
                                               self.image_height), self.dpi)
             # convert image to grayscale
