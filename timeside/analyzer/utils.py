@@ -113,7 +113,6 @@ def melFilterBank(nbFilters, fftLen, sr):
                         The filter bank can be applied by matrix multiplication
                         (Use numpy *dot* function).
     '''
-
     fh = float(sr) / 2.0
     mh = 2595 * np.log10(1 + fh / 700)
 

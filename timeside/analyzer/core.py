@@ -27,7 +27,7 @@ from __future__ import division
 
 from timeside.core import Processor
 import timeside  # import __version__
-import numpy
+import numpy as np
 from collections import OrderedDict
 import h5py
 import h5tools
@@ -64,8 +64,8 @@ numpy_data_types = [
     #'complex128',
     #'complex64',
 ]
-numpy_data_types = map(lambda x: getattr(numpy, x), numpy_data_types)
-#numpy_data_types += [numpy.ndarray]
+numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
+#numpy_data_types += [np.ndarray]
 
 
 class MetadataObject(object):
@@ -118,7 +118,11 @@ class MetadataObject(object):
         if name not in self._default_value.keys():
             raise AttributeError("%s is not a valid attribute in %s" %
                                  (name, self.__class__.__name__))
-        super(MetadataObject, self).__setattr__(name, value)
+        try:
+            super(MetadataObject, self).__setattr__(name, value)
+        except AttributeError:
+            print name, value
+            raise AttributeError
 
     def __delattr__(self, name):
         if name in self._default_value.keys():
@@ -197,7 +201,7 @@ class MetadataObject(object):
 class IdMetadata(MetadataObject):
 
     '''
-    Metadata object to handle Audio related Metadata
+    Metadata object to handle ID related Metadata
 
         Attributes
         ----------
@@ -209,7 +213,8 @@ class IdMetadata(MetadataObject):
             date and time in ISO  8601 format YYYY-MM-DDTHH:MM:SS
         version : str
         author : str
-        uuid : str
+        proc_uuid : str
+        res_uuid : str
     '''
     # TODO :
     # - (long) description --> à mettre dans l'API Processor
@@ -222,7 +227,8 @@ class IdMetadata(MetadataObject):
                                   ('date', None),
                                   ('version', None),
                                   ('author', None),
-                                  ('uuid', None)])
+                                  ('proc_uuid', None),
+                                  ('res_uuid', None)])
 
     def __setattr__(self, name, value):
         if value is None:
@@ -334,7 +340,6 @@ class FrameMetadata(MetadataObject):
 
 
 class DataObject(MetadataObject):
-
     '''
     Metadata object to handle data related Metadata
 
@@ -359,7 +364,7 @@ class DataObject(MetadataObject):
 
         # Set Data with the proper type
         if name == 'value':
-            value = numpy.asarray(value)
+            value = np.asarray(value)
             if value.dtype.type not in numpy_data_types:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
@@ -369,15 +374,15 @@ class DataObject(MetadataObject):
 
         elif name == 'label':
             try:
-                value = numpy.asarray(value, dtype='int')
+                value = np.asarray(value, dtype='int')
             except ValueError:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
                     (value.dtype.type, name))
 
-        elif name in ['time', 'duration']:
+        elif name in ['time', 'duration', 'y_value']:
             try:
-                value = numpy.asfarray(value)
+                value = np.asfarray(value)
             except ValueError:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
@@ -388,19 +393,28 @@ class DataObject(MetadataObject):
         super(DataObject, self).__setattr__(name, value)
 
     def __eq__(self, other):
+        # TODO fix this
         try:
             return (isinstance(other, self.__class__) and
-                    all([numpy.array_equal(self[key], other[key])
+                    all([np.array_equal(self[key], other[key])
                          for key in self.keys()]))
         except AttributeError:
             return (isinstance(other, self.__class__) and
-                    all([bool(numpy.logical_and.reduce((self[key] == other[key]).ravel()))
+                    all([bool(np.logical_and.reduce((self[key] == other[key]).ravel()))
                          for key in self.keys()]))
 
     def __ne__(self, other):
         return not(isinstance(other, self.__class__) or
-                   any([numpy.array_equal(self[key], other[key])
+                   any([np.array_equal(self[key], other[key])
                         for key in self.keys()]))
+
+    def as_dict(self):
+        as_dict = super(DataObject, self).as_dict()
+        for key in ['frame_metadata', 'label_metadata']:
+            if key in as_dict and not isinstance(as_dict[key], dict):
+                as_dict[key] = as_dict[key].as_dict()
+
+        return as_dict
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
@@ -409,7 +423,9 @@ class DataObject(MetadataObject):
         for key in self.keys():
             child = ET.SubElement(root, key)
             value = getattr(self, key)
-            if value not in [None, []]:
+            if hasattr(value, 'to_xml'):
+                child = value.to_xml()
+            elif value not in [None, []]:
                 child.text = repr(value.tolist())
                 child.set('dtype', value.dtype.__str__())
 
@@ -422,7 +438,7 @@ class DataObject(MetadataObject):
         for child in root:
             key = child.tag
             if child.text:
-                self[key] = numpy.asarray(ast.literal_eval(child.text),
+                self[key] = np.asarray(ast.literal_eval(child.text),
                                           dtype=child.get('dtype'))
 
     def to_hdf5(self, h5group):
@@ -430,14 +446,17 @@ class DataObject(MetadataObject):
         for key in self.keys():
             if self.__getattribute__(key) is None:
                 continue
-            if self.__getattribute__(key).dtype == 'object':
+            if hasattr(self.__getattribute__(key), 'to_hdf5'):
+                subgroup = h5group.create_group(key)
+                self.__getattribute__(key).to_hdf5(subgroup)
+            elif self.__getattribute__(key).dtype == 'object':
                 # Handle numpy type = object as vlen string
                 h5group.create_dataset(key,
                                        data=self.__getattribute__(
                                            key).tolist().__repr__(),
                                        dtype=h5py.special_dtype(vlen=str))
             else:
-                if numpy.prod(self.__getattribute__(key).shape):
+                if np.prod(self.__getattribute__(key).shape):
                     maxshape = None
                 else:
                     maxshape = (None,)
@@ -446,6 +465,9 @@ class DataObject(MetadataObject):
 
     def from_hdf5(self, h5group):
         for key, dataset in h5group.items():
+            if isinstance(dataset, h5py.Group):
+                self[key].from_hdf5(dataset)
+                continue
             # Load value from the hdf5 dataset and store in data
             # FIXME : the following conditional statement is to prevent
             # reading an empty dataset.
@@ -492,6 +514,25 @@ class AnalyzerParameters(dict):
         h5tools.dict_from_hdf5(self, h5group)
 
 
+def data_objet_class(data_mode='value', time_mode='framewise'):
+    """
+    Factory function for Analyzer result
+    """
+    classes_table = {('value', 'global'): GlobalValueObject,
+                     ('value', 'event'): EventValueObject,
+                     ('value', 'segment'): SegmentValueObject,
+                     ('value', 'framewise'): FrameValueObject,
+                     ('label', 'global'): GlobalLabelObject,
+                     ('label', 'event'): EventLabelObject,
+                     ('label', 'segment'): SegmentLabelObject,
+                     ('label', 'framewise'): FrameLabelObject}
+
+    try:
+        return classes_table[(data_mode, time_mode)]
+    except KeyError as e:
+        raise ValueError('Wrong arguments')
+
+
 class AnalyzerResult(MetadataObject):
 
     """
@@ -526,34 +567,21 @@ class AnalyzerResult(MetadataObject):
     _default_value = OrderedDict([('id_metadata', None),
                                   ('data_object', None),
                                   ('audio_metadata', None),
-                                  ('frame_metadata', None),
-                                  ('label_metadata', None),
                                   ('parameters', None)
                                   ])
 
-    def __init__(self, data_mode=None, time_mode=None):
+    def __init__(self, data_mode='value', time_mode='framewise'):
         super(AnalyzerResult, self).__init__()
 
+        self._data_mode = data_mode
+        self._time_mode = time_mode
         self.id_metadata = IdMetadata()
-        self.data_object = DataObject()
         self.audio_metadata = AudioMetadata()
-        self.frame_metadata = FrameMetadata()
-        self.label_metadata = LabelMetadata()
         self.parameters = AnalyzerParameters()
+        self.data_object = data_objet_class(data_mode, time_mode)()
 
-    @staticmethod
-    def factory(data_mode='value', time_mode='framewise'):
-        """
-        Factory function for Analyzer result
-        """
-        for result_cls in AnalyzerResult.__subclasses__():
-            if (hasattr(result_cls, '_time_mode') and
-                hasattr(result_cls, '_data_mode') and
-                (result_cls._data_mode, result_cls._time_mode) == (data_mode,
-                                                                   time_mode)):
-                return result_cls()
-        print data_mode, time_mode
-        raise ValueError('Wrong arguments')
+#        self.label_metadata = LabelMetadata()
+
 
     def __setattr__(self, name, value):
         if name in ['_data_mode', '_time_mode']:
@@ -606,7 +634,7 @@ class AnalyzerResult(MetadataObject):
 
         data_mode_child = root.find('data_mode')
         time_mode_child = root.find('time_mode')
-        result = AnalyzerResult.factory(data_mode=data_mode_child.text,
+        result = AnalyzerResult(data_mode=data_mode_child.text,
                                         time_mode=time_mode_child.text)
         for child in root:
             key = child.tag
@@ -618,7 +646,7 @@ class AnalyzerResult(MetadataObject):
 
     def to_hdf5(self, h5_file):
         # Save results in HDF5 Dataset
-        group = h5_file.create_group(self.id_metadata.id)
+        group = h5_file.create_group(self.id_metadata.res_uuid)
         group.attrs['data_mode'] = self.__getattribute__('data_mode')
         group.attrs['time_mode'] = self.__getattribute__('time_mode')
         for key in self.keys():
@@ -630,7 +658,7 @@ class AnalyzerResult(MetadataObject):
     @staticmethod
     def from_hdf5(h5group):
         # Read Sub-Group
-        result = AnalyzerResult.factory(data_mode=h5group.attrs['data_mode'],
+        result = AnalyzerResult(data_mode=h5group.attrs['data_mode'],
                                         time_mode=h5group.attrs['time_mode'])
         for subgroup_name, h5subgroup in h5group.items():
             result[subgroup_name].from_hdf5(h5subgroup)
@@ -650,7 +678,7 @@ class AnalyzerResult(MetadataObject):
         # see http://stackoverflow.com/a/8881973
 
         fig, ax = plt.subplots()
-        self._render_plot(ax)
+        self.data_object._render_plot(ax)
         return fig
 
     def _render_PIL(self, size=(1024, 256), dpi=80):
@@ -664,7 +692,7 @@ class AnalyzerResult(MetadataObject):
 
         ax = fig.add_axes([0, 0, 1, 1], frame_on=False)
 
-        self._render_plot(ax)
+        self.data_object._render_plot(ax)
 
         ax.autoscale(axis='x', tight=True)
 
@@ -687,15 +715,21 @@ class AnalyzerResult(MetadataObject):
 
     @property
     def data(self):
-        raise NotImplementedError
+        return self.data_object.data
 
     @property
     def time(self):
-        raise NotImplementedError
+        if self._time_mode == 'global':
+            return self.audio_metadata.start
+        else:
+            return self.audio_metadata.start + self.data_object.time
 
     @property
     def duration(self):
-        raise NotImplementedError
+        if self._time_mode == 'global':
+            return self.audio_metadata.duration
+        else:
+            return self.data_object.duration
 
     @property
     def id(self):
@@ -710,49 +744,35 @@ class AnalyzerResult(MetadataObject):
         return self.id_metadata.unit
 
 
-class ValueObject(object):
-    _data_mode = 'value'
-
-    def __init__(self):
-        super(ValueObject, self).__init__()
-        del self.data_object.label
-        del self.label_metadata
+class ValueObject(DataObject):
 
     @property
     def data(self):
-        return self.data_object.value
+        return self.value
 
     @property
     def properties(self):
-        return dict(mean=numpy.mean(self.data, axis=0),
-                    std=numpy.std(self.data, axis=0, ddof=1),
-                    median=numpy.median(self.data, axis=0),
-                    max=numpy.max(self.data, axis=0),
-                    min=numpy.min(self.data, axis=0),
+        return dict(mean=np.mean(self.data, axis=0),
+                    std=np.std(self.data, axis=0, ddof=1),
+                    median=np.median(self.data, axis=0),
+                    max=np.max(self.data, axis=0),
+                    min=np.min(self.data, axis=0),
                     shape=self.data.shape,
                     )
 
 
-class LabelObject(object):
-    _data_mode = 'label'
+class LabelObject(DataObject):
 
     def __init__(self):
         super(LabelObject, self).__init__()
-        del self.data_object.value
+        self.label_metadata = LabelMetadata()
 
     @property
     def data(self):
-        return self.data_object.label
+        return self.label
 
 
-class GlobalObject(object):
-    _time_mode = 'global'
-
-    def __init__(self):
-        super(GlobalObject, self).__init__()
-        del self.frame_metadata
-        del self.data_object.time
-        del self.data_object.duration
+class GlobalObject(DataObject):
 
     @property
     def time(self):
@@ -763,88 +783,97 @@ class GlobalObject(object):
         return self.audio_metadata.duration
 
 
-class FramewiseObject(object):
-    _time_mode = 'framewise'
+class FramewiseObject(DataObject):
 
     def __init__(self):
         super(FramewiseObject, self).__init__()
-        del self.data_object.time
-        del self.data_object.duration
+        self.frame_metadata = FrameMetadata()
 
     @property
     def time(self):
-        return (self.audio_metadata.start +
-                self.frame_metadata.stepsize /
-                self.frame_metadata.samplerate *
-                numpy.arange(0, len(self)))
+        return (np.arange(0, len(self.data)*self.frame_metadata.stepsize,
+                             self.frame_metadata.stepsize) /
+                self.frame_metadata.samplerate)
 
     @property
     def duration(self):
         return (self.frame_metadata.blocksize / self.frame_metadata.samplerate
-                * numpy.ones(len(self)))
+                * np.ones(len(self.data)))
 
 
-class EventObject(object):
-    _time_mode = 'event'
-
-    def __init__(self):
-        super(EventObject, self).__init__()
-        del self.frame_metadata
-        del self.data_object.duration
-
-    @property
-    def time(self):
-        return self.audio_metadata.start + self.data_object.time
+class EventObject(DataObject):
 
     @property
     def duration(self):
-        return numpy.zeros(len(self))
+        return np.zeros(len(self.data))
 
     def _render_plot(self, ax):
         ax.stem(self.time, self.data)
 
 
-class SegmentObject(EventObject):
-    _time_mode = 'segment'
-
-    def __init__(self):
-        super(EventObject, self).__init__()
-        del self.frame_metadata
-
-    @property
-    def duration(self):
-        return self.data_object.duration
-
-
-class GlobalValueResult(ValueObject, GlobalObject, AnalyzerResult):
+class SegmentObject(DataObject):
     pass
 
 
-class GlobalLabelResult(LabelObject, GlobalObject, AnalyzerResult):
-    pass
+class GlobalValueObject(ValueObject, GlobalObject):
+    # Define default values
+    _default_value = OrderedDict([('value', None),
+                                  ('y_value', None)])
 
 
-class FrameValueResult(ValueObject, FramewiseObject, AnalyzerResult):
+class GlobalLabelObject(LabelObject, GlobalObject):
+    # Define default values
+    _default_value = OrderedDict([('label', None),
+                                  ('label_metadata', None)])
+
+
+class FrameValueObject(ValueObject, FramewiseObject):
+    # Define default values
+    _default_value = OrderedDict([('value', None),
+                                  ('y_value', None),
+                                  ('frame_metadata', None)])
 
     def _render_plot(self, ax):
-        ax.plot(self.time, self.data)
+        if not self.y_value.size:
+            ax.plot(self.time, self.data)
+        else:
+            ax.imshow(20 * np.log10(self.data.T),
+                      origin='lower',
+                      extent=[self.time[0], self.time[-1],
+                              self.y_value[0], self.y_value[-1]],
+                      aspect='auto')
 
 
-class FrameLabelResult(LabelObject, FramewiseObject, AnalyzerResult):
+class FrameLabelObject(LabelObject, FramewiseObject):
+    # Define default values
+    _default_value = OrderedDict([('label', None),
+                                  ('label_metadata', None),
+                                  ('frame_metadata', None)])
 
     def _render_plot(self, ax):
         pass
 
 
-class EventValueResult(ValueObject, EventObject, AnalyzerResult):
-    pass
+class EventValueObject(ValueObject, EventObject):
+    # Define default values
+    _default_value = OrderedDict([('value', None),
+                                  ('y_value', None),
+                                  ('time', None)])
 
 
-class EventLabelResult(LabelObject, EventObject, AnalyzerResult):
-    pass
+class EventLabelObject(LabelObject, EventObject, DataObject):
+    # Define default values
+    _default_value = OrderedDict([('label', None),
+                                  ('label_metadata', None),
+                                  ('time', None)])
 
 
-class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
+class SegmentValueObject(ValueObject, SegmentObject):
+    # Define default values
+    _default_value = OrderedDict([('value', None),
+                                  ('y_value', None),
+                                  ('time', None),
+                                  ('duration', None)])
 
     def _render_plot(self, ax):
         for time, value in (self.time, self.data):
@@ -852,16 +881,26 @@ class SegmentValueResult(ValueObject, SegmentObject, AnalyzerResult):
             # TODO : check value shape !!!
 
 
-class SegmentLabelResult(LabelObject, SegmentObject, AnalyzerResult):
+class SegmentLabelObject(LabelObject, SegmentObject):
+    # Define default values
+    _default_value = OrderedDict([('label', None),
+                                  ('label_metadata', None),
+                                  ('time', None),
+                                  ('duration', None)])
 
     def _render_plot(self, ax):
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
-        for key in self.label_metadata.label.keys():
+        artist = {}
+        for key, label in self.label_metadata.label.items():
             ax_color[key] = colors.next()
+            artist[key] = plt.axvspan(0, 0, color=ax_color[key], alpha=0.3)
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
+
+        #Create legend from custom artist/label lists
+        ax.legend(artist.values(), self.label_metadata.label.values())
 
 
 class AnalyzerResultContainer(dict):
@@ -875,7 +914,7 @@ class AnalyzerResultContainer(dict):
     >>> a = Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
-    FrameValueResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192), parameters={})
+    AnalyzerResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', proc_uuid='...', res_uuid='...'), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri='.../sweep.mp3', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
     '''
 
@@ -893,9 +932,21 @@ class AnalyzerResultContainer(dict):
         if not isinstance(analyzer_result, AnalyzerResult):
             raise TypeError('only AnalyzerResult can be added')
 
-        self.__setitem__(analyzer_result.id_metadata.id,
-                         analyzer_result)
-        #self.results += [analyzer_result]
+        # Update result uuid by adding a suffix uuid
+        # It enable to deal with multiple results for the same processor uuid
+        uuid = analyzer_result.id_metadata.proc_uuid
+        count = 0
+        for res_uuid in self.keys():
+            count += res_uuid.startswith(uuid)
+        res_uuid = '-'.join([uuid, format(count, '02x')])
+        analyzer_result.id_metadata.res_uuid = res_uuid
+
+        self.__setitem__(res_uuid, analyzer_result)
+
+    def get_result_by_id(self, result_id):
+        for res in self.values():
+            if res.id_metadata.id == result_id:
+                return res
 
     def to_xml(self, output_file=None):
 
@@ -933,11 +984,11 @@ class AnalyzerResultContainer(dict):
 
         # Define Specialize JSON encoder for numpy array
         def NumpyArrayEncoder(obj):
-            if isinstance(obj, numpy.ndarray):
+            if isinstance(obj, np.ndarray):
                 return {'numpyArray': obj.tolist(),
                         'dtype': obj.dtype.__str__()}
-            elif isinstance(obj, numpy.generic):
-                return numpy.asscalar(obj)
+            elif isinstance(obj, np.generic):
+                return np.asscalar(obj)
             else:
                 print type(obj)
                 raise TypeError(repr(obj) + " is not JSON serializable")
@@ -956,7 +1007,7 @@ class AnalyzerResultContainer(dict):
         # Define Specialize JSON decoder for numpy array
         def NumpyArrayDecoder(obj):
             if isinstance(obj, dict) and 'numpyArray' in obj:
-                numpy_obj = numpy.asarray(obj['numpyArray'],
+                numpy_obj = np.asarray(obj['numpyArray'],
                                           dtype=obj['dtype'])
                 return numpy_obj
             else:
@@ -966,7 +1017,7 @@ class AnalyzerResultContainer(dict):
         results = AnalyzerResultContainer()
         for res_json in results_json:
 
-            res = AnalyzerResult.factory(data_mode=res_json['data_mode'],
+            res = AnalyzerResult(data_mode=res_json['data_mode'],
                                          time_mode=res_json['time_mode'])
             for key in res_json.keys():
                 if key not in ['data_mode', 'time_mode']:
@@ -985,7 +1036,7 @@ class AnalyzerResultContainer(dict):
                                             {'dtype': obj.dtype.__str__(),
                                              'array': obj.tolist()})
 
-        yaml.add_representer(numpy.ndarray, numpyArray_representer)
+        yaml.add_representer(np.ndarray, numpyArray_representer)
 
         yaml_str = yaml.dump([res.as_dict() for res in self.values()])
         if output_file:
@@ -1000,14 +1051,14 @@ class AnalyzerResultContainer(dict):
         # Define Specialize Yaml encoder for numpy array
         def numpyArray_constructor(loader, node):
             mapping = loader.construct_mapping(node, deep=True)
-            return numpy.asarray(mapping['array'], dtype=mapping['dtype'])
+            return np.asarray(mapping['array'], dtype=mapping['dtype'])
 
         yaml.add_constructor(u'!numpyArray', numpyArray_constructor)
 
         results_yaml = yaml.load(yaml_str)
         results = AnalyzerResultContainer()
         for res_yaml in results_yaml:
-            res = AnalyzerResult.factory(data_mode=res_yaml['data_mode'],
+            res = AnalyzerResult(data_mode=res_yaml['data_mode'],
                                          time_mode=res_yaml['time_mode'])
             for key in res_yaml.keys():
                 if key not in ['data_mode', 'time_mode']:
@@ -1017,13 +1068,13 @@ class AnalyzerResultContainer(dict):
 
     def to_numpy(self, output_file=None):
         if output_file:
-            numpy.save(output_file, self)
+            np.save(output_file, self)
         else:
             return self
 
     @staticmethod
     def from_numpy(input_file):
-        return numpy.load(input_file)
+        return np.load(input_file)
 
     def to_hdf5(self, output_file):
         # Open HDF5 file and save dataset (overwrite any existing file)
@@ -1099,8 +1150,9 @@ class Analyzer(Processor):
     @property
     def results(self):
         return AnalyzerResultContainer(
-            [self.process_pipe.results[key] for key in self.process_pipe.results.keys()
-             if key.split('.')[0] == self.id()])
+            [self.process_pipe.results[key]
+             for key in self.process_pipe.results.keys()
+             if key.startswith(self.uuid())])
 
     @staticmethod
     def id():
@@ -1131,7 +1183,7 @@ class Analyzer(Processor):
 
         from datetime import datetime
 
-        result = AnalyzerResult.factory(data_mode=data_mode,
+        result = AnalyzerResult(data_mode=data_mode,
                                         time_mode=time_mode)
 
         # Automatically write known metadata
@@ -1142,7 +1194,7 @@ class Analyzer(Processor):
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()
         result.id_metadata.unit = self.unit()
-        result.id_metadata.uuid = self.uuid()
+        result.id_metadata.proc_uuid = self.uuid()
 
         result.audio_metadata.uri = self.mediainfo()['uri']
         result.audio_metadata.sha1 = self.mediainfo()['sha1']
@@ -1152,9 +1204,9 @@ class Analyzer(Processor):
         result.audio_metadata.channels = self.channels()
 
         if time_mode == 'framewise':
-            result.frame_metadata.samplerate = self.result_samplerate
-            result.frame_metadata.blocksize = self.result_blocksize
-            result.frame_metadata.stepsize = self.result_stepsize
+            result.data_object.frame_metadata.samplerate = self.result_samplerate
+            result.data_object.frame_metadata.blocksize = self.result_blocksize
+            result.data_object.frame_metadata.stepsize = self.result_stepsize
 
         return result
 

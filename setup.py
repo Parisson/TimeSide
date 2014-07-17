@@ -50,6 +50,7 @@ setup(
         'mutagen',
         'pillow',
         'h5py',
+        'tables',
         'pyyaml',
         'simplejson',
         'scipy',
@@ -58,7 +59,8 @@ setup(
         'django-extensions',
         'djangorestframework',
         'south',
-        'py_sonicvisualiser',
+<        'py_sonicvisualiser',
+        'traits'
         ],
 
   platforms=['OS Independent'],

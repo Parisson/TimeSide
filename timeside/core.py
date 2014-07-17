@@ -22,6 +22,7 @@ from .component import Component, MetaComponent, abstract
 from .component import implements, implementations, interfacedoc
 from .api import IProcessor
 from .exceptions import Error, PIDError, ApiError
+from .tools.parameters import HasParam
 
 import re
 import numpy
@@ -44,7 +45,7 @@ class MetaProcessor(MetaComponent):
     valid_id = re.compile("^[a-z][_a-z0-9]*$")
 
     def __new__(cls, name, bases, d):
-        new_class = MetaComponent.__new__(cls, name, bases, d)
+        new_class = super(MetaProcessor, cls).__new__(cls, name, bases, d)
         if new_class in implementations(IProcessor):
             id = str(new_class.id())
             if id in _processors:
@@ -67,7 +68,7 @@ class MetaProcessor(MetaComponent):
         return new_class
 
 
-class Processor(Component):
+class Processor(Component, HasParam):
 
     """Base component class of all processors
 
@@ -109,6 +110,14 @@ class Processor(Component):
         if not hasattr(self, 'input_stepsize'):
             self.input_stepsize = self.source_blocksize
 
+        # Check samplerate specification if any
+        if self.force_samplerate:
+            if self.input_samplerate != self.force_samplerate:
+                raise ValueError(
+                    '%s requires %d input sample rate: %d provided' %
+                    (self.__class__.__name__, self.force_samplerate,
+                     self.input_samplerate))
+
     # default channels(), samplerate() and blocksize() implementations returns
     # the source characteristics, but processors may change this behaviour by
     # overloading those methods
@@ -147,6 +156,10 @@ class Processor(Component):
     @interfacedoc
     def uuid(self):
         return str(self.UUID)
+
+    @property
+    def force_samplerate(self):
+        return None
 
     def __del__(self):
         self.release()
@@ -302,6 +315,21 @@ class ProcessPipe(object):
 
         source = self.processors[0]
         items = self.processors[1:]
+
+        # Check if any processor in items need to force the asmplerate
+        force_samplerate = set([item.force_samplerate for item in items
+                                if item.force_samplerate])
+        if force_samplerate:
+            if len(force_samplerate) > 1:
+                raise(ValueError,
+                      "Some processors specify different samplerate")
+            force_samplerate = force_samplerate.pop()
+
+            if samplerate and samplerate != force_samplerate:
+                raise(ValueError, "A processor try to force the samplerate")
+
+            samplerate = force_samplerate
+
         source.setup(channels=channels, samplerate=samplerate,
                      blocksize=blocksize)
         source.SIG_STOP = False
@@ -354,7 +382,6 @@ class ProcessPipe(object):
         # Release processors
         for item in items:
             item.release()
-            self.processors.remove(item)
 
         self._is_running = False
 

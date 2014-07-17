@@ -87,7 +87,8 @@ class IRITMonopoly(Analyzer):
 
         '''
         aubio_res_id = 'aubio_pitch.pitch_confidence'
-        pitch_confidences = self.process_pipe.results[aubio_res_id].data
+        pipe_results = self.process_pipe.results
+        pitch_confidences = pipe_results.get_result_by_id(aubio_res_id).data
 
         nb_frameDecision = int(self.decisionLen / self.wStep)
         epsilon = numpy.spacing(pitch_confidences[0])
@@ -118,7 +119,7 @@ class IRITMonopoly(Analyzer):
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
 
-        segs.label_metadata.label = label
+        segs.data_object.label_metadata.label = label
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [(float(s[0]+0.5) * self.decisionLen)
                                  for s in segList]

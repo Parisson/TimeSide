@@ -92,7 +92,7 @@ class MetaComponent(type):
     abstract = False
 
     def __new__(cls, name, bases, d):
-        new_class = type.__new__(cls, name, bases, d)
+        new_class = super(MetaComponent, cls).__new__(cls, name, bases, d)
 
         # Register implementations
         if MetaComponent.implements:
@@ -128,6 +128,9 @@ class Component(object):
 
     """Base class of all components"""
     __metaclass__ = MetaComponent
+
+    def __init__(self):
+        super(Component, self).__init__()
 
 
 def extend_unique(list1, list2):

@@ -25,8 +25,12 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.preprocessors import frames_adapter
 from timeside.api import IAnalyzer
+from timeside.analyzer.utils import MACHINE_EPSILON
+from timeside.tools.buffering import BufferTable
+
+
 import numpy
-from scipy.signal import firwin, lfilter
+from scipy.signal import firwin, lfilter, lfiltic
 from scipy.ndimage.morphology import binary_opening, binary_closing
 import os
 
@@ -44,7 +48,12 @@ class IRITStartSeg(Analyzer):
 
         self._save_lab = save_lab
 
-        self.energy = []
+        self._buffer = BufferTable()
+
+        # self.energy = []
+
+
+
         self.maxenergy = 0.002
         self.min_overlap = 20
         self.threshold = 0.1
@@ -57,16 +66,19 @@ class IRITStartSeg(Analyzer):
                                         samplerate,
                                         blocksize,
                                         totalframes)
-        lowFreq = 100.0
 
         self.input_blocksize = int(0.02 * samplerate)
         self.input_stepsize = int(0.008 * samplerate)
 
+
         sr = float(samplerate)
+        lowFreq = 100.0
         highFreq = sr / 2
         f1 = lowFreq / sr
         f2 = highFreq / sr
-        self.filtre = firwin(10, [f1, f2], pass_zero=False)
+        numtaps = 10
+        self.filtre = firwin(numtaps=numtaps, cutoff=[f1, f2], pass_zero=False)
+        self.filtre_z = lfiltic(b=self.filtre, a=1, y=0)  # Initial conditions
 
     @staticmethod
     @interfacedoc
@@ -92,16 +104,26 @@ class IRITStartSeg(Analyzer):
 
         '''
 
-        self.energy += [numpy.sqrt(numpy.mean(lfilter(self.filtre,
-                                                      1.0,
-                                                      frames.T[0]) ** 2))]
+        #self.energy += [numpy.sqrt(numpy.mean(lfilter(self.filtre,
+        #                                              1.0,
+        #                                              frames.T[0]) ** 2))]
+        # Compute energy
+        env, self.filtre_z = lfilter(b=self.filtre, a=1.0, axis=0,
+                                     x=frames[:, 0],
+                                     zi=self.filtre_z)
+        self._buffer.append('energy', numpy.sqrt(numpy.mean(env ** 2)))
+
         return frames, eod
 
     def post_process(self):
         '''
 
         '''
-        self.energy = numpy.array(self.energy) / max(self.energy)
+        # Normalize energy
+        self.energy = self._buffer['energy'][:]
+        if self.energy.max():
+            self.energy = self.energy / self.energy.max()
+
         silences = numpy.zeros((1, len(self.energy)))[0]
         silences[self.energy < self.maxenergy] = 1
 
@@ -109,8 +131,10 @@ class IRITStartSeg(Analyzer):
 
         models_dir = os.path.join(timeside.__path__[0],
                                   'analyzer', 'trained_models')
-        prototype1_file = os.path.join(models_dir, 'protoStart1.dat')
-        prototype2_file = os.path.join(models_dir, 'protoStart2.dat')
+        prototype1_file = os.path.join(models_dir,
+                                       'irit_noise_startSilences_proto1.dat')
+        prototype2_file = os.path.join(models_dir,
+                                       'irit_noise_startSilences_proto2.dat')
 
         prototype = numpy.load(prototype1_file)
         prototype2 = numpy.load(prototype2_file)
@@ -162,7 +186,7 @@ class IRITStartSeg(Analyzer):
         segs = self.new_result(data_mode='label', time_mode='segment')
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
-        segs.label_metadata.label = label
+        segs.data_object.label_metadata.label = label
         segs.data_object.label = [s[2] for s in segsList]
         segs.data_object.time = [(float(s[0]) * step)
                                  for s in segsList]
@@ -170,12 +194,17 @@ class IRITStartSeg(Analyzer):
                                      for s in segsList]
         self.process_pipe.results.add(segs)
 
+    def release(self):
+        self._buffer.close()
+
 
 def computeDist2(proto, serie):
     l = len(proto)
     r = range(len(serie))
     serie = numpy.array(list(serie) + [0] * (l - 1))
-    v = [numpy.mean(numpy.abs((serie[i:i + l] / numpy.max(serie[i:i + l])) -
+    v = [numpy.mean(numpy.abs((serie[i:i + l] /
+                               max([numpy.max(serie[i:i + l]),
+                                    MACHINE_EPSILON])) -
                               proto))
          for i in r]
     return numpy.min(v), numpy.argmin(v)
