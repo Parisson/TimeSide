@@ -25,6 +25,7 @@ from django.views.generic import *
 from django.http import HttpResponse, HttpResponseRedirect
 
 from rest_framework import viewsets
+from rest_framework.mixins import UpdateModelMixin
 
 import timeside
 from timeside.server.models import *
@@ -120,6 +121,6 @@ class ResultGrapherView(View):
 
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
-        return HttpResponse(stream_from_file(result.file.path), 
+        return HttpResponse(stream_from_file(result.file.path),
                             mimetype='image/png')
 

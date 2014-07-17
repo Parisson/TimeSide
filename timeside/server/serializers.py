@@ -23,6 +23,7 @@ import django.db.models
 from django.contrib.auth.models import User
 
 
+
 class SelectionSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -62,7 +63,27 @@ class PresetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Preset
-        # fields = ('id', 'processor', 'parameters', 'is_public')
+        #fields = ('id', 'processor', 'parameters', 'is_public')
+
+    def validate_parameters(self, attrs, source):
+
+        import timeside
+        proc = timeside.core.get_processor(attrs['processor'].pid)
+        if proc.type == 'analyzer':
+            processor = proc()
+            default_params = processor.get_parameters()
+            default_msg = "Defaut parameters:\n%s" % default_params
+
+            try:
+                processor.validate_parameters(attrs[source])
+            except ValueError as e:
+                msg = '\n'.join([str(e), default_msg])
+                raise serializers.ValidationError(msg)
+            except KeyError as e:
+                msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
+                raise serializers.ValidationError(msg)
+
+        return attrs
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -76,5 +97,3 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-
-

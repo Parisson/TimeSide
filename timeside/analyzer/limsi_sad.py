@@ -123,12 +123,15 @@ class LimsiSad(Analyzer):
         return frames, eod
 
     def post_process(self):
-        mfcc = self.process_pipe.results['yaafe.mfcc']['data_object']['value']
-        mfccd1 = self.process_pipe.results[
-            'yaafe.mfccd1']['data_object']['value']
-        mfccd2 = self.process_pipe.results[
-            'yaafe.mfccd2']['data_object']['value']
-        zcr = self.process_pipe.results['yaafe.zcr']['data_object']['value']
+        yaafe_result = self.process_pipe.results
+        mfcc = yaafe_result.get_result_by_id(
+            'yaafe.mfcc')['data_object']['value']
+        mfccd1 = yaafe_result.get_result_by_id(
+            'yaafe.mfccd1')['data_object']['value']
+        mfccd2 = yaafe_result.get_result_by_id(
+            'yaafe.mfccd2')['data_object']['value']
+        zcr = yaafe_result.get_result_by_id(
+            'yaafe.zcr')['data_object']['value']
 
         features = np.concatenate((mfcc, mfccd1, mfccd2, zcr), axis=1)
 

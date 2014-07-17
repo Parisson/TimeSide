@@ -200,7 +200,7 @@ class MetadataObject(object):
 class IdMetadata(MetadataObject):
 
     '''
-    Metadata object to handle Audio related Metadata
+    Metadata object to handle ID related Metadata
 
         Attributes
         ----------
@@ -212,7 +212,8 @@ class IdMetadata(MetadataObject):
             date and time in ISO  8601 format YYYY-MM-DDTHH:MM:SS
         version : str
         author : str
-        uuid : str
+        proc_uuid : str
+        res_uuid : str
     '''
     # TODO :
     # - (long) description --> à mettre dans l'API Processor
@@ -225,7 +226,8 @@ class IdMetadata(MetadataObject):
                                   ('date', None),
                                   ('version', None),
                                   ('author', None),
-                                  ('uuid', None)])
+                                  ('proc_uuid', None),
+                                  ('res_uuid', None)])
 
     def __setattr__(self, name, value):
         if value is None:
@@ -643,7 +645,7 @@ class AnalyzerResult(MetadataObject):
 
     def to_hdf5(self, h5_file):
         # Save results in HDF5 Dataset
-        group = h5_file.create_group(self.id_metadata.id)
+        group = h5_file.create_group(self.id_metadata.res_uuid)
         group.attrs['data_mode'] = self.__getattribute__('data_mode')
         group.attrs['time_mode'] = self.__getattribute__('time_mode')
         for key in self.keys():
@@ -911,7 +913,7 @@ class AnalyzerResultContainer(dict):
     >>> a = Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
-    AnalyzerResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri='...', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})
+    AnalyzerResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', proc_uuid='...', res_uuid='...'), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri='.../sweep.mp3', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
     '''
 
@@ -929,9 +931,21 @@ class AnalyzerResultContainer(dict):
         if not isinstance(analyzer_result, AnalyzerResult):
             raise TypeError('only AnalyzerResult can be added')
 
-        self.__setitem__(analyzer_result.id_metadata.id,
-                         analyzer_result)
-        #self.results += [analyzer_result]
+        # Update result uuid by adding a suffix uuid
+        # It enable to deal with multiple results for the same processor uuid
+        uuid = analyzer_result.id_metadata.proc_uuid
+        count = 0
+        for res_uuid in self.keys():
+            count += res_uuid.startswith(uuid)
+        res_uuid = '-'.join([uuid, format(count, '02x')])
+        analyzer_result.id_metadata.res_uuid = res_uuid
+
+        self.__setitem__(res_uuid, analyzer_result)
+
+    def get_result_by_id(self, result_id):
+        for res in self.values():
+            if res.id_metadata.id == result_id:
+                return res
 
     def to_xml(self, output_file=None):
 
@@ -1113,8 +1127,9 @@ class Analyzer(Processor):
     @property
     def results(self):
         return AnalyzerResultContainer(
-            [self.process_pipe.results[key] for key in self.process_pipe.results.keys()
-             if key.split('.')[0] == self.id()])
+            [self.process_pipe.results[key]
+             for key in self.process_pipe.results.keys()
+             if key.startswith(self.uuid())])
 
     @staticmethod
     def id():
@@ -1156,7 +1171,7 @@ class Analyzer(Processor):
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()
         result.id_metadata.unit = self.unit()
-        result.id_metadata.uuid = self.uuid()
+        result.id_metadata.proc_uuid = self.uuid()
 
         result.audio_metadata.uri = self.mediainfo()['uri']
         result.audio_metadata.sha1 = self.mediainfo()['sha1']
