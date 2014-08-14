@@ -59,7 +59,9 @@ setup(
         'django-extensions',
         'djangorestframework',
         'south',
-<        'py_sonicvisualiser',
+        'py_sonicvisualiser',
+        'pyannote.core',
+        'pyannote.features',
         'traits'
         ],
 
