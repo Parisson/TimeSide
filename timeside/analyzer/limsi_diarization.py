@@ -46,7 +46,7 @@ def gauss_div(data, winsize):
         meandiff = N.mean(w1, axis = 0) - N.mean(w2, axis = 0)
         invstdprod = 1. / (N.std(w1, axis = 0) * N.std(w2, axis = 0))
         ret.append(N.sum(meandiff * meandiff * invstdprod))
-    
+
     return ret
 
 
@@ -85,7 +85,7 @@ class LimsiDiarization(Analyzer):
         # feature extraction defition
         spec = yaafelib.FeaturePlan(sample_rate=16000)
         spec.addFeature('mfccchop: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256')
-        parent_analyzer = Yaafe(spec)        
+        parent_analyzer = Yaafe(spec)
         self.parents.append(parent_analyzer)
 
         # informative parameters
@@ -117,10 +117,10 @@ class LimsiDiarization(Analyzer):
         return frames, eod
 
     def post_process(self):
-        mfcc = self.process_pipe.results['yaafe.mfccchop']['data_object']['value']
+        mfcc = self.process_pipe.results.get_result_by_id('yaafe.mfccchop')['data_object']['value']
 
         sw = YaafeFrame(self.input_blocksize, self.input_stepsize, self.input_samplerate)
-        pyannotefeat = SlidingWindowFeature(mfcc, sw)     
+        pyannotefeat = SlidingWindowFeature(mfcc, sw)
 
         # speech activity detection: usefull for debugging purpose only
         # print 'adding sad res to result'
@@ -137,7 +137,7 @@ class LimsiDiarization(Analyzer):
         gdiff_win_size_frame = int(self.gdiff_win_size_sec / timestepsize)
         min_seg_size_frame = int(self.min_seg_size_sec / timestepsize)
         # print 'timestepsize %d, gdiffwinsize (sec: %f, frame: %d) , minsegsize (sec: %f, frame: %d)' % (timestepsize, self.gdiff_win_size_sec, gdiff_win_size_frame, self.min_seg_size_sec, min_seg_size_frame)
-        
+
 
         # basic gauss div
         #bgd = (range(0, len(mfcc)), 'basicgdiv')

@@ -100,8 +100,8 @@ class IRITSingings(Analyzer):
         """
 
         """
-        preproc = self.process_pipe.results['irit_monopoly.segments'].data_object
-        labels = self.process_pipe.results['irit_monopoly.segments'].label_metadata['label']
+        preproc = self.process_pipe.results.get_result_by_id('irit_monopoly.segments').data_object
+        labels = self.process_pipe.results.get_result_by_id('irit_monopoly.segments').label_metadata['label']
         segments_monopoly = [(start, duration, labels[label])for start, duration, label in zip(preproc.time,
                                                                                                preproc.duration,
                                                                                                preproc.label)]

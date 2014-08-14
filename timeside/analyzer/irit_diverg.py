@@ -390,7 +390,7 @@ class IRITDiverg(Analyzer):
         return frames, eod
 
     def post_process(self):
-        audio_data = self.process_pipe.results['waveform_analyzer'].data
+        audio_data = self.process_pipe.results.get_result_by_id('waveform_analyzer').data
         if audio_data.shape[1] > 1:
             data = list(audio_data.mean(axis=1))
         else:

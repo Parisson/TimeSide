@@ -74,7 +74,7 @@ class IRITMusicSLN(Analyzer):
 
         '''
 
-        segList = self.process_pipe.results['irit_diverg.segments'].time
+        segList = self.process_pipe.results.get_result_by_id('irit_diverg.segments').time
 
         w = self.wLen / 2
         end = segList[-1]
