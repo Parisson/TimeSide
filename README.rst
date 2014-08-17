@@ -188,7 +188,7 @@ News
  * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency on aubio)
  * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency on yaafe)
  * Add new IRIT speech detection analyzers (NEW dependency on scipy)
- * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency on some vamp toold)
+ * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency on some vamp tools)
  * Add new documentation : http://files.parisson.com/timeside/doc/
  * New Debian repository for instant install
  * Various bugfixes
@@ -199,39 +199,45 @@ News
 Dive in
 ========
 
-To list all available plugins::
+To list all available plugins:
 
- >>> import timeside
- >>> timeside.core.list_processors()
+ .. code:: python
+ import timeside
+ timeside.core.list_processors()
 
-Define some processors::
+Define some processors:
 
- >>> from timeside.core import get_processor
- >>> decoder  =  get_processor('gst_dec')('sweep.wav')
- >>> grapher  =  get_processor('waveform_simple')
- >>> analyzer =  get_processor('level')
- >>> encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
+ .. code:: python
+ from timeside.core import get_processor
+ decoder  =  get_processor('gst_dec')('sweep.wav')
+ grapher  =  get_processor('waveform_simple')
+ analyzer =  get_processor('level')
+ encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
 
-Then run the *magic* pipeline::
+Then run the *magic* pipeline:
 
- >>> (decoder | grapher | analyzer | encoder).run()
+ .. code:: python
+ (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results::
+Render the grapher results:
 
- >>> grapher.render(output='waveform.png')
+ .. code:: python
+ grapher.render(output='waveform.png')
 
-Show the analyzer results::
+Show the analyzer results:
 
- >>> print 'Level:', analyzer.results
+ .. code:: python
+ print 'Level:', analyzer.results
 
 The encoded OGG file should also be there...
 
-Note you can also instanciate each processor with its own class::
+Note you can also instanciate each processor with its own class:
 
- >>> decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
- >>> grapher  =  timeside.grapher.waveform_simple.Waveform()
- >>> analyzer =  timeside.analyzer.level.Level()
- >>> encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
+ .. code:: python
+ decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
+ grapher  =  timeside.grapher.waveform_simple.Waveform()
+ analyzer =  timeside.analyzer.level.Level()
+ encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
 
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
 
@@ -262,7 +268,7 @@ For Debian based distributions, we provide a safe repository which provides all 
 
 Note you can also use pip if you already have *already* satisfied all the dependencies::
 
- $ sudo pip install timeside
+ sudo pip install timeside
 
 Other Linux distributions
 --------------------------
@@ -271,7 +277,7 @@ On other Linux platforms, you need to install all dependencies listed in the par
 
 Then, use pip::
 
- $ sudo pip install timeside
+ sudo pip install timeside
 
 OSX
 ---
@@ -301,7 +307,7 @@ Shell
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
 
- $ timeside-launch -h
+ timeside-launch -h
  Usage: scripts/timeside-launch [options] -c file.conf file1.wav [file2.wav ...]
   help: scripts/timeside-launch -h
 
@@ -365,10 +371,10 @@ An EXPERIMENTAL web server based on Django has been added to the package from ve
 
 A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
-  $ cd timeside/server/sandbox
-  $ ./manage.py syncdb
-  $ ./manage.py migrate
-  $ ./manage.py runserver
+  cd timeside/server/sandbox
+  ./manage.py syncdb
+  ./manage.py migrate
+  ./manage.py runserver
 
 and browse http://localhost:8000/api/
 
@@ -383,17 +389,17 @@ On Debian 7 Wheezy
 
 The shell commands to setup the development version on you system::
 
- $ wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
- $ echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
- $ echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
- $ sudo apt-get update
- $ sudo apt-get install git
- $ sudo apt-get build-dep python-timeside
- $ git clone https://github.com/yomguy/TimeSide.git
- $ cd TimeSide
- $ git checkout dev
- $ sudo pip install -e .
- $ tests/run_all_tests
+ wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
+ echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
+ echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
+ sudo apt-get update
+ sudo apt-get install git
+ sudo apt-get build-dep python-timeside
+ git clone https://github.com/yomguy/TimeSide.git
+ cd TimeSide
+ git checkout dev
+ sudo pip install -e .
+ tests/run_all_tests
 
 VirtualBox and Vagrant
 -----------------------
@@ -401,7 +407,7 @@ VirtualBox and Vagrant
 We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
 First, install Vagrant and VirtualVox::
 
- $ sudo apt-get install vagrant virtualbox
+ sudo apt-get install vagrant virtualbox
 
 On other OS, we need to install the packages correponding to your system:
 
@@ -410,15 +416,15 @@ On other OS, we need to install the packages correponding to your system:
 
 Then setup our image box like this in a terminal::
 
- $ vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
- $ vagrant init parisson/timeside-wheezy64
- $ vagrant up
- $ vagrant ssh
+ vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
+ vagrant init parisson/timeside-wheezy64
+ vagrant up
+ vagrant ssh
 
 To stop the virtual box::
 
- $ exit
- $ vagrant halt
+ exit
+ vagrant halt
 
 
 Sponsors and Partners
