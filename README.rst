@@ -378,8 +378,10 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-On Debian 7 Wheezy:
----------------------
+On Debian 7 Wheezy
+-------------------
+
+The shell commands to setup the development version on you system::
 
  $ wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
  $ echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
@@ -396,17 +398,26 @@ On Debian 7 Wheezy:
 VirtualBox and Vagrant
 -----------------------
 
+We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
+First, install Vagrant and VirtualVox::
+
  $ sudo apt-get install vagrant virtualbox
 
- Or install / update Vagrant from https://www.vagrantup.com/downloads.html
- And VirtualBox from https://www.virtualbox.org/wiki/Downloads
+On other OS, we need to install the packages correponding to your system:
 
- Then::
+ * Vagrant: https://www.vagrantup.com/downloads.html
+ * VirtualBox: https://www.virtualbox.org/wiki/Downloads
+
+Then setup our image box like this in a terminal::
 
  $ vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
  $ vagrant init parisson/timeside-wheezy64
  $ vagrant up
  $ vagrant ssh
+
+To stop the virtual box::
+
+ $ exit
  $ vagrant halt
 
 
