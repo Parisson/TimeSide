@@ -199,39 +199,34 @@ News
 Dive in
 ========
 
-To list all available plugins:
+To list all available plugins::
 
- .. code:: python
  import timeside
  timeside.core.list_processors()
 
-Define some processors:
+Define some processors::
 
- .. code:: python
  from timeside.core import get_processor
  decoder  =  get_processor('gst_dec')('sweep.wav')
  grapher  =  get_processor('waveform_simple')
  analyzer =  get_processor('level')
  encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
 
-Then run the *magic* pipeline:
+Then run the *magic* pipeline::
 
- .. code:: python
  (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results:
+Render the grapher results::
 
- .. code:: python
  grapher.render(output='waveform.png')
 
-Show the analyzer results:
+Show the analyzer results::
 
- .. code:: python
  print 'Level:', analyzer.results
 
 The encoded OGG file should also be there...
 
-Note you can also instanciate each processor with its own class:: python
+Note you can also instanciate each processor with its own class::
 
  decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
  grapher  =  timeside.grapher.waveform_simple.Waveform()
@@ -265,9 +260,8 @@ Debian, Ubuntu
 
 For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
 
-Note you can also use pip if you already have *already* satisfied all the dependencies:
+Note you can also use pip if you already have *already* satisfied all the dependencies::
 
- .. code:: bash
  sudo pip install timeside
 
 Other Linux distributions
@@ -275,9 +269,8 @@ Other Linux distributions
 
 On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution).
 
-Then, use pip:
+Then, use pip::
 
- .. code:: bash
  sudo pip install timeside
 
 OSX
@@ -370,9 +363,8 @@ Web server
 
 An EXPERIMENTAL web server based on Django has been added to the package from version 0.5.5. The goal is to provide a full REST API to TimeSide to enable new kinds of audio processing web services.
 
-A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this:
+A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
- .. code:: bash
   cd timeside/server/sandbox
   ./manage.py syncdb
   ./manage.py migrate
@@ -389,9 +381,8 @@ Development
 On Debian 7 Wheezy
 -------------------
 
-The shell commands to setup the development version on you system:
+The shell commands to setup the development version on you system::
 
- .. code:: bash
  wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
  echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
  echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
@@ -408,9 +399,8 @@ VirtualBox and Vagrant
 -----------------------
 
 We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
-First, install Vagrant and VirtualVox:
+First, install Vagrant and VirtualVox::
 
- .. code:: bash
  sudo apt-get install vagrant virtualbox
 
 On other OS, we need to install the packages correponding to your system:
@@ -418,17 +408,15 @@ On other OS, we need to install the packages correponding to your system:
  * Vagrant: https://www.vagrantup.com/downloads.html
  * VirtualBox: https://www.virtualbox.org/wiki/Downloads
 
-Then setup our image box like this in a terminal:
+Then setup our image box like this in a terminal::
 
- .. code:: bash
  vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
  vagrant init parisson/timeside-wheezy64
  vagrant up
  vagrant ssh
 
-To stop the virtual box:
+To stop the virtual box::
 
- .. code:: bash
  exit
  vagrant halt
 
