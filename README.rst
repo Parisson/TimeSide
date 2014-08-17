@@ -231,9 +231,8 @@ Show the analyzer results:
 
 The encoded OGG file should also be there...
 
-Note you can also instanciate each processor with its own class:
+Note you can also instanciate each processor with its own class::
 
-.. code:: python
  decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
  grapher  =  timeside.grapher.waveform_simple.Waveform()
  analyzer =  timeside.analyzer.level.Level()
