@@ -378,19 +378,37 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-For versions >=0.5 on Debian 7 Wheezy::
+On Debian 7 Wheezy:
+---------------------
 
- $ echo "deb http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
- $ echo "deb-src http://debian.parisson.com/debian/ stable main" | sudo tee -a /etc/apt/sources.list
+ $ wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
+ $ echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
+ $ echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
  $ sudo apt-get update
  $ sudo apt-get install git
  $ sudo apt-get build-dep python-timeside
-
  $ git clone https://github.com/yomguy/TimeSide.git
  $ cd TimeSide
  $ git checkout dev
  $ sudo pip install -e .
- $ python tests/run_all_tests
+ $ tests/run_all_tests
+
+VirtualBox and Vagrant
+-----------------------
+
+ $ sudo apt-get install vagrant virtualbox
+
+ Or install / update Vagrant from https://www.vagrantup.com/downloads.html
+ And VirtualBox from https://www.virtualbox.org/wiki/Downloads
+
+ Then::
+
+ $ vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
+ $ vagrant init parisson/timeside-wheezy64
+ $ vagrant up
+ $ vagrant ssh
+ $ vagrant halt
+
 
 Sponsors and Partners
 =====================
