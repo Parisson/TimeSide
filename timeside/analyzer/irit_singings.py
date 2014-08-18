@@ -38,20 +38,10 @@ class IRITSingings(Analyzer):
     implements(IAnalyzer)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None,
-              blocksize=None, totalframes=None):
-
-        super(IRITSingings, self).setup(channels,
-                                        samplerate,
-                                        blocksize,
-                                        totalframes)
-
+    def __init__(self):
+        super(IRITSingings, self).__init__()
         self.parents.append(IRITMonopoly())
 
-        self.aubio_pitch = pitch(
-            "default", self.input_blocksize, self.input_stepsize,
-            samplerate)
-        self.aubio_pitch.set_unit("freq")
         self.block_read = 0
         self.pitches = []
         self.spectro = []
@@ -62,6 +52,19 @@ class IRITSingings(Analyzer):
 
         self.thPoly = 0.15
         self.thMono = 0.1
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
+
+        super(IRITSingings, self).setup(channels,
+                                        samplerate,
+                                        blocksize,
+                                        totalframes)
+
+        self.aubio_pitch = pitch("default", self.input_blocksize,
+                                 self.input_stepsize, samplerate)
+        self.aubio_pitch.set_unit("freq")
 
         self.input_blocksize = int(self.wLen * samplerate)
         self.input_stepsize = int(self.wStep * samplerate)
@@ -101,7 +104,7 @@ class IRITSingings(Analyzer):
 
         """
         preproc = self.process_pipe.results.get_result_by_id('irit_monopoly.segments').data_object
-        labels = self.process_pipe.results.get_result_by_id('irit_monopoly.segments').label_metadata['label']
+        labels = self.process_pipe.results.get_result_by_id('irit_monopoly.segments').data_object.label_metadata['label']
         segments_monopoly = [(start, duration, labels[label])for start, duration, label in zip(preproc.time,
                                                                                                preproc.duration,
                                                                                                preproc.label)]

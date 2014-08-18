@@ -127,7 +127,7 @@ class LimsiDiarization(Analyzer):
         # sadres = self.new_result(data_mode='value', time_mode='framewise')
         # sadres.id_metadata.id += '.' + 'sadres'
         # sadres.id_metadata.name += ' ' + 'SAD RESULT'
-        sadval = self.process_pipe.results[self.sad_analyzer.id() + '.sad_lhh_diff'].data_object.value[:]
+        sadval = self.process_pipe.results.get_result_by_id(self.sad_analyzer.id() + '.sad_lhh_diff').data_object.value[:]
         # sadres.data_object.value = sadval
         # self.process_pipe.results.add(sadres)
 
@@ -223,9 +223,9 @@ class LimsiDiarization(Analyzer):
             diar_res.data_object.label = label
             diar_res.data_object.time = time
             diar_res.data_object.duration = duration
-            diar_res.label_metadata.label = dict()
+            diar_res.data_object.label_metadata.label = dict()
             for lab in diar_res.data_object.label:
-                diar_res.label_metadata.label[lab] = str(lab)
+                diar_res.data_object.label_metadata.label[lab] = str(lab)
             # TODO FIXME
             # for h in hypothesis.itertracks(label=True):
             #     diar_res.data_object.label.append(h[2])

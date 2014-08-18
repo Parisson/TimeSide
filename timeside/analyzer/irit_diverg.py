@@ -23,7 +23,7 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.analyzer.waveform import Waveform
 from timeside.api import IAnalyzer
-from numpy import spacing
+import numpy as np
 from collections import deque
 
 
@@ -34,20 +34,23 @@ class ModelLongTerm(object):
 
     def __init__(self, ordre, echantillon):
         self.ordre = ordre
-        self.ft = [0] * (ordre + 2)
-        self.ftm1 = [0] * (ordre + 2)
-        self.variance_f = [1] * (ordre + 2)
-        self.variance_b = [1] * (ordre + 2)
-        self.et = [0] * (ordre + 2)
-        self.cor = [0] * (ordre + 2)
+        self.ft = np.repeat(0., ordre + 2)
+        self.ftm1 = np.repeat(0., ordre + 2)
+        self.variance_f = np.repeat(1., ordre + 2)
+        self.variance_b = np.repeat(1., ordre + 2)
+        self.et = np.repeat(0., ordre + 2)
+
+        self.et_vec = self.et
+        self.ft_vec = self.ft
+        self.ftm1_vec = self.ftm1
+        self.cor = np.repeat(0., ordre + 2)
         self.length = 1
         self.erreur_residuelle = 0
         self.variance_erreur_residuelle = 0
 
         oubli = 1.0 / float(self.length)
 
-        self.variance_f[0] = self.variance_f[
-            0] + oubli * (echantillon ** 2 - self.variance_f[0])
+        self.variance_f[0] = self.variance_f[0] + oubli * (echantillon ** 2 - self.variance_f[0])
         self.variance_b[0] = self.variance_f[0]
         self.et[0] = echantillon
         self.ft[0] = echantillon
@@ -62,31 +65,28 @@ class ModelLongTerm(object):
         '''
 
         self.length += 1
-        self.ftm1 = self.ft[:]
+        self.ftm1 = self.ft.copy()
 
         self.et[0] = echantillon
 
         oubli = 1.0 / float(self.length)
-        self.variance_f[0] = self.variance_f[
-            0] + oubli * (echantillon ** 2 - self.variance_f[0])
+        self.variance_f[0] = (1 - oubli) * self.variance_f[0] + oubli * echantillon ** 2
         self.variance_b[0] = self.variance_f[0]
         ik = min([self.ordre, self.length - 1])
 
         for n in xrange(ik + 1):
             oubli = 1.0 / float(self.length - n)
+            oubli_ = 1 - oubli
 
-            self.cor[n] = self.cor[n] + oubli * (
-                self.ftm1[n] * self.et[n] - self.cor[n])
+            self.cor[n] = oubli_ * self.cor[n] + oubli * self.ftm1[n] * self.et[n]
 
-            knplus1 = 2 * \
-                self.cor[n] / (self.variance_f[n] + self.variance_b[n])
+            knplus1 = 2 * self.cor[n] / (self.variance_f[n] + self.variance_b[n])
             self.et[n + 1] = self.et[n] - knplus1 * self.ftm1[n]
             self.ft[n + 1] = self.ftm1[n] - knplus1 * self.et[n]
 
-            self.variance_f[n + 1] = self.variance_f[
-                n + 1] + oubli * (self.et[n + 1] ** 2 - self.variance_f[n + 1])
-            self.variance_b[n + 1] = self.variance_b[
-                n + 1] + oubli * (self.ft[n + 1] ** 2 - self.variance_b[n + 1])
+            self.variance_f[n + 1] = oubli_ * self.variance_f[n + 1] + oubli * self.et[n + 1] ** 2
+            self.variance_b[n + 1] = oubli_ * self.variance_b[n + 1] + oubli * self.ft[n + 1] ** 2
+
 
         self.ft[0] = echantillon
         self.erreur_residuelle = self.et[ik + 1]
@@ -121,7 +121,7 @@ class ModelLongTerm(object):
         return s
 
 
-class ModelCourtTrerm(object):
+class ModelShortTerm(object):
 
     '''
     '''
@@ -225,13 +225,13 @@ def calculDistance(modeleLong, modeleCourt):
 
     args :
         - modeleLong (ModelLongTerme) : Modèle appris sur tous les echantillons depuis la dernière rupture
-        - modeleCourt (ModelCourtTrerm): Modèle appris sur les Lmin derniers echantillons
+        - modeleCourt (ModelShortTerm): Modèle appris sur les Lmin derniers echantillons
     '''
 
     if modeleCourt.variance_erreur_residuelle == 0:
         # epsilon pour le type de donnés correspondant à
         # modeleLong.variance_erreur_residuelle
-        numerateur = spacing(modeleCourt.variance_erreur_residuelle)
+        numerateur = np.spacing(modeleCourt.variance_erreur_residuelle)
     else:
         numerateur = modeleCourt.variance_erreur_residuelle
 
@@ -296,7 +296,7 @@ def segment(data, fe, ordre=2, Lmin=0.02,
 
                 # Initialisation du modèle court terme
                 if t - rupt_last == Lmin:
-                    courtTerme = ModelCourtTrerm(ordre, audio_buffer)
+                    courtTerme = ModelShortTerm(ordre, audio_buffer)
 
                 # Mise à jour du modèle court terme
                 if t - rupt_last > Lmin:
@@ -402,7 +402,7 @@ class IRITDiverg(Analyzer):
         segs.id_metadata.name += ' ' + 'Segments'
 
         label = {0: 'Instable', 1: 'Forward', -1: 'Backward'}
-        segs.label_metadata.label = label
+        segs.data_object.label_metadata.label = label
 
         segs.data_object.label = [s[1] for s in frontieres]
         segs.data_object.time = [(float(s[0]) / self.samplerate())

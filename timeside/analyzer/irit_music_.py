@@ -66,7 +66,7 @@ class IRITMusicLDN(Analyzer):
         '''
         '''
 
-        segList = self.process_pipe.resultsget_result_by_id('irit_diverg.segments').time
+        segList = self.process_pipe.results.get_result_by_id('irit_diverg.segments').time
         w = self.wLen / 2
         end = segList[-1]
         tLine = arange(0, end, self.wStep)
@@ -77,8 +77,8 @@ class IRITMusicLDN(Analyzer):
             idx = nonzero(logical_and(segList > (t - w), segList < (t + w)))[0]
             segLen[i] = len(idx)
 
-        plot(tLine, segLen)
-        show()
+        #plot(tLine, segLen)
+        #show()
         # Confidence Index
         conf = array(segLen - self.threshold) / self.threshold
         conf[conf > 1] = 1
@@ -104,7 +104,7 @@ class IRITMusicLDN(Analyzer):
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
 
-        segs.label_metadata.label = label
+        segs.data_object.label_metadata.label = label
 
         segs.data_object.label = [convert[s[2]] for s in segList]
         segs.data_object.time = [tLine[s[0]] for s in segList]
