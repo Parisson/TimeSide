@@ -59,7 +59,8 @@ setup(
         'django-extensions',
         'djangorestframework',
         'south',
-        'traits'
+        'traits',
+        'networkx'
         ],
   platforms=['OS Independent'],
   license='Gnu Public License V2',
