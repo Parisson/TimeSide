@@ -947,6 +947,9 @@ class AnalyzerResultContainer(dict):
             if res.id_metadata.id == result_id:
                 return res
 
+    def list_id(self):
+        return [res.id for res in self.values()]
+
     def to_xml(self, output_file=None):
 
         import xml.etree.ElementTree as ET
