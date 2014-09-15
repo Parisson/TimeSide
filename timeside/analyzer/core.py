@@ -943,9 +943,12 @@ class AnalyzerResultContainer(dict):
         self.__setitem__(res_uuid, analyzer_result)
 
     def get_result_by_id(self, result_id):
+        if self.list_id().count(result_id) > 1:
+            raise ValueError('Result id shared by several procesors in the pipe. Get result from the processor instead')
         for res in self.values():
             if res.id_metadata.id == result_id:
                 return res
+        raise KeyError('No such result id: %s' % result_id)
 
     def list_id(self):
         return [res.id for res in self.values()]
