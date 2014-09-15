@@ -72,6 +72,8 @@ class TestDecodingFromStack(unittest.TestCase):
         # without decoding the audio source again.
         #Let's define a second analyzer equivalent to the previous one:
 
+        # Remove level_on_file from pipe
+        pipe.processors.pop()
         level_on_stack = Level()
         pipe |= level_on_stack
         pipe.run()
