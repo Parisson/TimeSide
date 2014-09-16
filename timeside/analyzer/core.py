@@ -1130,12 +1130,14 @@ class Analyzer(Processor):
         self.result_blocksize = self.input_blocksize
         self.result_stepsize = self.input_stepsize
 
+    def add_result(self, result):
+        if not self.uuid() in self.process_pipe.results:
+            self.process_pipe.results[self.uuid()] = AnalyzerResultContainer()
+        self.process_pipe.results[self.uuid()][result.id] = result
+
     @property
     def results(self):
-        return AnalyzerResultContainer(
-            [self.process_pipe.results[key]
-             for key in self.process_pipe.results.keys()
-             if key.startswith(self.uuid())])
+        return self.process_pipe.results[self.uuid()]
 
     @staticmethod
     def id():

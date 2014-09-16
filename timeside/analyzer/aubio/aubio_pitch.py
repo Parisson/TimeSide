@@ -107,7 +107,7 @@ class AubioPitch(Analyzer):
         pitch.id_metadata.name += ' ' + "pitch"
         pitch.id_metadata.unit = "Hz"
         pitch.data_object.value = self.pitches
-        self.process_pipe.results.add(pitch)
+        self.add_result(pitch)
 
         pitch_confidence = self.new_result(
             data_mode='value', time_mode='framewise')
@@ -115,4 +115,4 @@ class AubioPitch(Analyzer):
         pitch_confidence.id_metadata.name += ' ' + "pitch confidence"
         pitch_confidence.id_metadata.unit = None
         pitch_confidence.data_object.value = self.pitch_confidences
-        self.process_pipe.results.add(pitch_confidence)
+        self.add_result(pitch_confidence)

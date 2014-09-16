@@ -192,7 +192,7 @@ class IRITStartSeg(Analyzer):
                                  for s in segsList]
         segs.data_object.duration = [(float(s[1] - s[0]) * step)
                                      for s in segsList]
-        self.process_pipe.results.add(segs)
+        self.add_result(segs)
 
     def release(self):
         self._buffer.close()

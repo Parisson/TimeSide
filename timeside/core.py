@@ -75,7 +75,7 @@ class Processor(Component, HasParam):
 
 
     Attributes:
-              parents :  List of parent Processors that must be processed
+              parents :  Dictionnary of parent Processors that must be processed
                          before the current Processor
               pipe :     The ProcessPipe in which the Processor will run
         """
@@ -89,7 +89,7 @@ class Processor(Component, HasParam):
     def __init__(self):
         super(Processor, self).__init__()
 
-        self.parents = []
+        self.parents = {}
         self.source_mediainfo = None
         self.process_pipe = None
         self.UUID = uuid.uuid4()
@@ -175,7 +175,7 @@ class Processor(Component, HasParam):
                 self.get_parameters() == other.get_parameters())
 
     def __repr__(self):
-        return self.id() + '\n' + self.get_parameters()
+        return '-'.join([self.id(), self.get_parameters()])
 
 
 class FixedSizeInputAdapter(object):
@@ -275,7 +275,8 @@ class ProcessPipe(object):
 
     Attributes:
         processor: List of all processors in the Process pipe
-        results : Results Container for all the analyzers of the Pipe process
+        results : Dictionnary of Results Container from all the analyzers
+                  in the Pipe process
 """
 
     def __init__(self, *others):
@@ -287,8 +288,7 @@ class ProcessPipe(object):
 
         self |= others
 
-        from timeside.analyzer.core import AnalyzerResultContainer
-        self.results = AnalyzerResultContainer()
+        self.results = {}
 
     def append_processor(self, proc, source_proc=None):
         "Append a new processor to the pipe"
@@ -319,7 +319,7 @@ class ProcessPipe(object):
                                      type='audio_source')
             proc.process_pipe = self
             # Add an edge between each parent and proc
-            for parent in proc.parents:
+            for parent in proc.parents.values():
                     self._graph.add_edge(parent.uuid(), proc.uuid(),
                                          type='data_source')
 
@@ -363,7 +363,7 @@ class ProcessPipe(object):
 
     def __ior__(self, other):
         if isinstance(other, Processor):
-            for parent in other.parents:
+            for parent in other.parents.values():
                 self |= parent
             self.append_processor(other)
 

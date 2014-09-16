@@ -68,4 +68,4 @@ class Waveform(Analyzer):
     def post_process(self):
         waveform = self.new_result(data_mode='value', time_mode='framewise')
         waveform.data_object.value = np.vstack(self.values)
-        self.process_pipe.results.add(waveform)
+        self.add_result(waveform)
