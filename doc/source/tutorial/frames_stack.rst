@@ -20,16 +20,15 @@ Then let's setup a :class:`FileDecoder <timeside.decoder.file.FileDecoder>` with
 
 Setup an arbitrary analyzer to check that decoding process from file and from stack are equivalent:
 
->>> pitch_on_file = get_processor('aubio_pitch')()
->>> pipe = (decoder | pitch_on_file)
+>>> pitch = get_processor('aubio_pitch')()
+>>> pipe = (decoder | pitch)
 >>> print pipe.processors #doctest: +ELLIPSIS
-[<timeside.decoder.file.FileDecoder object at 0x...>, <timeside.analyzer.aubio.aubio_pitch.AubioPitch object at 0x...>]
+[gst_dec-{}, aubio_pitch-{}]
 
-After the pipe has been run, the other processes of the pipe are removed from the pipe and only the :class:`FileDecoder <timeside.decoder.file.FileDecoder>` is kept :
+
+Run the pipe:
 
 >>> pipe.run()
->>> print pipe.processors #doctest: +ELLIPSIS
-[<timeside.decoder.file.FileDecoder object at 0x...>]
 
 The processed frames are stored in the pipe attribute `frames_stack` as a list of frames :
 
@@ -47,23 +46,3 @@ Last frame :
 (array([[...]], dtype=float32), True)
 
 If the pipe is used for a second run, the processed frames stored in the stack are passed to the other processors without decoding the audio source again.
-Let's define a second analyzer equivalent to the previous one:
-
->>> pitch_on_stack = get_processor('aubio_pitch')()
-
-Add it to the pipe:
-
->>> pipe |= pitch_on_stack
->>> print pipe.processors #doctest: +ELLIPSIS
-[<timeside.decoder.file.FileDecoder object at 0x...>, <timeside.analyzer.aubio.aubio_pitch.AubioPitch object at 0x...>]
-
-And run the pipe:
-
->>> pipe.run()
-
-Assert that the frames passed to the two analyzers are the same, we check that the results of these analyzers are equivalent:
-
->>> np.allclose(pitch_on_file.results.get_result_by_id('aubio_pitch.pitch').data,
-...                    pitch_on_stack.results.get_result_by_id('aubio_pitch.pitch').data)
-True
-

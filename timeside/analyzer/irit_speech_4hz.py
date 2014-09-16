@@ -152,7 +152,7 @@ class IRITSpeech4Hz(Analyzer):
 
         modEnergy.data_object.value = conf
 
-        self.process_pipe.results.add(modEnergy)
+        self.add_result(modEnergy)
 
         # Segment
         convert = {False: 0, True: 1}
@@ -182,7 +182,7 @@ class IRITSpeech4Hz(Analyzer):
                                      self.samplerate())
                                      for s in segList]
 
-        self.process_pipe.results.add(segs)
+        self.add_result(segs)
 
         # Median filter on decision
         segs = self.new_result(data_mode='label', time_mode='segment')
@@ -199,7 +199,7 @@ class IRITSpeech4Hz(Analyzer):
                                      self.samplerate())
                                      for s in segList_filt]
 
-        self.process_pipe.results.add(segs)
+        self.add_result(segs)
 
 
 

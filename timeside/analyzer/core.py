@@ -944,9 +944,15 @@ class AnalyzerResultContainer(dict):
         self.__setitem__(res_uuid, analyzer_result)
 
     def get_result_by_id(self, result_id):
+        if self.list_id().count(result_id) > 1:
+            raise ValueError('Result id shared by several procesors in the pipe. Get result from the processor instead')
         for res in self.values():
             if res.id_metadata.id == result_id:
                 return res
+        raise KeyError('No such result id: %s' % result_id)
+
+    def list_id(self):
+        return [res.id for res in self.values()]
 
     def to_xml(self, output_file=None):
 
@@ -1147,12 +1153,14 @@ class Analyzer(Processor):
         self.result_blocksize = self.input_blocksize
         self.result_stepsize = self.input_stepsize
 
+    def add_result(self, result):
+        if not self.uuid() in self.process_pipe.results:
+            self.process_pipe.results[self.uuid()] = AnalyzerResultContainer()
+        self.process_pipe.results[self.uuid()][result.id] = result
+
     @property
     def results(self):
-        return AnalyzerResultContainer(
-            [self.process_pipe.results[key]
-             for key in self.process_pipe.results.keys()
-             if key.startswith(self.uuid())])
+        return self.process_pipe.results[self.uuid()]
 
     @staticmethod
     def id():

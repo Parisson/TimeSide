@@ -63,6 +63,7 @@ setup(
         'pyannote.core',
         'pyannote.features',
         'traits'
+        'networkx'
         ],
 
   platforms=['OS Independent'],

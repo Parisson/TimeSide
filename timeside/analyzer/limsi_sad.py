@@ -83,7 +83,7 @@ class LimsiSad(Analyzer):
             'mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2')
         spec.addFeature('zcr: ZCR blockSize=1024 stepSize=256')
         parent_analyzer = get_processor('yaafe')(spec)
-        self.parents.append(parent_analyzer)
+        self.parents['yaafe'] = parent_analyzer
 
         # informative parameters
         # these are not really taken into account by the system
@@ -123,15 +123,11 @@ class LimsiSad(Analyzer):
         return frames, eod
 
     def post_process(self):
-        yaafe_result = self.process_pipe.results
-        mfcc = yaafe_result.get_result_by_id(
-            'yaafe.mfcc')['data_object']['value']
-        mfccd1 = yaafe_result.get_result_by_id(
-            'yaafe.mfccd1')['data_object']['value']
-        mfccd2 = yaafe_result.get_result_by_id(
-            'yaafe.mfccd2')['data_object']['value']
-        zcr = yaafe_result.get_result_by_id(
-            'yaafe.zcr')['data_object']['value']
+        yaafe_result = self.process_pipe.results[self.parents['yaafe'].uuid()]
+        mfcc = yaafe_result['yaafe.mfcc']['data_object']['value']
+        mfccd1 = yaafe_result['yaafe.mfccd1']['data_object']['value']
+        mfccd2 = yaafe_result['yaafe.mfccd2']['data_object']['value']
+        zcr = yaafe_result['yaafe.zcr']['data_object']['value']
 
         features = np.concatenate((mfcc, mfccd1, mfccd2, zcr), axis=1)
 
@@ -143,4 +139,4 @@ class LimsiSad(Analyzer):
         sad_result.id_metadata.name += ' ' + \
             'Speech Activity Detection Log Likelihood Difference'
         sad_result.data_object.value = res
-        self.process_pipe.results.add(sad_result)
+        self.add_result(sad_result)

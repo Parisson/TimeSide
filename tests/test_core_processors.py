@@ -11,6 +11,7 @@ from timeside.component import implements, interfacedoc
 SAMPLE_RATE_FORCED = 16000
 OTHER_SAMPLE_RATE = 32000
 
+
 class TestForceSampleRate(unittest.TestCase):
 
     class Dummy_Processor(Processor):

@@ -36,6 +36,8 @@ class Spectrogram(Analyzer):
     # Define Parameters
     class _Param(HasTraits):
         FFT_SIZE = Int()
+        input_blocksize = Int()
+        input_stepsize = Int()
 
     def __init__(self, blocksize=2048, stepsize=None, fft_size=None):
         super(Spectrogram, self).__init__()
@@ -88,4 +90,4 @@ class Spectrogram(Analyzer):
         spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
                                            self.samplerate() / self.FFT_SIZE)
 
-        self.process_pipe.results.add(spectrogram)
+        self.add_result(spectrogram)

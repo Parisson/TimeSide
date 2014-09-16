@@ -120,4 +120,4 @@ class Yaafe(Analyzer):
 
             # Store results in Container
             if len(result.data_object.value):
-                self.process_pipe.results.add(result)
+                self.add_result(result)

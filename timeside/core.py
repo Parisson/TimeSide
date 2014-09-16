@@ -27,6 +27,7 @@ from .tools.parameters import HasParam
 import re
 import numpy
 import uuid
+import networkx as nx
 
 import gobject
 gobject.threads_init()
@@ -74,7 +75,7 @@ class Processor(Component, HasParam):
 
 
     Attributes:
-              parents :  List of parent Processors that must be processed
+              parents :  Dictionnary of parent Processors that must be processed
                          before the current Processor
               pipe :     The ProcessPipe in which the Processor will run
         """
@@ -83,10 +84,12 @@ class Processor(Component, HasParam):
     abstract()
     implements(IProcessor)
 
+    type = ''
+
     def __init__(self):
         super(Processor, self).__init__()
 
-        self.parents = []
+        self.parents = {}
         self.source_mediainfo = None
         self.process_pipe = None
         self.UUID = uuid.uuid4()
@@ -167,6 +170,13 @@ class Processor(Component, HasParam):
     def __or__(self, other):
         return ProcessPipe(self, other)
 
+    def __eq__(self, other):
+        return (self.id() == other.id() and
+                self.get_parameters() == other.get_parameters())
+
+    def __repr__(self):
+        return '-'.join([self.id(), self.get_parameters()])
+
 
 class FixedSizeInputAdapter(object):
 
@@ -174,9 +184,10 @@ class FixedSizeInputAdapter(object):
     input buffers."""
 
     def __init__(self, buffer_size, channels, pad=False):
-        """Construct a new adapter: buffer_size is the desired buffer size in frames,
-        channels the number of channels, and pad indicates whether the last block should
-        be padded with zeros."""
+        """Construct a new adapter:
+        buffer_size is the desired buffer size in frames,
+        channels the number of channels, and pad indicates whether the last
+        block should be padded with zeros."""
 
         self.buffer = numpy.empty((buffer_size, channels))
         self.buffer_size = buffer_size
@@ -243,7 +254,7 @@ def get_processor(processor_id):
     """Return a processor by its id"""
     if not processor_id in _processors:
         raise PIDError("No processor registered with id: '%s'"
-                    % processor_id)
+                       % processor_id)
 
     return _processors[processor_id]
 
@@ -264,7 +275,8 @@ class ProcessPipe(object):
 
     Attributes:
         processor: List of all processors in the Process pipe
-        results : Results Container for all the analyzers of the Pipe process
+        results : Dictionnary of Results Container from all the analyzers
+                  in the Pipe process
 """
 
     def __init__(self, *others):
@@ -272,11 +284,78 @@ class ProcessPipe(object):
         self._streamer = None
         self._stream_thread = False
         self._is_running = False
+        self._graph = nx.DiGraph(name='ProcessPipe')
 
         self |= others
 
-        from timeside.analyzer.core import AnalyzerResultContainer
-        self.results = AnalyzerResultContainer()
+        self.results = {}
+
+    def append_processor(self, proc, source_proc=None):
+        "Append a new processor to the pipe"
+        if source_proc is None and len(self.processors):
+            source_proc = self.processors[0]
+
+        if source_proc and not isinstance(source_proc, Processor):
+            raise TypeError('source_proc must be a Processor or None')
+
+        if not isinstance(proc, Processor):
+            raise TypeError('proc must be a Processor or None')
+
+        if proc.type == 'decoder' and len(self.processors):
+            raise ValueError('Only the first processor in a pipe could be a Decoder')
+
+        # TODO : check if the processor is already in the pipe
+        if source_proc:
+            for child in self._graph.neighbors_iter(source_proc.uuid()):
+                child_proc = self._graph.node[child]['processor']
+                if proc == child_proc:
+                    proc.UUID = child_proc.UUID
+                    break
+        if not self._graph.has_node(proc.uuid()):
+            self.processors.append(proc)  # Add processor to the pipe
+            self._graph.add_node(proc.uuid(), processor=proc, id=proc.id())
+            if source_proc:
+                self._graph.add_edge(self.processors[0].uuid(), proc.uuid(),
+                                     type='audio_source')
+            proc.process_pipe = self
+            # Add an edge between each parent and proc
+            for parent in proc.parents.values():
+                    self._graph.add_edge(parent.uuid(), proc.uuid(),
+                                         type='data_source')
+
+    def append_pipe(self, proc_pipe):
+        "Append a sub-pipe to the pipe"
+
+        for proc in proc_pipe.processors:
+            self.append_processor(proc)
+
+    def draw_graph(self):
+        import matplotlib.pyplot as plt
+
+        elarge = [(u, v) for (u, v, d) in self._graph.edges(data=True)
+                  if d['type'] == 'audio_source']
+        esmall = [(u, v) for (u, v, d) in self._graph.edges(data=True)
+                  if d['type'] == 'data_source']
+
+        pos = nx.shell_layout(self._graph)  # positions for all nodes
+
+        # nodes
+        nx.draw_networkx_nodes(self._graph, pos, node_size=700)
+
+        # edges
+        nx.draw_networkx_edges(self._graph, pos, edgelist=elarge,
+                               arrows=True)
+        nx.draw_networkx_edges(self._graph, pos, edgelist=esmall,
+                               alpha=0.5, edge_color='b',
+                               style='dashed', arrows=True)
+
+        # labels
+        labels = {node: repr(self._graph.node[node]['processor']) for node in self._graph.nodes()}
+        nx.draw_networkx_labels(self._graph, pos, labels, font_size=20,
+                                font_family='sans-serif')
+
+        plt.axis('off')
+        plt.show()  # display
 
     def __or__(self, other):
         self |= other
@@ -284,18 +363,18 @@ class ProcessPipe(object):
 
     def __ior__(self, other):
         if isinstance(other, Processor):
-            for parent in other.parents:
+            for parent in other.parents.values():
                 self |= parent
-            self.processors.append(other)
-            other.process_pipe = self
+            self.append_processor(other)
+
         elif isinstance(other, ProcessPipe):
-            self.processors.extend(other.processors)
+            self.append_pipe(other)
         else:
             try:
                 iter(other)
             except TypeError:
-                raise Error(
-                    "Can not add this type of object to a pipe: %s", str(other))
+                raise Error("Can not add this type of object to a pipe: %s",
+                            str(other))
 
             for item in other:
                 self |= item
@@ -316,7 +395,7 @@ class ProcessPipe(object):
         source = self.processors[0]
         items = self.processors[1:]
 
-        # Check if any processor in items need to force the asmplerate
+        # Check if any processor in items need to force the samplerate
         force_samplerate = set([item.force_samplerate for item in items
                                 if item.force_samplerate])
         if force_samplerate:
