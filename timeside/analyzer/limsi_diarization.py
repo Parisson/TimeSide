@@ -35,7 +35,6 @@ from pyannote.core.feature import SlidingWindowFeature
 from pyannote.core import Annotation, Segment
 from pyannote.algorithms.clustering.bic import BICClustering
 
-# import time
 
 
 def gauss_div(data, winsize):
@@ -117,119 +116,85 @@ class LimsiDiarization(Analyzer):
         return frames, eod
 
     def post_process(self):
+        
+        # extract mfcc with yaafe and store them to be used with pyannote
         mfcc = self.process_pipe.results['yaafe.mfccchop']['data_object']['value']
-
         sw = YaafeFrame(self.input_blocksize, self.input_stepsize, self.input_samplerate)
         pyannotefeat = SlidingWindowFeature(mfcc, sw)     
 
-        # speech activity detection: usefull for debugging purpose only
-        # print 'adding sad res to result'
-        # sadres = self.new_result(data_mode='value', time_mode='framewise')
-        # sadres.id_metadata.id += '.' + 'sadres'
-        # sadres.id_metadata.name += ' ' + 'SAD RESULT'
-        sadval = self.process_pipe.results[self.sad_analyzer.id() + '.sad_lhh_diff'].data_object.value[:]
-        # sadres.data_object.value = sadval
-        # self.process_pipe.results.add(sadres)
 
         # gaussian divergence window size
-        #winframesize = int((self.input_samplerate / self.input_stepsize) * self.chop_window_size)
         timestepsize = self.input_stepsize / float(self.input_samplerate)
         gdiff_win_size_frame = int(self.gdiff_win_size_sec / timestepsize)
         min_seg_size_frame = int(self.min_seg_size_sec / timestepsize)
-        # print 'timestepsize %d, gdiffwinsize (sec: %f, frame: %d) , minsegsize (sec: %f, frame: %d)' % (timestepsize, self.gdiff_win_size_sec, gdiff_win_size_frame, self.min_seg_size_sec, min_seg_size_frame)
-        
-
-        # basic gauss div
-        #bgd = (range(0, len(mfcc)), 'basicgdiv')
-        # speech gauss div
-        sgd = ([i for i, val in enumerate(sadval) if val > 0], 'speechgdiv')
-        # speech above threshold
-        #thres = N.percentile([val for val in sadval if val > 0], 25)
-        #sat = ([i for i, val in enumerate(sadval) if val > thres], 'speechthreshold25p')
-
-#        for frameids, name in [bgd, sgd, sat]:
-        for frameids, name in [sgd]:
-
-            gdiff = gauss_div(mfcc[frameids,:], gdiff_win_size_frame)
-
-            # debug purpose only
-            # res = self.new_result(data_mode='value', time_mode='event')
-            # res.id_metadata.id += ('.%s' % name)
-            # res.id_metadata.name += (' %s' % name)
-            # res.data_object.value = N.array(gdiff)
-            # res.data_object.time = N.array(frameids[gdiff_win_size_frame:(1-gdiff_win_size_frame)]) * timestepsize
-            # self.process_pipe.results.add(res)
-
-            seg = segment(gdiff, min_seg_size_frame)
-            # seg_result = self.new_result(data_mode='value', time_mode='event')
-            # seg_result.id_metadata.id += '.' + name + 'segchop'
-            # seg_result.id_metadata.name += ' ' + name + 'seg chop'
-            # seg_result.data_object.value = N.array(seg)
-            # seg_result.data_object.time = N.array(frameids[gdiff_win_size_frame:(1-gdiff_win_size_frame)]) * timestepsize
-            # self.process_pipe.results.add(seg_result)
-
-            # build pyannote annotation
-            # print 'building annotation'
-            #b = time.time()
-            chunks = Annotation()
-            fbegin = None
-            #fend = None
-            lastframe = None
-            ichunk = 0
-            for segval, iframe in zip(seg, frameids):
-                if segval == 1:
-                    if lastframe is not None:
-                        chunks[pyannotefeat.sliding_window.rangeToSegment(fbegin, iframe-fbegin)] = str(ichunk)
-                        ichunk += 1
-                    fbegin= iframe
-                elif iframe -1 != lastframe:
-                    if lastframe is not None:
-                        chunks[pyannotefeat.sliding_window.rangeToSegment(fbegin, lastframe-fbegin+1)] = str(ichunk)
-                    fbegin= iframe
-                lastframe = iframe
-            if lastframe != fbegin:
-                chunks[pyannotefeat.sliding_window.rangeToSegment(fbegin, lastframe-fbegin+1)] = str(ichunk)
-            # print 'chunks', chunks
-            #print 'anotation build in', (time.time() - b)
-
-            bicClustering = BICClustering(covariance_type='full', penalty_coef=self.bic_penalty_coeff)
-            hypothesis = bicClustering(chunks, feature=pyannotefeat)
-
-            # gen result interval
-            #print 'gen result interval'
-            diar_res = self.new_result(data_mode='label', time_mode='segment')
-            diar_res.id_metadata.id += '.' + 'speakers' # + name + 'diarisation'
-            diar_res.id_metadata.name += ' ' + 'speaker identifiers' # name + 'diarisation'
-
-            tmplabel = [int(h[2]) for h in hypothesis.itertracks(True)]
-            tmptime = [h[0].start for h in hypothesis.itertracks()]
-            tmpduration = [h[0].duration for h in hypothesis.itertracks()]
-
-            label = []
-            time = []
-            duration = []
-            lastlabel = None
-
-            for l, t, d in zip(tmplabel, tmptime, tmpduration):
-                if l != lastlabel:
-                    label.append(l)
-                    duration.append(d)
-                    time.append(t)
-                else:
-                    duration[-1] = t + d - time[-1]
-                lastlabel = l
 
 
-            diar_res.data_object.label = label
-            diar_res.data_object.time = time
-            diar_res.data_object.duration = duration
-            diar_res.label_metadata.label = dict()
-            for lab in diar_res.data_object.label:
-                diar_res.label_metadata.label[lab] = str(lab)
-            # TODO FIXME
-            # for h in hypothesis.itertracks(label=True):
-            #     diar_res.data_object.label.append(h[2])
-            #     diar_res.data_object.time.append(h[0].start)
-            #     diar_res.data_object.duration.apeend(h[0].duration)
-            #sadres.data_object.value = sadval
-            self.process_pipe.results.add(diar_res)
+        # speech activity detection
+        sadval = self.process_pipe.results[self.sad_analyzer.id() + '.sad_lhh_diff'].data_object.value[:]
+        # indices of frames detected as speech
+        speech_threshold = 0.
+        frameids = [i for i, val in enumerate(sadval) if val > speech_threshold]
+
+        # compute gaussian divergence of speech frames only
+        gdiff = gauss_div(mfcc[frameids,:], gdiff_win_size_frame)
+
+        # initial segmentation based on gaussian divergence criterion
+        seg = segment(gdiff, min_seg_size_frame)
+
+        # Convert initial segmentation to pyannote annotation
+        chunks = Annotation()
+        fbegin = None
+
+        lastframe = None
+        ichunk = 0
+        for segval, iframe in zip(seg, frameids):
+            if segval == 1:
+                if lastframe is not None:
+                    chunks[pyannotefeat.sliding_window.rangeToSegment(fbegin, iframe-fbegin)] = str(ichunk)
+                    ichunk += 1
+                fbegin= iframe
+            elif iframe -1 != lastframe:
+                if lastframe is not None:
+                    chunks[pyannotefeat.sliding_window.rangeToSegment(fbegin, lastframe-fbegin+1)] = str(ichunk)
+                fbegin= iframe
+            lastframe = iframe
+        if lastframe != fbegin:
+            chunks[pyannotefeat.sliding_window.rangeToSegment(fbegin, lastframe-fbegin+1)] = str(ichunk)
+
+
+        # performs BIC clustering
+        bicClustering = BICClustering(covariance_type='full', penalty_coef=self.bic_penalty_coeff)
+        hypothesis = bicClustering(chunks, feature=pyannotefeat)
+
+        # get diarisation results
+        tmplabel = [int(h[2]) for h in hypothesis.itertracks(True)]
+        tmptime = [h[0].start for h in hypothesis.itertracks()]
+        tmpduration = [h[0].duration for h in hypothesis.itertracks()]
+
+        # merge adjacent clusters having same labels
+        label = []
+        time = []
+        duration = []
+        lastlabel = None
+        for l, t, d in zip(tmplabel, tmptime, tmpduration):
+            if l != lastlabel:
+                label.append(l)
+                duration.append(d)
+                time.append(t)
+            else:
+                duration[-1] = t + d - time[-1]
+            lastlabel = l
+
+            
+        # store diarisation result
+        diar_res = self.new_result(data_mode='label', time_mode='segment')
+        diar_res.id_metadata.id += '.' + 'speakers' # + name + 'diarisation'
+        diar_res.id_metadata.name += ' ' + 'speaker identifiers' # name + 'diarisation'
+        diar_res.data_object.label = label
+        diar_res.data_object.time = time
+        diar_res.data_object.duration = duration
+        diar_res.label_metadata.label = dict()
+        for lab in diar_res.data_object.label:
+            diar_res.label_metadata.label[lab] = str(lab)
+            
+        self.process_pipe.results.add(diar_res)
