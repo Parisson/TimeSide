@@ -20,48 +20,49 @@
 # Author : Thomas Fillon <thomas@parisson.com>
 """
 Module Yaafe Analyzer
-Created on Thu Jun 13 16:05:02 2013
-
-@author: Thomas Fillon
 """
+
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from yaafelib import *
+
+import yaafelib
 import numpy
+from timeside.analyzer.preprocessors import downmix_to_mono
 
 
 class Yaafe(Analyzer):
+    """Yaafe feature extraction library interface analyzer"""
     implements(IAnalyzer)
 
     def __init__(self, yaafeSpecification=None):
-        super(Yaafe,self).__init__()
+        super(Yaafe, self).__init__()
 
         # Check arguments
         if yaafeSpecification is None:
-            yaafeSpecification = FeaturePlan(sample_rate=32000)
+            yaafeSpecification = yaafelib.FeaturePlan(sample_rate=32000)
             # add feature definitions manually
-            yaafeSpecification.addFeature('mfcc: MFCC blockSize=512 stepSize=256')
+            yaafeSpecification.addFeature(
+                'mfcc: MFCC blockSize=512 stepSize=256')
 
-        if isinstance(yaafeSpecification, DataFlow):
+        if isinstance(yaafeSpecification, yaafelib.DataFlow):
             self.dataFlow = yaafeSpecification
-        elif isinstance(yaafeSpecification, FeaturePlan):
+        elif isinstance(yaafeSpecification, yaafelib.FeaturePlan):
             self.featurePlan = yaafeSpecification
             self.dataFlow = self.featurePlan.getDataFlow()
         else:
             raise TypeError("'%s' Type must be either '%s' or '%s'" %
                             (str(yaafeSpecification),
-                             str(DataFlow),
-                             str(FeaturePlan)))
+                             str(yaafelib.DataFlow),
+                             str(yaafelib.FeaturePlan)))
         self.yaafe_engine = None
-
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Yaafe, self).setup(channels, samplerate, blocksize, totalframes)
         # Configure a YAAFE engine
-        self.yaafe_engine = Engine()
+        self.yaafe_engine = yaafelib.Engine()
         self.yaafe_engine.load(self.dataFlow)
         self.yaafe_engine.reset()
         self.input_samplerate = samplerate
@@ -82,14 +83,13 @@ class Yaafe(Analyzer):
     def unit():
         return ''
 
+    @downmix_to_mono
     def process(self, frames, eod=False):
         # do process things...
-        # Downmixing to mono and convert to float64 for compatibility with
-        # Yaafe
-        yaafe_frames = frames.sum(
-            axis=-1, dtype=numpy.float64) / frames.shape[-1]
-        # Reshape for compatibility with Yaafe input format
-        yaafe_frames.shape = (1, yaafe_frames.shape[0])
+        # Convert to float64and reshape
+        # for compatibility with Yaafe engine
+        yaafe_frames = frames.astype(numpy.float64).reshape(1, -1)
+
         # write audio array on 'audio' input
         self.yaafe_engine.writeInput('audio', yaafe_frames)
         # process available data
@@ -114,10 +114,10 @@ class Yaafe(Analyzer):
             result.data_object.value = self.yaafe_engine.readOutput(featName)
 
             yaafe_metadata = self.yaafe_engine.getOutputs()[featName]
-            result.frame_metadata.blocksize = yaafe_metadata['frameLength']
-            result.frame_metadata.stepsize = yaafe_metadata['sampleStep']
-            result.frame_metadata.samplerate = yaafe_metadata['sampleRate']
+            result.data_object.frame_metadata.blocksize = yaafe_metadata['frameLength']
+            result.data_object.frame_metadata.stepsize = yaafe_metadata['sampleStep']
+            result.data_object.frame_metadata.samplerate = yaafe_metadata['sampleRate']
 
             # Store results in Container
             if len(result.data_object.value):
-                self.process_pipe.results.add(result)
+                self.add_result(result)

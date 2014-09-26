@@ -19,14 +19,14 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc
+from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
 
 class WebMEncoder(GstEncoder):
-    """ gstreamer-based webm encoder and muxer """
+
+    """ gstreamer-based WebM encoder """
     implements(IEncoder)
 
     def __init__(self, output, streaming=False, overwrite=False, video=False):
@@ -71,7 +71,7 @@ class WebMEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def description():
-        return "WebM GStreamer based encoder and muxer"
+        return "WebM GStreamer based encoder"
 
     @staticmethod
     @interfacedoc
@@ -93,7 +93,5 @@ class WebMEncoder(GstEncoder):
         self.metadata = metadata
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
-    from tests import test_encoding, test_transcoding
-    from tests.unit_timeside import run_test_module
-    run_test_module([test_encoding, test_transcoding], test_prefix='testWebM')
+    import doctest
+    doctest.testmod()

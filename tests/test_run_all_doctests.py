@@ -20,10 +20,11 @@
 
 # Authors:
 #   Thomas Fillon <thomas  at parisson.com>
-from unit_timeside import *
+import unittest
+from unit_timeside import TestRunner
 import doctest
 import timeside
-import pkgutil
+from timeside.tools.package import discover_modules
 
 
 def load_tests(loader, tests, ignore):
@@ -31,16 +32,23 @@ def load_tests(loader, tests, ignore):
     finder = doctest.DocTestFinder(exclude_empty=False)
 
     # Create tests for doctest in timeside modules and sub-modules
-    modules_list = [modname for _, modname, _ in pkgutil.walk_packages(
-                    path=timeside.__path__,
-                    prefix=timeside.__name__ + '.',
-                    onerror=lambda x: None)]
+    modules_list = discover_modules(timeside.__name__)
 
     for module in modules_list:
-        tests.addTests(doctest.DocTestSuite(module, test_finder=finder))
+        _tmp = __import__(module, fromlist=['DOCTEST_ALIAS'])
+        try:
+            DOCTEST_ALIAS = _tmp.DOCTEST_ALIAS
+        except AttributeError:
+            DOCTEST_ALIAS = {}
+
+        tests.addTests(doctest.DocTestSuite(module, extraglobs=DOCTEST_ALIAS,
+                                            test_finder=finder))
 
     return tests
 
 
 if __name__ == '__main__':
-    unittest.main(testRunner=TestRunner())
+    import os
+     # Do not run doctest for environment without a display (e.g. server)
+    if 'DISPLAY' in os.environ:
+        unittest.main(testRunner=TestRunner())

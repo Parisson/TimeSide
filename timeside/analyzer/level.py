@@ -24,9 +24,12 @@ from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IValueAnalyzer
 import numpy as np
+from timeside.analyzer.utils import MACHINE_EPSILON
 
 
 class Level(Analyzer):
+
+    """RMS level analyzer"""
     implements(IValueAnalyzer)
 
     @interfacedoc
@@ -46,7 +49,7 @@ class Level(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Level Analyzer"
+        return "Level"
 
     @staticmethod
     @interfacedoc
@@ -56,12 +59,12 @@ class Level(Analyzer):
     def process(self, frames, eod=False):
         if frames.size:
             # max_level
-            max_value = frames.max()
+            max_value = np.abs(frames).max()
             if max_value > self.max_value:
                 self.max_value = max_value
             # rms_level
             self.mean_values = np.append(self.mean_values,
-                                            np.mean(np.square(frames)))
+                                         np.mean(np.square(frames)))
         return frames, eod
 
     def post_process(self):
@@ -71,15 +74,22 @@ class Level(Analyzer):
         max_level.id_metadata.id += '.' + "max"
         max_level.id_metadata.name += ' ' + "Max"
 
-        max_level.data_object.value = np.round(20*np.log10(self.max_value), 3)
-        self.process_pipe.results.add(max_level)
+        if self.max_value == 0:  # Prevent np.log10(0) = Inf
+            self.max_value = MACHINE_EPSILON
+
+        max_level.data_object.value = np.round(
+            20 * np.log10(self.max_value), 3)
+        self.add_result(max_level)
 
         # RMS level
         rms_level = self.new_result(data_mode='value', time_mode='global')
         rms_level.id_metadata.id += '.' + "rms"
         rms_level.id_metadata.name += ' ' + "RMS"
 
-        rms_level.data_object.value = np.round(20*np.log10(
-                                np.sqrt(np.mean(self.mean_values))), 3)
-        self.process_pipe.results.add(rms_level)
+        rms_val = np.sqrt(np.mean(self.mean_values))
 
+        if rms_val == 0:
+            rms_val = MACHINE_EPSILON
+
+        rms_level.data_object.value = np.round(20 * np.log10(rms_val), 3)
+        self.add_result(rms_level)

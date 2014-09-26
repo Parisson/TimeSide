@@ -2,39 +2,99 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-.. image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
+
+TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
+
+
+Build status
+============
+- Branch **master** : |travis_master| |coveralls_master|
+- Branch **dev** : |travis_dev| |coveralls_dev|
+
+.. |travis_master| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
     :target: https://travis-ci.org/yomguy/TimeSide/
 
-TimeSide is a set of python components enabling audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on big media data corpus. Its simple plugin architecture can be adapted to various usecases.
+.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
+    :target: https://travis-ci.org/yomguy/TimeSide/
 
-It also includes a smart HTML5 interactive user interface embeddable in any web application to provide various media format playback, on the fly transcoding and streaming, fancy waveforms and spectrograms, various low and high level audio analyzers, semantic labelling and segmentation.
+.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+
+.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+
 
 
 Goals
-=====
-
-We just **need** a python library to:
+======
 
 * **Do** asynchronous and fast audio processing with Python,
-* **Decode** audio frames from ANY format into numpy arrays,
-* **Analyze** audio content with some state-of-the-art audio feature extraction libraries,
-* **Organize**, serialize and save analysis metadata through various formats,
-* **Draw** various fancy waveforms, spectrograms and other cool graphers,
+* **Decode** audio frames from **any** audio or video media format into numpy arrays,
+* **Analyze** audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors
+* **Visualize** sounds with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
+* **Organize**, **serialize** and **save** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
-* **Index**, **tag** and **organize semantic metadata** (see `Telemeta <http://telemeta.org>`_ which embed TimeSide).
+* **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 
 
 Architecture
 ============
 
-The streaming architecture of TimeSide relies on 2 main parts: a process engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
+The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
-.. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_schema.png
+.. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
+  :width: 800 px
 
 
 Processors
 ==========
+
+IDecoder
+---------
+
+  * FileDecoder [gst_dec]
+  * ArrayDecoder [array_dec]
+  * LiveDecoder [gst_live_dec]
+
+IAnalyzer
+---------
+
+  *  AubioTemporal [aubio_temporal]
+  *  AubioPitch [aubio_pitch]
+  *  AubioMfcc [aubio_mfcc]
+  *  AubioMelEnergy [aubio_melenergy]
+  *  AubioSpecdesc [aubio_specdesc]
+  *  Yaafe [yaafe]
+  *  Spectrogram [spectrogram_analyzer]
+  *  Waveform [waveform_analyzer]
+  *  VampSimpleHost [vamp_simple_host]
+  *  IRITSpeechEntropy [irit_speech_entropy]
+  *  IRITSpeech4Hz [irit_speech_4hz]
+  *  OnsetDetectionFunction [odf]
+  *  LimsiSad [limsi_sad]
+
+IValueAnalyzer
+---------------
+
+  * Level [level]
+  * MeanDCShift [mean_dc_shift]
+
+IGrapher
+---------
+
+  *  Waveform [waveform_simple]
+  *  WaveformCentroid [waveform_centroid]
+  *  WaveformTransparent [waveform_transparent]
+  *  WaveformContourBlack [waveform_contour_black]
+  *  WaveformContourWhite [waveform_contour_white]
+  *  SpectrogramLog [spectrogram_log]
+  *  SpectrogramLinear [spectrogram_lin]
+  *  Display.aubio_pitch.pitch [grapher_aubio_pitch]
+  *  Display.odf [grapher_odf]
+  *  Display.waveform_analyzer [grapher_waveform]
+  *  Display.irit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
 
 IEncoder
 ---------
@@ -45,39 +105,6 @@ IEncoder
   * FlacEncoder [gst_flac_enc]
   * AacEncoder [gst_aac_enc]
   * WebMEncoder [gst_webm_enc]
-
-IDecoder
----------
-
-  * FileDecoder [gst_dec]
-  * ArrayDecoder [array_dec]
-
-IGrapher
----------
-
-  * Waveform [waveform_simple]
-  * WaveformCentroid [waveform_centroid]
-  * WaveformTransparent [waveform_transparent]
-  * WaveformContourBlack [waveform_contour_black]
-  * WaveformContourWhite [waveform_contour_white]
-  * SpectrogramLog [spectrogram_log]
-  * SpectrogramLinear [spectrogram_lin]
-
-IAnalyzer
----------
-
-  * Level [level]
-  * MeanDCShift [mean_dc_shift]
-  * AubioTemporal [aubio_temporal]
-  * AubioPitch [aubio_pitch]
-  * AubioMfcc [aubio_mfcc]
-  * AubioMelEnergy [aubio_melenergy]
-  * AubioSpecdesc [aubio_specdesc]
-  * Yaafe [yaafe]
-  * Spectrogram [spectrogram_analyzer]
-  * Waveform [waveform_analyzer]
-  * VampSimpleHost [vamp_simple_host]
-  * IRITSpeechEntropy [irit_speech_entropy]
-  * IRITSpeech4Hz [irit_speech_4hz]
-  * OnsetDetectionFunction [odf]
+  * OpusEncoder [gst_opus_enc]
+  * AudioSink [gst_audio_sink_enc]
 

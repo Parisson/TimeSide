@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Author : Thomas fillon <thomas@parisson.fr>
+# Author : Thomas fillon <thomas@parisson.com>
 '''
     Collections of preprocessors to use as decorators for the analyzers process
 
@@ -27,6 +27,7 @@
         - Adapt the frames to match the input_blocksize and input_stepsize
             of the analyzer
 '''
+
 
 def downmix_to_mono(process_func):
     '''
@@ -160,8 +161,8 @@ def frames_adapter(process_func):
             if eod and len(eod_list):
                 eod_list[-1] = eod
 
-            for index, eod in zip(xrange(0, nb_frames*self.stepsize, self.stepsize), eod_list):
-                yield (stack[index:index + self.blocksize],eod)
+            for index, eod in zip(xrange(0, nb_frames * self.stepsize, self.stepsize), eod_list):
+                yield (stack[index:index + self.blocksize], eod)
 
     @functools.wraps(process_func)
     def wrapper(analyzer, frames, eod):
@@ -179,7 +180,5 @@ def frames_adapter(process_func):
 
 
 if __name__ == "__main__":
-    # Run doctest from __main__ and unittest from test_analyzer_preprocessors
-    from tests import test_analyzer_preprocessors
-    from tests.unit_timeside import run_test_module
-    run_test_module(test_analyzer_preprocessors)
+    import doctest
+    doctest.testmod()

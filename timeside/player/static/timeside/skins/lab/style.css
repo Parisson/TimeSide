@@ -1,0 +1,146 @@
+/*
+* Style for the timeside player. The player div is supposed to be of class .ts-player. Change if needed
+* For details, see http://code.google.com/p/timeside/wiki/UiGuide?ts=1308677096&updated=UiGuide#CSS_and_skins
+*/
+
+.ts-player {
+    padding: 0;
+    border: solid 1px #ADADAD;
+    margin-top: 2px;
+}
+
+
+.ts-player .ts-ruler{
+    color: white;
+    background-color: #2E2E2E;
+    font-size: 10px;
+    line-height: 13px;
+}
+/*svg style, MUST BE A SINGLE SELECTOR. FOR INSTANCE, THIS DOES NOT WORK WHEN SVG IS NOT SUPPORTED:
+  ".ts-player .ts-ruler .ts-svg-ruler-upper-rect" */
+.ts-svg-ruler-upper-rect{
+    fill:  #595959;
+    stroke-width:0;
+    stroke: #595959; /*to be sure...*/
+}
+/*svg style, MUST BE A SINGLE SELECTOR. FOR INSTANCE, THIS DOES NOT WORK WHEN SVG IS NOT SUPPORTED:
+  ".ts-player .ts-ruler .ts-svg-ruler-lines"*/
+.ts-svg-ruler-lines{
+    stroke-width:1;
+    stroke: #ADADAD;
+}
+
+/*wave:*/
+.ts-player .ts-wave {
+    height: 130px;
+}
+
+/*.ts-player .ts-viewer .ts-marker {*/
+.ts-player .ts-ruler .ts-marker {
+     padding: 0 0.5em;
+    background: #e65911;
+    color: #FFF;
+    text-decoration: none;
+}
+/*svg style, MUST BE A SINGLE SELECTOR. FOR INSTANCE, THIS DOES NOT WORK WHEN SVG IS NOT SUPPORTED:
+  ".ts-player .ts-wave .ts-image-canvas .ts-svg-marker-line" */
+.ts-svg-marker-line {
+    fill: #e65911;
+    stroke-width:0;
+}
+
+/*.ts-player .ts-viewer a.ts-pointer {*/
+.ts-player .ts-ruler a.ts-pointer {
+    color: #BB0000;
+    background-color: white;
+    padding: 0 0.5em;
+    border: solid 1px #BB0000;
+
+    text-decoration: none;
+     -moz-border-radius: .3em;
+    -webkit-border-radius: .3em;
+    border-radius: .3em;
+    /*color: #3c4251; #6A0307 !important;*/
+}
+/*svg style, MUST BE A SINGLE SELECTOR. FOR INSTANCE, THIS DOES NOT WORK WHEN SVG IS NOT SUPPORTED:
+  ".ts-player .ts-wave .ts-image-canvas .ts-svg-pointer-line" */
+.ts-svg-pointer-line {
+    fill: #BB0000;
+    stroke-width:0;
+}
+
+.ts-player .ts-wave .ts-image {
+    background: #090e0d ;
+}
+
+.ts-player .ts-control {
+    background: url('img/controlbg.png');
+    font-size: 90%;
+}
+
+ /** display (inline-block) and overflow of a is set inside javascript*/
+.ts-player .ts-control .ts-button {
+    background-repeat: no-repeat;
+    height:28px;
+    width:28px;
+}
+.ts-player .ts-control .ts-play {
+    background-image: url('img/play.png');
+}
+
+.ts-player .ts-control  .ts-pause {
+    background-image: url('img/pause.png');
+}
+
+.ts-player .ts-control  .ts-rewind {
+    background-image: url('img/rewind.png');
+}
+
+.ts-player .ts-control  .ts-forward {
+    background-image: url('img/forward.png');
+}
+
+.ts-player .ts-control  .ts-set-marker {
+    background-image: url('img/setmarker.png');
+}
+
+.ts-player .ts-control .ts-volume-speaker-on {
+    background-image: url('img/volumeon.png');
+    width:24px;
+}
+.ts-player .ts-control .ts-volume-speaker-off {
+    background-image: url('img/volumeoff.png');
+    width:24px;
+}
+.ts-player .ts-control .ts-volume-bar-container { 
+    background: url('img/controlbg-inverted.png');
+    background-position: -3px left;
+    background-repeat: repeat-x;
+    height:10px;
+    width:42px;
+    margin-top:9px;
+     -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    
+}
+.ts-player .ts-control .ts-volume-bar { /*width will be changed inside the code*/
+    background-color: #e4eaf1;
+     -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+/*position is set to absolute inside javascript*/
+.ts-player .ts-control .ts-wait {
+    background-repeat: no-repeat;
+    background-image: url('img/wait3.gif');
+    text-align: right;
+    right:0;
+    height:28px;
+    line-height:28px;
+    top:0;
+    background-position: right center;
+    padding-right: 60px;
+    font-size: 80%;
+    color:white;
+}

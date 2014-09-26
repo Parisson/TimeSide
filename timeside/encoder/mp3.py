@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2007-2012 Parisson SARL
-# Copyright (c) 2006-2012 Guillaume Pellerin <pellerin@parisson.com>
-# Copyright (c) 2010-2012 Paul Brossier <piem@piem.org>
+# Copyright (C) 2007-2014 Parisson SARL
+# Copyright (c) 2006-2014 Guillaume Pellerin <pellerin@parisson.com>
+# Copyright (c) 2010-2014 Paul Brossier <piem@piem.org>
 # Copyright (c) 2009-2010 Olivier Guilyardi <olivier@samalyse.com>
-
+# Copyright (c) 2013-2014 Thomas Fillon <thomas@parisson.com>
 
 # This file is part of TimeSide.
 
@@ -23,24 +23,26 @@
 
 # Authors: Guillaume Pellerin <yomguy@parisson.com>
 #          Paul Brossier <piem@piem.org>
+#          Thomas Fillon <thomas@parisson.com>
 
 from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
-from timeside.tools import *
 
-import mutagen
 
 class Mp3Encoder(GstEncoder):
-    """ gstreamer-based mp3 encoder """
+
+    """ gstreamer-based MP3 encoder """
     implements(IEncoder)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
-        super(Mp3Encoder, self).setup(channels, samplerate, blocksize, totalframes)
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
+        super(Mp3Encoder, self).setup(channels, samplerate, blocksize,
+                                      totalframes)
 
         self.pipe = '''appsrc name=src
-                  ! audioconvert
+                  ! audioconvert ! audioresample
                   ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard
                   ! xingmux
                   ! id3v2mux
@@ -49,13 +51,13 @@ class Mp3Encoder(GstEncoder):
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
             ! queue ! filesink location=%s
-            t. ! queue ! appsink name=app sync=False
+            t. ! queue! appsink name=app sync=False
             ''' % self.filename
 
-        elif self.filename :
+        elif self.filename:
             self.pipe += '! filesink location=%s async=False sync=False ' % self.filename
         else:
-            self.pipe += '! queue ! appsink name=app sync=False '
+            self.pipe += '! queue ! appsink name=app sync=False'
 
         self.start_pipeline(channels, samplerate)
 
@@ -84,23 +86,20 @@ class Mp3Encoder(GstEncoder):
     def mime_type():
         return "audio/mpeg"
 
-    @interfacedoc
-    def set_metadata(self, metadata):
-        self.metadata = metadata
-
     def write_metadata(self):
         """Write all ID3v2.4 tags to file from self.metadata"""
+        import mutagen
         from mutagen import id3
+
         id3 = id3.ID3(self.filename)
         for tag in self.metadata.keys():
             value = self.metadata[tag]
-            frame = mutagen.id3.Frames[tag](3,value)
+            frame = mutagen.id3.Frames[tag](3, value)
             try:
                 id3.add(frame)
             except:
-                raise IOError('EncoderError: cannot tag "'+tag+'"')
+                raise IOError('EncoderError: cannot tag "' + tag + '"')
         try:
             id3.save()
         except:
             raise IOError('EncoderError: cannot write tags')
-

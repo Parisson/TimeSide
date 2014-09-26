@@ -29,7 +29,11 @@ sys.path.insert(0, os.path.abspath('../../'))
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.viewcode', 'sphinx.ext.autosummary', 'sphinx.ext.doctest', 'numpydoc']
 
 doctest_path = os.path.abspath('../../')
-
+doctest_global_setup = '''
+import os
+# os.getcwd() -> /doc
+wav_file = os.path.join(os.getcwd(),'../tests/samples/sweep.mp3')
+'''
 
 autodoc_default_flags = 'show-inheritance'
 autoclass_content = 'both'
@@ -51,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'TimeSide'
-copyright = u'2013, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -261,7 +265,7 @@ texinfo_documents = [
 epub_title = u'TimeSide'
 epub_author = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 epub_publisher = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
-epub_copyright = u'2013, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+epub_copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

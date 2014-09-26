@@ -1,6 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from setuptools import setup, find_packages
+import sys
+from setuptools.command.test import test as TestCommand
+
+# Pytest
+class PyTest(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = ['tests', '--ignore', 'tests/sandbox']
+        self.test_suite = True
+
+    def run_tests(self):
+        #import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
+
+
 
 CLASSIFIERS = [
     'Intended Audience :: Science/Research',
@@ -17,7 +35,7 @@ CLASSIFIERS = [
     'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 
-KEYWORDS = 'audio analysis features extraction transcoding graph plot HTML5 player metadata'
+KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize plot HTML5 interactive metadata player'
 
 setup(
   name = "TimeSide",
@@ -26,24 +44,36 @@ setup(
   long_description = open('README.rst').read(),
   author = "Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
   author_email = "yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
-  version = '0.5.3',
+  version = '0.5.7',
   install_requires = [
-        'setuptools',
         'numpy',
         'mutagen',
-        'pil',
+        'pillow',
         'h5py',
-        'yaml',
+        'tables',
+        'pyyaml',
         'simplejson',
         'scipy',
+        'matplotlib',
+        'django>=1.4',
+        'django-extensions',
+        'djangorestframework',
+        'south',
         'py_sonicvisualiser',
+        'pyannote.core',
+        'pyannote.features',
+        'traits'
+        'networkx'
         ],
+
   platforms=['OS Independent'],
   license='Gnu Public License V2',
   classifiers = CLASSIFIERS,
   keywords = KEYWORDS,
-  packages = find_packages(),
+  packages = ['timeside'],
   include_package_data = True,
   zip_safe = False,
   scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
-)
+  tests_require=['pytest'],
+  cmdclass = {'test': PyTest},
+    )

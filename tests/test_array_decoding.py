@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 from __future__ import division
 
-from timeside.decoder.core import ArrayDecoder
+from timeside.decoder.array import ArrayDecoder
 from unit_timeside import *
-
 
 import numpy as np
 
@@ -20,14 +19,12 @@ class TestDecoding(unittest.TestCase):
         self.expected_duration = self.array_duration
         self.expected_is_segment = False
 
-
     def test1DArray(self):
         "Test 1D Array decoding"
         self.source_samplerate = 44100
         self.source = np.random.randn(
             self.array_duration * self.source_samplerate,)
         self.source_channels = 1
-
 
     def test2DArrayMono(self):
         "Test 2D Array mono decoding"
@@ -59,7 +56,6 @@ class TestDecoding(unittest.TestCase):
         decoder.setup(samplerate=self.samplerate, channels=self.channels,
                       blocksize=self.blocksize)
 
-
         # Check input
         self.assertEqual(self.source_samplerate, decoder.input_samplerate)
         self.assertEqual(self.expected_is_segment, decoder.is_segment)
@@ -75,7 +71,6 @@ class TestDecoding(unittest.TestCase):
         self.assertIsInstance(decoder.encoding(), str)
         self.assertIsInstance(decoder.resolution(), int)
         self.assertIsNone(decoder.metadata())
-
 
         totalframes = 0
 
@@ -104,8 +99,8 @@ class TestDecoding(unittest.TestCase):
             self.assertEqual(
                 decoder.input_samplerate, decoder.output_samplerate)
 
-
-        self.assertEqual(totalframes, self.expected_duration * decoder.output_samplerate)
+        self.assertEqual(totalframes,
+                         self.expected_duration * decoder.output_samplerate)
         self.assertEquals(totalframes, decoder.totalframes())
 
 
@@ -117,8 +112,6 @@ class TestDecodingSegment(TestDecoding):
         self.duration = 3
         self.expected_is_segment = True
         self.expected_duration = self.duration
-
-
 
 
 class TestDecodingSegmentDefaultStart(TestDecodingSegment):

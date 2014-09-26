@@ -6,7 +6,7 @@ from math import pi
 import numpy as np
 from unit_timeside import *
 from timeside.decoder.utils import get_uri, get_media_uri_info
-from timeside.decoder import ArrayDecoder
+from timeside.decoder.array import ArrayDecoder
 import os
 from tools import tmp_file_sink
 
@@ -87,6 +87,13 @@ class TestEncoding(unittest.TestCase):
             self.encoder = self.encoder_function(self.sink,
                                                  overwrite=self.overwrite,
                                                  video=True)
+
+    def testOpus(self):
+        "Test opus encoding"
+        from timeside.encoder.opus import OpusEncoder
+        self.encoder_function = OpusEncoder
+        self.delta = 0.1
+        self.samplerate = 48000  # 44100 is not supported by opusenc
 
     def tearDown(self):
 

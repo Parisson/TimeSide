@@ -18,34 +18,48 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Paul Brossier <piem@piem.org>
-
+from __future__ import division
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from preprocessors import downmix_to_mono, frames_adapter
+from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
+from ..tools.parameters import Unicode, Int, HasTraits
+
+
 import numpy as np
 
 
 class Spectrogram(Analyzer):
+    """Spectrogram analyzer"""
     implements(IAnalyzer)
 
-    def __init__(self, blocksize=2048, stepsize=None):
+    # Define Parameters
+    class _Param(HasTraits):
+        FFT_SIZE = Int()
+        input_blocksize = Int()
+        input_stepsize = Int()
+
+    def __init__(self, blocksize=2048, stepsize=None, fft_size=None):
         super(Spectrogram, self).__init__()
 
         self.input_blocksize = blocksize
         if stepsize:
             self.input_stepsize = stepsize
         else:
-            self.input_stepsize = blocksize / 2
+            self.input_stepsize = blocksize // 2
+
+        if not fft_size:
+            self.FFT_SIZE = blocksize
+        else:
+            self.FFT_SIZE = fft_size
+
+        self.values = []
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Spectrogram, self).setup(channels, samplerate,
-              blocksize, totalframes)
-
-        self.values = []
-        self.FFT_SIZE = 2048
+                                       blocksize, totalframes)
 
     @staticmethod
     @interfacedoc
@@ -72,4 +86,8 @@ class Spectrogram(Analyzer):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
         spectrogram.parameters = {'FFT_SIZE': self.FFT_SIZE}
         spectrogram.data_object.value = self.values
-        self.process_pipe.results.add(spectrogram)
+        nb_freq = spectrogram.data_object.value.shape[1]
+        spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
+                                           self.samplerate() / self.FFT_SIZE)
+
+        self.add_result(spectrogram)

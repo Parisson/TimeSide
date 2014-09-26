@@ -23,10 +23,9 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-# from timeside.analyzer import IRITSpeech4Hz
 from yaafe import Yaafe
 import yaafelib
-from timeside.analyzer import LimsiSad
+from timeside.analyzer.limsi_sad import LimsiSad
 import numpy as N
 import sys
 
@@ -45,7 +44,7 @@ def gauss_div(data, winsize):
         meandiff = N.mean(w1, axis = 0) - N.mean(w2, axis = 0)
         invstdprod = 1. / (N.std(w1, axis = 0) * N.std(w2, axis = 0))
         ret.append(N.sum(meandiff * meandiff * invstdprod))
-    
+
     return ret
 
 
@@ -84,7 +83,7 @@ class LimsiDiarization(Analyzer):
         # feature extraction defition
         spec = yaafelib.FeaturePlan(sample_rate=16000)
         spec.addFeature('mfccchop: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256')
-        parent_analyzer = Yaafe(spec)        
+        parent_analyzer = Yaafe(spec)
         self.parents.append(parent_analyzer)
 
         # informative parameters
@@ -116,21 +115,19 @@ class LimsiDiarization(Analyzer):
         return frames, eod
 
     def post_process(self):
-        
         # extract mfcc with yaafe and store them to be used with pyannote
-        mfcc = self.process_pipe.results['yaafe.mfccchop']['data_object']['value']
-        sw = YaafeFrame(self.input_blocksize, self.input_stepsize, self.input_samplerate)
-        pyannotefeat = SlidingWindowFeature(mfcc, sw)     
+        mfcc = self.process_pipe.results.get_result_by_id('yaafe.mfccchop')['data_object']['value']
 
+        sw = YaafeFrame(self.input_blocksize, self.input_stepsize, self.input_samplerate)
+        pyannotefeat = SlidingWindowFeature(mfcc, sw)
 
         # gaussian divergence window size
         timestepsize = self.input_stepsize / float(self.input_samplerate)
         gdiff_win_size_frame = int(self.gdiff_win_size_sec / timestepsize)
         min_seg_size_frame = int(self.min_seg_size_sec / timestepsize)
 
-
         # speech activity detection
-        sadval = self.process_pipe.results[self.sad_analyzer.id() + '.sad_lhh_diff'].data_object.value[:]
+        sadval = self.process_pipe.results.get_result_by_id(self.sad_analyzer.id() + '.sad_lhh_diff').data_object.value[:]
         # indices of frames detected as speech
         speech_threshold = 0.
         frameids = [i for i, val in enumerate(sadval) if val > speech_threshold]

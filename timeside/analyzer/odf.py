@@ -21,7 +21,7 @@
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
-from timeside.analyzer import Spectrogram
+from .spectrogram import Spectrogram
 from timeside.api import IAnalyzer
 import numpy as np
 from numpy import pi as Pi
@@ -29,6 +29,8 @@ from scipy import signal
 
 
 class OnsetDetectionFunction(Analyzer):
+
+    """Onset Detection Function analyzer"""
     implements(IAnalyzer)
 
     def __init__(self, blocksize=1024, stepsize=None):
@@ -40,8 +42,9 @@ class OnsetDetectionFunction(Analyzer):
         else:
             self.input_stepsize = blocksize / 2
 
-        self.parents.append(Spectrogram(blocksize=self.input_blocksize,
-                            stepsize=self.input_stepsize))
+        self.parents['spectrogram'] = Spectrogram(
+            blocksize=self.input_blocksize,
+            stepsize=self.input_stepsize)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -70,17 +73,13 @@ class OnsetDetectionFunction(Analyzer):
     def post_process(self):
 
         #spectrogram = self.parents()[0]['spectrogram_analyzer'].data
-        spectrogram = self.process_pipe.results['spectrogram_analyzer'].data
+        results = self.process_pipe.results
+        parent_uuid = self.parents['spectrogram'].uuid()
+        spectrogram = results[parent_uuid]['spectrogram_analyzer'].data
         #spectrogram = self.pipe._results[self.parents()[0].id]
 
         # Low-pass filtering of the spectrogram amplitude along the time axis
         S = signal.lfilter(signal.hann(15)[8:], 1, abs(spectrogram), axis=0)
-
-
-        import matplotlib.pyplot as plt
-#        plt.figure()
-#        plt.imshow(np.log10(abs(spectrogram)), origin='lower', aspect='auto', interpolation='nearest')
-
 
         # Clip small value to a minimal threshold
         np.maximum(S, 1e-9, out=S)
@@ -103,9 +102,11 @@ class OnsetDetectionFunction(Analyzer):
 
         # Summation along the frequency axis
         odf_diff = S_diff.sum(axis=1)
-        odf_diff = odf_diff / np.median(odf_diff)  # Normalize
+        odf_median = np.median(odf_diff)
+        if odf_median:
+            odf_diff = odf_diff / odf_median  # Normalize
 
         odf = self.new_result(data_mode='value', time_mode='framewise')
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
         odf.data_object.value = odf_diff
-        self.process_pipe.results.add(odf)
+        self.add_result(odf)

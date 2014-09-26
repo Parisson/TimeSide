@@ -24,9 +24,10 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import numpy as np
 
-from preprocessors import downmix_to_mono, frames_adapter
 
 class Waveform(Analyzer):
+
+    """Waveform analyzer"""
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
     def __init__(self):
@@ -38,7 +39,7 @@ class Waveform(Analyzer):
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(Waveform, self).setup(channels, samplerate,
-              blocksize, totalframes)
+                                    blocksize, totalframes)
         self.values = []
         self.result_blocksize = 1
         self.result_stepsize = 1
@@ -67,4 +68,4 @@ class Waveform(Analyzer):
     def post_process(self):
         waveform = self.new_result(data_mode='value', time_mode='framewise')
         waveform.data_object.value = np.vstack(self.values)
-        self.process_pipe.results.add(waveform)
+        self.add_result(waveform)

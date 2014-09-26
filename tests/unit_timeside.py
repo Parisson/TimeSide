@@ -6,6 +6,8 @@ import sys
 import time
 from tools import check_samples
 
+check_samples()
+
 
 class _TextTestResult(unittest.TestResult):
     """A test result class that can print formatted text results to a stream.

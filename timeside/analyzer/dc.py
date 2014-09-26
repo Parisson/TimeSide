@@ -26,6 +26,8 @@ import numpy
 
 
 class MeanDCShift(Analyzer):
+
+    """Mean DC shift analyzer"""
     implements(IValueAnalyzer)
 
     @interfacedoc
@@ -61,4 +63,4 @@ class MeanDCShift(Analyzer):
         dc_result = self.new_result(data_mode='value', time_mode='global')
         dc_result.data_object.value = numpy.round(
             numpy.mean(100 * self.values), 3)
-        self.process_pipe.results.add(dc_result)
+        self.add_result(dc_result)
