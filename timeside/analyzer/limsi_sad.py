@@ -31,7 +31,9 @@ import os.path
 
 
 class GMM:
-
+    """
+    Gaussian Mixture Model
+    """
     def __init__(self, weights, means, vars):
         self.weights = weights
         self.means = means
@@ -49,27 +51,89 @@ class GMM:
         return m + N.log(N.sum(N.exp(dif),1))
 
 
+def slidewinmap(lin, winsize, func):
+    """
+    map a function to a list of elements using a sliding window
+    the window is centered on the element to process
+    missing values required by the windows corresponding to the beginning, or end
+    of the signal are replaced with the first, or last, element of the list
+
+    Parameters:
+    ----------
+    lin: input (list)
+    winsize: size of the sliding windows in samples (int)
+    func: function to be mapped on sliding windows
+    """
+    tmpin = ([lin[0]] * (winsize/2)) + list(lin) + ([lin[-1]] * (winsize -1 - winsize/2))
+    lout = []
+    for i in xrange(len(lin)):
+        lout.append(func(tmpin[i:(i+winsize)]))
+    assert(len(lin) == len(lout))
+    return lout
+
+def dilatation(lin, winsize):
+    """
+    morphological dilation
+    """
+    return slidewinmap(lin, winsize, max)
+
+def erosion(lin, winsize):
+    """
+    morphological erosion
+    """
+    return slidewinmap(lin, winsize, min)
+
+
 class LimsiSad(Analyzer):
     """
     Limsi Speech Activity Detection Systems
-    LimsiSad performs frame level speech activity detection based on GMM models
+    LimsiSad performs frame level speech activity detection based on trained GMM models
     For each frame, it computes the log likelihood difference between a speech model and a non speech model. 
     The highest is the estimate, the largest is the probability that the frame corresponds to speech.
-    The initialization of the analyzer requires to chose a model between 'etape' and 'maya'
-    'etape' models were trained on data distributed in the framework of the ETAPE campaign (http://www.afcp-parole.org/etape.html)
-    'maya' models were obtained on data collected by EREA – Centre Enseignement et Recherche en Ethnologie Amerindienne
+    Dilatation and erosion procedures are used in a latter stage to obtain speech and non speech segments
+
+    The analyser outputs 3 result structures:
+    * sad_lhh_diff: the raw frame level speech/non speech log likelihood difference
+    * sad_de_lhh_diff: frame level speech/non speech log likelihood difference
+      altered with erosion and dilatation procedures
+    * sad_segments: speech/non speech segments
     """
     implements(IAnalyzer)
     
 
-    def __init__(self, sad_model):
+    def __init__(self, sad_model, dews=0.2, speech_threshold=1., dllh_bounds=(-10., 10.)):
         """
         Parameters:
         ----------
-        sad_model : string bellowing to 'etape' 'maya'
-        alllows the selection of a SAD model:
-        'etape' is more suited to radionews material
-        'maya' is more suited to speech obtained in noisy environments
+
+        sad_model : string bellowing to ['etape', 'maya']
+          Allows the selection of trained speech activity detection models.
+          * 'etape' models were trained on data distributed in the framework of the
+            ETAPE campaign (http://www.afcp-parole.org/etape.html)
+            These models are suited for radionews material (0.974 AUC on Etape data)
+          * 'maya' models were obtained on data collected by EREA – Centre
+            Enseignement et Recherche en Ethnologie Amerindienne
+            These models are suited to speech obtained in noisy environments
+            (0.915 AUC on Maya data)
+
+
+        dews: dilatation and erosion window size (seconds)
+          This value correspond to the size in seconds of the sliding window
+          used to perform a dilation followed by an erosion procedure
+          these procedures consist to output the max (respectively the min) of the
+          speech detection estimate. The order of these procedures is aimed at removing
+          non-speech frames corresponding to fricatives or short pauses
+          The size of the windows correspond to the minimal size of the resulting
+          speech/non speech segments
+
+        speech_threshold: threshold used for speech/non speech decision
+          based on the log likelihood difference
+
+        dllh_bounds: raw log likelihood difference estimates will be bound
+          according this (min_llh_difference, max_llh_difference) tuple
+          Usefull for plotting log likelihood differences
+          if set to None, no bounding will be done
+
         """
         super(LimsiSad, self).__init__()
 
@@ -94,6 +158,9 @@ class LimsiSad(Analyzer):
         picfname = os.path.join(timeside.__path__[0], 'trained_models', 'limsi_sad_%s.pkl' % sad_model)
         self.gmms = pickle.load(open(picfname, 'rb'))
 
+        self.dews = dews
+        self.speech_threshold = speech_threshold
+        self.dllh_bounds = dllh_bounds
 
     @staticmethod
     @interfacedoc
@@ -117,18 +184,65 @@ class LimsiSad(Analyzer):
         return frames, eod
 
     def post_process(self):
+        # extract signal features
         mfcc = self.process_pipe.results['yaafe.mfcc']['data_object']['value']
         mfccd1 = self.process_pipe.results['yaafe.mfccd1']['data_object']['value']
         mfccd2 = self.process_pipe.results['yaafe.mfccd2']['data_object']['value']
-        zcr = self.process_pipe.results['yaafe.zcr']['data_object']['value']
-
+        zcr = self.process_pipe.results['yaafe.zcr']['data_object']['value']       
         features = N.concatenate((mfcc, mfccd1, mfccd2, zcr), axis=1)
 
+        # compute log likelihood difference
         res = 0.5 + 0.5 * (self.gmms[0].llh(features) - self.gmms[1].llh(features))
 
+        # bounds log likelihood difference
+        if self.dllh_bounds is not None:
+            mindiff, maxdiff = self.dllh_bounds
+            res = N.minimum(N.maximum(res,  mindiff), maxdiff)
+
+        # performs dilation, erosion, erosion, dilatation
+        ws = int(self.dews * float(self.input_samplerate ) / self.input_stepsize)
+        deed_llh = dilatation(erosion(erosion(dilatation(res, ws), ws), ws), ws)
+
+        # infer speech and non speech segments from dilated
+        # and erroded likelihood difference estimate
+        last = None
+        labels = []
+        times = []
+        durations = []
+        for i, val in enumerate([1 if e > self.speech_threshold else 0 for e in deed_llh]):
+            if val != last:
+                labels.append(val)
+                durations.append(1)
+                times.append(i)
+            else:
+                durations[-1] += 1
+            last = val
+        times = [(float(e) * self.input_stepsize) / self.input_samplerate for e in times]
+        durations = [(float(e) * self.input_stepsize) / self.input_samplerate for e in durations]
+
+
+        # outputs the raw frame level speech/non speech log likelihood difference
         sad_result = self.new_result(data_mode='value', time_mode='framewise')
         sad_result.id_metadata.id += '.' + 'sad_lhh_diff'
         sad_result.id_metadata.name += ' ' + 'Speech Activity Detection Log Likelihood Difference'
         sad_result.data_object.value = res
         self.process_pipe.results.add(sad_result)
 
+        # outputs frame level speech/non speech log likelihood difference
+        # altered with erosion and dilatation procedures
+        sad_de_result = self.new_result(data_mode='value', time_mode='framewise')
+        sad_de_result.id_metadata.id += '.' + 'sad_de_lhh_diff'
+        sad_de_result.id_metadata.name += ' ' + 'Speech Activity Detection Log Likelihood Difference | dilat | erode'
+        sad_de_result.data_object.value = deed_llh
+        self.process_pipe.results.add(sad_de_result)
+
+        # outputs speech/non speech segments
+        sad_seg_result = self.new_result(data_mode='label', time_mode='segment')
+        sad_seg_result.id_metadata.id += '.' + 'sad_segments'
+        sad_seg_result.id_metadata.name += ' ' + 'Speech Activity Detection Segments'
+        sad_seg_result.data_object.label = labels
+        sad_seg_result.data_object.time = times
+        sad_seg_result.data_object.duration = durations
+        sad_seg_result.label_metadata.label = {0: 'Not Speech', 1: 'Speech'}
+
+        self.process_pipe.results.add(sad_seg_result)
