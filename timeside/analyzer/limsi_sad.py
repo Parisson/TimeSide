@@ -41,14 +41,14 @@ class GMM:
 
     def llh(self, x):
         n_samples, n_dim = x.shape
-        llh = -0.5 * (n_dim * N.log(2 * N.pi) + N.sum(N.log(self.vars), 1)
-                      + N.sum((self.means ** 2) / self.vars, 1)
-                      - 2 * N.dot(x, (self.means / self.vars).T)
-                      + N.dot(x ** 2, (1.0 / self.vars).T))
-        + N.log(self.weights)
-        m = N.amax(llh,1)
-        dif = llh - N.atleast_2d(m).T
-        return m + N.log(N.sum(N.exp(dif),1))
+        llh = -0.5 * (n_dim * np.log(2 * np.pi) + np.sum(np.log(self.vars), 1)
+                      + np.sum((self.means ** 2) / self.vars, 1)
+                      - 2 * np.dot(x, (self.means / self.vars).T)
+                      + np.dot(x ** 2, (1.0 / self.vars).T))
+        + np.log(self.weights)
+        m = np.amax(llh,1)
+        dif = llh - np.atleast_2d(m).T
+        return m + np.log(np.sum(np.exp(dif),1))
 
 
 def slidewinmap(lin, winsize, func):
@@ -196,7 +196,7 @@ class LimsiSad(Analyzer):
         mfccd1 = yaafe_result['yaafe.mfccd1']['data_object']['value']
         mfccd2 = yaafe_result['yaafe.mfccd2']['data_object']['value']
         zcr = yaafe_result['yaafe.zcr']['data_object']['value']
-        features = N.concatenate((mfcc, mfccd1, mfccd2, zcr), axis=1)
+        features = np.concatenate((mfcc, mfccd1, mfccd2, zcr), axis=1)
 
         # compute log likelihood difference
         res = 0.5 + 0.5 * (self.gmms[0].llh(features) - self.gmms[1].llh(features))
@@ -204,7 +204,7 @@ class LimsiSad(Analyzer):
         # bounds log likelihood difference
         if self.dllh_bounds is not None:
             mindiff, maxdiff = self.dllh_bounds
-            res = N.minimum(N.maximum(res,  mindiff), maxdiff)
+            res = np.minimum(np.maximum(res,  mindiff), maxdiff)
 
         # performs dilation, erosion, erosion, dilatation
         ws = int(self.dews * float(self.input_samplerate ) / self.input_stepsize)
@@ -233,7 +233,7 @@ class LimsiSad(Analyzer):
         sad_result.id_metadata.id += '.' + 'sad_lhh_diff'
         sad_result.id_metadata.name += ' ' + 'Speech Activity Detection Log Likelihood Difference'
         sad_result.data_object.value = res
-        self.process_pipe.results.add(sad_result)
+        self.add_result(sad_result)
 
         # outputs frame level speech/non speech log likelihood difference
         # altered with erosion and dilatation procedures
@@ -241,7 +241,7 @@ class LimsiSad(Analyzer):
         sad_de_result.id_metadata.id += '.' + 'sad_de_lhh_diff'
         sad_de_result.id_metadata.name += ' ' + 'Speech Activity Detection Log Likelihood Difference | dilat | erode'
         sad_de_result.data_object.value = deed_llh
-        self.process_pipe.results.add(sad_de_result)
+        self.add_result(sad_de_result)
 
         # outputs speech/non speech segments
         sad_seg_result = self.new_result(data_mode='label', time_mode='segment')
@@ -250,6 +250,6 @@ class LimsiSad(Analyzer):
         sad_seg_result.data_object.label = labels
         sad_seg_result.data_object.time = times
         sad_seg_result.data_object.duration = durations
-        sad_seg_result.label_metadata.label = {0: 'Not Speech', 1: 'Speech'}
+        sad_seg_result.data_object.label_metadata.label = {0: 'Not Speech', 1: 'Speech'}
 
-        self.process_pipe.results.add(sad_seg_result)
+        self.add_result(sad_seg_result)

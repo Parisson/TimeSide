@@ -1119,7 +1119,7 @@ class AnalyzerResultContainer(dict):
             if res.data_mode == 'value':
                 labels = None
             elif res.data_mode == 'label':
-                labdic = res.label_metadata.label
+                labdic = res.data_object.label_metadata.label
                 labels = [labdic[k] for k in data]
             else:
                 raise NotImplementedError()
