@@ -296,6 +296,17 @@ Optional:
 User Interfaces
 ===============
 
+Python
+-------
+
+Of course all the TimeSide are available in our beloved python envionment.
+As IPython is really great for discovering objects with completion, writing notebooks, we strongly advise to install and use it::
+
+  sudo apt-get install ipython
+  ipython
+  >>> import timeside
+
+
 Shell
 ------
 
@@ -419,6 +430,24 @@ To stop the virtual box::
 
  exit
  vagrant halt
+
+
+Docker
+-------
+
+Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
+
+Simply pull our dev image and run::
+
+  sudo docker pull yomguy/timeside
+  sudo docker run -i -t yomguy/timeside bash
+
+To start a development process, it is advised to checkout the dev branch::
+
+  cd /root/apps/TimeSide
+  git checkout dev
+
+More infos: https://registry.hub.docker.com/u/yomguy/timeside/
 
 
 Sponsors and Partners

@@ -61,7 +61,8 @@ setup(
         'djangorestframework',
         'south',
         'traits',
-        'networkx'
+        'networkx',
+        'sphinx_rtd_theme',
         ],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
