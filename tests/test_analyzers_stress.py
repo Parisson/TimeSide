@@ -23,9 +23,10 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
         """Internal function that test if there is NaN in the results
         of a given analyzer"""
 
-        pipe = (self.decoder | analyzer_cls())
+        analyzer = analyzer_cls()
+        pipe = (self.decoder | analyzer)
         pipe.run()
-        for key, result in pipe.results.items():
+        for key, result in analyzer.results.items():
             if 'value' in result.data_object.keys():
                 # Test for NaN
                 self.assertFalse(np.any(np.isnan(result.data)),

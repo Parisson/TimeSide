@@ -28,7 +28,6 @@ from timeside.api import IAnalyzer
 from timeside.analyzer.utils import MACHINE_EPSILON
 from timeside.tools.buffering import BufferTable
 
-
 import numpy
 from scipy.signal import firwin, lfilter, lfiltic
 from scipy.ndimage.morphology import binary_opening, binary_closing
@@ -52,12 +51,9 @@ class IRITStartSeg(Analyzer):
 
         # self.energy = []
 
-
-
-        self.maxenergy = 0.002
+        self.max_energy = 0.002*2
         self.min_overlap = 20
-        self.threshold = 0.1
-
+        self.threshold = 0.12
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
@@ -73,7 +69,7 @@ class IRITStartSeg(Analyzer):
 
         sr = float(samplerate)
         lowFreq = 100.0
-        highFreq = sr / 2
+        highFreq = sr / 5
         f1 = lowFreq / sr
         f2 = highFreq / sr
         numtaps = 10
@@ -109,7 +105,7 @@ class IRITStartSeg(Analyzer):
         #                                              frames.T[0]) ** 2))]
         # Compute energy
         env, self.filtre_z = lfilter(b=self.filtre, a=1.0, axis=0,
-                                     x=frames[:, 0],
+                                     x=frames[:,0],
                                      zi=self.filtre_z)
         self._buffer.append('energy', numpy.sqrt(numpy.mean(env ** 2)))
 
@@ -124,9 +120,7 @@ class IRITStartSeg(Analyzer):
         if self.energy.max():
             self.energy = self.energy / self.energy.max()
 
-        silences = numpy.zeros((1, len(self.energy)))[0]
-        silences[self.energy < self.maxenergy] = 1
-
+        silences = [1 if e < self.max_energy else 0 for e in self.energy]
         step = float(self.input_stepsize) / float(self.samplerate())
 
         models_dir = os.path.join(timeside.__path__[0],
@@ -143,6 +137,7 @@ class IRITStartSeg(Analyzer):
         struct = [1] * len(prototype)
         silences = binary_closing(silences, struct)
         silences = binary_opening(silences, struct)
+
         seg = [0, -1, silences[0]]
         silencesList = []
         for i, v in enumerate(silences):
@@ -152,7 +147,7 @@ class IRITStartSeg(Analyzer):
                 seg = [i, -1, v]
         seg[1] = i
         silencesList.append(tuple(seg))
-        segsList = []
+        selected_segs = []
         candidates = []
 
         for s in silencesList:
@@ -164,15 +159,14 @@ class IRITStartSeg(Analyzer):
                 dist = min([d1, d2])
 
                 candidates.append((s[0], s[1], dist))
-
                 if dist < self.threshold:
-                    segsList.append(s)
+                    selected_segs.append(s)
 
         label = {0: 'Start', 1: 'Session'}
 
         if self._save_lab:
             with open('out.lab', 'w') as f:
-                for s in segsList:
+                for s in selected_segs:
                     f.write(
                         '%.2f\t%.2f\t%s\n' %
                         (s[0] * step, s[1] * step, label[s[2]]))
@@ -187,12 +181,12 @@ class IRITStartSeg(Analyzer):
         segs.id_metadata.id += '.' + 'segments'
         segs.id_metadata.name += ' ' + 'Segments'
         segs.data_object.label_metadata.label = label
-        segs.data_object.label = [s[2] for s in segsList]
+        segs.data_object.label = [s[2] for s in selected_segs]
         segs.data_object.time = [(float(s[0]) * step)
-                                 for s in segsList]
+                                 for s in selected_segs]
         segs.data_object.duration = [(float(s[1] - s[0]) * step)
-                                     for s in segsList]
-        self.process_pipe.results.add(segs)
+                                     for s in selected_segs]
+        self.add_result(segs)
 
     def release(self):
         self._buffer.close()

@@ -29,7 +29,7 @@ class TestAnalyzerDC(unittest.TestCase):
         (decoder | self.analyzer).run()
         results = self.analyzer.results
         for result_id in self.expected.keys():
-            result = results.get_result_by_id(result_id)
+            result = results[result_id]
             self.assertEquals(result.data_object.value,
                               self.expected[result_id])
 

@@ -42,8 +42,9 @@ class OnsetDetectionFunction(Analyzer):
         else:
             self.input_stepsize = blocksize / 2
 
-        self.parents.append(Spectrogram(blocksize=self.input_blocksize,
-                            stepsize=self.input_stepsize))
+        self.parents['spectrogram'] = Spectrogram(
+            blocksize=self.input_blocksize,
+            stepsize=self.input_stepsize)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -73,8 +74,8 @@ class OnsetDetectionFunction(Analyzer):
 
         #spectrogram = self.parents()[0]['spectrogram_analyzer'].data
         results = self.process_pipe.results
-
-        spectrogram = results.get_result_by_id('spectrogram_analyzer').data
+        parent_uuid = self.parents['spectrogram'].uuid()
+        spectrogram = results[parent_uuid]['spectrogram_analyzer'].data
         #spectrogram = self.pipe._results[self.parents()[0].id]
 
         # Low-pass filtering of the spectrogram amplitude along the time axis
@@ -108,4 +109,4 @@ class OnsetDetectionFunction(Analyzer):
         odf = self.new_result(data_mode='value', time_mode='framewise')
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
         odf.data_object.value = odf_diff
-        self.process_pipe.results.add(odf)
+        self.add_result(odf)

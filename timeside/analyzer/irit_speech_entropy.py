@@ -80,7 +80,7 @@ class IRITSpeechEntropy(Analyzer):
         conf.id_metadata.name += ' ' + 'Confidence'
 
         conf.data_object.value = confEntropy
-        self.process_pipe.results.add(conf)
+        self.add_result(conf)
 
         # Binary Entropy
         binaryEntropy = modulentropy > self.threshold
@@ -105,6 +105,6 @@ class IRITSpeechEntropy(Analyzer):
                                      self.samplerate())
                                      for s in segList]
 
-        self.process_pipe.results.add(segs)
+        self.add_result(segs)
 
         return

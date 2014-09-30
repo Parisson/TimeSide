@@ -98,7 +98,7 @@ class AubioTemporal(Analyzer):
         onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.data_object.label_metadata.label = {1: 'Onset'}
 
-        self.process_pipe.results.add(onsets)
+        self.add_result(onsets)
 
         #---------------------------------
         #  Onset Rate: Segment (time, duration, value)
@@ -117,7 +117,7 @@ class AubioTemporal(Analyzer):
             onsetrate.data_object.value = []
             onsetrate.data_object.time = []
 
-        self.process_pipe.results.add(onsetrate)
+        self.add_result(onsetrate)
 
         #---------------------------------
         #  Beats: Event (time, "Beat")
@@ -130,7 +130,7 @@ class AubioTemporal(Analyzer):
         beats.data_object.label = numpy.ones(len(self.beats))
         beats.data_object.label_metadata.label = {1: 'Beat'}
 
-        self.process_pipe.results.add(beats)
+        self.add_result(beats)
 
         #---------------------------------
         #  Beat confidences: Event (time, value)
@@ -143,7 +143,7 @@ class AubioTemporal(Analyzer):
         beat_confidences.data_object.time = self.beats
         beat_confidences.data_object.value = self.beat_confidences
 
-        self.process_pipe.results.add(beat_confidences)
+        self.add_result(beat_confidences)
 
         #---------------------------------
         #  BPM: Segment (time, duration, value)
@@ -161,4 +161,4 @@ class AubioTemporal(Analyzer):
         else:
             bpm.data_object.value = []
 
-        self.process_pipe.results.add(bpm)
+        self.add_result(bpm)

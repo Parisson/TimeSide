@@ -95,4 +95,4 @@ class AubioSpecdesc(Analyzer):
             res_specdesc.id_metadata.name = ' ' + method
             res_specdesc.data_object.value = self.specdesc_results[method]
 
-            self.process_pipe.results.add(res_specdesc)
+            self.add_result(res_specdesc)
