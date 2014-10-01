@@ -450,10 +450,11 @@ To start the web server through the container::
 
 Then browse http://localhost:9000/api/
 
-To start a development process, it is advised to checkout the dev branch::
+To start a new development, it is advised to checkout the dev branch and build your own container::
 
-  cd /root/apps/TimeSide
+  cd TimeSide
   git checkout dev
+  sudo docker build .
 
 
 Sponsors and Partners
