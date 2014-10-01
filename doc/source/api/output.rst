@@ -99,6 +99,8 @@ The result for this item with be save to WORKING_DIR/a4ba8e700eeff426923c8f83b43
 
 TimeSide Server view
 --------------------
+TIMESIDE_WORKING_DIR 
+cf. server/sandbox/settings.py
 
 - Item has a hdf5 field --> 
       
