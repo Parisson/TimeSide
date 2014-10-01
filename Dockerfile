@@ -19,14 +19,14 @@ maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
 run apt-get update
-run apt-get install -y build-essential vim
+run apt-get install -y --force-yes build-essential vim
 run apt-get install -y python python-dev python-pip
 run apt-get -y -t wheezy-backports dist-upgrade
-run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-django python-traits python-networkx
+run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-django python-traits python-networkx ipython
 run apt-get clean
 
 # install uwsgi now because it takes a little while
-run pip install uwsgi
+run pip install uwsgi ipython
 
 # clone app
 add . /opt/TimeSide

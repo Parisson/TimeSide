@@ -148,6 +148,9 @@ class Item(DocBaseResource):
         self.lock = lock
         self.save()
 
+    def get_results_path(self):
+        pass
+
 
 class Experience(DocBaseResource):
 
