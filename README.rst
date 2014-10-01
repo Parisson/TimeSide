@@ -437,7 +437,9 @@ Docker
 
 Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
 
-Simply pull our dev image and run::
+First, install Docker: https://docs.docker.com/installation/
+
+Then, simply pull our dev image and run::
 
   sudo docker pull yomguy/timeside
   sudo docker run -i -t yomguy/timeside bash
@@ -448,7 +450,7 @@ To start the web server through the container::
 
   sudo docker run -p 9000:80 yomguy/timeside supervisord -n
 
-Then browse http://localhost:9000/api/
+Finally browse http://localhost:9000/api/
 
 To start a new development, it is advised to checkout the dev branch and build your own container::
 
