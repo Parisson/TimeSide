@@ -442,12 +442,18 @@ Simply pull our dev image and run::
   sudo docker pull yomguy/timeside
   sudo docker run -i -t yomguy/timeside bash
 
+More infos: https://registry.hub.docker.com/u/yomguy/timeside/
+
+To start the web server through the container::
+
+  sudo docker run -p 9000:80 yomguy/timeside supervisord -n
+
+Then browse http://localhost:9000/api/
+
 To start a development process, it is advised to checkout the dev branch::
 
   cd /root/apps/TimeSide
   git checkout dev
-
-More infos: https://registry.hub.docker.com/u/yomguy/timeside/
 
 
 Sponsors and Partners
