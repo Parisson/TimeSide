@@ -281,13 +281,13 @@ The installation on OSX platforms is pretty hard at the moment because all depen
 Dependencies
 -------------
 
-Needed::
+Needed:
 
  python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib python-imaging
  python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-tables python-gst0.10
  gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 
-Optional::
+Optional:
 
  aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
  django (>=1.4) django-south djangorestframework django-extensions
@@ -295,6 +295,17 @@ Optional::
 
 User Interfaces
 ===============
+
+Python
+-------
+
+Of course all the TimeSide are available in our beloved python envionment.
+As IPython is really great for discovering objects with completion, writing notebooks, we strongly advise to install and use it::
+
+  sudo apt-get install ipython
+  ipython
+  >>> import timeside
+
 
 Shell
 ------
@@ -419,6 +430,33 @@ To stop the virtual box::
 
  exit
  vagrant halt
+
+
+Docker
+-------
+
+Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
+
+First, install Docker: https://docs.docker.com/installation/
+
+Then, simply pull our dev image and run::
+
+  sudo docker pull yomguy/timeside
+  sudo docker run -i -t yomguy/timeside bash
+
+More infos: https://registry.hub.docker.com/u/yomguy/timeside/
+
+To start the web server through the container::
+
+  sudo docker run -p 9000:80 yomguy/timeside supervisord -n
+
+Finally browse http://localhost:9000/api/
+
+To start a new development, it is advised to checkout the dev branch and build your own container::
+
+  cd TimeSide
+  git checkout dev
+  sudo docker build .
 
 
 Sponsors and Partners

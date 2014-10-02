@@ -303,7 +303,7 @@ class Task(BaseResource):
 
             if not item.hdf5:
                 hdf5_file = str(self.experience.uuid) + '.hdf5'
-                item.hdf5 =  os.path.join(item_path, hdf5_file)
+                item.hdf5 = os.path.join(item_path, hdf5_file)
                 item.save()
             pipe.run()
             item.lock_setter(True)

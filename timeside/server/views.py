@@ -27,7 +27,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework import viewsets
 from rest_framework.mixins import UpdateModelMixin
 
-import timeside
 from timeside.server.models import *
 from timeside.server.serializers import *
 
