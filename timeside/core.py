@@ -94,6 +94,12 @@ class Processor(Component, HasParam):
         self.process_pipe = None
         self.UUID = uuid.uuid4()
 
+        self.input_channels = 0
+        self.input_samplerate = 0
+        self.input_blocksize = 0
+        self.input_stepsize = 0
+
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
@@ -104,13 +110,13 @@ class Processor(Component, HasParam):
 
         # If empty Set default values for input_* attributes
         # may be setted by the processor during __init__()
-        if not hasattr(self, 'input_channels'):
+        if not self.input_channels:
             self.input_channels = self.source_channels
-        if not hasattr(self, 'input_samplerate'):
+        if not self.input_samplerate:
             self.input_samplerate = self.source_samplerate
-        if not hasattr(self, 'input_blocksize'):
+        if not self.input_blocksize:
             self.input_blocksize = self.source_blocksize
-        if not hasattr(self, 'input_stepsize'):
+        if not self.input_stepsize:
             self.input_stepsize = self.source_blocksize
 
         # Check samplerate specification if any

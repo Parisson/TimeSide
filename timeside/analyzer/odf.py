@@ -26,6 +26,7 @@ from timeside.api import IAnalyzer
 import numpy as np
 from numpy import pi as Pi
 from scipy import signal
+from ..tools.parameters import Int, HasTraits
 
 
 class OnsetDetectionFunction(Analyzer):
@@ -33,18 +34,23 @@ class OnsetDetectionFunction(Analyzer):
     """Onset Detection Function analyzer"""
     implements(IAnalyzer)
 
-    def __init__(self, blocksize=1024, stepsize=None):
+    # Define Parameters
+    class _Param(HasTraits):
+        input_blocksize = Int()
+        input_stepsize = Int()
+
+    def __init__(self, input_blocksize=1024, input_stepsize=None):
         super(OnsetDetectionFunction, self).__init__()
 
-        self.input_blocksize = blocksize
-        if stepsize:
-            self.input_stepsize = stepsize
+        self.input_blocksize = input_blocksize
+        if input_stepsize:
+            self.input_stepsize = input_stepsize
         else:
-            self.input_stepsize = blocksize / 2
+            self.input_stepsize = input_blocksize / 2
 
         self.parents['spectrogram'] = Spectrogram(
-            blocksize=self.input_blocksize,
-            stepsize=self.input_stepsize)
+            input_blocksize=self.input_blocksize,
+            input_stepsize=self.input_stepsize)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,

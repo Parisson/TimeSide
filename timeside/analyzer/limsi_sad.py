@@ -24,6 +24,8 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import timeside
 
+from ..tools.parameters import Enum, HasTraits
+
 import yaafelib
 import numpy as np
 import pickle
@@ -62,6 +64,10 @@ class LimsiSad(Analyzer):
     """
     implements(IAnalyzer)
 
+   # Define Parameters
+    class _Param(HasTraits):
+      sad_model = Enum('etape', 'maya')
+
     def __init__(self, sad_model='etape'):
         """
         Parameters:
@@ -74,16 +80,13 @@ class LimsiSad(Analyzer):
         super(LimsiSad, self).__init__()
 
         # feature extraction defition
-        spec = yaafelib.FeaturePlan(sample_rate=16000)
-        spec.addFeature(
-            'mfcc: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256')
-        spec.addFeature(
-            'mfccd1: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=1')
-        spec.addFeature(
-            'mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2')
-        spec.addFeature('zcr: ZCR blockSize=1024 stepSize=256')
-        parent_analyzer = get_processor('yaafe')(spec)
-        self.parents['yaafe'] = parent_analyzer
+        feature_plan = ['mfcc: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256',
+                        'mfccd1: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=1',
+                        'mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2',
+                        'zcr: ZCR blockSize=1024 stepSize=256']
+        yaafe_analyzer = get_processor('yaafe')
+        self.parents['yaafe'] = yaafe_analyzer(feature_plan=feature_plan,
+                                               input_samplerate=16000)
 
         # informative parameters
         # these are not really taken into account by the system
@@ -95,6 +98,7 @@ class LimsiSad(Analyzer):
         if sad_model not in ['etape', 'maya']:
             raise ValueError(
                 "argument sad_model %s not supported. Supported values are 'etape' or 'maya'" % sad_model)
+        self.sad_model = sad_model
         picfname = os.path.join(
             timeside.__path__[0], 'analyzer', 'trained_models', 'limsi_sad_%s.pkl' % sad_model)
         self.gmms = pickle.load(open(picfname, 'rb'))
