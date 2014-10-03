@@ -23,7 +23,7 @@
 
 
 from traits.api import HasTraits, Unicode, Int, Float, Range, Enum
-from traits.api import ListUnicode, List
+from traits.api import ListUnicode, List, Tuple
 from traits.api import TraitError
 
 import simplejson as json
