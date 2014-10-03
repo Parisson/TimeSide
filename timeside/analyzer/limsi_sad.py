@@ -152,7 +152,7 @@ class LimsiSad(Analyzer):
         try:
             yaafe_analyzer = get_processor('yaafe')
         except timeside.exceptions.PIDError as e:
-            raise ImportError(e + '.yaafelib must be missing')
+            raise ImportError(e.message + '.yaafelib must be missing')
 
         self.parents['yaafe'] = yaafe_analyzer(feature_plan=feature_plan,
                                                input_samplerate=16000)
