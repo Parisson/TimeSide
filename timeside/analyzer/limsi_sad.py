@@ -30,6 +30,10 @@ import numpy as np
 import pickle
 import os.path
 
+# Require Yaafe
+if not timeside._WITH_YAAFE:
+    raise ImportError('yaafelib must be missing')
+
 
 class GMM:
     """
@@ -149,11 +153,7 @@ class LimsiSad(Analyzer):
                         'mfccd1: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=1',
                         'mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2',
                         'zcr: ZCR blockSize=1024 stepSize=256']
-        try:
-            yaafe_analyzer = get_processor('yaafe')
-        except timeside.exceptions.PIDError as e:
-            raise ImportError(e.message + '.yaafelib must be missing')
-
+        yaafe_analyzer = get_processor('yaafe')
         self.parents['yaafe'] = yaafe_analyzer(feature_plan=feature_plan,
                                                input_samplerate=16000)
 
