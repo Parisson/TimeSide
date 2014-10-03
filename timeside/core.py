@@ -28,7 +28,8 @@ import re
 import numpy
 import uuid
 import networkx as nx
-
+import inspect
+import os
 import gobject
 gobject.threads_init()
 
@@ -52,10 +53,14 @@ class MetaProcessor(MetaComponent):
             if id in _processors:
                 # Doctest test can duplicate a processor
                 # This can be identify by the conditon "module == '__main__'"
+                new_path = os.path.realpath(inspect.getfile(new_class))
+                id_path = os.path.realpath(inspect.getfile(_processors[id]))
                 if new_class.__module__ == '__main__':
                     new_class = _processors[id]
                 elif _processors[id].__module__ == '__main__':
                     pass
+                elif new_path == id_path:
+                    new_class = _processors[id]
                 else:
                     raise ApiError("%s and %s have the same id: '%s'"
                                    % (new_class.__name__,
