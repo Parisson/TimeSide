@@ -149,7 +149,11 @@ class LimsiSad(Analyzer):
                         'mfccd1: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=1',
                         'mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2',
                         'zcr: ZCR blockSize=1024 stepSize=256']
-        yaafe_analyzer = get_processor('yaafe')
+        try:
+            yaafe_analyzer = get_processor('yaafe')
+        except timeside.exceptions.PIDError as e:
+            raise ImportError(e + '.yaafelib must be missing')
+
         self.parents['yaafe'] = yaafe_analyzer(feature_plan=feature_plan,
                                                input_samplerate=16000)
 
