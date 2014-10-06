@@ -10,10 +10,6 @@ Debian, Ubuntu
 
 For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
 
-Note you can also use pip if you already have *already* satisfied all the dependencies::
-
- sudo pip install timeside
-
 Other Linux distributions
 --------------------------
 
