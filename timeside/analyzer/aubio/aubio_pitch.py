@@ -28,10 +28,18 @@ from aubio import pitch
 import numpy as np
 from timeside.analyzer.utils import nextpow2
 
+from ...tools.parameters import Float, HasTraits
+
+
 class AubioPitch(Analyzer):
 
     """Aubio Pitch estimation analyzer"""
     implements(IAnalyzer)  # TODO check if needed with inheritance
+
+    # Define Parameters
+    class _Param(HasTraits):
+        blocksize_s = Float
+        stepsize_s = Float
 
     def __init__(self, blocksize_s=None, stepsize_s=None):
 

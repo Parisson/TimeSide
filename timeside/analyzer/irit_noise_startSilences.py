@@ -42,10 +42,8 @@ class IRITStartSeg(Analyzer):
     Properties:
     '''
     @interfacedoc
-    def __init__(self, save_lab=False):
+    def __init__(self):
         super(IRITStartSeg, self).__init__()
-
-        self._save_lab = save_lab
 
         self._buffer = BufferTable()
 
@@ -54,6 +52,7 @@ class IRITStartSeg(Analyzer):
         self.max_energy = 0.002*2
         self.min_overlap = 20
         self.threshold = 0.12
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
@@ -163,19 +162,6 @@ class IRITStartSeg(Analyzer):
                     selected_segs.append(s)
 
         label = {0: 'Start', 1: 'Session'}
-
-        if self._save_lab:
-            with open('out.lab', 'w') as f:
-                for s in selected_segs:
-                    f.write(
-                        '%.2f\t%.2f\t%s\n' %
-                        (s[0] * step, s[1] * step, label[s[2]]))
-
-            with open('cand.lab', 'w') as f:
-                for s in candidates:
-                    f.write('%.2f\t%.2f\t%f\n' % (s[0] * step,
-                                                  s[1] * step,
-                                                  s[2]))
 
         segs = self.new_result(data_mode='label', time_mode='segment')
         segs.id_metadata.id += '.' + 'segments'

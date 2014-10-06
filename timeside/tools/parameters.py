@@ -22,7 +22,8 @@
 #   Thomas Fillon <thomas  at parisson.com>
 
 
-from traits.api import HasTraits, Unicode, Int, Float, Range
+from traits.api import HasTraits, Unicode, Int, Float, Range, Enum
+from traits.api import ListUnicode, List, Tuple
 from traits.api import TraitError
 
 import simplejson as json
@@ -31,7 +32,10 @@ import simplejson as json
 TRAIT_TYPES = {Unicode: 'str',
                Int: 'int',
                Float: 'float',
-               Range: 'range'}
+               Range: 'range',
+               Enum: 'enum',
+               ListUnicode: 'list of str',
+               List: 'list'}
 
 
 class HasParam(object):

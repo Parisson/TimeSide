@@ -28,7 +28,8 @@ import re
 import numpy
 import uuid
 import networkx as nx
-
+import inspect
+import os
 import gobject
 gobject.threads_init()
 
@@ -52,10 +53,14 @@ class MetaProcessor(MetaComponent):
             if id in _processors:
                 # Doctest test can duplicate a processor
                 # This can be identify by the conditon "module == '__main__'"
+                new_path = os.path.realpath(inspect.getfile(new_class))
+                id_path = os.path.realpath(inspect.getfile(_processors[id]))
                 if new_class.__module__ == '__main__':
                     new_class = _processors[id]
                 elif _processors[id].__module__ == '__main__':
                     pass
+                elif new_path == id_path:
+                    new_class = _processors[id]
                 else:
                     raise ApiError("%s and %s have the same id: '%s'"
                                    % (new_class.__name__,
@@ -94,6 +99,12 @@ class Processor(Component, HasParam):
         self.process_pipe = None
         self.UUID = uuid.uuid4()
 
+        self.input_channels = 0
+        self.input_samplerate = 0
+        self.input_blocksize = 0
+        self.input_stepsize = 0
+
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
@@ -104,13 +115,13 @@ class Processor(Component, HasParam):
 
         # If empty Set default values for input_* attributes
         # may be setted by the processor during __init__()
-        if not hasattr(self, 'input_channels'):
+        if not self.input_channels:
             self.input_channels = self.source_channels
-        if not hasattr(self, 'input_samplerate'):
+        if not self.input_samplerate:
             self.input_samplerate = self.source_samplerate
-        if not hasattr(self, 'input_blocksize'):
+        if not self.input_blocksize:
             self.input_blocksize = self.source_blocksize
-        if not hasattr(self, 'input_stepsize'):
+        if not self.input_stepsize:
             self.input_stepsize = self.source_blocksize
 
         # Check samplerate specification if any
