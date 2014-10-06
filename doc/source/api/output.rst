@@ -23,6 +23,7 @@ To save the results of a given pipe, we need to specify a working directory.
 The working directory is set with the :func:`set_working_directory` function and can be retrieved with the :func:`get_working_directory` function
 
 >>> WORKING_DIR = '/tmp/TS'
+>>> import timeside
 >>> timeside.set_working_dir(WORKING_DIR)
 >>> timeside.get_working_dir()
 '/tmp/TS'
@@ -70,11 +71,11 @@ HDF5 file hierarchy
    C [label="c.h5\nResult C" shape=folder];
    D [label="d.h5\nResult D" shape=folder];
    E [label="e.h5\nResult E" shape=folder];
-   dec1 -> A [label="ext. link"];
-   dec1 -> B [label="ext. link"];
-   dec1 -> C [label="ext. link"];
-   dec2 -> D [label="ext. link"];
-   dec3 -> E [label="ext. link"];
+   dec1 -> A [label="ext. link" color=blue fontsize=10];
+   dec1 -> B [label="ext. link" color=blue fontsize=10];
+   dec1 -> C [label="ext. link" color=blue fontsize=10];
+   dec2 -> D [label="ext. link" color=blue fontsize=10];
+   dec3 -> E [label="ext. link" color=blue fontsize=10];
 
 
 HDF5 file/groups hierarchy example:
@@ -102,13 +103,14 @@ TimeSide Server view
 TIMESIDE_WORKING_DIR 
 cf. server/sandbox/settings.py
 
-- Item has a hdf5 field --> 
-      
+- Item has a hdf5 field:
+
 >>> item_path = os.path.join(results_path, item.uuid) # item.uuid inherited from BaseResource
 >>> hdf5_file = str(self.experience.uuid) + '.hdf5'
 >>> item.hdf5 =  os.path.join(item_path, hdf5_file)
 
 - result has a hdf5 field:
+
 >>> hdf5_file = str(result.uuid) + '.hdf5'  # result.uuid inherited from BaseResource
 >>> result.hdf5 = os.path.join(item_path, hdf5_file)
  
