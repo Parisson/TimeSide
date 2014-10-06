@@ -41,9 +41,9 @@ run ln -s /opt/TimeSide/deploy/supervisor-app.conf /etc/supervisor/conf.d/
 run pip install -e /opt/TimeSide
 
 # sandbox setup
-run /opt/TimeSide/timeside/server/sandbox/manage.py syncdb --noinput
-run /opt/TimeSide/timeside/server/sandbox/manage.py migrate --noinput
-run /opt/TimeSide/timeside/server/sandbox/manage.py collectstatic --noinput
+run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
+run /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
+run /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 expose 80
 cmd ["supervisord", "-n"]
