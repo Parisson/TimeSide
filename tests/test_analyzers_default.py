@@ -5,19 +5,19 @@
 
 from unit_timeside import unittest, TestRunner
 import timeside
+from timeside.decoder.file import FileDecoder
 import numpy as np
+import os
 
 
-class TestAnalyzers_with_zeros(unittest.TestCase):
-    """Stress test for analyzer with null input"""
+class TestAnalyzers_with_default(unittest.TestCase):
+    """Test analyzer with default parameters"""
 
     def setUp(self):
-        import timeside.analyzer
-        samplerate = 16000  # LimsiSad require Fs = 16000 Hz
-        duration = 10
-        samples = np.zeros((duration * samplerate, 1))
-        decoder_cls = timeside.core.get_processor('array_dec')
-        self.decoder = decoder_cls(samples, samplerate=samplerate)
+        source = os.path.join(os.path.dirname(__file__),
+                              "samples", "guitar.wav")
+
+        self.decoder = FileDecoder(source)
 
     def _perform_test(self, analyzer_cls):
         """Internal function that test if there is NaN in the results
@@ -34,18 +34,6 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
                 # Test for Inf
                 self.assertFalse(np.any(np.isinf(result.data)),
                                  'Inf in %s data value' % result.name)
-
-
-class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
-    """Stress test for analyzer with constant input"""
-
-    def setUp(self):
-        import timeside.analyzer
-        samplerate = 16000  # LimsiSad require Fs = 16000 Hz
-        duration = 10
-        samples = -1000*np.ones((duration * samplerate, 1))
-        decoder_cls = timeside.core.get_processor('array_dec')
-        self.decoder = decoder_cls(samples, samplerate=samplerate)
 
 
 def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
@@ -68,18 +56,11 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 
 
 # Define test to skip and corresponding reasons
-skip_reasons = {'VampSimpleHost': ('VampSimpleHost bypasses the decoder '
-                                   'and requires a file input')}
+skip_reasons = {}
 
 # For each analyzer in TimeSide, test with constant input
-_tests_factory(test_class=TestAnalyzers_withDC,
-               test_doc="Stress test for %s",
-               list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
-               skip_reasons=skip_reasons)
-
-# For each analyzer in TimeSide, test with null input
-_tests_factory(test_class=TestAnalyzers_with_zeros,
-               test_doc="Stress test for %s",
+_tests_factory(test_class=TestAnalyzers_with_default,
+               test_doc="Test analyzer %s with default parameters",
                list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
                skip_reasons=skip_reasons)
 

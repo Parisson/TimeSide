@@ -3,8 +3,8 @@ include LICENSE
 include README.rst
 include requirements.txt
 recursive-include doc *
-recursive-include timeside/player/static *
-recursive-include timeside/analyzer/trained_models *
+recursive-include timeside *
+recursive-exclude timeside/server/sandbox/media *
 recursive-include tests *
 recursive-exclude tests/sandbox *
 recursive-exclude * *.pyc
