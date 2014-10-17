@@ -81,7 +81,7 @@ class SampleArray(object):
 
     def __init__(self, duration=10, samplerate=44100):
         self.samplerate = int(samplerate)
-        self.num_samples = numpy.ceil(duration * self.samplerate)
+        self.num_samples = int(numpy.ceil(duration * self.samplerate))
         self.array = NotImplemented
 
     @property
