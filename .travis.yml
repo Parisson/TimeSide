@@ -21,7 +21,6 @@ install:
 
 # command to run tests
 before_script:
-- python tests/get_samples.py
 - pip install coveralls
 
 script:
