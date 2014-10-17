@@ -6,6 +6,7 @@ from timeside.decoder.file import FileDecoder
 from timeside.core import ProcessPipe
 
 from unit_timeside import *
+from timeside.tools.data_samples import samples as ts_samples
 
 import os.path
 
@@ -31,20 +32,17 @@ class TestDecoding(unittest.TestCase):
 
     def testWav(self):
         "Test wav decoding"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.wav")
+        self.source = ts_samples["sweep.wav"]
 
     def testWavMono(self):
         "Test mono wav decoding"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep_mono.wav")
+        self.source = ts_samples["sweep_mono.wav"]
 
         self.expected_channels = 1
 
     def testWav32k(self):
         "Test 32kHz wav decoding"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep_32000.wav")
+        self.source = ts_samples["sweep_32000.wav"]
 
         expected_samplerate = 32000
         ratio = expected_samplerate / self.expected_samplerate
@@ -54,23 +52,20 @@ class TestDecoding(unittest.TestCase):
 
     def testFlac(self):
         "Test flac decoding"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.flac")
+        self.source = ts_samples["sweep.flac"]
         self.expected_mime_type = 'audio/x-flac'
 
     def testOgg(self):
         "Test ogg decoding"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.ogg")
+        self.source = ts_samples["sweep.ogg"]
 
-        self.expected_totalframes = 352832
+        self.expected_totalframes = 352960
         self.expected_mime_type = 'application/ogg'
         self.test_exact_duration = False
 
     def testMp3(self):
         "Test mp3 decoding"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.mp3")
+        self.source = ts_samples["sweep.mp3"]
 
         self.expected_totalframes = 353664
         self.expected_mime_type = 'audio/mpeg'
@@ -125,8 +120,9 @@ class TestDecoding(unittest.TestCase):
 
         self.assertEqual(decoder.mime_type(), self.expected_mime_type)
 
-        expected_totalframes = [self.expected_totalframes, self.expected_totalframes +32]  # +32 to handle some issue with ogg
-        self.assertIn(totalframes, expected_totalframes)
+        #expected_totalframes = [self.expected_totalframes, self.expected_totalframes +32]  # +32 to handle some issue with ogg
+
+        self.assertEqual(totalframes, self.expected_totalframes)
 
         input_duration = decoder.input_totalframes / decoder.input_samplerate
         output_duration = decoder.totalframes() / decoder.output_samplerate
@@ -224,7 +220,7 @@ class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
     def testMp3(self):
         "Test mp3 decoding"
         super(TestDecodingSegment, self).testMp3()
-        self.expected_totalframes = 310715  # was  308701 ?
+        self.expected_totalframes = 309565  # was  308701 ?
 
 
 class TestDecodingSegmentBadParameters(unittest.TestCase):
@@ -285,7 +281,7 @@ class TestDecodingMonoUpsampling(TestDecoding):
     def testOgg(self):
         "Test ogg decoding"
         super(TestDecodingMonoUpsampling, self).testOgg()
-        self.expected_totalframes = 384000
+        self.expected_totalframes = 384140
 
 
 class TestDecodingMonoDownsampling(TestDecoding):
@@ -304,7 +300,7 @@ class TestDecodingMonoDownsampling(TestDecoding):
     def testOgg(self):
         "Test ogg decoding"
         super(TestDecodingMonoDownsampling, self).testOgg()
-        self.expected_totalframes = 127980
+        self.expected_totalframes = 128027
 
     def testMp3(self):
         "Test mp3 decoding"
@@ -328,7 +324,7 @@ class TestDecodingStereoDownsampling(TestDecoding):
     def testOgg(self):
         "Test ogg decoding"
         super(TestDecodingStereoDownsampling, self).testOgg()
-        self.expected_totalframes = 255992
+        self.expected_totalframes = 256085
 
     def testMp3(self):
         "Test mp3 decoding"
@@ -352,7 +348,7 @@ class TestDecodingStereoUpsampling(TestDecoding):
     def testOgg(self):
         "Test ogg decoding"
         super(TestDecodingStereoUpsampling, self).testOgg()
-        self.expected_totalframes = 768000
+        self.expected_totalframes = 768279
 
     def testMp3(self):
         "Test mp3 decoding"

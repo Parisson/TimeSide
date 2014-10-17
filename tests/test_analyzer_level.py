@@ -3,7 +3,7 @@
 from unit_timeside import unittest, TestRunner
 from timeside.decoder.file import FileDecoder
 from timeside.analyzer.level import Level
-import os
+from timeside.tools.data_samples import samples as ts_samples
 
 
 class TestAnalyzerLevel(unittest.TestCase):
@@ -13,22 +13,20 @@ class TestAnalyzerLevel(unittest.TestCase):
 
     def testOnSweep(self):
         "runs on sweep"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples", "sweep.wav")
+        self.source = ts_samples["sweep.wav"]
 
-        max_level_value = -6.021
-        rms_level_value = -9.856
+        max_level_value = 0
+        rms_level_value = -2.995
 
         self.expected = {'level.max': max_level_value,
                          'level.rms': rms_level_value}
 
-    def testOnGuitar(self):
-        "runs on guitar"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples", "guitar.wav")
+    def testOnC4_Scale(self):
+        "runs on C4 scale"
+        self.source = ts_samples["C4_scale.wav"]
 
-        max_level_value = -4.054
-        rms_level_value = -21.945
+        max_level_value = 0
+        rms_level_value = -3.705
 
         self.expected = {'level.max': max_level_value,
                          'level.rms': rms_level_value}
