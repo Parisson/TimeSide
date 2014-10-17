@@ -39,11 +39,10 @@ class NumpySrc:
                     rate=%d,
                     channels=%d,
                     endianness=(int)1234,
-                    signed=true""" % (32,#self.array.dtype.itemsize*8,
-                                      32,#self.array.dtype.itemsize*8,
+                    signed=true""" % (self.array.dtype.itemsize*8,
+                                      self.array.dtype.itemsize*8,
                                       self.samplerate,
                                       self.channels)
-        print array.dtype.itemsize*8
         self.appsrc.set_property("caps", gst.caps_from_string(capstr))
         self.appsrc.set_property("stream-type", 0)  # Seekable
         self.appsrc.set_property('block', True)
