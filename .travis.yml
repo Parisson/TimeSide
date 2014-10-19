@@ -25,7 +25,6 @@ before_script:
 - pip install coveralls
 
 script:
- - py.test --collect-only tests --ignore tests/sandbox
  - coverage run --source=timeside --omit=timeside/analyzer/aubio/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
 
 after_success:

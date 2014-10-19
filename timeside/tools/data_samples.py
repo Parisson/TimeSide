@@ -59,7 +59,8 @@ class NumpySrc:
             avalaible_sample = self.length - self.pos
             if avalaible_sample < length:
                 length = avalaible_sample
-            buf = gst.Buffer(self.array[self.pos:self.pos+length, :].data)
+            array = self.array[self.pos:self.pos+length]
+            buf = gst.Buffer(numpy.getbuffer(array.flatten()))
 
             buf.timestamp = self.pos * self.per_sample
             buf.duration = int(length*self.per_sample)
