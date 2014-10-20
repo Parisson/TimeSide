@@ -33,11 +33,23 @@ import numpy as np
 class Spectrogram(Analyzer):
     """Spectrogram analyzer
 
+    Parameters
+    ----------
+    input_blocksize : int, optional
+        Blocksize of the input signal, default to 2048
+    input_stepsize : str, optional
+        The second parameter, default to half blocksize.
+    fft_size : int, optional
+        The size of the fft, default to blocksize.
+
+    Examples
+    --------
+
     >>> import timeside
     >>> from timeside.tools.data_samples import samples as ts_samples
     >>> audio_source = ts_samples['sweep.wav']
     >>> decoder = timeside.decoder.file.FileDecoder(uri=audio_source)
-    >>> spectrogram = Spectrogram(input_blocksize=2048, input_stepsize=1024)
+    >>> spectrogram = timeside.analyzer.spectrogram.Spectrogram(input_blocksize=2048, input_stepsize=1024)
     >>> pipe = (decoder | spectrogram)
     >>> pipe.run()
 
