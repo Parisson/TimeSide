@@ -105,6 +105,9 @@ class Spectrogram(Analyzer):
 
         self.add_result(spectrogram)
 
+    def release(self):
+        self.values.close()
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
