@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
-from ..tools.parameters import HasTraits, List
+from timeside.tools.parameters import HasTraits, List
 
 import subprocess
 import numpy as np
@@ -42,7 +42,7 @@ def simple_host_process(argslist):
 
 
 # Raise an exception if Vamp Host is missing
-from ..exceptions import VampImportError
+from timeside.exceptions import VampImportError
 try:
     simple_host_process(['-v'])
     WITH_VAMP = True

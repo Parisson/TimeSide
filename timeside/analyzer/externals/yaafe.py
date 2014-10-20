@@ -29,7 +29,7 @@ from timeside.api import IAnalyzer
 import yaafelib
 import numpy
 from timeside.analyzer.preprocessors import downmix_to_mono
-from ..tools.parameters import HasTraits, ListUnicode, Float
+from timeside.tools.parameters import HasTraits, ListUnicode, Float
 
 
 class Yaafe(Analyzer):

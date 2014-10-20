@@ -25,7 +25,7 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import numpy
 from timeside.analyzer.preprocessors import frames_adapter
-from timeside.analyzer.aubio.aubio_pitch import AubioPitch
+from timeside.analyzer.externals.aubio_pitch import AubioPitch
 
 
 class IRITMonopoly(Analyzer):

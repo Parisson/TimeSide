@@ -18,7 +18,7 @@ class TestAubioMelEnergy(unittest.TestCase):
         self.source = ts_samples["sweep.wav"]
 
     def testOnGuitar(self):
-        "runs on guitar"
+        "runs on C4_scale"
         self.source = ts_samples["C4_scale.wav"]
 
     def tearDown(self):
