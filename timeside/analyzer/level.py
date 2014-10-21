@@ -29,7 +29,8 @@ from timeside.analyzer.utils import MACHINE_EPSILON
 
 class Level(Analyzer):
 
-    """RMS level analyzer"""
+    """RMS level analyzer
+    """
     implements(IValueAnalyzer)
 
     @interfacedoc
@@ -93,3 +94,7 @@ class Level(Analyzer):
 
         rms_level.data_object.value = np.round(20 * np.log10(rms_val), 3)
         self.add_result(rms_level)
+
+if __name__ == "__main__":
+    import doctest
+    print doctest.testmod(verbose=True)

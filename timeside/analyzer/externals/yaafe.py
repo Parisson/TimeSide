@@ -29,11 +29,47 @@ from timeside.api import IAnalyzer
 import yaafelib
 import numpy
 from timeside.analyzer.preprocessors import downmix_to_mono
-from ..tools.parameters import HasTraits, ListUnicode, Float
+from timeside.tools.parameters import HasTraits, ListUnicode, Float
 
 
 class Yaafe(Analyzer):
-    """Yaafe feature extraction library interface analyzer"""
+    """Yaafe feature extraction library interface analyzer
+
+    Parameters
+    ----------
+    feature_plan : list, optional
+        Yaafe feature plan as a list of feature definition,
+        default to ['mfcc: MFCC blockSize=512 stepSize=256']
+    input_samplerate : int, optional
+        The samplerate, default to 32000.
+
+    Examples
+    --------
+    >>> import timeside
+    >>> from timeside.tools.data_samples import samples as ts_samples
+    >>> from timeside.core import get_processor
+    >>> source = ts_samples['C4_scale.wav']
+    >>> FileDecoder = get_processor('gst_dec')
+    >>> YaafeAnalyzer = get_processor('yaafe')
+    >>> # feature extraction defition
+    >>> feature_plan = ['mfcc: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256',
+    ...                 'mfccd1: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=1',
+    ...                 'mfccd2: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256 > Derivate DOrder=2',
+    ...                 'zcr: ZCR blockSize=1024 stepSize=256']
+    >>> decoder = FileDecoder(uri=source)
+    >>> yaafe = YaafeAnalyzer(feature_plan=feature_plan,
+    ...                       input_samplerate=16000)
+    >>> pipe = (decoder | yaafe)
+    >>> pipe.run()
+    >>> print yaafe.results.keys()
+    ['yaafe.mfccd1', 'yaafe.mfcc', 'yaafe.mfccd2', 'yaafe.zcr']
+    >>> # Access to one of the result:
+    >>> res_mfcc = yaafe.results['yaafe.mfcc']
+    >>> print type(res_mfcc.data_object)
+    <class 'timeside.analyzer.core.FrameValueObject'>
+    >>> res_mfcc.data  # doctest: +ELLIPSIS
+    array([[...]])
+"""
     implements(IAnalyzer)
 
     # Define Parameters
@@ -78,6 +114,9 @@ class Yaafe(Analyzer):
 
     @property
     def force_samplerate(self):
+        """Yaafe analyzer force the pipe samplerate to match
+        the `input_samplerate` parameters
+        """
         return self.input_samplerate
 
     @staticmethod
@@ -133,3 +172,8 @@ class Yaafe(Analyzer):
             # Store results in Container
             if len(result.data_object.value):
                 self.add_result(result)
+
+if __name__ == "__main__":
+    import doctest
+    import timeside
+    doctest.testmod(timeside.analyzer.externals.yaafe, verbose=True)

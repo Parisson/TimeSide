@@ -7,15 +7,14 @@ from unit_timeside import unittest, TestRunner
 import timeside
 from timeside.decoder.file import FileDecoder
 import numpy as np
-import os
+from timeside.tools.data_samples import samples as ts_samples
 
 
 class TestAnalyzers_with_default(unittest.TestCase):
     """Test analyzer with default parameters"""
 
     def setUp(self):
-        source = os.path.join(os.path.dirname(__file__),
-                              "samples", "guitar.wav")
+        source = ts_samples["C4_scale.wav"]
 
         self.decoder = FileDecoder(source)
 

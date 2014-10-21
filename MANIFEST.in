@@ -1,11 +1,13 @@
-include AUTHORS
-include LICENSE
+include AUTHORS.txt
+include LICENSE.txt
 include README.rst
+include NEWS.rst
 include requirements.txt
 recursive-include doc *
 recursive-include timeside *
-recursive-exclude timeside/server/sandbox/media *
+recursive-include examples *
 recursive-include tests *
+recursive-exclude examples/sandbox/media *
 recursive-exclude tests/sandbox *
 recursive-exclude * *.pyc
 recursive-exclude * *.swp

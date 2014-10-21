@@ -24,7 +24,7 @@ from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 import timeside
 
-from ..tools.parameters import Enum, HasTraits, Float, Tuple
+from timeside.tools.parameters import Enum, HasTraits, Float, Tuple
 
 import numpy as np
 import pickle

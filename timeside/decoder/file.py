@@ -257,7 +257,7 @@ class FileDecoder(Decoder):
             self.input_channels = caps[0]["channels"]
             if not self.output_channels:
                 self.output_channels = self.input_channels
-            self.input_duration = length / 1.e9
+            self.input_duration = length / gst.SECOND
 
             self.input_totalframes = int(
                 self.input_duration * self.input_samplerate)

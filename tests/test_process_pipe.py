@@ -6,7 +6,7 @@
 from unit_timeside import unittest, TestRunner
 import timeside
 from timeside.decoder.file import FileDecoder
-import os
+from timeside.tools.data_samples import samples as ts_samples
 
 
 class TestProcessPipe(unittest.TestCase):
@@ -16,8 +16,8 @@ class TestProcessPipe(unittest.TestCase):
         """Test process pipe (Quick and dirty)"""
         # TODO clean up and complete
 
-        source = os.path.join(os.path.dirname(__file__),
-                              "samples", "guitar.wav")
+        source = ts_samples["sweep.wav"]
+
 
         pipe = timeside.core.ProcessPipe()
         dec = FileDecoder(source)

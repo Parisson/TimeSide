@@ -33,7 +33,8 @@ class AudioSink(GstEncoder):
 
 
     >>> import timeside
-    >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
+    >>> from timeside.tools.data_samples import samples as ts_samples
+    >>> wav_file = ts_samples['C4_scale.wav']
     >>> d = timeside.decoder.file.FileDecoder(wav_file)
     >>> e = timeside.encoder.audiosink.AudioSink()
     >>> (d|e).run() # doctest: +SKIP
@@ -96,11 +97,7 @@ class AudioSink(GstEncoder):
         self.metadata = metadata
 
 
-# Define global variables for use with doctest
-DOCTEST_ALIAS = {'wav_file':
-                 'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'}
-
 if __name__ == "__main__":
     import doctest
-
-    doctest.testmod(extraglobs=DOCTEST_ALIAS)
+    import timeside
+    doctest.testmod(timeside.decoder.live, verbose=True)

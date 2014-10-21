@@ -22,7 +22,7 @@
 
 import tables
 from tempfile import NamedTemporaryFile
-
+import numpy as np
 
 class BufferTable(object):
     def __init__(self, array_names=None):
@@ -49,7 +49,11 @@ class BufferTable(object):
 
     def append(self, name, new_array):
         try:
-            self.fileh.root.__getattr__(name).append([new_array])
+            if new_array.shape:
+                self.fileh.root.__getattr__(name).append(new_array[np.newaxis,
+                                                                   :])
+            else:
+                self.fileh.root.__getattr__(name).append([new_array])
         except tables.exceptions.NoSuchNodeError:
             if name not in self.array_names:
                 self.array_names.append(name)
@@ -58,10 +62,10 @@ class BufferTable(object):
              #                         name=name,
              #                         obj=[new_array])
             atom = tables.Atom.from_dtype(new_array.dtype)
-            if len(new_array.shape) > 1:
-                shape = (0, new_array.shape[1])
-            else:
-                shape = (0,)
+            dim_list = [0]
+            dim_list.extend([dim for dim in new_array.shape])
+            shape = tuple(dim_list)
+
             self.fileh.createEArray(where=self.fileh.root,
                                     name=name,
                                     atom=atom,

@@ -26,6 +26,7 @@ from ...api import IAnalyzer
 from ..preprocessors import downmix_to_mono, frames_adapter
 from aubio import filterbank, pvoc
 
+
 class AubioMelEnergy(Analyzer):
 
     """Aubio Mel Energy analyzer"""

@@ -111,90 +111,19 @@ IEncoder
 News
 =====
 
+0.5.7
+
+  * Add a Docker development box
+  * Add a Vagrant development box
+  * Add a Debian package installation procedure
+  * Fix parent and child analyzers both using yaafe (fix #60)
+
 0.5.6
 
   * Bugfix release
   * Fix analyzer instanciation as parent for some graphers
 
-0.5.5
-
- * All processor folders (decoder, analyzer, grapher, encoder) are now real plugin repositories : you can just drop processors in it and play!
- * TimeSide can be installed without Aubio, Yaafe nor Vamp : it should be easier to install on old distributions for which those librairies are difficult or impossible to compile
- * Encoder : add an Opus encoder
- * Experimental : add a django web server with a REST API (see "Web server")
- * AubioPitch: prevent NaN in result by converting them to zero
- * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
- * LimsiSad: add a default value for parameter sad_model
- * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
- * Full `Travis integration <https://travis-ci.org/yomguy/TimeSide/>`_ with tests and test coverage through `coveralls.io <https://coveralls.io/r/yomguy/TimeSide>`_
- * Thanks to all contributors!
- * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). Note that it is now advised to use the timeside.core.get_processor() method to instantiate the processors with their respective id as argument.
- * UPGRADING from the sources: please remove all .pyc files from your repository.
-
-0.5.4
-
- * Encoder : transcoded streams where broken. Now fixed with some smart thread controls.
- * Analyzer : update VAMP plugin example in sandbox
- * Analyzer : new *experimental* plugin : Limsi Speech Activity Detection Systems (limsi_sad)
- * Decoder : process any media in streaming mode giving its URL
- * Install : fix some setup requirements
-
-0.5.3
-
- * Make Analyzer rendering more generic and easy to implement
- * Analyzer : implement rendering capability for event and segment + add some more analyzer graphers
- * Analyzer : refactoring the results rendering method. + Capability to use matplotlib in environnement with no display
- * Decoder : Add a Live decoder to get data from the soundcard
- * Decoder : add support for 96kHz sampling rate
- * Encoder: live AudioSink encoder, encoder that plays the audio stream through the soundcard
- * Grapher : add a generic Class to display Analyzers through their 'render' method. Add the new grapher file
- * Grapher : add a generic Class to display Analyzers through their 'render' method. For now, it only support FrameValueResult analyzer
- * Core : add a condition to catch signal only if a LiveDecoder source is used
- * Various bugfixes
-
-0.5.2
-
- * Add a general launch script "timeside-launch" (see "Shell interface")
- * Add some decorators to filter the inputs of processes (see analyzer.waveform for ex)
- * Add a "stack" option to the FileDecoder to accumulate audio data allowing multipass processes
- * Add beat confidence to aubio_temporal
- * Add AAC encoder (gstreamer voaacenc plugin needed)
- * Add UUIDs to the file URI and to all processors
- * Add a Debian repository with all dependencies for i386 and amd64 architectures
- * Fix buggy WebM encoder
- * Fix buggy MP3 muxing
- * Fix various minor bugs
-
-0.5.1
-
- * Add *parent* processor list to Processor
- * Simplify and optimize the grapher system
- * Add Grapher abstract generic class
- * Add a UUID property to Processor
- * Add a SpectrogramLinear grapher
- * Add WaveformTransparent grapher
- * Fix some assignment issues regarding immutable type in for Analyzer Result
- * Simplify analyzer results implementation by introducing a Factory and multiple classes and subclasses to handle the 8 different kinds of results
- * Add doctests and improve the unit tests
- * Add a OnsetDetectionFunction analyzer
- * Update documentation
- * Various cleanups
- * Various bugfixes
-
-0.5.0
-
- * Deep refactoring of the analyzer API to handle various new usecases, specifically audio feature extraction
- * Add serializable global result container (NEW dependency to h5py, json, yaml)
- * Add new audio feature extraction analyzers thanks to the Aubio library providing beat & BPM detection, pitch dectection and other cool stuff (NEW dependency on aubio)
- * Add new audio feature extraction analyzers thanks to the Yaafe library (NEW dependency on yaafe)
- * Add new IRIT speech detection analyzers (NEW dependency on scipy)
- * EXPERIMENTAL : add new audio feature extraction thanks to the VAMP plugin library (NEW dependency on some vamp tools)
- * Add new documentation : http://files.parisson.com/timeside/doc/
- * New Debian repository for instant install
- * Various bugfixes
- * Comptatible with Python >=2.7
- * WARNING : no longer compatible with Telemeta 1.4.5
-
+For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
 
 Dive in
 ========
@@ -244,7 +173,7 @@ API / Documentation
 * Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Examples:
 
-  - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
+  - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
   - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
   - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
 
@@ -259,10 +188,6 @@ Debian, Ubuntu
 ---------------
 
 For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
-
-Note you can also use pip if you already have *already* satisfied all the dependencies::
-
- sudo pip install timeside
 
 Other Linux distributions
 --------------------------
@@ -291,7 +216,6 @@ Optional:
 
  aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
  django (>=1.4) django-south djangorestframework django-extensions
-
 
 User Interfaces
 ===============
@@ -342,6 +266,10 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
 
+
+Find some preset examples in examples/presets/
+
+
 Web player
 -----------
 
@@ -376,7 +304,7 @@ An EXPERIMENTAL web server based on Django has been added to the package from ve
 
 A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
-  cd timeside/server/sandbox
+  cd examples/sandbox
   ./manage.py syncdb
   ./manage.py migrate
   ./manage.py runserver
@@ -385,25 +313,20 @@ and browse http://localhost:8000/api/
 
 At the moment, this server is NOT connected to the player using TimeSide alone. Please use Telemeta.
 
-
 Development
 ===========
 
-On Debian 7 Wheezy
--------------------
+First, install TimeSide (see Install).
 
-The shell commands to setup the development version on you system::
+Then::
 
- wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
- echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
- echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
- sudo apt-get update
  sudo apt-get install git
- sudo apt-get build-dep python-timeside
  git clone https://github.com/yomguy/TimeSide.git
  cd TimeSide
  git checkout dev
  sudo pip install -e .
+ echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
+ source ~/.bashrc
  tests/run_all_tests
 
 VirtualBox and Vagrant
@@ -458,7 +381,6 @@ To start a new development, it is advised to checkout the dev branch and build y
   git checkout dev
   sudo docker build .
 
-
 Sponsors and Partners
 =====================
 
@@ -478,8 +400,6 @@ Related projects
     * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
     * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
-
-
 Copyrights
 ==========
 
@@ -489,7 +409,7 @@ Copyrights
 * Copyright (c) 2013, 2014 Thomas Fillon
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
-* Copyright (c) 2006, 2010 Samalyse SARL
+* Copyright (c) 2006, 2010 Olivier Guilyardi
 
 
 License

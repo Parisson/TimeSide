@@ -4,7 +4,7 @@ from unit_timeside import unittest, TestRunner
 from timeside.decoder.file import FileDecoder
 from timeside import _WITH_YAAFE
 if _WITH_YAAFE:
-    from timeside.analyzer.yaafe import Yaafe
+    from timeside.analyzer.externals.yaafe import Yaafe
 import os
 
 

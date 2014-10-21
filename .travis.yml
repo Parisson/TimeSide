@@ -21,7 +21,7 @@ install:
 
 # command to run tests
 before_script:
-- python tests/get_samples.py
+- pip install coverage -U
 - pip install coveralls
 
 script:

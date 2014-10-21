@@ -8,17 +8,16 @@ from timeside.decoder.file import FileDecoder
 #from timeside.encoder import *
 #from timeside.component import *
 
-from unit_timeside import *
+from unit_timeside import unittest, TestRunner
 from tools import tmp_file_sink
-import os.path
+from timeside.tools.data_samples import samples as ts_samples
 
 
 class TestTranscodingStreaming(unittest.TestCase):
     "Test transcoding and streaming"
 
     def setUp(self):
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.wav")
+        self.source = ts_samples["sweep.wav"]
         self.test_duration = True
         self.test_channels = True
         self.filesize_delta = None

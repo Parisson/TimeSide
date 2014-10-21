@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2013 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013-2014 Parisson SARL
+# Copyright (c) 2013-2014 Thomas Fillon
 
 # This file is part of TimeSide.
 
@@ -17,20 +18,64 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Author: Thomas Fillon <thomas@parisson.com>
+
 from __future__ import division
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
-from ..tools.parameters import Int, HasTraits
-
+from timeside.tools.parameters import Int, HasTraits
+from timeside.tools.buffering import BufferTable
 
 import numpy as np
 
 
 class Spectrogram(Analyzer):
-    """Spectrogram analyzer"""
+    """
+    Spectrogram analyzer
+
+    Parameters
+    ----------
+    input_blocksize : int, optional
+        Blocksize of the input signal, default to 2048
+    input_stepsize : str, optional
+        The second parameter, default to half blocksize.
+    fft_size : int, optional
+        The size of the fft, default to blocksize.
+
+    Examples
+    --------
+    >>> import timeside
+    >>> from timeside.core import get_processor
+    >>> from timeside.tools.data_samples import samples as ts_samples
+    >>> audio_source = ts_samples['sweep.wav']
+    >>> decoder = get_processor('gst_dec')(uri=audio_source)
+    >>> spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048, input_stepsize=1024)
+    >>> pipe = (decoder | spectrogram)
+    >>> pipe.run()
+    >>> spectrogram.results.keys()
+    ['spectrogram_analyzer']
+    >>> result = spectrogram.results['spectrogram_analyzer']
+    >>> result.data.shape
+    (344, 1025)
+
+     .. plot::
+
+      import timeside
+      from timeside.core import get_processor
+      from timeside.tools.data_samples import samples as ts_samples
+      audio_source = ts_samples['sweep.wav']
+      decoder = get_processor('gst_dec')(uri=audio_source)
+      spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048,
+                                                          input_stepsize=1024)
+      pipe = (decoder | spectrogram)
+      pipe.run()
+      res = spectrogram.results['spectrogram_analyzer']
+      res.render()
+
+
+    """
     implements(IAnalyzer)
 
     # Define Parameters
@@ -54,7 +99,7 @@ class Spectrogram(Analyzer):
         else:
             self.fft_size = fft_size
 
-        self.values = []
+        self.values = BufferTable()
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -80,15 +125,24 @@ class Spectrogram(Analyzer):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
-            self.values.append(np.abs(np.fft.rfft(frames, self.fft_size)))
+            stft = np.fft.rfft(frames, self.fft_size)
+            self.values.append('stft', stft)
             return frames, eod
 
     def post_process(self):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
         spectrogram.parameters = {'fft_size': self.fft_size}
-        spectrogram.data_object.value = self.values
+        spectrogram.data_object.value = np.abs(self.values['stft'])
         nb_freq = spectrogram.data_object.value.shape[1]
         spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
                                            self.samplerate() / self.fft_size)
 
         self.add_result(spectrogram)
+
+    def release(self):
+        self.values.close()
+
+if __name__ == "__main__":
+    import doctest
+    import timeside
+    doctest.testmod(timeside.analyzer.spectrogram, verbose=True)

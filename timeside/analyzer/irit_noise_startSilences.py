@@ -104,7 +104,7 @@ class IRITStartSeg(Analyzer):
         #                                              frames.T[0]) ** 2))]
         # Compute energy
         env, self.filtre_z = lfilter(b=self.filtre, a=1.0, axis=0,
-                                     x=frames[:,0],
+                                     x=frames[:, 0],
                                      zi=self.filtre_z)
         self._buffer.append('energy', numpy.sqrt(numpy.mean(env ** 2)))
 
