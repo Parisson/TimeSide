@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2013 Paul Brossier <piem@piem.org>
+# Copyright (c) 20013-2014 Parisson SARL
+# Copyright (c) 2013-2014 Thomas Fillon
 
 # This file is part of TimeSide.
 
@@ -17,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Author: Thomas Fillon <thomas@parisson.com>
 
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
