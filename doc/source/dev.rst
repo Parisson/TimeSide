@@ -1,21 +1,17 @@
 Development
 ===========
 
-On Debian 7 Wheezy
--------------------
+First, install TimeSide (see Install).
 
-The shell commands to setup the development version on you system::
+Then::
 
- wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
- echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
- echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
- sudo apt-get update
  sudo apt-get install git
- sudo apt-get build-dep python-timeside
  git clone https://github.com/yomguy/TimeSide.git
  cd TimeSide
  git checkout dev
  sudo pip install -e .
+ echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
+ source ~/.bashrc
  tests/run_all_tests
 
 VirtualBox and Vagrant

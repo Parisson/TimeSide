@@ -173,7 +173,7 @@ API / Documentation
 * Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Examples:
 
-  - http://nbviewer.ipython.org/github/thomasfillon/AES53-timeside-demos/tree/master/
+  - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
   - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
   - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
 
@@ -188,10 +188,6 @@ Debian, Ubuntu
 ---------------
 
 For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
-
-Note you can also use pip if you already have *already* satisfied all the dependencies::
-
- sudo pip install timeside
 
 Other Linux distributions
 --------------------------
@@ -320,21 +316,17 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-On Debian 7 Wheezy
--------------------
+First, install TimeSide (see Install).
 
-The shell commands to setup the development version on you system::
+Then::
 
- wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
- echo "deb http://http.debian.net/debian/ wheezy-backports main" | sudo tee -a /etc/apt/sources.list
- echo "deb http://debian.parisson.com/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list
- sudo apt-get update
  sudo apt-get install git
- sudo apt-get build-dep python-timeside
  git clone https://github.com/yomguy/TimeSide.git
  cd TimeSide
  git checkout dev
  sudo pip install -e .
+ echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
+ source ~/.bashrc
  tests/run_all_tests
 
 VirtualBox and Vagrant
