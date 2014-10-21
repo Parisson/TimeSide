@@ -23,7 +23,7 @@ Setup an arbitrary analyzer to check that decoding process from file and from st
 >>> pitch = get_processor('aubio_pitch')()
 >>> pipe = (decoder | pitch)
 >>> print pipe.processors #doctest: +ELLIPSIS
-[gst_dec-{}, aubio_pitch-{}]
+[gst_dec-{}, aubio_pitch-{"blocksize_s": 0.0, "stepsize_s": 0.0}]
 
 
 Run the pipe:

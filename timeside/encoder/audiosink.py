@@ -99,5 +99,5 @@ class AudioSink(GstEncoder):
 
 if __name__ == "__main__":
     import doctest
-
-    doctest.testmod()
+    import timeside
+    doctest.testmod(timeside.decoder.live, verbose=True)

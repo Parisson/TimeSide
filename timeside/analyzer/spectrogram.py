@@ -18,6 +18,7 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Paul Brossier <piem@piem.org>
+
 from __future__ import division
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
@@ -26,12 +27,12 @@ from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 from timeside.tools.parameters import Int, HasTraits
 from timeside.tools.buffering import BufferTable
 
-
 import numpy as np
 
 
 class Spectrogram(Analyzer):
-    """Spectrogram analyzer
+    """
+    Spectrogram analyzer
 
     Parameters
     ----------
@@ -44,14 +45,30 @@ class Spectrogram(Analyzer):
 
     Examples
     --------
-
     >>> import timeside
+    >>> from timeside.core import get_processor
     >>> from timeside.tools.data_samples import samples as ts_samples
     >>> audio_source = ts_samples['sweep.wav']
-    >>> decoder = timeside.decoder.file.FileDecoder(uri=audio_source)
-    >>> spectrogram = timeside.analyzer.spectrogram.Spectrogram(input_blocksize=2048, input_stepsize=1024)
+    >>> decoder = get_processor('gst_dec')(uri=audio_source)
+    >>> spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048, input_stepsize=1024)
     >>> pipe = (decoder | spectrogram)
     >>> pipe.run()
+
+
+     .. plot::
+
+      import timeside
+      from timeside.core import get_processor
+      from timeside.tools.data_samples import samples as ts_samples
+      audio_source = ts_samples['sweep.wav']
+      decoder = get_processor('gst_dec')(uri=audio_source)
+      spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048,
+                                                          input_stepsize=1024)
+      pipe = (decoder | spectrogram)
+      pipe.run()
+      res = spectrogram.results['spectrogram_analyzer']
+      res.render()
+
 
     """
     implements(IAnalyzer)
@@ -122,4 +139,5 @@ class Spectrogram(Analyzer):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
+    import timeside
+    doctest.testmod(timeside.analyzer.spectrogram, verbose=True)
