@@ -1,7 +1,9 @@
 Development
 ===========
 
-First, install TimeSide as described in #Install. Then::
+First, install TimeSide (see Install).
+
+Then::
 
  sudo apt-get install git
  git clone https://github.com/yomguy/TimeSide.git
