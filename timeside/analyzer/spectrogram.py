@@ -58,6 +58,7 @@ class Spectrogram(Analyzer):
     ['spectrogram_analyzer']
     >>> result = spectrogram.results['spectrogram_analyzer']
     >>> result.data.shape
+    (344, 1025)
 
      .. plot::
 
