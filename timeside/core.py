@@ -80,8 +80,8 @@ class Processor(Component, HasParam):
 
 
     Attributes:
-              parents :  Dictionnary of parent Processors that must be processed
-                         before the current Processor
+              parents :  Dictionnary of parent Processors that must be
+                         processed before the current Processor
               pipe :     The ProcessPipe in which the Processor will run
         """
     __metaclass__ = MetaProcessor
@@ -103,7 +103,6 @@ class Processor(Component, HasParam):
         self.input_samplerate = 0
         self.input_blocksize = 0
         self.input_stepsize = 0
-
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -171,6 +170,16 @@ class Processor(Component, HasParam):
     def uuid(self):
         return str(self.UUID)
 
+    @interfacedoc
+    @classmethod
+    def description(self):
+        try:
+            descr = self.__doc__.lstrip().split('\n')[0]
+        except AttributeError:
+            return '*** NO DESCRIPTION FOR THIS PROCESSOR ***'
+
+        return descr
+
     @property
     def force_samplerate(self):
         return None
@@ -206,8 +215,8 @@ class FixedSizeInputAdapter(object):
         self.pad = pad
 
     def blocksize(self, input_totalframes):
-        """Return the total number of frames that this adapter will output according to the
-        input_totalframes argument"""
+        """Return the total number of frames that this adapter will output
+        according to the input_totalframes argument"""
 
         blocksize = input_totalframes
         if self.pad:
@@ -218,9 +227,11 @@ class FixedSizeInputAdapter(object):
         return blocksize
 
     def process(self, frames, eod):
-        """Returns an iterator over tuples of the form (buffer, eod) where buffer is a
-        fixed-sized block of data, and eod indicates whether this is the last block.
-        In case padding is deactivated the last block may be smaller than the buffer size.
+        """Returns an iterator over tuples of the form (buffer, eod)
+        where buffer is a fixed-sized block of data, and eod indicates whether
+        this is the last block.
+        In case padding is deactivated the last block may be smaller than
+        the buffer size.
         """
         src_index = 0
         remaining = len(frames)
@@ -272,12 +283,18 @@ def get_processor(processor_id):
 
 def list_processors(interface=IProcessor, prefix=""):
     print prefix + interface.__name__
+    if len(prefix):
+        underline_char = '-'
+    else:
+        underline_char = '='
+    print prefix + underline_char * len(interface.__name__)
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors(interface=i, prefix=prefix + "  ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  %s [%s]" % (p.__name__, p.id())
+        print prefix + "  - '%s' :" % p.id()
+        print prefix + "    \t\t%s" % p.description()
 
 
 class ProcessPipe(object):
