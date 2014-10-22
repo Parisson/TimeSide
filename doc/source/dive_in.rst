@@ -9,10 +9,10 @@ To list all available plugins::
 Define some processors::
 
  from timeside.core import get_processor
- decoder  =  get_processor('gst_dec')('sweep.wav')
+ decoder  =  get_processor('file_decoder')('sweep.wav')
  grapher  =  get_processor('waveform_simple')
  analyzer =  get_processor('level')
- encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
+ encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
 Then run the *magic* pipeline::
 
@@ -36,4 +36,3 @@ Note you can also instanciate each processor with its own class::
  encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
 
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
-

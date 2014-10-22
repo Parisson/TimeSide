@@ -181,8 +181,8 @@ def sha1sum_file(filename):
     '''
     Return the secure hash digest with sha1 algorithm for a given file
 
-    >>> from timeside.tools.data_samples import samples as ts_samples
-    >>> wav_file = ts_samples["C4_scale.wav"]
+    >>> from timeside.tools.test_samples import samples
+    >>> wav_file = samples["C4_scale.wav"]
     >>> print sha1sum_file(wav_file)
     a598e78d0b5c90da54a77e34c083abdcd38d42ba
     '''

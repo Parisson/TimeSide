@@ -25,12 +25,12 @@ from timeside.api import IEncoder
 
 
 class FlacEncoder(GstEncoder):
-
-    """ gstreamer-based FLAC encoder """
+    """FLAC encoder based on Gstreamer"""
     implements(IEncoder)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
         super(FlacEncoder, self).setup(
             channels, samplerate, blocksize, totalframes)
 
@@ -53,12 +53,7 @@ class FlacEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_flac_enc"
-
-    @staticmethod
-    @interfacedoc
-    def description():
-        return "FLAC GStreamer based encoder"
+        return "flac_encoder"
 
     @staticmethod
     @interfacedoc

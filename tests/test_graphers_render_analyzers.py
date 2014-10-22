@@ -20,7 +20,7 @@ class Test_graphers_analyzers(unittest.TestCase):
         t = np.arange(0, duration, 1/samplerate)
         samples = chirp(t=t, f0=20, t1=t[-1], f1=samplerate/2,
                         method='logarithmic')
-        decoder_cls = timeside.core.get_processor('array_dec')
+        decoder_cls = timeside.core.get_processor('array_decoder')
         self.decoder = decoder_cls(samples, samplerate=samplerate)
 
     def _perform_test(self, grapher_cls):

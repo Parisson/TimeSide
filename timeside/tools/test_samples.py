@@ -331,6 +331,17 @@ def generateSamples(overwrite=False):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
+    # Short 1s sine at 440Hz,  44100 mono wav
+    filename = 'sine440Hz_mono_1s.wav'
+    samplerate = 44100
+    gst_audio_encoder = 'wavenc'
+    sweep_mono = SineArray(duration=1, samplerate=samplerate, frequency=440)
+    sample_file = generate_sample_file(filename, samples_dir,
+                                       gst_audio_encoder,
+                                       sample_array=sweep_mono,
+                                       overwrite=overwrite)
+    samples.update({filename: sample_file})
+
     # sine at 440Hz,  44100 stereo wav
     filename = 'sine440Hz.wav'
     sweep_stereo = sweep_mono & sweep_mono

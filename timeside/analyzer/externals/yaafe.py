@@ -46,10 +46,10 @@ class Yaafe(Analyzer):
     Examples
     --------
     >>> import timeside
-    >>> from timeside.tools.data_samples import samples as ts_samples
+    >>> from timeside.tools.test_samples import samples
     >>> from timeside.core import get_processor
-    >>> source = ts_samples['C4_scale.wav']
-    >>> FileDecoder = get_processor('gst_dec')
+    >>> source = samples['C4_scale.wav']
+    >>> FileDecoder = get_processor('file_decoder')
     >>> YaafeAnalyzer = get_processor('yaafe')
     >>> # feature extraction defition
     >>> feature_plan = ['mfcc: MFCC CepsIgnoreFirstCoeff=0 blockSize=1024 stepSize=256',

@@ -6,7 +6,7 @@
 from unit_timeside import unittest, TestRunner
 import timeside
 from timeside.decoder.file import FileDecoder
-from timeside.tools.data_samples import samples as ts_samples
+from timeside.tools.test_samples import samples
 
 
 class TestProcessPipe(unittest.TestCase):
@@ -16,8 +16,7 @@ class TestProcessPipe(unittest.TestCase):
         """Test process pipe (Quick and dirty)"""
         # TODO clean up and complete
 
-        source = ts_samples["sweep.wav"]
-
+        source = samples["sweep.wav"]
 
         pipe = timeside.core.ProcessPipe()
         dec = FileDecoder(source)
@@ -31,7 +30,11 @@ class TestProcessPipe(unittest.TestCase):
 
         a2 = timeside.analyzer.spectrogram.Spectrogram()
         pipe2 = (dec | a | a2 | abis)
+
         self.assertEqual(len(pipe2.processors), 4)
+        # Release temporary buffers in Spectrogram
+        for proc in pipe2.processors:
+            proc.release()
         #pipe2.draw_graph()
 
 if __name__ == '__main__':
