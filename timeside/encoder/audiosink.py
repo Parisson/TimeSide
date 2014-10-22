@@ -81,11 +81,6 @@ class AudioSink(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "GStreamer based audio sink encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return ""
 

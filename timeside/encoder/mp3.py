@@ -68,11 +68,6 @@ class Mp3Encoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "MP3 GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "MP3"
 
