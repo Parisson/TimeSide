@@ -29,7 +29,26 @@ from timeside.analyzer.utils import MACHINE_EPSILON
 
 class Level(Analyzer):
 
-    """RMS level analyzer
+    """Audio level analyzer
+
+    Examples
+    --------
+
+    >>> import timeside
+    >>> from timeside.core import get_processor
+    >>> from timeside.tools.test_samples import samples
+    >>> source = samples['sweep.mp3']
+    >>> decoder = get_processor('file_decoder')(uri=source)
+    >>> level = get_processor('level')()
+    >>> (decoder | level).run()
+    >>> level.results.keys()
+    ['level.max', 'level.rms']
+    >>> max = level.results['level.max']
+    >>> print max.data
+    [ 0.]
+    >>> rms = level.results['level.rms']
+    >>> print rms.data
+    [-3.263]
     """
     implements(IValueAnalyzer)
 
@@ -50,7 +69,7 @@ class Level(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Level"
+        return "Level Analyzer"
 
     @staticmethod
     @interfacedoc
@@ -97,4 +116,5 @@ class Level(Analyzer):
 
 if __name__ == "__main__":
     import doctest
-    print doctest.testmod(verbose=True)
+    import timeside
+    doctest.testmod(timeside.analyzer.level)

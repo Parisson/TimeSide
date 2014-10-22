@@ -30,7 +30,7 @@ from __future__ import division
 
 from timeside.decoder.core import Decoder, IDecoder, interfacedoc, implements
 from timeside.tools.gstutils import MainloopThread, gobject
-from . file import FileDecoder
+from timeside.decoder.file import FileDecoder
 import Queue
 import threading
 
@@ -41,7 +41,42 @@ QUEUE_SIZE = 10
 
 
 class LiveDecoder(FileDecoder):
-    """ gstreamer-based decoder from live source"""
+    """Live source Decoder based on Gstreamer
+   capturing audio from alsasrc
+
+    Construct a new LiveDecoder capturing audio from alsasrc
+
+    Parameters
+    ----------
+    num_buffers : int, optional
+        Number of buffers to output before sending End Of Stream signal
+        (-1 = unlimited).
+        (Allowed values: >= -1, Default value: -1)
+
+    input_src : str, optional
+        Gstreamer source element
+        default to 'alsasrc'
+        possible values :  'autoaudiosrc', 'alsasrc', 'osssrc'
+
+    Examples
+    --------
+
+    >>> import timeside
+
+    >>> from timeside.core import get_processor
+    >>> live_decoder = get_processor('live_decoder')(num_buffers=5)
+    >>> waveform = get_processor('waveform_analyzer')()
+    >>> mp3_encoder = timeside.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
+    ...                                               overwrite=True)
+    >>> pipe = (live_decoder | waveform | mp3_encoder)
+    >>> pipe.run()
+    >>> # Show the audio as captured by the decoder
+    >>> import matplotlib.pyplot as plt # doctest: +SKIP
+    >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
+             a.results['waveform_analyzer'].data) # doctest: +SKIP
+    >>> plt.show() # doctest: +SKIP
+
+        """
     implements(IDecoder)
 
     # IProcessor methods
@@ -49,39 +84,9 @@ class LiveDecoder(FileDecoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_live_dec"
+        return "live_decoder"
 
-    def __init__(self, num_buffers=-1, input_src='autoaudiosrc'):
-        """
-        Construct a new LiveDecoder capturing audio from alsasrc
-
-        Parameters
-        ----------
-        num_buffers :
-            Number of buffers to output before sending EOS (-1 = unlimited).
-            (Allowed values: >= -1, Default value: -1)
-
-
-        Examples
-        --------
-
-        >>> import timeside
-
-        >>> from timeside.core import get_processor
-        >>> live = timeside.decoder.live.LiveDecoder(num_buffers=5)
-        >>> a = get_processor('waveform_analyzer')()
-        >>> e = timeside.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
-        ...                                 overwrite=True)
-        >>> pipe = (live | a | e)
-        >>> pipe.run() # doctest: +SKIP
-        >>> pipe.run() # doctest: +SKIP
-
-        >>> import matplotlib.pyplot as plt # doctest: +SKIP
-        >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
-                 a.results['waveform_analyzer'].data) # doctest: +SKIP
-        >>> plt.show() # doctest: +SKIP
-
-        """
+    def __init__(self, num_buffers=-1, input_src='alsasrc'):
 
         super(Decoder, self).__init__()
         self.num_buffers = num_buffers
@@ -187,3 +192,8 @@ class LiveDecoder(FileDecoder):
         pass
 
     # IDecoder methods
+
+if __name__ == "__main__":
+    import doctest
+    import timeside
+    doctest.testmod(timeside.decoder.live, verbose=True)

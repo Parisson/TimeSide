@@ -55,7 +55,7 @@ class WavEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_wav_enc"
+        return "wav_encoder"
 
     @staticmethod
     @interfacedoc

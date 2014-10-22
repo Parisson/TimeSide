@@ -25,12 +25,12 @@ from timeside.api import IEncoder
 
 
 class VorbisEncoder(GstEncoder):
-
-    """ gstreamer-based OGG Vorbis encoder """
+    """OGG Vorbis encoder based on Gstreamer"""
     implements(IEncoder)
 
     @interfacedoc
-    def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+              totalframes=None):
         super(VorbisEncoder, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.pipe = ''' appsrc name=src
@@ -55,7 +55,7 @@ class VorbisEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_vorbis_enc"
+        return "vorbis_encoder"
 
     @staticmethod
     @interfacedoc

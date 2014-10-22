@@ -56,7 +56,7 @@ WebM encoder
 
 
 AudioSink encoder
-------------
+-----------------
 
 .. automodule:: timeside.encoder.audiosink
    :members:

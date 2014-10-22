@@ -144,11 +144,11 @@ except PIDError:
     pass
 
 # Onset Detection Function
-odf = get_processor('odf')
+odf = get_processor('onset_detection_function')
 DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=odf,
-    result_id='odf',
-    grapher_id='grapher_odf',
+    result_id='onset_detection_function',
+    grapher_id='grapher_onset_detection_function',
     grapher_name='Onset detection function')
 
 # Waveform

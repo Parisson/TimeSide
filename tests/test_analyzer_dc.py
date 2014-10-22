@@ -3,7 +3,7 @@
 from unit_timeside import unittest, TestRunner
 from timeside.decoder.file import FileDecoder
 from timeside.analyzer.dc import MeanDCShift
-from timeside.tools.data_samples import samples as ts_samples
+from timeside.tools.test_samples import samples
 
 
 class TestAnalyzerDC(unittest.TestCase):
@@ -13,13 +13,13 @@ class TestAnalyzerDC(unittest.TestCase):
 
     def testOnSweep(self):
         "runs on sweep"
-        self.source = ts_samples["sweep.wav"]
+        self.source = samples["sweep.wav"]
 
         self.expected = {'mean_dc_shift': 0.004}
 
     def testOnScale(self):
         "runs on C4 Scale"
-        self.source = ts_samples["C4_scale.wav"]
+        self.source = samples["C4_scale.wav"]
         self.expected = {'mean_dc_shift': 0.034}
 
     def tearDown(self):

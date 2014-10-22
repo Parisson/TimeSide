@@ -8,38 +8,38 @@ from timeside.decoder.file import FileDecoder
 import os
 from unit_timeside import unittest, TestRunner
 from tools import tmp_file_sink
-from timeside.tools.data_samples import samples as ts_samples
+from timeside.tools.test_samples import samples
 
 
 class TestTranscodingFromWav(unittest.TestCase):
     "Test transcoding from wav"
 
     def setUp(self):
-        self.source = ts_samples["sweep.wav"]
+        self.source = samples["sweep.wav"]
         self.test_duration = True
         self.test_channels = True
 
     def testWav(self):
         "Test conversion to wav"
-        self.encoder_id = 'gst_wav_enc'
+        self.encoder_id = 'wav_encoder'
 
     def testMp3(self):
         "Test conversion to mp3"
-        self.encoder_id = 'gst_mp3_enc'
+        self.encoder_id = 'mp3_encoder'
 
     def testOgg(self):
         "Test conversion to ogg"
-        self.encoder_id = 'gst_vorbis_enc'
+        self.encoder_id = 'vorbis_encoder'
 
     def testWebM(self):
         "Test conversion to webm"
-        self.encoder_id = 'gst_webm_enc'
+        self.encoder_id = 'webm_encoder'
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 
     def testM4a(self):
         "Test conversion to m4a"
-        self.encoder_id = 'gst_aac_enc'
+        self.encoder_id = 'aac_encoder'
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
@@ -82,7 +82,7 @@ class TestTranscodingFromMonoWav(TestTranscodingFromWav):
 
     def setUp(self):
         super(TestTranscodingFromMonoWav, self).setUp()
-        self.source = ts_samples["sweep_mono.wav"]
+        self.source = samples["sweep_mono.wav"]
 
     def testM4a(self):
         "Test conversion to m4a"
@@ -95,7 +95,7 @@ class TestTranscodingFromAnotherWav(TestTranscodingFromMonoWav):
 
     def setUp(self):
         super(TestTranscodingFromAnotherWav, self).setUp()
-        self.source = ts_samples["C4_scale.wav"]  # Mono
+        self.source = samples["C4_scale.wav"]  # Mono
 
 
 class TestTranscodingFromMp3(TestTranscodingFromWav):
@@ -103,7 +103,7 @@ class TestTranscodingFromMp3(TestTranscodingFromWav):
 
     def setUp(self):
         super(TestTranscodingFromMp3, self).setUp()
-        self.source = ts_samples["sweep.mp3"]
+        self.source = samples["sweep.mp3"]
 
 
 class TestTranscodingFromFlac(TestTranscodingFromWav):
@@ -111,7 +111,7 @@ class TestTranscodingFromFlac(TestTranscodingFromWav):
 
     def setUp(self):
         super(TestTranscodingFromFlac, self).setUp()
-        self.source = ts_samples["sweep.flac"]
+        self.source = samples["sweep.flac"]
 
 
 class TestTranscodingFromOgg(TestTranscodingFromWav):
@@ -119,7 +119,7 @@ class TestTranscodingFromOgg(TestTranscodingFromWav):
 
     def setUp(self):
         super(TestTranscodingFromOgg, self).setUp()
-        self.source = ts_samples["sweep.ogg"]
+        self.source = samples["sweep.ogg"]
 
 
 class TestTranscodingFrom32kHzWav(TestTranscodingFromWav):
@@ -127,7 +127,7 @@ class TestTranscodingFrom32kHzWav(TestTranscodingFromWav):
 
     def setUp(self):
         super(TestTranscodingFrom32kHzWav, self).setUp()
-        self.source = ts_samples["sweep_32000.wav"]
+        self.source = samples["sweep_32000.wav"]
 
 
 class TestTranscodingFromMissingFile(TestTranscodingFromWav):

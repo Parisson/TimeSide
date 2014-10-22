@@ -62,7 +62,7 @@ class AacEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_aac_enc"
+        return "aac_encoder"
 
     @staticmethod
     @interfacedoc

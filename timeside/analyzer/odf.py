@@ -61,7 +61,7 @@ class OnsetDetectionFunction(Analyzer):
     @staticmethod
     @interfacedoc
     def id():
-        return "odf"
+        return "onset_detection_function"
 
     @staticmethod
     @interfacedoc

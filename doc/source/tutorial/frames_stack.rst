@@ -11,8 +11,9 @@ First, let's import everything and define the audio file source :
 
 >>> import timeside
 >>> from timeside.core import get_processor
+>>> from timeside.tools.test_samples import samples
 >>> import numpy as np
->>> audio_file = 'http://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'
+>>> audio_file = samples['sweep.mp3']
 
 Then let's setup a :class:`FileDecoder <timeside.decoder.file.FileDecoder>` with argument `stack=True` (default argument is `stack=False`) :
 
@@ -23,7 +24,7 @@ Setup an arbitrary analyzer to check that decoding process from file and from st
 >>> pitch = get_processor('aubio_pitch')()
 >>> pipe = (decoder | pitch)
 >>> print pipe.processors #doctest: +ELLIPSIS
-[gst_dec-{}, aubio_pitch-{"blocksize_s": 0.0, "stepsize_s": 0.0}]
+[file_decoder-{}, aubio_pitch-{"blocksize_s": 0.0, "stepsize_s": 0.0}]
 
 
 Run the pipe:

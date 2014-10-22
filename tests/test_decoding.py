@@ -6,7 +6,7 @@ from timeside.decoder.file import FileDecoder
 from timeside.core import ProcessPipe
 
 from unit_timeside import unittest, TestRunner
-from timeside.tools.data_samples import samples as ts_samples
+from timeside.tools.test_samples import samples
 
 import os.path
 
@@ -31,35 +31,35 @@ class TestDecoding(unittest.TestCase):
 
     def testWav(self):
         "Test wav decoding"
-        self.source = ts_samples["sweep.wav"]
+        self.source = samples["sweep.wav"]
 
     def testWavMono(self):
         "Test mono wav decoding"
-        self.source = ts_samples["sweep_mono.wav"]
+        self.source = samples["sweep_mono.wav"]
 
         self.expected_channels = 1
 
     def testWav32k(self):
         "Test 32kHz wav decoding"
-        self.source = ts_samples["sweep_32000.wav"]
+        self.source = samples["sweep_32000.wav"]
 
         self.expected_samplerate = 32000
 
     def testFlac(self):
         "Test flac decoding"
-        self.source = ts_samples["sweep.flac"]
+        self.source = samples["sweep.flac"]
         self.expected_mime_type = 'audio/x-flac'
 
     def testOgg(self):
         "Test ogg decoding"
-        self.source = ts_samples["sweep.ogg"]
+        self.source = samples["sweep.ogg"]
 
         self.expected_mime_type = 'application/ogg'
         self.test_exact_duration = False
 
     def testMp3(self):
         "Test mp3 decoding"
-        self.source = ts_samples["sweep.mp3"]
+        self.source = samples["sweep.mp3"]
 
         self.expected_mime_type = 'audio/mpeg'
         self.test_exact_duration = False

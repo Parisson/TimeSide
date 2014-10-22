@@ -47,7 +47,7 @@ class MeanDCShift(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Mean DC shift"
+        return "Mean DC shift Analyzer"
 
     @staticmethod
     @interfacedoc
