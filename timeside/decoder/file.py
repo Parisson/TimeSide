@@ -1,10 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2007-2013 Parisson
+# Copyright (c) 2007-2014 Parisson
 # Copyright (c) 2007 Olivier Guilyardi <olivier@samalyse.com>
 # Copyright (c) 2007-2013 Guillaume Pellerin <pellerin@parisson.com>
 # Copyright (c) 2010-2013 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013-2014 Thomas fillon <thomas@parisson.com>
+
 #
 # This file is part of TimeSide.
 
@@ -45,8 +47,35 @@ import numpy as np
 
 
 class FileDecoder(Decoder):
+    """ File Decoder based on Gstreamer
 
-    """ gstreamer-based decoder """
+    Parameters
+    ----------
+    uri : str
+        uri of the media
+    start : float, optional
+        start time of the segment in seconds
+    duration : float, optional
+        duration of the segment in seconds
+    stack : boolean, optional
+        keep decoded data in the stack
+    sha1 : boolean, optional
+        compute the sha1 hash of the data
+
+
+    Examples
+    --------
+    >>> import timeside
+    >>> from timeside.core import get_processor
+    >>> from timeside.tools.test_samples import samples
+    >>> audio_source = samples['sweep.wav']
+    >>> FileDecoder = get_processor('file_decoder')  # Get the decoder class
+    >>> # Use decoder with default parameters
+    >>> decoder = FileDecoder(uri=audio_source)
+    >>> analyzer = get_processor('level')()  # Pick a arbitrary analyzer
+    >>> pipe =(decoder | analyzer)
+    >>> pipe.run()  # Run the pipe for the given audio source
+"""
     implements(IDecoder)
 
     output_blocksize = 8 * 1024
@@ -59,26 +88,9 @@ class FileDecoder(Decoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_dec"
+        return "file_decoder"
 
     def __init__(self, uri, start=0, duration=None, stack=False, sha1=None):
-        """
-        Construct a new FileDecoder
-
-        Parameters
-        ----------
-        uri : str
-            uri of the media
-        start : float
-            start time of the segment in seconds
-        duration : float
-            duration of the segment in seconds
-        stack : boolean
-            keep decoded data in the stack
-        sha1 : boolean
-            compute the sha1 hash of the data
-
-        """
 
         super(FileDecoder, self).__init__(start=start, duration=duration)
 
@@ -361,4 +373,5 @@ class FileDecoder(Decoder):
 
 if __name__ == "__main__":
     import doctest
-    doctest.testmod()
+    import timeside
+    doctest.testmod(timeside.decoder.file)

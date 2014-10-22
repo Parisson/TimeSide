@@ -445,7 +445,7 @@ class ProcessPipe(object):
 
         eod = False
 
-        if source.id() == 'gst_live_dec':
+        if source.id() == 'live_decoder':
             # Set handler for Interruption signal
             import signal
 
@@ -459,7 +459,7 @@ class ProcessPipe(object):
             for item in items:
                 frames, eod = item.process(frames, eod)
 
-        if source.id() == 'gst_live_dec':
+        if source.id() == 'live_decoder':
             # Restore default handler for Interruption signal
             signal.signal(signal.SIGINT, signal.SIG_DFL)
 

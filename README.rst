@@ -54,9 +54,9 @@ Processors
 IDecoder
 ---------
 
-  * FileDecoder [gst_dec]
-  * ArrayDecoder [array_dec]
-  * LiveDecoder [gst_live_dec]
+  * FileDecoder [file_decoder]
+  * ArrayDecoder [array_decoder]
+  * LiveDecoder [live_decoder]
 
 IAnalyzer
 ---------
@@ -72,7 +72,7 @@ IAnalyzer
   *  VampSimpleHost [vamp_simple_host]
   *  IRITSpeechEntropy [irit_speech_entropy]
   *  IRITSpeech4Hz [irit_speech_4hz]
-  *  OnsetDetectionFunction [odf]
+  *  OnsetDetectionFunction [onset_detection_function]
   *  LimsiSad [limsi_sad]
 
 IValueAnalyzer
@@ -92,21 +92,21 @@ IGrapher
   *  SpectrogramLog [spectrogram_log]
   *  SpectrogramLinear [spectrogram_lin]
   *  Display.aubio_pitch.pitch [grapher_aubio_pitch]
-  *  Display.odf [grapher_odf]
+  *  Display.onset_detection_function [grapher_odf]
   *  Display.waveform_analyzer [grapher_waveform]
   *  Display.irit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
 
 IEncoder
 ---------
 
-  * VorbisEncoder [gst_vorbis_enc]
-  * WavEncoder [gst_wav_enc]
-  * Mp3Encoder [gst_mp3_enc]
-  * FlacEncoder [gst_flac_enc]
-  * AacEncoder [gst_aac_enc]
-  * WebMEncoder [gst_webm_enc]
-  * OpusEncoder [gst_opus_enc]
-  * AudioSink [gst_audio_sink_enc]
+  * VorbisEncoder [vorbis_encoder]
+  * WavEncoder [wav_encoder]
+  * Mp3Encoder [mp3_encoder]
+  * FlacEncoder [flac_encoder]
+  * AacEncoder [aac_encoder]
+  * WebMEncoder [webm_encoder]
+  * OpusEncoder [opus_encoder]
+  * AudioSink [live_encoder]
 
 News
 =====
@@ -136,10 +136,10 @@ To list all available plugins::
 Define some processors::
 
  from timeside.core import get_processor
- decoder  =  get_processor('gst_dec')('sweep.wav')
+ decoder  =  get_processor('file_decoder')('sweep.wav')
  grapher  =  get_processor('waveform_simple')
  analyzer =  get_processor('level')
- encoder  =  get_processor('gst_vorbis_enc')('sweep.ogg')
+ encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
 Then run the *magic* pipeline::
 

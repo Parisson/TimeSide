@@ -63,7 +63,7 @@ class OpusEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_opus_enc"
+        return "opus_encoder"
 
     @staticmethod
     @interfacedoc
