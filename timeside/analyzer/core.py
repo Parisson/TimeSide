@@ -215,8 +215,6 @@ class IdMetadata(MetadataObject):
         proc_uuid : str
         res_uuid : str
     '''
-    # TODO :
-    # - (long) description --> à mettre dans l'API Processor
 
     # Define default values
     _default_value = OrderedDict([('id', None),
@@ -913,7 +911,7 @@ class AnalyzerResultContainer(dict):
     >>> a = Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
-    AnalyzerResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='', date='...', version='...', author='TimeSide', proc_uuid='...', res_uuid='...'), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri='.../sweep.mp3', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})
+    AnalyzerResult(id_metadata=IdMetadata(id='analyzer', name='Generic analyzer', unit='', description='...', date='...', version='...', author='TimeSide', proc_uuid='...', res_uuid='...'), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri='.../sweep.mp3', start=0.0, duration=8.0..., is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})
     >>> resContainer = timeside.analyzer.core.AnalyzerResultContainer()
     '''
 
@@ -1178,6 +1176,7 @@ class Analyzer(Processor):
         result.id_metadata.author = 'TimeSide'
         result.id_metadata.id = self.id()
         result.id_metadata.name = self.name()
+        result.id_metadata.description = self.description()
         result.id_metadata.unit = self.unit()
         result.id_metadata.proc_uuid = self.uuid()
 
