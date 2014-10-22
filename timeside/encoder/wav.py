@@ -59,11 +59,6 @@ class WavEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "Wav GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "WAV"
 

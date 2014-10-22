@@ -67,11 +67,6 @@ class OpusEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "Opus GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "Opus"
 

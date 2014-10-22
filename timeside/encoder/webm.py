@@ -69,11 +69,6 @@ class WebMEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "WebM GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "WebM"
 
