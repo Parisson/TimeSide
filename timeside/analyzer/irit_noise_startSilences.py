@@ -35,12 +35,13 @@ import os
 
 
 class IRITStartSeg(Analyzer):
-    implements(IAnalyzer)
     '''
     Segmentation of recording sessions into 'start' and 'session' segments
 
     Properties:
     '''
+    implements(IAnalyzer)
+
     @interfacedoc
     def __init__(self):
         super(IRITStartSeg, self).__init__()
