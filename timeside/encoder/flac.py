@@ -57,11 +57,6 @@ class FlacEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "FLAC GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "FLAC"
 

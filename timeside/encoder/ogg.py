@@ -59,11 +59,6 @@ class VorbisEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "Vorbis GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "OGG"
 

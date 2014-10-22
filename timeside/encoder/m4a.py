@@ -66,11 +66,6 @@ class AacEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
-    def description():
-        return "AAC GStreamer based encoder"
-
-    @staticmethod
-    @interfacedoc
     def format():
         return "AAC"
 
