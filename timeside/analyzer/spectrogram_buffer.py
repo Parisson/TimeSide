@@ -52,12 +52,12 @@ class SpectrogramBuffer(Spectrogram):
     >>> from timeside.tools.test_samples import samples
     >>> audio_source = samples['sweep.wav']
     >>> decoder = get_processor('file_decoder')(uri=audio_source)
-    >>> spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048, input_stepsize=1024)
+    >>> spectrogram = get_processor('spectrogram_analyzer_buffer')(input_blocksize=2048, input_stepsize=1024)
     >>> pipe = (decoder | spectrogram)
     >>> pipe.run()
     >>> spectrogram.results.keys()
-    ['spectrogram_analyzer']
-    >>> result = spectrogram.results['spectrogram_analyzer']
+    ['spectrogram_analyzer_buffer']
+    >>> result = spectrogram.results['spectrogram_analyzer_buffer']
     >>> result.data.shape
     (344, 1025)
 
@@ -68,11 +68,11 @@ class SpectrogramBuffer(Spectrogram):
       from timeside.tools.test_samples import samples
       audio_source = samples['sweep.wav']
       decoder = get_processor('file_decoder')(uri=audio_source)
-      spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048,
+      spectrogram = get_processor('spectrogram_analyzer_buffer')(input_blocksize=2048,
                                                           input_stepsize=1024)
       pipe = (decoder | spectrogram)
       pipe.run()
-      res = spectrogram.results['spectrogram_analyzer']
+      res = spectrogram.results['spectrogram_analyzer_buffer']
       res.render()
     """
 
