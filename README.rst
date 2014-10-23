@@ -163,7 +163,6 @@ Note you can also instanciate each processor with its own class::
  encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
 
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
-
 API / Documentation
 ====================
 
