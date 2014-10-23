@@ -13,6 +13,7 @@ Contents:
 
    intro
    news
+   Processors <processors>
    Installation <install>
    Tutorial <tutorial/index>
    ui
