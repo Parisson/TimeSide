@@ -1,10 +1,10 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-import os
 from timeside.decoder.file import FileDecoder
 from timeside.core import get_processor
 from timeside import _WITH_AUBIO
+from timeside.tools.test_samples import samples
 
 
 @unittest.skipIf(not _WITH_AUBIO, 'Aubio library is not available')
@@ -15,11 +15,11 @@ class TestAubioMfcc(unittest.TestCase):
 
     def testOnSweep(self):
         "runs on sweep"
-        self.source = os.path.join (os.path.dirname(__file__),  "samples", "sweep.wav")
+        self.source = samples["sweep.wav"]
 
-    def testOnGuitar(self):
-        "runs on guitar"
-        self.source = os.path.join (os.path.dirname(__file__),  "samples", "guitar.wav")
+    def testOnScale(self):
+        "runs on C4 scale"
+        self.source = samples["C4_scale.wav"]
 
     def tearDown(self):
         decoder = FileDecoder(self.source)

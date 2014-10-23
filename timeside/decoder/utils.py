@@ -181,9 +181,10 @@ def sha1sum_file(filename):
     '''
     Return the secure hash digest with sha1 algorithm for a given file
 
-    >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> print sha1sum_file(wav_file) # doctest: +SKIP
-    #08301c3f9a8d60926f31e253825cc74263e52ad1
+    >>> from timeside.tools.test_samples import samples
+    >>> wav_file = samples["C4_scale.wav"]
+    >>> print sha1sum_file(wav_file)
+    a598e78d0b5c90da54a77e34c083abdcd38d42ba
     '''
     import hashlib
     import io
@@ -200,12 +201,8 @@ def sha1sum_file(filename):
 def sha1sum_url(url):
     '''Return the secure hash digest with sha1 algorithm for a given url
 
-    >>> url = 'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'
+    >>> url = "https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav"
     >>> print sha1sum_url(url)
-    08301c3f9a8d60926f31e253825cc74263e52ad1
-    >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> uri = get_uri(wav_file)
-    >>> print sha1sum_url(uri)
     08301c3f9a8d60926f31e253825cc74263e52ad1
 
     '''

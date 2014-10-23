@@ -4,9 +4,6 @@ import unittest
 import doctest
 import sys
 import time
-from tools import check_samples
-
-check_samples()
 
 
 class _TextTestResult(unittest.TestResult):
@@ -111,7 +108,6 @@ class TestRunner:
         self.stream = _WritelnDecorator(stream)
         self.descriptions = descriptions
         self.verbosity = verbosity
-        check_samples()
 
     def _makeResult(self):
         return _TextTestResult(self.stream, self.descriptions, self.verbosity)

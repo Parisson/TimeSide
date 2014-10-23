@@ -5,7 +5,7 @@ from __future__ import division
 from timeside.decoder.file import FileDecoder
 from timeside.analyzer.level import Level
 from timeside.core import ProcessPipe
-from unit_timeside import *
+from unit_timeside import unittest, TestRunner
 
 import os.path
 
@@ -57,27 +57,25 @@ class TestDecodingFromStack(unittest.TestCase):
                               start=self.start,
                               duration=self.duration,
                               stack=True)
-        level_on_file = Level()
-        pipe = (decoder | level_on_file)
+        level = Level()
+        pipe = (decoder | level)
 
         pipe.run()
 
         self.assertIsInstance(pipe.frames_stack, list)
 
-        results_on_file = pipe.results['level.rms'].data.copy()
+        results_on_file = level.results['level.rms'].data.copy()
 
         # If the pipe is used for a second run, the processed frames stored
         # in the stack are passed to the other processors
         # without decoding the audio source again.
-        #Let's define a second analyzer equivalent to the previous one:
 
-        level_on_stack = Level()
-        pipe |= level_on_stack
+        pipe.results = {}  # to be sure the previous results are deleted
         pipe.run()
 
         # to assert that the frames passed to the two analyzers are the same,
         # we check that the results of these analyzers are equivalent:
-        results_on_stack = pipe.results['level.rms'].data
+        results_on_stack = level.results['level.rms'].data
 
         self.assertEqual(results_on_stack,
                          results_on_file)

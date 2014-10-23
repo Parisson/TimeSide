@@ -74,6 +74,7 @@ def import_module_with_exceptions(name, package=None):
             # Ignore module requiring DJANGO_SETTINGS_MODULE in environnement
             return
         else:
+            print (name, package)
             raise e
     return name
 
@@ -112,7 +113,7 @@ def check_vamp():
     "Check Vamp host availability"
 
     try:
-        from ..analyzer import vamp_plugin
+        from timeside.analyzer.externals import vamp_plugin
     except VampImportError:
         warnings.warn('Vamp host is not available', ImportWarning,
                       stacklevel=2)

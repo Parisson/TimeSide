@@ -31,12 +31,20 @@ class AudioSink(GstEncoder):
 
     This encoder plays the decoded audio stream to the sound card
 
+    Parameters
+    ----------
+    output_sink : str, optional
+        Gstreamer sink element
+        Default to 'autoaudiosink'
+        Possible values : 'autoaudiosink', 'alsasink', 'osssink'
 
     >>> import timeside
-    >>> wav_file = 'tests/samples/guitar.wav' # doctest: +SKIP
-    >>> d = timeside.decoder.file.FileDecoder(wav_file)
-    >>> e = timeside.encoder.audiosink.AudioSink()
-    >>> (d|e).run() # doctest: +SKIP
+    >>> from timeside.core import get_processor
+    >>> from timeside.tools.test_samples import samples
+    >>> wav_file = samples['sine440Hz_mono_1s.wav']
+    >>> d = get_processor('file_decoder')(wav_file)
+    >>> e = get_processor('live_encoder')()
+    >>> (d|e).run()
     """
 
     implements(IEncoder)
@@ -69,12 +77,7 @@ class AudioSink(GstEncoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "gst_audio_sink_enc"
-
-    @staticmethod
-    @interfacedoc
-    def description():
-        return "GStreamer based audio sink encoder"
+        return "live_encoder"
 
     @staticmethod
     @interfacedoc
@@ -96,11 +99,7 @@ class AudioSink(GstEncoder):
         self.metadata = metadata
 
 
-# Define global variables for use with doctest
-DOCTEST_ALIAS = {'wav_file':
-                 'https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav'}
-
 if __name__ == "__main__":
     import doctest
-
-    doctest.testmod(extraglobs=DOCTEST_ALIAS)
+    import timeside
+    doctest.testmod(timeside.decoder.live, verbose=True)

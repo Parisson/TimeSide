@@ -1,12 +1,23 @@
 User Interfaces
 ===============
 
+Python
+-------
+
+Of course all the TimeSide are available in our beloved python envionment.
+As IPython is really great for discovering objects with completion, writing notebooks, we strongly advise to install and use it::
+
+  sudo apt-get install ipython
+  ipython
+  >>> import timeside
+
+
 Shell
 ------
 
 Of course, TimeSide can be used in any python environment. But, a shell script is also provided to enable preset based and recursive processing through your command line interface::
 
- $ timeside-launch -h
+ timeside-launch -h
  Usage: scripts/timeside-launch [options] -c file.conf file1.wav [file2.wav ...]
   help: scripts/timeside-launch -h
 
@@ -35,6 +46,10 @@ Of course, TimeSide can be used in any python environment. But, a shell script i
                         list of graph output formats for the analyzers results
   -o <outputdir>, --ouput-directory=<outputdir>
                         output directory
+
+
+Find some preset examples in examples/presets/
+
 
 Web player
 -----------
@@ -70,13 +85,12 @@ An EXPERIMENTAL web server based on Django has been added to the package from ve
 
 A sandbox is provided in timeside/server/sandbox and you can initialize it and test it like this::
 
-  $ cd timeside/server/sandbox
-  $ ./manage.py syncdb
-  $ ./manage.py migrate
-  $ ./manage.py runserver
+  cd examples/sandbox
+  ./manage.py syncdb
+  ./manage.py migrate
+  ./manage.py runserver
 
 and browse http://localhost:8000/api/
 
 At the moment, this server is NOT connected to the player using TimeSide alone. Please use Telemeta.
-
 

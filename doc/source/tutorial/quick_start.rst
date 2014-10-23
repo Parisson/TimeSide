@@ -29,9 +29,9 @@ A most basic operation, transcoding, is easily performed with two processors:
 .. doctest:: test_1
 
  >>> import timeside
- >>> from timeside.core import get_processor	     
- >>> decoder = get_processor('gst_dec')('sweep.wav')# doctest: +SKIP
- >>> encoder = get_processor('gst_vorbis_enc')('sweep.ogg')
+ >>> from timeside.core import get_processor
+ >>> decoder = get_processor('file_decoder')('sweep.wav')# doctest: +SKIP
+ >>> encoder = get_processor('vorbis_encoder')('sweep.ogg')
  >>> pipe = decoder | encoder
  >>> pipe.run()
 
@@ -59,7 +59,7 @@ analysis and encoding:
    >>> from timeside.core import get_processor
    >>> decoder = get_processor('gst-dec')('sweep.wav') # doctest: +SKIP
    >>> levels = get_processor('level')()
-   >>> encoders = get_processor('gst_mp3_enc')('sweep.mp3') | get_processor('gst_flac_enc')('sweep.flac')
+   >>> encoders = get_processor('mp3_encoder')('sweep.mp3') | get_processor('flac_encoder')('sweep.flac')
    >>> (decoder | levels | encoders).run()
    >>> print levels.results
-   {'level.max': GlobalValueResult(id_metadata=IdMetadata(id='level.max', name='Level Max', unit='dBFS', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([-6.021])), audio_metadata=AudioMetadata(uri='file://...sweep.wav', start=0.0, duration=8.0, is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={}), 'level.rms': GlobalValueResult(id_metadata=IdMetadata(id='level.rms', name='Level RMS', unit='dBFS', description='', date='...', version='...', author='TimeSide', uuid='...'), data_object=DataObject(value=array([-9.856])), audio_metadata=AudioMetadata(uri='file://...sweep.wav', start=0.0, duration=8.0, is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})}
+   {'...': AnalyzerResult(id_metadata=IdMetadata(id='level.max', name='Level Analyzer Max', unit='dBFS', description='...', date='...', version='...', author='TimeSide', proc_uuid='...', res_uuid='...'), data_object=GlobalValueObject(value=array([ 0.]), y_value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='.../sweep.wav', start=0.0, duration=8.0, is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={}), '...': AnalyzerResult(id_metadata=IdMetadata(id='level.rms', name='Level Analyzer RMS', unit='dBFS', description='...', date='...', version='...', author='TimeSide', proc_uuid='...', res_uuid='...'), data_object=GlobalValueObject(value=array([-2.995]), y_value=array([], dtype=float64)), audio_metadata=AudioMetadata(uri='.../sweep.wav', start=0.0, duration=8.0, is_segment=False, sha1='...', channels=2, channelsManagement=''), parameters={})}

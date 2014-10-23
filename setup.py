@@ -1,15 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+
+from setuptools import setup
 import sys
 from setuptools.command.test import test as TestCommand
+
 
 # Pytest
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = ['tests', '--ignore', 'tests/sandbox']
+        self.test_args = ['tests', '--ignore', 'tests/sandbox', '--verbose']
         self.test_suite = True
 
     def run_tests(self):
@@ -17,7 +19,6 @@ class PyTest(TestCommand):
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
-
 
 
 CLASSIFIERS = [
@@ -38,18 +39,19 @@ CLASSIFIERS = [
 KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize plot HTML5 interactive metadata player'
 
 setup(
-  name = "TimeSide",
-  url='https://github.com/yomguy/TimeSide/',
-  description = "open web audio processing framework",
-  long_description = open('README.rst').read(),
-  author = "Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
-  author_email = "yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
-  version = '0.5.6.3',
-  install_requires = [
+    name='TimeSide',
+    url='https://github.com/yomguy/TimeSide/',
+    description="open web audio processing framework",
+    long_description=open('README.rst').read(),
+    author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
+    author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
+    version='0.5.7',
+    install_requires=[
         'numpy',
         'mutagen',
         'pillow',
         'h5py',
+        'tables',
         'pyyaml',
         'simplejson',
         'scipy',
@@ -58,15 +60,18 @@ setup(
         'django-extensions',
         'djangorestframework',
         'south',
+        'traits',
+        'networkx',
+        'sphinx_rtd_theme',
         ],
-  platforms=['OS Independent'],
-  license='Gnu Public License V2',
-  classifiers = CLASSIFIERS,
-  keywords = KEYWORDS,
-  packages = ['timeside'],
-  include_package_data = True,
-  zip_safe = False,
-  scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
-  tests_require=['pytest'],
-  cmdclass = {'test': PyTest},
+    platforms=['OS Independent'],
+    license='Gnu Public License V2',
+    classifiers=CLASSIFIERS,
+    keywords=KEYWORDS,
+    packages=['timeside'],
+    include_package_data=True,
+    zip_safe=False,
+    scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
+    tests_require=['pytest'],
+    cmdclass={'test': PyTest},
     )

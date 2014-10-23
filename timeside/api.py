@@ -102,6 +102,12 @@ class IProcessor(Interface):
     def uuid():
         """Return the UUID of the processor"""
 
+    @staticmethod
+    def description():
+        """Return a string describing what this processor is meant for.
+        The description should provide enough information to help the end user.
+        """
+
 
 class IEncoder(IProcessor):
 

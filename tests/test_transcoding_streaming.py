@@ -8,17 +8,16 @@ from timeside.decoder.file import FileDecoder
 #from timeside.encoder import *
 #from timeside.component import *
 
-from unit_timeside import *
+from unit_timeside import unittest, TestRunner
 from tools import tmp_file_sink
-import os.path
+from timeside.tools.test_samples import samples
 
 
 class TestTranscodingStreaming(unittest.TestCase):
     "Test transcoding and streaming"
 
     def setUp(self):
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.wav")
+        self.source = samples["sweep.wav"]
         self.test_duration = True
         self.test_channels = True
         self.filesize_delta = None
@@ -26,21 +25,21 @@ class TestTranscodingStreaming(unittest.TestCase):
 
     def testMp3(self):
         "Test conversion to mp3"
-        self.encoder_id = 'gst_mp3_enc'
+        self.encoder_id = 'mp3_encoder'
         self.filesize_delta = 156
 
     def testOgg(self):
         "Test conversion to ogg"
-        self.encoder_id = 'gst_vorbis_enc'
+        self.encoder_id = 'vorbis_encoder'
 
     def testOpus(self):
         "Test conversion to opus"
-        self.encoder_id = 'gst_opus_enc'
+        self.encoder_id = 'opus_encoder'
         self.expected_sample_rate = 48000
 
     def testWebM(self):
         "Test conversion to webm"
-        self.encoder_id = 'gst_webm_enc'
+        self.encoder_id = 'webm_encoder'
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 

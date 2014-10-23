@@ -16,16 +16,17 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
         samples = np.zeros((duration * samplerate, 1))
-        decoder_cls = timeside.core.get_processor('array_dec')
+        decoder_cls = timeside.core.get_processor('array_decoder')
         self.decoder = decoder_cls(samples, samplerate=samplerate)
 
     def _perform_test(self, analyzer_cls):
         """Internal function that test if there is NaN in the results
         of a given analyzer"""
 
-        pipe = (self.decoder | analyzer_cls())
+        analyzer = analyzer_cls()
+        pipe = (self.decoder | analyzer)
         pipe.run()
-        for key, result in pipe.results.items():
+        for key, result in analyzer.results.items():
             if 'value' in result.data_object.keys():
                 # Test for NaN
                 self.assertFalse(np.any(np.isnan(result.data)),
@@ -43,7 +44,7 @@ class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
         samples = -1000*np.ones((duration * samplerate, 1))
-        decoder_cls = timeside.core.get_processor('array_dec')
+        decoder_cls = timeside.core.get_processor('array_decoder')
         self.decoder = decoder_cls(samples, samplerate=samplerate)
 
 
@@ -60,8 +61,7 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
         test_func = test_func_factory(analyzer)
 
         if analyzer.__name__ not in skip_reasons:
-            setattr(test_class, test_func_name,
-                    test_func_factory(analyzer))
+            setattr(test_class, test_func_name, test_func)
         else:  # Decorate with unittest.skip to skip test
             setattr(test_class, test_func_name,
                     unittest.skip(skip_reasons[analyzer.__name__])(test_func))

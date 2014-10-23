@@ -10,7 +10,7 @@ Decoder package
    
 
 File Decoder
-===========
+============
 
 .. autoclass:: timeside.decoder.file.FileDecoder
    :members:
@@ -26,7 +26,7 @@ Array Decoder
    :show-inheritance:
 
 Live Decoder
-=============
+============
 
 .. autoclass:: timeside.decoder.live.LiveDecoder
    :members:

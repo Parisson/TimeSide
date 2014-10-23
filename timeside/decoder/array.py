@@ -43,7 +43,7 @@ class ArrayDecoder(Decoder):
     @staticmethod
     @interfacedoc
     def id():
-        return "array_dec"
+        return "array_decoder"
 
     def __init__(self, samples, samplerate=44100, start=0, duration=None):
         '''
