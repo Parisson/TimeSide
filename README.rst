@@ -68,8 +68,8 @@ For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEW
 IProcessor
 ==========
 
-  IEncoder
-  --------
+IEncoder
+--------
 
     * live_encoder : Gstreamer-based Audio Sink
     * flac_encoder : FLAC encoder based on Gstreamer
@@ -80,15 +80,15 @@ IProcessor
     * wav_encoder : WAV encoder based on Gstreamer
     * webm_encoder : WebM encoder based on Gstreamer
 
-  IDecoder
-  --------
+IDecoder
+--------
 
     * array_decoder : Decoder taking Numpy array as input
     * file_decoder : File Decoder based on Gstreamer
     * live_decoder : Live source Decoder based on Gstreamer
 
-  IGrapher
-  --------
+IGrapher
+--------
 
     * grapher_aubio_pitch : Builds a PIL image representing Aubio Pitch
     * grapher_onset_detection_function : Builds a PIL image representing Onset detection function
@@ -107,15 +107,11 @@ IProcessor
     * waveform_contour_white : Builds a PIL image representing an amplitude coutour (envelop) of the audio stream.
     * waveform_transparent : Builds a PIL image representing a transparent waveform
 
-  IAnalyzer
-  ---------
+IAnalyzer
+---------
 
-
-    IValueAnalyzer
-    --------------
-
-      * mean_dc_shift : Mean DC shift analyzer
-      * level : Audio level analyzer
+    * mean_dc_shift : Mean DC shift analyzer
+    * level : Audio level analyzer
     * aubio_melenergy : Aubio Mel Energy analyzer
     * aubio_mfcc : Aubio MFCC analyzer
     * aubio_pitch : Aubio Pitch estimation analyzer
@@ -133,8 +129,8 @@ IProcessor
     * spectrogram_analyzer_3 : Spectrogram analyzer
     * waveform_analyzer : Waveform analyzer
 
-  IEffect
-  -------
+IEffect
+-------
 
     * fx_gain : Gain effect processor
 
