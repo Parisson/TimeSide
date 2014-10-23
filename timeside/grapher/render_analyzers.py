@@ -29,7 +29,7 @@ from ..exceptions import PIDError
 class DisplayAnalyzer(Grapher):
 
     """
-    Builds a PIL image from analyzer result
+    image from analyzer result
     This is an Abstract base class
     """
     dpi = 72  # Web default value for Telemeta
@@ -121,7 +121,7 @@ class DisplayAnalyzer(Grapher):
             def name():
                 return grapher_name
 
-            __doc__ = """Builds a PIL image representing """ + grapher_name
+            __doc__ = """Image representing """ + grapher_name
 
         NewGrapher.__name__ = 'Display' + '.' + result_id
 

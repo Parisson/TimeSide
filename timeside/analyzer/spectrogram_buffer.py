@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2013 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013-2014 Parisson SARL
+# Copyright (c) 2013-2014 Thomas Fillon
 
 # This file is part of TimeSide.
 
@@ -17,21 +18,21 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Author: Thomas Fillon <thomas@parisson.com>
+
 from __future__ import division
 from timeside.core import implements, interfacedoc
 from timeside.analyzer.core import Analyzer
 from timeside.api import IAnalyzer
 from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
+from timeside.tools.parameters import Int, HasTraits
 from timeside.tools.buffering import BufferTable
-from ..tools.parameters import Int, HasTraits
-from timeside.tools.pyx.cfft import cfft
+from timeside.analyzer.spectrogram import Spectrogram
 
 import numpy as np
 
 
-class Spectrogram(Analyzer):
-
+class SpectrogramBuffer(Spectrogram):
     """
     Spectrogram image builder with an extensible buffer based on tables
 
@@ -77,69 +78,33 @@ class Spectrogram(Analyzer):
 
     implements(IAnalyzer)
 
-    # Define Parameters
-    class _Param(HasTraits):
-        fft_size = Int()
-        input_blocksize = Int()
-        input_stepsize = Int()
-
     def __init__(self, input_blocksize=2048, input_stepsize=None,
                  fft_size=None):
-        super(Spectrogram, self).__init__()
-
-        self.input_blocksize = input_blocksize
-        if input_stepsize:
-            self.input_stepsize = input_stepsize
-        else:
-            self.input_stepsize = input_blocksize // 2
-
-        if not fft_size:
-            self.fft_size = input_blocksize
-        else:
-            self.fft_size = fft_size
-
-        self.values = []
-
-    @interfacedoc
-    def setup(self, channels=None, samplerate=None,
-              blocksize=None, totalframes=None):
-        super(Spectrogram, self).setup(channels, samplerate,
-                                       blocksize, totalframes)
+        super(SpectrogramBuffer, self).__init__()
+        self.values = BufferTable()
 
     @staticmethod
     @interfacedoc
     def id():
-        return "spectrogram_analyzer"
+        return "spectrogram_analyzer_buffer"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectrogram Analyzer"
-
-    @staticmethod
-    @interfacedoc
-    def unit():
-        return ""
+        return "Spectrogram Analyzer with extensible buffer"
 
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
-        self.values.append(np.abs(np.fft.rfft(frames, self.fft_size)))
-        return frames, eod
+            stft = np.fft.rfft(frames, self.fft_size)
+            self.values.append('stft', stft)
+            return frames, eod
 
-    def post_process(self):
-        spectrogram = self.new_result(data_mode='value', time_mode='framewise')
-        spectrogram.parameters = {'fft_size': self.fft_size}
-        # spectrogram.data_object.value = self.values['spectrogram']
-        spectrogram.data_object.value = self.values
-        nb_freq = spectrogram.data_object.value.shape[1]
-        spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
-                                           self.samplerate() / self.fft_size)
-
-        self.add_result(spectrogram)
+    def release(self):
+        self.values.close()
 
 
 if __name__ == "__main__":
     import doctest
     import timeside
-    doctest.testmod(timeside.analyzer.spectrogram, verbose=True)
+    doctest.testmod(timeside.analyzer.spectrogram_buffer, verbose=True)

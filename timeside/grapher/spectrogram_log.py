@@ -29,7 +29,7 @@ import math
 
 class SpectrogramLog(Grapher):
 
-    """logarithmic scaled spectrogram (level vs. frequency vs. time).
+    """Logarithmic scaled spectrogram (level vs. frequency vs. time).
 
     Adds pixels iteratively thanks to the adapter providing
     fixed size frame buffers."""
