@@ -134,7 +134,6 @@ class Spectrogram(Analyzer):
         nb_freq = spectrogram.data_object.value.shape[1]
         spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
                                            self.samplerate() / self.fft_size)
-
         self.add_result(spectrogram)
 
 
