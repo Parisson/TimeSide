@@ -282,19 +282,18 @@ def get_processor(processor_id):
 
 
 def list_processors(interface=IProcessor, prefix=""):
-    print prefix + interface.__name__
+    print '\n' + prefix + interface.__name__
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print prefix + underline_char * len(interface.__name__)
+    print prefix + underline_char * len(interface.__name__) + '\n'
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors(interface=i, prefix=prefix + "  ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * %s" % p.id()
-        print prefix + "    \t\t%s" % p.description()
+        print prefix + "  * %s : %s" % (p.id(), p.description())
 
 
 class ProcessPipe(object):
