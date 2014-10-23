@@ -28,8 +28,8 @@ from timeside.grapher.color_schemes import default_color_schemes
 
 class WaveformCentroid(Waveform):
 
-    """ Builds a PIL image representing a waveform of the audio stream.
-    Peaks are colored relatively to the spectral centroids of each frame buffer. """
+    """Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
+    """
 
     implements(IGrapher)
 

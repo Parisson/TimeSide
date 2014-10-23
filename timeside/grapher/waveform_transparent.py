@@ -28,8 +28,7 @@ from . utils import peaks
 
 class WaveformTransparent(Waveform):
 
-    """ Builds a PIL image representing a transparent waveform
-    of the audio stream.
+    """Transparent waveform.
     """
 
     implements(IGrapher)
