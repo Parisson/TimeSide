@@ -25,7 +25,9 @@ from timeside.api import IEncoder
 
 
 class FlacEncoder(GstEncoder):
+
     """FLAC encoder based on Gstreamer"""
+
     implements(IEncoder)
 
     @interfacedoc

@@ -3,6 +3,7 @@ News
 
 0.5.7
 
+  * WARNING! some processor ids have changed. Please see the full list below.
   * Add a Docker development box
   * Add a Vagrant development box
   * Add a Debian package installation procedure

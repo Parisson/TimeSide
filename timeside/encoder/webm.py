@@ -25,7 +25,9 @@ from timeside.api import IEncoder
 
 
 class WebMEncoder(GstEncoder):
-    """WebM encoder based on Gstreamer `webmmux` muxer"""
+
+    """WebM encoder based on Gstreamer"""
+
     implements(IEncoder)
 
     def __init__(self, output, streaming=False, overwrite=False, video=False):

@@ -293,7 +293,7 @@ def list_processors(interface=IProcessor, prefix=""):
         list_processors(interface=i, prefix=prefix + "  ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  - '%s' :" % p.id()
+        print prefix + "  * %s" % p.id()
         print prefix + "    \t\t%s" % p.description()
 
 
