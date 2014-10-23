@@ -30,7 +30,7 @@ import numpy
 
 class WaveformContourBlack(Waveform):
 
-    """ Builds a PIL image representing an amplitude coutour (envelop) of the audio stream.
+    """Black amplitude contour waveform.
     """
 
     implements(IGrapher)
@@ -76,7 +76,7 @@ class WaveformContourBlack(Waveform):
 
 class WaveformContourWhite(WaveformContourBlack):
 
-    """ Builds a PIL image representing an amplitude coutour (envelop) of the audio stream.
+    """an white amplitude contour wavform.
     """
 
     implements(IGrapher)
