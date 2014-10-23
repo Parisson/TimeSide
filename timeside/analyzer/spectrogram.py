@@ -25,7 +25,6 @@ from timeside.api import IAnalyzer
 from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
 from timeside.tools.buffering import BufferTable
 from ..tools.parameters import Int, HasTraits
-from timeside.tools.pyx.cfft import cfft
 
 import numpy as np
 
