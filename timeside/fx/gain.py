@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from timeside.core import Processor, implements, interfacedoc, FixedSizeInputAdapter
-from timeside.api import *
+from timeside.core import Processor, implements, interfacedoc
+from timeside.api import IEffect
 import numpy
 
 
 class Gain(Processor):
+    """Gain effect processor"""
+
     implements(IEffect)
 
     @interfacedoc
@@ -15,12 +17,12 @@ class Gain(Processor):
     @staticmethod
     @interfacedoc
     def id():
-        return "test_gain"
+        return "fx_gain"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Gain test effect"
+        return "Gain effect"
 
     def process(self, frames, eod=False):
         return numpy.multiply(frames, self.gain), eod
