@@ -103,7 +103,7 @@ class SpectrogramBuffer(Spectrogram):
     def post_process(self):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
         spectrogram.parameters = {'fft_size': self.fft_size}
-        spectrogram.data_object.value = self.values['stft']
+        spectrogram.data_object.value = np.abs(self.values['stft'])
         nb_freq = spectrogram.data_object.value.shape[1]
         spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
                                            self.samplerate() / self.fft_size)
