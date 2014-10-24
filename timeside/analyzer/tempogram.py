@@ -32,20 +32,54 @@ import numpy as np
 
 
 class Tempogram(Analyzer):
+    """ Tempogram Analyzer
+
+    Examples
+    --------
+    >>> import timeside
+    >>> from timeside.core import get_processor
+    >>> from timeside.tools.test_samples import samples
+    >>> audio_source = samples['C4_scale.wav']
+    >>> decoder = get_processor('file_decoder')(uri=audio_source)
+    >>> tempogram = get_processor('tempogram')(input_blocksize=2048, input_stepsize=1024)
+    >>> pipe = (decoder | tempogram)
+    >>> pipe.run()
+    >>> tempogram.results.keys()
+    ['tempogram']
+    >>> result = tempogram.results['tempogram']
+    >>> result.data.shape
+    (344, 1025)
+
+     .. plot::
+
+      import timeside
+      from timeside.core import get_processor
+      from timeside.tools.test_samples import samples
+      audio_source = samples['sweep.wav']
+      decoder = get_processor('file_decoder')(uri=audio_source)
+      spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048,
+                                                          input_stepsize=1024)
+      pipe = (decoder | spectrogram)
+      pipe.run()
+      res = spectrogram.results['spectrogram_analyzer']
+      res.render()
+
+
+    """
     implements(IAnalyzer)  # TODO check if needed with inheritance
 
-    def __init__(self, blocksize=2048, stepsize=None):
+    def __init__(self, input_blocksize=1024, input_stepsize=None):
         super(Tempogram, self).__init__()
 
-        self.input_blocksize = blocksize
-        if stepsize:
-            self.input_stepsize = stepsize
+        self.input_blocksize = input_blocksize
+        if input_stepsize:
+            self.input_stepsize = input_stepsize
         else:
-            self.input_stepsize = blocksize // 2
+            self.input_stepsize = input_blocksize / 2
 
-        self.parents.append(
-            OnsetDetectionFunction(blocksize=self.input_blocksize,
-                                   stepsize=self.input_stepsize))
+        self.parents['odf'] = OnsetDetectionFunction(
+            input_blocksize=self.input_blocksize,
+            input_stepsize=self.input_stepsize)
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
@@ -85,20 +119,24 @@ class Tempogram(Analyzer):
 
     def post_process(self):
 
-        odf = self.process_pipe.results.get_result_by_id('odf').data
+        odf = self.parents['odf'].results['onset_detection_function'].data
+        print odf.shape
 
         NFFT = np.round(20 * self.input_samplerate // self.input_stepsize)
-        tempogram, freqs, t = specgram(odf,
+        tempogram, freqs, t = specgram(odf.T,
                                        Fs=self.input_samplerate /
                                        self.input_stepsize,
                                        NFFT=NFFT, pad_to=4 * NFFT,
                                        noverlap=NFFT - 32,
                                        detrend=detrend_mean)
 
-        #print tempogram.shape
-        #print freqs.shape
-
         result = self.new_result(data_mode='value', time_mode='framewise')
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
         result.data_object.value = tempogram
-        self.process_pipe.results.add(result)
+        self.add_result(result)
+
+
+if __name__ == "__main__":
+    import doctest
+    import timeside
+    doctest.testmod(timeside.analyzer.tempogram)
