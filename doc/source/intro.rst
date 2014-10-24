@@ -58,7 +58,6 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
   :width: 800 px
 
-
 Dive in
 ========
 
