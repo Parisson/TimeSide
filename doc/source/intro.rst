@@ -47,3 +47,37 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
   :width: 800 px
 
+
+Dive in
+========
+
+To list all available plugins::
+
+ import timeside
+ timeside.core.list_processors()
+
+Define some processors::
+
+ from timeside.core import get_processor
+ decoder  =  get_processor('file_decoder')('sweep.wav')
+ grapher  =  get_processor('waveform_simple')
+ analyzer =  get_processor('level')
+ encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
+
+Then run the *magic* pipeline::
+
+ (decoder | grapher | analyzer | encoder).run()
+
+Render the grapher results::
+
+ grapher.render(output='waveform.png')
+
+Show the analyzer results::
+
+ print 'Level:', analyzer.results
+
+The encoded OGG file should also be there...
+
+For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
+
+
