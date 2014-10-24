@@ -84,24 +84,35 @@ For more extensive examples, please see the `full documentation <http://files.pa
 News
 =====
 
-0.5.7
+0.6
 
   * WARNING! some processor ids have changed. Please see the full list below.
-  * Add a Docker development box
+  * NEW analyzers: IRIT Monopoly (see Processors)
+  * NEW graphers: IRIT Start/Session segmentation
+  * Add extensible buffering thanks to pytables (NEW dependency)
+  * Add typed parameters in processors and server thanks to traits (NEW dependency)
+  * Add a graph model to the pipe thanks to networkx (NEW dependency)
+  * Add test sample generators based on GStreamer
+  * Add a background image option for rendering analyzers
+  * Add on-the-fly filtering decorators
+  * Add a Docker development image and a Dockerfile
   * Add a Vagrant development box
-  * Add a Debian package installation procedure
-  * Fix parent and child analyzers both using yaafe (fix #60)
+  * Update the Debian package installation procedure
+  * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
+  * Update various processors
+  * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
+  * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
 
 0.5.6
 
   * Bugfix release
   * Fix analyzer instanciation as parent for some graphers
+  * Store analyzer's results in pipe.results by uuid instead of id (fix #24)
 
 For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
 
 Processors
 ==========
-
 
 IEncoder
 --------
@@ -175,11 +186,8 @@ API / Documentation
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
 * Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
-* Examples:
-
-  - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
-  - http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
-
+* Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
+* Usage : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
 =======
@@ -406,7 +414,7 @@ Related projects
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2014 Parisson SARL
+* Copyright (c) 2006, 2014 Parisson Sarl
 * Copyright (c) 2006, 2014 Guillaume Pellerin
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Thomas Fillon

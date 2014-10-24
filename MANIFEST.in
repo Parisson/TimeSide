@@ -3,12 +3,12 @@ include LICENSE.txt
 include README.rst
 include NEWS.rst
 include requirements.txt
+include Dockerfile
 recursive-include doc *
 recursive-include timeside *
 recursive-include examples *
 recursive-include tests *
 recursive-exclude examples/sandbox/media *
-recursive-exclude tests/sandbox *
 recursive-exclude * *.pyc
 recursive-exclude * *.swp
 recursive-exclude dist *
