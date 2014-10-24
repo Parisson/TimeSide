@@ -1,7 +1,7 @@
 News
 =====
 
-0.5.7
+0.6
 
   * WARNING! some processor ids have changed. Please see the full list below.
   * NEW analyzers: IRIT Monopoly (see Processors)

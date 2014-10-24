@@ -1,7 +1,7 @@
 News
 =====
 
-0.5.7
+0.6
 
   * WARNING! some processor ids have changed. Please see the full list below.
   * NEW analyzers: IRIT Monopoly (see Processors)
@@ -17,7 +17,7 @@ News
   * Update the Debian package installation procedure
   * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
   * Update various processors
-  * Prevent duplication of processors (i.e. processors sharing the same class and parameters). Also fix #60.
+  * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
   * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
 
 0.5.6
