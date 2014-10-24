@@ -27,7 +27,7 @@ from . utils import peaks
 
 class Waveform(Grapher):
 
-    """ Builds a PIL image representing a simple waveform of the audio stream.
+    """Simple monochrome waveform image.
     """
 
     implements(IGrapher)

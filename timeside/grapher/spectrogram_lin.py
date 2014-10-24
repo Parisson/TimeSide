@@ -27,7 +27,8 @@ from timeside.grapher.spectrogram_log import SpectrogramLog
 
 class SpectrogramLinear(SpectrogramLog):
 
-    """ Builds a PIL image representing a spectrogram of the audio stream (level vs. frequency vs. time).
+    """Linear scaled spectrogram (level vs. frequency vs. time).
+
     Adds pixels iteratively thanks to the adapter providing fixed size frame buffers."""
 
     implements(IGrapher)

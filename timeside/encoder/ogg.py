@@ -25,7 +25,9 @@ from timeside.api import IEncoder
 
 
 class VorbisEncoder(GstEncoder):
+
     """OGG Vorbis encoder based on Gstreamer"""
+
     implements(IEncoder)
 
     @interfacedoc

@@ -29,8 +29,8 @@ import math
 
 class SpectrogramLog(Grapher):
 
-    """ Builds a PIL image representing a spectrogram of the audio stream
-    (level vs. frequency vs. time).
+    """Logarithmic scaled spectrogram (level vs. frequency vs. time).
+
     Adds pixels iteratively thanks to the adapter providing
     fixed size frame buffers."""
 

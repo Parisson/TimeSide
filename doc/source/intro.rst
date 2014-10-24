@@ -48,63 +48,36 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
   :width: 800 px
 
 
-Processors
-==========
+Dive in
+========
 
-IDecoder
----------
+To list all available plugins::
 
-  * FileDecoder [file_decoder]
-  * ArrayDecoder [array_decoder]
-  * LiveDecoder [live_decoder]
+ import timeside
+ timeside.core.list_processors()
 
-IAnalyzer
----------
+Define some processors::
 
-  *  AubioTemporal [aubio_temporal]
-  *  AubioPitch [aubio_pitch]
-  *  AubioMfcc [aubio_mfcc]
-  *  AubioMelEnergy [aubio_melenergy]
-  *  AubioSpecdesc [aubio_specdesc]
-  *  Yaafe [yaafe]
-  *  Spectrogram [spectrogram_analyzer]
-  *  Waveform [waveform_analyzer]
-  *  VampSimpleHost [vamp_simple_host]
-  *  IRITSpeechEntropy [irit_speech_entropy]
-  *  IRITSpeech4Hz [irit_speech_4hz]
-  *  OnsetDetectionFunction [onset_detection_function]
-  *  LimsiSad [limsi_sad]
+ from timeside.core import get_processor
+ decoder  =  get_processor('file_decoder')('sweep.wav')
+ grapher  =  get_processor('waveform_simple')
+ analyzer =  get_processor('level')
+ encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
-IValueAnalyzer
----------------
+Then run the *magic* pipeline::
 
-  * Level [level]
-  * MeanDCShift [mean_dc_shift]
+ (decoder | grapher | analyzer | encoder).run()
 
-IGrapher
----------
+Render the grapher results::
 
-  *  Waveform [waveform_simple]
-  *  WaveformCentroid [waveform_centroid]
-  *  WaveformTransparent [waveform_transparent]
-  *  WaveformContourBlack [waveform_contour_black]
-  *  WaveformContourWhite [waveform_contour_white]
-  *  SpectrogramLog [spectrogram_log]
-  *  SpectrogramLinear [spectrogram_lin]
-  *  Display.aubio_pitch.pitch [grapher_aubio_pitch]
-  *  Display.onset_detection_function [grapher_odf]
-  *  Display.waveform_analyzer [grapher_waveform]
-  *  Display.irit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
+ grapher.render(output='waveform.png')
 
-IEncoder
----------
+Show the analyzer results::
 
-  * VorbisEncoder [vorbis_encoder]
-  * WavEncoder [wav_encoder]
-  * Mp3Encoder [mp3_encoder]
-  * FlacEncoder [flac_encoder]
-  * AacEncoder [aac_encoder]
-  * WebMEncoder [webm_encoder]
-  * OpusEncoder [opus_encoder]
-  * AudioSink [live_encoder]
+ print 'Level:', analyzer.results
+
+The encoded OGG file should also be there...
+
+For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
+
 

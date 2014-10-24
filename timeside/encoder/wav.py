@@ -27,7 +27,8 @@ from timeside.api import IEncoder
 
 class WavEncoder(GstEncoder):
 
-    """ gstreamer-based WAV encoder """
+    """WAV encoder based on Gstreamer"""
+
     implements(IEncoder)
 
     @interfacedoc

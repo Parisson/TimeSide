@@ -8,6 +8,6 @@ API / Documentation
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
+  - http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
+
 

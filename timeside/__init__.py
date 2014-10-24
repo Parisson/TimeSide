@@ -35,7 +35,7 @@ _WITH_YAAFE = ts_package.check_yaafe()
 _WITH_VAMP = ts_package.check_vamp()
 
 
-_packages_with_processors = ['decoder', 'analyzer', 'encoder', 'grapher']
+_packages_with_processors = ['decoder', 'analyzer', 'encoder', 'grapher', 'fx']
 
 __all__ = ['api', 'core']
 __all__.extend(_packages_with_processors)

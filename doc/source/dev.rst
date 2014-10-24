@@ -5,6 +5,7 @@ First, install TimeSide (see Install).
 
 Then::
 
+ sudo apt-get build-dep python-timeside
  sudo apt-get install git
  git clone https://github.com/yomguy/TimeSide.git
  cd TimeSide

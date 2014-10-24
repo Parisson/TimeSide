@@ -48,83 +48,6 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
   :width: 800 px
 
 
-Processors
-==========
-
-IDecoder
----------
-
-  * FileDecoder [file_decoder]
-  * ArrayDecoder [array_decoder]
-  * LiveDecoder [live_decoder]
-
-IAnalyzer
----------
-
-  *  AubioTemporal [aubio_temporal]
-  *  AubioPitch [aubio_pitch]
-  *  AubioMfcc [aubio_mfcc]
-  *  AubioMelEnergy [aubio_melenergy]
-  *  AubioSpecdesc [aubio_specdesc]
-  *  Yaafe [yaafe]
-  *  Spectrogram [spectrogram_analyzer]
-  *  Waveform [waveform_analyzer]
-  *  VampSimpleHost [vamp_simple_host]
-  *  IRITSpeechEntropy [irit_speech_entropy]
-  *  IRITSpeech4Hz [irit_speech_4hz]
-  *  OnsetDetectionFunction [onset_detection_function]
-  *  LimsiSad [limsi_sad]
-
-IValueAnalyzer
----------------
-
-  * Level [level]
-  * MeanDCShift [mean_dc_shift]
-
-IGrapher
----------
-
-  *  Waveform [waveform_simple]
-  *  WaveformCentroid [waveform_centroid]
-  *  WaveformTransparent [waveform_transparent]
-  *  WaveformContourBlack [waveform_contour_black]
-  *  WaveformContourWhite [waveform_contour_white]
-  *  SpectrogramLog [spectrogram_log]
-  *  SpectrogramLinear [spectrogram_lin]
-  *  Display.aubio_pitch.pitch [grapher_aubio_pitch]
-  *  Display.onset_detection_function [grapher_odf]
-  *  Display.waveform_analyzer [grapher_waveform]
-  *  Display.irit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
-
-IEncoder
----------
-
-  * VorbisEncoder [vorbis_encoder]
-  * WavEncoder [wav_encoder]
-  * Mp3Encoder [mp3_encoder]
-  * FlacEncoder [flac_encoder]
-  * AacEncoder [aac_encoder]
-  * WebMEncoder [webm_encoder]
-  * OpusEncoder [opus_encoder]
-  * AudioSink [live_encoder]
-
-News
-=====
-
-0.5.7
-
-  * Add a Docker development box
-  * Add a Vagrant development box
-  * Add a Debian package installation procedure
-  * Fix parent and child analyzers both using yaafe (fix #60)
-
-0.5.6
-
-  * Bugfix release
-  * Fix analyzer instanciation as parent for some graphers
-
-For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
-
 Dive in
 ========
 
@@ -155,14 +78,96 @@ Show the analyzer results::
 
 The encoded OGG file should also be there...
 
-Note you can also instanciate each processor with its own class::
-
- decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
- grapher  =  timeside.grapher.waveform_simple.Waveform()
- analyzer =  timeside.analyzer.level.Level()
- encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
-
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
+
+
+News
+=====
+
+0.5.7
+
+  * WARNING! some processor ids have changed. Please see the full list below.
+  * Add a Docker development box
+  * Add a Vagrant development box
+  * Add a Debian package installation procedure
+  * Fix parent and child analyzers both using yaafe (fix #60)
+
+0.5.6
+
+  * Bugfix release
+  * Fix analyzer instanciation as parent for some graphers
+
+For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
+
+Processors
+==========
+
+
+IEncoder
+--------
+
+   * **live_encoder** : Gstreamer-based Audio Sink
+   * **flac_encoder** : FLAC encoder based on Gstreamer
+   * **aac_encoder** : AAC encoder based on Gstreamer
+   * **mp3_encoder** : MP3 encoder based on Gstreamer
+   * **vorbis_encoder** : OGG Vorbis encoder based on Gstreamer
+   * **opus_encoder** : Opus encoder based on Gstreamer
+   * **wav_encoder** : WAV encoder based on Gstreamer
+   * **webm_encoder** : WebM encoder based on Gstreamer
+
+IDecoder
+--------
+
+   * **array_decoder** : Decoder taking Numpy array as input
+   * **file_decoder** : File Decoder based on Gstreamer
+   * **live_decoder** : Live source Decoder based on Gstreamer
+
+IGrapher
+--------
+
+   * **grapher_aubio_pitch** : Image representing Aubio Pitch
+   * **grapher_onset_detection_function** : Image representing Onset detection function
+   * **grapher_waveform** : Image representing Waveform from Analyzer
+   * **grapher_irit_speech_4hz_segments** : Image representing Irit 4Hz Speech Segmentation
+   * **grapher_irit_speech_4hz_segments_median** : Image representing Irit 4Hz Speech Segmentation with median filter
+   * **grapher_monopoly_segments** : Image representing Irit Monopoly Segmentation
+   * **grapher_limsi_sad_etape** : Image representing LIMSI SAD with ETAPE model
+   * **grapher_limsi_sad_maya** : Image representing LIMSI SAD with Mayan model
+   * **grapher_irit_startseg** : Image representing IRIT Start Noise
+   * **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
+   * **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
+   * **waveform_simple** : Simple monochrome waveform image.
+   * **waveform_centroid** : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
+   * **waveform_contour_black** : Black amplitude contour waveform.
+   * **waveform_contour_white** : an white amplitude contour wavform.
+   * **waveform_transparent** : Transparent waveform.
+
+IAnalyzer
+---------
+
+   * **mean_dc_shift** : Mean DC shift analyzer
+   * **level** : Audio level analyzer
+   * **aubio_melenergy** : Aubio Mel Energy analyzer
+   * **aubio_mfcc** : Aubio MFCC analyzer
+   * **aubio_pitch** : Aubio Pitch estimation analyzer
+   * **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
+   * **aubio_temporal** : Aubio Temporal analyzer
+   * **yaafe** : Yaafe feature extraction library interface analyzer
+   * **irit_monopoly** : Segmentor Monophony/Polyphony based on the analysis of yin confidence.
+   * **irit_startseg** : Segmentation of recording sessions into 'start' and 'session' segments
+   * **irit_speech_4hz** : Speech Segmentor based on the 4Hz energy modulation analysis.
+   * **irit_speech_entropy** : Speech Segmentor based on Entropy analysis.
+   * **limsi_sad** : Limsi Speech Activity Detection Systems
+   * **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
+   * **onset_detection_function** : Onset Detection Function analyzer
+   * **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
+   * **waveform_analyzer** : Waveform analyzer
+
+IEffect
+-------
+
+   * **fx_gain** : Gain effect processor
+
 API / Documentation
 ====================
 
@@ -173,34 +178,32 @@ API / Documentation
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
+  - http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
+
 
 Install
 =======
 
-The TimeSide engine is intended to work on all Linux and Unix like platforms.
-
-It depends on several other python modules and compiled librairies like GStreamer.
+The TimeSide engine is intended to work on all Linux and Unix like platforms. It depends on several other python modules and compiled libraries like GStreamer.
 
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
+For Debian based distributions, we provide a safe repository giving additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
 
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution).
+On other Linux platforms, you need to install all dependencies listed in Dependencies finding all equivalent package names for your distribution.
 
 Then, use pip::
 
  sudo pip install timeside
 
-OSX
----
+OSX / Windows
+--------------
 
-The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
+Native install is hard at the moment but you can either run our Vagrant or Docker images (see Development).
 
 Dependencies
 -------------
@@ -319,6 +322,7 @@ First, install TimeSide (see Install).
 
 Then::
 
+ sudo apt-get build-dep python-timeside
  sudo apt-get install git
  git clone https://github.com/yomguy/TimeSide.git
  cd TimeSide

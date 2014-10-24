@@ -32,7 +32,8 @@ from timeside.api import IEncoder
 
 class Mp3Encoder(GstEncoder):
 
-    """ gstreamer-based MP3 encoder """
+    """MP3 encoder based on Gstreamer"""
+
     implements(IEncoder)
 
     @interfacedoc
