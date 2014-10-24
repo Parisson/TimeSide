@@ -17,7 +17,7 @@ News
   * Update the Debian package installation procedure
   * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
   * Update various processors
-  * Prevent duplication of processor in the pipe (i.e. processors sharing the same Classe and parameters). This also fix #60.
+  * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
   * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
 
 0.5.6
