@@ -47,6 +47,40 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
   :width: 800 px
 
+
+Dive in
+========
+
+To list all available plugins::
+
+ import timeside
+ timeside.core.list_processors()
+
+Define some processors::
+
+ from timeside.core import get_processor
+ decoder  =  get_processor('file_decoder')('sweep.wav')
+ grapher  =  get_processor('waveform_simple')
+ analyzer =  get_processor('level')
+ encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
+
+Then run the *magic* pipeline::
+
+ (decoder | grapher | analyzer | encoder).run()
+
+Render the grapher results::
+
+ grapher.render(output='waveform.png')
+
+Show the analyzer results::
+
+ print 'Level:', analyzer.results
+
+The encoded OGG file should also be there...
+
+For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
+
+
 News
 =====
 
@@ -134,46 +168,6 @@ IEffect
 
    * **fx_gain** : Gain effect processor
 
-Dive in
-========
-
-To list all available plugins::
-
- import timeside
- timeside.core.list_processors()
-
-Define some processors::
-
- from timeside.core import get_processor
- decoder  =  get_processor('file_decoder')('sweep.wav')
- grapher  =  get_processor('waveform_simple')
- analyzer =  get_processor('level')
- encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
-
-Then run the *magic* pipeline::
-
- (decoder | grapher | analyzer | encoder).run()
-
-Render the grapher results::
-
- grapher.render(output='waveform.png')
-
-Show the analyzer results::
-
- print 'Level:', analyzer.results
-
-The encoded OGG file should also be there...
-
-Note you can also instanciate each processor with its own class::
-
- decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
- grapher  =  timeside.grapher.waveform_simple.Waveform()
- analyzer =  timeside.analyzer.level.Level()
- encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
-
-For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
-
-
 API / Documentation
 ====================
 
@@ -184,34 +178,32 @@ API / Documentation
 * Examples:
 
   - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
+  - http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
+
 
 Install
 =======
 
-The TimeSide engine is intended to work on all Linux and Unix like platforms.
-
-It depends on several other python modules and compiled librairies like GStreamer.
+The TimeSide engine is intended to work on all Linux and Unix like platforms. It depends on several other python modules and compiled libraries like GStreamer.
 
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
+For Debian based distributions, we provide a safe repository giving additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
 
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution).
+On other Linux platforms, you need to install all dependencies listed in Dependencies finding all equivalent package names for your distribution.
 
 Then, use pip::
 
  sudo pip install timeside
 
-OSX
----
+OSX / Windows
+--------------
 
-The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
+Native install is hard at the moment but you can either run our Vagrant or Docker images (see Development).
 
 Dependencies
 -------------
@@ -330,6 +322,7 @@ First, install TimeSide (see Install).
 
 Then::
 
+ sudo apt-get build-dep python-timeside
  sudo apt-get install git
  git clone https://github.com/yomguy/TimeSide.git
  cd TimeSide

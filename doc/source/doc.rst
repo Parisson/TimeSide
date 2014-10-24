@@ -9,4 +9,5 @@ API / Documentation
 
   - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
   - http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
-  -
+
+
