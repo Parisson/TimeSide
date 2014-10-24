@@ -17,7 +17,7 @@ News
   * Update the Debian package installation procedure
   * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
   * Update various processors
-  * Fix parent and child analyzers both using yaafe (fix #60)
+  * Prevent duplication of processors (i.e. processors sharing the same class and parameters). Also fix #60.
   * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
 
 0.5.6
