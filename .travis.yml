@@ -16,12 +16,13 @@ before_install:
 # command to install dependencies
 install: 
 # - "pip install -r requirements.txt --use-mirrors"
+- pip install -U pip
 - python setup.py install
 
 
 # command to run tests
 before_script:
-- pip install coverage -U
+- pip install -U coverage
 - pip install coveralls
 
 script:
