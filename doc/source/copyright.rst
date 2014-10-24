@@ -1,7 +1,7 @@
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2014 Parisson SARL
+* Copyright (c) 2006, 2014 Parisson Sarl
 * Copyright (c) 2006, 2014 Guillaume Pellerin
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Thomas Fillon
@@ -25,13 +25,3 @@ GNU General Public License for more details.
 
 See LICENSE for more details.
 
-Usage
-======
-
-To fund the project and continue our development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
-
- * star or fork the project on `GitHub <https://github.com/yomguy/TimeSide>`_
- * tweet something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@yomguy <https://twitter.com/yomguy>`_
- * send us an email <support@parisson.com>
-
-Thanks for your support!
