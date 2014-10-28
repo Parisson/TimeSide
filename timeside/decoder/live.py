@@ -39,6 +39,12 @@ from gst import _gst as gst
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
 
+#  TODO:
+# check if a soundcard device is available
+# alsasrc = gst.element_factory_make("alsasrc", "alsasrc")
+# alsasrc.probe_get_values_name('device')
+# ['hw:0,0']
+
 
 class LiveDecoder(FileDecoder):
     """Live source Decoder based on Gstreamer
@@ -69,7 +75,7 @@ class LiveDecoder(FileDecoder):
     >>> mp3_encoder = timeside.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
     ...                                               overwrite=True)
     >>> pipe = (live_decoder | waveform | mp3_encoder)
-    >>> pipe.run()
+    >>> pipe.run()  # doctest: +SKIP
     >>> # Show the audio as captured by the decoder
     >>> import matplotlib.pyplot as plt # doctest: +SKIP
     >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP

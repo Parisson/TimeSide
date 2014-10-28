@@ -24,6 +24,13 @@ from timeside.core import implements, interfacedoc
 from timeside.encoder.core import GstEncoder
 from timeside.api import IEncoder
 
+#  TODO:
+# check if a soundcard device is available
+# alsasink = gst.element_factory_make("alsasink", "alsasink")
+# alsasink.probe_get_values_name('device')
+# ['hw:0,0', 'hw:0,3', 'hw:0,7', 'hw:0,8']
+
+
 
 class AudioSink(GstEncoder):
 
@@ -44,7 +51,7 @@ class AudioSink(GstEncoder):
     >>> wav_file = samples['sine440Hz_mono_1s.wav']
     >>> d = get_processor('file_decoder')(wav_file)
     >>> e = get_processor('live_encoder')()
-    >>> (d|e).run()
+    >>> (d|e).run()  # doctest: +SKIP
     """
 
     implements(IEncoder)
