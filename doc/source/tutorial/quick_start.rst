@@ -36,8 +36,9 @@ Spectrogram. All graphers return an image:
 .. doctest:: test_2
 
    >>> import timeside
+   >>> from timeside.tools.test_samples import samples
    >>> from timeside.core import get_processor
-   >>> decoder =  get_processor('gst-dec')('sweep.wav') # doctest: +SKIP
+   >>> decoder =  get_processor('file_decoder')(samples["sweep.wav"])
    >>> spectrogram = get_processor('spectrogram_lin')(width=400, height=150)
    >>> (decoder | spectrogram).run()
    >>> spectrogram.render('graph.png')
@@ -48,8 +49,9 @@ analysis and encoding:
 .. doctest:: test_3
 
    >>> import timeside
+   >>> from timeside.tools.test_samples import samples
    >>> from timeside.core import get_processor
-   >>> decoder = get_processor('gst-dec')('sweep.wav') # doctest: +SKIP
+   >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
    >>> levels = get_processor('level')()
    >>> encoders = get_processor('mp3_encoder')('sweep.mp3') | get_processor('flac_encoder')('sweep.flac')
    >>> (decoder | levels | encoders).run()
