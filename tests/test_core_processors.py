@@ -8,6 +8,8 @@ from timeside.core import Processor
 from timeside.api import IProcessor
 from timeside.component import implements, interfacedoc
 
+from timeside.tools.test_samples import samples
+
 SAMPLE_RATE_FORCED = 16000
 OTHER_SAMPLE_RATE = 32000
 
@@ -47,8 +49,7 @@ class TestForceSampleRate(unittest.TestCase):
             return OTHER_SAMPLE_RATE
 
     def setUp(self):
-        self.source = os.path.join(os.path.dirname(__file__), "samples",
-                                   "sweep.wav")
+        self.source = samples['sweep.wav']
         self.source_samplerate = 44100
         self.decoder = FileDecoder(uri=self.source)
 

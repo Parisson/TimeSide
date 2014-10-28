@@ -6,8 +6,7 @@ from timeside.decoder.file import FileDecoder
 from timeside.analyzer.level import Level
 from timeside.core import ProcessPipe
 from unit_timeside import unittest, TestRunner
-
-import os.path
+from timeside.tools.test_samples import samples
 
 #from glib import GError as GST_IOError
 # HINT : to use later with Gnonlin only
@@ -27,8 +26,7 @@ class TestDecodingFromStack(unittest.TestCase):
         self.test_exact_duration = True
         self.source_duration = 8
         self.expected_mime_type = 'audio/x-wav'
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.wav")
+        self.source = samples["sweep.wav"]
 
     def testProcess(self):
         "Test decoder stack: test process"

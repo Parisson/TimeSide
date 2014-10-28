@@ -210,8 +210,7 @@ class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
 class TestDecodingSegmentBadParameters(unittest.TestCase):
 
     def setUp(self):
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.wav")
+        self.source = samples["sweep.wav"]
 
     def test_bad_start_value(self):
         "Test decoding segment with start value exceeding the media duration"
@@ -343,7 +342,7 @@ class TestDecodingWrongFiles(unittest.TestCase):
     def testMissingFile(self):
         "Test decoding missing file"
         self.source = os.path.join(os.path.dirname(__file__),
-                                   "a_missing_file_blahblah.wav")
+                                   "a_missing_file.wav")
         self.assertRaises(IOError, FileDecoder, self.source)
 
     def testDevNull(self):

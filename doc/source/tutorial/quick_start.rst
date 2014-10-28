@@ -4,15 +4,6 @@
 
 A most basic operation, transcoding, is easily performed with two processors:
 
-
-.. testsetup:: test_1,test_2,test_3
-
-   import timeside
-   import os
-   ModulePath =  os.path.dirname(os.path.realpath(timeside.analyzer.core.__file__))
-   wavFile = os.path.join(ModulePath , '../../tests/samples/sweep.wav')
-   decoder = timeside.decoder.file.FileDecoder(wavFile)
-
 .. testcleanup:: test_1
 
    os.remove('sweep.ogg')
@@ -29,9 +20,10 @@ A most basic operation, transcoding, is easily performed with two processors:
 .. doctest:: test_1
 
  >>> import timeside
+ >>> from timeside.tools.test_samples import samples
  >>> from timeside.core import get_processor
- >>> decoder = get_processor('file_decoder')('sweep.wav')# doctest: +SKIP
- >>> encoder = get_processor('vorbis_encoder')('sweep.ogg')
+ >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
+ >>> encoder = get_processor('vorbis_encoder')("sweep.ogg")
  >>> pipe = decoder | encoder
  >>> pipe.run()
 
