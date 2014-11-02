@@ -2,28 +2,25 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
-
-TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
-
-
-Build status
-============
-- Branch **master** : |travis_master| |coveralls_master|
-- Branch **dev** : |travis_dev| |coveralls_dev|
+|version| |downloads| |travis_master| |coveralls_master|
 
 .. |travis_master| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
-    :target: https://travis-ci.org/yomguy/TimeSide/
-
-.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
     :target: https://travis-ci.org/yomguy/TimeSide/
 
 .. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
   :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
 
-.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+.. |version| image:: https://pypip.in/version/TimeSide/badge.png
+  :target: https://pypi.python.org/pypi/TimeSide/
+  :alt: Version
 
+.. |downloads| image:: https://pypip.in/download/TimeSide/badge.svg
+    :target: https://pypi.python.org/pypi/TimeSide/
+    :alt: Downloads
+
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
+
+TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
 
 
 Goals
@@ -57,7 +54,6 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
   :width: 800 px
-
 
 Dive in
 ========
@@ -336,6 +332,14 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 
 Development
 ===========
+
+|travis_dev| |coveralls_dev|
+
+.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
+    :target: https://travis-ci.org/yomguy/TimeSide/
+
+.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
 
 First, install TimeSide (see Install).
 

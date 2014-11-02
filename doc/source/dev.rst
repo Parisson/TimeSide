@@ -1,6 +1,14 @@
 Development
 ===========
 
+|travis_dev| |coveralls_dev|
+
+.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
+    :target: https://travis-ci.org/yomguy/TimeSide/
+
+.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+
 First, install TimeSide (see Install).
 
 Then::
