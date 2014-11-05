@@ -18,8 +18,7 @@ from debian:stable
 maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
-run apt-get install -y wget
-wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
+run wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | sudo apt-key add -
 run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
 run gpg -a --export 07DC563D1F41B907 | sudo apt-key add -
 run apt-get update
