@@ -18,11 +18,15 @@ from debian:stable
 maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
+run gpg --keyserver pgpkeys.mit.edu --recv-key E3298399DF14BB7C
+run gpg -a --export E3298399DF14BB7C | sudo apt-key add -
+run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
+run gpg -a --export 07DC563D1F41B907 | sudo apt-key add -
 run apt-get update
-run apt-get install -y --force-yes build-essential vim
+run apt-get install -y --force-yes build-essential vim apt-utils
 run apt-get install -y python python-dev python-pip
 run apt-get -y -t wheezy-backports dist-upgrade
-run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-django python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
+run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
 run apt-get clean
 
 # install uwsgi now because it takes a little while

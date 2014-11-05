@@ -56,7 +56,7 @@ setup(
         'simplejson',
         'scipy',
         'matplotlib',
-        'django>=1.4',
+        'django<1.7',
         'django-extensions',
         'djangorestframework',
         'south',
