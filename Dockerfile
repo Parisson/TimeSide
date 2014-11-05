@@ -22,7 +22,7 @@ run apt-get update
 run apt-get install -y --force-yes build-essential vim
 run apt-get install -y python python-dev python-pip
 run apt-get -y -t wheezy-backports dist-upgrade
-run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-django python-traits python-networkx ipython
+run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-django python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
 run apt-get clean
 
 # install uwsgi now because it takes a little while
