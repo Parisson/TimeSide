@@ -22,7 +22,7 @@ run apt-get update
 run apt-get install -y wget
 run wget -O - http://debian.parisson.com/debian/conf/parisson.gpg.key | apt-key add -
 run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
-run gpg -a --export 07DC563D1F41B907 | sudo apt-key add -
+run gpg -a --export 07DC563D1F41B907 | apt-key add -
 run apt-get install -y --force-yes build-essential vim apt-utils
 run apt-get install -y python python-dev python-pip
 run apt-get -y -t wheezy-backports dist-upgrade
