@@ -56,5 +56,6 @@ run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
 run /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
 run /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
+volume  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 expose 80
 cmd ["supervisord", "-n"]
