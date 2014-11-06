@@ -19,10 +19,10 @@ maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 # install confs, keys and deps
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
-run apt-get update
 run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys E3298399DF14BB7C
 run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys 07DC563D1F41B907
 run apt-get update
+run apt-get install -y --force-yes apt-utils
 run apt-get -y --force-yes -t wheezy-backports dist-upgrade
 run apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
 run apt-get clean
