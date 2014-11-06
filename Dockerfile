@@ -34,10 +34,10 @@ run pip install uwsgi ipython
 add . /opt/TimeSide
 
 # setup postgresql DB
-run /etc/init.d/postgresql start
 user postgres
-run psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';"
-run createdb -O docker docker
+run /etc/init.d/postgresql start &&\
+	psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
+	createdb -O docker docker
 user root
 
 # setup all the configfiles
