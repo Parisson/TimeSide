@@ -25,7 +25,7 @@ from __future__ import absolute_import
 from . import api
 from . import core
 
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 
 # Check Availability of external Audio feature extraction librairies
