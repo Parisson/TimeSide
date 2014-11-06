@@ -3,11 +3,11 @@ Development
 
 |travis_dev| |coveralls_dev|
 
-.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
-    :target: https://travis-ci.org/yomguy/TimeSide/
+.. |travis_dev| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=dev
+    :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+.. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
 First, install TimeSide (see Install).
 
@@ -15,7 +15,7 @@ Then::
 
  sudo apt-get build-dep python-timeside
  sudo apt-get install git
- git clone https://github.com/yomguy/TimeSide.git
+ git clone https://github.com/Parisson/TimeSide.git
  cd TimeSide
  git checkout dev
  sudo pip install -e .
