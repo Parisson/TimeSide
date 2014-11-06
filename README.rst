@@ -91,6 +91,12 @@ For more extensive examples, please see the `full documentation <http://files.pa
 News
 =====
 
+0.6.1
+
+  * Fix various minor bugs
+  * Fix docker sandbox
+  * Auto build docker image (https://registry.hub.docker.com/u/parisson/timeside/)
+
 0.6
 
   * WARNING! some processor ids have changed. Please see the full list below.
@@ -341,22 +347,40 @@ Development
 .. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
-First, install TimeSide (see Install).
 
-Then::
+Docker (recommended)
+--------------------
 
- sudo apt-get build-dep python-timeside
- sudo apt-get install git
- git clone https://github.com/Parisson/TimeSide.git
- cd TimeSide
- git checkout dev
- sudo pip install -e .
- echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
- source ~/.bashrc
- tests/run_all_tests
+Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
 
-VirtualBox and Vagrant
------------------------
+First, install Docker: https://docs.docker.com/installation/
+
+Then, simply pull our dev image and run::
+
+  sudo docker pull parisson/timeside
+  sudo docker run parisson/timeside
+
+To get a shell::
+
+  sudo docker run -ti parisson/timeside bash
+
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
+
+To start the web server through the container::
+
+  sudo docker run -p 9000:80 parisson/timeside
+
+Finally browse http://localhost:9000/api/
+
+To start a new development, it is advised to checkout the dev branch and build your own container::
+
+  sudo docker run -ti parisson/timeside bash
+  cd /opt/TimeSide
+  git checkout dev
+
+
+VirtualBox and Vagrant (deprecated)
+-----------------------------------
 
 We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
 First, install Vagrant and VirtualVox::
@@ -381,32 +405,22 @@ To stop the virtual box::
  vagrant halt
 
 
-Docker
+Native
 -------
 
-Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
+First, install TimeSide (see Install).
 
-First, install Docker: https://docs.docker.com/installation/
+Then::
 
-Then, simply pull our dev image and run::
-
-  sudo docker pull parisson/timeside
-  sudo docker run -i -t parisson/timeside bash
-
-More infos: https://registry.hub.docker.com/u/parisson/timeside/
-
-To start the web server through the container::
-
-  sudo docker run -p 9000:80 parisson/timeside supervisord -n
-
-Finally browse http://localhost:9000/api/
-
-To start a new development, it is advised to checkout the dev branch and build your own container::
-
-  cd TimeSide
-  git checkout dev
-  sudo docker build .
-
+ sudo apt-get build-dep python-timeside
+ sudo apt-get install git
+ git clone https://github.com/Parisson/TimeSide.git
+ cd TimeSide
+ git checkout dev
+ sudo pip install -e .
+ echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
+ source ~/.bashrc
+ tests/run_all_tests
 Sponsors and Partners
 =====================
 
