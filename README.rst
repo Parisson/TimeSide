@@ -36,16 +36,16 @@ Goals
 * **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 
 
-Support
-=======
+Funding and Support
+===================
 
-To fund the project and continue our development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
+To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
 
  * star or fork the project on `GitHub <https://github.com/Parisson/TimeSide>`_
  * tweet something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@yomguy <https://twitter.com/yomguy>`_
  * drop us an email <support@parisson.com>
 
-Thanks for your support!
+Thanks for your help!
 
 Architecture
 ============
@@ -108,7 +108,7 @@ News
   * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
   * Update various processors
   * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
-  * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
+  * Update of Travis CI scripts https://travis-ci.org/Parisson/TimeSide/
 
 0.5.6
 
@@ -116,7 +116,7 @@ News
   * Fix analyzer instanciation as parent for some graphers
   * Store analyzer's results in pipe.results by uuid instead of id (fix #24)
 
-For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
+For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
 Processors
 ==========
@@ -192,7 +192,7 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
-* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
+* Player / UI : https://github.com/Parisson/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
 * Usage : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
@@ -300,14 +300,14 @@ Features:
     * fully skinnable with CSS style
 
 Screenshot:
- .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_player_01.png
+ .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/slides/img/timeside_player_01.png
 
 Examples of the player embeded in the Telemeta open web audio CMS:
     * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
     * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
 
 Development documentation:
-    * https://github.com/yomguy/TimeSide/wiki/Ui-Guide
+    * https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 
 TODO list:
     * zoom
@@ -390,14 +390,14 @@ First, install Docker: https://docs.docker.com/installation/
 
 Then, simply pull our dev image and run::
 
-  sudo docker pull yomguy/timeside
-  sudo docker run -i -t yomguy/timeside bash
+  sudo docker pull parisson/timeside
+  sudo docker run -i -t parisson/timeside bash
 
-More infos: https://registry.hub.docker.com/u/yomguy/timeside/
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
 To start the web server through the container::
 
-  sudo docker run -p 9000:80 yomguy/timeside supervisord -n
+  sudo docker run -p 9000:80 parisson/timeside supervisord -n
 
 Finally browse http://localhost:9000/api/
 

@@ -58,14 +58,14 @@ First, install Docker: https://docs.docker.com/installation/
 
 Then, simply pull our dev image and run::
 
-  sudo docker pull yomguy/timeside
-  sudo docker run -i -t yomguy/timeside bash
+  sudo docker pull parisson/timeside
+  sudo docker run -i -t parisson/timeside bash
 
-More infos: https://registry.hub.docker.com/u/yomguy/timeside/
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
 To start the web server through the container::
 
-  sudo docker run -p 9000:80 yomguy/timeside supervisord -n
+  sudo docker run -p 9000:80 parisson/timeside supervisord -n
 
 Finally browse http://localhost:9000/api/
 

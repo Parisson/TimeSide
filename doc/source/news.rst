@@ -18,7 +18,7 @@ News
   * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
   * Update various processors
   * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
-  * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
+  * Update of Travis CI scripts https://travis-ci.org/Parisson/TimeSide/
 
 0.5.6
 
@@ -26,5 +26,5 @@ News
   * Fix analyzer instanciation as parent for some graphers
   * Store analyzer's results in pipe.results by uuid instead of id (fix #24)
 
-For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
+For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
