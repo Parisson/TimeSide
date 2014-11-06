@@ -19,18 +19,11 @@ maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 # install confs, keys and deps
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
+run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys E3298399DF14BB7C
+run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys 07DC563D1F41B907
 run apt-get update
-run apt-get install -y apt-utils
-run gpg --keyserver pgpkeys.mit.edu --recv-key E3298399DF14BB7C
-run gpg -a --export E3298399DF14BB7C | apt-key add -
-run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
-run gpg -a --export 07DC563D1F41B907 | apt-key add -
-run apt-get update
-run apt-get upgrade -y --force-yes
-run apt-get install -y --force-yes build-essential vim
-run apt-get install -y python python-dev python-pip
-run apt-get -y -t wheezy-backports dist-upgrade
-run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
+run apt-get -y --force-yes -t wheezy-backports dist-upgrade
+run apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
 run apt-get clean
 
 # install tools via pip
@@ -38,6 +31,13 @@ run pip install uwsgi ipython
 
 # clone app
 add . /opt/TimeSide
+
+# setup postgresql DB
+run /etc/init.d/postgresql start
+user postgres
+run psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';"
+run createdb -O docker docker
+user root
 
 # setup all the configfiles
 run echo "daemon off;" >> /etc/nginx/nginx.conf
