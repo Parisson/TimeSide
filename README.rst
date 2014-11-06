@@ -351,32 +351,31 @@ Development
 Docker (recommended)
 --------------------
 
-Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
+Docker is a great tool for developing and deploying processing environments. We provide a docker image which contains TimeSide and all the necessary packages (nginx, uwsgi, etc) to run it either in development or in production stages.
 
 First, install Docker: https://docs.docker.com/installation/
 
-Then, simply pull our dev image and run::
+Then, simply pull the image and run it::
 
-  sudo docker pull parisson/timeside
-  sudo docker run parisson/timeside
+  docker pull parisson/timeside
+  docker run -p 9000:80 parisson/timeside
 
-To get a shell::
+You can now browse the TimeSide API: http://localhost:9000/api/
 
-  sudo docker run -ti parisson/timeside bash
+or get a shell session::
 
-More infos: https://registry.hub.docker.com/u/parisson/timeside/
+  docker run -ti parisson/timeside bash
 
-To start the web server through the container::
+To start a new development, it is advised to checkout the dev branch in the container::
 
-  sudo docker run -p 9000:80 parisson/timeside
-
-Finally browse http://localhost:9000/api/
-
-To start a new development, it is advised to checkout the dev branch and build your own container::
-
-  sudo docker run -ti parisson/timeside bash
   cd /opt/TimeSide
   git checkout dev
+
+or get our latest-dev image::
+
+  docker pull parisson/timeside:latest-dev
+
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
 
 VirtualBox and Vagrant (deprecated)
