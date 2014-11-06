@@ -19,8 +19,8 @@ maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 # install confs, keys and deps
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
-run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys E3298399DF14BB7C
-run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys 07DC563D1F41B907
+#run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys DF14BB7C
+#run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys 1F41B907
 run apt-get update
 run apt-get install -y --force-yes apt-utils
 run apt-get -y --force-yes -t wheezy-backports dist-upgrade
