@@ -1,6 +1,12 @@
 News
 =====
 
+0.6.1
+
+  * Fix various minor bugs
+  * Fix docker sandbox
+  * Auto build docker image (https://registry.hub.docker.com/u/parisson/timeside/)
+
 0.6
 
   * WARNING! some processor ids have changed. Please see the full list below.
