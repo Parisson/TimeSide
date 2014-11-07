@@ -34,6 +34,7 @@ run pip install uwsgi ipython
 add . /opt/TimeSide
 
 # setup postgresql DB
+volume  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 user postgres
 run /etc/init.d/postgresql start &&\
 	psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
@@ -53,10 +54,9 @@ run pip install -e /opt/TimeSide
 run echo "export PYTHONPATH=$PYTHONPATH:/opt/Timeside" >> ~/.bashrc
 
 # sandbox setup
-run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-run /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
+run /etc/init.d/postgresql start && /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
+run /etc/init.d/postgresql start && /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
 run /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
-volume  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 expose 80
 cmd ["supervisord", "-n"]
