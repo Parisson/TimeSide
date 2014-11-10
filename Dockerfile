@@ -37,8 +37,10 @@ add . /opt/TimeSide
 volume  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 user postgres
 run /etc/init.d/postgresql start &&\
-	psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
-	createdb -O docker docker
+	psql --command "CREATE USER docker WITH SUPERUSER; &&\
+	psql --command "ALTER USER WITH PASSWORD 'docker';" &&\
+	psql --command "CREATE DATABASE timeside;" &&\
+	psql --command "ALTER DATABASE timeside OWNER TO docker;"
 user root
 
 # setup all the configfiles
