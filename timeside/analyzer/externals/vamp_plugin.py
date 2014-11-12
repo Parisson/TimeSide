@@ -25,6 +25,7 @@ from timeside.api import IAnalyzer
 from timeside.tools.parameters import HasTraits, List
 
 import subprocess
+import tempfile
 import numpy as np
 
 
@@ -35,8 +36,8 @@ def simple_host_process(argslist):
     command = [vamp_host]
     command.extend(argslist)
     # try ?
-    stdout = subprocess.check_output(
-        command, stderr=subprocess.STDOUT).splitlines()
+    stdout = subprocess.check_output(command,
+                                     stderr=subprocess.STDOUT).splitlines()
 
     return stdout
 
@@ -142,18 +143,43 @@ class VampSimpleHost(Analyzer):
 
             self.add_result(plugin_res)
 
+
     @staticmethod
     def vamp_plugin(plugin, wavfile):
+        def get_vamp_result(txt_file):
+            # Guess format
+            time_, value_ = np.genfromtxt(txt_file, delimiter=':', dtype=str,
+                                          unpack=True)
+            time_duration = np.genfromtxt(np.array(time_).ravel(),
+                                          delimiter=',',
+                                          dtype=float, unpack=True)
 
-        args = [plugin, wavfile]
+            if len(time_duration.shape) <= 1:
+                time = time_duration
+            if len(time_duration.shape) == 2:
+                time = time_duration[:, 0]
+                duration = time_duration[:, 1]
+            else:
+                duration = None
 
-        stdout = simple_host_process(args)  # run vamp-simple-host
+            if value_.size == 1 and value_ == '':
+                value = None
+            elif value_.size > 1 and (value_ == '').all():
+                value = None
+            else:
+                value = np.genfromtxt(np.array(value_).ravel(), delimiter=' ',
+                                      invalid_raise=False)
+                value = np.atleast_2d(value)
+                if np.isnan(value[:, -1]).all():
+                    value = value[:, 0:-1]
 
-        stderr = stdout[0:8]  # stderr containing file and process information
-        res = stdout[8:]  # stdout containg the feature data
+            return (time, duration, value)
 
-        if len(res) == 0:
-            return ([], [], [])
+        vamp_output_file = tempfile.NamedTemporaryFile(suffix='_vamp.txt',
+                                                       delete=False)
+        args = [plugin, wavfile, '-o', vamp_output_file.name]
+
+        stderr = simple_host_process(args)  # run vamp-simple-host
 
         # Parse stderr to get blocksize and stepsize
         blocksize_info = stderr[4]
@@ -167,20 +193,7 @@ class VampSimpleHost(Analyzer):
         stepsize = int(m.groups()[1])
         # Get the results
 
-        value = np.asfarray([line.split(': ')[1].split(' ')
-                            for line in res if (len(line.split(': ')) > 1)])
-        time = np.asfarray([r.split(':')[0].split(',')[0] for r in res])
-
-        time_len = len(res[0].split(':')[0].split(','))
-        if time_len == 1:
-            # event
-            duration = None
-        elif time_len == 2:
-            # segment
-            duration = np.asfarray(
-                [r.split(':')[0].split(',')[1] for r in res])
-
-        return (time, duration, value)
+        return get_vamp_result(vamp_output_file)
 
     @staticmethod
     def get_plugins_list():
