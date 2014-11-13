@@ -19,8 +19,8 @@ install:
 
 
 # command to run tests
-before_script:
- - pip install coverage
+#before_script:
+# - pip install coverage
 
 script:
  - coverage run --source=timeside --omit=timeside/analyzer/aubio/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
