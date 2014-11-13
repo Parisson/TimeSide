@@ -1,19 +1,16 @@
 language: python
 python:
   - "2.7"
-#virtualenv:
-#  system_site_packages: true
+virtualenv:
+  system_site_packages: true
 
 # command to prepare the system to install prerequisites or dependencies
 before_install:
- - deactivate
  - sudo add-apt-repository -y ppa:donk/gstreamer
  - sudo apt-get -qq update
  - sudo apt-get install -qq python-numpy python-scipy python-matplotlib python-networkx
  - sudo apt-get install -qq libhdf5-serial-dev python-h5py python-tables
  - sudo apt-get install -qq python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
- - virtualenv --system-site-packages venv
- - source venv/bin/activate
 
 # command to install dependencies
 install: 
@@ -23,6 +20,7 @@ install:
 
 # command to run tests
 before_script:
+ - pip install pkg-resources
  - pip install coverage
 
 script:
