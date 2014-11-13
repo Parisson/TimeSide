@@ -20,7 +20,7 @@ install:
 
 # command to run tests
 before_script:
-- pip install -U coverage
+- pip install coverage
 - pip install coveralls
 
 script:
