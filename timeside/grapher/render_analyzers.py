@@ -138,7 +138,7 @@ try:  # because of the dependencies on the Aubio librairy
         analyzer=aubiopitch,
         result_id='aubio_pitch.pitch',
         grapher_id='grapher_aubio_pitch',
-        grapher_name='Aubio Pitch',
+        grapher_name='Pitch',
         background='spectrogram')
 except PIDError:
     pass
@@ -149,7 +149,7 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=odf,
     result_id='onset_detection_function',
     grapher_id='grapher_onset_detection_function',
-    grapher_name='Onset detection function')
+    grapher_name='Onset detection')
 
 # Waveform
 wav = get_processor('waveform_analyzer')
@@ -164,7 +164,7 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
     result_id='irit_speech_4hz.segments',
     grapher_id='grapher_irit_speech_4hz_segments',
-    grapher_name='Irit 4Hz Speech Segmentation',
+    grapher_name='Speech segmentation',
     background='waveform')
 
 
@@ -174,7 +174,7 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
     result_id='irit_speech_4hz.segments_median',
     grapher_id='grapher_irit_speech_4hz_segments_median',
-    grapher_name='Irit 4Hz Speech Segmentation with median filter',
+    grapher_name='Speech segmentation (median)',
     background='waveform')
 
 # IRIT Monopoly
@@ -184,7 +184,7 @@ try:  # because of the dependencies on Aubio Pitch
         analyzer=iritmonopoly,
         result_id='irit_monopoly.segments',
         grapher_id='grapher_monopoly_segments',
-        grapher_name='Irit Monopoly Segmentation',
+        grapher_name='Mono/Poly segmentation',
         background='waveform')
 except PIDError:
     pass
@@ -198,7 +198,7 @@ try:
         analyzer_parameters={'sad_model': 'etape'},
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_etape',
-        grapher_name='LIMSI SAD with ETAPE model',
+        grapher_name='Speech activity (ETAPE)',
         background='waveform')
 
     DisplayLIMSI_SAD_maya = DisplayAnalyzer.create(
@@ -206,7 +206,7 @@ try:
         analyzer_parameters={'sad_model': 'maya'},
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_maya',
-        grapher_name='LIMSI SAD with Mayan model',
+        grapher_name='Speech activity (Mayan)',
         background='waveform')
 
 except PIDError:
@@ -218,5 +218,5 @@ DisplayIRIT_Start = DisplayAnalyzer.create(
     analyzer=irit_startseg,
     result_id='irit_startseg.segments',
     grapher_id='grapher_irit_startseg',
-    grapher_name='IRIT Start Noise',
+    grapher_name='Analogous start point',
     background='waveform')
