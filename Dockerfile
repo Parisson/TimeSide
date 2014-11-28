@@ -18,9 +18,11 @@ from debian:stable
 maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 # install confs, keys and deps
+run gpg --keyserver pgpkeys.mit.edu --recv-key E3298399DF14BB7C
+run gpg -a --export E3298399DF14BB7C | apt-key add -
+run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
+run gpg -a --export 07DC563D1F41B907 | apt-key add -
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
-#run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys DF14BB7C
-#run apt-key adv --keyserver pgpkeys.mit.edu --recv-keys 1F41B907
 run apt-get update
 run apt-get install -y --force-yes apt-utils
 run apt-get -y --force-yes -t wheezy-backports dist-upgrade
@@ -32,16 +34,6 @@ run pip install uwsgi ipython
 
 # clone app
 add . /opt/TimeSide
-
-# setup postgresql DB
-volume  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
-user postgres
-run /etc/init.d/postgresql start &&\
-	psql --command "CREATE USER docker WITH SUPERUSER; &&\
-	psql --command "ALTER USER WITH PASSWORD 'docker';" &&\
-	psql --command "CREATE DATABASE timeside;" &&\
-	psql --command "ALTER DATABASE timeside OWNER TO docker;"
-user root
 
 # setup all the configfiles
 run echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -56,8 +48,8 @@ run pip install -e /opt/TimeSide
 run echo "export PYTHONPATH=$PYTHONPATH:/opt/Timeside" >> ~/.bashrc
 
 # sandbox setup
-run /etc/init.d/postgresql start && /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-run /etc/init.d/postgresql start && /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
+run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
+run /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
 run /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 expose 80
