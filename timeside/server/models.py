@@ -34,7 +34,7 @@ from timeside.decoder.utils import sha1sum_file
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
 app = 'timeside'
@@ -310,8 +310,7 @@ class Task(BaseResource):
                 item.save()
             pipe.run()
             item.lock_setter(True)
-            pipe.results.to_hdf5(item.hdf5.path)
-            item.lock_setter(False)
+            #pipe.results.to_hdf5(item.hdf5.path)
 
             for preset in presets.keys():
                 proc = presets[preset]
@@ -338,6 +337,8 @@ class Task(BaseResource):
                     result = Result.objects.get(preset=preset, item=item)
                     result.status_setter(_DONE)
                 del proc
+
+            item.lock_setter(False)
 
             # except:
             #     self.status_setter(0)
@@ -368,7 +369,7 @@ def run(sender, **kwargs):
         instance.run()
 
 
-post_save.connect(set_mimetype, sender=Item)
-post_save.connect(set_hash, sender=Item)
-post_save.connect(set_mimetype, sender=Result)
+pre_save.connect(set_mimetype, sender=Item)
+pre_save.connect(set_hash, sender=Item)
+pre_save.connect(set_mimetype, sender=Result)
 post_save.connect(run, sender=Task)
