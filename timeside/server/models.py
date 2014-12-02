@@ -267,7 +267,7 @@ class Task(BaseResource):
         self.status = status
         self.save()
 
-    def run(self):
+    def run(self, streaming=False):
         self.status_setter(_RUNNING)
 
         results_root = 'results'
@@ -293,7 +293,8 @@ class Task(BaseResource):
                                            proc.file_extension()])
                     result.file = os.path.join(item_path, media_file)
                     result.save()
-                    proc = proc(result.file.path, overwrite=True)
+                    proc = proc(result.file.path, overwrite=True,
+                                streaming=streaming)
                 else:
                     proc = proc()
                 if proc.type == 'analyzer':
@@ -308,7 +309,11 @@ class Task(BaseResource):
                 hdf5_file = str(self.experience.uuid) + '.hdf5'
                 item.hdf5 = os.path.join(item_path, hdf5_file)
                 item.save()
-            pipe.run()
+            if streaming:
+                for chunk in pipe.stream():
+                    yield chunk
+            else:
+                pipe.run()
             item.lock_setter(True)
             #pipe.results.to_hdf5(item.hdf5.path)
 
