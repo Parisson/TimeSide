@@ -130,7 +130,7 @@ class ResultAnalyzerView(View):
         result = Result.objects.get(pk=kwargs['pk'])
         container = AnalyzerResultContainer()
         return HttpResponse(container.from_hdf5(result.hdf5.path).to_json(),
-                            mimetype='application/json')
+                            content_type='application/json')
 
 
 class ResultGrapherView(View):
@@ -140,7 +140,7 @@ class ResultGrapherView(View):
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
         return HttpResponse(stream_from_file(result.file.path),
-                            mimetype='image/png')
+                            content_type='image/png')
 
 
 class ResultEncoderView(View):
@@ -150,7 +150,7 @@ class ResultEncoderView(View):
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
         return HttpResponse(stream_from_file(result.file.path),
-                            mimetype=result.mime_type)
+                            content_type=result.mime_type)
 
 
 class ItemDetail(DetailView):
