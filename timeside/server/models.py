@@ -239,7 +239,7 @@ class Result(BaseResource):
         self.save()
 
     def __unicode__(self):
-        return '_'.join([self.item.title, unicode(self.parameters.processor)])
+        return '_'.join([self.item.title, unicode(self.preset.processor)])
 
 
 class Task(BaseResource):
@@ -269,7 +269,6 @@ class Task(BaseResource):
 
     def run(self, streaming=False):
         self.status_setter(_RUNNING)
-
         results_root = 'results'
         results_path = os.path.join(settings.MEDIA_ROOT, results_root)
         if not os.path.exists(results_path):
@@ -309,21 +308,27 @@ class Task(BaseResource):
                 hdf5_file = str(self.experience.uuid) + '.hdf5'
                 item.hdf5 = os.path.join(item_path, hdf5_file)
                 item.save()
-            if streaming:
+
+            def stream_task(pipe):
                 for chunk in pipe.stream():
                     yield chunk
+
+            if streaming:
+                stream_task(pipe)
             else:
                 pipe.run()
+
             item.lock_setter(True)
-            #pipe.results.to_hdf5(item.hdf5.path)
+            # pipe.results.to_hdf5(item.hdf5.path)
 
             for preset in presets.keys():
                 proc = presets[preset]
                 if proc.type == 'analyzer':
                     for result_id in proc.results.keys():
                         parameters = proc.results[result_id].parameters
-                        preset, c = Preset.objects.get_or_create(processor=preset.processor,
-                                                                 parameters=unicode(parameters))
+                        preset, c = Preset.objects.get_or_create(
+                            processor=preset.processor,
+                            parameters=unicode(parameters))
                         result, c = Result.objects.get_or_create(preset=preset,
                                                                  item=item)
                         hdf5_file = str(result.uuid) + '.hdf5'
@@ -370,11 +375,11 @@ def set_hash(sender, **kwargs):
 
 def run(sender, **kwargs):
     instance = kwargs['instance']
-    if instance.status == 2:
+    if instance.status == _PENDING:
         instance.run()
 
 
-pre_save.connect(set_mimetype, sender=Item)
-pre_save.connect(set_hash, sender=Item)
-pre_save.connect(set_mimetype, sender=Result)
+post_save.connect(set_mimetype, sender=Item)
+post_save.connect(set_hash, sender=Item)
+post_save.connect(set_mimetype, sender=Result)
 post_save.connect(run, sender=Task)
