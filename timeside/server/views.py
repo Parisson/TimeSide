@@ -209,9 +209,10 @@ class ItemExport(DetailView):
             if created:
                 selection.save()
                 selection.items.add(item)
-            task = Task(experience=experience, selection=selection,
-                        status=_DRAFT)
+            task, created = Task.objects.get_or_create(experience=experience,
+                                                       selection=selection)
             task.save()
+
             # Run task in streaming mode
             response = StreamingHttpResponse()
             response['streaming_content'] = task.run(streaming=True)
