@@ -48,7 +48,7 @@ def import_module_with_exceptions(name, package=None):
     """Wrapper around importlib.import_module to import TimeSide subpackage
     and ignoring ImportError if Aubio, Yaafe and Vamp Host are not available"""
 
-    from timeside import _WITH_AUBIO, _WITH_YAAFE, _WITH_VAMP
+    from timeside import _WITH_AUBIO, _WITH_YAAFE, _WITH_VAMP, _WITH_ECHOPRINT
 
     if name.count('.server.'):
         # TODO:
@@ -70,6 +70,9 @@ def import_module_with_exceptions(name, package=None):
         elif str(e).count('aubio') and not _WITH_AUBIO:
             # Ignore Aubio ImportError
             return
+        elif str(e).count('echoprint') and not _WITH_ECHOPRINT:
+            # Ignore EchoPrint ImportError
+            return
         elif str(e).count('DJANGO_SETTINGS_MODULE'):
             # Ignore module requiring DJANGO_SETTINGS_MODULE in environnement
             return
@@ -85,7 +88,7 @@ def check_aubio():
     try:
         import aubio
     except ImportError:
-        warnings.warn('Aubio librairy is not available', ImportWarning,
+        warnings.warn('Aubio library is not available', ImportWarning,
                       stacklevel=2)
         _WITH_AUBIO = False
     else:
@@ -100,7 +103,7 @@ def check_yaafe():
     try:
         import yaafelib
     except ImportError:
-        warnings.warn('Yaafe librairy is not available', ImportWarning,
+        warnings.warn('Yaafe library is not available', ImportWarning,
                       stacklevel=2)
         _WITH_YAAFE = False
     else:
@@ -123,3 +126,20 @@ def check_vamp():
         del vamp_plugin
 
     return _WITH_VAMP
+
+
+def check_echoprint():
+    "Check EchoPrint availability"
+
+    try:
+        import echoprint
+    except ImportError:
+        warnings.warn('EchoPrint library is not available', ImportWarning,
+                      stacklevel=2)
+        _WITH_ECHOPRINT = False
+    else:
+        _WITH_ECHOPRINT = True
+        del echoprint
+
+    return _WITH_ECHOPRINT
+

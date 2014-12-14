@@ -33,6 +33,7 @@ from .tools import package as ts_package
 _WITH_AUBIO = ts_package.check_aubio()
 _WITH_YAAFE = ts_package.check_yaafe()
 _WITH_VAMP = ts_package.check_vamp()
+_WITH_ECHOPRINT = ts_package.check_echoprint()
 
 
 _packages_with_processors = ['decoder', 'analyzer', 'encoder', 'grapher', 'fx']
