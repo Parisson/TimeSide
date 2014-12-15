@@ -183,8 +183,8 @@ class ItemExport(DetailView):
                 result.delete()
                 return self.get(request, pk, extension)
             # Result and file exist --> OK
-            return HttpResponse(stream_from_file(result.file.path),
-                                content_type=result.mime_type)
+            return StreamingHttpResponse(stream_from_file(result.file.path),
+                                         content_type=result.mime_type)
         except Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
@@ -211,10 +211,10 @@ class ItemExport(DetailView):
                 selection.items.add(item)
             task, created = Task.objects.get_or_create(experience=experience,
                                                        selection=selection)
-            task.save()
-
-            # Run task in streaming mode
-            response = StreamingHttpResponse()
-            response['streaming_content'] = task.run(streaming=True)
-            response['content-type'] = mime_type
-            return response
+            task.run()
+            #  TODO Run task in streaming mode
+            #response = StreamingHttpResponse(streaming_
+            #response = StreamingHttpResponse(streaming_content=stream_from_task(task),
+            #                                 content_type=mime_type)
+            # return response
+            return self.get(request, pk, extension)
