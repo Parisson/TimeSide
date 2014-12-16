@@ -25,11 +25,15 @@ class TestProcessPipe(unittest.TestCase):
         dec2 = FileDecoder(source)
         self.assertRaises(ValueError, pipe.append_processor, dec2)
 
-        a = timeside.analyzer.odf.OnsetDetectionFunction()
-        abis = timeside.analyzer.odf.OnsetDetectionFunction()
+        odf = timeside.analyzer.odf.OnsetDetectionFunction()
+        odf2 = timeside.analyzer.odf.OnsetDetectionFunction()
 
-        a2 = timeside.analyzer.spectrogram.Spectrogram()
-        pipe2 = (dec | a | a2 | abis)
+        spectro2 = timeside.analyzer.spectrogram.Spectrogram()
+        pipe2 = (dec | odf | spectro2 | odf2)
+
+        self.assertEqual(pipe2, odf.process_pipe)
+        self.assertEqual(pipe2, odf2.process_pipe)
+        self.assertEqual(pipe2, spectro2.process_pipe)
 
         self.assertEqual(len(pipe2.processors), 4)
         # Release temporary buffers in Spectrogram
