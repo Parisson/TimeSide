@@ -51,12 +51,6 @@ class AubioPitch(Analyzer):
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(AubioPitch, self).setup(channels,
-                                      samplerate,
-                                      blocksize,
-                                      totalframes)
-
-
         # Frame parameters setup
         if self._blocksize_s:
             self.input_blocksize = nextpow2(self._blocksize_s * samplerate)
@@ -67,6 +61,13 @@ class AubioPitch(Analyzer):
             self.input_stepsize = nextpow2(self._stepsize_s * samplerate)
         else:
             self.input_stepsize = self.input_blocksize / 2
+
+        # Now that frames size metadata are properly set, we can do the set-up
+        super(AubioPitch, self).setup(channels,
+                                      samplerate,
+                                      blocksize,
+                                      totalframes)
+
 
         # Aubio Pitch set-up
         self.aubio_pitch = pitch(
