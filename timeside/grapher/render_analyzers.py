@@ -54,10 +54,10 @@ class DisplayAnalyzer(Grapher):
     @interfacedoc
     def post_process(self):
         pipe_result = self.process_pipe.results
-        parent_uuid = self.parents['analyzer'].uuid()
-        parent_result = pipe_result[parent_uuid][self._result_id]
+        analyzer_uuid = self.parents['analyzer'].uuid()
+        analyzer_result = pipe_result[analyzer_uuid][self._result_id]
 
-        fg_image = parent_result._render_PIL((self.image_width,
+        fg_image = analyzer_result._render_PIL((self.image_width,
                                               self.image_height), self.dpi)
         if self._background:
             bg_uuid = self.parents['bg_analyzer'].uuid()
@@ -69,7 +69,7 @@ class DisplayAnalyzer(Grapher):
 
             # Merge background and foreground images
             from PIL.Image import blend
-            fg_image = blend(fg_image, bg_image, 0.25)
+            fg_image = blend(fg_image, bg_image, 0.15)
 
         self.image = fg_image
 
@@ -107,8 +107,6 @@ class DisplayAnalyzer(Grapher):
 
                 parent_analyzer = analyzer(**analyzer_parameters)
                 self.parents['analyzer'] = parent_analyzer
-                # TODO : make it generic when analyzer will be "atomize"
-                self._parent_uuid =  parent_analyzer.uuid()
                 self._result_id = result_id
 
             @staticmethod
