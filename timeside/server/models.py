@@ -57,6 +57,12 @@ STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_DONE, _('done')))
 
 
+results_root = 'results'
+results_path = os.path.join(settings.MEDIA_ROOT, results_root)
+if not os.path.exists(results_path):
+    os.makedirs(results_path)
+
+
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
 
@@ -149,7 +155,7 @@ class Item(DocBaseResource):
         self.save()
 
     def get_results_path(self):
-        pass
+        return os.path.join(results_path, self.uuid)
 
 
 class Experience(DocBaseResource):
@@ -267,15 +273,45 @@ class Task(BaseResource):
         self.status = status
         self.save()
 
+    def post_run(self, item, presets):
+        item.lock_setter(True)
+        item_path = item.get_results_path()
+
+        # pipe.results.to_hdf5(item.hdf5.path)
+        for preset in presets.keys():
+            proc = presets[preset]
+            if proc.type == 'analyzer':
+                for result_id in proc.results.keys():
+                    parameters = proc.results[result_id].parameters
+                    preset, c = Preset.objects.get_or_create(
+                        processor=preset.processor,
+                        parameters=unicode(parameters))
+                    result, c = Result.objects.get_or_create(preset=preset,
+                                                             item=item)
+                    hdf5_file = str(result.uuid) + '.hdf5'
+                    result.hdf5 = os.path.join(item_path, hdf5_file)
+                    proc.results.to_hdf5(result.hdf5.path)
+                    result.status_setter(_DONE)
+            elif proc.type == 'grapher':
+                parameters = {}
+                result, c = Result.objects.get_or_create(preset=preset,
+                                                         item=item)
+                image_file = str(result.uuid) + '.png'
+                result.file = os.path.join(item_path, image_file)
+                proc.render(output=result.file.path)
+                result.status_setter(_DONE)
+            elif proc.type == 'encoder':
+                result = Result.objects.get(preset=preset, item=item)
+                result.status_setter(_DONE)
+            del proc
+
+        item.lock_setter(False)
+
     def run(self, streaming=False):
         self.status_setter(_RUNNING)
-        results_root = 'results'
-        results_path = os.path.join(settings.MEDIA_ROOT, results_root)
-        if not os.path.exists(results_path):
-            os.makedirs(results_path)
 
         for item in self.selection.items.all():
-            item_path = os.path.join(results_path, item.uuid)
+            item_path = item.get_results_path()
             if not os.path.exists(item_path):
                 os.makedirs(item_path)
 
@@ -309,46 +345,19 @@ class Task(BaseResource):
                 item.hdf5 = os.path.join(item_path, hdf5_file)
                 item.save()
 
-            def stream_task(pipe):
+            def stream_task(pipe, item, presets):
                 for chunk in pipe.stream():
                     yield chunk
+                self.post_run(item, presets)
+                self.status_setter(_DONE)
+                del pipe
 
             if streaming:
-                stream_task(pipe)
+                return stream_task(pipe, item, presets)
             else:
                 pipe.run()
 
-            item.lock_setter(True)
-            # pipe.results.to_hdf5(item.hdf5.path)
-
-            for preset in presets.keys():
-                proc = presets[preset]
-                if proc.type == 'analyzer':
-                    for result_id in proc.results.keys():
-                        parameters = proc.results[result_id].parameters
-                        preset, c = Preset.objects.get_or_create(
-                            processor=preset.processor,
-                            parameters=unicode(parameters))
-                        result, c = Result.objects.get_or_create(preset=preset,
-                                                                 item=item)
-                        hdf5_file = str(result.uuid) + '.hdf5'
-                        result.hdf5 = os.path.join(item_path, hdf5_file)
-                        proc.results.to_hdf5(result.hdf5.path)
-                        result.status_setter(_DONE)
-                elif proc.type == 'grapher':
-                    parameters = {}
-                    result, c = Result.objects.get_or_create(preset=preset,
-                                                             item=item)
-                    image_file = str(result.uuid) + '.png'
-                    result.file = os.path.join(item_path, image_file)
-                    proc.render(output=result.file.path)
-                    result.status_setter(_DONE)
-                elif proc.type == 'encoder':
-                    result = Result.objects.get(preset=preset, item=item)
-                    result.status_setter(_DONE)
-                del proc
-
-            item.lock_setter(False)
+            self.post_run(item, presets)
 
             # except:
             #     self.status_setter(0)
