@@ -58,6 +58,7 @@ class EchoNestIdentifier(Analyzer):
     api_url = 'http://developer.echonest.com/api/v4/song/identify'
     api_key = '6O3QX1BEQVY0JDDU5'
     proxy = None
+    delay = 5
 
     def __init__(self, api_key=None, start=-1):
         super(EchoNestIdentifier, self).__init__()
@@ -94,7 +95,7 @@ class EchoNestIdentifier(Analyzer):
 
     def post_process(self):
         if np.count_nonzero(self.samples):
-            self.samples = self.samples[5*11025:]
+            self.samples = self.samples[self.delay*self.samplerate:]
             print self.samples
             if self.start == -1:
                 data = echoprint.codegen(self.samples.astype(np.float))
