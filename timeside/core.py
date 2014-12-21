@@ -353,6 +353,7 @@ class ProcessPipe(object):
                 child_proc = self._graph.node[child]['processor']
                 if proc == child_proc:
                     proc.UUID = child_proc.UUID
+                    proc.process_pipe = self
                     break
         if not self._graph.has_node(proc.uuid()):
             self.processors.append(proc)  # Add processor to the pipe
