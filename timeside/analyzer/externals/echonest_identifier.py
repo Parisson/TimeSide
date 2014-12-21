@@ -58,7 +58,7 @@ class EchoNestIdentifier(Analyzer):
     api_url = 'http://developer.echonest.com/api/v4/song/identify'
     api_key = '6O3QX1BEQVY0JDDU5'
     proxy = None
-    delay = 5
+    delay = 1
 
     def __init__(self, api_key=None, start=-1):
         super(EchoNestIdentifier, self).__init__()
