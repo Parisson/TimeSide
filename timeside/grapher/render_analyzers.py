@@ -76,11 +76,12 @@ class DisplayAnalyzer(Grapher):
     @classmethod
     def create(cls, analyzer, analyzer_parameters={}, result_id=None,
                grapher_id=None, grapher_name=None,
-               background=None):
+               background=None, staging=False):
 
         class NewGrapher(cls):
 
             _id = grapher_id
+            _staging = staging
 
             implements(IGrapher)
 
@@ -110,6 +111,7 @@ class DisplayAnalyzer(Grapher):
                 # TODO : make it generic when analyzer will be "atomize"
                 self._parent_uuid =  parent_analyzer.uuid()
                 self._result_id = result_id
+                self.staging = _staging
 
             @staticmethod
             @interfacedoc
@@ -156,7 +158,8 @@ wav = get_processor('waveform_analyzer')
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
-                                         grapher_name='Waveform from Analyzer')
+                                         grapher_name='Waveform from Analyzer',
+                                         staging=True)
 
 # IRIT 4Hz
 irit4hz = get_processor('irit_speech_4hz')
@@ -165,7 +168,8 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     result_id='irit_speech_4hz.segments',
     grapher_id='grapher_irit_speech_4hz_segments',
     grapher_name='Speech segmentation',
-    background='waveform')
+    background='waveform',
+    staging=True)
 
 
 # IRIT 4Hz with median filter
@@ -175,7 +179,8 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     result_id='irit_speech_4hz.segments_median',
     grapher_id='grapher_irit_speech_4hz_segments_median',
     grapher_name='Speech segmentation (median)',
-    background='waveform')
+    background='waveform',
+    staging=True)
 
 # IRIT Monopoly
 try:  # because of the dependencies on Aubio Pitch
@@ -185,7 +190,8 @@ try:  # because of the dependencies on Aubio Pitch
         result_id='irit_monopoly.segments',
         grapher_id='grapher_monopoly_segments',
         grapher_name='Mono/Poly segmentation',
-        background='waveform')
+        background='waveform',
+        staging=True)
 except PIDError:
     pass
 
@@ -199,7 +205,8 @@ try:
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_etape',
         grapher_name='Speech activity (ETAPE)',
-        background='waveform')
+        background='waveform',
+        staging=True)
 
     DisplayLIMSI_SAD_maya = DisplayAnalyzer.create(
         analyzer=limsi_sad,
@@ -207,7 +214,8 @@ try:
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_maya',
         grapher_name='Speech activity (Mayan)',
-        background='waveform')
+        background='waveform',
+        staging=True)
 
 except PIDError:
     pass
@@ -219,4 +227,5 @@ DisplayIRIT_Start = DisplayAnalyzer.create(
     result_id='irit_startseg.segments',
     grapher_id='grapher_irit_startseg',
     grapher_name='Analogous start point',
-    background='waveform')
+    background='waveform',
+    staging=True)
