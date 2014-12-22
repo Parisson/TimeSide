@@ -95,7 +95,7 @@ class EchoNestIdentifier(Analyzer):
 
     def post_process(self):
         if np.count_nonzero(self.samples):
-            self.samples = self.samples[self.delay*self.samplerate:]
+            self.samples = self.samples[self.delay*self.samplerate():]
             print self.samples
             if self.start == -1:
                 data = echoprint.codegen(self.samples.astype(np.float))
