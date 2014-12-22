@@ -109,7 +109,6 @@ class DisplayAnalyzer(Grapher):
                 parent_analyzer = analyzer(**analyzer_parameters)
                 self.parents['analyzer'] = parent_analyzer
                 self._result_id = result_id
-                self.staging = _staging
 
             @staticmethod
             @interfacedoc
