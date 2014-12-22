@@ -834,9 +834,19 @@ class FrameValueObject(ValueObject, FramewiseObject):
             # see http://stackoverflow.com/a/8881973
             #  TODO: mean may not be appropriate for waveform ... (mean~=0)
             nb_frames = self.data.shape[0]
-            chunksize = size[0]
 
-            numchunks = nb_frames // chunksize
+            numchunks = size[0]
+
+            if nb_frames > 10*numchunks:
+                ax.plot(self.time, self.data)
+                return
+            else:
+                chunksize = 1
+                numchunks = nb_frames
+
+            print "nb_frames %d" % nb_frames
+            print "chunksize %d" % chunksize
+            print "numchunks %d" % numchunks
 
             if self.data.ndim <= 1:
                 ychunks = self.data[:chunksize*numchunks].reshape((-1,
@@ -854,9 +864,9 @@ class FrameValueObject(ValueObject, FramewiseObject):
             xcenters = xchunks.mean(axis=1)
 
             # Now plot the bounds and the mean...
-            ax.fill_between(xcenters, min_env, max_env, color='gray',
-                            edgecolor='none', alpha=0.5)
-            ax.plot(xcenters, ycenters)
+            ax.fill_between(xcenters, min_env, max_env, color='blue',
+                            edgecolor='black', alpha=1)
+            #ax.plot(xcenters, ycenters, color='gray', alpha=0.5)
 
             #ax.plot(self.time, self.data)
         else:
