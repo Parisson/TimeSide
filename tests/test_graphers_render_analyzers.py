@@ -50,8 +50,8 @@ def _tests_factory(grapher_analyzers):
 
         setattr(Test_graphers_analyzers, test_func_name, test_func)
 
-list_graphers = timeside.core.processors(timeside.api.IGrapher)
-module = 'timeside.grapher.render_analyzers'
+list_graphers = timeside.core.processor.processors(timeside.core.api.IGrapher)
+module = 'timeside.plugins.grapher.render_analyzers'
 grapher_analyzers = [grapher for grapher in list_graphers
                      if grapher.__module__ == module]
 _tests_factory(grapher_analyzers)

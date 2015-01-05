@@ -19,7 +19,7 @@
 
 # Author: Thomas Fillon <thomas.fillon@parisson.com>
 
-from ..exceptions import VampImportError
+from ..core.exceptions import VampImportError
 
 from importlib import import_module
 import warnings
@@ -29,7 +29,10 @@ def discover_modules(subpackage, package=None):
     import pkgutil
 
     if package:
-        _pkg = import_module('.' + subpackage, package)
+        try:
+            _pkg = import_module('.' + subpackage, package)
+        except ImportError as e:
+            raise e
     else:
         _pkg = import_module(subpackage)
 
@@ -48,7 +51,7 @@ def import_module_with_exceptions(name, package=None):
     """Wrapper around importlib.import_module to import TimeSide subpackage
     and ignoring ImportError if Aubio, Yaafe and Vamp Host are not available"""
 
-    from timeside import _WITH_AUBIO, _WITH_YAAFE, _WITH_VAMP
+    from timeside.core import _WITH_AUBIO, _WITH_YAAFE, _WITH_VAMP
 
     if name.count('.server.'):
         # TODO:
@@ -113,7 +116,7 @@ def check_vamp():
     "Check Vamp host availability"
 
     try:
-        from timeside.analyzer.externals import vamp_plugin
+        from timeside.plugins.analyzer.externals import vamp_plugin
     except VampImportError:
         warnings.warn('Vamp host is not available', ImportWarning,
                       stacklevel=2)

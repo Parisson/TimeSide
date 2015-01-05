@@ -1,9 +1,10 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-from timeside.decoder.file import FileDecoder
+from timeside.plugins.decoder.file import FileDecoder
 from timeside.core import get_processor
-from timeside import _WITH_AUBIO
+from timeside.core import _WITH_AUBIO
+
 from timeside.tools.test_samples import samples
 
 

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from timeside.core import FixedSizeInputAdapter
+from timeside.core.processor import FixedSizeInputAdapter
 from unit_timeside import *
 import numpy
 

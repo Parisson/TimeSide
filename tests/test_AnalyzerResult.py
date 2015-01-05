@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-from timeside.analyzer.core import AnalyzerResult, AnalyzerResultContainer
-from timeside import __version__
+from timeside.core.analyzer import AnalyzerResult, AnalyzerResultContainer
+from timeside.core import __version__
 import numpy as np
 from math import pi
 
@@ -33,7 +33,7 @@ class TestAnalyzerResult(unittest.TestCase):
         pass
 
 # Get good and bad types for AnalyzerResult.data_object.data.value
-from timeside.analyzer.core import numpy_data_types as good_dtypes
+from timeside.core.analyzer import numpy_data_types as good_dtypes
 good_numpy_data_types = [str(dtype)[13:-2] for dtype in good_dtypes]
 bad_numpy_data_types = [
     # not understood by json or yaml

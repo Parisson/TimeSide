@@ -12,7 +12,6 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
     """Stress test for analyzer with null input"""
 
     def setUp(self):
-        import timeside.analyzer
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
         samples = np.zeros((duration * samplerate, 1))
@@ -40,7 +39,6 @@ class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
     """Stress test for analyzer with constant input"""
 
     def setUp(self):
-        import timeside.analyzer
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
         samples = -1000*np.ones((duration * samplerate, 1))
@@ -74,13 +72,13 @@ skip_reasons = {'VampSimpleHost': ('VampSimpleHost bypasses the decoder '
 # For each analyzer in TimeSide, test with constant input
 _tests_factory(test_class=TestAnalyzers_withDC,
                test_doc="Stress test for %s",
-               list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
+               list_analyzers=timeside.core.processor.processors(timeside.core.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
 # For each analyzer in TimeSide, test with null input
 _tests_factory(test_class=TestAnalyzers_with_zeros,
                test_doc="Stress test for %s",
-               list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
+               list_analyzers=timeside.core.processor.processors(timeside.core.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
 

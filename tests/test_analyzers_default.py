@@ -5,7 +5,7 @@
 
 from unit_timeside import unittest, TestRunner
 import timeside
-from timeside.decoder.file import FileDecoder
+from timeside.plugins.decoder.file import FileDecoder
 import numpy as np
 from timeside.tools.test_samples import samples
 
@@ -60,7 +60,7 @@ skip_reasons = {}
 # For each analyzer in TimeSide, test with constant input
 _tests_factory(test_class=TestAnalyzers_with_default,
                test_doc="Test analyzer %s with default parameters",
-               list_analyzers=timeside.core.processors(timeside.api.IAnalyzer),
+               list_analyzers=timeside.core.processor.processors(timeside.core.api.IAnalyzer),
                skip_reasons=skip_reasons)
 
 

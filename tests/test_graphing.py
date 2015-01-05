@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from timeside.decoder.file import FileDecoder
+from timeside.plugins.decoder.file import FileDecoder
 from unit_timeside import unittest, TestRunner
 from timeside.tools.test_samples import samples
 
@@ -20,7 +20,7 @@ class TestGraphing(unittest.TestCase):
     # WAVEFORMS
     def testWav2Waveform(self):
         "Test WAV to Waveform"
-        from timeside.grapher.waveform_simple import Waveform
+        from timeside.plugins.grapher.waveform_simple import Waveform
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="waveform.png",
                                                  delete=True)
@@ -31,7 +31,7 @@ class TestGraphing(unittest.TestCase):
     # WAVEFORM CENTROID
     def testWav2WaveformCentroid(self):
         "Test WAV to WaveformCentroid"
-        from timeside.grapher.waveform_centroid import WaveformCentroid
+        from timeside.plugins.grapher.waveform_centroid import WaveformCentroid
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="waveform_centr.png",
                                                  delete=True)
@@ -42,7 +42,7 @@ class TestGraphing(unittest.TestCase):
     # WAVEFORMS TRANSPARENT
     def testWav2WaveformTransparent(self):
         "Test WAV to WaveformTransparent"
-        from timeside.grapher.waveform_transparent import WaveformTransparent
+        from timeside.plugins.grapher.waveform_transparent import WaveformTransparent
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="waveform_trans.png",
                                                  delete=True)
@@ -53,7 +53,7 @@ class TestGraphing(unittest.TestCase):
     # WAVEFORMS CONTOUR BLACK
     def testWav2WaveformContourBlack(self):
         "Test WAV to WaveformContourBlack"
-        from timeside.grapher.waveform_contour import WaveformContourBlack
+        from timeside.plugins.grapher.waveform_contour import WaveformContourBlack
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="waveform_cont_bk.png",
                                                  delete=True)
@@ -63,7 +63,7 @@ class TestGraphing(unittest.TestCase):
     # WAVEFORMS CONTOUR WHITE
     def testWav2WaveformContourWhite(self):
         "Test WAV to WaveformContourWhite"
-        from timeside.grapher.waveform_contour import WaveformContourWhite
+        from timeside.plugins.grapher.waveform_contour import WaveformContourWhite
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="waveform_cont_wh.png",
                                                  delete=True)
@@ -74,7 +74,7 @@ class TestGraphing(unittest.TestCase):
     # LOG SPECTROGRAMS
     def testWav2SpectrogramLog(self):
         "Test WAV to Spectrogram"
-        from timeside.grapher.spectrogram_log import SpectrogramLog
+        from timeside.plugins.grapher.spectrogram_log import SpectrogramLog
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="spectrogram_log.png",
                                                  delete=True)
@@ -85,7 +85,7 @@ class TestGraphing(unittest.TestCase):
     # LIN SPECTROGRAMS
     def testWav2SpectrogramLin(self):
         "Test WAV to SpectrogramLinear"
-        from timeside.grapher.spectrogram_lin import SpectrogramLinear
+        from timeside.plugins.grapher.spectrogram_lin import SpectrogramLinear
         self.source = samples["sweep.wav"]
         self.image = tempfile.NamedTemporaryFile(suffix="spectrogram_lin.png",
                                                  delete=True)

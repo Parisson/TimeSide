@@ -2,11 +2,11 @@
 
 from unit_timeside import unittest, TestRunner
 import os
-from timeside.decoder.file import FileDecoder
+from timeside.plugins.decoder.file import FileDecoder
 from timeside.core import get_processor
-from timeside.core import Processor
-from timeside.api import IProcessor
-from timeside.component import implements, interfacedoc
+from timeside.core.processor import Processor
+from timeside.core.api import IProcessor
+from timeside.core.component import implements, interfacedoc
 
 from timeside.tools.test_samples import samples
 
