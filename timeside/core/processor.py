@@ -30,8 +30,7 @@ import uuid
 import networkx as nx
 import inspect
 import os
-import gobject
-gobject.threads_init()
+
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',

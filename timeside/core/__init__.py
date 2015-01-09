@@ -30,9 +30,12 @@ from .component import implements, interfacedoc, abstract
 
 __version__ = '0.6.2'
 
+from ..tools import package as ts_package
+
+# Check Availability of Gstreamer python bindings
+ts_package.check_gstreamer()
 
 # Check Availability of external Audio feature extraction librairies
-from ..tools import package as ts_package
 _WITH_AUBIO = ts_package.check_aubio()
 _WITH_YAAFE = ts_package.check_yaafe()
 _WITH_VAMP = ts_package.check_vamp()

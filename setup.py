@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import sys
 
 from setuptools import setup
-import sys
 from setuptools.command.test import test as TestCommand
 
 
