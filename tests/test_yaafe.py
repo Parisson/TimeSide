@@ -1,10 +1,12 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-from timeside.decoder.file import FileDecoder
-from timeside import _WITH_YAAFE
+from timeside.plugins.decoder.file import FileDecoder
+from timeside.tools.test_samples import samples
+
+from timeside.core import _WITH_YAAFE
 if _WITH_YAAFE:
-    from timeside.analyzer.externals.yaafe import Yaafe
+    from timeside.plugins.analyzer.externals.yaafe import Yaafe
 import os
 
 
@@ -16,8 +18,7 @@ class TestYaafe(unittest.TestCase):
 
     def testOnSweepWithFeaturePlan(self):
         "runs on sweep"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples", "sweep.wav")
+        self.source = samples["sweep.wav"]
 
         # Setup Yaafe Analyzer
         # Define Yaafe Feature Plan

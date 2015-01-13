@@ -1,10 +1,30 @@
 News
 =====
 
+0.6
+
+  * WARNING! some processor ids have changed. Please see the full list below.
+  * NEW analyzers: IRIT Monopoly (see Processors)
+  * NEW graphers: IRIT Start/Session segmentation
+  * Add extensible buffering thanks to pytables (NEW dependency)
+  * Add typed parameters in processors and server thanks to traits (NEW dependency)
+  * Add a graph model to the pipe thanks to networkx (NEW dependency)
+  * Add test sample generators based on GStreamer
+  * Add a background image option for rendering analyzers
+  * Add on-the-fly filtering decorators
+  * Add a Docker development image and a Dockerfile
+  * Add a Vagrant development box
+  * Update the Debian package installation procedure
+  * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
+  * Update various processors
+  * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
+  * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
+
 0.5.6
 
   * Bugfix release
   * Fix analyzer instanciation as parent for some graphers
+  * Store analyzer's results in pipe.results by uuid instead of id (fix #24)
 
 0.5.5
 
@@ -84,3 +104,66 @@ News
  * Various bugfixes
  * Comptatible with Python >=2.7
  * WARNING : no longer compatible with Telemeta 1.4.5
+
+0.4.5
+
+ * (re)fix Pillow support (#12)
+ * fix some python package rules
+ * add a Debian package directory (thanks to piem, in git repo only)
+
+0.4.4
+
+ * Only setup bugfixes
+ * Last compatible version with Python 2.6
+ * Next version 0.5 will integrate serious new analyzer features (aubio, yaafe and more)
+
+0.4.3
+
+ * finally fix decoder leaks and de-synchronizations (thanks to piem)
+ * this also fixes bad variable encoder file lengths
+ * fix OGG and FLAC encoders (closes: #8)
+ * fix multi-channels streaming (closes: #13)
+ * add support for Pillow (closes: #12)
+ * temporally desactivate AAC and WebM encoders (need to add some limits for them)
+ * WARNING : we now need to add overwrite=True to encoder kwargs instances in order to overwrite the destination file, i.e. e=Mp3Encoder(path, overwrite=True)
+
+0.4.2
+
+ * many releases these days, but there are some patches which are really worth to be HOT released : we just need them in production..
+ * finally fix FFT window border leaks in the streaming spectrum process for *really* better spectrograms and *smoother* spectral centroid waveforms
+ * *mv* gstutils to timeside.gstutils
+ * cleanup various processes
+ * Ogg, Aac and Flac encoders not really working now (some frames missing) :( Will be fixed in next release.
+
+0.4.1
+
+ * move UI static files from ui/ to static/timeside/ (for better django compatibility)
+ * upgrade js scripts from telemeta 1.4.4
+ * upgrade SoundManager2 to v297a-20120916
+
+0.4.0
+
+ * finally fixed an old decoder bug to prevent memory leaks during hard process (thanks to piem)
+ * add blocksize property to the processor API
+ * add many unit tests (check tests/alltests.py)
+ * re-add UI files (sorry, was missing in the last packages)
+ * various bugfixes
+ * encoders not all much tested on big files, please test!
+ * piem is now preparing some aubio analyzers :P
+
+0.3.3
+
+ * mostly a transitional developer and mantainer version, no new cool features
+ * but add "ts-waveforms" script for waveform batching
+ * fix some tests
+ * removed but download audio samples
+ * fix setup
+ * update README
+
+0.3.2
+
+ * move mainloop to its own thread to avoid memory hogging on large files
+ * add condition values to prepare running gst mainloop in a thread
+ * add experimental WebM encoder
+ * duration analysis goes to decoder.duration property
+ * bugfixes

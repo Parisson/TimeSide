@@ -1,0 +1,73 @@
+test_wheezy:
+  images: 
+    #- parisson/docker:dox_debian_wheezy_mini
+    - parisson/docker:dox_debian_wheezy
+ 
+  commands:
+    - lsb_release -sic
+    - export DOX_ENV=$(echo '.dox_env/')$(lsb_release -si)$(echo '_')$(lsb_release -sc)
+    - echo $DOX_ENV
+    - virtualenv --system-site-packages $DOX_ENV
+    - . $HOME/$DOX_ENV/bin/activate
+    - pip install -e .
+    - python setup.py test
+    
+test_jessie:
+  images: 
+    #- parisson/docker:dox_debian_jessie_mini
+    - parisson/docker:dox_debian_jessie
+  commands:
+    - lsb_release -sic
+    - export DOX_ENV=$(echo '.dox_env/')$(lsb_release -si)$(echo '_')$(lsb_release -sc)
+    - echo $DOX_ENV
+    - virtualenv --system-site-packages $DOX_ENV
+    - . $HOME/$DOX_ENV/bin/activate
+    - pip install -e .
+    - python setup.py test
+    
+test_precise:
+  images: 
+    #- parisson/docker:dox_ubuntu_precise_mini
+    - parisson/docker:dox_ubuntu_precise
+  commands:
+    - lsb_release -sic
+    - export DOX_ENV=$(echo '.dox_env/')$(lsb_release -si)$(echo '_')$(lsb_release -sc)
+    - echo $DOX_ENV
+    - virtualenv --system-site-packages $DOX_ENV
+    - . $HOME/$DOX_ENV/bin/activate
+    - pip install -e .
+    - python setup.py test
+    
+test_trusty:
+  images: 
+    #- parisson/docker:dox_ubuntu_trusty_mini
+    - parisson/docker:dox_ubuntu_trusty
+  commands:
+    - lsb_release -sic
+    - export DOX_ENV=$(echo '.dox_env/')$(lsb_release -si)$(echo '_')$(lsb_release -sc)
+    - echo $DOX_ENV
+    - virtualenv --system-site-packages $DOX_ENV
+    - . $HOME/$DOX_ENV/bin/activate
+    - pip install -e .
+    - python setup.py test
+    
+
+testing:
+  images: 
+    #- parisson/docker:dox_ubuntu_trusty_mini
+    #- parisson/docker:dox_ubuntu_precise_mini
+    #- parisson/docker:dox_debian_wheezy_mini
+    #- parisson/docker:dox_debian_jessie_mini
+    - parisson/docker:dox_ubuntu_trusty
+    - parisson/docker:dox_ubuntu_precise
+    - parisson/docker:dox_debian_wheezy
+    - parisson/docker:dox_debian_jessie
+  commands:
+    - lsb_release -sic
+    - export DOX_ENV=$(echo '.dox_env/')$(lsb_release -si)$(echo '_')$(lsb_release -sc)
+    - echo $DOX_ENV
+    - virtualenv --system-site-packages $DOX_ENV
+    - . $HOME/$DOX_ENV/bin/activate
+    - pip install -e .
+    - python setup.py test
+    

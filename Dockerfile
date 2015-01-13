@@ -17,15 +17,19 @@ from debian:stable
 
 maintainer Guillaume Pellerin <yomguy@parisson.com>
 
+# install confs, keys and deps
+run gpg --keyserver pgpkeys.mit.edu --recv-key E3298399DF14BB7C
+run gpg -a --export E3298399DF14BB7C | apt-key add -
+run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
+run gpg -a --export 07DC563D1F41B907 | apt-key add -
 add ./deploy/apt-app.list /etc/apt/sources.list.d/
 run apt-get update
-run apt-get install -y --force-yes build-essential vim
-run apt-get install -y python python-dev python-pip
-run apt-get -y -t wheezy-backports dist-upgrade
-run apt-get install -y --force-yes -t wheezy-backports nginx supervisor python-timeside git python-tables python-django python-traits python-networkx ipython
+run apt-get install -y --force-yes apt-utils
+run apt-get -y --force-yes -t wheezy-backports dist-upgrade
+run apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
 run apt-get clean
 
-# install uwsgi now because it takes a little while
+# install tools via pip
 run pip install uwsgi ipython
 
 # clone app
@@ -37,8 +41,11 @@ run rm /etc/nginx/sites-enabled/default
 run ln -s /opt/TimeSide/deploy/nginx-app.conf /etc/nginx/sites-enabled/
 run ln -s /opt/TimeSide/deploy/supervisor-app.conf /etc/supervisor/conf.d/
 
-# run pip install
+# install new deps from the local repo
 run pip install -e /opt/TimeSide
+
+# add dev repo path
+run echo "export PYTHONPATH=$PYTHONPATH:/opt/Timeside" >> ~/.bashrc
 
 # sandbox setup
 run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput

@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import sys
 
 from setuptools import setup
-import sys
 from setuptools.command.test import test as TestCommand
 
 
@@ -45,7 +44,7 @@ setup(
     long_description=open('README.rst').read(),
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
-    version='0.5.7',
+    version='0.6.2',
     install_requires=[
         'numpy',
         'mutagen',
@@ -56,13 +55,12 @@ setup(
         'simplejson',
         'scipy',
         'matplotlib',
-        'django>=1.4',
+        'django==1.6.8',
         'django-extensions',
         'djangorestframework',
         'south',
         'traits',
         'networkx',
-        'sphinx_rtd_theme',
         ],
     platforms=['OS Independent'],
     license='Gnu Public License V2',

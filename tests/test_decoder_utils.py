@@ -5,7 +5,7 @@
 from __future__ import division
 
 from unit_timeside import unittest, TestRunner
-from timeside.decoder.utils import get_uri, get_media_uri_info, path2uri
+from timeside.plugins.decoder.utils import get_uri, get_media_uri_info, path2uri
 from timeside.tools.test_samples import samples
 import os.path
 
@@ -14,8 +14,7 @@ class TestGetUri(unittest.TestCase):
     "Test get_uri function"
     def testFileName(self):
         "Retrieve the uri from a filename"
-        self.source = os.path.join(os.path.dirname(__file__),
-                                   "samples/sweep.wav")
+        self.source = samples["sweep.wav"]
 
         self.uri = path2uri(os.path.abspath(self.source))
 
@@ -32,15 +31,15 @@ class TestGetUriWrongUri(unittest.TestCase):
     def testMissingFile(self):
         "Missing file raise IOerror"
         self.source = os.path.join(os.path.dirname(__file__),
-                                   "a_missing_file_blahblah.wav")
+                                   "a_missing_file.wav")
 
     def testNotValidUri(self):
         "Not valid uri raise IOerror"
-        self.source = os.path.join("://not/a/valid/uri/parisson.com")
+        self.source = "://not/a/valid/uri/parisson.com"
 
     def testNotSupportedUriProtocol(self):
         "Not supported uri protocol raise IOerror"
-        self.source = os.path.join("mailto://john.doe@parisson.com")
+        self.source = "mailto://john.doe@parisson.com"
 
     def tearDown(self):
         self.assertRaises(IOError, get_uri, self.source)

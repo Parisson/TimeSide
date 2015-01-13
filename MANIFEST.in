@@ -1,18 +1,21 @@
+global-exclude *.pyc
+prune dist
+prune build
 include AUTHORS.txt
 include LICENSE.txt
 include README.rst
 include NEWS.rst
 include requirements.txt
+include Dockerfile
 recursive-include doc *
 recursive-include timeside *
 recursive-include examples *
 recursive-include tests *
 recursive-exclude examples/sandbox/media *
-recursive-exclude tests/sandbox *
-recursive-exclude * *.pyc
 recursive-exclude * *.swp
 recursive-exclude dist *
 recursive-exclude build *
 recursive-exclude tests/samples *
 recursive-exclude tests/results *
 recursive-exclude doc/build *
+global-exclude *.pyc

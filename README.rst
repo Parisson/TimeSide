@@ -2,28 +2,25 @@
 TimeSide : open web audio processing framework
 ==============================================
 
-TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
+|version| |downloads| |travis_master| |coveralls_master|
 
-TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
-
-
-Build status
-============
-- Branch **master** : |travis_master| |coveralls_master|
-- Branch **dev** : |travis_dev| |coveralls_dev|
-
-.. |travis_master| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=master
-    :target: https://travis-ci.org/yomguy/TimeSide/
-
-.. |travis_dev| image:: https://secure.travis-ci.org/yomguy/TimeSide.png?branch=dev
-    :target: https://travis-ci.org/yomguy/TimeSide/
+.. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
+    :target: https://travis-ci.org/Parisson/TimeSide/
 
 .. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
   :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
 
-.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+.. |version| image:: https://pypip.in/version/TimeSide/badge.png
+  :target: https://pypi.python.org/pypi/TimeSide/
+  :alt: Version
 
+.. |downloads| image:: https://pypip.in/download/TimeSide/badge.svg
+    :target: https://pypi.python.org/pypi/TimeSide/
+    :alt: Downloads
+
+TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
+
+TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
 
 
 Goals
@@ -39,6 +36,17 @@ Goals
 * **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 
 
+Funding and Support
+===================
+
+To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
+
+ * star or fork the project on `GitHub <https://github.com/Parisson/TimeSide>`_
+ * tweet something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@yomguy <https://twitter.com/yomguy>`_
+ * drop us an email <support@parisson.com>
+
+Thanks for your help!
+
 Architecture
 ============
 
@@ -46,84 +54,6 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 
 .. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
   :width: 800 px
-
-
-Processors
-==========
-
-IDecoder
----------
-
-  * FileDecoder [file_decoder]
-  * ArrayDecoder [array_decoder]
-  * LiveDecoder [live_decoder]
-
-IAnalyzer
----------
-
-  *  AubioTemporal [aubio_temporal]
-  *  AubioPitch [aubio_pitch]
-  *  AubioMfcc [aubio_mfcc]
-  *  AubioMelEnergy [aubio_melenergy]
-  *  AubioSpecdesc [aubio_specdesc]
-  *  Yaafe [yaafe]
-  *  Spectrogram [spectrogram_analyzer]
-  *  Waveform [waveform_analyzer]
-  *  VampSimpleHost [vamp_simple_host]
-  *  IRITSpeechEntropy [irit_speech_entropy]
-  *  IRITSpeech4Hz [irit_speech_4hz]
-  *  OnsetDetectionFunction [onset_detection_function]
-  *  LimsiSad [limsi_sad]
-
-IValueAnalyzer
----------------
-
-  * Level [level]
-  * MeanDCShift [mean_dc_shift]
-
-IGrapher
----------
-
-  *  Waveform [waveform_simple]
-  *  WaveformCentroid [waveform_centroid]
-  *  WaveformTransparent [waveform_transparent]
-  *  WaveformContourBlack [waveform_contour_black]
-  *  WaveformContourWhite [waveform_contour_white]
-  *  SpectrogramLog [spectrogram_log]
-  *  SpectrogramLinear [spectrogram_lin]
-  *  Display.aubio_pitch.pitch [grapher_aubio_pitch]
-  *  Display.onset_detection_function [grapher_odf]
-  *  Display.waveform_analyzer [grapher_waveform]
-  *  Display.irit_speech_4hz.segments [grapher_irit_speech_4hz_segments]
-
-IEncoder
----------
-
-  * VorbisEncoder [vorbis_encoder]
-  * WavEncoder [wav_encoder]
-  * Mp3Encoder [mp3_encoder]
-  * FlacEncoder [flac_encoder]
-  * AacEncoder [aac_encoder]
-  * WebMEncoder [webm_encoder]
-  * OpusEncoder [opus_encoder]
-  * AudioSink [live_encoder]
-
-News
-=====
-
-0.5.7
-
-  * Add a Docker development box
-  * Add a Vagrant development box
-  * Add a Debian package installation procedure
-  * Fix parent and child analyzers both using yaafe (fix #60)
-
-0.5.6
-
-  * Bugfix release
-  * Fix analyzer instanciation as parent for some graphers
-
-For older news, please visit: https://github.com/yomguy/TimeSide/blob/master/NEWS.rst
 
 Dive in
 ========
@@ -155,14 +85,112 @@ Show the analyzer results::
 
 The encoded OGG file should also be there...
 
-Note you can also instanciate each processor with its own class::
-
- decoder  =  timeside.decoder.file.FileDecoder('sweep.wav')
- grapher  =  timeside.grapher.waveform_simple.Waveform()
- analyzer =  timeside.analyzer.level.Level()
- encoder  =  timeside.encoder.ogg.VorbisEncoder('sweep.ogg')
-
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
+
+
+News
+=====
+
+0.6.1
+
+  * Fix various minor bugs
+  * Fix docker sandbox
+  * Auto build docker image (https://registry.hub.docker.com/u/parisson/timeside/)
+
+0.6
+
+  * WARNING! some processor ids have changed. Please see the full list below.
+  * NEW analyzers: IRIT Monopoly (see Processors)
+  * NEW graphers: IRIT Start/Session segmentation
+  * Add extensible buffering thanks to pytables (NEW dependency)
+  * Add typed parameters in processors and server thanks to traits (NEW dependency)
+  * Add a graph model to the pipe thanks to networkx (NEW dependency)
+  * Add test sample generators based on GStreamer
+  * Add a background image option for rendering analyzers
+  * Add on-the-fly filtering decorators
+  * Add a Docker development image and a Dockerfile
+  * Add a Vagrant development box
+  * Update the Debian package installation procedure
+  * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
+  * Update various processors
+  * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
+  * Update of Travis CI scripts https://travis-ci.org/Parisson/TimeSide/
+
+0.5.6
+
+  * Bugfix release
+  * Fix analyzer instanciation as parent for some graphers
+  * Store analyzer's results in pipe.results by uuid instead of id (fix #24)
+
+For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
+
+Processors
+==========
+
+IEncoder
+--------
+
+   * **live_encoder** : Gstreamer-based Audio Sink
+   * **flac_encoder** : FLAC encoder based on Gstreamer
+   * **aac_encoder** : AAC encoder based on Gstreamer
+   * **mp3_encoder** : MP3 encoder based on Gstreamer
+   * **vorbis_encoder** : OGG Vorbis encoder based on Gstreamer
+   * **opus_encoder** : Opus encoder based on Gstreamer
+   * **wav_encoder** : WAV encoder based on Gstreamer
+   * **webm_encoder** : WebM encoder based on Gstreamer
+
+IDecoder
+--------
+
+   * **array_decoder** : Decoder taking Numpy array as input
+   * **file_decoder** : File Decoder based on Gstreamer
+   * **live_decoder** : Live source Decoder based on Gstreamer
+
+IGrapher
+--------
+
+   * **grapher_aubio_pitch** : Image representing Aubio Pitch
+   * **grapher_onset_detection_function** : Image representing Onset detection function
+   * **grapher_waveform** : Image representing Waveform from Analyzer
+   * **grapher_irit_speech_4hz_segments** : Image representing Irit 4Hz Speech Segmentation
+   * **grapher_irit_speech_4hz_segments_median** : Image representing Irit 4Hz Speech Segmentation with median filter
+   * **grapher_monopoly_segments** : Image representing Irit Monopoly Segmentation
+   * **grapher_limsi_sad_etape** : Image representing LIMSI SAD with ETAPE model
+   * **grapher_limsi_sad_maya** : Image representing LIMSI SAD with Mayan model
+   * **grapher_irit_startseg** : Image representing IRIT Start Noise
+   * **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
+   * **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
+   * **waveform_simple** : Simple monochrome waveform image.
+   * **waveform_centroid** : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
+   * **waveform_contour_black** : Black amplitude contour waveform.
+   * **waveform_contour_white** : an white amplitude contour wavform.
+   * **waveform_transparent** : Transparent waveform.
+
+IAnalyzer
+---------
+
+   * **mean_dc_shift** : Mean DC shift analyzer
+   * **level** : Audio level analyzer
+   * **aubio_melenergy** : Aubio Mel Energy analyzer
+   * **aubio_mfcc** : Aubio MFCC analyzer
+   * **aubio_pitch** : Aubio Pitch estimation analyzer
+   * **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
+   * **aubio_temporal** : Aubio Temporal analyzer
+   * **yaafe** : Yaafe feature extraction library interface analyzer
+   * **irit_monopoly** : Segmentor Monophony/Polyphony based on the analysis of yin confidence.
+   * **irit_startseg** : Segmentation of recording sessions into 'start' and 'session' segments
+   * **irit_speech_4hz** : Speech Segmentor based on the 4Hz energy modulation analysis.
+   * **irit_speech_entropy** : Speech Segmentor based on Entropy analysis.
+   * **limsi_sad** : Limsi Speech Activity Detection Systems
+   * **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
+   * **onset_detection_function** : Onset Detection Function analyzer
+   * **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
+   * **waveform_analyzer** : Waveform analyzer
+
+IEffect
+-------
+
+   * **fx_gain** : Gain effect processor
 
 API / Documentation
 ====================
@@ -170,38 +198,34 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
-* Player / UI : https://github.com/yomguy/TimeSide/wiki/Ui-Guide (see also "Web player")
-* Examples:
-
-  - http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/example_CMMR.py
-  - https://github.com/yomguy/TimeSide/blob/master/tests/sandbox/exempleCMMR_vamp.py
+* Publications : https://github.com/Parisson/Telemeta-doc
+* Player / UI : https://github.com/Parisson/TimeSide/wiki/Ui-Guide (see also "Web player")
+* Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
+* Example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
 =======
 
-The TimeSide engine is intended to work on all Linux and Unix like platforms.
-
-It depends on several other python modules and compiled librairies like GStreamer.
+The TimeSide engine is intended to work on all Linux and Unix like platforms. It depends on several other python modules and compiled libraries like GStreamer.
 
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository which provides all additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
+For Debian based distributions, we provide a safe repository giving additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
 
 Other Linux distributions
 --------------------------
 
-On other Linux platforms, you need to install all dependencies listed in the paragraph "Dependencies" (find all equivalent package names for your distribution).
+On other Linux platforms, you need to install all dependencies listed in Dependencies finding all equivalent package names for your distribution.
 
 Then, use pip::
 
  sudo pip install timeside
 
-OSX
----
+OSX / Windows
+--------------
 
-The installation on OSX platforms is pretty hard at the moment because all dependencies are not in brew. But, it will be fully documented in the next release 0.5.6.
+Native install is hard at the moment but you can either run our Vagrant or Docker images (see Development).
 
 Dependencies
 -------------
@@ -283,14 +307,14 @@ Features:
     * fully skinnable with CSS style
 
 Screenshot:
- .. image:: https://raw.github.com/yomguy/TimeSide/master/doc/slides/img/timeside_player_01.png
+ .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/slides/img/timeside_player_01.png
 
 Examples of the player embeded in the Telemeta open web audio CMS:
     * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
     * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
 
 Development documentation:
-    * https://github.com/yomguy/TimeSide/wiki/Ui-Guide
+    * https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 
 TODO list:
     * zoom
@@ -316,21 +340,47 @@ At the moment, this server is NOT connected to the player using TimeSide alone. 
 Development
 ===========
 
-First, install TimeSide (see Install).
+|travis_dev| |coveralls_dev|
 
-Then::
+.. |travis_dev| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=dev
+    :target: https://travis-ci.org/Parisson/TimeSide/
 
- sudo apt-get install git
- git clone https://github.com/yomguy/TimeSide.git
- cd TimeSide
- git checkout dev
- sudo pip install -e .
- echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
- source ~/.bashrc
- tests/run_all_tests
+.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
 
-VirtualBox and Vagrant
------------------------
+
+Docker (recommended)
+--------------------
+
+Docker is a great tool for developing and deploying processing environments. We provide a docker image which contains TimeSide and all the necessary packages (nginx, uwsgi, etc) to run it either in development or in production stages.
+
+First, install Docker: https://docs.docker.com/installation/
+
+Then, simply pull the image and run it::
+
+  docker pull parisson/timeside
+  docker run -p 9000:80 parisson/timeside
+
+You can now browse the TimeSide API: http://localhost:9000/api/
+
+or get a shell session::
+
+  docker run -ti parisson/timeside bash
+
+To start a new development, it is advised to checkout the dev branch in the container::
+
+  cd /opt/TimeSide
+  git checkout dev
+
+or get our latest-dev image::
+
+  docker pull parisson/timeside:latest-dev
+
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
+
+
+VirtualBox and Vagrant (deprecated)
+-----------------------------------
 
 We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
 First, install Vagrant and VirtualVox::
@@ -355,31 +405,23 @@ To stop the virtual box::
  vagrant halt
 
 
-Docker
+Native
 -------
 
-Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
+First, install TimeSide (see Install).
 
-First, install Docker: https://docs.docker.com/installation/
+Then::
 
-Then, simply pull our dev image and run::
+ sudo apt-get build-dep python-timeside
+ sudo apt-get install git
+ git clone https://github.com/Parisson/TimeSide.git
+ cd TimeSide
+ git checkout dev
+ sudo pip install -e .
+ echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
+ source ~/.bashrc
+ tests/run_all_tests
 
-  sudo docker pull yomguy/timeside
-  sudo docker run -i -t yomguy/timeside bash
-
-More infos: https://registry.hub.docker.com/u/yomguy/timeside/
-
-To start the web server through the container::
-
-  sudo docker run -p 9000:80 yomguy/timeside supervisord -n
-
-Finally browse http://localhost:9000/api/
-
-To start a new development, it is advised to checkout the dev branch and build your own container::
-
-  cd TimeSide
-  git checkout dev
-  sudo docker build .
 
 Sponsors and Partners
 =====================
@@ -403,7 +445,7 @@ Related projects
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2014 Parisson SARL
+* Copyright (c) 2006, 2014 Parisson Sarl
 * Copyright (c) 2006, 2014 Guillaume Pellerin
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Thomas Fillon
