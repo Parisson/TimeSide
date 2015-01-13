@@ -5,8 +5,8 @@ from __future__ import division
 from math import pi
 import numpy as np
 from unit_timeside import *
-from timeside.decoder.utils import get_uri, get_media_uri_info
-from timeside.decoder.array import ArrayDecoder
+from timeside.plugins.decoder.utils import get_uri, get_media_uri_info
+from timeside.plugins.decoder.array import ArrayDecoder
 import os
 from tools import tmp_file_sink
 
@@ -38,45 +38,45 @@ class TestEncoding(unittest.TestCase):
 
     def testWav(self):
         "Test wav encoding"
-        from timeside.encoder.wav import WavEncoder
+        from timeside.plugins.encoder.wav import WavEncoder
         self.encoder_function = WavEncoder
         self.delta = 0
 
     def testVorbis(self):
         "Test vorbis encoding"
-        from timeside.encoder.ogg import VorbisEncoder
+        from timeside.plugins.encoder.ogg import VorbisEncoder
         self.encoder_function = VorbisEncoder
         self.delta = 0.3
 
     def testMp3(self):
         "Test mp3 encoding"
-        from timeside.encoder.mp3 import Mp3Encoder
+        from timeside.plugins.encoder.mp3 import Mp3Encoder
         self.encoder_function = Mp3Encoder
         self.delta = 0.2
 
     def testAac(self):
         "Test aac encoding"
-        from timeside.encoder.m4a import AacEncoder
+        from timeside.plugins.encoder.m4a import AacEncoder
         self.encoder_function = AacEncoder
         self.test_channels = False
         self.delta = 0.3
 
     def testFlac(self):
         "Test flac encoding"
-        from timeside.encoder.flac import FlacEncoder
+        from timeside.plugins.encoder.flac import FlacEncoder
         self.encoder_function = FlacEncoder
         self.delta = 0
 
     def testWebM(self):
         "Test webm encoding, audio only"
-        from timeside.encoder.webm import WebMEncoder
+        from timeside.plugins.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
 
     def testWebMVideo(self):
         "Test webm encoding, video"
-        from timeside.encoder.webm import WebMEncoder
+        from timeside.plugins.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
@@ -90,7 +90,7 @@ class TestEncoding(unittest.TestCase):
 
     def testOpus(self):
         "Test opus encoding"
-        from timeside.encoder.opus import OpusEncoder
+        from timeside.plugins.encoder.opus import OpusEncoder
         self.encoder_function = OpusEncoder
         self.delta = 0.1
         self.samplerate = 48000  # 44100 is not supported by opusenc

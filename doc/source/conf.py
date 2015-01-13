@@ -67,7 +67,7 @@ copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-from timeside import __version__ as TimeSideVersion
+from timeside.core import __version__ as TimeSideVersion
 # The short X.Y version.
 version = '.'.join(TimeSideVersion.split('.')[0:2])
 # The full version, including alpha/beta/rc tags.

@@ -2,11 +2,8 @@
 
 from __future__ import division
 
-from timeside.core import get_processor, ProcessPipe
-from timeside.decoder.file import FileDecoder
-#from timeside.analyzer import *
-#from timeside.encoder import *
-#from timeside.component import *
+from timeside.core.processor import get_processor, ProcessPipe
+from timeside.plugins.decoder.file import FileDecoder
 
 from unit_timeside import unittest, TestRunner
 from tools import tmp_file_sink

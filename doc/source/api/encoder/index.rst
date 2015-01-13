@@ -9,7 +9,7 @@ Encoder package
 Core module
 ===========
 
-.. automodule:: timeside.encoder.core
+.. automodule:: timeside.core.encoder
    :members:
    :undoc-members:
 
@@ -19,44 +19,44 @@ Encoders
 Flac encoder
 ------------
 
-.. automodule:: timeside.encoder.flac
+.. automodule:: timeside.plugins.encoder.flac
    :members:
 
 Aac encoder
 -----------
 
-.. automodule:: timeside.encoder.m4a
+.. automodule:: timeside.plugins.encoder.m4a
    :members:
 
 Mp3 encoder
 -----------
 
-.. automodule:: timeside.encoder.mp3
+.. automodule:: timeside.plugins.encoder.mp3
    :members:
 
 Vorbis encoder
 --------------
 
-.. automodule:: timeside.encoder.ogg
+.. automodule:: timeside.plugins.encoder.ogg
    :members:
 
 
 Wav encoder
 -----------
 
-.. automodule:: timeside.encoder.wav
+.. automodule:: timeside.plugins.encoder.wav
    :members:
 
 
 WebM encoder
 ------------
 
-.. automodule:: timeside.encoder.webm
+.. automodule:: timeside.plugins.encoder.webm
    :members:
 
 
 AudioSink encoder
 -----------------
 
-.. automodule:: timeside.encoder.audiosink
+.. automodule:: timeside.plugins.encoder.audiosink
    :members:

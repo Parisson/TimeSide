@@ -23,14 +23,14 @@ Two different *data_mode* can be specified :
 
 Default values are *time_mode = 'framewise'* and *data_mode = 'value'*
 
-See : :func:`timeside.analyzer.core.AnalyzerResult`, :class:`timeside.analyzer.core.AnalyzerResult`
+See : :func:`timeside.core.analyzer.AnalyzerResult`, :class:`timeside.core.analyzer.AnalyzerResult`
 
 Default
 =======
 
 Create a new analyzer result without default arguments
 
-   >>> from timeside.analyzer.core import AnalyzerResult
+   >>> from timeside.core.analyzer import AnalyzerResult
    >>> res = AnalyzerResult()
 
 

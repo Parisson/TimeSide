@@ -2,7 +2,7 @@
 from __future__ import division
 
 from unit_timeside import unittest, TestRunner
-from timeside.analyzer.core import AnalyzerResult
+from timeside.core.analyzer import AnalyzerResult
 import numpy as np
 
 

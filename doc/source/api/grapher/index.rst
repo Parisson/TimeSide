@@ -9,7 +9,7 @@ Grapher package
 Core module
 ===========
 
-.. automodule:: timeside.grapher.core
+.. automodule:: timeside.core.grapher
   :members:
 
 Graphers
@@ -19,37 +19,37 @@ Graphers
 Waveform
 -----------
 
-.. automodule:: timeside.grapher.waveform_simple
+.. automodule:: timeside.plugins.grapher.waveform_simple
   :members:
 
 WaveformCentroid
 ------------------
 
-.. automodule:: timeside.grapher.waveform_centroid
+.. automodule:: timeside.plugins.grapher.waveform_centroid
   :members:
 
 WaveformTransparent
 --------------------
 
-.. automodule:: timeside.grapher.waveform_centroid
+.. automodule:: timeside.plugins.grapher.waveform_centroid
   :members:
 
 WaveformContour
 ------------------------
 
-.. automodule:: timeside.grapher.waveform_contour
+.. automodule:: timeside.plugins.grapher.waveform_contour
   :members:
 
 
 SpectrogramLog
 ---------------
 
-.. automodule:: timeside.grapher.spectrogram_log
+.. automodule:: timeside.plugins.grapher.spectrogram_log
   :members:
 
 
 SpectrogramLin
 ---------------
 
-.. automodule:: timeside.grapher.spectrogram_lin
+.. automodule:: timeside.plugins.grapher.spectrogram_lin
   :members:
