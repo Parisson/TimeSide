@@ -5,26 +5,26 @@
  Running a pipe with previously decoded frames
 ===============================================
 
-Example of use of the `stack` argument in :class:`timeside.decoder.file.FileDecoder` to run a pipe with previously decoded frames stacked in memory on a second pass.
+Example of use of the `stack` argument in :class:`timeside.plugins.decoder.file.FileDecoder` to run a pipe with previously decoded frames stacked in memory on a second pass.
 
 First, let's import everything and define the audio file source :
 
->>> import timeside
+>>> import timeside.core
 >>> from timeside.core import get_processor
 >>> from timeside.tools.test_samples import samples
 >>> import numpy as np
 >>> audio_file = samples['sweep.mp3']
 
-Then let's setup a :class:`FileDecoder <timeside.decoder.file.FileDecoder>` with argument `stack=True` (default argument is `stack=False`) :
+Then let's setup a :class:`FileDecoder <timeside.plugins.decoder.file.FileDecoder>` with argument `stack=True` (default argument is `stack=False`) :
 
->>> decoder = timeside.decoder.file.FileDecoder(audio_file, stack=True)
+>>> decoder = timeside.plugins.decoder.file.FileDecoder(audio_file, stack=True)
 
 Setup an arbitrary analyzer to check that decoding process from file and from stack are equivalent:
 
->>> pitch = get_processor('aubio_pitch')()
->>> pipe = (decoder | pitch)
+>>> level = get_processor('level')()
+>>> pipe = (decoder | level)
 >>> print pipe.processors #doctest: +ELLIPSIS
-[file_decoder-{}, aubio_pitch-{"blocksize_s": 0.0, "stepsize_s": 0.0}]
+[file_decoder-{}, level-{}]
 
 
 Run the pipe:
