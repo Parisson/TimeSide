@@ -58,30 +58,50 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 Dive in
 ========
 
-To list all available plugins::
+To list all available plugins:
 
- import timeside.core
- timeside.core.list_processors()
+.. testcleanup:: 
 
-Define some processors::
+   os.remove('sweep.ogg')
+   os.remove('waveform.png')
 
- from timeside.core import get_processor
- decoder  =  get_processor('file_decoder')('sweep.wav')
- grapher  =  get_processor('waveform_simple')()
- analyzer =  get_processor('level')()
- encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
+.. doctest:: 
 
-Then run the *magic* pipeline::
+   >>> import timeside
+   >>> timeside.core.list_processors()  # doctest: +SKIP
 
- (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results::
+Define some processors:
 
- grapher.render(output='waveform.png')
+.. doctest:: 
 
-Show the analyzer results::
+    >>> from timeside.core import get_processor
+    >>> from timeside.core.tools.test_samples import samples
+    >>> wavfile = samples['sweep.wav']
+    >>> decoder  =  get_processor('file_decoder')(wavfile)
+    >>> grapher  =  get_processor('waveform_simple')()
+    >>> analyzer =  get_processor('level')()
+    >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
- print 'Level:', analyzer.results
+Then run the *magic* pipeline:
+
+.. doctest:: 
+
+    >>> (decoder | grapher | analyzer | encoder).run()
+
+Render the grapher results:
+
+.. doctest:: 
+
+    >>> grapher.render(output='waveform.png')
+
+Show the analyzer results:
+
+.. doctest::
+
+    >>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
+    Level: {'level.max': AnalyzerResult(...)}
+
 
 The encoded OGG file should also be there...
 
@@ -90,16 +110,6 @@ For more extensive examples, please see the `full documentation <http://files.pa
 
 News
 =====
-
-0.7
-
- * Code refactoring:
-
-   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decodr, timeside.plugins.analyzer, timeside.plugins.encoder, timeside.plugins.fx
-   - `timeside.plugins` is a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be automatically plug into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_).
-   - To properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`.
- * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
-
 
 0.6.1
 
