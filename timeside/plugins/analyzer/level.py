@@ -47,8 +47,8 @@ class Level(Analyzer):
     >>> print max.data
     [ 0.]
     >>> rms = level.results['level.rms']
-    >>> print rms.data
-    [-3.263]
+    >>> print rms.data  # doctest: +ELLIPSIS
+    [-3.26...]
     """
     implements(IValueAnalyzer)
 

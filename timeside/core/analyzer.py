@@ -946,9 +946,9 @@ class AnalyzerResultContainer(dict):
     '''
     >>> import timeside
     >>> from timeside.core.analyzer import Analyzer
-    >>> wav_file = 'tests/samples/sweep.mp3' # doctest: +SKIP
+    >>> from timeside.core.tools.test_samples import samples
+    >>> wav_file = samples['sweep.mp3']
     >>> d = timeside.core.get_processor('file_decoder')(wav_file)
-
     >>> a = Analyzer()
     >>> (d|a).run()
     >>> a.new_result() #doctest: +ELLIPSIS
@@ -1236,9 +1236,6 @@ class Analyzer(Processor):
             result.data_object.frame_metadata.stepsize = self.result_stepsize
 
         return result
-
-DOCTEST_ALIAS = {'wav_file':
-                 'https://github.com/yomguy/timeside-samples/raw/master/samples/sweep.mp3'}
 
 
 if __name__ == "__main__":
