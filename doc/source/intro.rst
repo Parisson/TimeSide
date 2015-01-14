@@ -60,17 +60,20 @@ Dive in
 
 To list all available plugins:
 
-.. doctest::
+.. testcleanup:: 
+
+   os.remove('sweep.ogg')
+   os.remove('waveform.png')
+
+.. doctest:: 
 
    >>> import timeside
    >>> timeside.core.list_processors()  # doctest: +SKIP
 
 
-
-
 Define some processors:
 
-.. doctest::
+.. doctest:: 
 
     >>> from timeside.core import get_processor
     >>> from timeside.core.tools.test_samples import samples
@@ -82,13 +85,13 @@ Define some processors:
 
 Then run the *magic* pipeline:
 
-.. doctest::
+.. doctest:: 
 
     >>> (decoder | grapher | analyzer | encoder).run()
 
 Render the grapher results:
 
-.. doctest::
+.. doctest:: 
 
     >>> grapher.render(output='waveform.png')
 
