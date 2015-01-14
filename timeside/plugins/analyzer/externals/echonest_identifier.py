@@ -17,12 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Thomas Fillon <thomas@parisson.com>
+# Authors:
+# Guillaume Pellerin <yomguy@parisson.com>
+# Thomas Fillon <thomas@parisson.com>
+
 
 from timeside.core import implements, interfacedoc
-from timeside.analyzer.core import Analyzer
-from timeside.api import IAnalyzer
-from timeside.analyzer.preprocessors import downmix_to_mono
+from timeside.core.analyzer import Analyzer, IAnalyzer
+from timeside.core.preprocessors import downmix_to_mono
 import numpy as np
 import echoprint
 import requests
