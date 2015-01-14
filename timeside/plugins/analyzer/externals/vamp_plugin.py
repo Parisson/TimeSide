@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
-from timeside.tools.parameters import HasTraits, List
+from timeside.core.tools.parameters import HasTraits, List
 
 import subprocess
 import tempfile

@@ -6,7 +6,7 @@ import numpy as np
 
 import timeside.core
 from timeside.plugins.decoder.file import FileDecoder
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 
 

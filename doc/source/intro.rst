@@ -60,7 +60,7 @@ Dive in
 
 To list all available plugins:
 
-.. doctest:: 
+.. doctest::
 
    >>> import timeside
    >>> timeside.core.list_processors()  # doctest: +SKIP
@@ -73,7 +73,7 @@ Define some processors:
 .. doctest::
 
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> wavfile = samples['sweep.wav']
     >>> decoder  =  get_processor('file_decoder')(wavfile)
     >>> grapher  =  get_processor('waveform_simple')()
@@ -82,19 +82,19 @@ Define some processors:
 
 Then run the *magic* pipeline:
 
-.. doctest:: 
+.. doctest::
 
     >>> (decoder | grapher | analyzer | encoder).run()
 
 Render the grapher results:
 
-.. doctest:: 
+.. doctest::
 
     >>> grapher.render(output='waveform.png')
 
 Show the analyzer results:
 
-.. doctest:: 
+.. doctest::
 
     >>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
     Level: {'level.max': AnalyzerResult(...)}

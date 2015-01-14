@@ -22,10 +22,9 @@
 # along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from timeside.core import Processor, implements, interfacedoc
-from ..core import abstract
+from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.core.api import IEncoder
-from timeside.tools.gstutils import numpy_array_to_gst_buffer, MainloopThread
+from .tools.gstutils import numpy_array_to_gst_buffer, MainloopThread
 
 import pygst
 pygst.require('0.10')

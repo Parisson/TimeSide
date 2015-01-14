@@ -7,7 +7,7 @@ from timeside.plugins.decoder.file import FileDecoder
 
 from unit_timeside import unittest, TestRunner
 from tools import tmp_file_sink
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 
 class TestTranscodingStreaming(unittest.TestCase):

@@ -20,7 +20,7 @@ A most basic operation, transcoding, is easily performed with two processors:
 .. doctest:: test_1
 
  >>> import timeside
- >>> from timeside.tools.test_samples import samples
+ >>> from timeside.core.tools.test_samples import samples
  >>> from timeside.core import get_processor
  >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
  >>> encoder = get_processor('vorbis_encoder')("sweep.ogg")
@@ -36,7 +36,7 @@ Spectrogram. All graphers return an image:
 .. doctest:: test_2
 
    >>> import timeside
-   >>> from timeside.tools.test_samples import samples
+   >>> from timeside.core.tools.test_samples import samples
    >>> from timeside.core import get_processor
    >>> decoder =  get_processor('file_decoder')(samples["sweep.wav"])
    >>> spectrogram = get_processor('spectrogram_lin')(width=400, height=150)
@@ -49,7 +49,7 @@ analysis and encoding:
 .. doctest:: test_3
 
    >>> import timeside
-   >>> from timeside.tools.test_samples import samples
+   >>> from timeside.core.tools.test_samples import samples
    >>> from timeside.core import get_processor
    >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
    >>> levels = get_processor('level')()

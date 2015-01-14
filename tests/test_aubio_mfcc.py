@@ -4,7 +4,7 @@ from unit_timeside import unittest, TestRunner
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.core import get_processor
 from timeside.core import _WITH_AUBIO
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 
 @unittest.skipIf(not _WITH_AUBIO, 'Aubio library is not available')

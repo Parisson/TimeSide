@@ -28,7 +28,7 @@ from aubio import pitch
 import numpy as np
 from timeside.plugins.analyzer.utils import nextpow2
 
-from timeside.tools.parameters import Float, HasTraits
+from timeside.core.tools.parameters import Float, HasTraits
 
 
 class AubioPitch(Analyzer):

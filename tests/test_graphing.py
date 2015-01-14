@@ -2,7 +2,7 @@
 
 from timeside.plugins.decoder.file import FileDecoder
 from unit_timeside import unittest, TestRunner
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 import tempfile
 import os.path

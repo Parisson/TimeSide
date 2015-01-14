@@ -22,7 +22,7 @@ from .component import Component, MetaComponent, abstract
 from .component import implements, implementations, interfacedoc
 from .api import IProcessor
 from .exceptions import Error, PIDError, ApiError
-from ..tools.parameters import HasParam
+from .tools.parameters import HasParam
 
 import re
 import numpy

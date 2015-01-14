@@ -11,7 +11,7 @@ First, let's import everything and define the audio file source :
 
 >>> import timeside.core
 >>> from timeside.core import get_processor
->>> from timeside.tools.test_samples import samples
+>>> from timeside.core.tools.test_samples import samples
 >>> import numpy as np
 >>> audio_file = samples['sweep.mp3']
 

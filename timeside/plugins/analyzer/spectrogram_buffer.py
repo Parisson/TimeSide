@@ -25,8 +25,8 @@ from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
-from timeside.tools.parameters import Int, HasTraits
-from timeside.tools.buffering import BufferTable
+from timeside.core.tools.parameters import Int, HasTraits
+from timeside.core.tools.buffering import BufferTable
 from timeside.plugins.analyzer.spectrogram import Spectrogram
 
 import numpy as np
@@ -49,7 +49,7 @@ class SpectrogramBuffer(Spectrogram):
     --------
     >>> import timeside
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> audio_source = samples['sweep.wav']
     >>> decoder = get_processor('file_decoder')(uri=audio_source)
     >>> spectrogram = get_processor('spectrogram_analyzer_buffer')(input_blocksize=2048, input_stepsize=1024)
@@ -65,7 +65,7 @@ class SpectrogramBuffer(Spectrogram):
 
       import timeside
       from timeside.core import get_processor
-      from timeside.tools.test_samples import samples
+      from timeside.core.tools.test_samples import samples
       audio_source = samples['sweep.wav']
       decoder = get_processor('file_decoder')(uri=audio_source)
       spectrogram = get_processor('spectrogram_analyzer_buffer')(input_blocksize=2048,

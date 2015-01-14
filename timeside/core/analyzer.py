@@ -25,7 +25,7 @@
 from __future__ import division
 
 from .processor import Processor
-from ..tools import hdf5
+from .tools import hdf5
 
 import timeside  # import __version__
 from timeside.core import implements, interfacedoc, abstract

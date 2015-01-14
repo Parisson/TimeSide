@@ -29,7 +29,7 @@ from timeside.core.api import IAnalyzer
 import yaafelib
 import numpy
 from timeside.core.preprocessors import downmix_to_mono
-from timeside.tools.parameters import HasTraits, ListUnicode, Float
+from timeside.core.tools.parameters import HasTraits, ListUnicode, Float
 
 
 class Yaafe(Analyzer):
@@ -46,7 +46,7 @@ class Yaafe(Analyzer):
     Examples
     --------
     >>> import timeside
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> from timeside.core import get_processor
     >>> source = samples['C4_scale.wav']
     >>> FileDecoder = get_processor('file_decoder')

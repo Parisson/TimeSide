@@ -36,7 +36,7 @@ class Level(Analyzer):
 
     >>> import timeside
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> source = samples['sweep.mp3']
     >>> decoder = get_processor('file_decoder')(uri=source)
     >>> level = get_processor('level')()

@@ -29,7 +29,7 @@
 from __future__ import division
 
 from timeside.core.decoder import Decoder, IDecoder, interfacedoc, implements
-from timeside.tools.gstutils import MainloopThread, gobject
+from timeside.core.tools.gstutils import MainloopThread, gobject
 from timeside.plugins.decoder.file import FileDecoder
 import Queue
 import threading

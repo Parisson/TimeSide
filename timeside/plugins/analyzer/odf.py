@@ -26,7 +26,7 @@ from timeside.core.api import IAnalyzer
 import numpy as np
 from numpy import pi as Pi
 from scipy import signal
-from timeside.tools.parameters import Int, HasTraits
+from timeside.core.tools.parameters import Int, HasTraits
 
 
 class OnsetDetectionFunction(Analyzer):

@@ -3,7 +3,7 @@ from __future__ import division
 
 from unit_timeside import unittest, TestRunner
 import timeside
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 from tempfile import NamedTemporaryFile
 import os
 

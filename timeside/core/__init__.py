@@ -30,7 +30,7 @@ from .component import implements, interfacedoc, abstract
 
 __version__ = '0.6.2'
 
-from ..tools import package as ts_package
+from .tools import package as ts_package
 
 # Check Availability of Gstreamer python bindings
 ts_package.check_gstreamer()

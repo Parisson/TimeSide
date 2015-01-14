@@ -47,7 +47,7 @@ class AudioSink(GstEncoder):
 
     >>> import timeside
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> wav_file = samples['sine440Hz_mono_1s.wav']
     >>> d = get_processor('file_decoder')(wav_file)
     >>> e = get_processor('live_encoder')()
