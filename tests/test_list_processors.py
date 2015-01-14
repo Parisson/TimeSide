@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from unit_timeside import *
+from unit_timeside import unittest, TestRunner
 import timeside
 verbose = 0
 
@@ -9,26 +9,22 @@ class TestListCoreProcessors(unittest.TestCase):
 
     def testHasSomeDecoders(self):
         "has some decoders"
-        import timeside.decoder
-        procs = timeside.core.processors(timeside.api.IDecoder)
+        procs = timeside.core.processor.processors(timeside.core.api.IDecoder)
         self.assertNotEquals(len(procs), 0)
 
     def testHasSomeEncoders(self):
         "has some encoders"
-        import timeside.encoder
-        procs = timeside.core.processors(timeside.api.IEncoder)
+        procs = timeside.core.processor.processors(timeside.core.api.IEncoder)
         self.assertNotEquals(len(procs), 0)
 
     def testHasSomeAnalyzers(self):
         "has some analyzers"
-        import timeside.analyzer
-        procs = timeside.core.processors(timeside.api.IAnalyzer)
+        procs = timeside.core.processor.processors(timeside.core.api.IAnalyzer)
         self.assertNotEquals(len(procs), 0)
 
     def testHasSomeGraphers(self):
         "has some graphers"
-        import timeside.grapher
-        procs = timeside.core.processors(timeside.api.IGrapher)
+        procs = timeside.core.processor.processors(timeside.core.api.IGrapher)
         self.assertNotEquals(len(procs), 0)
 
 

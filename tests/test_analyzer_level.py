@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-from timeside.decoder.file import FileDecoder
-from timeside.analyzer.level import Level
+from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.analyzer.level import Level
 from timeside.tools.test_samples import samples
 
 

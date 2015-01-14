@@ -6,13 +6,13 @@ Decoder package
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: timeside.decoder
+.. automodule:: timeside.plugins.decoder
    
 
 File Decoder
 ============
 
-.. autoclass:: timeside.decoder.file.FileDecoder
+.. autoclass:: timeside.plugins.decoder.file.FileDecoder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,7 +20,7 @@ File Decoder
 Array Decoder
 =============
 
-.. autoclass:: timeside.decoder.array.ArrayDecoder
+.. autoclass:: timeside.plugins.decoder.array.ArrayDecoder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -28,7 +28,7 @@ Array Decoder
 Live Decoder
 ============
 
-.. autoclass:: timeside.decoder.live.LiveDecoder
+.. autoclass:: timeside.plugins.decoder.live.LiveDecoder
    :members:
    :undoc-members:
    :show-inheritance:

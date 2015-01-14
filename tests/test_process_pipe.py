@@ -5,7 +5,7 @@
 
 from unit_timeside import unittest, TestRunner
 import timeside
-from timeside.decoder.file import FileDecoder
+from timeside.plugins.decoder.file import FileDecoder
 from timeside.tools.test_samples import samples
 
 
@@ -18,17 +18,17 @@ class TestProcessPipe(unittest.TestCase):
 
         source = samples["sweep.wav"]
 
-        pipe = timeside.core.ProcessPipe()
+        pipe = timeside.core.processor.ProcessPipe()
         dec = FileDecoder(source)
         pipe.append_processor(dec)
         self.assertRaises(TypeError, pipe.append_processor, object())
         dec2 = FileDecoder(source)
         self.assertRaises(ValueError, pipe.append_processor, dec2)
 
-        odf = timeside.analyzer.odf.OnsetDetectionFunction()
-        odf2 = timeside.analyzer.odf.OnsetDetectionFunction()
+        odf = timeside.plugins.analyzer.odf.OnsetDetectionFunction()
+        odf2 = timeside.plugins.analyzer.odf.OnsetDetectionFunction()
 
-        spectro2 = timeside.analyzer.spectrogram.Spectrogram()
+        spectro2 = timeside.plugins.analyzer.spectrogram.Spectrogram()
         pipe2 = (dec | odf | spectro2 | odf2)
 
         self.assertEqual(pipe2, odf.process_pipe)

@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 # Author : Thomas fillon <thomas@parisson.com>
 
-from unit_timeside import *
-from timeside.decoder import *
-from timeside.analyzer.preprocessors import downmix_to_mono, frames_adapter
+from unit_timeside import unittest, TestRunner
+from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 import numpy as np
 
 BLOCKSIZE = 1024

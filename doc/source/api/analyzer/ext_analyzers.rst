@@ -14,7 +14,7 @@ See http://aubio.org/
 
 Aubio Melenergy
 ---------------
-.. automodule:: timeside.analyzer.externals.aubio_melenergy
+.. automodule:: timeside.plugins.analyzer.externals.aubio_melenergy
    :members:
    :undoc-members:
    :show-inheritance:
@@ -22,28 +22,28 @@ Aubio Melenergy
 
 Aubio MFCC
 ----------
-.. automodule:: timeside.analyzer.externals.aubio_mfcc
+.. automodule:: timeside.plugins.analyzer.externals.aubio_mfcc
    :members:
    :undoc-members:
    :show-inheritance:
 
 Aubio Pitch
 -----------
-.. automodule:: timeside.analyzer.externals.aubio_pitch
+.. automodule:: timeside.plugins.analyzer.externals.aubio_pitch
    :members:
    :undoc-members:
    :show-inheritance:
 
 Aubio Spectral Descriptors collection
 -------------------------------------
-.. automodule:: timeside.analyzer.externals.aubio_specdesc
+.. automodule:: timeside.plugins.analyzer.externals.aubio_specdesc
    :members:
    :undoc-members:
    :show-inheritance:
 
 Aubio Temporal
 --------------
-.. automodule:: timeside.analyzer.externals.aubio_temporal  
+.. automodule:: timeside.plugins.analyzer.externals.aubio_temporal
    :members:
    :undoc-members:
    :show-inheritance:
@@ -51,7 +51,7 @@ Aubio Temporal
 
 Yaafe
 =====
-.. automodule:: timeside.analyzer.externals.yaafe
+.. automodule:: timeside.plugins.analyzer.externals.yaafe
    :members:
    :undoc-members:
    :show-inheritance:

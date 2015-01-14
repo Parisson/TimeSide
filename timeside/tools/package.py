@@ -19,17 +19,20 @@
 
 # Author: Thomas Fillon <thomas.fillon@parisson.com>
 
-from ..exceptions import VampImportError
 
 from importlib import import_module
 import warnings
 
+from ..core.exceptions import VampImportError
 
 def discover_modules(subpackage, package=None):
     import pkgutil
 
     if package:
-        _pkg = import_module('.' + subpackage, package)
+        try:
+            _pkg = import_module('.' + subpackage, package)
+        except ImportError as e:
+            raise e
     else:
         _pkg = import_module(subpackage)
 
@@ -48,7 +51,7 @@ def import_module_with_exceptions(name, package=None):
     """Wrapper around importlib.import_module to import TimeSide subpackage
     and ignoring ImportError if Aubio, Yaafe and Vamp Host are not available"""
 
-    from timeside import _WITH_AUBIO, _WITH_YAAFE, _WITH_VAMP, _WITH_ECHOPRINT
+    from timeside.core import _WITH_AUBIO, _WITH_YAAFE, _WITH_VAMP, _WITH_ECHOPRINT
 
     if name.count('.server.'):
         # TODO:
@@ -114,9 +117,10 @@ def check_yaafe():
 
 def check_vamp():
     "Check Vamp host availability"
+    from ..core.exceptions import VampImportError
 
     try:
-        from timeside.analyzer.externals import vamp_plugin
+        from timeside.plugins.analyzer.externals import vamp_plugin
     except VampImportError:
         warnings.warn('Vamp host is not available', ImportWarning,
                       stacklevel=2)
@@ -142,4 +146,39 @@ def check_echoprint():
         del echoprint
 
     return _WITH_ECHOPRINT
+
+
+def add_gstreamer_packages():
+    import os
+    import sys
+    from distutils.sysconfig import get_python_lib
+
+    dest_dir = get_python_lib()
+
+    packages = ['gobject', 'glib', 'pygst', 'pygst.pyc', 'pygst.pth',
+                'gst-0.10', 'pygtk.pth', 'pygtk.py', 'pygtk.pyc']
+
+    python_version = sys.version[:3]
+    global_path = os.path.join('/usr/lib', 'python' + python_version)
+    global_sitepackages = [os.path.join(global_path,
+                                        'dist-packages'),  # for Debian-based
+                           os.path.join(global_path,
+                                        'site-packages')]  # for others
+
+    for package in packages:
+        for pack_dir in global_sitepackages:
+            src = os.path.join(pack_dir, package)
+            dest = os.path.join(dest_dir, package)
+            if not os.path.exists(dest) and os.path.exists(src):
+                os.symlink(src, dest)
+
+
+def check_gstreamer():
+    try:
+        import gobject, pygst
+    except ImportError:
+        print 'Add Gstreamer'
+        add_gstreamer_packages()
+
+    
 
