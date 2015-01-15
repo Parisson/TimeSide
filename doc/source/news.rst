@@ -5,8 +5,8 @@ News
 
  * Code refactoring:
 
-   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decodr, timeside.plugins.analyzer, timeside.plugins.encoder, timeside.plugins.fx
-   - `timeside.plugins` is a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be automatically plug into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_).
+   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder, timeside.plugins.analyzer, timeside.plugins.encoder, timeside.plugins.fx
+   - `timeside.plugins` is a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a real plugin host!
    - To properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`.
  * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
 
