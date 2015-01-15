@@ -25,8 +25,18 @@ before_script:
 
 script:
  #- coverage run --source=timeside --omit=timeside/analyzer/aubio/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
+ # --------------
+ # Run Unit tests
+ # -------------
  - python setup.py test
+ # -------------
+ # Check doctest
+ # -------------
  - cd doc && make doctest
+ # -----------
+ # Test scripts
+ # -----------
+ - cd .. && source tests/test_scripts.sh
 
 after_success:
  #- pip install coveralls
