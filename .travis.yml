@@ -59,6 +59,6 @@ script:
 after_success:
   -  # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-          pip install coveralls;
+          pip install python-coveralls;
           coveralls;
     fi
