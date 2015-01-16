@@ -62,6 +62,7 @@ To list all available plugins:
 
 .. testcleanup::
 
+   import os
    os.remove('sweep.ogg')
    os.remove('waveform.png')
 
