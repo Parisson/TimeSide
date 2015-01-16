@@ -4,6 +4,10 @@
 
 A most basic operation, transcoding, is easily performed with two processors:
 
+.. testsetup:: *
+
+    import os
+
 .. testcleanup:: test_1
 
    os.remove('sweep.ogg')
