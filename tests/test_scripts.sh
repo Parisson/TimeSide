@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 
 export TEMPDIR=$(mktemp -d)
 export WAVFILE=$(python -c"from timeside.core.tools.test_samples import samples; print samples['C4_scale.wav']")
