@@ -7,8 +7,8 @@ TimeSide : open web audio processing framework
 .. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+.. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
 
 .. |version| image:: https://pypip.in/version/TimeSide/badge.png
   :target: https://pypi.python.org/pypi/TimeSide/
@@ -60,12 +60,12 @@ Dive in
 
 To list all available plugins:
 
-.. testcleanup:: 
+.. testcleanup::
 
    os.remove('sweep.ogg')
    os.remove('waveform.png')
 
-.. doctest:: 
+.. doctest::
 
    >>> import timeside
    >>> timeside.core.list_processors()  # doctest: +SKIP
@@ -73,7 +73,7 @@ To list all available plugins:
 
 Define some processors:
 
-.. doctest:: 
+.. doctest::
 
     >>> from timeside.core import get_processor
     >>> from timeside.core.tools.test_samples import samples
@@ -85,13 +85,13 @@ Define some processors:
 
 Then run the *magic* pipeline:
 
-.. doctest:: 
+.. doctest::
 
     >>> (decoder | grapher | analyzer | encoder).run()
 
 Render the grapher results:
 
-.. doctest:: 
+.. doctest::
 
     >>> grapher.render(output='waveform.png')
 
@@ -374,8 +374,8 @@ Development
 .. |travis_dev| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=dev
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+.. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
 
 Docker (recommended)

@@ -7,8 +7,8 @@ TimeSide : open web audio processing framework
 .. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+.. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
 
 .. |version| image:: https://pypip.in/version/TimeSide/badge.png
   :target: https://pypi.python.org/pypi/TimeSide/
@@ -60,7 +60,7 @@ Dive in
 
 To list all available plugins:
 
-.. testcleanup:: 
+.. testcleanup::
 
    import os
    os.remove('sweep.ogg')

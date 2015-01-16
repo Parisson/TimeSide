@@ -6,8 +6,8 @@ Development
 .. |travis_dev| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=dev
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+.. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
 
 Docker (recommended)
