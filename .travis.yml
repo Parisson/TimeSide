@@ -39,10 +39,10 @@ before_script:
 
 
 script:
-  #coverage run --source=timeside --omit=timeside/analyzer/aubio/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
+  #
   # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-       python setup.py test;
+       coverage run --source=timeside --omit=timeside/plugins/analyzer/externals/aubio/aubio_*.py,timeside/plugins/analyzer/external/yaafe.py setup.py test;
     fi
   # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
@@ -57,5 +57,8 @@ script:
     fi
 
 after_success:
- #- pip install coveralls
- #- coveralls
+  -  # -------------DEFAULT--------------------
+  - if [[ $TEST_TARGET == 'default' ]]; then
+          pip install coveralls;
+          coveralls;
+    fi
