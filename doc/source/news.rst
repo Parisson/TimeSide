@@ -1,6 +1,10 @@
 News
 =====
 
+0.6.2
+
+  * Bugfix release for #63 #64 #68
+
 0.6.1
 
   * Fix various minor bugs
