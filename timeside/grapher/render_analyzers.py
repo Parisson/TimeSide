@@ -54,10 +54,10 @@ class DisplayAnalyzer(Grapher):
     @interfacedoc
     def post_process(self):
         pipe_result = self.process_pipe.results
-        parent_uuid = self.parents['analyzer'].uuid()
-        parent_result = pipe_result[parent_uuid][self._result_id]
+        analyzer_uuid = self.parents['analyzer'].uuid()
+        analyzer_result = pipe_result[analyzer_uuid][self._result_id]
 
-        fg_image = parent_result._render_PIL((self.image_width,
+        fg_image = analyzer_result._render_PIL((self.image_width,
                                               self.image_height), self.dpi)
         if self._background:
             bg_uuid = self.parents['bg_analyzer'].uuid()
@@ -69,18 +69,19 @@ class DisplayAnalyzer(Grapher):
 
             # Merge background and foreground images
             from PIL.Image import blend
-            fg_image = blend(fg_image, bg_image, 0.25)
+            fg_image = blend(fg_image, bg_image, 0.15)
 
         self.image = fg_image
 
     @classmethod
     def create(cls, analyzer, analyzer_parameters={}, result_id=None,
                grapher_id=None, grapher_name=None,
-               background=None):
+               background=None, staging=False):
 
         class NewGrapher(cls):
 
             _id = grapher_id
+            _staging = staging
 
             implements(IGrapher)
 
@@ -107,8 +108,6 @@ class DisplayAnalyzer(Grapher):
 
                 parent_analyzer = analyzer(**analyzer_parameters)
                 self.parents['analyzer'] = parent_analyzer
-                # TODO : make it generic when analyzer will be "atomize"
-                self._parent_uuid =  parent_analyzer.uuid()
                 self._result_id = result_id
 
             @staticmethod
@@ -138,7 +137,7 @@ try:  # because of the dependencies on the Aubio librairy
         analyzer=aubiopitch,
         result_id='aubio_pitch.pitch',
         grapher_id='grapher_aubio_pitch',
-        grapher_name='Aubio Pitch',
+        grapher_name='Pitch',
         background='spectrogram')
 except PIDError:
     pass
@@ -149,14 +148,15 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=odf,
     result_id='onset_detection_function',
     grapher_id='grapher_onset_detection_function',
-    grapher_name='Onset detection function')
+    grapher_name='Onset detection')
 
 # Waveform
 wav = get_processor('waveform_analyzer')
 DisplayWaveform = DisplayAnalyzer.create(analyzer=wav,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
-                                         grapher_name='Waveform from Analyzer')
+                                         grapher_name='Waveform from Analyzer',
+                                         staging=True)
 
 # IRIT 4Hz
 irit4hz = get_processor('irit_speech_4hz')
@@ -164,8 +164,9 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
     result_id='irit_speech_4hz.segments',
     grapher_id='grapher_irit_speech_4hz_segments',
-    grapher_name='Irit 4Hz Speech Segmentation',
-    background='waveform')
+    grapher_name='Speech segmentation',
+    background='waveform',
+    staging=True)
 
 
 # IRIT 4Hz with median filter
@@ -174,8 +175,9 @@ Display4hzSpeechSegmentation = DisplayAnalyzer.create(
     analyzer=irit4hz,
     result_id='irit_speech_4hz.segments_median',
     grapher_id='grapher_irit_speech_4hz_segments_median',
-    grapher_name='Irit 4Hz Speech Segmentation with median filter',
-    background='waveform')
+    grapher_name='Speech segmentation (median)',
+    background='waveform',
+    staging=True)
 
 # IRIT Monopoly
 try:  # because of the dependencies on Aubio Pitch
@@ -184,8 +186,9 @@ try:  # because of the dependencies on Aubio Pitch
         analyzer=iritmonopoly,
         result_id='irit_monopoly.segments',
         grapher_id='grapher_monopoly_segments',
-        grapher_name='Irit Monopoly Segmentation',
-        background='waveform')
+        grapher_name='Mono/Poly segmentation',
+        background='waveform',
+        staging=True)
 except PIDError:
     pass
 
@@ -198,16 +201,18 @@ try:
         analyzer_parameters={'sad_model': 'etape'},
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_etape',
-        grapher_name='LIMSI SAD with ETAPE model',
-        background='waveform')
+        grapher_name='Speech activity (ETAPE)',
+        background='waveform',
+        staging=True)
 
     DisplayLIMSI_SAD_maya = DisplayAnalyzer.create(
         analyzer=limsi_sad,
         analyzer_parameters={'sad_model': 'maya'},
         result_id='limsi_sad.sad_lhh_diff',
         grapher_id='grapher_limsi_sad_maya',
-        grapher_name='LIMSI SAD with Mayan model',
-        background='waveform')
+        grapher_name='Speech activity (Mayan)',
+        background='waveform',
+        staging=True)
 
 except PIDError:
     pass
@@ -218,5 +223,6 @@ DisplayIRIT_Start = DisplayAnalyzer.create(
     analyzer=irit_startseg,
     result_id='irit_startseg.segments',
     grapher_id='grapher_irit_startseg',
-    grapher_name='IRIT Start Noise',
-    background='waveform')
+    grapher_name='Analogous start point',
+    background='waveform',
+    staging=True)
