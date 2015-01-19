@@ -833,11 +833,7 @@ class FrameValueObject(ValueObject, FramewiseObject):
             else:
                 chunksize = 1
                 numchunks = nb_frames
-
-            print "nb_frames %d" % nb_frames
-            print "chunksize %d" % chunksize
-            print "numchunks %d" % numchunks
-
+            
             if self.data.ndim <= 1:
                 ychunks = self.data[:chunksize*numchunks].reshape((-1,
                                                                    chunksize))
