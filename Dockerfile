@@ -18,9 +18,9 @@ from debian:stable
 maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 # install confs, keys and deps
-run gpg --keyserver pgpkeys.mit.edu --recv-key E3298399DF14BB7C
+run gpg --keyserver subkeys.pgp.net --recv-key E3298399DF14BB7C
 run gpg -a --export E3298399DF14BB7C | apt-key add -
-run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
+run gpg --keyserver subkeys.pgp.net --recv-key 07DC563D1F41B907
 run gpg -a --export 07DC563D1F41B907 | apt-key add -
 add ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
 run apt-get update
