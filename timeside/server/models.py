@@ -23,12 +23,12 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-import timeside
+
 import os
 import uuid
-
 import mimetypes
 
+import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file
 
 from django.db import models
