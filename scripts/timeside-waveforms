@@ -24,7 +24,7 @@ version = '0.4'
 
 import os
 import sys
-import timeside
+import timeside.core
 
 
 class GrapherScheme:
@@ -90,19 +90,20 @@ class Media2Waveform(object):
         return path_dict
 
     def process(self):
-        waveform = timeside.grapher.Waveform(width=self.width, height=self.height,
+
+        waveform = timeside.core.get_processor('waveform_simple')(width=self.width, height=self.height,
                             bg_color=self.bg_color, color_scheme=self.color_scheme)
         for source, image in self.path_dict.iteritems():
             if not os.path.exists(image) or self.force:
                 print 'Processing ', source
                 audio = os.path.join(os.path.dirname(__file__), source)
-                decoder  = timeside.decoder.FileDecoder(audio)
+                decoder  = timeside.core.get_processor('file_decoder')(audio)
                 (decoder | waveform).run()
                 img_name = os.path.split(image)[1]
-                image = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0] + '_' +\
+                filename = os.path.split(image)[0]+os.sep+os.path.splitext(img_name)[0] + '_' +\
                         '_'.join([str(self.width),  str(self.height)])+os.path.splitext(img_name)[1]
-                waveform.graph.filename = image
-                print 'Rendering ', waveform.graph.filename
+                #waveform.graph.filename = image
+                print 'Rendering %s '% filename
                 #print 'frames per pixel = ', waveform.graph.samples_per_pixel
                 waveform.render(output=image)
 
@@ -113,7 +114,7 @@ if __name__ == '__main__':
  timeside-waveforms : TimeSide simple batch waveform generator
 
  usage      : timeside-waveforms /path/to/media_dir /path/to/img_dir
- infos      : https://github.com/yomguy/TimeSide/
+ infos      : https://github.com/Parisson/TimeSide/
  version    : %s
         """ % version
     else:

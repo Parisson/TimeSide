@@ -39,7 +39,7 @@ KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize p
 
 setup(
     name='TimeSide',
-    url='https://github.com/yomguy/TimeSide/',
+    url='https://github.com/Parisson/TimeSide/',
     description="open web audio processing framework",
     long_description=open('README.rst').read(),
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
