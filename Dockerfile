@@ -22,7 +22,7 @@ run gpg --keyserver pgpkeys.mit.edu --recv-key E3298399DF14BB7C
 run gpg -a --export E3298399DF14BB7C | apt-key add -
 run gpg --keyserver pgpkeys.mit.edu --recv-key 07DC563D1F41B907
 run gpg -a --export 07DC563D1F41B907 | apt-key add -
-add ./deploy/apt-app.list /etc/apt/sources.list.d/
+add ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
 run apt-get update
 run apt-get install -y --force-yes apt-utils
 run apt-get -y --force-yes -t wheezy-backports dist-upgrade
@@ -38,8 +38,8 @@ add . /opt/TimeSide
 # setup all the configfiles
 run echo "daemon off;" >> /etc/nginx/nginx.conf
 run rm /etc/nginx/sites-enabled/default
-run ln -s /opt/TimeSide/deploy/nginx-app.conf /etc/nginx/sites-enabled/
-run ln -s /opt/TimeSide/deploy/supervisor-app.conf /etc/supervisor/conf.d/
+run ln -s /opt/TimeSide/examples/deploy/nginx-app.conf /etc/nginx/sites-enabled/
+run ln -s /opt/TimeSide/examples/deploy/supervisor-app.conf /etc/supervisor/conf.d/
 
 # install new deps from the local repo
 run pip install -e /opt/TimeSide
