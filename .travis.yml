@@ -58,7 +58,7 @@ script:
     fi
   # -------------SERVER-------------------------
   - if [[ $TEST_TARGET == 'server' ]]; then
-       cd example/sandbox;
+       cd examples/sandbox;
        ./manage.py syncdb;
        ./manage.py migrate;
        ./manage.py runserver;
