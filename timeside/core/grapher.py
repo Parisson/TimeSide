@@ -369,6 +369,9 @@ class DisplayAnalyzer(Grapher):
                grapher_id=None, grapher_name=None,
                background=None, staging=False):
 
+        if analyzer_parameters is None:
+            analyzer_parameters = {}
+
         class NewGrapher(cls):
 
             _id = grapher_id
@@ -413,7 +416,7 @@ class DisplayAnalyzer(Grapher):
 
             __doc__ = """Image representing """ + grapher_name
 
-        NewGrapher.__name__ = 'Display' + '.' + result_id
+        NewGrapher.__name__ = grapher_name
 
         return NewGrapher
 
