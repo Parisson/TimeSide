@@ -10,6 +10,7 @@ env:
   - TEST_TARGET=default  # Default unit test
   - TEST_TARGET=cli      # Test for TimeSide command line interfaces
   - TEST_TARGET=doc      # Test documentation and included doctest
+  - TEST_TARGET=server   # Test timeside.server
 
 
 # command to prepare the system to install prerequisites or dependencies
@@ -55,6 +56,16 @@ script:
   - if [[ $TEST_TARGET == 'cli' ]]; then
        ./tests/test_scripts.sh;
     fi
+  # -------------SERVER-------------------------
+  - if [[ $TEST_TARGET == 'server' ]]; then
+       cd example/sandbox;
+       ./manage.py syncdb;
+       ./manage.py migrate;
+       ./manage.py runserver;
+       TESTPID=$!;
+       sleep 100;
+       kill -2 $TESTPID;
+    fi  
 
 after_success:
   -  # -------------DEFAULT--------------------
