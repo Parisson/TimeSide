@@ -58,13 +58,7 @@ script:
     fi
   # -------------SERVER-------------------------
   - if [[ $TEST_TARGET == 'server' ]]; then
-       cd examples/sandbox;
-       ./manage.py syncdb --noinput;
-       ./manage.py migrate;
-       ./manage.py runserver &;
-       TESTPID=$!;
-       sleep 20;
-       kill -2 $TESTPID;
+       ./tests/test_server.sh;
     fi  
 
 after_success:
