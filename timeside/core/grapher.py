@@ -36,6 +36,8 @@ from timeside.core.processor import FixedSizeInputAdapter
 from timeside.core.api import IGrapher
 from timeside.plugins.grapher.utils import smooth, im_watermark, normalize
 
+import timeside.plugins.analyzer
+
 
 class Spectrum(object):
 
@@ -310,6 +312,110 @@ class Grapher(Processor):
                     else:
                         self.draw.point((x, y + height), line_color)
                 self.previous_x, self.previous_y = x, y
+
+
+class DisplayAnalyzer(Grapher):
+
+    """
+    image from analyzer result
+    This is an Abstract base class
+    """
+    dpi = 72  # Web default value for Telemeta
+
+    implements(IGrapher)
+    abstract()
+
+    @interfacedoc
+    def __init__(self, width=1024, height=256, bg_color=(0, 0, 0),
+                 color_scheme='default'):
+        super(DisplayAnalyzer, self).__init__(width, height, bg_color,
+                                              color_scheme)
+
+        self._result_id = None
+        self._id = NotImplemented
+        self._name = NotImplemented
+        self.image = None
+        self._background = None
+        self._bg_id = ''
+
+    @interfacedoc
+    def process(self, frames, eod=False):
+        return frames, eod
+
+    @interfacedoc
+    def post_process(self):
+        pipe_result = self.process_pipe.results
+        analyzer_uuid = self.parents['analyzer'].uuid()
+        analyzer_result = pipe_result[analyzer_uuid][self._result_id]
+
+        fg_image = analyzer_result._render_PIL((self.image_width,
+                                                self.image_height), self.dpi)
+        if self._background:
+            bg_uuid = self.parents['bg_analyzer'].uuid()
+            bg_result = pipe_result[bg_uuid][self._bg_id]
+            bg_image = bg_result._render_PIL((self.image_width,
+                                              self.image_height), self.dpi)
+            # convert image to grayscale
+            bg_image = bg_image.convert('LA').convert('RGBA')
+
+            # Merge background and foreground images
+            from PIL.Image import blend
+            fg_image = blend(fg_image, bg_image, 0.15)
+
+        self.image = fg_image
+
+    @classmethod
+    def create(cls, analyzer, analyzer_parameters=None, result_id=None,
+               grapher_id=None, grapher_name=None,
+               background=None, staging=False):
+
+        class NewGrapher(cls):
+
+            _id = grapher_id
+            _staging = staging
+
+            implements(IGrapher)
+
+            @interfacedoc
+            def __init__(self, width=1024, height=256, bg_color=(0, 0, 0),
+                         color_scheme='default'):
+                super(NewGrapher, self).__init__(width, height, bg_color,
+                                                 color_scheme)
+
+                # Add a parent waveform analyzer
+                if background == 'waveform':
+                    self._background = True
+                    bg_analyzer = timeside.plugins.analyzer.waveform.Waveform()
+                    self._bg_id = bg_analyzer.id()
+                    self.parents['bg_analyzer'] = bg_analyzer
+                elif background == 'spectrogram':
+                    self._background = True
+                    bg_analyzer = timeside.plugins.analyzer.spectrogram.Spectrogram()
+                    self._bg_id = bg_analyzer.id()
+                    self.parents['bg_analyzer'] = bg_analyzer
+
+                else:
+                    self._background = None
+
+                parent_analyzer = analyzer(**analyzer_parameters)
+                self.parents['analyzer'] = parent_analyzer
+                self._result_id = result_id
+
+            @staticmethod
+            @interfacedoc
+            def id():
+                return grapher_id
+
+            @staticmethod
+            @interfacedoc
+            def name():
+                return grapher_name
+
+            __doc__ = """Image representing """ + grapher_name
+
+        NewGrapher.__name__ = 'Display' + '.' + result_id
+
+        return NewGrapher
 
 
 if __name__ == "__main__":

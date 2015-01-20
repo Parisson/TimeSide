@@ -116,3 +116,13 @@ class OnsetDetectionFunction(Analyzer):
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
         odf.data_object.value = odf_diff
         self.add_result(odf)
+
+
+# Generate Grapher for Onset Detection Function analyzer
+from timeside.core.grapher import DisplayAnalyzer
+DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
+    analyzer=OnsetDetectionFunction,
+    result_id='onset_detection_function',
+    grapher_id='grapher_onset_detection_function',
+    grapher_name='Onset detection')
+

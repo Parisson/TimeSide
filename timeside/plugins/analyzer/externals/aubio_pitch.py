@@ -124,3 +124,13 @@ class AubioPitch(Analyzer):
         pitch_confidence.id_metadata.unit = None
         pitch_confidence.data_object.value = self.pitch_confidences
         self.add_result(pitch_confidence)
+
+
+# Generate Grapher for Aubio Pitch analyzer
+from timeside.core.grapher import DisplayAnalyzer
+DisplayAubioPitch = DisplayAnalyzer.create(
+    analyzer=AubioPitch,
+    result_id='aubio_pitch.pitch',
+    grapher_id='grapher_aubio_pitch',
+    grapher_name='Pitch',
+    background='spectrogram')
