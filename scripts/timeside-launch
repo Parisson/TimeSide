@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2007-2013 Parisson SARL
+# Copyright (c) 2007-2014 Parisson SARL
 
 # This file is part of TimeSide.
 
@@ -28,7 +28,7 @@ pipeline can be configured using command line options or a configuration file.
 
 import sys, os.path
 
-usage = "usage: %s [options] -c file.conf file1.wav [file2.wav ...]" % sys.argv[0]
+usage = "usage: %s [options] -C file.conf file1.wav [file2.wav ...]" % sys.argv[0]
 usage += "\n help: %s -h" % sys.argv[0]
 
 def parse_config(path):
@@ -139,7 +139,7 @@ def parse_args():
 if __name__ == '__main__':
     options, args = parse_args()
     # load timeside after parse_args, to avoid gstreamer hijacking
-    import timeside
+    import timeside.core
 
     if len(args) == 0:
         print usage
@@ -161,10 +161,10 @@ if __name__ == '__main__':
     graphers = options.graphers
     encoders = options.encoders
 
-    all_decoders = timeside.core.processors(timeside.api.IDecoder)
-    all_analyzers = timeside.core.processors(timeside.api.IAnalyzer)
-    all_graphers = timeside.core.processors(timeside.api.IGrapher)
-    all_encoders = timeside.core.processors(timeside.api.IEncoder)
+    all_decoders = timeside.core.processor.processors(timeside.core.api.IDecoder)
+    all_analyzers = timeside.core.processor.processors(timeside.core.api.IAnalyzer)
+    all_graphers = timeside.core.processor.processors(timeside.core.api.IGrapher)
+    all_encoders = timeside.core.processor.processors(timeside.core.api.IEncoder)
 
     def match_id_or_class(id_or_class, processors):
         matches = filter(lambda x: x.__name__ == id_or_class, processors)
@@ -194,16 +194,25 @@ if __name__ == '__main__':
     encoders = map(match_encoder, encoders)
 
     def process_file(path):
-        import uuid
-        from timeside.decoder.utils import get_uri
-        file_uuid = str(uuid.uuid5(uuid.NAMESPACE_URL, get_uri(path) ))
+        #import uuid
+        #from timeside.plugins.decoder.utils import get_uri
+        from timeside.core import get_processor
 
-        decoder = timeside.decoder.FileDecoder(path, start = 1)
+        decoder = get_processor('file_decoder')(path)
+
+        #file_uuid = str(uuid.uuid5(uuid.NAMESPACE_URL, get_uri(path) ))
+        file_uuid = decoder.sha1
+
+        result_dir = os.path.join(outputdir, file_uuid)
+        if not os.path.isdir(result_dir):
+            os.makedirs(result_dir)
+
+
         #pipe.setup(channels = channels, samplerate = samplerate, blocksize = blocksize)
         pipe = decoder
         _analyzers = [a() for a in analyzers]
         _graphers = [g() for g in graphers]
-        _encoders = [e(os.path.join(outputdir, file_uuid + '.' + e.file_extension())) for e in encoders]
+        _encoders = [e(os.path.join(result_dir, file_uuid + '.' + e.file_extension())) for e in encoders]
 
         for a in _analyzers:
             pipe = pipe | a
@@ -214,17 +223,16 @@ if __name__ == '__main__':
         pipe.run(channels = channels, samplerate = samplerate, blocksize = blocksize)
 
         if len(_analyzers):
-            results = pipe.results
-            for f in r_formats:
-                result_path = os.path.join(outputdir, file_uuid + '.' + f)
-                getattr(results,'to_'+f)(result_path)
-                if verbose : print 'saved', result_path
+            for res_uuid, result in pipe.results.items():
+
+                for f in r_formats:
+                    result_path = os.path.join(result_dir, res_uuid + '.' + f)
+                    getattr(result,'to_'+f)(result_path)
+                    if verbose : print 'saved', result_path
         if len(_graphers):
             for g in _graphers:
                 for f in i_formats:
-                    graph_path = os.path.join(outputdir, file_uuid, g.id() + '.' + f)
-                    if not os.path.isdir(os.path.dirname(graph_path)):
-                        os.makedirs(os.path.dirname(graph_path))
+                    graph_path = os.path.join(result_dir, g.uuid() + '.' + f)
                     g.render(graph_path)
                     if verbose : print 'saved', graph_path
         if len(_encoders):

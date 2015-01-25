@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from timeside.component import *
+from timeside.core.component import *
 from unit_timeside import *
 
 __all__ = ['TestComponentArchitecture']

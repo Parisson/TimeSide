@@ -2,11 +2,11 @@
 
 from __future__ import division
 
-from timeside.decoder.file import FileDecoder
-from timeside.analyzer.level import Level
-from timeside.core import ProcessPipe
+from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.analyzer.level import Level
+from timeside.core.processor import ProcessPipe
 from unit_timeside import unittest, TestRunner
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 #from glib import GError as GST_IOError
 # HINT : to use later with Gnonlin only

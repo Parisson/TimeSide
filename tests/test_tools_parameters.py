@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from unit_timeside import unittest, TestRunner
-from timeside.tools.parameters import HasParam, HasTraits
-from timeside.tools.parameters import Unicode, Int, Float, Range
+from timeside.core.tools.parameters import HasParam, HasTraits
+from timeside.core.tools.parameters import Unicode, Int, Float, Range
 
 import simplejson as json
 

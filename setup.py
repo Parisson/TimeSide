@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import sys
 
 from setuptools import setup
-import sys
 from setuptools.command.test import test as TestCommand
 
 
@@ -40,12 +39,12 @@ KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize p
 
 setup(
     name='TimeSide',
-    url='https://github.com/yomguy/TimeSide/',
+    url='https://github.com/Parisson/TimeSide/',
     description="open web audio processing framework",
     long_description=open('README.rst').read(),
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
-    version='0.6.2',
+    version='0.7',
     install_requires=[
         'numpy',
         'mutagen',

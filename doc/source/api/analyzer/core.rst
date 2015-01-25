@@ -2,7 +2,7 @@
  Core
 ======
 
-.. automodule:: timeside.analyzer.core
+.. automodule:: timeside.core.analyzer
 
 AnalyzerResult
 ***************

@@ -7,8 +7,8 @@ TimeSide : open web audio processing framework
 .. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+.. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
 
 .. |version| image:: https://pypip.in/version/TimeSide/badge.png
   :target: https://pypi.python.org/pypi/TimeSide/
@@ -58,30 +58,51 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 Dive in
 ========
 
-To list all available plugins::
+To list all available plugins:
 
- import timeside
- timeside.core.list_processors()
+.. testcleanup::
 
-Define some processors::
+   import os
+   os.remove('sweep.ogg')
+   os.remove('waveform.png')
 
- from timeside.core import get_processor
- decoder  =  get_processor('file_decoder')('sweep.wav')
- grapher  =  get_processor('waveform_simple')
- analyzer =  get_processor('level')
- encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
+.. doctest::
 
-Then run the *magic* pipeline::
+   >>> import timeside
+   >>> timeside.core.list_processors()  # doctest: +SKIP
 
- (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results::
+Define some processors:
 
- grapher.render(output='waveform.png')
+.. doctest::
 
-Show the analyzer results::
+    >>> from timeside.core import get_processor
+    >>> from timeside.core.tools.test_samples import samples
+    >>> wavfile = samples['sweep.wav']
+    >>> decoder  =  get_processor('file_decoder')(wavfile)
+    >>> grapher  =  get_processor('waveform_simple')()
+    >>> analyzer =  get_processor('level')()
+    >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
- print 'Level:', analyzer.results
+Then run the *magic* pipeline:
+
+.. doctest::
+
+    >>> (decoder | grapher | analyzer | encoder).run()
+
+Render the grapher results:
+
+.. doctest::
+
+    >>> grapher.render(output='waveform.png')
+
+Show the analyzer results:
+
+.. doctest::
+
+    >>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
+    Level: {'level.max': AnalyzerResult(...)}
+
 
 The encoded OGG file should also be there...
 
@@ -90,6 +111,19 @@ For more extensive examples, please see the `full documentation <http://files.pa
 
 News
 =====
+
+0.7
+
+ * Code refactoring:
+
+   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx
+   - WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`.
+   - `timeside.plugins` is now a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a **real** plugin host, yeah!
+   - A dummy timeside plugin will soon be provided for easy development start.
+
+ * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
+ * Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
+ * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
 0.6.2
 
@@ -156,12 +190,6 @@ IGrapher
    * **grapher_aubio_pitch** : Image representing Aubio Pitch
    * **grapher_onset_detection_function** : Image representing Onset detection function
    * **grapher_waveform** : Image representing Waveform from Analyzer
-   * **grapher_irit_speech_4hz_segments** : Image representing Irit 4Hz Speech Segmentation
-   * **grapher_irit_speech_4hz_segments_median** : Image representing Irit 4Hz Speech Segmentation with median filter
-   * **grapher_monopoly_segments** : Image representing Irit Monopoly Segmentation
-   * **grapher_limsi_sad_etape** : Image representing LIMSI SAD with ETAPE model
-   * **grapher_limsi_sad_maya** : Image representing LIMSI SAD with Mayan model
-   * **grapher_irit_startseg** : Image representing IRIT Start Noise
    * **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
    * **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
    * **waveform_simple** : Simple monochrome waveform image.
@@ -181,11 +209,6 @@ IAnalyzer
    * **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
    * **aubio_temporal** : Aubio Temporal analyzer
    * **yaafe** : Yaafe feature extraction library interface analyzer
-   * **irit_monopoly** : Segmentor Monophony/Polyphony based on the analysis of yin confidence.
-   * **irit_startseg** : Segmentation of recording sessions into 'start' and 'session' segments
-   * **irit_speech_4hz** : Speech Segmentor based on the 4Hz energy modulation analysis.
-   * **irit_speech_entropy** : Speech Segmentor based on Entropy analysis.
-   * **limsi_sad** : Limsi Speech Activity Detection Systems
    * **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
    * **onset_detection_function** : Onset Detection Function analyzer
    * **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
@@ -202,9 +225,10 @@ API / Documentation
 * General : http://files.parisson.com/timeside/doc/
 * Tutorial : http://files.parisson.com/timeside/doc/tutorial/index.html
 * API : http://files.parisson.com/timeside/doc/api/index.html
+* Publications : https://github.com/Parisson/Telemeta-doc
 * Player / UI : https://github.com/Parisson/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
-* Usage : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
+* Example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
 =======
@@ -348,39 +372,38 @@ Development
 .. |travis_dev| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=dev
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_dev| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=dev
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=dev
+.. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
 
 Docker (recommended)
 --------------------
 
-Docker is a great tool for developping and deploying processing environments! Our docker container includes all the necessary packages and environments for development and production with TimeSide.
+Docker is a great tool for developing and deploying processing environments. We provide a docker image which contains TimeSide and all the necessary packages (nginx, uwsgi, etc) to run it either in development or in production stages.
 
 First, install Docker: https://docs.docker.com/installation/
 
-Then, simply pull our dev image and run::
+Then, simply pull the image and run it::
 
-  sudo docker pull parisson/timeside
-  sudo docker run parisson/timeside
+  docker pull parisson/timeside
+  docker run -p 9000:80 parisson/timeside
 
-To get a shell::
+You can now browse the TimeSide API: http://localhost:9000/api/
 
-  sudo docker run -ti parisson/timeside bash
+or get a shell session::
 
-More infos: https://registry.hub.docker.com/u/parisson/timeside/
+  docker run -ti parisson/timeside bash
 
-To start the web server through the container::
+To start a new development, it is advised to checkout the dev branch in the container::
 
-  sudo docker run -p 9000:80 parisson/timeside
-
-Finally browse http://localhost:9000/api/
-
-To start a new development, it is advised to checkout the dev branch and build your own container::
-
-  sudo docker run -ti parisson/timeside bash
   cd /opt/TimeSide
   git checkout dev
+
+or get our latest-dev image::
+
+  docker pull parisson/timeside:latest-dev
+
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
 
 VirtualBox and Vagrant (deprecated)

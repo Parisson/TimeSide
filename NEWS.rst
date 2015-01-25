@@ -18,7 +18,7 @@ News
   * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
   * Update various processors
   * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
-  * Update of Travis CI scripts https://travis-ci.org/yomguy/TimeSide/
+  * Update of Travis CI scripts https://travis-ci.org/Parisson/TimeSide/
 
 0.5.6
 
@@ -36,7 +36,7 @@ News
  * Yaafe analyzer: simplify adaptation of process frames from TimeSide to Yaafe
  * LimsiSad: add a default value for parameter sad_model
  * Fix various NaN and Inf and PEP8 issues also many PyFlake warnings
- * Full `Travis integration <https://travis-ci.org/yomguy/TimeSide/>`_ with tests and test coverage through `coveralls.io <https://coveralls.io/r/yomguy/TimeSide>`_
+ * Full `Travis integration <https://travis-ci.org/Parisson/TimeSide/>`_ with tests and test coverage through `coveralls.io <https://coveralls.io/r/Parisson/TimeSide>`_
  * Thanks to all contributors!
  * WARNING: some of the processor paths used in your app could have moved between 0.5.4 and 0.5.5. Check them with timeside.core.processors(). Note that it is now advised to use the timeside.core.get_processor() method to instantiate the processors with their respective id as argument.
  * UPGRADING from the sources: please remove all .pyc files from your repository.

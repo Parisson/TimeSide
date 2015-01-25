@@ -1,8 +1,8 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-from timeside.analyzer.core import AnalyzerResult, AnalyzerResultContainer
-from timeside import __version__
+from timeside.core.analyzer import AnalyzerResult, AnalyzerResultContainer
+from timeside.core import __version__
 import numpy as np
 from math import pi
 
@@ -15,7 +15,7 @@ class TestAnalyzerResult(unittest.TestCase):
 
     def setUp(self):
         self.result = AnalyzerResult(data_mode='value',
-                                             time_mode='framewise')
+                                     time_mode='framewise')
 
         from datetime import datetime
         res_date = datetime.now().replace(microsecond=0).isoformat(' ')
@@ -25,6 +25,7 @@ class TestAnalyzerResult(unittest.TestCase):
                                        id="foo_bar",
                                        name="Foo bar",
                                        unit="foo")
+
         self.result.audio_metadata = dict(uri='Foo.wav',
                                           start=0, duration=20,
                                           channels=2)
@@ -33,7 +34,7 @@ class TestAnalyzerResult(unittest.TestCase):
         pass
 
 # Get good and bad types for AnalyzerResult.data_object.data.value
-from timeside.analyzer.core import numpy_data_types as good_dtypes
+from timeside.core.analyzer import numpy_data_types as good_dtypes
 good_numpy_data_types = [str(dtype)[13:-2] for dtype in good_dtypes]
 bad_numpy_data_types = [
     # not understood by json or yaml
@@ -164,18 +165,42 @@ class TestAnalyzerResultNumpy(TestAnalyzerResultGoodType):
         self.assertEqual(d_numpy, results)
 
 
-class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType):
+class LevelAnalyzer(object):
+    def testOnLevelAnaylyzer(self):
+        from timeside.core import get_processor
+        from timeside.core.tools.test_samples import samples
+
+        wav_file = samples['C4_scale.wav']
+        decoder = get_processor('file_decoder')(uri=wav_file)
+        analyzer = get_processor('level')()
+        pipe = (decoder | analyzer)
+        pipe.run()
+        self.result = analyzer.results
+
+
+class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
     """ test AnalyzerResult hdf5 serialize """
 
     def tearDown(self):
-        results = AnalyzerResultContainer([self.result])
-        results.to_hdf5('/tmp/t.h5')
-        res_hdf5 = results.from_hdf5('/tmp/t.h5')
+        if isinstance(self.result, AnalyzerResult):
+            results = AnalyzerResultContainer([self.result])
+        elif isinstance(self.result, AnalyzerResultContainer) :
+            results = self.result
+        else:
+            raise(TypeError, "Wrong type for self.result")
+
+        import tempfile
+        h5_file = tempfile.NamedTemporaryFile(suffix='.h5', delete=True)
+        results.to_hdf5(h5_file.name)
+
+        from_results = AnalyzerResultContainer()
+        from_results.from_hdf5(h5_file.name)
+
         if verbose:
             print '%15s' % 'from hdf5:',
-            print res_hdf5
-        self.assertEqual(results, res_hdf5)
-
+            print from_results
+        self.assertEqual(results, from_results)
+        h5_file.close()
 
 class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
     """ test AnalyzerResult yaml serialize """
@@ -185,16 +210,13 @@ class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
         if verbose:
             print 'to yaml:'
             print r_yaml
-        d_yaml = results.from_yaml(r_yaml)
+        from_results = AnalyzerResultContainer()
+        from_results.from_yaml(r_yaml)
         if verbose:
             print '%15s' % 'from yaml:',
-            print d_yaml
-        #for i in range(len(d_yaml)):
-        for res in results:
-            for key in res:
-                self.assertEqual(results[res][key],
-                                     d_yaml[res][key])
-
+            print from_results
+        self.assertEqual(type(self.result.data_object.frame_metadata),
+                         type(from_results['foo_bar'].data_object.frame_metadata))
 
 class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
     """ test AnalyzerResult xml serialize """
@@ -205,13 +227,14 @@ class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
             print 'to xml:'
             print r_xml
 
-        d_xml = results.from_xml(r_xml)
+        from_results = AnalyzerResultContainer()
+        from_results.from_xml(r_xml)
         if verbose:
             print '%15s' % 'from xml:',
-            print d_xml
+            print from_results
 
         #for i in range(len(d_xml)):
-        self.assertEqual(d_xml, results)
+        self.assertEqual(results, from_results)
 
 
 class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
@@ -226,16 +249,13 @@ class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
             print 'to json:'
             print r_json
 
-        d_json = results.from_json(r_json)
+        from_results = AnalyzerResultContainer()
+        from_results.from_json(r_json)
         if verbose:
-            print d_json
+            print from_results
             print '%15s' % 'from json:',
 
-        #for i in range(len(d_json)):
-        for res in results:
-            for key in res:
-                self.assertEqual(results[res][key],
-                                     d_json[res][key])
+        self.assertEqual(results, from_results)
 
 
 class TestAnalyzerResultAsDict(TestAnalyzerResultGoodType):

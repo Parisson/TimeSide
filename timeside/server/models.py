@@ -23,13 +23,13 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-import timeside
+
 import os
 import uuid
-
 import mimetypes
 
-from timeside.decoder.utils import sha1sum_file
+import timeside.core
+from timeside.plugins.decoder.utils import sha1sum_file
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -39,15 +39,15 @@ from django.conf import settings
 
 app = 'timeside'
 
-processors = timeside.core.processors(timeside.api.IProcessor)
+processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
 
-_processor_types = {'Analyzers': timeside.api.IAnalyzer,
-                    'Encoders': timeside.api.IEncoder,
-                    'Graphers': timeside.api.IGrapher}
+_processor_types = {'Analyzers': timeside.core.api.IAnalyzer,
+                    'Encoders': timeside.core.api.IEncoder,
+                    'Graphers': timeside.core.api.IGrapher}
 
 PROCESSOR_PIDS = [(name, [(processor.id(), processor.id())
                           for processor
-                          in timeside.core.processors(proc_type)])
+                          in timeside.core.processor.processors(proc_type)])
                   for name, proc_type in _processor_types.items()]
 
 # Status
@@ -185,7 +185,7 @@ class Processor(models.Model):
 
     def save(self, **kwargs):
         if not self.version:
-            self.version = timeside.__version__
+            self.version = timeside.core.__version__
         super(Processor, self).save(**kwargs)
 
 
@@ -280,7 +280,7 @@ class Task(BaseResource):
             if not os.path.exists(item_path):
                 os.makedirs(item_path)
 
-            pipe = timeside.decoder.file.FileDecoder(item.file.path,
+            pipe = timeside.plugins.decoder.file.FileDecoder(item.file.path,
                                                      sha1=item.sha1)
 
             presets = {}

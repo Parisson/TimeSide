@@ -3,8 +3,7 @@ from __future__ import division
 
 from unit_timeside import unittest, TestRunner
 import timeside
-from scipy.signal import chirp
-import numpy as np
+from timeside.core.tools.test_samples import samples
 from tempfile import NamedTemporaryFile
 import os
 
@@ -15,13 +14,9 @@ class Test_graphers_analyzers(unittest.TestCase):
     """ test Graphers from analyzers"""
 
     def setUp(self):
-        samplerate = 16000  # LimsiSad require Fs = 16000 Hz
-        duration = 10
-        t = np.arange(0, duration, 1/samplerate)
-        samples = chirp(t=t, f0=20, t1=t[-1], f1=samplerate/2,
-                        method='logarithmic')
-        decoder_cls = timeside.core.get_processor('array_decoder')
-        self.decoder = decoder_cls(samples, samplerate=samplerate)
+        source = samples["C4_scale.wav"]
+        decoder_cls = timeside.core.get_processor('file_decoder')
+        self.decoder = decoder_cls(uri=source)
 
     def _perform_test(self, grapher_cls):
             """Internal function that test grapher for a given analyzer"""
@@ -55,10 +50,11 @@ def _tests_factory(grapher_analyzers):
 
         setattr(Test_graphers_analyzers, test_func_name, test_func)
 
-list_graphers = timeside.core.processors(timeside.api.IGrapher)
-module = 'timeside.grapher.render_analyzers'
+list_graphers = timeside.core.processor.processors(timeside.core.api.IGrapher)
+from timeside.core.grapher import DisplayAnalyzer
 grapher_analyzers = [grapher for grapher in list_graphers
-                     if grapher.__module__ == module]
+                     if grapher.__base__ == DisplayAnalyzer]
+
 _tests_factory(grapher_analyzers)
 
 if __name__ == '__main__':

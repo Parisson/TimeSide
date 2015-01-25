@@ -8,7 +8,7 @@ Instead of calling a pipe.run(), the chunks of an encoding processor can also be
 
 >>> import timeside
 >>> from timeside.core import get_processor
->>> from timeside.tools.test_samples import samples
+>>> from timeside.core.tools.test_samples import samples
 >>> import numpy as np
 >>> audio_file = samples['sweep.wav']
 >>> decoder = get_processor('file_decoder')(audio_file, duration=1)

@@ -24,7 +24,7 @@ import unittest
 from unit_timeside import TestRunner
 import doctest
 import timeside
-from timeside.tools.package import discover_modules
+from timeside.core.tools.package import discover_modules
 
 
 def load_tests(loader, tests, ignore):

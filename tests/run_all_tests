@@ -2,7 +2,6 @@
 import os
 import sys
 
-
 def load_test():
     # get relevant files
     curdir = os.path.dirname(sys.argv[0])

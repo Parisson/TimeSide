@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 
 from unit_timeside import unittest, TestRunner
-from timeside.decoder.file import FileDecoder
-from timeside.tools.test_samples import samples
+from timeside.plugins.decoder.file import FileDecoder
+from timeside.core.tools.test_samples import samples
 
-from timeside import _WITH_YAAFE
+from timeside.core import _WITH_YAAFE
 if _WITH_YAAFE:
-    from timeside.analyzer.externals.yaafe import Yaafe
+    from timeside.plugins.analyzer.externals.yaafe import Yaafe
 import os
 
 

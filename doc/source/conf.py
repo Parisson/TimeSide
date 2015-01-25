@@ -35,11 +35,6 @@ extensions = ['sphinx.ext.autodoc',
               'matplotlib.sphinxext.plot_directive']
 
 doctest_path = os.path.abspath('../../')
-doctest_global_setup = '''
-import os
-# os.getcwd() -> /doc
-wav_file = os.path.join(os.getcwd(),'../tests/samples/sweep.mp3')
-'''
 
 autodoc_default_flags = 'show-inheritance'
 autoclass_content = 'both'
@@ -61,13 +56,13 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'TimeSide'
-copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+copyright = u'2015, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-from timeside import __version__ as TimeSideVersion
+from timeside.core import __version__ as TimeSideVersion
 # The short X.Y version.
 version = '.'.join(TimeSideVersion.split('.')[0:2])
 # The full version, including alpha/beta/rc tags.
@@ -164,9 +159,9 @@ html_static_path = ['_static']
 #html_additional_pages = {}
 
 # If false, no module index is generated.
-#html_domain_indices = True
+html_domain_indices = True
 # This is required to remove the superfluous np module index added by numpydoc
-html_domain_indices = ['py-modindex']
+#html_domain_indices = ['py-modindex']
 
 # If false, no index is generated.
 #html_use_index = True

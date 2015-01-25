@@ -2,13 +2,13 @@
 
 from __future__ import division
 
-from timeside.core import get_processor, ProcessPipe
-from timeside.decoder.file import FileDecoder
-#from timeside.component import *
+from timeside.core.processor import get_processor, ProcessPipe
+from timeside.plugins.decoder.file import FileDecoder
+
 import os
 from unit_timeside import unittest, TestRunner
 from tools import tmp_file_sink
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 
 class TestTranscodingFromWav(unittest.TestCase):
