@@ -58,23 +58,19 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 Dive in
 ========
 
-To list all available plugins:
+To list all available plugins::
 
-.. testcleanup::
 
    import os
    os.remove('sweep.ogg')
    os.remove('waveform.png')
 
-.. doctest::
 
    >>> import timeside
-   >>> timeside.core.list_processors()  # doctest: +SKIP
 
 
-Define some processors:
+Define some processors::
 
-.. doctest::
 
     >>> from timeside.core import get_processor
     >>> from timeside.core.tools.test_samples import samples
@@ -84,23 +80,19 @@ Define some processors:
     >>> analyzer =  get_processor('level')()
     >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
-Then run the *magic* pipeline:
+Then run the *magic* pipeline::
 
-.. doctest::
 
     >>> (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results:
+Render the grapher results::
 
-.. doctest::
 
     >>> grapher.render(output='waveform.png')
 
-Show the analyzer results:
+Show the analyzer results::
 
-.. doctest::
 
-    >>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
     Level: {'level.max': AnalyzerResult(...)}
 
 
