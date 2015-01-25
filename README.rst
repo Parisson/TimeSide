@@ -116,10 +116,14 @@ News
 
  * Code refactoring:
 
-   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decodr, timeside.plugins.analyzer, timeside.plugins.encoder, timeside.plugins.fx
-   - `timeside.plugins` is a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be automatically plug into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_).
-   - To properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`.
+   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx
+   - WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`.
+   - `timeside.plugins` is now a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a **real** plugin host, yeah!
+   - A dummy timeside plugin will soon be provided for easy development start.
+
  * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
+ * Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
+ * Add a dox file to test the docker building on `various distributions <https://github.com/Parisson/Docker>`_
 
 0.6.1
 
@@ -182,12 +186,6 @@ IGrapher
    * **grapher_aubio_pitch** : Image representing Aubio Pitch
    * **grapher_onset_detection_function** : Image representing Onset detection function
    * **grapher_waveform** : Image representing Waveform from Analyzer
-   * **grapher_irit_speech_4hz_segments** : Image representing Irit 4Hz Speech Segmentation
-   * **grapher_irit_speech_4hz_segments_median** : Image representing Irit 4Hz Speech Segmentation with median filter
-   * **grapher_monopoly_segments** : Image representing Irit Monopoly Segmentation
-   * **grapher_limsi_sad_etape** : Image representing LIMSI SAD with ETAPE model
-   * **grapher_limsi_sad_maya** : Image representing LIMSI SAD with Mayan model
-   * **grapher_irit_startseg** : Image representing IRIT Start Noise
    * **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
    * **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
    * **waveform_simple** : Simple monochrome waveform image.
@@ -207,11 +205,6 @@ IAnalyzer
    * **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
    * **aubio_temporal** : Aubio Temporal analyzer
    * **yaafe** : Yaafe feature extraction library interface analyzer
-   * **irit_monopoly** : Segmentor Monophony/Polyphony based on the analysis of yin confidence.
-   * **irit_startseg** : Segmentation of recording sessions into 'start' and 'session' segments
-   * **irit_speech_4hz** : Speech Segmentor based on the 4Hz energy modulation analysis.
-   * **irit_speech_entropy** : Speech Segmentor based on Entropy analysis.
-   * **limsi_sad** : Limsi Speech Activity Detection Systems
    * **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
    * **onset_detection_function** : Onset Detection Function analyzer
    * **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
