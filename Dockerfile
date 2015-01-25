@@ -44,7 +44,8 @@ run ln -s /opt/TimeSide/examples/deploy/supervisor-app.conf /etc/supervisor/conf
 run pip install -e /opt/TimeSide
 
 # add dev repo path
-run echo "export PYTHONPATH=$PYTHONPATH:/opt/Timeside" >> ~/.bashrc
+#run echo "export PYTHONPATH=$PYTHONPATH:/opt/Timeside" >> ~/.bashrc
+run cd /opt/TimeSide; python setup.py develop
 
 # sandbox setup
 run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
