@@ -18,8 +18,9 @@ from debian:stable
 maintainer Guillaume Pellerin <yomguy@parisson.com>
 
 # install confs, keys and deps
-run apt-key adv --keyserver subkeys.pgp.net --recv-key E3298399DF14BB7C
-run apt-key adv --keyserver subkeys.pgp.net --recv-key 07DC563D1F41B907
+run apt-key adv --keyserver keyring.debian.org --recv-key E3298399DF14BB7C
+run apt-key adv --keyserver keyring.debian.org --recv-key 07DC563D1F41B907
+run apt-key adv --keyserver keyring.debian.org --recv-key 5C808C2B65558117
 add ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
 run apt-get update
 run apt-get install -y --force-yes apt-utils
