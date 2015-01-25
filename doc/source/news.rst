@@ -12,7 +12,7 @@ News
 
  * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
  * Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
- * Add a dox file to test the docker building on `various distributions <https://github.com/Parisson/Docker>`_
+ * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
 0.6.1
 
