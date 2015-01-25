@@ -26,6 +26,7 @@ run apt-get update
 run apt-get install -y --force-yes apt-utils
 run apt-get -y --force-yes -t wheezy-backports dist-upgrade
 run apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
+run apt-get purge -y --force-yes python-timeside
 run apt-get clean
 
 # install tools via pip
@@ -44,7 +45,6 @@ run ln -s /opt/TimeSide/examples/deploy/supervisor-app.conf /etc/supervisor/conf
 run pip install -e /opt/TimeSide
 
 # add dev repo path
-#run echo "export PYTHONPATH=$PYTHONPATH:/opt/Timeside" >> ~/.bashrc
 run cd /opt/TimeSide; python setup.py develop
 
 # sandbox setup
