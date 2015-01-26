@@ -40,7 +40,7 @@ from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
 
 import timeside.core
-from timeside.analyzer.core import AnalyzerResultContainer
+from timeside.core.analyzer import AnalyzerResultContainer
 import os
 
 
