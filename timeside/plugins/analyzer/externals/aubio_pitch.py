@@ -28,7 +28,7 @@ from aubio import pitch
 import numpy as np
 from timeside.plugins.analyzer.utils import nextpow2
 
-from timeside.tools.parameters import Float, HasTraits
+from timeside.core.tools.parameters import Float, HasTraits
 
 
 class AubioPitch(Analyzer):
@@ -51,12 +51,6 @@ class AubioPitch(Analyzer):
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(AubioPitch, self).setup(channels,
-                                      samplerate,
-                                      blocksize,
-                                      totalframes)
-
-
         # Frame parameters setup
         if self._blocksize_s:
             self.input_blocksize = nextpow2(self._blocksize_s * samplerate)
@@ -67,6 +61,13 @@ class AubioPitch(Analyzer):
             self.input_stepsize = nextpow2(self._stepsize_s * samplerate)
         else:
             self.input_stepsize = self.input_blocksize / 2
+
+        # Now that frames size metadata are properly set, we can do the set-up
+        super(AubioPitch, self).setup(channels,
+                                      samplerate,
+                                      blocksize,
+                                      totalframes)
+
 
         # Aubio Pitch set-up
         self.aubio_pitch = pitch(
@@ -124,3 +125,13 @@ class AubioPitch(Analyzer):
         pitch_confidence.id_metadata.unit = None
         pitch_confidence.data_object.value = self.pitch_confidences
         self.add_result(pitch_confidence)
+
+
+# Generate Grapher for Aubio Pitch analyzer
+from timeside.core.grapher import DisplayAnalyzer
+DisplayAubioPitch = DisplayAnalyzer.create(
+    analyzer=AubioPitch,
+    result_id='aubio_pitch.pitch',
+    grapher_id='grapher_aubio_pitch',
+    grapher_name='Pitch',
+    background='spectrogram')

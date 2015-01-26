@@ -23,7 +23,7 @@
 from importlib import import_module
 import warnings
 
-from ..core.exceptions import VampImportError
+from ..exceptions import VampImportError
 
 def discover_modules(subpackage, package=None):
     import pkgutil
@@ -114,7 +114,6 @@ def check_yaafe():
 
 def check_vamp():
     "Check Vamp host availability"
-    from ..core.exceptions import VampImportError
 
     try:
         from timeside.plugins.analyzer.externals import vamp_plugin

@@ -11,6 +11,7 @@ recursive-include doc *
 recursive-include timeside *
 recursive-include examples *
 recursive-include tests *
+recursive-include scripts *
 recursive-exclude examples/sandbox/media *
 recursive-exclude * *.swp
 recursive-exclude dist *

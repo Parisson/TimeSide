@@ -1,12 +1,12 @@
 #! /usr/bin/env python
 
 from __future__ import division
-
-from timeside.plugins.decoder.file import FileDecoder
-from timeside.core.processor import ProcessPipe
-
 from unit_timeside import unittest, TestRunner
-from timeside.tools.test_samples import samples
+
+from timeside.core.processor import ProcessPipe
+from timeside.plugins.decoder.file import FileDecoder
+
+from timeside.core.tools.test_samples import samples
 
 import os.path
 

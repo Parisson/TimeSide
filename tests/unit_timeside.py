@@ -5,6 +5,7 @@ import doctest
 import sys
 import time
 
+import timeside.core
 
 class _TextTestResult(unittest.TestResult):
     """A test result class that can print formatted text results to a stream.

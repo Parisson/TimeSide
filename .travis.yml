@@ -1,31 +1,69 @@
 language: python
 python:
   - "2.7"
+
 virtualenv:
   system_site_packages: true
- 
+
+
+env:
+  - TEST_TARGET=default  # Default unit test
+  - TEST_TARGET=cli      # Test for TimeSide command line interfaces
+  - TEST_TARGET=doc      # Test documentation and included doctest
+  - TEST_TARGET=server   # Test timeside.server
+
+
 # command to prepare the system to install prerequisites or dependencies
 before_install:
- - sudo add-apt-repository -y ppa:donk/gstreamer
- - sudo apt-get -qq update
- - sudo apt-get install -qq python-numpy python-scipy python-matplotlib python-networkx python-setuptools
- - sudo apt-get install -qq libhdf5-serial-dev python-h5py python-tables
- - sudo apt-get install -qq python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
+  - sudo add-apt-repository -y ppa:donk/gstreamer
+  - sudo apt-get -qq update
+  - sudo apt-get install -qq python-numpy python-scipy python-matplotlib python-networkx python-setuptools
+  - sudo apt-get install -qq libhdf5-serial-dev python-h5py python-tables
+  - sudo apt-get install -qq python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad
 
-# command to install dependencies
+# Install TimeSide
 install:
- # - "pip install -r requirements.txt --use-mirrors"
- - python setup.py install
+  #- pip install -r requirements.txt
+  - python setup.py install
 
 
 # command to run tests
 before_script:
- #- pip install coverage
+  # -------------DEFAULT--------------------
+  - if [[ $TEST_TARGET == 'default' ]]; then
+       pip install coverage;
+    fi
+  # -------------DOC------------------------
+  - if [[ $TEST_TARGET == 'doc' ]]; then
+       pip install sphinx numpydoc;   
+    fi
+
 
 script:
- #- coverage run --source=timeside --omit=timeside/analyzer/aubio/aubio_*.py,timeside/analyzer/yaafe.py,timeside/analyzer/limsi_sad.py,timeside/analyzer/vamp_plugin.py setup.py test
- - python setup.py test
+  #
+  # -------------DEFAULT--------------------
+  - if [[ $TEST_TARGET == 'default' ]]; then
+       coverage run --source=timeside --omit=timeside/plugins/analyzer/externals/aubio/aubio_*.py,timeside/plugins/analyzer/external/yaafe.py setup.py test;
+    fi
+  # -------------DOC------------------------
+  - if [[ $TEST_TARGET == 'doc' ]]; then
+       cd doc;
+       make html;
+       make doctest;
+       cd ..;
+    fi
+  # -------------CLI-------------------------
+  - if [[ $TEST_TARGET == 'cli' ]]; then
+       ./tests/test_scripts.sh;
+    fi
+  # -------------SERVER-------------------------
+  - if [[ $TEST_TARGET == 'server' ]]; then
+       ./tests/test_server.sh;
+    fi  
 
 after_success:
- #- pip install coveralls
- #- coveralls
+  -  # -------------DEFAULT--------------------
+  - if [[ $TEST_TARGET == 'default' ]]; then
+          pip install python-coveralls;
+          coveralls;
+    fi

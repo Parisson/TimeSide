@@ -8,7 +8,7 @@ from timeside.core.processor import Processor
 from timeside.core.api import IProcessor
 from timeside.core.component import implements, interfacedoc
 
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 
 SAMPLE_RATE_FORCED = 16000
 OTHER_SAMPLE_RATE = 32000

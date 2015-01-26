@@ -36,7 +36,7 @@ class Level(Analyzer):
 
     >>> import timeside
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> source = samples['sweep.mp3']
     >>> decoder = get_processor('file_decoder')(uri=source)
     >>> level = get_processor('level')()
@@ -47,8 +47,8 @@ class Level(Analyzer):
     >>> print max.data
     [ 0.]
     >>> rms = level.results['level.rms']
-    >>> print rms.data
-    [-3.263]
+    >>> print rms.data  # doctest: +ELLIPSIS
+    [-3.26...]
     """
     implements(IValueAnalyzer)
 

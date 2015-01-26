@@ -70,3 +70,13 @@ class Waveform(Analyzer):
         waveform = self.new_result(data_mode='value', time_mode='framewise')
         waveform.data_object.value = np.vstack(self.values)
         self.add_result(waveform)
+
+
+# Generate Grapher for Waveform analyzer
+from timeside.core.grapher import DisplayAnalyzer
+DisplayWaveform = DisplayAnalyzer.create(analyzer=Waveform,
+                                         result_id='waveform_analyzer',
+                                         grapher_id='grapher_waveform',
+                                         grapher_name='Waveform from Analyzer',
+                                         staging=True)
+

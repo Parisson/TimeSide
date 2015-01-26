@@ -3,7 +3,7 @@ from __future__ import division
 
 from unit_timeside import unittest, TestRunner
 import timeside
-from timeside.tools.test_samples import samples
+from timeside.core.tools.test_samples import samples
 from tempfile import NamedTemporaryFile
 import os
 
@@ -51,9 +51,10 @@ def _tests_factory(grapher_analyzers):
         setattr(Test_graphers_analyzers, test_func_name, test_func)
 
 list_graphers = timeside.core.processor.processors(timeside.core.api.IGrapher)
-module = 'timeside.plugins.grapher.render_analyzers'
+from timeside.core.grapher import DisplayAnalyzer
 grapher_analyzers = [grapher for grapher in list_graphers
-                     if grapher.__module__ == module]
+                     if grapher.__base__ == DisplayAnalyzer]
+
 _tests_factory(grapher_analyzers)
 
 if __name__ == '__main__':

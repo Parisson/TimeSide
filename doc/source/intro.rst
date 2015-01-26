@@ -7,8 +7,8 @@ TimeSide : open web audio processing framework
 .. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
     :target: https://travis-ci.org/Parisson/TimeSide/
 
-.. |coveralls_master| image:: https://coveralls.io/repos/yomguy/TimeSide/badge.png?branch=master
-  :target: https://coveralls.io/r/yomguy/TimeSide?branch=master
+.. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
+  :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
 
 .. |version| image:: https://pypip.in/version/TimeSide/badge.png
   :target: https://pypi.python.org/pypi/TimeSide/
@@ -58,43 +58,47 @@ The streaming architecture of TimeSide relies on 2 main parts: a processing engi
 Dive in
 ========
 
-To list all available plugins:
+To list all available plugins::
 
-.. doctest:: 
+.. testcleanup::
+
+   import os
+   os.remove('sweep.ogg')
+   os.remove('waveform.png')
+
+.. doctest::
 
    >>> import timeside
    >>> timeside.core.list_processors()  # doctest: +SKIP
 
 
-
-
-Define some processors:
+Define some processors::
 
 .. doctest::
 
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> wavfile = samples['sweep.wav']
     >>> decoder  =  get_processor('file_decoder')(wavfile)
     >>> grapher  =  get_processor('waveform_simple')()
     >>> analyzer =  get_processor('level')()
     >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
-Then run the *magic* pipeline:
+Then run the *magic* pipeline::
 
-.. doctest:: 
+.. doctest::
 
     >>> (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results:
+Render the grapher results::
 
-.. doctest:: 
+.. doctest::
 
     >>> grapher.render(output='waveform.png')
 
-Show the analyzer results:
+Show the analyzer results::
 
-.. doctest:: 
+.. doctest::
 
     >>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
     Level: {'level.max': AnalyzerResult(...)}

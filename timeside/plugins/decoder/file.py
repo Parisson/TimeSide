@@ -31,8 +31,8 @@
 from __future__ import division
 
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
-from timeside.tools.gstutils import MainloopThread, gobject
-from timeside.tools.gstutils import gst_buffer_to_numpy_array
+from timeside.core.tools.gstutils import MainloopThread, gobject
+from timeside.core.tools.gstutils import gst_buffer_to_numpy_array
 import threading
 
 from timeside.plugins.decoder.utils import get_uri, get_media_uri_info, stack, get_sha1
@@ -67,7 +67,7 @@ class FileDecoder(Decoder):
     --------
     >>> import timeside
     >>> from timeside.core import get_processor
-    >>> from timeside.tools.test_samples import samples
+    >>> from timeside.core.tools.test_samples import samples
     >>> audio_source = samples['sweep.wav']
     >>> FileDecoder = get_processor('file_decoder')  # Get the decoder class
     >>> # Use decoder with default parameters
