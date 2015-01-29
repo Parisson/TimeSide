@@ -104,6 +104,10 @@ For more extensive examples, please see the `full documentation <http://files.pa
 News
 =====
 
+0.7.1
+
+  * fix django version to 1.6.10 (sync with Telemeta 1.5)
+  
 0.7
 
  * Code refactoring:
