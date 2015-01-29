@@ -68,8 +68,8 @@ To list all available plugins::
 
 .. doctest::
 
-   >>> import timeside
-   >>> timeside.core.list_processors()  # doctest: +SKIP
+   >>> import timeside.core
+   >>> timeside.core.list_processors()
 
 
 Define some processors::

@@ -66,7 +66,8 @@ To list all available plugins::
    os.remove('waveform.png')
 
 
-   >>> import timeside
+   >>> import timeside.core
+   >>> timeside.core.list_processors()
 
 
 Define some processors::
