@@ -61,14 +61,8 @@ Dive in
 To list all available plugins::
 
 
-   import os
-   os.remove('sweep.ogg')
-   os.remove('waveform.png')
-
-
    >>> import timeside.core
    >>> timeside.core.list_processors()
-
 
 Define some processors::
 
@@ -114,7 +108,7 @@ News
  * Code refactoring:
 
    - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx
-   - WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`.
+   - WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`
    - `timeside.plugins` is now a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a **real** plugin host, yeah!
    - A dummy timeside plugin will soon be provided for easy development start.
 
