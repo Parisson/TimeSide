@@ -1,4 +1,3 @@
-
 data:
   image: tianon/true
   volumes:
@@ -15,8 +14,8 @@ nginx:
     - "8080:80"
   volumes:
     - ./examples/deploy/nginx-app.conf:/etc/nginx/sites-enabled/
-#    #- ./web/media:/media:ro
-#    #- ./web//static:/static:ro
+    #  --> media
+    #  --> static
   links:
     - app
 
@@ -24,5 +23,9 @@ app:
   build: .
   volumes:
     - .:/opt/TimeSide
+  command:
+    - /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
+    - /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
+    - /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
   ports:
     - "8000:8000"

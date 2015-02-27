@@ -57,18 +57,17 @@ RUN conda install --file conda-requirements.txt  && \
 # Install Aubio
 RUN conda install -c thomasfillon aubio
 
+# Link Yaafe in site-packages 
+RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
+
 # clone app
 ADD . /opt/TimeSide
 WORKDIR /opt/TimeSide
 
-
 RUN pip install -r requirements.txt
 RUN conda list
 
-# Link Yaafe in site-packages 
-RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
-
-# setup all the configfiles
+# setup all the configfiles  --> Gérer dans le container Nginx
 #RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 #RUN rm /etc/nginx/sites-enabled/default
 #RUN ln -s /opt/TimeSide/examples/deploy/nginx-app.conf /etc/nginx/sites-enabled/
