@@ -1,0 +1,28 @@
+
+data:
+  image: tianon/true
+  volumes:
+    - /var/lib/postgresql
+ 
+db:
+  image: postgres
+  volumes_from:
+    - data
+
+nginx:
+  image: nginx
+  ports:
+    - "8080:80"
+  volumes:
+    - ./examples/deploy/nginx-app.conf:/etc/nginx/sites-enabled/
+#    #- ./web/media:/media:ro
+#    #- ./web//static:/static:ro
+  links:
+    - app
+
+app:
+  build: .
+  volumes:
+    - .:/opt/TimeSide
+  ports:
+    - "8000:8000"
