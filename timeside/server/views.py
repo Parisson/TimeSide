@@ -45,48 +45,56 @@ def stream_from_file(file):
 class SelectionViewSet(viewsets.ModelViewSet):
 
     model = Selection
+    queryset = Selection.objects.all()
     serializer_class = SelectionSerializer
 
 
 class ItemViewSet(viewsets.ModelViewSet):
 
     model = Item
+    queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
 
 class ExperienceViewSet(viewsets.ModelViewSet):
 
     model = Experience
+    queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
 
 
 class ProcessorViewSet(viewsets.ModelViewSet):
 
     model = Processor
+    queryset = Processor.objects.all()
     serializer_class = ProcessorSerializer
 
 
 class ResultViewSet(viewsets.ModelViewSet):
 
     model = Result
+    queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
 
 class PresetViewSet(viewsets.ModelViewSet):
 
     model = Preset
+    queryset = Preset.objects.all()
     serializer_class = PresetSerializer
 
 
 class TaskViewSet(viewsets.ModelViewSet):
 
     model = Task
+    queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
 
     model = User
+    queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
