@@ -14,8 +14,8 @@ nginx:
     - "8080:80"
   volumes:
     - ./examples/deploy/nginx-app.conf:/etc/nginx/sites-enabled/
-    #  --> media
-    #  --> static
+    - /var/www/static
+    - /media
   links:
     - app
 
@@ -23,9 +23,7 @@ app:
   build: .
   volumes:
     - .:/opt/TimeSide
-  command:
-    - /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-    - /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
-    - /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+  command: uwsgi --ini /opt/TimeSide/examples/sandbox/uwsgi.ini
   ports:
     - "8000:8000"
+ 

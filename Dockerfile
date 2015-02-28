@@ -29,7 +29,7 @@ RUN apt-get install -y --force-yes -t wheezy-backports  python-aubio python-yaaf
 #RUN apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor git
 RUN apt-get clean
 
-RUN apt-get update && apt-get install -y wget bzip2
+RUN apt-get update && apt-get install -y wget bzip2 build-essential
 
 # Install conda in /opt/miniconda
 RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh && \
@@ -39,16 +39,16 @@ ENV PATH /opt/miniconda/bin:$PATH
 RUN hash -r && \ 
     conda config --set always_yes yes --set changeps1 yes && \
     conda update -q conda
-# install tools via pip
-#RUN pip install uwsgi ipython
 
+# Install uwsgi
+RUN conda install pip && \
+    pip install uwsgi
 
 RUN mkdir /opt/TimeSide
 WORKDIR /opt/TimeSide
 
 
 # Install binary dependencies with conda
-#RUN export deps="setuptools pip coverage matplotlib h5py pytables pandas>=0.15.1 networkx nltk>=3.0 scikit-learn numexpr"
 ADD conda-requirements.txt /opt/TimeSide/
 ADD requirements.txt /opt/TimeSide/
 RUN conda install --file conda-requirements.txt  && \
@@ -60,12 +60,11 @@ RUN conda install -c thomasfillon aubio
 # Link Yaafe in site-packages 
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 
-# clone app
+# Clone app
 ADD . /opt/TimeSide
 WORKDIR /opt/TimeSide
 
 RUN pip install -r requirements.txt
-RUN conda list
 
 # setup all the configfiles  --> Gérer dans le container Nginx
 #RUN echo "daemon off;" >> /etc/nginx/nginx.conf
@@ -79,10 +78,10 @@ RUN conda list
 # add dev repo path
 #RUN cd /opt/TimeSide; python setup.py develop
 
-# sandbox setup
-#RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-#RUN /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
-#RUN /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+# Sandbox setup
+RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
+RUN /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
+RUN /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 #EXPOSE 80
 #CMD ["supervisord", "-n"]
