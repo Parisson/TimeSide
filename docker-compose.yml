@@ -2,17 +2,20 @@ datadb:
   image: debian:stable
   volumes:
     - /var/lib/postgresql
+  command: /bin/true
 
 datastatic:
   image: debian:stable
   volumes:
     - /var/www
-    
+  command: /bin/true
+
 datalog:
   image: debian:stable
   volumes:
     - /var/log/nginx
     - /var/log/postgres
+  command: /bin/true
 
 db:
   image: postgres
