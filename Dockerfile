@@ -83,5 +83,5 @@ RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
 RUN /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
 RUN /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
-#EXPOSE 80
+EXPOSE 8000
 #CMD ["supervisord", "-n"]
