@@ -1,13 +1,23 @@
-data:
-  image: tianon/true
+datadb:
+  image: debian:stable
   volumes:
     - /var/lib/postgresql
+
+datastatic:
+  image: debian:stable
+  volumes:
+    - /var/www
     
- 
+datalog:
+  image: debian:stable
+  volumes:
+    - /var/log/nginx
+    - /var/log/postgres
+        
 db:
   image: postgres
   volumes_from:
-    - data
+    - datadb
 
 nginx:
   image: nginx
@@ -16,6 +26,9 @@ nginx:
   volumes:
     - ./examples/deploy/nginx-app.conf:/etc/nginx/sites-enabled/
     - /media
+  volumes_from:
+    - datastatic
+    - datalog
   links:
     - app
 
@@ -23,6 +36,8 @@ app:
   build: .
   volumes:
     - .:/opt/TimeSide
+  volumes_from:
+    - datastatic
   command: uwsgi --ini /opt/TimeSide/examples/sandbox/uwsgi.ini:local
   ports:
     - "8000:8000"
