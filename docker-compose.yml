@@ -2,8 +2,8 @@ data:
   image: tianon/true
   volumes:
     - /var/lib/postgresql
-    
- 
+
+
 db:
   image: postgres
   volumes_from:
@@ -14,7 +14,7 @@ nginx:
   ports:
     - "8080:80"
   volumes:
-    - ./examples/deploy/nginx-app.conf:/etc/nginx/sites-enabled/
+    - ./examples/deploy/nginx/sites-enabled:/etc/nginx/sites-enabled
     - /media
   links:
     - app
@@ -26,4 +26,3 @@ app:
   command: uwsgi --ini /opt/TimeSide/examples/sandbox/uwsgi.ini:local
   ports:
     - "8000:8000"
- 
