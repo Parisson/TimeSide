@@ -29,9 +29,7 @@ nginx:
   volumes:
     - ./examples/deploy/nginx/sites-enabled:/etc/nginx/sites-enabled
     - /media
-  volumes_from:
-    - datastatic
-    - datalog
+    - ./examples/deploy/static/:/var/www/static
   links:
     - app
 
@@ -39,8 +37,8 @@ app:
   build: .
   volumes:
     - .:/opt/TimeSide
-  volumes_from:
-    - datastatic
+    - ./examples/deploy/static/:/var/www/static
+  command: /opt/TimeSide/examples/sandbox/manage.py collectstatic
   command: uwsgi --ini /opt/TimeSide/examples/sandbox/uwsgi.ini:local
   ports:
     - "8000:8000"
