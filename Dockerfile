@@ -36,7 +36,7 @@ RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O 
     bash miniconda.sh -b -p /opt/miniconda && \
     rm miniconda.sh
 ENV PATH /opt/miniconda/bin:$PATH
-RUN hash -r && \ 
+RUN hash -r && \
     conda config --set always_yes yes --set changeps1 yes && \
     conda update -q conda
 
@@ -57,7 +57,7 @@ RUN conda install --file conda-requirements.txt  && \
 # Install Aubio
 RUN conda install -c thomasfillon aubio
 
-# Link Yaafe in site-packages 
+# Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 
 # Clone app

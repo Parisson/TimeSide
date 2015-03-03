@@ -39,7 +39,7 @@ nginx:
     #- ./examples/deploy/static/:/var/www/static
   volumes_from:
     - datastatic
-    - datamedia 
+    - datamedia
   links:
     - app
 
