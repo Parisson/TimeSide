@@ -7,7 +7,7 @@ datadb:
 datamedia:
   image: debian:wheezy
   volumes:
-    - /media
+    - ./examples/sandbox/media:/media
   command: /bin/true
 
 datastatic:
@@ -32,11 +32,8 @@ nginx:
   image: nginx
   ports:
     - "8000:80"
-    - "8001:443"
   volumes:
     - ./examples/deploy/nginx/sites-enabled/app.conf:/etc/nginx/conf.d/default.conf
-    - /media
-    #- ./examples/deploy/static/:/var/www/static
   volumes_from:
     - datastatic
     - datamedia
@@ -47,7 +44,6 @@ app:
   build: .
   volumes:
     - .:/opt/TimeSide
-    #- ./examples/deploy/static/:/var/www/static
   volumes_from:
     - datastatic
     - datamedia
