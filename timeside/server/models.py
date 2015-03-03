@@ -271,7 +271,7 @@ class Task(BaseResource):
         verbose_name_plural = _('Tasks')
 
     def __unicode__(self):
-        return '_'.join([unicode(self.experience), unicode(self.id)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
 
     def status_setter(self, status):
         self.status = status
