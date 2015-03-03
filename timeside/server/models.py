@@ -244,6 +244,10 @@ class Result(BaseResource):
         self.status = status
         self.save()
 
+    def mime_type_setter(self, mime_type):
+        self.mime_type = mime_type
+        self.save()
+
     def __unicode__(self):
         return '_'.join([self.item.title, unicode(self.preset.processor)])
 
@@ -299,9 +303,11 @@ class Task(BaseResource):
                 image_file = str(result.uuid) + '.png'
                 result.file = os.path.join(item_path, image_file)
                 proc.render(output=result.file.path)
+                result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=item)
+                result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
             del proc
 

@@ -4,7 +4,8 @@ from timeside.server.models import *
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['date_added', 'date_modified', 'status']
+    model = Task
+    list_display = ['__unicode__', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
 
 
