@@ -51,7 +51,6 @@ app:
   volumes_from:
     - datastatic
     - datamedia
-  command: /opt/TimeSide/examples/sandbox/manage.py collectstatic
-  command: uwsgi --socket :8000 --wsgi-file /opt/TimeSide/examples/sandbox/wsgi.py  --chdir /opt/TimeSide/examples/sandbox/ --master --processes 4 --threads 2
+  command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
   expose:
     - "80" #default runserver wsgi port
