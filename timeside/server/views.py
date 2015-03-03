@@ -137,7 +137,8 @@ class ResultAnalyzerView(View):
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
         container = AnalyzerResultContainer()
-        return HttpResponse(container.from_hdf5(result.hdf5.path).to_json(),
+        container.from_hdf5(result.hdf5.path)
+        return HttpResponse(container.to_json(),
                             content_type='application/json')
 
 

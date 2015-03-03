@@ -23,7 +23,6 @@ import django.db.models
 from django.contrib.auth.models import User
 
 
-
 class SelectionSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -32,6 +31,9 @@ class SelectionSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
+
+    file = serializers.FileField(max_length=1024, allow_empty_file=True, use_url=True)
+    hdf5 = serializers.FileField(max_length=1024, allow_empty_file=True, use_url=True)
 
     class Meta:
         model = Item
