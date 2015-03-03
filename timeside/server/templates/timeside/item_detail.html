@@ -18,11 +18,12 @@ Your browser does not support the audio element.
 {% endblock html5-player %}
 
 <ul>
-   <li>File: {{ object.file.path }}</li>
+   <li>File: {{ object.file }}</li>
    {% if object.url %}<li>url : {{ object.url }}</li>{% endif %}
    <li>sha1 : {{ object.sha1 }}</li>
    <li>mime_type : {{ object.mime_type }}</li>
    <li>hdf5 : {{ object.hdf5 }}</li>
+   <li>uuid : {{ object.uuid }}</li>
    <li>author: {{ object.author }}</li>
    <li>lock : {{ object.lock }}</li>
 </ul>
