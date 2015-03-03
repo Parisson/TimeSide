@@ -32,9 +32,6 @@ class SelectionSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
 
-    file = serializers.FileField(max_length=1024, allow_empty_file=True, use_url=True)
-    hdf5 = serializers.FileField(max_length=1024, allow_empty_file=True, use_url=True)
-
     class Meta:
         model = Item
         # fields = ('id', 'title', 'file', 'mime_type', 'author')
