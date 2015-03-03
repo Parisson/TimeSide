@@ -60,17 +60,10 @@ Dive in
 
 To list all available plugins::
 
-.. testcleanup::
-
-   import os
-   os.remove('sweep.ogg')
-   os.remove('waveform.png')
-
 .. doctest::
 
-   >>> import timeside
-   >>> timeside.core.list_processors()  # doctest: +SKIP
-
+   >>> import timeside.core
+   >>> timeside.core.list_processors()
 
 Define some processors::
 

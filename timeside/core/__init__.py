@@ -28,7 +28,7 @@ from . import processor
 from .processor import Processor, get_processor, list_processors
 from .component import implements, interfacedoc, abstract
 
-__version__ = '0.7'
+__version__ = '0.7.2'
 
 from .tools import package as ts_package
 
