@@ -28,4 +28,3 @@ matplotlib.use('Agg')
 # setting points here.
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
-
