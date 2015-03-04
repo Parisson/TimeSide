@@ -34,7 +34,7 @@ from timeside.plugins.decoder.utils import sha1sum_file
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
 app = 'timeside'
@@ -55,6 +55,12 @@ _FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
 STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_PENDING, _('pending')), (_RUNNING, _('running')),
           (_DONE, _('done')))
+
+
+results_root = 'results'
+results_path = os.path.join(settings.MEDIA_ROOT, results_root)
+if not os.path.exists(results_path):
+    os.makedirs(results_path)
 
 
 def get_mime_type(path):
@@ -149,7 +155,7 @@ class Item(DocBaseResource):
         self.save()
 
     def get_results_path(self):
-        pass
+        return os.path.join(results_path, self.uuid)
 
 
 class Experience(DocBaseResource):
@@ -238,8 +244,12 @@ class Result(BaseResource):
         self.status = status
         self.save()
 
+    def mime_type_setter(self, mime_type):
+        self.mime_type = mime_type
+        self.save()
+
     def __unicode__(self):
-        return '_'.join([self.item.title, unicode(self.parameters.processor)])
+        return '_'.join([self.item.title, unicode(self.preset.processor)])
 
 
 class Task(BaseResource):
@@ -261,22 +271,53 @@ class Task(BaseResource):
         verbose_name_plural = _('Tasks')
 
     def __unicode__(self):
-        return '_'.join([unicode(self.experience), unicode(self.id)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
 
     def status_setter(self, status):
         self.status = status
         self.save()
 
-    def run(self):
+    def post_run(self, item, presets):
+        item.lock_setter(True)
+        item_path = item.get_results_path()
+
+        # pipe.results.to_hdf5(item.hdf5.path)
+        for preset in presets.keys():
+            proc = presets[preset]
+            if proc.type == 'analyzer':
+                for result_id in proc.results.keys():
+                    parameters = proc.results[result_id].parameters
+                    preset, c = Preset.objects.get_or_create(
+                        processor=preset.processor,
+                        parameters=unicode(parameters))
+                    result, c = Result.objects.get_or_create(preset=preset,
+                                                             item=item)
+                    hdf5_file = str(result.uuid) + '.hdf5'
+                    result.hdf5 = os.path.join(item_path, hdf5_file)
+                    proc.results.to_hdf5(result.hdf5.path)
+                    result.status_setter(_DONE)
+            elif proc.type == 'grapher':
+                parameters = {}
+                result, c = Result.objects.get_or_create(preset=preset,
+                                                         item=item)
+                image_file = str(result.uuid) + '.png'
+                result.file = os.path.join(item_path, image_file)
+                proc.render(output=result.file.path)
+                result.mime_type_setter(get_mime_type(result.file.path))
+                result.status_setter(_DONE)
+            elif proc.type == 'encoder':
+                result = Result.objects.get(preset=preset, item=item)
+                result.mime_type_setter(get_mime_type(result.file.path))
+                result.status_setter(_DONE)
+            del proc
+
+        item.lock_setter(False)
+
+    def run(self, streaming=False):
         self.status_setter(_RUNNING)
 
-        results_root = 'results'
-        results_path = os.path.join(settings.MEDIA_ROOT, results_root)
-        if not os.path.exists(results_path):
-            os.makedirs(results_path)
-
         for item in self.selection.items.all():
-            item_path = os.path.join(results_path, item.uuid)
+            item_path = item.get_results_path()
             if not os.path.exists(item_path):
                 os.makedirs(item_path)
 
@@ -293,7 +334,8 @@ class Task(BaseResource):
                                            proc.file_extension()])
                     result.file = os.path.join(item_path, media_file)
                     result.save()
-                    proc = proc(result.file.path, overwrite=True)
+                    proc = proc(result.file.path, overwrite=True,
+                                streaming=streaming)
                 else:
                     proc = proc()
                 if proc.type == 'analyzer':
@@ -308,36 +350,20 @@ class Task(BaseResource):
                 hdf5_file = str(self.experience.uuid) + '.hdf5'
                 item.hdf5 = os.path.join(item_path, hdf5_file)
                 item.save()
-            pipe.run()
-            item.lock_setter(True)
-            pipe.results.to_hdf5(item.hdf5.path)
-            item.lock_setter(False)
 
-            for preset in presets.keys():
-                proc = presets[preset]
-                if proc.type == 'analyzer':
-                    for result_id in proc.results.keys():
-                        parameters = proc.results[result_id].parameters
-                        preset, c = Preset.objects.get_or_create(processor=preset.processor,
-                                                                 parameters=unicode(parameters))
-                        result, c = Result.objects.get_or_create(preset=preset,
-                                                                 item=item)
-                        hdf5_file = str(result.uuid) + '.hdf5'
-                        result.hdf5 = os.path.join(item_path, hdf5_file)
-                        proc.results.to_hdf5(result.hdf5.path)
-                        result.status_setter(_DONE)
-                elif proc.type == 'grapher':
-                    parameters = {}
-                    result, c = Result.objects.get_or_create(preset=preset,
-                                                             item=item)
-                    image_file = str(result.uuid) + '.png'
-                    result.file = os.path.join(item_path, image_file)
-                    proc.render(output=result.file.path)
-                    result.status_setter(_DONE)
-                elif proc.type == 'encoder':
-                    result = Result.objects.get(preset=preset, item=item)
-                    result.status_setter(_DONE)
-                del proc
+            def stream_task(pipe, item, presets):
+                for chunk in pipe.stream():
+                    yield chunk
+                self.post_run(item, presets)
+                self.status_setter(_DONE)
+                del pipe
+
+            if streaming:
+                return stream_task(pipe, item, presets)
+            else:
+                pipe.run()
+
+            self.post_run(item, presets)
 
             # except:
             #     self.status_setter(0)
@@ -364,7 +390,7 @@ def set_hash(sender, **kwargs):
 
 def run(sender, **kwargs):
     instance = kwargs['instance']
-    if instance.status == 2:
+    if instance.status == _PENDING:
         instance.run()
 
 

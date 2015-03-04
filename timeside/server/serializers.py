@@ -23,7 +23,6 @@ import django.db.models
 from django.contrib.auth.models import User
 
 
-
 class SelectionSerializer(serializers.ModelSerializer):
 
     class Meta:

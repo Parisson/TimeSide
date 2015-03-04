@@ -13,44 +13,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from debian:stable
+FROM debian:wheezy
 
-maintainer Guillaume Pellerin <yomguy@parisson.com>
+MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
 # install confs, keys and deps
-run apt-key adv --keyserver pgp.mit.edu --recv-key E3298399DF14BB7C
-run apt-key adv --keyserver pgp.mit.edu --recv-key 07DC563D1F41B907
-run apt-key adv --keyserver pgp.mit.edu --recv-key 5C808C2B65558117
-add ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
-run apt-get update
-run apt-get install -y --force-yes apt-utils
-run apt-get -y --force-yes -t wheezy-backports dist-upgrade
-run apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor python-timeside git python-tables python-traits python-networkx ipython python-numexpr gstreamer0.10-alsa
-run apt-get purge -y --force-yes python-timeside
-run apt-get clean
+RUN apt-key adv --keyserver pgp.mit.edu --recv-key E3298399DF14BB7C && \
+    apt-key adv --keyserver pgp.mit.edu --recv-key 07DC563D1F41B907
+    apt-key adv --keyserver pgp.mit.edu --recv-key 5C808C2B65558117
+ADD ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
+RUN apt-get update && \
+    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples
+RUN apt-get -y --force-yes -t wheezy-backports dist-upgrade
+RUN apt-get install -y --force-yes -t wheezy-backports  python-aubio python-yaafe
+#RUN apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor git
+RUN apt-get clean
 
-# install tools via pip
-run pip install uwsgi ipython
+RUN apt-get update && apt-get install -y wget bzip2 build-essential
 
-# clone app
-add . /opt/TimeSide
+# Install conda in /opt/miniconda
+RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh && \
+    bash miniconda.sh -b -p /opt/miniconda && \
+    rm miniconda.sh
+ENV PATH /opt/miniconda/bin:$PATH
+RUN hash -r && \
+    conda config --set always_yes yes --set changeps1 yes && \
+    conda update -q conda
 
-# setup all the configfiles
-run echo "daemon off;" >> /etc/nginx/nginx.conf
-run rm /etc/nginx/sites-enabled/default
-run ln -s /opt/TimeSide/examples/deploy/nginx-app.conf /etc/nginx/sites-enabled/
-run ln -s /opt/TimeSide/examples/deploy/supervisor-app.conf /etc/supervisor/conf.d/
+# Install uwsgi
+RUN conda install pip && \
+    pip install uwsgi
+
+RUN mkdir /opt/TimeSide
+WORKDIR /opt/TimeSide
+
+
+# Install binary dependencies with conda
+ADD conda-requirements.txt /opt/TimeSide/
+ADD requirements.txt /opt/TimeSide/
+RUN conda install --file conda-requirements.txt  && \
+    rm /opt/miniconda/lib/libm.so.6  # use the system libm; see github.com/ContinuumIO/anaconda-issues/issues/182
+
+# Install Aubio
+RUN conda install -c thomasfillon aubio
+
+# Link Yaafe in site-packages
+RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
+
+# Clone app
+ADD . /opt/TimeSide
+WORKDIR /opt/TimeSide
+
+RUN pip install -r requirements.txt
+
+# setup all the configfiles  --> Gérer dans le container Nginx
+#RUN echo "daemon off;" >> /etc/nginx/nginx.conf
+#RUN rm /etc/nginx/sites-enabled/default
+#RUN ln -s /opt/TimeSide/examples/deploy/nginx-app.conf /etc/nginx/sites-enabled/
+#RUN ln -s /opt/TimeSide/examples/deploy/supervisor-app.conf /etc/supervisor/conf.d/
 
 # install new deps from the local repo
-run pip install -e /opt/TimeSide
+#RUN pip install -e /opt/TimeSide
 
 # add dev repo path
-run cd /opt/TimeSide; python setup.py develop
+#RUN cd /opt/TimeSide; python setup.py develop
 
-# sandbox setup
-run /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-run /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
-run /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+# Sandbox setup
+RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
+RUN /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
+RUN /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
-expose 80
-cmd ["supervisord", "-n"]
+EXPOSE 8000
+#CMD ["supervisord", "-n"]

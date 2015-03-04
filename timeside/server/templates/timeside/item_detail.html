@@ -1,0 +1,39 @@
+{% extends "timeside/base.html" %}
+{% load i18n %}
+
+{% block extra_stylesheets %}{% endblock %}
+
+{% block extra_javascript %}{% endblock %}
+
+{% block content %}
+
+<h1>{{ object.title }}</h1>
+
+{% block html5-player %}
+ <audio controls>
+  <source src="download/ogg" type="audio/ogg">
+  <source src="download/mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+{% endblock html5-player %}
+
+<ul>
+   <li>File: {{ object.file }}</li>
+   {% if object.url %}<li>url : {{ object.url }}</li>{% endif %}
+   <li>mime_type : {{ object.mime_type }}</li>
+   <li>sha1 : {{ object.sha1 }}</li>
+   <li>hdf5 : {{ object.hdf5 }}</li>
+   <li>uuid : {{ object.uuid }}</li>
+   <li>author: {{ object.author }}</li>
+   <li>lock : {{ object.lock }}</li>
+</ul>
+
+Results:
+
+<ul>
+{% for result in object.results.all %}
+  <li><a href="{% if 'image' in result.mime_type %}{% url "timeside-result-png" result.id %}{% elif 'audio' in result.mime_type %}{% url "timeside-result-audio" result.id %}{% else %}{% url "timeside-result-json" result.id %}{% endif %}">{{ result.preset.processor }}</a> ({{ result.uuid }})</li>
+{% endfor %}
+<ul>
+
+{% endblock content %}
