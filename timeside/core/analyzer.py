@@ -825,14 +825,14 @@ class FrameValueObject(ValueObject, FramewiseObject):
             #  TODO: mean may not be appropriate for waveform ... (mean~=0)
             nb_frames = self.data.shape[0]
 
-            numchunks = size[0]
+            width = size[0]
 
-            if nb_frames > 10*numchunks:
+            if nb_frames < 10*width:
                 ax.plot(self.time, self.data)
                 return
             else:
-                chunksize = 1
-                numchunks = nb_frames
+                chunksize = nb_frames // width
+                numchunks = nb_frames // chunksize
 
             if self.data.ndim <= 1:
                 ychunks = self.data[:chunksize*numchunks].reshape((-1,
