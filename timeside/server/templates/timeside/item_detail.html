@@ -5,43 +5,83 @@
 {% endblock %}
 
 {% block extra_javascript %}
+<button id="add-data">add</button>
 <script type="text/javascript">
+var d3 = wavesUI.d3;
+var loader = new loaders.AudioBufferLoader();
 
-$(window).ready(function( ){
+var segmentExample = function() {
+    $.getJSON('http://localhost:8000/results/21/json/', function(data) {
 
-var timeline = waves.ui.timeline;
-var segment = waves.ui.segment;
-var d3 = timeline.d3;
+        var trackDuration = data[0].audio_metadata.duration;
+        var durations = data[0].data_object.duration.numpyArray;
+        var starts = data[0].data_object.time.numpyArray;
+        var values = data[0].data_object.value.numpyArray;
 
-var data = [
-    {
-        start: 100,
-        duration: 200
-    }, {
-        start: 650,
-        duration: 300
-    }
-];
+        // format data
+        var data = durations.map(function(dummy, index) {
+            return {
+                start: starts[index],
+                duration: durations[index],
+                height: values[index]
+            };
+        });
 
-var graph = timeline()
-    .width(400)
-    .height(120)
-    .xDomain([0, 1000]);
+        // var minValue = Math.min.apply(null, values);
+        var maxValue = Math.max.apply(null, values);
 
-var segmentLayer = segment()
-    .params({
-        interactions: { editable: true },
-        opacity: 0.4,
-        handlerOpacity: 0.6
-    })
-    .data(data)
-    .color('steelblue');
+        // to update the data, add it to the data araay and redraw the graph
+        $('#add-data').on('click', function(e) {
+            e.preventDefault();
 
-graph.add(segmentLayer);
+            var datum = {
+                start: 2,
+                duration: 1,
+                height: 150
+            };
 
-d3.select('#timeline').call(graph.draw);
+            data.push(datum);
+            graph.update();
+        });
 
+        // add waveform
+        loader.load('download/ogg').then(function(audioBuffer) {
+            try {
 
+                // 1. creat graph
+                var graph = wavesUI.timeline()
+                    .xDomain([0, trackDuration])
+                    .yDomain([0, maxValue])
+                    .width(1000)
+                    .height(140);
+
+                // 2. create layers
+                var waveformLayer = wavesUI.waveform()
+                    .data(audioBuffer.getChannelData(0).buffer)
+                    .sampleRate(audioBuffer.sampleRate)
+                    .color('purple')
+                    // .opacity(0.8);
+
+                var segmentLayer = wavesUI.segment()
+                    .data(data)
+                    .color('steelblue')
+                    .opacity(0.8);
+
+                // 3. add layers to graph
+                graph.add(waveformLayer);
+                graph.add(segmentLayer);
+
+                // 4. draw graph
+                d3.select('#timeline').call(graph.draw);
+            } catch (err) {
+                console.log(err);
+            }
+        }, function() {});
+    });
+}
+
+$(window).ready(function() {
+    segmentExample();
 });
 
 </script>
