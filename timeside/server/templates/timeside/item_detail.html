@@ -32,7 +32,7 @@ Results:
 
 <ul>
 {% for result in object.results.all %}
-  <li><a href="{% if 'image' in result.mime_type %}{% url "timeside-result-png" result.id %}{% elif 'audio' in result.mime_type %}{% url "timeside-result-audio" result.id %}{% else %}{% url "timeside-result-json" result.id %}{% endif %}">{{ result }}</a> ({{ result.uuid }})</li>
+  <li><a href="{% if 'image' in result.mime_type %}{% url "timeside-result-png" result.id %}{% elif 'audio' in result.mime_type %}{% url "timeside-result-audio" result.id %}{% else %}{% url "timeside-result-json" result.id %}{% endif %}">{{ result.preset.processor }}</a> ({{ result.uuid }})</li>
 {% endfor %}
 <ul>
 
