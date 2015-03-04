@@ -167,3 +167,4 @@ LOGGING = {
 
 REST_FRAMEWORK = {
 }
+
