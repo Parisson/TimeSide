@@ -1,0 +1,15 @@
+coverage=3.7.1=py27_0
+h5py=2.4.0=np19py27_0
+ipython=2.4.1=py27_0
+#ipython-notebook=2.4.1=py27_0
+matplotlib=1.4.3=np19py27_0
+networkx=1.9.1=py27_0
+numpy=1.9.1=py27_0
+pillow=2.7.0=py27_0
+pip=6.0.8=py27_0
+pytables=3.1.1=np19py27_2
+python=2.7.9
+requests=2.5.1=py27_0
+scipy=0.14.0=np19py27_0
+setuptools=12.2=py27_0
+traits=4.4.0=py27_0
