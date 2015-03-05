@@ -87,67 +87,171 @@ var waveform = function(div_id) {
 }
 
 
+var timeline_get_data = function(json_url, div_id) {
+    $.getJSON(json_url, function(data_list) {
+	
+	for (var i = 0; i < data_list.length; i++) {
+	    var data = data_list[i];
+	    timeline_result(data, div_id);
+	}
+    });
+}
 
-var timeline = function(json_url, div_id) {
-    $.getJSON(json_url, function(data) {
-        var duration = data[0].audio_metadata.duration;
-        var durations = data[0].data_object.duration.numpyArray;
-        var starts = data[0].data_object.time.numpyArray;
-        var values = data[0].data_object.value.numpyArray;
-        // format data
-        var data = durations.map(function(dummy, index) {
-            return {
-                start: starts[index],
-                duration: durations[index],
-                height: values[index]
-            };
+var timeline_result = function(data, div_id) {
+   
+    var time_mode = data.time_mode
+    var data_mode = data.data_mode
+    var id = data.id_metadata.id
+    
+    switch (time_mode) {
+    case 'global':
+	console.log(id, time_mode, data_mode);
+	break;
+    case 'event':
+	switch (data_mode) {
+	case 'value':
+	    console.log(id, time_mode, data_mode);
+	    break;
+	case 'label':
+	    timeline_event_label(data, div_id);
+	    break;
+	}
+	break;
+    case 'segment':
+	switch (data_mode) {
+	case 'value':
+	    timeline_segment_value(data, div_id);
+	    break;
+	    
+	case 'label':
+	    console.log(id, time_mode, data_mode);
+	    break;
+	}
+	break;
+    case 'framewise':
+	console.log(id, time_mode, data_mode);
+	break;
+    }   
+}
+
+
+var timeline_segment_value = function(data, div_id) {
+    var duration = data.audio_metadata.duration;
+    var durations = data.data_object.duration.numpyArray;
+    var starts = data.data_object.time.numpyArray;
+    var values = data.data_object.value.numpyArray;
+    // format data
+    var data = durations.map(function(dummy, index) {
+        return {
+            start: starts[index],
+            duration: durations[index],
+            height: values[index]
+        };
+    });
+    
+    
+    // var minValue = Math.min.apply(null, values);
+    var max_value = Math.max.apply(null, values);
+    
+    var graph = wavesUI.timeline()
+        .xDomain([0, duration])
+        .yDomain([0, max_value])
+        .width(1024)
+        .height(140);
+    
+    var segmentLayer = wavesUI.segment()
+        .data(data)
+        .color('steelblue')
+        .opacity(0.8);
+    
+    // 3. add layers to graph
+    graph.add(segmentLayer);
+   
+    // 4. draw graph
+    d3.select('#'+div_id).call(graph.draw);
+    
+    var zoomLayer = wavesUI.zoomer()
+        .select('#'+div_id)
+        .on('mousemove', function(e) {
+	    // update graph xZoom
+	    graph.xZoom(e);
+        })
+        .on('mouseup', function(e) {
+            // set the final xZoom value of the graph
+            graph.xZoomSet();
         });
+    
+    // to update the data, add it to the data array and redraw the graph
+    $('#add-data').on('click', function(e) {
+        e.preventDefault();
+	
+        var datum = {
+            start: 2,
+            duration: 1,
+            height: 1000
+        };
+	
+        data.push(datum);
+        graph.update();
+    });
+}
 
-        // var minValue = Math.min.apply(null, values);
-        var max_value = Math.max.apply(null, values);
-
-        var graph = wavesUI.timeline()
-                    .xDomain([0, duration])
-                    .yDomain([0, max_value])
-                    .width(1024)
-                    .height(140);
-
-        var segmentLayer = wavesUI.segment()
-            .data(data)
-            .color('steelblue')
-            .opacity(0.8);
-
-        // 3. add layers to graph
-        graph.add(segmentLayer);
-
-        // 4. draw graph
-        d3.select('#'+div_id).call(graph.draw);
-
-        var zoomLayer = wavesUI.zoomer()
-            .select('#'+div_id)
-            .on('mousemove', function(e) {
-               // update graph xZoom
-               graph.xZoom(e);
-            })
-            .on('mouseup', function(e) {
-                // set the final xZoom value of the graph
-                graph.xZoomSet();
-            });
-
-        // to update the data, add it to the data array and redraw the graph
-        $('#add-data').on('click', function(e) {
-            e.preventDefault();
-
-            var datum = {
-                start: 2,
-                duration: 1,
-                height: 1000
-            };
-
-            data.push(datum);
-            graph.update();
+var timeline_event_label = function(data, div_id) {
+    var duration = data.audio_metadata.duration;
+    var starts = data.data_object.time.numpyArray;
+    var values = data.data_object.label
+    // format data
+    var data = starts.map(function(dummy, index) {
+        return {
+            x: starts[index],
+            height: values[index]
+        };
+    });
+    
+    
+    // var minValue = Math.min.apply(null, values);
+    var max_value = Math.max.apply(null, values);
+    
+    var graph = wavesUI.timeline()
+        .xDomain([0, duration])
+        .yDomain([0, max_value])
+        .width(1024)
+        .height(140);
+    
+    var markerLayer = wavesUI.marker()
+        .data(data)
+        .color('steelblue')
+        .opacity(0.8);
+    
+    // 3. add layers to graph
+    graph.add(markerLayer);
+   
+    // 4. draw graph
+    d3.select('#'+div_id).call(graph.draw);
+    
+    var zoomLayer = wavesUI.zoomer()
+        .select('#'+div_id)
+        .on('mousemove', function(e) {
+	    // update graph xZoom
+	    graph.xZoom(e);
+        })
+        .on('mouseup', function(e) {
+            // set the final xZoom value of the graph
+            graph.xZoomSet();
         });
-
+    
+    // to update the data, add it to the data array and redraw the graph
+    $('#add-data').on('click', function(e) {
+        e.preventDefault();
+	
+        var datum = {
+            start: 2,
+            duration: 1,
+            height: 1000
+        };
+	
+        data.push(datum);
+        graph.update();
     });
 }
 
@@ -159,7 +263,7 @@ $(window).ready(function() {
     $('.timeline').each( function (){
         var div_id = $(this).attr('id');
         var json_url = $(this).attr('json');
-        timeline(json_url, div_id);
+        timeline_get_data(json_url, div_id);
     });
 
 });
@@ -209,10 +313,7 @@ Results:
      </audio>
     {% else %}
         <a href="{% url "timeside-result-json" result.id %}">JSON</a>
-    {% endif %}
-
-    {% if 'aubio_temporal' in result.preset.processor.pid %}
-        <button id="add-data">add</button>
+            <button id="add-data">add</button>
         <br>
         <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
     {% endif %}
