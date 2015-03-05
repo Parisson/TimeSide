@@ -12,78 +12,79 @@ var loader = new loaders.AudioBufferLoader();
 
 var waveform = function(div_id) {
 
-        // add waveform
-        loader.load('download/ogg').then(function(audioBuffer) {
-            try {
+    // add waveform
+    loader.load('download/ogg').then(function(audioBuffer) {
+        try {
 
-                var id = '#' + div_id;
-                var id_sub = '#' + div_id + '_sub';
+            var id = '#' + div_id;
+            var id_sub = '#' + div_id + '_sub';
 
-                var data = [{
-                    start: audioBuffer.duration/4,
-                    duration: audioBuffer.duration/2
-                }];
+            var data = [{
+                start: audioBuffer.duration/4,
+                duration: audioBuffer.duration/2
+            }];
 
-                // 1. creat graph
-                var graph = wavesUI.timeline()
-                    .xDomain([0, audioBuffer.duration])
-                    .width(1024)
-                    .height(140);
+            var buffer = audioBuffer.getChannelData(0).buffer
 
-                // 2. create layers
-                var waveformLayer = wavesUI.waveform()
-                    .data(audioBuffer.getChannelData(0).buffer)
-                    .sampleRate(audioBuffer.sampleRate)
-                    .color('purple')
-                    // .opacity(0.8);
+            // 1. creat graph
+            var graph = wavesUI.timeline()
+                .xDomain([0, audioBuffer.duration])
+                .width(1024)
+                .height(140);
 
-                var segmentLayer = wavesUI.segment()
-                    .params({
-                        interactions: { editable: true },
-                        opacity: 0.4,
-                        handlerOpacity: 0.6
-                    })
-                    .data(data)
-                    .color('steelblue');
+            // 2. create layers
+            var waveformLayer = wavesUI.waveform()
+                .data(buffer)
+                .sampleRate(audioBuffer.sampleRate)
+                .color('purple')
+                // .opacity(0.8);
 
-                // 3. add layers to graph
-                graph.add(waveformLayer);
-                graph.add(segmentLayer);
-
-                // 4. draw graph
-                d3.select(id).call(graph.draw);
-
-                var graph_sub = wavesUI.timeline()
-                    .xDomain([0, audioBuffer.duration])
-                    .width(1024)
-                    .height(140);
-
-                var waveformLayerSub = wavesUI.waveform()
-                    .data(audioBuffer.getChannelData(0).buffer)
-                    .sampleRate(audioBuffer.sampleRate)
-                    .color('purple')
-                    // .opacity(0.8);
-
-                graph_sub.add(waveformLayerSub);
-
-                d3.select(id_sub).call(graph_sub.draw);
-
-                var zoomLayer = wavesUI.zoomer()
-                .select(id_sub)
-                .on('mousemove', function(e) {
-                   // update graph xZoom
-                   graph_sub.xZoom(e);
+            var segmentLayer = wavesUI.segment()
+                .params({
+                    interactions: { editable: true },
+                    opacity: 0.4,
+                    handlerOpacity: 0.6
                 })
-                .on('mouseup', function(e) {
-                    // set the final xZoom value of the graph
-                    graph_sub.xZoomSet();
-                });
+                .data(data)
+                .color('steelblue');
 
+            // 3. add layers to graph
+            graph.add(waveformLayer);
+            graph.add(segmentLayer);
 
-            } catch (err) {
-                console.log(err);
-            }
-        }, function() {});
+            // 4. draw graph
+            d3.select(id).call(graph.draw);
+
+            var graph_sub = wavesUI.timeline()
+                .xDomain([0, audioBuffer.duration])
+                .width(1024)
+                .height(140);
+
+            var waveformLayerSub = wavesUI.waveform()
+                .data(buffer)
+                .sampleRate(audioBuffer.sampleRate)
+                .color('purple')
+                // .opacity(0.8);
+
+            graph_sub.add(waveformLayerSub);
+
+            d3.select(id_sub).call(graph_sub.draw);
+
+            var zoomLayer = wavesUI.zoomer()
+            .select(id_sub)
+            .on('mousemove', function(e) {
+               // update graph xZoom
+               graph_sub.xZoom(e);
+            })
+            .on('mouseup', function(e) {
+                // set the final xZoom value of the graph
+                graph_sub.xZoomSet();
+            });
+
+        } catch (err) {
+            console.log(err);
+        }
+    }, function() {});
 }
 
 
@@ -184,6 +185,8 @@ Your browser does not support the audio element.
 <div id="waveform"></div>
 <div id="waveform_sub"></div>
 
+<h2>Metadata</h2>
+
 <ul>
    <li>File: {{ object.file }}</li>
    {% if object.url %}<li>url : {{ object.url }}</li>{% endif %}
@@ -195,7 +198,7 @@ Your browser does not support the audio element.
    <li>lock : {{ object.lock }}</li>
 </ul>
 
-Results:
+<h2>Results</h2>
 
 <ul>
 {% for result in object.results.all %}
@@ -216,9 +219,7 @@ Results:
         <br>
         <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
     {% endif %}
-
     </li>
-
 {% endfor %}
 
 <ul>
