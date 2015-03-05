@@ -90,6 +90,17 @@ var timeline = function(json_url, div_id) {
         // 4. draw graph
         d3.select('#'+div_id).call(graph.draw);
 
+        var zoomLayer = wavesUI.zoomer()
+            .select('#'+div_id)
+            .on('mousemove', function(e) {
+               // update graph xZoom
+               graph.xZoom(e);
+            })
+            .on('mouseup', function(e) {
+                // set the final xZoom value of the graph
+                graph.xZoomSet();
+            });
+
         // to update the data, add it to the data array and redraw the graph
         $('#add-data').on('click', function(e) {
             e.preventDefault();
@@ -97,7 +108,7 @@ var timeline = function(json_url, div_id) {
             var datum = {
                 start: 2,
                 duration: 1,
-                height: 150
+                height: 1000
             };
 
             data.push(datum);
