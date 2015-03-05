@@ -51,5 +51,7 @@ app:
     - media
     - log
   command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
+  ports:
+    - "9000:9000"
   expose:
     - "80" #default runserver wsgi port
