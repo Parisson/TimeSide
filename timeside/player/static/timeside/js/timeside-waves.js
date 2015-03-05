@@ -1,14 +1,16 @@
 var d3 = wavesUI.d3;
 var loader = new loaders.AudioBufferLoader();
 
-function waveform(div_id) {
+var graph_width = 1024
 
+function waveform(div_id) {
+    var id_sub = '#' + div_id + '_sub';
     // add waveform
     loader.load('download/ogg').then(function(audioBuffer) {
         try {
 
             var id = '#' + div_id;
-            var id_sub = '#' + div_id + '_sub';
+            
 
             var data = [{
                 start: audioBuffer.duration/4,
@@ -20,7 +22,7 @@ function waveform(div_id) {
             // 1. creat graph
             var graph = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
-                .width(1024)
+                .width(graph_width)
                 .height(140);
 
             // 2. create layers
@@ -45,10 +47,10 @@ function waveform(div_id) {
 
             // 4. draw graph
             d3.select(id).call(graph.draw);
-
+	    
             var graph_sub = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
-                .width(1024)
+                .width(graph_width)
                 .height(140);
 
             var waveformLayerSub = wavesUI.waveform()
@@ -61,15 +63,45 @@ function waveform(div_id) {
 
             d3.select(id_sub).call(graph_sub.draw);
 
-            var zoomLayer = wavesUI.zoomer()
+	    // Add X-Ticks addTicks(id_sub, graph_sub);
+	    // Create a svg element for the zoomer
+	    var zoomerSvg = d3.select(id_sub).append('svg')
+		.attr('width', graph_width)
+		.attr('height', 30);
+
+	    // Create the time axis - here a common d3 axis
+	    // Graph must be drawn in order to have `graph.xScale` up to date
+	    var xAxis = d3.svg.axis()
+		.scale(graph_sub.xScale)
+		.tickSize(1)
+		.tickFormat(function(d) {
+		    var form = '%S:%L';
+		    var date = new Date(d * 1000);
+		    var format = d3.time.format(form);
+		    return format(date);
+		});
+
+	    // Add the axis to the newly created svg element
+	    var axis = zoomerSvg.append('g')
+		.attr('class', 'x-axis')
+		.attr('transform', 'translate(0, 0)')
+		.attr('fill', '#555')
+		.call(xAxis);
+
+	    var zoomLayer = wavesUI.zoomer()
             .select(id_sub)
             .on('mousemove', function(e) {
-               // update graph xZoom
-               graph_sub.xZoom(e);
+		// update graph xZoom
+		graph_sub.xZoom(e);
+		// update axis
+		axis.call(xAxis);
+		
             })
             .on('mouseup', function(e) {
                 // set the final xZoom value of the graph
                 graph_sub.xZoomSet();
+		// update axis
+		axis.call(xAxis);
             });
 
         } catch (err) {
@@ -77,6 +109,7 @@ function waveform(div_id) {
         }
     }, function() {});
 }
+
 
 
 function timeline_get_data(json_url, div_id) {
@@ -148,7 +181,7 @@ function timeline_segment_value(data, div_id) {
     var graph = wavesUI.timeline()
         .xDomain([0, duration])
         .yDomain([0, max_value])
-        .width(1024)
+        .width(graph_width)
         .height(140);
 
     var segmentLayer = wavesUI.segment()
@@ -207,7 +240,7 @@ function timeline_event_label(data, div_id) {
     var graph = wavesUI.timeline()
         .xDomain([0, duration])
         .yDomain([0, max_value])
-        .width(1024)
+        .width(graph_width)
         .height(140);
 
     var markerLayer = wavesUI.marker()
