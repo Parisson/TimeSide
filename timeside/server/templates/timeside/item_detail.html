@@ -10,9 +10,54 @@
 var d3 = wavesUI.d3;
 var loader = new loaders.AudioBufferLoader();
 
+var waveform = function(div_id) {
+
+        // add waveform
+        loader.load('download/ogg').then(function(audioBuffer) {
+            try {
+                var data = [{
+                    start: audioBuffer.duration/4,
+                    duration: audioBuffer.duration/2
+                }];
+
+                // 1. creat graph
+                var graph = wavesUI.timeline()
+                    .xDomain([0, audioBuffer.duration])
+                    .width(1000)
+                    .height(140);
+
+                // 2. create layers
+                var waveformLayer = wavesUI.waveform()
+                    .data(audioBuffer.getChannelData(0).buffer)
+                    .sampleRate(audioBuffer.sampleRate)
+                    .color('purple')
+                    // .opacity(0.8);
+
+                var segmentLayer = wavesUI.segment()
+                    .params({
+                        interactions: { editable: true },
+                        opacity: 0.4,
+                        handlerOpacity: 0.6
+                    })
+                    .data(data)
+                    .color('steelblue');
+
+                // 3. add layers to graph
+                graph.add(waveformLayer);
+                graph.add(segmentLayer);
+
+                // 4. draw graph
+                d3.select('#'+div_id).call(graph.draw);
+            } catch (err) {
+                console.log(err);
+            }
+        }, function() {});
+}
+
+
 var timeline = function(json_url, div_id) {
     $.getJSON(json_url, function(data) {
-        var trackDuration = data[0].audio_metadata.duration;
+        var duration = data[0].audio_metadata.duration;
         var durations = data[0].data_object.duration.numpyArray;
         var starts = data[0].data_object.time.numpyArray;
         var values = data[0].data_object.value.numpyArray;
@@ -26,7 +71,24 @@ var timeline = function(json_url, div_id) {
         });
 
         // var minValue = Math.min.apply(null, values);
-        var maxValue = Math.max.apply(null, values);
+        var max_value = Math.max.apply(null, values);
+
+        var graph = wavesUI.timeline()
+                    .xDomain([0, duration])
+                    .yDomain([0, max_value])
+                    .width(1000)
+                    .height(140);
+
+        var segmentLayer = wavesUI.segment()
+            .data(data)
+            .color('steelblue')
+            .opacity(0.8);
+
+        // 3. add layers to graph
+        graph.add(segmentLayer);
+
+        // 4. draw graph
+        d3.select('#'+div_id).call(graph.draw);
 
         // to update the data, add it to the data array and redraw the graph
         $('#add-data').on('click', function(e) {
@@ -42,43 +104,13 @@ var timeline = function(json_url, div_id) {
             graph.update();
         });
 
-        // add waveform
-        loader.load('download/ogg').then(function(audioBuffer) {
-            try {
-                // 1. creat graph
-                var graph = wavesUI.timeline()
-                    .xDomain([0, trackDuration])
-                    .yDomain([0, maxValue])
-                    .width(1000)
-                    .height(140);
-
-                // 2. create layers
-                var waveformLayer = wavesUI.waveform()
-                    .data(audioBuffer.getChannelData(0).buffer)
-                    .sampleRate(audioBuffer.sampleRate)
-                    .color('purple')
-                    // .opacity(0.8);
-
-                var segmentLayer = wavesUI.segment()
-                    .data(data)
-                    .color('steelblue')
-                    .opacity(0.8);
-
-                // 3. add layers to graph
-                graph.add(waveformLayer);
-                graph.add(segmentLayer);
-
-                // 4. draw graph
-                d3.select('#'+div_id).call(graph.draw);
-            } catch (err) {
-                console.log(err);
-            }
-        }, function() {});
     });
 }
 
 
 $(window).ready(function() {
+
+    waveform("waveform");
 
     $('.timeline').each( function (){
         var div_id = $(this).attr('id');
@@ -105,7 +137,7 @@ Your browser does not support the audio element.
 </audio>
 {% endblock html5-player %}
 
-<div id="timeline"></div>
+<div id="waveform"></div>
 
 <ul>
    <li>File: {{ object.file }}</li>
@@ -134,7 +166,7 @@ Results:
         <a href="{% url "timeside-result-json" result.id %}">JSON</a>
     {% endif %}
 
-    {% if 'aubio_temporal' in result.preset.processor|safe %}
+    {% if 'aubio_temporal' in result.preset.processor.pid %}
         <button id="add-data">add</button>
         <br>
         <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
