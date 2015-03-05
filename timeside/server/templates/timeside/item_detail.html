@@ -4,53 +4,18 @@
 {% block extra_stylesheets %}
 {% endblock %}
 
-{% block content %}
+{% block extra_javascript %}
 
-<h1>{{ object.title }}</h1>
-
-{% block html5-player %}
- <audio controls>
-  <source src="download/ogg" type="audio/ogg">
-  <source src="download/mp3" type="audio/mpeg">
-Your browser does not support the audio element.
-</audio>
-{% endblock html5-player %}
-
-<div id="timeline"></div>
-
-<ul>
-   <li>File: {{ object.file }}</li>
-   {% if object.url %}<li>url : {{ object.url }}</li>{% endif %}
-   <li>mime_type : {{ object.mime_type }}</li>
-   <li>sha1 : {{ object.sha1 }}</li>
-   <li>hdf5 : {{ object.hdf5 }}</li>
-   <li>uuid : {{ object.uuid }}</li>
-   <li>author: {{ object.author }}</li>
-   <li>lock : {{ object.lock }}</li>
-</ul>
-
-Results:
-
-<ul>
-{% for result in object.results.all %}
-<li><a href="{% if 'image' in result.mime_type %}{% url "timeside-result-png" result.id %}{% elif 'audio' in result.mime_type %}{% url "timeside-result-audio" result.id %}{% else %}{% url "timeside-result-json" result.id %}{% endif %}">{{ result.preset.processor }}</a> ({{ result.uuid }})</li>
-{% if 'aubio_temporal' in result.preset.processor|safe %}
-<div id="graph-{{ result.id }}" ></div>
-<button id="add-data">add</button>
 <script type="text/javascript">
 var d3 = wavesUI.d3;
 var loader = new loaders.AudioBufferLoader();
-var testtt = '{{result.preset.processor|safe}}'
-var segmentExample = function() {
-        var result_url = '{% url "timeside-result-json" result.id %}'
-        var div_id = '#graph-{{ result.id }}'
-        $.getJSON('{% url "timeside-result-json" result.id %}', function(data) {
 
+var timeline = function(json_url, div_id) {
+    $.getJSON(json_url, function(data) {
         var trackDuration = data[0].audio_metadata.duration;
         var durations = data[0].data_object.duration.numpyArray;
         var starts = data[0].data_object.time.numpyArray;
         var values = data[0].data_object.value.numpyArray;
-
         // format data
         var data = durations.map(function(dummy, index) {
             return {
@@ -80,7 +45,6 @@ var segmentExample = function() {
         // add waveform
         loader.load('download/ogg').then(function(audioBuffer) {
             try {
-
                 // 1. creat graph
                 var graph = wavesUI.timeline()
                     .xDomain([0, trackDuration])
@@ -105,7 +69,7 @@ var segmentExample = function() {
                 graph.add(segmentLayer);
 
                 // 4. draw graph
-                d3.select(div_id).call(graph.draw);
+                d3.select('#'+div_id).call(graph.draw);
             } catch (err) {
                 console.log(err);
             }
@@ -113,13 +77,62 @@ var segmentExample = function() {
     });
 }
 
+
 $(window).ready(function() {
-    segmentExample();
+
+    $('.timeline').each( function (){
+        var div_id = $(this).attr('id');
+        var json_url = $(this).attr('json');
+        timeline(json_url, div_id);
+    });
+
 });
 
 </script>
-{% endif %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ object.title }}</h1>
+
+{% block html5-player %}
+ <audio controls>
+  <source src="download/ogg" type="audio/ogg">
+  <source src="download/mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+{% endblock html5-player %}
+
+<div id="timeline"></div>
+
+<ul>
+   <li>File: {{ object.file }}</li>
+   {% if object.url %}<li>url : {{ object.url }}</li>{% endif %}
+   <li>mime_type : {{ object.mime_type }}</li>
+   <li>sha1 : {{ object.sha1 }}</li>
+   <li>hdf5 : {{ object.hdf5 }}</li>
+   <li>uuid : {{ object.uuid }}</li>
+   <li>author: {{ object.author }}</li>
+   <li>lock : {{ object.lock }}</li>
+</ul>
+
+Results:
+
+<ul>
+{% for result in object.results.all %}
+    <li>
+    <a href="{% if 'image' in result.mime_type %}{% url "timeside-result-png" result.id %}{% elif 'audio' in result.mime_type %}{% url "timeside-result-audio" result.id %}{% else %}{% url "timeside-result-json" result.id %}{% endif %}">{{ result.preset.processor }}</a> ({{ result.uuid }})
+
+    {% if 'aubio_temporal' in result.preset.processor|safe %}
+    <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
+    <button id="add-data">add</button>
+    {% endif %}
+    </li>
+
 {% endfor %}
+
 <ul>
 
 {% endblock content %}
