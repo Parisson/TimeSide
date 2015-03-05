@@ -15,6 +15,10 @@ var waveform = function(div_id) {
         // add waveform
         loader.load('download/ogg').then(function(audioBuffer) {
             try {
+
+                var id = '#' + div_id;
+                var id_sub = '#' + div_id + '_sub';
+
                 var data = [{
                     start: audioBuffer.duration/4,
                     duration: audioBuffer.duration/2
@@ -23,7 +27,7 @@ var waveform = function(div_id) {
                 // 1. creat graph
                 var graph = wavesUI.timeline()
                     .xDomain([0, audioBuffer.duration])
-                    .width(1000)
+                    .width(1024)
                     .height(140);
 
                 // 2. create layers
@@ -47,12 +51,41 @@ var waveform = function(div_id) {
                 graph.add(segmentLayer);
 
                 // 4. draw graph
-                d3.select('#'+div_id).call(graph.draw);
+                d3.select(id).call(graph.draw);
+
+                var graph_sub = wavesUI.timeline()
+                    .xDomain([0, audioBuffer.duration])
+                    .width(1024)
+                    .height(140);
+
+                var waveformLayerSub = wavesUI.waveform()
+                    .data(audioBuffer.getChannelData(0).buffer)
+                    .sampleRate(audioBuffer.sampleRate)
+                    .color('purple')
+                    // .opacity(0.8);
+
+                graph_sub.add(waveformLayerSub);
+
+                d3.select(id_sub).call(graph_sub.draw);
+
+                var zoomLayer = wavesUI.zoomer()
+                .select(id_sub)
+                .on('mousemove', function(e) {
+                   // update graph xZoom
+                   graph_sub.xZoom(e);
+                })
+                .on('mouseup', function(e) {
+                    // set the final xZoom value of the graph
+                    graph_sub.xZoomSet();
+                });
+
+
             } catch (err) {
                 console.log(err);
             }
         }, function() {});
 }
+
 
 
 var timeline = function(json_url, div_id) {
@@ -76,7 +109,7 @@ var timeline = function(json_url, div_id) {
         var graph = wavesUI.timeline()
                     .xDomain([0, duration])
                     .yDomain([0, max_value])
-                    .width(1000)
+                    .width(1024)
                     .height(140);
 
         var segmentLayer = wavesUI.segment()
@@ -149,6 +182,7 @@ Your browser does not support the audio element.
 {% endblock html5-player %}
 
 <div id="waveform"></div>
+<div id="waveform_sub"></div>
 
 <ul>
    <li>File: {{ object.file }}</li>
