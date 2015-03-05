@@ -200,7 +200,7 @@ class Preset(BaseResource):
     processor = models.ForeignKey('Processor', related_name="presets",
                                   verbose_name=_('processor'), blank=True,
                                   null=True)
-    parameters = models.TextField(_('Parameters'), blank=True)
+    parameters = models.TextField(_('Parameters'), blank=True, default='{}')
     author = models.ForeignKey(User, related_name="presets",
                                verbose_name=_('author'), blank=True, null=True,
                                on_delete=models.SET_NULL)
