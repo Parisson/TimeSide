@@ -23,7 +23,7 @@ function waveform(div_id) {
             var graph = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
                 .width(graph_width)
-                .height(140);
+                .height(40);
 
             // 2. create layers
             var waveformLayer = wavesUI.waveform()
