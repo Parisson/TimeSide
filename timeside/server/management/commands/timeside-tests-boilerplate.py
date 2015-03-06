@@ -57,6 +57,6 @@ class Command(BaseCommand):
             if not preset in experience.presets.all():
                 experience.presets.add(preset)
 
-        task, c = Task.objects.get_or_create(experience=experience, selection=selection)
+        task = Task(experience=experience, selection=selection)
         task.status_setter(2)
         task.delete()
