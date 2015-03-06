@@ -307,7 +307,7 @@ class Task(BaseResource):
                 result.status_setter(_DONE)
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=item)
-                result.mime_type_setter(get_mime_type(result.file.path))
+                # result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
             del proc
 
