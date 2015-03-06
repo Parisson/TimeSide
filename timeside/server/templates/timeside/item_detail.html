@@ -32,7 +32,26 @@ Results:
 
 <ul>
 {% for result in object.results.all %}
-  <li><a href="{% if 'image' in result.mime_type %}{% url "timeside-result-png" result.id %}{% elif 'audio' in result.mime_type %}{% url "timeside-result-audio" result.id %}{% else %}{% url "timeside-result-json" result.id %}{% endif %}">{{ result.preset.processor }}</a> ({{ result.uuid }})</li>
+    <li>{{ result.preset.processor }} ({{ result.uuid }})
+    {% if 'image' in result.mime_type %}
+        <img src="{% url "timeside-result-png" result.id %}">
+    {% elif 'audio' in result.mime_type or 'ogg' in result.mime_type%}
+     <br>
+     <audio controls>
+        <source src="{% url "timeside-result-audio" result.id %}" type="{{ result.mime_type }}">
+     </audio>
+    {% elif 'video' in result.mime_type %}
+     <br>
+     <video controls>
+        <source src="{% url "timeside-result-audio" result.id %}" type="{{ result.mime_type }}">
+     </video>
+    {% else %}
+        <a href="{% url "timeside-result-json" result.id %}">JSON</a>
+            <button id="add-data">add</button>
+        <br>
+        <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
+    {% endif %}
+    </li>
 {% endfor %}
 <ul>
 
