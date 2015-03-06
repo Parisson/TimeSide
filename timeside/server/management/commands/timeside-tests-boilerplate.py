@@ -13,16 +13,21 @@ from timeside.core.tools.test_samples import generateSamples
 class Command(BaseCommand):
     help = "Setup and run a boilerplate for testing"
 
-    def cleanup(self):
+    def processor_cleanup(self):
         for processor in Processor.objects.all():
             processor.delete()
 
+    def result_cleanup(self):
+        for result in Result.objects.all():
+            result.delete()
+
     def handle(self, *args, **options):
         # NOT for production
-        self.cleanup()
+        self.processor_cleanup()
+        # self.result_cleanup()
 
         presets = []
-        blacklist =['decoder', 'live', 'gain', 'yaafe']
+        blacklist =['decoder', 'live', 'gain']
         processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
         for proc in processors:
             trig = True
@@ -54,3 +59,4 @@ class Command(BaseCommand):
 
         task, c = Task.objects.get_or_create(experience=experience, selection=selection)
         task.status_setter(2)
+        task.delete()
