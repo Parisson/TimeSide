@@ -56,7 +56,7 @@ function waveform(div_id) {
             var waveformLayerSub = wavesUI.waveform()
                 .data(buffer)
                 .sampleRate(audioBuffer.sampleRate)
-                .color('purple')
+                .color('steelblue')
                 // .opacity(0.8);
 
             graph_sub.add(waveformLayerSub);
@@ -147,9 +147,8 @@ function timeline_result(data, div_id) {
     case 'value':
         timeline_segment_value(data, div_id);
         break;
-
     case 'label':
-        console.log(id, time_mode, data_mode);
+	timeline_segment_label(data, div_id);
         break;
     }
     break;
@@ -221,10 +220,76 @@ function timeline_segment_value(data, div_id) {
     });
 }
 
+function timeline_segment_label(data, div_id) {
+    var duration = data.audio_metadata.duration;
+    var durations = data.data_object.duration.numpyArray;
+    var starts = data.data_object.time.numpyArray;
+    var values = data.data_object.label.numpyArray;
+
+    // format data
+    var data = durations.map(function(dummy, index) {
+        return {
+            start: starts[index],
+            duration: durations[index],
+	    label: values[index]
+        };
+    });
+
+    var colors = d3.scale.category10().domain(d3.range(0,10)).range();
+    
+    // var minValue = Math.min.apply(null, values);
+    var max_value = Math.max.apply(null, values);
+
+    var graph = wavesUI.timeline()
+        .xDomain([0, duration])
+        .width(graph_width)
+        .height(140);
+
+    var segmentLayer = wavesUI.segment()
+        .data(data)
+        .color(function(d) { return colors[d.label]})
+        .opacity(0.8)
+	.params({
+	    handlerOpacity: 1
+	});
+	
+
+    // 3. add layers to graph
+    graph.add(segmentLayer);
+
+    // 4. draw graph
+    d3.select('#'+div_id).call(graph.draw);
+
+    var zoomLayer = wavesUI.zoomer()
+        .select('#'+div_id)
+        .on('mousemove', function(e) {
+        // update graph xZoom
+        graph.xZoom(e);
+        })
+        .on('mouseup', function(e) {
+            // set the final xZoom value of the graph
+            graph.xZoomSet();
+        });
+
+    // to update the data, add it to the data array and redraw the graph
+    $('#add-data').on('click', function(e) {
+        e.preventDefault();
+
+        var datum = {
+            start: 2,
+            duration: 1,
+            height: 1000
+        };
+
+        data.push(datum);
+        graph.update();
+    });
+}
+
 function timeline_event_label(data, div_id) {
     var duration = data.audio_metadata.duration;
     var starts = data.data_object.time.numpyArray;
-    var values = data.data_object.label
+    var values = data.data_object.label.numpyArray;
     // format data
     var data = starts.map(function(dummy, index) {
         return {
