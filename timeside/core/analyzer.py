@@ -335,6 +335,11 @@ class LabelMetadata(MetadataObject):
             subgroup = h5group.create_group(name)
             hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
 
+    def from_hdf5(self, h5group):
+        self['label_type'] =  h5group.attrs['label_type']
+        for subgroup_name, h5subgroup in h5group.items():
+            hdf5.dict_from_hdf5(self[subgroup_name], h5subgroup)
+
 
 class FrameMetadata(MetadataObject):
 
@@ -426,11 +431,13 @@ class DataObject(MetadataObject):
 
     def as_dict(self):
         as_dict = super(DataObject, self).as_dict()
-        for key in ['frame_metadata', 'label_metadata']:
-            if key in as_dict and not isinstance(as_dict[key], dict):
-                as_dict[key] = as_dict[key].as_dict()
 
+        for key in ['frame_metadata', 'label_metadata']:
+            #  TODO : check if its needed now
+            if key in as_dict and isinstance(as_dict[key], MetadataObject):
+                as_dict[key] = as_dict[key].as_dict()
         return as_dict
+                
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
@@ -591,7 +598,7 @@ class AnalyzerResult(MetadataObject):
 
     def as_dict(self):
         return dict([(key, self[key].as_dict())
-                     for key in self.keys() if hasattr(self[key], 'as_dict')] +
+                     for key in self.keys() ]+ #if hasattr(self[key], 'as_dict')] +
                     [('data_mode', self.data_mode), ('time_mode', self.time_mode)])
                     # TODO : check if it can be simplified now
 
