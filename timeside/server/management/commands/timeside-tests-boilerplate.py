@@ -16,8 +16,6 @@ class Command(BaseCommand):
     def cleanup(self):
         for processor in Processor.objects.all():
             processor.delete()
-        for result in Result.objects.all():
-            result.delete()
 
     def handle(self, *args, **options):
         # NOT for production
