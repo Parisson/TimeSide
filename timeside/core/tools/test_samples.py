@@ -238,17 +238,21 @@ def generate_sample_file(filename, samples_dir, gst_audio_encoder,
     return sample_file
 
 
-def generateSamples(overwrite=False):
-    from timeside import __file__ as ts_file
-    ts_path = os.path.split(os.path.abspath(ts_file))[0]
-    tests_dir = os.path.abspath(os.path.join(ts_path, '../tests'))
-    if os.path.isdir(tests_dir):
-        samples_dir = os.path.abspath(os.path.join(tests_dir, 'samples'))
+def generateSamples(overwrite=False, samples_dir=None):
+    if not samples_dir:
+        from timeside import __file__ as ts_file
+        ts_path = os.path.split(os.path.abspath(ts_file))[0]
+        tests_dir = os.path.abspath(os.path.join(ts_path, '../tests'))
+        if os.path.isdir(tests_dir):
+            samples_dir = os.path.abspath(os.path.join(tests_dir, 'samples'))
+            if not os.path.isdir(samples_dir):
+                os.makedirs(samples_dir)
+        else:
+            import tempfile
+            samples_dir = tempfile.mkdtemp(suffix="ts_samples")
+    else:
         if not os.path.isdir(samples_dir):
             os.makedirs(samples_dir)
-    else:
-        import tempfile
-        samples_dir = tempfile.mkdtemp(suffix="ts_samples")
 
     samples = dict()
 
