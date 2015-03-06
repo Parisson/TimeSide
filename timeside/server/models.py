@@ -50,6 +50,21 @@ PROCESSOR_PIDS = [(name, [(processor.id(), processor.id())
                           in timeside.core.processor.processors(proc_type)])
                   for name, proc_type in _processor_types.items()]
 
+extra_types = {
+    '.webm': 'video/webm',
+    '.eaf': 'text/xml',  # ELAN Annotation Format
+    '.trs':  'text/xml', # Trancriber Annotation Format
+    '.svl':  'text/xml',  # Sonic Visualiser layer file
+    '.TextGrid': 'text/praat-textgrid',  # Praat TextGrid annotation file
+}
+
+encoders = timeside.core.processor.processors(timeside.core.api.IEncoder)
+for encoder in encoders:
+    extra_types['.' + encoder.file_extension()] = encoder.mime_type()
+
+for ext,mime_type in extra_types.items():
+    mimetypes.add_type(mime_type, ext)
+
 # Status
 _FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
 STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
@@ -307,7 +322,7 @@ class Task(BaseResource):
                 result.status_setter(_DONE)
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=item)
-                # result.mime_type_setter(get_mime_type(result.file.path))
+                result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
             del proc
 
