@@ -23,20 +23,23 @@ function waveform(div_id) {
             var graph = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
                 .width(graph_width)
-                .height(40);
+                .height(80);
 
             // 2. create layers
             var waveformLayer = wavesUI.waveform()
+		.params({height: 40})
                 .data(buffer)
                 .sampleRate(audioBuffer.sampleRate)
-                .color('purple')
+                .color('purple');
                 // .opacity(0.8);
 
             var segmentLayer = wavesUI.segment()
                 .params({
                     interactions: { editable: true },
                     opacity: 0.4,
-                    handlerOpacity: 0.6
+                    handlerOpacity: 0.6,
+		    top: 50,
+		    height: 40
                 })
                 .data(data)
                 .color('steelblue');
@@ -115,14 +118,39 @@ function waveform(div_id) {
 function timeline_get_data(json_url, div_id) {
     $.getJSON(json_url, function(data_list) {
 
-    for (var i = 0; i < data_list.length; i++) {
-        var data = data_list[i];
-        timeline_result(data, div_id);
-    }
+	var nb_results = data_list.length;
+	var height = 140 * data_list.length + 10 * (data_list.length -1);
+
+	var duration = data_list[0].audio_metadata.duration;
+
+	var graph = wavesUI.timeline()
+        .xDomain([0, duration])
+        .width(graph_width)
+        .height(height);
+		
+	for (var i = 0; i < data_list.length; i++) {
+            var data = data_list[i];
+	    var ytop = i * (140 + 10)
+	    
+            timeline_result(data, graph, ytop);
+	}
+	// 4. draw graph
+	d3.select('#'+div_id).call(graph.draw);
+
+	var zoomLayer = wavesUI.zoomer()
+            .select('#'+div_id)
+            .on('mousemove', function(e) {
+		// update graph xZoom
+		graph.xZoom(e);
+            })
+            .on('mouseup', function(e) {
+		// set the final xZoom value of the graph
+		graph.xZoomSet();
+            });
     });
 }
 
-function timeline_result(data, div_id) {
+function timeline_result(data, graph, ytop) {
 
     var time_mode = data.time_mode
     var data_mode = data.data_mode
@@ -130,37 +158,79 @@ function timeline_result(data, div_id) {
 
     switch (time_mode) {
     case 'global':
-    console.log(id, time_mode, data_mode);
-    break;
+	console.log(id, time_mode, data_mode);
+	break;
     case 'event':
-    switch (data_mode) {
-    case 'value':
-        console.log(id, time_mode, data_mode);
-        break;
-    case 'label':
-        timeline_event_label(data, div_id);
-        break;
-    }
-    break;
+	switch (data_mode) {
+	case 'value':
+            console.log(id, time_mode, data_mode);
+            break;
+	case 'label':
+            timeline_event_label(data, graph, ytop);
+            break;
+	}
+	break;
     case 'segment':
-    switch (data_mode) {
-    case 'value':
-        timeline_segment_value(data, div_id);
-        break;
-    case 'label':
-	timeline_segment_label(data, div_id);
-        break;
-    }
-    break;
+	switch (data_mode) {
+	case 'value':
+            timeline_segment_value(data, graph, ytop);
+            break;
+	case 'label':
+	    timeline_segment_label(data, graph, ytop);
+            break;
+	}
+	break;
     case 'framewise':
-    console.log(id, time_mode, data_mode);
-    break;
+	switch (data_mode) {
+	case 'value':
+            timeline_framewise_value(data, graph, ytop);
+            break;
+	case 'label':
+	    console.log(id, time_mode, data_mode);
+            break;
+	}
+	break;
     }
 }
 
+function timeline_framewise_value(data, graph, ytop) {
 
-function timeline_segment_value(data, div_id) {
-    var duration = data.audio_metadata.duration;
+    // Extract frame_metadata parameters
+    var samplerate = data.data_object.frame_metadata.samplerate;
+    var blocksize = data.data_object.frame_metadata.blocksize;
+    var stepsize = data.data_object.frame_metadata.stepsize;
+
+    var values = data.data_object.value.numpyArray;
+
+    // format data
+    var data = values.map(function(dummy, index) {
+        return {
+	    cx: (blocksize / 2 +  stepsize * index ) / samplerate,
+            cy: values[index]
+        };
+    });
+
+    
+
+    // var minValue = Math.min.apply(null, values);
+    var max_value = Math.max.apply(null, values);
+
+    var breakpointLayer = wavesUI.breakpoint()
+	.params({
+	    height: 140,
+	    top: ytop,
+	    yDomain: [0, max_value]
+	})
+        .data(data)
+        .color('steelblue')
+        .opacity(0.8);
+    
+    // 3. add layers to graph
+    graph.add(breakpointLayer);
+}
+
+function timeline_segment_value(data, graph, ytop) {
+
     var durations = data.data_object.duration.numpyArray;
     var starts = data.data_object.time.numpyArray;
     var values = data.data_object.value.numpyArray;
@@ -172,122 +242,63 @@ function timeline_segment_value(data, div_id) {
             height: values[index]
         };
     });
-
+    
 
     // var minValue = Math.min.apply(null, values);
     var max_value = Math.max.apply(null, values);
 
-    var graph = wavesUI.timeline()
-        .xDomain([0, duration])
-        .yDomain([0, max_value])
-        .width(graph_width)
-        .height(140);
-
+    console.log(ytop)
+    
     var segmentLayer = wavesUI.segment()
         .data(data)
         .color('steelblue')
-        .opacity(0.8);
-
+        .opacity(0.8)
+	.params({
+	    height: 140,
+	    top: ytop,
+	    yDomain: [0, max_value]
+	});
+    
     // 3. add layers to graph
     graph.add(segmentLayer);
-
-    // 4. draw graph
-    d3.select('#'+div_id).call(graph.draw);
-
-    var zoomLayer = wavesUI.zoomer()
-        .select('#'+div_id)
-        .on('mousemove', function(e) {
-        // update graph xZoom
-        graph.xZoom(e);
-        })
-        .on('mouseup', function(e) {
-            // set the final xZoom value of the graph
-            graph.xZoomSet();
-        });
-
-    // to update the data, add it to the data array and redraw the graph
-    $('#add-data').on('click', function(e) {
-        e.preventDefault();
-
-        var datum = {
-            start: 2,
-            duration: 1,
-            height: 1000
-        };
-
-        data.push(datum);
-        graph.update();
-    });
+    
 }
 
-function timeline_segment_label(data, div_id) {
-    var duration = data.audio_metadata.duration;
+function timeline_segment_label(data, graph, ytop) {
+
     var durations = data.data_object.duration.numpyArray;
     var starts = data.data_object.time.numpyArray;
-    var values = data.data_object.label.numpyArray;
+    var labels = data.data_object.label.numpyArray;
 
     // format data
     var data = durations.map(function(dummy, index) {
         return {
             start: starts[index],
             duration: durations[index],
-	    label: values[index]
+	    label: labels[index]
         };
     });
 
-    var colors = d3.scale.category10().domain(d3.range(0,10)).range();
+    var colors = d3.scale.category10().domain(d3.set(labels).values()).range();
     
-    // var minValue = Math.min.apply(null, values);
-    var max_value = Math.max.apply(null, values);
-
-    var graph = wavesUI.timeline()
-        .xDomain([0, duration])
-        .width(graph_width)
-        .height(140);
-
     var segmentLayer = wavesUI.segment()
         .data(data)
         .color(function(d) { return colors[d.label]})
         .opacity(0.8)
 	.params({
+	    height: 140,
+	    top: ytop,
 	    handlerOpacity: 1
 	});
 	
 
     // 3. add layers to graph
     graph.add(segmentLayer);
-
-    // 4. draw graph
-    d3.select('#'+div_id).call(graph.draw);
-
-    var zoomLayer = wavesUI.zoomer()
-        .select('#'+div_id)
-        .on('mousemove', function(e) {
-        // update graph xZoom
-        graph.xZoom(e);
-        })
-        .on('mouseup', function(e) {
-            // set the final xZoom value of the graph
-            graph.xZoomSet();
-        });
-
-    // to update the data, add it to the data array and redraw the graph
-    $('#add-data').on('click', function(e) {
-        e.preventDefault();
-
-        var datum = {
-            start: 2,
-            duration: 1,
-            height: 1000
-        };
-
-        data.push(datum);
-        graph.update();
-    });
+    
 }
 
-function timeline_event_label(data, div_id) {
-    var duration = data.audio_metadata.duration;
+function timeline_event_label(data, graph, ytop) {
+
     var starts = data.data_object.time.numpyArray;
     var values = data.data_object.label.numpyArray;
     // format data
@@ -302,45 +313,19 @@ function timeline_event_label(data, div_id) {
     // var minValue = Math.min.apply(null, values);
     var max_value = Math.max.apply(null, values);
 
-    var graph = wavesUI.timeline()
-        .xDomain([0, duration])
-        .yDomain([0, max_value])
-        .width(graph_width)
-        .height(140);
+    console.log(ytop)
 
     var markerLayer = wavesUI.marker()
         .data(data)
         .color('steelblue')
-        .opacity(0.8);
-
+        .opacity(0.8)
+    	.params({
+	    height: 140,
+	    top: ytop,
+	    yDomain: [0, max_value],
+	});
+    
     // 3. add layers to graph
     graph.add(markerLayer);
 
-    // 4. draw graph
-    d3.select('#'+div_id).call(graph.draw);
-
-    var zoomLayer = wavesUI.zoomer()
-        .select('#'+div_id)
-        .on('mousemove', function(e) {
-        // update graph xZoom
-        graph.xZoom(e);
-        })
-        .on('mouseup', function(e) {
-            // set the final xZoom value of the graph
-            graph.xZoomSet();
-        });
-
-    // to update the data, add it to the data array and redraw the graph
-    $('#add-data').on('click', function(e) {
-        e.preventDefault();
-
-        var datum = {
-            start: 2,
-            duration: 1,
-            height: 1000
-        };
-
-        data.push(datum);
-        graph.update();
-    });
 }
