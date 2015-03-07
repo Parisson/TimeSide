@@ -2,16 +2,17 @@ var d3 = wavesUI.d3;
 var loader = new loaders.AudioBufferLoader();
 
 var graph_width = 1024
+var graph_height = 100
+var waveform_height = 150
+
 
 function waveform(div_id) {
     var id_sub = '#' + div_id + '_sub';
     // add waveform
     loader.load('download/ogg').then(function(audioBuffer) {
         try {
-
             var id = '#' + div_id;
             
-
             var data = [{
                 start: audioBuffer.duration/4,
                 duration: audioBuffer.duration/2
@@ -23,11 +24,10 @@ function waveform(div_id) {
             var graph = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
                 .width(graph_width)
-                .height(80);
+                .height(40);
 
             // 2. create layers
             var waveformLayer = wavesUI.waveform()
-		.params({height: 40})
                 .data(buffer)
                 .sampleRate(audioBuffer.sampleRate)
                 .color('purple');
@@ -38,8 +38,6 @@ function waveform(div_id) {
                     interactions: { editable: true },
                     opacity: 0.4,
                     handlerOpacity: 0.6,
-		    top: 50,
-		    height: 40
                 })
                 .data(data)
                 .color('steelblue');
@@ -54,7 +52,7 @@ function waveform(div_id) {
             var graph_sub = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
                 .width(graph_width)
-                .height(140);
+                .height(waveform_height);
 
             var waveformLayerSub = wavesUI.waveform()
                 .data(buffer)
@@ -119,7 +117,7 @@ function timeline_get_data(json_url, div_id) {
     $.getJSON(json_url, function(data_list) {
 
 	var nb_results = data_list.length;
-	var height = 140 * data_list.length + 10 * (data_list.length -1);
+	var height = graph_height * data_list.length + 10 * (data_list.length -1);
 
 	var duration = data_list[0].audio_metadata.duration;
 
@@ -130,7 +128,7 @@ function timeline_get_data(json_url, div_id) {
 		
 	for (var i = 0; i < data_list.length; i++) {
             var data = data_list[i];
-	    var ytop = i * (140 + 10)
+	    var ytop = i * (graph_height + 10)
 	    
             timeline_result(data, graph, ytop);
 	}
@@ -210,14 +208,12 @@ function timeline_framewise_value(data, graph, ytop) {
         };
     });
 
-    
-
     // var minValue = Math.min.apply(null, values);
     var max_value = Math.max.apply(null, values);
 
     var breakpointLayer = wavesUI.breakpoint()
 	.params({
-	    height: 140,
+	    height: graph_height,
 	    top: ytop,
 	    yDomain: [0, max_value]
 	})
@@ -247,14 +243,12 @@ function timeline_segment_value(data, graph, ytop) {
     // var minValue = Math.min.apply(null, values);
     var max_value = Math.max.apply(null, values);
 
-    console.log(ytop)
-    
     var segmentLayer = wavesUI.segment()
         .data(data)
         .color('steelblue')
         .opacity(0.8)
 	.params({
-	    height: 140,
+	    height: graph_height,
 	    top: ytop,
 	    yDomain: [0, max_value]
 	});
@@ -286,7 +280,7 @@ function timeline_segment_label(data, graph, ytop) {
         .color(function(d) { return colors[d.label]})
         .opacity(0.8)
 	.params({
-	    height: 140,
+	    height: graph_height,
 	    top: ytop,
 	    handlerOpacity: 1
 	});
@@ -313,14 +307,12 @@ function timeline_event_label(data, graph, ytop) {
     // var minValue = Math.min.apply(null, values);
     var max_value = Math.max.apply(null, values);
 
-    console.log(ytop)
-
     var markerLayer = wavesUI.marker()
         .data(data)
         .color('steelblue')
         .opacity(0.8)
     	.params({
-	    height: 140,
+	    height: graph_height,
 	    top: ytop,
 	    yDomain: [0, max_value],
 	});
