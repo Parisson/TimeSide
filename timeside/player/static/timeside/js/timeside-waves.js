@@ -94,6 +94,8 @@ function waveform(div_id) {
             .on('mousemove', function(e) {
 		// update graph xZoom
 		graph_sub.xZoom(e);
+		graph_sub.update();
+
 		// update axis
 		axis.call(xAxis);
 		
@@ -140,6 +142,7 @@ function timeline_get_data(json_url, div_id) {
             .on('mousemove', function(e) {
 		// update graph xZoom
 		graph.xZoom(e);
+		graph.update();
             })
             .on('mouseup', function(e) {
 		// set the final xZoom value of the graph
