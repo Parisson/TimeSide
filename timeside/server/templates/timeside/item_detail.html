@@ -23,7 +23,7 @@ $(window).ready(function() {
 <h1>{{ object.title }}</h1>
 
 {% block html5-player %}
- <audio controls>
+ <audio controls preload="none">
   <source src="download/ogg" type="audio/ogg">
   <source src="download/mp3" type="audio/mpeg">
 Your browser does not support the audio element.
@@ -55,12 +55,12 @@ Your browser does not support the audio element.
         <img src="{% url "timeside-result-png" result.id %}">
     {% elif 'audio' in result.mime_type or 'ogg' in result.mime_type%}
      <br>
-     <audio controls>
+     <audio controls preload="none">
         <source src="{% url "timeside-result-audio" result.id %}" type="{{ result.mime_type }}">
      </audio>
     {% elif 'video' in result.mime_type %}
      <br>
-     <video controls>
+     <video controls preload="none">
         <source src="{% url "timeside-result-audio" result.id %}" type="{{ result.mime_type }}">
      </video>
     {% else %}
