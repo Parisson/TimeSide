@@ -116,11 +116,11 @@ class SampleArray(object):
 class SineArray(SampleArray):
     """Class for generating a Sine array"""
     def __init__(self, frequency=440, duration=10, samplerate=44100,
-                 channels=1, gain=0.97):
+                 channels=1):
         super(SineArray, self).__init__(duration=duration,
                                         samplerate=samplerate)
         self.frequency = frequency
-        self.array = gain*numpy.sin((2 * numpy.pi * self.frequency *
+        self.array = numpy.sin((2 * numpy.pi * self.frequency *
                                self.time_samples / self.samplerate))
         self.array.resize(self.num_samples, 1)
 
@@ -128,7 +128,7 @@ class SineArray(SampleArray):
 class SweepArray(SampleArray):
     """Class for generating a Sweep array"""
     def __init__(self, f0=20, f1=None, duration=10, samplerate=44100,
-                 method='logarithmic', gain=0.97):
+                 method='logarithmic'):
         super(SweepArray, self).__init__(duration=duration,
                                          samplerate=samplerate)
 
@@ -138,7 +138,7 @@ class SweepArray(SampleArray):
         else:
             self.f1 = f1 / samplerate
         self.method = method
-        self.array = gain*scipy.signal.waveforms.chirp(t=self.time_samples,
+        self.array = scipy.signal.waveforms.chirp(t=self.time_samples,
                                                   f0=self.f0,
                                                   t1=self.time_samples[-1],
                                                   f1=self.f1,
