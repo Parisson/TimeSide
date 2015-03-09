@@ -14,7 +14,7 @@ function waveform(div_id) {
             var id = '#' + div_id;
 
 	    var audio_start = 0
-	    var audio_end = audioBuffer.duration / 4 ;//Math.min(audioBuffer.duration, 30);
+	    var audio_end = Math.min(audioBuffer.duration/2, 30);
 
             var data = [{
                 start: audio_start,
@@ -94,7 +94,8 @@ function waveform(div_id) {
                 // .opacity(0.8);
 
             graph_sub.add(waveformLayerSub);
-
+	    update_waveform(graph_sub, data)
+	    
             d3.select(id_sub).call(graph_sub.draw);
 
 	    // Add X-Ticks addTicks(id_sub, graph_sub);
