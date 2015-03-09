@@ -57,7 +57,7 @@ setup(
         'matplotlib',
         'django==1.6.10',
         'django-extensions',
-        'djangorestframework',
+        'djangorestframework==2.4.4',
         'south',
         'traits',
         'networkx',
