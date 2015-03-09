@@ -1,5 +1,22 @@
-python /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-python /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
-python /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+#!/bin/sh
 
-uwsgi --socket :8000 --wsgi-file /opt/TimeSide/examples/sandbox/wsgi.py  --chdir /opt/TimeSide/examples/sandbox/ --master --processes 4 --threads 2 --py-autoreload 3
+# paths
+app_dir='/opt/TimeSide/'
+sandbox_dir=$app_dir'examples/sandbox/'
+manage=$sandbox_dir'manage.py'
+wsgi=$sandbox_dir'wsgi.py'
+app_static_dir=$app_dir'timeside/player/static/'
+
+# django init
+python $manage syncdb --noinput
+python $manage migrate --noinput
+python $manage collectstatic --noinput
+
+# static files auto update
+pip install watchdog
+
+watchmedo shell-command --patterns="*.js;*.css" --recursive \
+    --command='python '$manage' collectstatic --noinput' $app_static_dir &
+
+# app start
+uwsgi --socket :8000 --wsgi-file $wsgi --chdir $sandbox_dir --master --processes 4 --threads 2 --py-autoreload 3
