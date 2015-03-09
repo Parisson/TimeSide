@@ -12,13 +12,16 @@ function waveform(div_id) {
     loader.load('download/ogg').then(function(audioBuffer) {
         try {
             var id = '#' + div_id;
-            
+
+	    var audio_start = 0
+	    var audio_end = Math.min(audioBuffer.duration, 30);
+
             var data = [{
-                start: audioBuffer.duration/4,
-                duration: audioBuffer.duration/2
+                start: audio_start,
+                duration: audio_end
             }];
 
-            var buffer = audioBuffer.getChannelData(0).buffer
+            var buffer = audioBuffer.getChannelData(0).buffer;
 
             // 1. creat graph
             var graph = wavesUI.timeline()
@@ -34,13 +37,43 @@ function waveform(div_id) {
                 // .opacity(0.8);
 
             var segmentLayer = wavesUI.segment()
-                .params({
+	        .params({
                     interactions: { editable: true },
                     opacity: 0.4,
                     handlerOpacity: 0.6,
                 })
                 .data(data)
                 .color('steelblue');
+
+	    function update_waveform(graph, data) {
+		graph.xScale.domain([data[0].start, data[0].start + data[0].duration]);
+		graph.update();
+	    };
+
+	    function update_segment() {
+		seg_start = graph_sub.xScale.domain()[0]
+		seg_end = graph_sub.xScale.domain()[1]
+		
+		if ( seg_start < 0 || seg_end > audioBuffer.duration) {
+		    seg_start = Math.max(0, seg_start);
+		    seg_end = Math.min(audioBuffer.duration, seg_end);
+		    data[0].start = seg_start;
+		    data[0].duration = seg_end - seg_start;
+
+		    update_waveform(graph_sub, data);
+
+		} else {
+		    data[0].start = seg_start;
+		    data[0].duration = seg_end - seg_start;
+		}
+		graph.update();
+
+	    };
+
+	    
+	    segmentLayer.on('drag', function(item, e) {
+		update_waveform(graph_sub, data)
+	    });
 
             // 3. add layers to graph
             graph.add(waveformLayer);
@@ -90,23 +123,25 @@ function waveform(div_id) {
 		.call(xAxis);
 
 	    var zoomLayer = wavesUI.zoomer()
-            .select(id_sub)
-            .on('mousemove', function(e) {
-		// update graph xZoom
-		graph_sub.xZoom(e);
-		graph_sub.update();
-
-		// update axis
-		axis.call(xAxis);
-		
-            })
-            .on('mouseup', function(e) {
-                // set the final xZoom value of the graph
-                graph_sub.xZoomSet();
-		// update axis
-		axis.call(xAxis);
-            });
-
+		.select(id_sub)
+		.on('mousemove', function(e) {
+		    // update graph xZoom
+		    graph_sub.xZoom(e);
+		    graph_sub.update();
+		    
+		    // update axis
+		    axis.call(xAxis);
+		    // Update zoom_segment
+		    update_segment()
+		    
+		})
+		.on('mouseup', function(e) {
+                    // set the final xZoom value of the graph
+                    graph_sub.xZoomSet();
+		    // update axis
+		    axis.call(xAxis);
+		});
+	    
         } catch (err) {
             console.log(err);
         }
