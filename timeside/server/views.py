@@ -158,7 +158,7 @@ class ResultEncoderView(View):
 
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
-        return HttpResponse(stream_from_file(result.file.path),
+        return StreamingHttpResponse(stream_from_file(result.file.path),
                             content_type=result.mime_type)
 
 
