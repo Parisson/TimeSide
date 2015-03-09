@@ -406,7 +406,11 @@ def set_hash(sender, **kwargs):
 def run(sender, **kwargs):
     instance = kwargs['instance']
     if instance.status == _PENDING:
-        instance.run()
+        from django_gearman import GearmanClient
+        client = GearmanClient()
+        completed_job_request = client.submit_job("timeside.server.task_run", instance.id)
+        print "Result: '%s'" % completed_job_request.result
+        # instance.run()
 
 
 post_save.connect(set_mimetype, sender=Item)

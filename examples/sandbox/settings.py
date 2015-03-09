@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'timeside.server',
     'timeside.player',
     'rest_framework',
+    'django_gearman',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -168,3 +169,5 @@ LOGGING = {
 REST_FRAMEWORK = {
 }
 
+# One or more gearman servers
+GEARMAN_SERVERS = ['127.0.0.1']
