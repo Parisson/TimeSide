@@ -14,7 +14,7 @@ function waveform(div_id) {
             var id = '#' + div_id;
 
 	    var audio_start = 0
-	    var audio_end = Math.min(audioBuffer.duration, 30);
+	    var audio_end = audioBuffer.duration / 4 ;//Math.min(audioBuffer.duration, 30);
 
             var data = [{
                 start: audio_start,

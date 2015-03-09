@@ -65,7 +65,6 @@ Your browser does not support the audio element.
      </video>
     {% else %}
         <a href="{% url "timeside-result-json" result.id %}">JSON</a>
-            <button id="add-data">add</button>
         <br>
         <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
     {% endif %}

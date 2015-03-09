@@ -13,6 +13,9 @@
 
 {% block extra_stylesheets %}{% endblock %}
 
+{% load staticfiles %}
+<link href="{% static "timeside/css/timeside.css" %}" type="text/css" media="all" rel="stylesheet" />
+
 {% block javascript %}
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
