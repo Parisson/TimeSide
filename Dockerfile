@@ -50,7 +50,7 @@ WORKDIR /opt/TimeSide
 
 # Install binary dependencies with conda
 ADD conda-requirements.txt /opt/TimeSide/
-ADD requirements.txt /opt/TimeSide/
+#ADD requirements.txt /opt/TimeSide/
 RUN conda install --file conda-requirements.txt  && \
     rm /opt/miniconda/lib/libm.so.6  # use the system libm; see github.com/ContinuumIO/anaconda-issues/issues/182
 
@@ -66,12 +66,6 @@ WORKDIR /opt/TimeSide
 
 RUN pip install -r requirements.txt
 
-# setup all the configfiles  --> Gérer dans le container Nginx
-#RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-#RUN rm /etc/nginx/sites-enabled/default
-#RUN ln -s /opt/TimeSide/examples/deploy/nginx-app.conf /etc/nginx/sites-enabled/
-#RUN ln -s /opt/TimeSide/examples/deploy/supervisor-app.conf /etc/supervisor/conf.d/
-
 # install new deps from the local repo
 #RUN pip install -e /opt/TimeSide
 
@@ -84,4 +78,3 @@ RUN /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
 RUN /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 EXPOSE 8000
-#CMD ["supervisord", "-n"]

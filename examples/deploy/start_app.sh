@@ -2,7 +2,7 @@
 
 # paths
 app_dir='/opt/TimeSide/'
-sandbox_dir=$app_dir'examples/sandbox/'
+sandbox_dir='/home/timeside/'
 manage=$sandbox_dir'manage.py'
 wsgi=$sandbox_dir'wsgi.py'
 app_static_dir=$app_dir'timeside/player/static/'
