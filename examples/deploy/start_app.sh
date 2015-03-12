@@ -11,6 +11,7 @@ app_static_dir=$app_dir'timeside/player/static/'
 python $manage syncdb --noinput
 python $manage migrate --noinput
 python $manage collectstatic --noinput
+python $manage timeside-create-admin-user
 
 # static files auto update
 pip install watchdog
