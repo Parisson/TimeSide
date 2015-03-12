@@ -7,6 +7,10 @@ manage=$sandbox_dir'manage.py'
 wsgi=$sandbox_dir'wsgi.py'
 app_static_dir=$app_dir'timeside/player/static/'
 
+# Copy Sandbox in /home/timeside
+#  this is not needed for TimeSide but for Timeside-diadems
+cp -uR /opt/TimeSide/examples/sandbox/* /home/timeside/
+
 # django init
 python $manage syncdb --noinput
 python $manage migrate --noinput
