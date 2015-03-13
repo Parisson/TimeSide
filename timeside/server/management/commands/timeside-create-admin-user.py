@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Command(BaseCommand):
-    help = """Create a default admin user if it doesn't exists.
+    help = """Create a default admin user if it doesn't exist.
             you SHOULD change the password and the email afterwards!"""
 
     username = 'admin'
