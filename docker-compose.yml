@@ -1,7 +1,7 @@
-media:
+home:
   image: debian:wheezy
   volumes:
-    - ./examples/sandbox/media:/media
+    - ./examples/sandbox:/home/timeside
   command: /bin/true
 
 static:
@@ -34,10 +34,10 @@ nginx:
   ports:
     - "8000:80"
   volumes:
-    - ./examples/deploy/nginx/sites-enabled/app.conf:/etc/nginx/conf.d/default.conf
+    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
   volumes_from:
     - static
-    - media
+    - home
     - log
   links:
     - app
@@ -48,7 +48,7 @@ app:
     - .:/opt/TimeSide
   volumes_from:
     - static
-    - media
+    - home
     - log
   command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
   ports:
