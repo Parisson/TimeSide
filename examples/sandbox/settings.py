@@ -1,5 +1,4 @@
 # Django settings for server project.
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -29,6 +28,9 @@ DATABASES = {
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -134,7 +136,7 @@ INSTALLED_APPS = (
     'timeside.server',
     'timeside.player',
     'rest_framework',
-    'django_gearman',
+    'djcelery',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -170,4 +172,12 @@ REST_FRAMEWORK = {
 }
 
 # One or more gearman servers
-GEARMAN_SERVERS = ['127.0.0.1']
+# GEARMAN_SERVERS = ['127.0.0.1']
+
+BROKER_URL = 'amqp://guest:guest@localhost//'
+
+
+# This will make sure the app is always imported when
+# Django starts so that shared_task will use this app.
+CELERY_IMPORTS = ("timeside.server.tasks", )
+from celery_app import app
