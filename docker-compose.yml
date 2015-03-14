@@ -56,7 +56,7 @@ app:
     - rabbitmq
 
 worker:
-  image: parisson/timeside
+  image: parisson/timeside:latest-dev
   volumes:
     - .:/opt/TimeSide
   volumes_from:
