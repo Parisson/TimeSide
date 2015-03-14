@@ -11,6 +11,9 @@ app_static_dir=$app_dir'timeside/player/static/'
 #  this is not needed for TimeSide but for Timeside-diadems
 cp -uR /opt/TimeSide/examples/sandbox/* /home/timeside/
 
+# add some staging modules
+pip install watchdog django-celery
+
 # django init
 python $manage syncdb --noinput
 python $manage migrate --noinput
@@ -18,8 +21,6 @@ python $manage collectstatic --noinput
 python $manage timeside-create-admin-user
 
 # static files auto update
-pip install watchdog
-
 watchmedo shell-command --patterns="*.js;*.css" --recursive \
     --command='python '$manage' collectstatic --noinput' $app_static_dir &
 

@@ -27,7 +27,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7'
@@ -174,10 +174,10 @@ REST_FRAMEWORK = {
 # One or more gearman servers
 # GEARMAN_SERVERS = ['127.0.0.1']
 
-BROKER_URL = 'amqp://guest:guest@localhost//'
+BROKER_URL = 'amqp://guest:guest@rabbitmq//'
+CELERY_IMPORTS = ("timeside.server.tasks",)
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_TASK_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ['application/json']
 
-
-# This will make sure the app is always imported when
-# Django starts so that shared_task will use this app.
-CELERY_IMPORTS = ("timeside.server.tasks", )
 from celery_app import app
