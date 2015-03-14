@@ -404,9 +404,10 @@ def set_hash(sender, **kwargs):
 
 
 def run(sender, **kwargs):
+    from timeside.server.tasks import task_run
     instance = kwargs['instance']
     if instance.status == _PENDING:
-        instance.run()
+        task_run.delay(instance.id)
 
 
 post_save.connect(set_mimetype, sender=Item)

@@ -79,11 +79,10 @@ class NumpySrc:
 class SampleArray(object):
     """Base Class for generating a data sample array"""
 
-    def __init__(self, duration=10, samplerate=44100, gain=0.97):
+    def __init__(self, duration=10, samplerate=44100):
         self.samplerate = int(samplerate)
         self.num_samples = int(numpy.ceil(duration * self.samplerate))
         self.array = NotImplemented
-        self.gain = gain
 
     @property
     def time_samples(self):

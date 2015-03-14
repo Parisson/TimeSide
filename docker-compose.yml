@@ -18,16 +18,53 @@ log:
     - /var/log/uwsgi
   command: /bin/true
 
-# datadb:
-#   image: debian:wheezy
-#   volumes:
-#     - /var/lib/postgresql
-#   command: /bin/true
+lib:
+  image: debian:wheezy
+  volumes:
+    - /var/lib/rabbitmq
+    - /var/lib/postgres
+    - /var/lib/mysql
+  command: /bin/true
+
 
 # db:
 #   image: postgres
 #   volumes_from:
 #     - datadb
+
+rabbitmq:
+  image: rabbitmq:3-management
+  ports:
+    - "15672:15672"
+  expose:
+    - "5672"
+
+app:
+  build: .
+  volumes:
+    - .:/opt/TimeSide
+  volumes_from:
+    - static
+    - home
+    - log
+  command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
+  ports:
+    - "9000:9000"
+  expose:
+    - "8000" #default runserver wsgi port
+  links:
+    - rabbitmq
+
+worker:
+  image: parisson/timeside
+  volumes:
+    - .:/opt/TimeSide
+  volumes_from:
+    - home
+  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
+  links:
+    - rabbitmq
+    - app
 
 nginx:
   image: nginx
@@ -42,16 +79,3 @@ nginx:
   links:
     - app
 
-app:
-  build: .
-  volumes:
-    - .:/opt/TimeSide
-  volumes_from:
-    - static
-    - home
-    - log
-  command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
-  ports:
-    - "9000:9000"
-  expose:
-    - "80" #default runserver wsgi port

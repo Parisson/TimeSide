@@ -1,21 +1,39 @@
 {% extends "timeside/base.html" %}
 {% load i18n %}
 
-{% block extra_stylesheets %}{% endblock %}
+{% block extra_stylesheets %}
+{% endblock %}
 
-{% block extra_javascript %}{% endblock %}
+{% block extra_javascript %}
+<script type="text/javascript">
+
+$(window).ready(function() {
+    div_wav_sub = waveform("waveform");
+    $('.timeline').each( function (){
+        var div_id = $(this).attr('id');
+        var json_url = $(this).attr('json');
+        timeline_get_data(json_url, div_id);
+    });
+});
+</script>
+{% endblock %}
 
 {% block content %}
 
 <h1>{{ object.title }}</h1>
 
 {% block html5-player %}
- <audio controls>
+ <audio controls preload="none">
   <source src="download/ogg" type="audio/ogg">
   <source src="download/mp3" type="audio/mpeg">
 Your browser does not support the audio element.
 </audio>
 {% endblock html5-player %}
+
+<div id="waveform"></div>
+<div id="waveform_sub"></div>
+
+<h2>Metadata</h2>
 
 <ul>
    <li>File: {{ object.file }}</li>
@@ -28,7 +46,7 @@ Your browser does not support the audio element.
    <li>lock : {{ object.lock }}</li>
 </ul>
 
-Results:
+<h2>Results</h2>
 
 <ul>
 {% for result in object.results.all %}
@@ -37,22 +55,22 @@ Results:
         <img src="{% url "timeside-result-png" result.id %}">
     {% elif 'audio' in result.mime_type or 'ogg' in result.mime_type%}
      <br>
-     <audio controls>
+     <audio controls preload="none">
         <source src="{% url "timeside-result-audio" result.id %}" type="{{ result.mime_type }}">
      </audio>
     {% elif 'video' in result.mime_type %}
      <br>
-     <video controls>
+     <video controls preload="none">
         <source src="{% url "timeside-result-audio" result.id %}" type="{{ result.mime_type }}">
      </video>
     {% else %}
         <a href="{% url "timeside-result-json" result.id %}">JSON</a>
-            <button id="add-data">add</button>
         <br>
         <div id="graph-{{ result.id }}" class="timeline" json="{% url "timeside-result-json" result.id %}"></div>
     {% endif %}
     </li>
 {% endfor %}
+
 <ul>
 
 {% endblock content %}

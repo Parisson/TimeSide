@@ -13,9 +13,16 @@
 
 {% block extra_stylesheets %}{% endblock %}
 
+{% load staticfiles %}
+<link href="{% static "timeside/css/timeside.css" %}" type="text/css" media="all" rel="stylesheet" />
+
 {% block javascript %}
-    <script src="{{ STATIC_URL }}timeside/js/libs/soundmanager2-nodebug-jsmin.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}timeside/js/timeside.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="{{ STATIC_URL }}timeside/lib/waves/ui/waves-ui.umd.js"></script>
+    <script src="{{ STATIC_URL }}timeside/lib/waves/loaders/loaders.min.js"></script>
+    <script src="{{ STATIC_URL }}timeside/js/timeside.js"></script>
+    <script src="{{ STATIC_URL }}timeside/js/timeside-waves.js"></script>
 {% endblock %}
 
 {% block extra_javascript %}{% endblock %}

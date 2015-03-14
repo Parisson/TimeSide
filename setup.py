@@ -61,6 +61,8 @@ setup(
         'south',
         'traits',
         'networkx',
+        'django-celery',
+        'watchdog',
         ],
     platforms=['OS Independent'],
     license='Gnu Public License V2',

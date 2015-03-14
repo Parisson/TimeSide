@@ -1,9 +1,25 @@
-
 from __future__ import absolute_import
 
-from timeside.server.celery import app
+from celery import shared_task
+from .models import Task
 
 
-@app.task
-def process(pipe):
-    pipe.run()
+@shared_task
+def task_run(id):
+    task = Task.objects.get(id=id)
+    task.run()
+
+
+@shared_task
+def add(x, y):
+    return x + y
+
+
+@shared_task
+def mul(x, y):
+    return x * y
+
+
+@shared_task
+def xsum(numbers):
+    return sum(numbers)
