@@ -19,24 +19,21 @@ MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@paris
 
 # install confs, keys and deps
 RUN apt-key adv --keyserver pgp.mit.edu --recv-key E3298399DF14BB7C && \
-    apt-key adv --keyserver pgp.mit.edu --recv-key 07DC563D1F41B907 && \
-    apt-key adv --keyserver pgp.mit.edu --recv-key 5C808C2B65558117
-ADD ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
-RUN apt-get update && \
-    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples
-RUN apt-get -y --force-yes -t wheezy-backports dist-upgrade
-RUN apt-get install -y --force-yes -t wheezy-backports  python-aubio python-yaafe
-#RUN apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor git
-RUN apt-get clean
-
-RUN apt-get update && apt-get install -y wget bzip2 build-essential
+    echo 'deb http://http.debian.net/debian wheezy-backports main contrib non-free' > /etc/apt/sources.list.d/wheezy-backports.list && \
+    echo 'deb http://debian.parisson.com/debian/ wheezy main' > /etc/apt/sources.list.d/parisson.list && \
+    apt-get update && \
+    apt-get -y --force-yes -t wheezy-backports dist-upgrade  && \
+    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples && \
+    apt-get install -y --force-yes -t wheezy-backports python-yaafe && \
+    apt-get install -y --force-yes wget bzip2 build-essential && \
+    apt-get clean
 
 # Install conda in /opt/miniconda
+ENV PATH /opt/miniconda/bin:$PATH
 RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh && \
     bash miniconda.sh -b -p /opt/miniconda && \
-    rm miniconda.sh
-ENV PATH /opt/miniconda/bin:$PATH
-RUN hash -r && \
+    rm miniconda.sh && \
+    hash -r && \
     conda config --set always_yes yes --set changeps1 yes && \
     conda update -q conda
 
@@ -73,8 +70,8 @@ RUN pip install -r requirements.txt
 #RUN cd /opt/TimeSide; python setup.py develop
 
 # Sandbox setup
-RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput
-RUN /opt/TimeSide/examples/sandbox/manage.py migrate --noinput
-RUN /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
+    /opt/TimeSide/examples/sandbox/manage.py migrate --noinput && \
+    /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 EXPOSE 8000
