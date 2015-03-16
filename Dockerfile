@@ -19,7 +19,7 @@ MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@paris
 
 # install confs, keys and deps
 RUN apt-key adv --keyserver pgp.mit.edu --recv-key E3298399DF14BB7C && \
-    apt-key adv --keyserver pgp.mit.edu --recv-key 07DC563D1F41B907
+    apt-key adv --keyserver pgp.mit.edu --recv-key 07DC563D1F41B907 && \
     apt-key adv --keyserver pgp.mit.edu --recv-key 5C808C2B65558117
 ADD ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
 RUN apt-get update && \
