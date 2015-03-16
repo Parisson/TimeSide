@@ -56,9 +56,7 @@ app:
     - rabbitmq
 
 worker:
-  image: parisson/timeside:latest-dev
-  volumes:
-    - .:/opt/TimeSide
+  build: .
   volumes_from:
     - home
   command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
