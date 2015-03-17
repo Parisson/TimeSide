@@ -19,28 +19,14 @@ MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@paris
 
 # install confs, keys and deps
 RUN apt-key adv --keyserver pgp.mit.edu --recv-key E3298399DF14BB7C && \
-<<<<<<< HEAD
-    apt-key adv --keyserver pgp.mit.edu --recv-key 07DC563D1F41B907
-    apt-key adv --keyserver pgp.mit.edu --recv-key 5C808C2B65558117
-ADD ./examples/deploy/apt-app.list /etc/apt/sources.list.d/
-RUN apt-get update && \
-    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples libmysqlclient-dev
-RUN apt-get -y --force-yes -t wheezy-backports dist-upgrade
-RUN apt-get install -y --force-yes -t wheezy-backports  python-aubio python-yaafe
-#RUN apt-get install -y --force-yes -t wheezy-backports build-essential vim python python-dev python-pip nginx postgresql python-psycopg2 supervisor git
-RUN apt-get clean
-
-RUN apt-get update && apt-get install -y wget bzip2 build-essential
-=======
     echo 'deb http://http.debian.net/debian wheezy-backports main contrib non-free' > /etc/apt/sources.list.d/wheezy-backports.list && \
     echo 'deb http://debian.parisson.com/debian/ wheezy main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
     apt-get -y --force-yes -t wheezy-backports dist-upgrade  && \
-    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples && \
+    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples libmysqlclient-dev && \
     apt-get install -y --force-yes -t wheezy-backports python-yaafe && \
     apt-get install -y --force-yes wget bzip2 build-essential && \
     apt-get clean
->>>>>>> dev
 
 # Install conda in /opt/miniconda
 ENV PATH /opt/miniconda/bin:$PATH
