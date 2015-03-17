@@ -1,8 +1,4 @@
-home:
-  image: debian:wheezy
-  volumes:
-    - ./examples/sandbox:/home/timeside
-  command: /bin/true
+# Volumes
 
 static:
   image: debian:wheezy
@@ -26,6 +22,11 @@ lib:
     - /var/lib/mysql
   command: /bin/true
 
+home:
+  image: debian:wheezy
+  volumes:
+    - ./examples/sandbox:/home/timeside
+  command: /bin/true
 
 db:
   image: mysql
@@ -37,6 +38,7 @@ db:
     - MYSQL_DATABASE=timeside
     - MYSQL_USER=timeside
     - MYSQL_PASSWORD=changeme
+
 rabbitmq:
   image: rabbitmq:3-management
   ports:
@@ -56,7 +58,7 @@ app:
   ports:
     - "9000:9000"
   expose:
-    - "8000" #default runserver wsgi port
+    - "8000"
   links:
     - rabbitmq
     - db
