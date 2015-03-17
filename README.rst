@@ -60,7 +60,7 @@ Architecture
 
 The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
-.. image:: https://github.com/Parisson/Telemeta-doc/blob/master/Common/img/TimeSide_pipe.svg
+.. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/images/TimeSide_pipe.svg;hb=refs/heads/dev
   :width: 800 px
 
 Dive in
@@ -235,40 +235,35 @@ Install
 Any platform
 --------------
 
-Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in 5 minutes.
+Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in 5 minutes:
 
-1. install Git: http://git-scm.com/downloads
+    1. install `Git <http://git-scm.com/downloads>`_
 
-2. install Docker: https://docs.docker.com/installation/
+    2. install `Docker <https://docs.docker.com/installation/>`_
 
-3. Install pip docker-compose: https://docs.docker.com/compose/install/
+    3. install `docker-compose <https://docs.docker.com/compose/install/>`_
 
-4. Clone TimeSide::
+    4. clone TimeSide::
 
-   git clone https://github.com/Parisson/TimeSide.git
-   cd TimeSide
+        git clone https://github.com/Parisson/TimeSide.git
+        cd TimeSide
 
-5. Start the app:
+    5. start it up::
 
-    docker-compose up
+        docker-compose up
 
-That's it!
+That's it! You can now browse the TimeSide API browsing http://localhost:8000/api/
 
-You can now browse the TimeSide API: http://localhost:8000/api/
-
-or start a python shell session in the sandbox (to do processing by hand)::
+To process data by hand, you can also start a python shell session into the sandbox::
 
     docker-compose run app python examples/sandbox/manage.py shell
 
-If you only want to get our latest master image for another project::
+To build your project on top of TimeSide, just pull our latest master image::
 
     docker pull parisson/timeside:latest
 
-or, for the development version::
 
-    docker pull parisson/timeside:latest-dev
-
-More infos: https://registry.hub.docker.com/u/parisson/timeside/
+More infos about our docker repository: https://registry.hub.docker.com/u/parisson/timeside/
 
 
 Debian, Ubuntu
