@@ -350,7 +350,7 @@ Features:
     * fully skinnable with CSS style
 
 Screenshot:
- .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/slides/img/timeside_player_01.png
+ .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/images/timeside_player_01.png
 
 Examples of the player embeded in the Telemeta open web audio CMS:
     * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
