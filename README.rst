@@ -1,6 +1,6 @@
-==============================================
-TimeSide : open web audio processing framework
-==============================================
+===========================================
+TimeSide : open audio processing framework
+===========================================
 
 |version| |downloads| |travis_master| |coveralls_master|
 
@@ -18,25 +18,33 @@ TimeSide : open web audio processing framework
     :target: https://pypi.python.org/pypi/TimeSide/
     :alt: Downloads
 
-TimeSide is a set of python components enabling low and high level audio analysis, imaging, transcoding and streaming. Its high-level API is designed to enable complex processing on large datasets of audio and video assets of any format. Its simple plug-in architecture can be adapted to various use cases.
+TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
 
-TimeSide also includes a smart interactive HTML5 player which provides various streaming playback functions, formats selectors, fancy audio visualizations, segmentation and semantic labelling synchronized with audio events. It is embeddable in any web application.
+
+Use cases
+==========
+
+* Scaled audio computing
+* Pseudo-realtime streaming
+* Plugin prototyping
+* Audio metadata management and visualization
+* Automatic segmentation and labelling synchronized with audio events.
 
 
 Goals
-======
+=====
 
 * **Do** asynchronous and fast audio processing with Python,
 * **Decode** audio frames from **any** audio or video media format into numpy arrays,
 * **Analyze** audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors
 * **Visualize** sounds with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
-* **Organize**, **serialize** and **save** feature analysis data through various portable formats,
+* **Serialize** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 
 
-Funding and Support
+Funding and support
 ===================
 
 To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
@@ -52,19 +60,20 @@ Architecture
 
 The streaming architecture of TimeSide relies on 2 main parts: a processing engine including various plugin processors written in pure Python and a user interface providing some web based visualization and playback tools in pure HTML5.
 
-.. image:: http://vcs.parisson.com/gitweb/?p=timeside.git;a=blob_plain;f=doc/slides/img/timeside_schema.svg;hb=refs/heads/dev
+.. image:: https://github.com/Parisson/Telemeta-doc/blob/master/Common/img/TimeSide_pipe.svg
   :width: 800 px
 
 Dive in
 ========
 
-To list all available plugins::
+Let's produce a really simple audio analysis of an audio file.
+First, list all available plugins:
 
 
    >>> import timeside.core
    >>> timeside.core.list_processors()
 
-Define some processors::
+Define some processors:
 
 
     >>> from timeside.core import get_processor
@@ -75,26 +84,25 @@ Define some processors::
     >>> analyzer =  get_processor('level')()
     >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
-Then run the *magic* pipeline::
+Then run the *magic* pipeline:
 
 
     >>> (decoder | grapher | analyzer | encoder).run()
 
-Render the grapher results::
+Render the grapher results:
 
 
     >>> grapher.render(output='waveform.png')
 
-Show the analyzer results::
+Show the analyzer results:
 
 
     Level: {'level.max': AnalyzerResult(...)}
 
 
-The encoded OGG file should also be there...
+So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.
 
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
-
 
 News
 =====
@@ -224,40 +232,57 @@ API / Documentation
 Install
 =======
 
-The TimeSide engine is intended to work on all Linux and Unix like platforms. It depends on several other python modules and compiled libraries like GStreamer.
+Any platform
+--------------
+
+Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in 5 minutes.
+
+1. install Git: http://git-scm.com/downloads
+
+2. install Docker: https://docs.docker.com/installation/
+
+3. Install pip docker-compose: https://docs.docker.com/compose/install/
+
+4. Clone TimeSide::
+
+   git clone https://github.com/Parisson/TimeSide.git
+   cd TimeSide
+
+5. Start the app:
+
+    docker-compose up
+
+That's it!
+
+You can now browse the TimeSide API: http://localhost:8000/api/
+
+or start a python shell session in the sandbox (to do processing by hand)::
+
+    docker-compose run app python examples/sandbox/manage.py shell
+
+If you only want to get our latest master image for another project::
+
+    docker pull parisson/timeside:latest
+
+or, for the development version::
+
+    docker pull parisson/timeside:latest-dev
+
+More infos: https://registry.hub.docker.com/u/parisson/timeside/
+
 
 Debian, Ubuntu
 ---------------
 
 For Debian based distributions, we provide a safe repository giving additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
 
-Other Linux distributions
---------------------------
+Some of the needed dependencies
+--------------------------------
 
-On other Linux platforms, you need to install all dependencies listed in Dependencies finding all equivalent package names for your distribution.
-
-Then, use pip::
-
- sudo pip install timeside
-
-OSX / Windows
---------------
-
-Native install is hard at the moment but you can either run our Vagrant or Docker images (see Development).
-
-Dependencies
--------------
-
-Needed:
-
- python (>=2.7) python-setuptools python-numpy python-scipy python-h5py python-matplotlib python-imaging
- python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-tables python-gst0.10
- gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
-
-Optional:
-
- aubio (>=0.4.1) yaafe python-aubio python-yaafe vamp-examples
- django (>=1.4) django-south djangorestframework django-extensions
+python (2.7.x) python-setuptools python-numpy python-scipy python-h5py python-matplotlib python-imaging
+python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-tables python-gst0.10
+gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+aubio yaafe python-aubio python-yaafe vamp-examples django (1.6.x) django-south djangorestframework django-extensions
 
 User Interfaces
 ===============
@@ -395,32 +420,6 @@ or get our latest-dev image::
   docker pull parisson/timeside:latest-dev
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
-
-
-VirtualBox and Vagrant (deprecated)
------------------------------------
-
-We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
-First, install Vagrant and VirtualVox::
-
- sudo apt-get install vagrant virtualbox
-
-On other OS, we need to install the packages correponding to your system:
-
- * Vagrant: https://www.vagrantup.com/downloads.html
- * VirtualBox: https://www.virtualbox.org/wiki/Downloads
-
-Then setup our image box like this in a terminal::
-
- vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
- vagrant init parisson/timeside-wheezy64
- vagrant up
- vagrant ssh
-
-To stop the virtual box::
-
- exit
- vagrant halt
 
 
 Native

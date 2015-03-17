@@ -40,32 +40,6 @@ or get our latest-dev image::
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
 
-VirtualBox and Vagrant (deprecated)
------------------------------------
-
-We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
-First, install Vagrant and VirtualVox::
-
- sudo apt-get install vagrant virtualbox
-
-On other OS, we need to install the packages correponding to your system:
-
- * Vagrant: https://www.vagrantup.com/downloads.html
- * VirtualBox: https://www.virtualbox.org/wiki/Downloads
-
-Then setup our image box like this in a terminal::
-
- vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
- vagrant init parisson/timeside-wheezy64
- vagrant up
- vagrant ssh
-
-To stop the virtual box::
-
- exit
- vagrant halt
-
-
 Native
 -------
 
