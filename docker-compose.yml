@@ -27,11 +27,16 @@ lib:
   command: /bin/true
 
 
-# db:
-#   image: postgres
-#   volumes_from:
-#     - datadb
-
+db:
+  image: mysql
+  volumes_from:
+    - lib
+    - log
+  environment:
+    - MYSQL_ROOT_PASSWORD=mysecretpassword
+    - MYSQL_DATABASE=timeside
+    - MYSQL_USER=timeside
+    - MYSQL_PASSWORD=changeme
 rabbitmq:
   image: rabbitmq:3-management
   ports:
@@ -54,6 +59,7 @@ app:
     - "8000" #default runserver wsgi port
   links:
     - rabbitmq
+    - db
 
 worker:
   build: .

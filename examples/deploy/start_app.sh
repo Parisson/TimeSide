@@ -9,7 +9,10 @@ app_static_dir=$app_dir'timeside/player/static/'
 
 # Copy Sandbox in /home/timeside
 #  this is not needed for TimeSide but for Timeside-diadems
-cp -uR /opt/TimeSide/examples/sandbox/* /home/timeside/
+# cp -uR /opt/TimeSide/examples/sandbox/* /home/timeside/
+
+# install staging modules
+pip install mysql
 
 # django init
 python $manage syncdb --noinput

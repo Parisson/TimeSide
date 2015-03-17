@@ -63,6 +63,7 @@ setup(
         'networkx',
         'django-celery',
         'watchdog',
+        'mysqldb',
         ],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
