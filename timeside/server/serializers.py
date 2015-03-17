@@ -82,6 +82,8 @@ class PresetSerializer(serializers.ModelSerializer):
                 msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
                 raise serializers.ValidationError(msg)
 
+        processor.set_parameters(attrs[source])
+        attrs[source] =  processor.get_parameters()
         return attrs
 
 

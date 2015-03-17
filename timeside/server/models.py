@@ -50,20 +50,27 @@ PROCESSOR_PIDS = [(name, [(processor.id(), processor.id())
                           in timeside.core.processor.processors(proc_type)])
                   for name, proc_type in _processor_types.items()]
 
-extra_types = {
+public_extra_types = {
     '.webm': 'video/webm',
+}
+
+encoders = timeside.core.processor.processors(timeside.core.api.IEncoder)
+for encoder in encoders:
+    public_extra_types['.' + encoder.file_extension()] = encoder.mime_type()
+
+private_extra_types = {
     '.eaf': 'text/xml',  # ELAN Annotation Format
     '.trs':  'text/xml', # Trancriber Annotation Format
     '.svl':  'text/xml',  # Sonic Visualiser layer file
     '.TextGrid': 'text/praat-textgrid',  # Praat TextGrid annotation file
 }
 
-encoders = timeside.core.processor.processors(timeside.core.api.IEncoder)
-for encoder in encoders:
-    extra_types['.' + encoder.file_extension()] = encoder.mime_type()
-
-for ext,mime_type in extra_types.items():
+for ext,mime_type in public_extra_types.items():
     mimetypes.add_type(mime_type, ext)
+
+for ext,mime_type in private_extra_types.items():
+    mimetypes.add_type(mime_type, ext)
+
 
 # Status
 _FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
