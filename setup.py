@@ -63,6 +63,7 @@ setup(
         'networkx',
         'django-celery',
         'watchdog',
+        'pympi-ling',
         ],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
