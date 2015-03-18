@@ -11,4 +11,5 @@ TimeSide API
    analyzer/index
    encoder/index
    grapher/index
+   server/index
 

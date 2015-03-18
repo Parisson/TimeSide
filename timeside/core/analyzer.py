@@ -34,7 +34,7 @@ from timeside.core.api import IAnalyzer
 import numpy as np
 from collections import OrderedDict
 import h5py
-
+import simplejson as json
 
 import os
 
@@ -928,6 +928,25 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         #Create legend from custom artist/label lists
         ax.legend(artist.values(), self.label_metadata.label.values())
 
+    def to_elan(self, elan_file, media_file=None):
+        import pympi
+        elan = pympi.Elan.Eaf(author='TimeSide')
+        if media_file is not None:
+            elan.add_linked_file(media_file)
+        for label in self.label_metadata.label.values():
+            elan.add_tier(label)
+        for n in xrange(len(self.label)):
+            label_id = self.label[n]
+            tier_id = self.label_metadata.label[unicode(label_id)]
+            start = self.time[n]
+            end = start + self.duration[n]
+            # Time has to be converted in millisecond integer values
+            elan.add_annotation(id_tier=tier_id,
+                                start=int(start*1000),
+                                end=int(end*1000))
+        
+        elan.to_file(elan_file)
+
 
 class AnalyzerResultContainer(dict):
 
@@ -1008,8 +1027,7 @@ class AnalyzerResultContainer(dict):
 
     def to_json(self, output_file=None):
         #if data_list == None: data_list = self.results
-        import simplejson as json
-
+        
         # Define Specialize JSON encoder for numpy array
         def NumpyArrayEncoder(obj):
             if isinstance(obj, np.ndarray):
@@ -1029,8 +1047,7 @@ class AnalyzerResultContainer(dict):
             return json_str
 
     def from_json(self, json_str):
-        import simplejson as json
-
+        
         # Define Specialize JSON decoder for numpy array
         def NumpyArrayDecoder(obj):
             if isinstance(obj, dict) and 'numpyArray' in obj:
@@ -1202,6 +1219,8 @@ class Analyzer(Processor):
         result.audio_metadata.duration = self.mediainfo()['duration']
         result.audio_metadata.is_segment = self.mediainfo()['is_segment']
         result.audio_metadata.channels = self.channels()
+
+        result.parameters = Parameters(json.loads(self.get_parameters()))
 
         if time_mode == 'framewise':
             result.data_object.frame_metadata.samplerate = self.result_samplerate
