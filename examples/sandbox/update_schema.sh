@@ -1,5 +1,5 @@
 #!/bin/sh
 
-./manage.py schemamigration timeside --auto
-./manage.py migrate timeside
+./manage.py schemamigration timeside.server--auto
+./manage.py migrate timeside.server
 

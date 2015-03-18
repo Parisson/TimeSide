@@ -93,6 +93,7 @@ worker:
   links:
     - rabbitmq
     - app
+    - db
 
 nginx:
   image: nginx
