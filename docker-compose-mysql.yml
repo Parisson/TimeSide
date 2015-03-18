@@ -68,6 +68,15 @@ rabbitmq:
   expose:
     - "5672"
 
+worker:
+  build: .
+  volumes_from:
+    - home
+  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
+  links:
+    - rabbitmq
+    - db
+
 app:
   build: .
   volumes:
@@ -84,15 +93,7 @@ app:
   links:
     - rabbitmq
     - db
-
-worker:
-  build: .
-  volumes_from:
-    - home
-  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
-  links:
-    - rabbitmq
-    - db
+    - worker
 
 nginx:
   image: nginx
