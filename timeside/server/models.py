@@ -98,7 +98,7 @@ def get_processor(pid):
 
 class MetaCore:
 
-    app_label = 'server'
+    app_label = 'TimeSide'
 
 
 class BaseResource(models.Model):

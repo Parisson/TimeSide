@@ -20,11 +20,9 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
 
-
 class ResultAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
-
 
 
 admin.site.register(Selection, SelectionAdmin)
