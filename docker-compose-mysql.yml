@@ -58,8 +58,8 @@ db:
   environment:
     - MYSQL_ROOT_PASSWORD=mysecretpassword
     - MYSQL_DATABASE=timeside
-    - MYSQL_USER=timeside
-    - MYSQL_PASSWORD=changeme
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=mysecretpassword
 
 rabbitmq:
   image: rabbitmq:3-management
@@ -92,7 +92,6 @@ worker:
   command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
   links:
     - rabbitmq
-    - app
     - db
 
 nginx:

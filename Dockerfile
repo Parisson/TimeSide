@@ -69,8 +69,8 @@ RUN pip install -r requirements.txt
 #RUN cd /opt/TimeSide; python setup.py develop
 
 # Sandbox setup
-RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
-    /opt/TimeSide/examples/sandbox/manage.py migrate --noinput && \
-    /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+# RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
+#     /opt/TimeSide/examples/sandbox/manage.py migrate --noinput && \
+#     /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 EXPOSE 8000
