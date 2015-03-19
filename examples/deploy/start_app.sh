@@ -1,15 +1,13 @@
 #!/bin/sh
 
 # paths
-app_dir='/opt/TimeSide/'
-sandbox_dir='/home/timeside/'
-manage=$sandbox_dir'manage.py'
-wsgi=$sandbox_dir'wsgi.py'
-app_static_dir=$app_dir'timeside/player/static/'
+app='/opt/TimeSide/'
+static=$app'timeside/player/static/'
+sandbox='/home/sandbox/'
+manage=$sandbox'manage.py'
+wsgi=$sandbox'wsgi.py'
 
-# Copy Sandbox in /home/timeside
-#  this is not needed for TimeSide but for Timeside-diadems
-cp -uR /opt/TimeSide/examples/sandbox/* /home/timeside/
+sh $app/examples/deploy/wait.sh
 
 # django init
 python $manage syncdb --noinput
@@ -19,7 +17,7 @@ python $manage timeside-create-admin-user
 
 # static files auto update
 watchmedo shell-command --patterns="*.js;*.css" --recursive \
-    --command='python '$manage' collectstatic --noinput' $app_static_dir &
+    --command='python '$manage' collectstatic --noinput' $static &
 
 # app start
-uwsgi --socket :8000 --wsgi-file $wsgi --chdir $sandbox_dir --master --processes 4 --threads 2 --py-autoreload 3
+uwsgi --socket :8000 --wsgi-file $wsgi --chdir $sandbox --master --processes 4 --threads 2 --py-autoreload 3

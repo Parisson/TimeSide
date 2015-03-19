@@ -18,14 +18,13 @@ FROM debian:wheezy
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
 # install confs, keys and deps
-RUN apt-key adv --keyserver pgp.mit.edu --recv-key E3298399DF14BB7C && \
-    echo 'deb http://http.debian.net/debian wheezy-backports main contrib non-free' > /etc/apt/sources.list.d/wheezy-backports.list && \
+RUN echo 'deb http://http.debian.net/debian wheezy-backports main contrib non-free' > /etc/apt/sources.list.d/wheezy-backports.list && \
     echo 'deb http://debian.parisson.com/debian/ wheezy main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
     apt-get -y --force-yes -t wheezy-backports dist-upgrade  && \
     apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples && \
     apt-get install -y --force-yes -t wheezy-backports python-yaafe && \
-    apt-get install -y --force-yes wget bzip2 build-essential && \
+    apt-get install -y --force-yes wget bzip2 build-essential netcat libmysqlclient-dev && \
     apt-get clean
 
 # Install conda in /opt/miniconda
@@ -70,8 +69,8 @@ RUN pip install -r requirements.txt
 #RUN cd /opt/TimeSide; python setup.py develop
 
 # Sandbox setup
-RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
-    /opt/TimeSide/examples/sandbox/manage.py migrate --noinput && \
-    /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
+# RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
+#     /opt/TimeSide/examples/sandbox/manage.py migrate --noinput && \
+#     /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
 
 EXPOSE 8000

@@ -129,15 +129,15 @@ function waveform(div_id) {
 		    // update graph xZoom
 		    graph_sub.xZoom(e);
 		    graph_sub.update();
-		    
-		    // update axis
-		    axis.call(xAxis);
 		    // Update zoom_segment
 		    update_segment()
+
+		    // update axis
+		    axis.call(xAxis);
 		    
 		})
 		.on('mouseup', function(e) {
-                    // set the final xZoom value of the graph
+		    // set the final xZoom value of the graph
                     graph_sub.xZoomSet();
 		    // update axis
 		    axis.call(xAxis);
@@ -195,7 +195,7 @@ function timeline_result(data, graph, ytop) {
 
     switch (time_mode) {
     case 'global':
-	console.log(id, time_mode, data_mode);
+	console.log(id, time_mode);
 	break;
     case 'event':
 	switch (data_mode) {
@@ -239,29 +239,72 @@ function timeline_framewise_value(data, graph, ytop) {
 
     var values = data.data_object.value.numpyArray;
 
-    // format data
-    var data = values.map(function(dummy, index) {
-        return {
-	    cx: (blocksize / 2 +  stepsize * index ) / samplerate,
-            cy: values[index]
-        };
-    });
+    if (values[0] instanceof Array ) {
+	var dim = values[0].length;
+    } else {
+	var dim = 0;
+    }
 
-    // var minValue = Math.min.apply(null, values);
-    var max_value = Math.max.apply(null, values);
 
-    var breakpointLayer = wavesUI.breakpoint()
-	.params({
-	    height: graph_height,
-	    top: ytop,
-	    yDomain: [0, max_value]
-	})
-        .data(data)
-        .color('steelblue')
-        .opacity(0.8);
     
-    // 3. add layers to graph
-    graph.add(breakpointLayer);
+    if (dim == 0) {
+	// format data
+	var min_value = 1;
+	var max_value = -1;
+	var data = values.map(function(dummy, index) {
+	    min_value = Math.min(min_value, values[index])
+	    max_value = Math.max(max_value, values[index])
+	    
+	    return {
+		cx: (blocksize / 2 +  stepsize * index ) / samplerate,
+		cy: values[index]
+	    };
+	});
+
+	var breakpointLayer = wavesUI.breakpoint()
+	    .params({
+		height: graph_height,
+		top: ytop,
+		yDomain: [min_value, max_value]
+	    })
+            .data(data)
+            .color('steelblue')
+            .opacity(0.8);
+	
+	// 3. add layers to graph
+	graph.add(breakpointLayer);
+	
+    } else {
+	var colors = d3.scale.category20().domain(d3.set(Math.min(dim, 20)).values()).range();
+	
+	for (var i = 0; i < dim; i++) {
+	    // format data
+	    var min_value = 0;
+	    var max_value = 0;
+	    var data = values.map(function(dummy, index) {
+		min_value = Math.min(min_value, values[index][i])
+		max_value = Math.max(max_value, values[index][i])
+		
+		return {
+		    cx: (blocksize / 2 +  stepsize * index ) / samplerate,
+		    cy: values[index][i]
+		};
+	    });
+
+	    var breakpointLayer = wavesUI.breakpoint()
+		.params({
+		    height: graph_height,
+		    top: ytop,
+		    yDomain: [min_value, max_value]
+		})
+		.data(data)
+		.color(colors[i % 20])
+		.opacity(0.8);
+	    
+	    // 3. add layers to graph
+	    graph.add(breakpointLayer);
+	};
+    }
 }
 
 function timeline_segment_value(data, graph, ytop) {

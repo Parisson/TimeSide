@@ -16,15 +16,20 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(PROJECT_ROOT, 'timeside.sql'),  # Or path to database file if using sqlite3.
-        'USER': '',      # Not used with sqlite3.
-        'PASSWORD': '',  # Not used with sqlite3.
-        'HOST': '',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',      # Set to empty string for default. Not used with sqlite3.
-        'OPTIONS': {
-            'timeout': 60,
-        }
+        # SQLite config
+        # 'ENGINE': 'django.db.backends.sqlite',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        # 'NAME': os.path.join(PROJECT_ROOT, 'timeside.sql'),  # Or path to database file if using sqlite3.
+        # 'OPTIONS': {
+        #     'timeout': 60,
+        # }
+
+        # MySQL config
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'USER': 'root',      # Not used with sqlite3.
+        'PASSWORD': 'mysecretpassword',  # Not used with sqlite3.
+        'NAME': 'sandbox',
+        'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -174,10 +179,9 @@ LOGGING = {
 REST_FRAMEWORK = {
 }
 
-# One or more gearman servers
-# GEARMAN_SERVERS = ['127.0.0.1']
-
+# replace rabbitmq by localhost if you start your app outside docker-compose
 BROKER_URL = 'amqp://guest:guest@rabbitmq//'
+
 CELERY_IMPORTS = ("timeside.server.tasks",)
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 CELERY_TASK_SERIALIZER = "json"
