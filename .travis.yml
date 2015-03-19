@@ -2,6 +2,9 @@ language: python
 python:
   - "2.7"
 
+services:
+  - mysql
+
 virtualenv:
   system_site_packages: true
 
@@ -57,6 +60,7 @@ script:
     fi
   # -------------CLI-------------------------
   - if [[ $TEST_TARGET == 'cli' ]]; then
+       mysql -e 'create database sandbox;';
        ./tests/test_scripts.sh;
     fi
   # -------------SERVER-------------------------
