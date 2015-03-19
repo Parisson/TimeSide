@@ -10,7 +10,6 @@ def task_run(id):
     task.run()
 
 
-@shared_task
 def experience_run(experience_id, item_id):
     item = Item.objects.get(id=item_id)
     experience = Experience.objects.get(id=experience_id)
