@@ -44,10 +44,22 @@ lib:
     - /var/lib/mysql
   command: /bin/true
 
-# db:
-#   image: postgres
-#   volumes_from:
-#     - datadb
+home:
+  image: debian:wheezy
+  volumes:
+    - ./examples/sandbox:/home/sandbox
+  command: /bin/true
+
+db:
+  image: mysql
+  volumes_from:
+    - lib
+    - log
+  environment:
+    - MYSQL_ROOT_PASSWORD=mysecretpassword
+    - MYSQL_DATABASE=sandbox
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=mysecretpassword
 
 rabbitmq:
   image: rabbitmq:3-management
@@ -55,37 +67,6 @@ rabbitmq:
     - "15672:15672"
   expose:
     - "5672"
-
-worker:
-  build: .
-  volumes_from:
-    - home
-  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
-  links:
-    - rabbitmq
-    - app
-
-
-# --- TimeSide containers ---
-
-nginx:
-  image: nginx
-  ports:
-    - "8000:80"
-  volumes:
-    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
-  volumes_from:
-    - static
-    - home
-    - log
-  links:
-    - app
-
-home:
-  image: debian:wheezy
-  volumes:
-    - ./examples/sandbox:/home/timeside
-  command: /bin/true
 
 app:
   build: .
@@ -99,7 +80,31 @@ app:
   ports:
     - "9000:9000"
   expose:
-    - "8000" #default runserver wsgi port
+    - "8000"
   links:
     - rabbitmq
+    - db
+
+worker:
+  build: .
+  volumes_from:
+    - app
+  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
+  links:
+    - rabbitmq
+    - db
+    - app
+
+nginx:
+  image: nginx
+  ports:
+    - "8000:80"
+  volumes:
+    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
+  volumes_from:
+    - static
+    - home
+    - log
+  links:
+    - app
 
