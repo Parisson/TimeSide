@@ -8,3 +8,4 @@ TimeSide.egg-info
 *.rst~
 *.py~
 *.log
+.tags/
