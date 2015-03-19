@@ -1,14 +1,11 @@
 #!/bin/sh
 
 # paths
-app_dir='/opt/TimeSide/'
-sandbox_dir='/home/timeside/'
-manage=$sandbox_dir'manage.py'
+app='/opt/TimeSide/'
+sandbox='/home/sandbox/'
+manage=$sandbox'manage.py'
 
-python $manage syncdb --noinput
-python $manage migrate --noinput
-python $manage collectstatic --noinput
-python $manage timeside-create-admin-user
+sh $app/examples/deploy/wait.sh
 
 # Starting celery worker with the --autoreload option will enable the worker to watch for file system changes
 # This is an experimental feature intended for use in development only

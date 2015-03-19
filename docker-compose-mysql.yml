@@ -47,7 +47,7 @@ lib:
 home:
   image: debian:wheezy
   volumes:
-    - ./examples/sandbox:/home/timeside
+    - ./examples/sandbox:/home/sandbox
   command: /bin/true
 
 db:
@@ -57,7 +57,7 @@ db:
     - log
   environment:
     - MYSQL_ROOT_PASSWORD=mysecretpassword
-    - MYSQL_DATABASE=timeside
+    - MYSQL_DATABASE=sandbox
     - MYSQL_USER=root
     - MYSQL_PASSWORD=mysecretpassword
 
@@ -67,15 +67,6 @@ rabbitmq:
     - "15672:15672"
   expose:
     - "5672"
-
-worker:
-  build: .
-  volumes_from:
-    - home
-  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
-  links:
-    - rabbitmq
-    - db
 
 app:
   build: .
@@ -93,7 +84,16 @@ app:
   links:
     - rabbitmq
     - db
-    - worker
+
+worker:
+  build: .
+  volumes_from:
+    - app
+  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
+  links:
+    - rabbitmq
+    - db
+    - app
 
 nginx:
   image: nginx
