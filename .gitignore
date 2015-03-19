@@ -7,3 +7,4 @@ tests/samples
 TimeSide.egg-info
 *.rst~
 *.py~
+*.log
