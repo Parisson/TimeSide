@@ -147,6 +147,13 @@ class Selection(DocBaseResource):
         verbose_name = _('selection')
 
 
+    def get_all_items(self):
+        qs_items = self.items.all()
+        for selection in self.selections.all():
+            qs_items |= selection.get_all_items()
+        return qs_items
+
+
 class Item(DocBaseResource):
 
     element_type = 'timeside_item'
@@ -337,8 +344,8 @@ class Task(BaseResource):
 
     def run(self, streaming=False):
         self.status_setter(_RUNNING)
-
-        for item in self.selection.items.all():
+        
+        for item in self.selection. get_all_items():
             item_path = item.get_results_path()
             if not os.path.exists(item_path):
                 os.makedirs(item_path)
