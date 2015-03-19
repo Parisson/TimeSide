@@ -59,4 +59,3 @@ class Command(BaseCommand):
 
         task = Task(experience=experience, selection=selection)
         task.status_setter(2)
-        task.delete()

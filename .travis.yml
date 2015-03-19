@@ -35,7 +35,7 @@ before_script:
     fi
   # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
-       pip install sphinx numpydoc;   
+       pip install sphinx numpydoc;
     fi
 
 
@@ -59,7 +59,7 @@ script:
   # -------------SERVER-------------------------
   - if [[ $TEST_TARGET == 'server' ]]; then
        ./tests/test_server.sh;
-    fi  
+    fi
 
 after_success:
   -  # -------------DEFAULT--------------------
