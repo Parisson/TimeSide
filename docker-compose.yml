@@ -36,14 +36,6 @@ log:
     - /var/log/uwsgi
   command: /bin/true
 
-lib:
-  image: debian:wheezy
-  volumes:
-    - /var/lib/rabbitmq
-    - /var/lib/postgres
-    - /var/lib/mysql
-  command: /bin/true
-
 home:
   image: debian:wheezy
   volumes:
@@ -53,7 +45,6 @@ home:
 db:
   image: mysql
   volumes_from:
-    - lib
     - log
   environment:
     - MYSQL_ROOT_PASSWORD=mysecretpassword
@@ -89,11 +80,12 @@ worker:
   build: .
   volumes_from:
     - app
+    - home
+    - log
   command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
   links:
     - rabbitmq
     - db
-    - app
 
 nginx:
   image: nginx
