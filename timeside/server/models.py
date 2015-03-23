@@ -29,7 +29,7 @@ import uuid
 import mimetypes
 
 import timeside.core
-from timeside.plugins.decoder.utils import sha1sum_file
+from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -191,8 +191,14 @@ class Item(DocBaseResource):
         if not os.path.exists(result_path):
             os.makedirs(result_path)
 
-        pipe = timeside.plugins.decoder.file.FileDecoder(self.file.path,
-                                                 sha1=self.sha1)
+
+        if self.file :
+            uri = self.file.path
+        elif self.url:
+            uri = self.url
+
+        pipe = timeside.plugins.decoder.file.FileDecoder(uri=uri,
+                                                         sha1=self.sha1)
         presets = {}
         for preset in experience.presets.all():
             proc = get_processor(preset.processor.pid)
@@ -395,15 +401,31 @@ class Task(BaseResource):
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file:
-        if not instance.mime_type:
-            instance.mime_type = get_mime_type(instance.file.path)
-
+        path = instance.file.path
+    elif instance.url:
+        path = instance.url
+    else:
+        return
+    mime_type = get_mime_type(path)
+    if instance.mime_type == mime_type:
+        return
+    else:
+        instance.mime_type = get_mime_type(path)
+        super(sender, instance).save()
 
 def set_hash(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file:
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
+        sha1 = sha1sum_file(instance.file.path)
+    elif instance.url:
+        sha1 = sha1sum_url(instance.url)
+    else:
+        return
+    if instance.sha1 == sha1:
+        return
+    else:
+        instance.sha1 = sha1
+        super(sender, instance).save()
 
 
 def run(sender, **kwargs):
