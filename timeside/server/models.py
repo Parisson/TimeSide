@@ -402,8 +402,9 @@ def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file:
         path = instance.file.path
-    elif instance.url:
-        path = instance.url
+    elif (sender == Item):
+        if instance.url:
+            path = instance.url
     else:
         return
     mime_type = get_mime_type(path)
