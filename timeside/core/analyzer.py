@@ -933,17 +933,23 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         elan = pympi.Elan.Eaf(author='TimeSide')
         if media_file is not None:
             elan.add_linked_file(media_file)
-        for label in self.label_metadata.label.values():
-            elan.add_tier(label)
+        #for label in self.label_metadata.label.values():
+        tier_id = 'Analysis'
+        elan.add_tier(tier_id)
+         
         for n in xrange(len(self.label)):
-            label_id = self.label[n]
-            tier_id = self.label_metadata.label[unicode(label_id)]
+            label_id = self.label_metadata.label[unicode(self.label[n])]
+            #tier_id = self.label_metadata.label[unicode(label_id)]
             start = self.time[n]
+            if start < 0:
+                # TODO: check why start could be negative
+                start = 0
             end = start + self.duration[n]
             # Time has to be converted in millisecond integer values
             elan.add_annotation(id_tier=tier_id,
                                 start=int(start*1000),
-                                end=int(end*1000))
+                                end=int(end*1000),
+                                value=label_id)
         
         elan.to_file(elan_file)
 
