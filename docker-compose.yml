@@ -36,6 +36,14 @@ log:
     - /var/log/uwsgi
   command: /bin/true
 
+lib:
+  image: debian:wheezy
+  volumes:
+    - /var/lib/rabbitmq
+    - /var/lib/postgres
+    - /var/lib/mysql
+  command: /bin/true
+
 home:
   image: debian:wheezy
   volumes:
@@ -56,8 +64,6 @@ rabbitmq:
   image: rabbitmq:3-management
   ports:
     - "15672:15672"
-  expose:
-    - "5672"
 
 app:
   build: .
