@@ -66,7 +66,7 @@ class PresetSerializer(serializers.ModelSerializer):
 
     def validate_parameters(self, attrs, source):
 
-        import timeside
+        import timeside.core
         proc = timeside.core.get_processor(attrs['processor'].pid)
         if proc.type == 'analyzer':
             processor = proc()
