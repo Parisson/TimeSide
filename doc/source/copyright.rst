@@ -1,10 +1,10 @@
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2014 Parisson Sarl
-* Copyright (c) 2006, 2014 Guillaume Pellerin
+* Copyright (c) 2006, 2015 Parisson Sarl
+* Copyright (c) 2006, 2015 Guillaume Pellerin
+* Copyright (c) 2013, 2015 Thomas Fillon
 * Copyright (c) 2010, 2014 Paul Brossier
-* Copyright (c) 2013, 2014 Thomas Fillon
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
 * Copyright (c) 2006, 2010 Olivier Guilyardi

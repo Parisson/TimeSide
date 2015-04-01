@@ -49,9 +49,9 @@ Funding and support
 
 To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
 
- * star or fork the project on `GitHub <https://github.com/Parisson/TimeSide>`_
- * tweet something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@yomguy <https://twitter.com/yomguy>`_
- * drop us an email <support@parisson.com>
+* star or fork the project on `GitHub <https://github.com/Parisson/TimeSide>`_
+* tweet something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@yomguy <https://twitter.com/omguy>`_
+* drop us an email <support@parisson.com>
 
 Thanks for your help!
 
@@ -109,55 +109,55 @@ News
 
 0.7.1
 
-  * fix django version to 1.6.10 (sync with Telemeta 1.5)
-  
+* fix django version to 1.6.10 (sync with Telemeta 1.5)
+
 0.7
 
- * Code refactoring:
+* Code refactoring:
 
    - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx
    - WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`
    - `timeside.plugins` is now a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a **real** plugin host, yeah!
    - A dummy timeside plugin will soon be provided for easy development start.
 
- * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
- * Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
- * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
+* Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
+* Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
+* Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
 0.6.2
 
-  * Bugfix release for #63 #64 #68
+* Bugfix release for #63 #64 #68
 
 0.6.1
 
-  * Fix various minor bugs
-  * Fix docker sandbox
-  * Auto build docker image (https://registry.hub.docker.com/u/parisson/timeside/)
+* Fix various minor bugs
+* Fix docker sandbox
+* Auto build docker image (https://registry.hub.docker.com/u/parisson/timeside/)
 
 0.6
 
-  * WARNING! some processor ids have changed. Please see the full list below.
-  * NEW analyzers: IRIT Monopoly (see Processors)
-  * NEW graphers: IRIT Start/Session segmentation
-  * Add extensible buffering thanks to pytables (NEW dependency)
-  * Add typed parameters in processors and server thanks to traits (NEW dependency)
-  * Add a graph model to the pipe thanks to networkx (NEW dependency)
-  * Add test sample generators based on GStreamer
-  * Add a background image option for rendering analyzers
-  * Add on-the-fly filtering decorators
-  * Add a Docker development image and a Dockerfile
-  * Add a Vagrant development box
-  * Update the Debian package installation procedure
-  * Results are now stored in pipe.results as as dictionnary of AnalyzerResults
-  * Update various processors
-  * Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
-  * Update of Travis CI scripts https://travis-ci.org/Parisson/TimeSide/
+* WARNING! some processor ids have changed. Please see the full list below.
+* NEW analyzers: IRIT Monopoly (see Processors)
+* NEW graphers: IRIT Start/Session segmentation
+* Add extensible buffering thanks to pytables (NEW dependency)
+* Add typed parameters in processors and server thanks to traits (NEW dependency)
+* Add a graph model to the pipe thanks to networkx (NEW dependency)
+* Add test sample generators based on GStreamer
+* Add a background image option for rendering analyzers
+* Add on-the-fly filtering decorators
+* Add a Docker development image and a Dockerfile
+* Add a Vagrant development box
+* Update the Debian package installation procedure
+* Results are now stored in pipe.results as as dictionnary of AnalyzerResults
+* Update various processors
+* Prevent duplication of processor in the pipe (i.e. processors sharing the same class and parameters). This also fix #60.
+* Update of Travis CI scripts https://travis-ci.org/Parisson/TimeSide/
 
 0.5.6
 
-  * Bugfix release
-  * Fix analyzer instanciation as parent for some graphers
-  * Store analyzer's results in pipe.results by uuid instead of id (fix #24)
+* Bugfix release
+* Fix analyzer instanciation as parent for some graphers
+* Store analyzer's results in pipe.results by uuid instead of id (fix #24)
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
@@ -167,56 +167,56 @@ Processors
 IEncoder
 --------
 
-   * **live_encoder** : Gstreamer-based Audio Sink
-   * **flac_encoder** : FLAC encoder based on Gstreamer
-   * **aac_encoder** : AAC encoder based on Gstreamer
-   * **mp3_encoder** : MP3 encoder based on Gstreamer
-   * **vorbis_encoder** : OGG Vorbis encoder based on Gstreamer
-   * **opus_encoder** : Opus encoder based on Gstreamer
-   * **wav_encoder** : WAV encoder based on Gstreamer
-   * **webm_encoder** : WebM encoder based on Gstreamer
+* **live_encoder** : Gstreamer-based Audio Sink
+* **flac_encoder** : FLAC encoder based on Gstreamer
+* **aac_encoder** : AAC encoder based on Gstreamer
+* **mp3_encoder** : MP3 encoder based on Gstreamer
+* **vorbis_encoder** : OGG Vorbis encoder based on Gstreamer
+* **opus_encoder** : Opus encoder based on Gstreamer
+* **wav_encoder** : WAV encoder based on Gstreamer
+* **webm_encoder** : WebM encoder based on Gstreamer
 
 IDecoder
 --------
 
-   * **array_decoder** : Decoder taking Numpy array as input
-   * **file_decoder** : File Decoder based on Gstreamer
-   * **live_decoder** : Live source Decoder based on Gstreamer
+* **array_decoder** : Decoder taking Numpy array as input
+* **file_decoder** : File Decoder based on Gstreamer
+* **live_decoder** : Live source Decoder based on Gstreamer
 
 IGrapher
 --------
 
-   * **grapher_aubio_pitch** : Image representing Aubio Pitch
-   * **grapher_onset_detection_function** : Image representing Onset detection function
-   * **grapher_waveform** : Image representing Waveform from Analyzer
-   * **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
-   * **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
-   * **waveform_simple** : Simple monochrome waveform image.
-   * **waveform_centroid** : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
-   * **waveform_contour_black** : Black amplitude contour waveform.
-   * **waveform_contour_white** : an white amplitude contour wavform.
-   * **waveform_transparent** : Transparent waveform.
+* **grapher_aubio_pitch** : Image representing Aubio Pitch
+* **grapher_onset_detection_function** : Image representing Onset detection function
+* **grapher_waveform** : Image representing Waveform from Analyzer
+* **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
+* **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
+* **waveform_simple** : Simple monochrome waveform image.
+* **waveform_centroid** : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
+* **waveform_contour_black** : Black amplitude contour waveform.
+* **waveform_contour_white** : an white amplitude contour wavform.
+* **waveform_transparent** : Transparent waveform.
 
 IAnalyzer
 ---------
 
-   * **mean_dc_shift** : Mean DC shift analyzer
-   * **level** : Audio level analyzer
-   * **aubio_melenergy** : Aubio Mel Energy analyzer
-   * **aubio_mfcc** : Aubio MFCC analyzer
-   * **aubio_pitch** : Aubio Pitch estimation analyzer
-   * **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
-   * **aubio_temporal** : Aubio Temporal analyzer
-   * **yaafe** : Yaafe feature extraction library interface analyzer
-   * **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
-   * **onset_detection_function** : Onset Detection Function analyzer
-   * **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
-   * **waveform_analyzer** : Waveform analyzer
+* **mean_dc_shift** : Mean DC shift analyzer
+* **level** : Audio level analyzer
+* **aubio_melenergy** : Aubio Mel Energy analyzer
+* **aubio_mfcc** : Aubio MFCC analyzer
+* **aubio_pitch** : Aubio Pitch estimation analyzer
+* **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
+* **aubio_temporal** : Aubio Temporal analyzer
+* **yaafe** : Yaafe feature extraction library interface analyzer
+* **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
+* **onset_detection_function** : Onset Detection Function analyzer
+* **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
+* **waveform_analyzer** : Waveform analyzer
 
 IEffect
 -------
 
-   * **fx_gain** : Gain effect processor
+* **fx_gain** : Gain effect processor
 
 API / Documentation
 ====================
@@ -256,7 +256,7 @@ To build your own audido project on top of TimeSide, just pull our latest master
 
     docker pull parisson/timeside:latest
 
-WARNING: our docker composition already bundles some powerfull containers and bleeding edge frameworks (Nginx, MySQL, RabbitMQ, Celery, Python, Django) that can be scaled from development to massive production environments very easily. But you must modify all the passwords and secret keys of the sandbox before any serious usecase.
+WARNING: our docker composition already bundles some powerfull containers and bleeding edge frameworks (Nginx, MySQL, RabbitMQ, Celery, Python, Django) that can be scaled from development to massive production environments very easily. But you *must* modify all the passwords and secret keys of the sandbox before any serious usecase.
 
 More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
 
@@ -333,25 +333,25 @@ Web player
 TimeSide comes with a smart and pure **HTML5** audio player.
 
 Features:
-    * embed it in any audio web application
-    * stream, playback and download various audio formats on the fly
-    * synchronize sound with text, bitmap and vectorial events
-    * seek through various semantic, analytic and time synced data
-    * fully skinnable with CSS style
+* embed it in any audio web application
+* stream, playback and download various audio formats on the fly
+* synchronize sound with text, bitmap and vectorial events
+* seek through various semantic, analytic and time synced data
+* fully skinnable with CSS style
 
 Screenshot:
  .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/images/timeside_player_01.png
 
 Examples of the player embeded in the Telemeta open web audio CMS:
-    * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
-    * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
+* http://parisson.telemeta.org/archives/items/PRS_07_01_03/
+* http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
 
 Development documentation:
-    * https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+* https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 
 TODO list:
-    * zoom
-    * layers
+* zoom
+* layers
 
 
 Web server
@@ -433,29 +433,29 @@ Then::
 Sponsors and Partners
 =====================
 
-    * `Parisson <http://parisson.com>`_
-    * `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
-    * `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
-    * `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
-    * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
-    * `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
-    * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
+* `Parisson <http://parisson.com>`_
+* `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
+* `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
+* `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
+* `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
+* `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
+* `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 
 
 Related projects
 =================
 
-    * `Telemeta <http://telemeta.org>`__ : open web audio platform
-    * `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
-    * The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
+* `Telemeta <http://telemeta.org>`__ : open web audio platform
+* `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
+* The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2014 Parisson Sarl
-* Copyright (c) 2006, 2014 Guillaume Pellerin
+* Copyright (c) 2006, 2015 Parisson Sarl
+* Copyright (c) 2006, 2015 Guillaume Pellerin
+* Copyright (c) 2013, 2015 Thomas Fillon
 * Copyright (c) 2010, 2014 Paul Brossier
-* Copyright (c) 2013, 2014 Thomas Fillon
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
 * Copyright (c) 2006, 2010 Olivier Guilyardi
