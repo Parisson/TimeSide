@@ -25,7 +25,7 @@ To build your own audido project on top of TimeSide, just pull our latest master
 
     docker pull parisson/timeside:latest
 
-WARNING: our docker composition already bundles some powerfull containers and bleeding edge frameworks (Nginx, MySQL, RabbitMQ, Celery, Python, Django) that can be scaled from development to massive production environments very easily. But you must modify all the passwords and secret keys of the sandbox before any serious usecase.
+WARNING: our docker composition already bundles some powerfull containers and bleeding edge frameworks (Nginx, MySQL, RabbitMQ, Celery, Python, Django) that can be scaled from development to massive production environments very easily. But you *must* modify all the passwords and secret keys of the sandbox before any serious usecase.
 
 More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
 
