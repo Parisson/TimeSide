@@ -64,7 +64,7 @@ Features:
 * seek through various semantic, analytic and time synced data
 * fully skinnable with CSS style
 
-.. image:: https://github.com/Parisson/TimeSide/blob/dev/doc/images/timeside_player_01.png?raw=true
+.. image:: https://raw.githubusercontent.com/Parisson/TimeSide/dev/doc/images/timeside_player_01.png
   :alt: TimeSide player
 
 Examples of the player embeded in the Telemeta open web audio CMS:
