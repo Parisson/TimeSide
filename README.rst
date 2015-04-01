@@ -70,29 +70,29 @@ Let's produce a really simple audio analysis of an audio file.
 First, list all available plugins:
 
 
-   >>> import timeside.core
-   >>> timeside.core.list_processors()
+>>> import timeside.core
+>>> timeside.core.list_processors()
 
 Define some processors:
 
 
-    >>> from timeside.core import get_processor
-    >>> from timeside.core.tools.test_samples import samples
-    >>> wavfile = samples['sweep.wav']
-    >>> decoder  =  get_processor('file_decoder')(wavfile)
-    >>> grapher  =  get_processor('waveform_simple')()
-    >>> analyzer =  get_processor('level')()
-    >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
+>>> from timeside.core import get_processor
+>>> from timeside.core.tools.test_samples import samples
+>>> wavfile = samples['sweep.wav']
+>>> decoder  =  get_processor('file_decoder')(wavfile)
+>>> grapher  =  get_processor('waveform_simple')()
+>>> analyzer =  get_processor('level')()
+>>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
 Then run the *magic* pipeline:
 
 
-    >>> (decoder | grapher | analyzer | encoder).run()
+>>> (decoder | grapher | analyzer | encoder).run()
 
 Render the grapher results:
 
 
-    >>> grapher.render(output='waveform.png')
+>>> grapher.render(output='waveform.png')
 
 Show the analyzer results:
 
@@ -333,23 +333,27 @@ Web player
 TimeSide comes with a smart and pure **HTML5** audio player.
 
 Features:
+
 * embed it in any audio web application
 * stream, playback and download various audio formats on the fly
 * synchronize sound with text, bitmap and vectorial events
 * seek through various semantic, analytic and time synced data
 * fully skinnable with CSS style
 
-Screenshot:
- .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/images/timeside_player_01.png
+.. image:: https://raw.githubusercontent.com/Parisson/TimeSide/dev/doc/images/timeside_player_01.png
+  :alt: TimeSide player
 
 Examples of the player embeded in the Telemeta open web audio CMS:
+
 * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
 * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
 
 Development documentation:
+
 * https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 
 TODO list:
+
 * zoom
 * layers
 
