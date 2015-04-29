@@ -24,7 +24,7 @@ RUN echo 'deb http://http.debian.net/debian wheezy-backports main contrib non-fr
     apt-get -y --force-yes -t wheezy-backports dist-upgrade  && \
     apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples && \
     apt-get install -y --force-yes -t wheezy-backports python-yaafe && \
-    apt-get install -y --force-yes wget bzip2 build-essential netcat libmysqlclient-dev && \
+    apt-get install -y --force-yes wget bzip2 build-essential netcat libmysqlclient-dev libxml2-dev libxslt1-dev && \
     apt-get clean
 
 # Install conda in /opt/miniconda

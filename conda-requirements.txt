@@ -14,3 +14,4 @@ scipy=0.14.0=np19py27_0
 setuptools=12.2=py27_0
 traits=4.4.0=py27_0
 mysql-python=1.2.3=py27_0
+lxml=3.4.4=py27_0
