@@ -48,7 +48,7 @@ WORKDIR /opt/TimeSide
 ADD conda-requirements.txt /opt/TimeSide/
 #ADD requirements.txt /opt/TimeSide/
 RUN conda install --file conda-requirements.txt  && \
-    rm /opt/miniconda/lib/libm.so.6  # use the system libm; see github.com/ContinuumIO/anaconda-issues/issues/182
+    if [ -e /opt/miniconda/lib/libm.so.6 ]; then rm /opt/miniconda/lib/libm.so.6; fi  # use the system libm; see github.com/ContinuumIO/anaconda-issues/issues/182
 
 # Install Aubio
 RUN conda install -c thomasfillon aubio
