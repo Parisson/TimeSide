@@ -15,6 +15,13 @@ $(window).ready(function() {
         timeline_get_data(json_url, div_id);
     });
 });
+
+angular.module('timeside', ['angular-bootstrap-select', 'angular-bootstrap-select.extra']);
+
+function SelectCtrl($scope) {
+  $scope.form = undefined;
+}
+
 </script>
 {% endblock %}
 
@@ -47,6 +54,17 @@ Your browser does not support the audio element.
 </ul>
 
 <h2>Results</h2>
+
+<div class="page-header">
+    <h1>Angular bootstrap-select test</h1>
+    <code>{{form || 'undefined'}}</code>
+</div>
+
+<select ng-model="form" class="selectpicker">
+    <option>Mustard</option>
+    <option>Ketchup</option>
+    <option>Relish</option>
+</select>
 
 <ul>
 {% for result in object.results.all %}
