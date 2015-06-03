@@ -16,7 +16,12 @@ $(window).ready(function() {
     });
 });
 
-angular.module('timeside', ['angular-bootstrap-select', 'angular-bootstrap-select.extra']);
+angular.module('TimeSide', ['angular-bootstrap-select', 'angular-bootstrap-select.extra']);
+
+angular.module('TimeSide', []).config(function($interpolateProvider) {
+    $interpolateProvider.startSymbol('{$');
+    $interpolateProvider.endSymbol('$}');
+});
 
 function SelectCtrl($scope) {
   $scope.form = undefined;
@@ -55,16 +60,17 @@ Your browser does not support the audio element.
 
 <h2>Results</h2>
 
-<div class="page-header">
-    <h1>Angular bootstrap-select test</h1>
-    <code>{{form || 'undefined'}}</code>
-</div>
+  <section id="directives-bootstrap-select" ng-controller="SelectCtrl">
+  <div>
+    <code>{$ form || 'undefined' $}</code>
+  </div>
 
-<select ng-model="form" class="selectpicker">
+  <select ng-model="form" class="selectpicker">
     <option>Mustard</option>
     <option>Ketchup</option>
     <option>Relish</option>
-</select>
+  </select>
+  </section>
 
 <ul>
 {% for result in object.results.all %}
