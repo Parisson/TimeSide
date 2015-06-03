@@ -1,5 +1,5 @@
-build/
-dist/
+./build/
+./dist/
 *.pyc
 *.~[0-9]~
 *.swp
