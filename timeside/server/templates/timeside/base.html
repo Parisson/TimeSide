@@ -9,18 +9,26 @@
 <title></title>
 
 {% block stylesheets %}
+<link href="{{ STATIC_URL }}timeside/css/timeside.css" type="text/css" media="all" rel="stylesheet" />
+<link href="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css" media="all" rel="stylesheet" />
+<link href="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap-select/bootstrap-select.css" type="text/css" media="all" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_stylesheets %}{% endblock %}
 
-{% load staticfiles %}
-<link href="{% static "timeside/css/timeside.css" %}" type="text/css" media="all" rel="stylesheet" />
-
 {% block javascript %}
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="{{ STATIC_URL }}timeside/lib/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}timeside/lib/bower_components/jquery-migrate/jquery-migrate.min.js"></script>
+
+    <script src="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap-select/bootstrap-select.min.js"></script>
+
+    <script src="{{ STATIC_URL }}timeside/lib/bower_components/angular/angular.min.js"></script>
+    <script src="{{ STATIC_URL }}timeside/lib/bower_components/angular-bootstrap-select/build/angular-bootstrap-select.min.js"></script>
+
     <script src="{{ STATIC_URL }}timeside/lib/waves/ui/waves-ui.umd.js"></script>
     <script src="{{ STATIC_URL }}timeside/lib/waves/loaders/loaders.min.js"></script>
+
     <script src="{{ STATIC_URL }}timeside/js/timeside.js"></script>
     <script src="{{ STATIC_URL }}timeside/js/timeside-waves.js"></script>
 {% endblock %}
