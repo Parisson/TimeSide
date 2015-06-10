@@ -20,10 +20,14 @@ api_router.register(r'presets', views.PresetViewSet)
 api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 
+
+
+
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_router.urls)),
+    url(r'^api/items/(?P<pk>\d+)/results/', views.ItemResultsList.as_view()),
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),
     # Items
     # ex: /item/5/

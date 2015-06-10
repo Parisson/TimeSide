@@ -26,15 +26,15 @@ from django.views.generic.base import View
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
 
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 
 from timeside.server.models import Experience, Item, Result, Processor
 from timeside.server.models import Preset, Selection, Task, User
-from timeside.server.models import _DRAFT
+from timeside.server.models import _DRAFT, _DONE
 from timeside.server.serializers import ExperienceSerializer, ItemSerializer
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
-from timeside.server.serializers import ResultSerializer
+from timeside.server.serializers import ResultSerializer, Result_ReadableSerializer
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
@@ -224,3 +224,13 @@ class ItemExport(DetailView):
             response = StreamingHttpResponse(streaming_content=stream_from_task(task),
                                              content_type=mime_type)
             return response
+
+class ItemResultsList(generics.ListAPIView):
+    model = Result
+    queryset = Result.objects.all()
+    serializer_class = Result_ReadableSerializer
+
+    def get_queryset(self):
+        queryset = super(ItemResultsList, self).get_queryset()
+        return queryset.filter(item__pk=self.kwargs.get('pk'), status=_DONE)
+

@@ -58,6 +58,16 @@ class ResultSerializer(serializers.ModelSerializer):
         # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
 
 
+class Result_ReadableSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Result
+        fields = ('id', 'preset', 'hdf5', 'file', 'mime_type')
+        read_only_fields = fields
+        depth = 2
+        
+
 class PresetSerializer(serializers.ModelSerializer):
 
     class Meta:
