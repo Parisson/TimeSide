@@ -1,4 +1,4 @@
-# Django settings for server project.
+    # Django settings for server project.
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -95,6 +95,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'djangobower.finders.BowerFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -145,6 +146,10 @@ INSTALLED_APPS = (
     'timeside.player',
     'rest_framework',
     'djcelery',
+    'bootstrap3',
+    'bootstrap_pagination',
+    'djangular',
+    'djangobower',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -188,3 +193,14 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 
 from celery_app import app
+
+BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
+
+BOWER_INSTALLED_APPS = (
+    'jquery',
+    'jquery-migrate',
+    'underscore',
+    'bootstrap-select',
+    'angular-bootstrap-select',
+    'font-awesome',
+)
