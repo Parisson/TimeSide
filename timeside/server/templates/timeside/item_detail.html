@@ -16,16 +16,40 @@ $(window).ready(function() {
     });
 });
 
-angular.module('TimeSide', ['angular-bootstrap-select', 'angular-bootstrap-select.extra']);
+var ts_API = angular.module('ts_API', ['ngResource']);
 
-angular.module('TimeSide', []).config(function($interpolateProvider) {
+ts_API.factory('Results', ['$resource', 
+  function($resource){
+    return $resource('/api/items/:Id/results/', {Id: "@Id"}, {
+      query: {method:'GET', params:{itemId:'id'}, isArray:true}
+    });
+}]);
+
+
+var ts_select_result_App = angular.module("TimeSide", ['angular-bootstrap-select', 'angular-bootstrap-select.extra', 'ts_API']);
+
+ts_select_result_App.config(function($locationProvider){
+    $locationProvider.html5Mode(true);
+});
+
+ts_select_result_App.config(function($interpolateProvider) {
     $interpolateProvider.startSymbol('{$');
     $interpolateProvider.endSymbol('$}');
 });
 
-function SelectCtrl($scope) {
-  $scope.form = undefined;
-}
+
+ts_select_result_App.controller('SelectController', ['$scope', '$location', '$log', 'Results', function($scope, $location, $log, Results) {
+    $scope.form = undefined;
+    $scope.options = [$location.path()];
+    $scope.itemId = $location.path().split('/items/')[1].split("/")[0];
+    $scope.list_results = Results.query({},{'Id': $scope.itemId});
+    $scope.list_results.$promise.then(function (results) {
+        angular.forEach(results, function(res) {
+        $scope.options.push({"value":res.id, "text":res.preset.processor.pid, "mime_type":res.mime_type})});
+   });
+}]);
+
+
 
 </script>
 {% endblock %}
@@ -60,17 +84,16 @@ Your browser does not support the audio element.
 
 <h2>Results</h2>
 
-  <section id="directives-bootstrap-select" ng-controller="SelectCtrl">
+<section id="directives-bootstrap-select" ng-controller="SelectController">
   <div>
     <code>{$ form || 'undefined' $}</code>
   </div>
-
-  <select ng-model="form" class="selectpicker">
-    <option>Mustard</option>
-    <option>Ketchup</option>
-    <option>Relish</option>
+  {% verbatim %}
+  <select ng-model="form" ng-options="res as res.text for res in options">
   </select>
-  </section>
+  {% endverbatim %}
+  
+</section>
 
 <ul>
 {% for result in object.results.all %}
