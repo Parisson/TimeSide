@@ -13,17 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:wheezy
+FROM debian:jessie
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
 # install confs, keys and deps
-RUN echo 'deb http://http.debian.net/debian wheezy-backports main contrib non-free' > /etc/apt/sources.list.d/wheezy-backports.list && \
-    echo 'deb http://debian.parisson.com/debian/ wheezy main' > /etc/apt/sources.list.d/parisson.list && \
+RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
-    apt-get -y --force-yes -t wheezy-backports dist-upgrade  && \
     apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples && \
-    apt-get install -y --force-yes -t wheezy-backports python-yaafe && \
+    apt-get install -y --force-yes python-yaafe && \
     apt-get install -y --force-yes git wget bzip2 build-essential netcat npm libmysqlclient-dev libxml2-dev libxslt1-dev && \
     apt-get clean
 
@@ -63,6 +61,7 @@ WORKDIR /opt/TimeSide
 RUN pip install -r requirements.txt
 
 RUN npm install -g bower
+RUN /opt/TimeSide/examples/sandbox/manage.py bower
 
 # install new deps from the local repo
 #RUN pip install -e /opt/TimeSide

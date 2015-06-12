@@ -60,6 +60,7 @@ setup(
         'djangorestframework==2.4.4',
         'django-celery',
         'django-bootstrap3',
+        'django-bootstrap-pagination',
         'django-angular',
         'django-bower',
         'south',
