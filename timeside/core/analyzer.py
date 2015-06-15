@@ -766,11 +766,11 @@ class GlobalObject(DataObject):
 
     @property
     def time(self):
-        return self.audio_metadata.start
+        return 0  #self.audio_metadata.start
 
     @property
     def duration(self):
-        return self.audio_metadata.duration
+        return None  #self.audio_metadata.duration
 
 
 class FramewiseObject(DataObject):
@@ -815,6 +815,21 @@ class GlobalLabelObject(LabelObject, GlobalObject):
     # Define default values
     _default_value = OrderedDict([('label', None),
                                   ('label_metadata', None)])
+
+    def _render_plot(self, ax, size=(1024,256)):
+        #import itertools
+        #colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
+        #ax_color = {}
+        #artist = {}
+        #for key, label in self.label_metadata.label.items():
+        #    ax_color[key] = colors.next()
+        #    artist[key] = plt.axvspan(0, 0, color='b', alpha=0.3)
+        #for time, duration, label in zip(self.time, self.duration, self.data):
+        #    ax.axvspan(time, time + duration, color='b', alpha=0.3)
+
+        #Create legend
+        ax.legend(self.label_metadata.label[int(self.label)])
+
 
 
 class FrameValueObject(ValueObject, FramewiseObject):
@@ -928,17 +943,23 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         #Create legend from custom artist/label lists
         ax.legend(artist.values(), self.label_metadata.label.values())
 
-    def to_elan(self, elan_file, media_file=None):
+    def to_elan(self, elan_file, media_file=None, label_per_tier = 'ALL'):
         import pympi
         elan = pympi.Elan.Eaf(author='TimeSide')
         if media_file is not None:
             elan.add_linked_file(media_file)
-        #for label in self.label_metadata.label.values():
-        tier_id = 'Analysis'
-        elan.add_tier(tier_id)
+        if label_per_tier=='ONE':
+            for label in self.label_metadata.label.values():
+                tier_id = unicode(label)
+                elan.add_tier(tier_id)
+        elif label_per_tier == 'ALL':
+            tier_id = 'Analysis'
+            elan.add_tier(tier_id)
          
         for n in xrange(len(self.label)):
             label_id = self.label_metadata.label[unicode(self.label[n])]
+            if label_per_tier=='ONE':
+                tier_id = label_id
             #tier_id = self.label_metadata.label[unicode(label_id)]
             start = self.time[n]
             if start < 0:
