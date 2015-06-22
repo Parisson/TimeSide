@@ -16,7 +16,7 @@ $(window).ready(function() {
     });
 });
 
-var ts_API = angular.module('ts_API', ['ngResource']);
+var ts_API = angular.module('ts_API', ['ngResource', 'ng.django.urls']);
 
 ts_API.factory('Results', ['$resource', 
   function($resource){
@@ -26,7 +26,7 @@ ts_API.factory('Results', ['$resource',
 }]);
 
 
-var ts_select_result_App = angular.module("TimeSide", ['angular-bootstrap-select', 'angular-bootstrap-select.extra', 'ts_API']);
+var ts_select_result_App = angular.module("TimeSide", ['angular-bootstrap-select', 'angular-bootstrap-select.extra', 'ts_API', 'ng.django.urls']);
 
 ts_select_result_App.config(function($locationProvider){
     $locationProvider.html5Mode(true);
@@ -38,14 +38,15 @@ ts_select_result_App.config(function($interpolateProvider) {
 });
 
 
-ts_select_result_App.controller('SelectController', ['$scope', '$location', '$log', 'Results', function($scope, $location, $log, Results) {
+ts_select_result_App.controller('SelectController', ['$scope', '$location', '$log', 'Results', 'djangoUrl', function($scope, $location, $log, Results, djangoUrl) {
     $scope.form = undefined;
-    $scope.options = [$location.path()];
+    $scope.options = [];
     $scope.itemId = $location.path().split('/items/')[1].split("/")[0];
     $scope.list_results = Results.query({},{'Id': $scope.itemId});
     $scope.list_results.$promise.then(function (results) {
         angular.forEach(results, function(res) {
-        $scope.options.push({"value":res.id, "text":res.preset.processor.pid, "mime_type":res.mime_type})});
+            $scope.options.push({"value":res.id, "text":res.preset.processor.pid, "mime_type":res.mime_type, "json_url":djangoUrl.reverse('timeside-result-json', [res.id])})});
+
    });
 }]);
 
@@ -88,10 +89,17 @@ Your browser does not support the audio element.
   <div>
     <code>{$ form || 'undefined' $}</code>
   </div>
-  {% verbatim %}
+  
   <select ng-model="form" ng-options="res as res.text for res in options">
   </select>
-  {% endverbatim %}
+ 
+  <div id="graph-{$ form.value $}" class="timeline" json="{$ form.json_url $}">
+    value : {$ form.value $}
+    <br>
+    url : {$ form.json_url $}</div>
+ 
+  
+
   
 </section>
 

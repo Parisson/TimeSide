@@ -25,6 +25,10 @@ RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources
     apt-get install -y --force-yes git wget bzip2 build-essential netcat npm libmysqlclient-dev libxml2-dev libxslt1-dev && \
     apt-get clean
 
+# Install bower
+npm install -g bower
+
+
 # Install conda in /opt/miniconda
 ENV PATH /opt/miniconda/bin:$PATH
 RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh && \

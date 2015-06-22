@@ -12,7 +12,7 @@ sh $app_dir/examples/deploy/wait.sh
 # django init
 python $manage syncdb --noinput
 python $manage migrate --noinput
-python $manage bower install --noinput
+python $manage bower install
 python $manage collectstatic --noinput
 python $manage timeside-create-admin-user
 python $manage timeside-create-boilerplate

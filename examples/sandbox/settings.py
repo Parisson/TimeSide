@@ -114,6 +114,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # Manage Django URLs for AngularJS with django-angular
+    'djangular.middleware.DjangularUrlMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -195,6 +197,12 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 from celery_app import app
 
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
+
+print '---------------****-------------------'
+print BOWER_COMPONENTS_ROOT
+print '---------------****-------------------'
+
+BOWER_PATH = '/usr/local/bin/bower'
 
 BOWER_INSTALLED_APPS = (
     'jquery',
