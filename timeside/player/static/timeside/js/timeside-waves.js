@@ -170,7 +170,9 @@ function timeline_get_data(json_url, div_id) {
 	    
             timeline_result(data, graph, ytop);
 	}
+
 	// 4. draw graph
+        d3.select('#'+div_id).select('svg').remove();  // remove old graph
 	d3.select('#'+div_id).call(graph.draw);
 
 	var zoomLayer = wavesUI.zoomer()
