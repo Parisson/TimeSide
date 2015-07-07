@@ -197,13 +197,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 from celery_app import app
 
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'bower')
-
-print '---------------****-------------------'
-print BOWER_COMPONENTS_ROOT
-print '---------------****-------------------'
-
 BOWER_PATH = '/usr/local/bin/bower'
-
 BOWER_INSTALLED_APPS = (
     'jquery',
     'jquery-migrate',
