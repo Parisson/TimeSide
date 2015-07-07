@@ -208,7 +208,7 @@ BOWER_INSTALLED_APPS = (
     'jquery',
     'jquery-migrate',
     'underscore',
-    'bootstrap-select',
+    'bootstrap-select#1.5.4',
     'angular-bootstrap-select',
     'font-awesome',
 )
