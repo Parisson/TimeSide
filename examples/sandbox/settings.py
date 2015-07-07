@@ -196,7 +196,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 
 from celery_app import app
 
-BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
+BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'bower')
 
 print '---------------****-------------------'
 print BOWER_COMPONENTS_ROOT
