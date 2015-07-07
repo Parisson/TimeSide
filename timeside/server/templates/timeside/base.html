@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load i18n %}
+{% load bootstrap3 %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 <html lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} ng-app="TimeSide">
@@ -9,26 +10,25 @@
 <title></title>
 
 {% block stylesheets %}
+{% bootstrap_css %}
+<link href="{{ STATIC_URL }}bootstrap-select/bootstrap-select.css" type="text/css" media="all" rel="stylesheet" />
 <link href="{{ STATIC_URL }}timeside/css/timeside.css" type="text/css" media="all" rel="stylesheet" />
-<link href="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css" media="all" rel="stylesheet" />
-<link href="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap-select/bootstrap-select.css" type="text/css" media="all" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_stylesheets %}{% endblock %}
 
 {% block javascript %}
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/jquery-migrate/jquery-migrate.min.js"></script>
+    <script src="{{ STATIC_URL }}jquery/dist/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}jquery-migrate/jquery-migrate.min.js"></script>
 
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/bootstrap-select/bootstrap-select.min.js"></script>
+    {% bootstrap_javascript %}
+    <script src="{{ STATIC_URL }}bootstrap-select/bootstrap-select.min.js"></script>
 
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/angular/angular.min.js"></script>
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/angular-bootstrap-select/build/angular-bootstrap-select.min.js"></script>
-    <script src="{{ STATIC_URL }}timeside/lib/bower_components/angular/angular-resource.min.js"></script>
-
+    <script src="{{ STATIC_URL }}angular/angular.min.js"></script>
+    <script src="{{ STATIC_URL }}angular-bootstrap-select/build/angular-bootstrap-select.min.js"></script>
+    <!-- <script src="{{ STATIC_URL }}angular-resource/angular-resource.min.js"></script> -->
     <script src="{{ STATIC_URL }}djangular/js/django-angular.js"></script>
-    
+
     <script src="{{ STATIC_URL }}timeside/lib/waves/ui/waves-ui.umd.js"></script>
     <script src="{{ STATIC_URL }}timeside/lib/waves/loaders/loaders.min.js"></script>
 
