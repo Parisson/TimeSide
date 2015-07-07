@@ -1,7 +1,6 @@
 coverage=3.7.1=py27_0
 h5py=2.4.0=np19py27_0
 ipython=2.4.1=py27_0
-#ipython-notebook=2.4.1=py27_0
 matplotlib=1.4.3=np19py27_0
 networkx=1.9.1=py27_0
 numpy=1.9.1=py27_0
@@ -15,3 +14,6 @@ setuptools=12.2=py27_0
 traits=4.4.0=py27_0
 mysql-python=1.2.3=py27_0
 lxml=3.4.4=py27_0
+pyzmq=14.7.0=py27_0
+jinja2=2.7.3=py27_0
+tornado=4.2=py27_0
