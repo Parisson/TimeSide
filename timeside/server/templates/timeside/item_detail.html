@@ -20,7 +20,7 @@ var ts_API = angular.module('ts_API', ['ngResource', 'ng.django.urls']);
 
 ts_API.factory('Results', ['$resource', 
   function($resource){
-    return $resource('/api/items/:Id/results/', {Id: "@Id"}, {
+    return $resource('/timeside/api/items/:Id/results/', {Id: "@Id"}, {
       query: {method:'GET', params:{itemId:'id'}, isArray:true}
     });
 }]);
