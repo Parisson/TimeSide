@@ -9,6 +9,7 @@ Development
 .. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
+The easiest way to develop with TimeSide framework is to use our `DevBox <https://github.com/Parisson/DevBox>`_
 
 Docker (recommended)
 --------------------
@@ -38,23 +39,4 @@ or get our latest-dev image::
   docker pull parisson/timeside:latest-dev
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
-
-
-Native
--------
-
-First, install TimeSide (see Install).
-
-Then::
-
- sudo apt-get build-dep python-timeside
- sudo apt-get install git
- git clone https://github.com/Parisson/TimeSide.git
- cd TimeSide
- git checkout dev
- sudo pip install -e .
- echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
- source ~/.bashrc
- tests/run_all_tests
-
 

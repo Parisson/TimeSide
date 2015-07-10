@@ -48,10 +48,17 @@ To build your own audio project on top of TimeSide, just pull our latest master 
 More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
 
 
-Scaling
---------
+Deploying
+---------
 
-Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
+Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It thus provides a safe way to deploy your project from the development stage to a massive production setup very easily.
 
 WARNING: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
 
+
+Scaling
+--------
+
+Thanks to Celery, each TimeSide worker of the server will process each task asynchronously over independant threads so that you can load all the cores of your CPU.
+
+To scale it up through your cluster, Docker provides some nice tools for orchestrating it very easily: `Machine and Swarm <https://blog.docker.com/2015/02/orchestrating-docker-with-machine-swarm-and-compose/>`_.

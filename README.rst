@@ -169,63 +169,6 @@ News
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
-Processors
-==========
-
-IEncoder
---------
-
-* **live_encoder** : Gstreamer-based Audio Sink
-* **flac_encoder** : FLAC encoder based on Gstreamer
-* **aac_encoder** : AAC encoder based on Gstreamer
-* **mp3_encoder** : MP3 encoder based on Gstreamer
-* **vorbis_encoder** : OGG Vorbis encoder based on Gstreamer
-* **opus_encoder** : Opus encoder based on Gstreamer
-* **wav_encoder** : WAV encoder based on Gstreamer
-* **webm_encoder** : WebM encoder based on Gstreamer
-
-IDecoder
---------
-
-* **array_decoder** : Decoder taking Numpy array as input
-* **file_decoder** : File Decoder based on Gstreamer
-* **live_decoder** : Live source Decoder based on Gstreamer
-
-IGrapher
---------
-
-* **grapher_aubio_pitch** : Image representing Aubio Pitch
-* **grapher_onset_detection_function** : Image representing Onset detection function
-* **grapher_waveform** : Image representing Waveform from Analyzer
-* **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
-* **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
-* **waveform_simple** : Simple monochrome waveform image.
-* **waveform_centroid** : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
-* **waveform_contour_black** : Black amplitude contour waveform.
-* **waveform_contour_white** : an white amplitude contour wavform.
-* **waveform_transparent** : Transparent waveform.
-
-IAnalyzer
----------
-
-* **mean_dc_shift** : Mean DC shift analyzer
-* **level** : Audio level analyzer
-* **aubio_melenergy** : Aubio Mel Energy analyzer
-* **aubio_mfcc** : Aubio MFCC analyzer
-* **aubio_pitch** : Aubio Pitch estimation analyzer
-* **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
-* **aubio_temporal** : Aubio Temporal analyzer
-* **yaafe** : Yaafe feature extraction library interface analyzer
-* **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
-* **onset_detection_function** : Onset Detection Function analyzer
-* **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
-* **waveform_analyzer** : Waveform analyzer
-
-IEffect
--------
-
-* **fx_gain** : Gain effect processor
-
 API / Documentation
 ====================
 
@@ -287,13 +230,20 @@ To build your own audio project on top of TimeSide, just pull our latest master 
 More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
 
 
-Scaling
---------
+Deploying
+---------
 
-Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
+Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It thus provides a safe way to deploy your project from the development stage to a massive production setup very easily.
 
 WARNING: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
 
+
+Scaling
+--------
+
+Thanks to Celery, each TimeSide worker of the server will process each task asynchronously over independant threads so that you can load all the cores of your CPU.
+
+To scale it up through your cluster, Docker provides some nice tools for orchestrating it very easily: `Machine and Swarm <https://blog.docker.com/2015/02/orchestrating-docker-with-machine-swarm-and-compose/>`_.
 User Interfaces
 ===============
 
@@ -405,6 +355,7 @@ Development
 .. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
+The easiest way to develop with TimeSide framework is to use our `DevBox <https://github.com/Parisson/DevBox>`_
 
 Docker (recommended)
 --------------------
@@ -434,25 +385,6 @@ or get our latest-dev image::
   docker pull parisson/timeside:latest-dev
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
-
-
-Native
--------
-
-First, install TimeSide (see Install).
-
-Then::
-
- sudo apt-get build-dep python-timeside
- sudo apt-get install git
- git clone https://github.com/Parisson/TimeSide.git
- cd TimeSide
- git checkout dev
- sudo pip install -e .
- echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
- source ~/.bashrc
- tests/run_all_tests
-
 
 Sponsors and Partners
 =====================
