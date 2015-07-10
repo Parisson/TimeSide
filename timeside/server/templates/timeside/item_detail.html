@@ -18,7 +18,7 @@ $(window).ready(function() {
 
 var ts_API = angular.module('ts_API', ['ngResource', 'ng.django.urls']);
 
-ts_API.factory('Results', ['$resource', 
+ts_API.factory('Results', ['$resource',
   function($resource){
     return $resource('/timeside/api/items/:Id/results/', {Id: "@Id"}, {
       query: {method:'GET', params:{itemId:'id'}, isArray:true}
@@ -70,7 +70,7 @@ ts_select_result_App.controller('SelectController', ['$scope', '$location', '$lo
 				 "is_json": is_json
                                 })
         });
-	
+
     });
 
 $scope.submit = function() {
@@ -78,7 +78,7 @@ $scope.submit = function() {
         timeline_get_data($scope.form.result_url, div_id);
         $log.log(div_id,$scope.form.result_url);
 };
-        
+
 }]);
 
 
@@ -120,7 +120,7 @@ Your browser does not support the audio element.
     <select ng-model="form" ng-click="submit()" ng-options="res as res.text for res in options">
     <option value="">Select result</option>
     </select>
-    <br>
+    <br/><br/>
     <img  ng-if="form.is_image" ng-src="{$ form.result_url $}">
     <audio ng-if="form.is_audio" controls preload="none">
     <source src="{$ form.result_url $}" type="{$ form.mime_type $}">
