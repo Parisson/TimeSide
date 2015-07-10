@@ -10,13 +10,14 @@ TimeSide : open audio processing framework
 .. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
 
-.. |version| image:: https://pypip.in/version/TimeSide/badge.png
-  :target: https://pypi.python.org/pypi/TimeSide/
-  :alt: Version
+.. |version| image:: https://img.shields.io/pypi/v/timeside.svg
+   :target: https://pypi.python.org/pypi/TimeSide/
+   :alt: Version
 
-.. |downloads| image:: https://pypip.in/download/TimeSide/badge.svg
-    :target: https://pypi.python.org/pypi/TimeSide/
-    :alt: Downloads
+.. |downloads| image:: https://img.shields.io/pypi/dm/timeside.svg
+   :target: https://pypi.python.org/pypi/TimeSide/
+   :alt: Downloads
+
 
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
 
@@ -106,6 +107,13 @@ For more extensive examples, please see the `full documentation <http://files.pa
 
 News
 =====
+
+0.8
+
+* Analyzer Result : fix and improve some results containers and add export to Elan files.
+* Add *Docker* support for easy installation of TimeSide across any OS platform
+* Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
+* Various bugfixes
 
 0.7.1
 
@@ -233,12 +241,32 @@ API / Documentation
 Install
 =======
 
-Any platform
---------------
+Any platform - *with Docker*
+-----------------------------
 
 Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few minutes.
 
-First install `Git <http://git-scm.com/downloads>`_, `Docker <https://docs.docker.com/installation/>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
+First install `Docker <https://docs.docker.com/installation/>`_ then just pull our latest master image::
+
+    docker pull parisson/timeside:latest
+
+and then run the docker container as an interactive shell::
+
+    docker run -it --name timeside -v $(pwd):/home/timeside parisson/timeside:latest /bin/bash
+
+In this shell, you have access to `python` and `ipython` to play with TimeSide. And you have access to the current working directory inside the container in the /home/timeside directory.
+
+
+Debian, Ubuntu
+---------------
+
+For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
+
+
+Advanced (and experimental) usage
+----------------------------------
+
+TimeSide now includes an experimental web service and API. To test this new environnement please install  `Git <http://git-scm.com/downloads>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
 
     git clone https://github.com/Parisson/TimeSide.git
     cd TimeSide
@@ -252,7 +280,7 @@ To process some data by hand, you can also start a python shell session into the
 
     docker-compose run app python examples/sandbox/manage.py shell
 
-To build your own audido project on top of TimeSide, just pull our latest master image::
+To build your own audio project on top of TimeSide, just pull our latest master image::
 
     docker pull parisson/timeside:latest
 
@@ -262,15 +290,9 @@ More infos about the TimeSide docker image: https://registry.hub.docker.com/u/pa
 Scaling
 --------
 
-Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, ElasticSearch, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
+Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
 
 WARNING: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
-
-
-Debian, Ubuntu
----------------
-
-For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
 
 User Interfaces
 ===============
