@@ -3,7 +3,7 @@ Install
 =======
 
 Any platform - *with Docker*
---------------
+-----------------------------
 
 Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few minutes.
 
@@ -24,8 +24,8 @@ Debian, Ubuntu
 For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
 
 
-Advance (and experimental) usage
---------------------------------
+Advanced (and experimental) usage
+----------------------------------
 
 TimeSide now includes an experimental web service and API. To test this new environnement please install  `Git <http://git-scm.com/downloads>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
 
@@ -49,11 +49,9 @@ More infos about the TimeSide docker image: https://registry.hub.docker.com/u/pa
 
 
 Scaling
-~~~~~~~
+--------
 
 Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
 
 WARNING: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
-
-
 

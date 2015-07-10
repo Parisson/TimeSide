@@ -5,8 +5,8 @@ News
 
 * Analyzer Result : fix and improve some results containers and add export to Elan files.
 * Add *Docker* support for easy installation of TimeSide across any OS platform
-* Start the development of a web service and API (experimental) with *docker composition* support based on Dajngo REST Framework. 
-
+* Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
+* Various bugfixes
 
 0.7.1
 
