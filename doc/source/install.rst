@@ -2,12 +2,26 @@
 Install
 =======
 
-Any platform
+Any platform - *with Docker*
 --------------
 
 Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few minutes.
 
-First install `Git <http://git-scm.com/downloads>`_, `Docker <https://docs.docker.com/installation/>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
+First install `Docker <https://docs.docker.com/installation/>`_ then just pull our latest master image::
+
+    docker pull parisson/timeside:latest
+
+and then run the docker container as an interactive shell::
+
+    docker run -it --name timeside -v $(pwd):/home/timeside parisson/timeside:latest /bin/bash
+
+In this shell, you have access to `python` and `ipython` to play with TimeSide. And you have access to the current working directory inside the container in the /home/timeside directory.
+
+
+Advance (and experimental) usage
+--------------------------------
+
+TimeSide now includes an experimental web service and API. To test this new environnement please install  `Git <http://git-scm.com/downloads>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
 
     git clone https://github.com/Parisson/TimeSide.git
     cd TimeSide
@@ -21,7 +35,7 @@ To process some data by hand, you can also start a python shell session into the
 
     docker-compose run app python examples/sandbox/manage.py shell
 
-To build your own audido project on top of TimeSide, just pull our latest master image::
+To build your own audio project on top of TimeSide, just pull our latest master image::
 
     docker pull parisson/timeside:latest
 
