@@ -1,3 +1,7 @@
+#layout {
+  padding: 0em 2em 2em 2em;
+}
+
 .segment-item {
   cursor: all-scroll;
 }
