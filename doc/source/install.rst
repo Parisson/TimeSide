@@ -18,6 +18,12 @@ and then run the docker container as an interactive shell::
 In this shell, you have access to `python` and `ipython` to play with TimeSide. And you have access to the current working directory inside the container in the /home/timeside directory.
 
 
+Debian, Ubuntu
+---------------
+
+For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
+
+
 Advance (and experimental) usage
 --------------------------------
 
@@ -43,15 +49,11 @@ More infos about the TimeSide docker image: https://registry.hub.docker.com/u/pa
 
 
 Scaling
---------
+~~~~~~~
 
-Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, ElasticSearch, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
+Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It provides a safe way to scale your project from the development stage to a massive production setup very easily.
 
 WARNING: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
 
 
-Debian, Ubuntu
----------------
-
-For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
 
