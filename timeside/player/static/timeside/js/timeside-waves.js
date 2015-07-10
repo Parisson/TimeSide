@@ -225,7 +225,7 @@ function timeline_result(data, graph, ytop) {
             timeline_framewise_value(data, graph, ytop);
             break;
 	case 'label':
-	    console.log(id, time_mode, data_mode);
+	    timeline_framewise_label(data, graph, ytop); 
             break;
 	}
 	break;
@@ -404,4 +404,41 @@ function timeline_event_label(data, graph, ytop) {
     // 3. add layers to graph
     graph.add(markerLayer);
 
+}
+
+function timeline_framewise_label(data, graph, ytop) {
+
+    // Extract frame_metadata parameters
+    var samplerate = data.data_object.frame_metadata.samplerate;
+    var blocksize = data.data_object.frame_metadata.blocksize;
+    var stepsize = data.data_object.frame_metadata.stepsize;
+
+
+    var labels = data.data_object.label.numpyArray;
+
+    // format data
+    var data = labels.map(function(dummy, index) {
+        return {
+            start: (blocksize / 2 +  stepsize * index ) / samplerate,
+            duration: blocksize / samplerate,
+	    label: labels[index]
+        };
+    });
+
+    var colors = d3.scale.category10().domain(d3.set(labels).values()).range();
+    
+    var segmentLayer = wavesUI.segment()
+        .data(data)
+        .color(function(d) { return colors[d.label]})
+        .opacity(0.8)
+	.params({
+	    height: graph_height,
+	    top: ytop,
+	    handlerOpacity: 1
+	});
+	
+
+    // 3. add layers to graph
+    graph.add(segmentLayer);
+    
 }
