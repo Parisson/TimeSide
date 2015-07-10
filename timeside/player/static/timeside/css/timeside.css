@@ -1,7 +1,8 @@
-  .segment-item {
+.segment-item {
   cursor: all-scroll;
-  }
+}
 
-  .segment-item .handle {
+.segment-item .handle {
   cursor: ew-resize;
-  }
+}
+
