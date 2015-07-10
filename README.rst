@@ -1,6 +1,6 @@
-===========================================
-TimeSide : open audio processing framework
-===========================================
+==================================================
+TimeSide : audio processing framework for the web
+==================================================
 
 |version| |downloads| |travis_master| |coveralls_master|
 
