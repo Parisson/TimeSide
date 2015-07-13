@@ -17,10 +17,15 @@ FROM debian:jessie
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
+RUN mkdir /opt/TimeSide
+WORKDIR /opt/TimeSide
+
 # install confs, keys and deps
+ADD debian-requirements.txt /opt/TimeSide/
 RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
-    apt-get install -y --force-yes python-gst0.10 gstreamer0.10-plugins-good gstreamer0.10-gnonlin gstreamer0.10-plugins-ugly gstreamer0.10-plugins-bad gstreamer0.10-alsa vamp-examples && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" /opt/TimeSide/debian-requirements.txt) && \
+    apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get install -y --force-yes python-yaafe && \
     apt-get install -y --force-yes git wget bzip2 build-essential netcat npm libmysqlclient-dev libxml2-dev libxslt1-dev && \
     apt-get clean
@@ -37,9 +42,6 @@ RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O 
 # Install uwsgi
 RUN conda install pip && \
     pip install uwsgi
-
-RUN mkdir /opt/TimeSide
-WORKDIR /opt/TimeSide
 
 
 # Install binary dependencies with conda
