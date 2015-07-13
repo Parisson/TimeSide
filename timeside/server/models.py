@@ -29,12 +29,12 @@ import uuid
 import mimetypes
 
 import timeside.core
-from timeside.plugins.decoder.utils import sha1sum_file
+from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
 app = 'timeside'
@@ -50,11 +50,39 @@ PROCESSOR_PIDS = [(name, [(processor.id(), processor.id())
                           in timeside.core.processor.processors(proc_type)])
                   for name, proc_type in _processor_types.items()]
 
+public_extra_types = {
+    '.webm': 'video/webm',
+}
+
+encoders = timeside.core.processor.processors(timeside.core.api.IEncoder)
+for encoder in encoders:
+    public_extra_types['.' + encoder.file_extension()] = encoder.mime_type()
+
+private_extra_types = {
+    '.eaf': 'text/xml',  # ELAN Annotation Format
+    '.trs':  'text/xml', # Trancriber Annotation Format
+    '.svl':  'text/xml',  # Sonic Visualiser layer file
+    '.TextGrid': 'text/praat-textgrid',  # Praat TextGrid annotation file
+}
+
+for ext,mime_type in public_extra_types.items():
+    mimetypes.add_type(mime_type, ext)
+
+for ext,mime_type in private_extra_types.items():
+    mimetypes.add_type(mime_type, ext)
+
+
 # Status
 _FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
 STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_PENDING, _('pending')), (_RUNNING, _('running')),
           (_DONE, _('done')))
+
+
+results_root = 'results'
+results_path = os.path.join(settings.MEDIA_ROOT, results_root)
+if not os.path.exists(results_path):
+    os.makedirs(results_path)
 
 
 def get_mime_type(path):
@@ -70,7 +98,7 @@ def get_processor(pid):
 
 class MetaCore:
 
-    app_label = 'server'
+    app_label = 'TimeSide'
 
 
 class BaseResource(models.Model):
@@ -78,7 +106,7 @@ class BaseResource(models.Model):
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True,
                                          null=True)
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=512)
+    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255)
 
     class Meta(MetaCore):
         abstract = True
@@ -119,6 +147,13 @@ class Selection(DocBaseResource):
         verbose_name = _('selection')
 
 
+    def get_all_items(self):
+        qs_items = self.items.all()
+        for selection in self.selections.all():
+            qs_items |= selection.get_all_items()
+        return qs_items
+
+
 class Item(DocBaseResource):
 
     element_type = 'timeside_item'
@@ -149,7 +184,86 @@ class Item(DocBaseResource):
         self.save()
 
     def get_results_path(self):
-        pass
+        return os.path.join(results_path, self.uuid)
+
+    def run(self, experience):
+        result_path = self.get_results_path()
+        if not os.path.exists(result_path):
+            os.makedirs(result_path)
+
+
+        if self.file :
+            uri = self.file.path
+        elif self.url:
+            uri = self.url
+
+        pipe = timeside.plugins.decoder.file.FileDecoder(uri=uri,
+                                                         sha1=self.sha1)
+        presets = {}
+        for preset in experience.presets.all():
+            proc = get_processor(preset.processor.pid)
+            if proc.type == 'encoder':
+                result, c = Result.objects.get_or_create(preset=preset,
+                                                         item=self)
+                media_file = '.'.join([str(result.uuid),
+                                       proc.file_extension()])
+                result.file = os.path.join(result_path, media_file)
+                result.save()
+                proc = proc(result.file.path, overwrite=True,
+                            streaming=False)
+            else:
+                proc = proc()
+            if proc.type == 'analyzer':
+                proc.set_parameters(preset.parameters)
+            presets[preset] = proc
+            pipe = pipe | proc
+
+        # item.lock_setter(True)
+
+        if not self.hdf5:
+            hdf5_file = str(experience.uuid) + '.hdf5'
+            self.hdf5 = os.path.join(result_path, hdf5_file)
+            self.save()
+
+        pipe.run()
+
+        for preset, proc in presets.iteritems():
+            if proc.type == 'analyzer':
+                for result_id in proc.results.keys():
+                    parameters = proc.results[result_id].parameters
+                    preset, c = Preset.objects.get_or_create(
+                        processor=preset.processor,
+                        parameters=unicode(parameters))
+                    result, c = Result.objects.get_or_create(preset=preset,
+                                                             item=self)
+                    hdf5_file = str(result.uuid) + '.hdf5'
+                    result.hdf5 = os.path.join(result_path, hdf5_file)
+                    # while result.lock:
+                    #     time.sleep(3)
+                    # result.lock_setter(True)
+                    proc.results.to_hdf5(result.hdf5.path)
+                    # result.lock_setter(False)
+                    result.status_setter(_DONE)
+
+            elif proc.type == 'grapher':
+                parameters = {}
+                result, c = Result.objects.get_or_create(preset=preset,
+                                                         item=self)
+                image_file = str(result.uuid) + '.png'
+                result.file = os.path.join(result_path, image_file)
+                proc.render(output=result.file.path)
+                result.mime_type_setter(get_mime_type(result.file.path))
+                result.status_setter(_DONE)
+
+            elif proc.type == 'encoder':
+                result = Result.objects.get(preset=preset, item=self)
+                result.mime_type_setter(get_mime_type(result.file.path))
+                result.status_setter(_DONE)
+
+            del proc
+
+        del pipe
+        # item.lock_setter(False)
 
 
 class Experience(DocBaseResource):
@@ -194,7 +308,7 @@ class Preset(BaseResource):
     processor = models.ForeignKey('Processor', related_name="presets",
                                   verbose_name=_('processor'), blank=True,
                                   null=True)
-    parameters = models.TextField(_('Parameters'), blank=True)
+    parameters = models.TextField(_('Parameters'), blank=True, default='{}')
     author = models.ForeignKey(User, related_name="presets",
                                verbose_name=_('author'), blank=True, null=True,
                                on_delete=models.SET_NULL)
@@ -228,6 +342,7 @@ class Result(BaseResource):
     author = models.ForeignKey(User, related_name="results",
                                verbose_name=_('author'), blank=True, null=True,
                                on_delete=models.SET_NULL)
+    # lock = models.BooleanField(default=False)
 
     class Meta(MetaCore):
         db_table = app + '_results'
@@ -238,8 +353,16 @@ class Result(BaseResource):
         self.status = status
         self.save()
 
+    def mime_type_setter(self, mime_type):
+        self.mime_type = mime_type
+        self.save()
+
+    def lock_setter(self, lock):
+        self.lock = lock
+        self.save()
+
     def __unicode__(self):
-        return '_'.join([self.item.title, unicode(self.parameters.processor)])
+        return '_'.join([self.item.title, unicode(self.preset.processor)])
 
 
 class Task(BaseResource):
@@ -261,111 +384,56 @@ class Task(BaseResource):
         verbose_name_plural = _('Tasks')
 
     def __unicode__(self):
-        return '_'.join([unicode(self.experience), unicode(self.id)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
 
     def status_setter(self, status):
         self.status = status
         self.save()
 
-    def run(self):
+    def run(self, streaming=False):
+        from timeside.server.tasks import experience_run
         self.status_setter(_RUNNING)
-
-        results_root = 'results'
-        results_path = os.path.join(settings.MEDIA_ROOT, results_root)
-        if not os.path.exists(results_path):
-            os.makedirs(results_path)
-
-        for item in self.selection.items.all():
-            item_path = os.path.join(results_path, item.uuid)
-            if not os.path.exists(item_path):
-                os.makedirs(item_path)
-
-            pipe = timeside.plugins.decoder.file.FileDecoder(item.file.path,
-                                                     sha1=item.sha1)
-
-            presets = {}
-            for preset in self.experience.presets.all():
-                proc = get_processor(preset.processor.pid)
-                if proc.type == 'encoder':
-                    result, c = Result.objects.get_or_create(preset=preset,
-                                                             item=item)
-                    media_file = '.'.join([str(result.uuid),
-                                           proc.file_extension()])
-                    result.file = os.path.join(item_path, media_file)
-                    result.save()
-                    proc = proc(result.file.path, overwrite=True)
-                else:
-                    proc = proc()
-                if proc.type == 'analyzer':
-                    proc.set_parameters(preset.parameters)
-                presets[preset] = proc
-                pipe = pipe | proc
-
-            # while item.lock:
-            #     time.sleep(30)
-
-            if not item.hdf5:
-                hdf5_file = str(self.experience.uuid) + '.hdf5'
-                item.hdf5 = os.path.join(item_path, hdf5_file)
-                item.save()
-            pipe.run()
-            item.lock_setter(True)
-            pipe.results.to_hdf5(item.hdf5.path)
-            item.lock_setter(False)
-
-            for preset in presets.keys():
-                proc = presets[preset]
-                if proc.type == 'analyzer':
-                    for result_id in proc.results.keys():
-                        parameters = proc.results[result_id].parameters
-                        preset, c = Preset.objects.get_or_create(processor=preset.processor,
-                                                                 parameters=unicode(parameters))
-                        result, c = Result.objects.get_or_create(preset=preset,
-                                                                 item=item)
-                        hdf5_file = str(result.uuid) + '.hdf5'
-                        result.hdf5 = os.path.join(item_path, hdf5_file)
-                        proc.results.to_hdf5(result.hdf5.path)
-                        result.status_setter(_DONE)
-                elif proc.type == 'grapher':
-                    parameters = {}
-                    result, c = Result.objects.get_or_create(preset=preset,
-                                                             item=item)
-                    image_file = str(result.uuid) + '.png'
-                    result.file = os.path.join(item_path, image_file)
-                    proc.render(output=result.file.path)
-                    result.status_setter(_DONE)
-                elif proc.type == 'encoder':
-                    result = Result.objects.get(preset=preset, item=item)
-                    result.status_setter(_DONE)
-                del proc
-
-            # except:
-            #     self.status_setter(0)
-            #     item.lock_setter(False)
-            #     break
-
+        for item in self.selection.get_all_items():
+            experience_run.delay(self.experience.id, item.id)
         self.status_setter(_DONE)
-        del pipe
 
 
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file:
-        if not instance.mime_type:
-            instance.mime_type = get_mime_type(instance.file.path)
-
+        path = instance.file.path
+    elif (sender == Item):
+        if instance.url:
+            path = instance.url
+    else:
+        return
+    mime_type = get_mime_type(path)
+    if instance.mime_type == mime_type:
+        return
+    else:
+        instance.mime_type = get_mime_type(path)
+        super(sender, instance).save()
 
 def set_hash(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file:
-        if not instance.sha1:
-            instance.sha1 = sha1sum_file(instance.file.path)
+        sha1 = sha1sum_file(instance.file.path)
+    elif instance.url:
+        sha1 = sha1sum_url(instance.url)
+    else:
+        return
+    if instance.sha1 == sha1:
+        return
+    else:
+        instance.sha1 = sha1
+        super(sender, instance).save()
 
 
 def run(sender, **kwargs):
+    from timeside.server.tasks import task_run
     instance = kwargs['instance']
-    if instance.status == 2:
-        instance.run()
+    if instance.status == _PENDING:
+        task_run.delay(instance.id)
 
 
 post_save.connect(set_mimetype, sender=Item)

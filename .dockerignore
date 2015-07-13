@@ -1,0 +1,7 @@
+.git
+*.pyc
+*.egg-info
+build/
+dist/
+examples/sandbox/media
+examples/sanbox/timeside.sql

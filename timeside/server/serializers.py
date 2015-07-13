@@ -23,7 +23,6 @@ import django.db.models
 from django.contrib.auth.models import User
 
 
-
 class SelectionSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -59,6 +58,16 @@ class ResultSerializer(serializers.ModelSerializer):
         # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
 
 
+class Result_ReadableSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Result
+        fields = ('id', 'preset', 'hdf5', 'file', 'mime_type')
+        read_only_fields = fields
+        depth = 2
+        
+
 class PresetSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -67,7 +76,7 @@ class PresetSerializer(serializers.ModelSerializer):
 
     def validate_parameters(self, attrs, source):
 
-        import timeside
+        import timeside.core
         proc = timeside.core.get_processor(attrs['processor'].pid)
         if proc.type == 'analyzer':
             processor = proc()
@@ -83,6 +92,8 @@ class PresetSerializer(serializers.ModelSerializer):
                 msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
                 raise serializers.ValidationError(msg)
 
+            processor.set_parameters(attrs[source])
+            attrs[source] =  processor.get_parameters()
         return attrs
 
 

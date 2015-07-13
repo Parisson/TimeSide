@@ -9,7 +9,7 @@ As IPython is really great for discovering objects with completion, writing note
 
   sudo apt-get install ipython
   ipython
-  >>> import timeside
+  >>> import timeside.core
 
 
 Shell
@@ -64,7 +64,8 @@ Features:
 * seek through various semantic, analytic and time synced data
 * fully skinnable with CSS style
 
-.. image:: https://raw.github.com/Parisson/TimeSide/master/doc/slides/img/timeside_player_01.png
+.. image:: https://raw.githubusercontent.com/Parisson/TimeSide/dev/doc/images/timeside_player_01.png
+  :alt: TimeSide player
 
 Examples of the player embeded in the Telemeta open web audio CMS:
 

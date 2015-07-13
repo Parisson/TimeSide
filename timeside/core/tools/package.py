@@ -156,6 +156,5 @@ def check_gstreamer():
     try:
         import gobject, pygst
     except ImportError:
-        print 'Add Gstreamer'
         add_gstreamer_packages()
 

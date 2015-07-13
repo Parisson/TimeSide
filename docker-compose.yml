@@ -1,0 +1,108 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2015 Parisson SARL
+
+# This file is part of TimeSide.
+
+# TimeSide is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
+# Authors:
+# Guillaume Pellerin <yomguy@parisson.com>
+# Thomas Fillon <thomas@parisson.com>
+
+
+static:
+  image: debian:wheezy
+  volumes:
+    - /var/www/static
+  command: true
+
+log:
+  image: debian:wheezy
+  volumes:
+    - /var/log/nginx
+    - /var/log/postgres
+    - /var/log/uwsgi
+  command: /bin/true
+
+lib:
+  image: debian:wheezy
+  volumes:
+    - /var/lib/rabbitmq
+    - /var/lib/postgres
+    - /var/lib/mysql
+  command: /bin/true
+
+home:
+  image: debian:wheezy
+  volumes:
+    - ./examples/sandbox:/home/sandbox
+  command: /bin/true
+
+db:
+  image: mysql
+  volumes_from:
+    - log
+  environment:
+    - MYSQL_ROOT_PASSWORD=mysecretpassword
+    - MYSQL_DATABASE=sandbox
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=mysecretpassword
+
+rabbitmq:
+  image: rabbitmq:3-management
+  ports:
+    - "15672:15672"
+
+app:
+  build: .
+  volumes:
+    - .:/opt/TimeSide
+  volumes_from:
+    - static
+    - home
+    - log
+  command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
+  ports:
+    - "9000:9000"
+  expose:
+    - "8000"
+  links:
+    - rabbitmq
+    - db
+
+worker:
+  build: .
+  volumes_from:
+    - app
+    - home
+    - log
+  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
+  links:
+    - rabbitmq
+    - db
+
+nginx:
+  image: nginx
+  ports:
+    - "8000:80"
+  volumes:
+    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
+  volumes_from:
+    - static
+    - home
+    - log
+  links:
+    - app
+

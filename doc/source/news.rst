@@ -1,6 +1,13 @@
 News
 =====
 
+0.8
+
+* Analyzer Result : fix and improve some results containers and add export to Elan files.
+* Add *Docker* support for easy installation of TimeSide across any OS platform
+* Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
+* Various bugfixes
+
 0.7.1
 
 * fix django version to 1.6.10 (sync with Telemeta 1.5)

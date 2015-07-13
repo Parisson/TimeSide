@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 ===========================================
 TimeSide : open audio processing framework
 ===========================================
+=======
+==================================================
+TimeSide : audio processing framework for the web
+==================================================
+>>>>>>> release/0.8
 
 |version| |downloads| |travis_master| |coveralls_master|
 
@@ -10,16 +16,22 @@ TimeSide : open audio processing framework
 .. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
 
-.. |version| image:: https://pypip.in/version/TimeSide/badge.png
-  :target: https://pypi.python.org/pypi/TimeSide/
-  :alt: Version
+.. |version| image:: https://img.shields.io/pypi/v/timeside.svg
+   :target: https://pypi.python.org/pypi/TimeSide/
+   :alt: Version
 
-.. |downloads| image:: https://pypip.in/download/TimeSide/badge.svg
-    :target: https://pypi.python.org/pypi/TimeSide/
-    :alt: Downloads
+.. |downloads| image:: https://img.shields.io/pypi/dm/timeside.svg
+   :target: https://pypi.python.org/pypi/TimeSide/
+   :alt: Downloads
+
+<<<<<<< HEAD
+TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
+
+=======
 
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
 
+>>>>>>> release/0.8
 
 Use cases
 ==========
@@ -70,29 +82,29 @@ Let's produce a really simple audio analysis of an audio file.
 First, list all available plugins:
 
 
-   >>> import timeside.core
-   >>> timeside.core.list_processors()
+>>> import timeside.core
+>>> timeside.core.list_processors()
 
 Define some processors:
 
 
-    >>> from timeside.core import get_processor
-    >>> from timeside.core.tools.test_samples import samples
-    >>> wavfile = samples['sweep.wav']
-    >>> decoder  =  get_processor('file_decoder')(wavfile)
-    >>> grapher  =  get_processor('waveform_simple')()
-    >>> analyzer =  get_processor('level')()
-    >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
+>>> from timeside.core import get_processor
+>>> from timeside.core.tools.test_samples import samples
+>>> wavfile = samples['sweep.wav']
+>>> decoder  =  get_processor('file_decoder')(wavfile)
+>>> grapher  =  get_processor('waveform_simple')()
+>>> analyzer =  get_processor('level')()
+>>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
 Then run the *magic* pipeline:
 
 
-    >>> (decoder | grapher | analyzer | encoder).run()
+>>> (decoder | grapher | analyzer | encoder).run()
 
 Render the grapher results:
 
 
-    >>> grapher.render(output='waveform.png')
+>>> grapher.render(output='waveform.png')
 
 Show the analyzer results:
 
@@ -106,6 +118,13 @@ For more extensive examples, please see the `full documentation <http://files.pa
 
 News
 =====
+
+0.8
+
+* Analyzer Result : fix and improve some results containers and add export to Elan files.
+* Add *Docker* support for easy installation of TimeSide across any OS platform
+* Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
+* Various bugfixes
 
 0.7.1
 
@@ -161,6 +180,7 @@ News
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
+<<<<<<< HEAD
 Processors
 ==========
 
@@ -218,6 +238,8 @@ IEffect
 
 * **fx_gain** : Gain effect processor
 
+=======
+>>>>>>> release/0.8
 API / Documentation
 ====================
 
@@ -233,11 +255,30 @@ API / Documentation
 Install
 =======
 
+<<<<<<< HEAD
 Any platform
 --------------
+=======
+Any platform - *with Docker*
+-----------------------------
 
 Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few minutes.
 
+First install `Docker <https://docs.docker.com/installation/>`_ then just pull our latest master image::
+
+    docker pull parisson/timeside:latest
+
+and then run the docker container as an interactive shell::
+
+    docker run -it --name timeside -v $(pwd):/home/timeside parisson/timeside:latest /bin/bash
+
+In this shell, you have access to `python` and `ipython` to play with TimeSide. And you have access to the current working directory inside the container in the /home/timeside directory.
+
+>>>>>>> release/0.8
+
+Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few minutes.
+
+<<<<<<< HEAD
 First install `Git <http://git-scm.com/downloads>`_, `Docker <https://docs.docker.com/installation/>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
 
     git clone https://github.com/Parisson/TimeSide.git
@@ -273,6 +314,50 @@ python (2.7.x) python-setuptools python-numpy python-scipy python-h5py python-ma
 python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-tables python-gst0.10
 gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 aubio yaafe python-aubio python-yaafe vamp-examples django (1.6.x) django-south djangorestframework django-extensions
+=======
+For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
+
+
+Advanced (and experimental) usage
+----------------------------------
+
+TimeSide now includes an experimental web service and API. To test this new environnement please install  `Git <http://git-scm.com/downloads>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
+
+    git clone https://github.com/Parisson/TimeSide.git
+    cd TimeSide
+    docker-compose up
+
+That's it! You can now browse the TimeSide API: http://localhost:8000/api/
+
+and the admin: http://localhost:8000/admin (admin/admin)
+
+To process some data by hand, you can also start a python shell session into the sandbox::
+
+    docker-compose run app python examples/sandbox/manage.py shell
+
+To build your own audio project on top of TimeSide, just pull our latest master image::
+
+    docker pull parisson/timeside:latest
+
+More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
+
+
+Deploying
+---------
+
+Our docker composition already bundles some powerfull containers and bleeding edge frameworks like: Nginx, MySQL, RabbitMQ, Celery, Python and Django. It thus provides a safe way to deploy your project from the development stage to a massive production setup very easily.
+
+WARNING: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
+
+
+Scaling
+--------
+
+Thanks to Celery, each TimeSide worker of the server will process each task asynchronously over independant threads so that you can load all the cores of your CPU.
+
+To scale it up through your cluster, Docker provides some nice tools for orchestrating it very easily: `Machine and Swarm <https://blog.docker.com/2015/02/orchestrating-docker-with-machine-swarm-and-compose/>`_.
+
+>>>>>>> release/0.8
 
 User Interfaces
 ===============
@@ -333,6 +418,7 @@ Web player
 TimeSide comes with a smart and pure **HTML5** audio player.
 
 Features:
+<<<<<<< HEAD
 * embed it in any audio web application
 * stream, playback and download various audio formats on the fly
 * synchronize sound with text, bitmap and vectorial events
@@ -343,13 +429,35 @@ Screenshot:
  .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/images/timeside_player_01.png
 
 Examples of the player embeded in the Telemeta open web audio CMS:
+=======
+
+* embed it in any audio web application
+* stream, playback and download various audio formats on the fly
+* synchronize sound with text, bitmap and vectorial events
+* seek through various semantic, analytic and time synced data
+* fully skinnable with CSS style
+
+.. image:: https://raw.githubusercontent.com/Parisson/TimeSide/dev/doc/images/timeside_player_01.png
+  :alt: TimeSide player
+
+Examples of the player embeded in the Telemeta open web audio CMS:
+
+>>>>>>> release/0.8
 * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
 * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
 
 Development documentation:
+<<<<<<< HEAD
 * https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 
 TODO list:
+=======
+
+* https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+
+TODO list:
+
+>>>>>>> release/0.8
 * zoom
 * layers
 
@@ -381,6 +489,7 @@ Development
 .. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
+The easiest way to develop with TimeSide framework is to use our `DevBox <https://github.com/Parisson/DevBox>`_
 
 Docker (recommended)
 --------------------
@@ -411,6 +520,7 @@ or get our latest-dev image::
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
+<<<<<<< HEAD
 
 Native
 -------
@@ -430,6 +540,8 @@ Then::
  tests/run_all_tests
 
 
+=======
+>>>>>>> release/0.8
 Sponsors and Partners
 =====================
 

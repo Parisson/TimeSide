@@ -9,6 +9,7 @@ Development
 .. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
   :target: https://coveralls.io/r/Parisson/TimeSide?branch=dev
 
+The easiest way to develop with TimeSide framework is to use our `DevBox <https://github.com/Parisson/DevBox>`_
 
 Docker (recommended)
 --------------------
@@ -38,49 +39,4 @@ or get our latest-dev image::
   docker pull parisson/timeside:latest-dev
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
-
-
-VirtualBox and Vagrant (deprecated)
------------------------------------
-
-We also provide a vagrant box to install a virtual Debian system including TimeSide and all other dependencies.
-First, install Vagrant and VirtualVox::
-
- sudo apt-get install vagrant virtualbox
-
-On other OS, we need to install the packages correponding to your system:
-
- * Vagrant: https://www.vagrantup.com/downloads.html
- * VirtualBox: https://www.virtualbox.org/wiki/Downloads
-
-Then setup our image box like this in a terminal::
-
- vagrant box add parisson/timeside-wheezy64 http://files.parisson.com/vagrant/timeside/parisson-timeside-wheezy64.box
- vagrant init parisson/timeside-wheezy64
- vagrant up
- vagrant ssh
-
-To stop the virtual box::
-
- exit
- vagrant halt
-
-
-Native
--------
-
-First, install TimeSide (see Install).
-
-Then::
-
- sudo apt-get build-dep python-timeside
- sudo apt-get install git
- git clone https://github.com/Parisson/TimeSide.git
- cd TimeSide
- git checkout dev
- sudo pip install -e .
- echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
- source ~/.bashrc
- tests/run_all_tests
-
 

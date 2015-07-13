@@ -1,5 +1,5 @@
-build/
-dist/
+./build/
+./dist/
 *.pyc
 *.~[0-9]~
 *.swp
@@ -7,3 +7,5 @@ tests/samples
 TimeSide.egg-info
 *.rst~
 *.py~
+*.log
+.tags/

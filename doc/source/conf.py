@@ -19,6 +19,10 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../../'))
 
+sys.path.insert(0, os.path.abspath('../../examples/sandbox/'))
+from django.conf import settings
+settings.configure()
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -56,7 +60,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'TimeSide'
-copyright = u'2015, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+copyright = u'2014-2015 Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -271,7 +275,7 @@ texinfo_documents = [
 epub_title = u'TimeSide'
 epub_author = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 epub_publisher = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
-epub_copyright = u'2014, Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+epub_copyright = u'2014-2015 Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
