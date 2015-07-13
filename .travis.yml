@@ -5,7 +5,6 @@ python:
 virtualenv:
   system_site_packages: true
 
-
 env:
   - TEST_TARGET=default  # Default unit test
   - TEST_TARGET=cli      # Test for TimeSide command line interfaces
@@ -21,17 +20,17 @@ before_install:
   - sudo apt-get install -qq $DEBIAN_PACKAGES 
 
 # Install conda
- - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
- - bash miniconda.sh -b -p $HOME/miniconda
- - export PATH="$HOME/miniconda/bin:$PATH"
- - hash -r
- - conda config --set always_yes yes --set changeps1 no
- - conda update -q conda
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
 # Useful for debugging any issues with conda
- - conda info -a
+  - conda info -a
 # Install binary dependencies with conda
- - conda create -q -n test-environment -c thomasfillon --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
- - source activate test-environment
+  - conda create -q -n test-environment -c thomasfillon --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
+  - source activate test-environment
 
 # Install TimeSide
 install:
