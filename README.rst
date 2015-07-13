@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-===========================================
-TimeSide : open audio processing framework
-===========================================
-=======
 ==================================================
 TimeSide : audio processing framework for the web
 ==================================================
->>>>>>> release/0.8
 
 |version| |downloads| |travis_master| |coveralls_master|
 
@@ -24,14 +18,9 @@ TimeSide : audio processing framework for the web
    :target: https://pypi.python.org/pypi/TimeSide/
    :alt: Downloads
 
-<<<<<<< HEAD
-TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
-
-=======
 
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
 
->>>>>>> release/0.8
 
 Use cases
 ==========
@@ -180,66 +169,6 @@ News
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
 
-<<<<<<< HEAD
-Processors
-==========
-
-IEncoder
---------
-
-* **live_encoder** : Gstreamer-based Audio Sink
-* **flac_encoder** : FLAC encoder based on Gstreamer
-* **aac_encoder** : AAC encoder based on Gstreamer
-* **mp3_encoder** : MP3 encoder based on Gstreamer
-* **vorbis_encoder** : OGG Vorbis encoder based on Gstreamer
-* **opus_encoder** : Opus encoder based on Gstreamer
-* **wav_encoder** : WAV encoder based on Gstreamer
-* **webm_encoder** : WebM encoder based on Gstreamer
-
-IDecoder
---------
-
-* **array_decoder** : Decoder taking Numpy array as input
-* **file_decoder** : File Decoder based on Gstreamer
-* **live_decoder** : Live source Decoder based on Gstreamer
-
-IGrapher
---------
-
-* **grapher_aubio_pitch** : Image representing Aubio Pitch
-* **grapher_onset_detection_function** : Image representing Onset detection function
-* **grapher_waveform** : Image representing Waveform from Analyzer
-* **spectrogram_log** : Logarithmic scaled spectrogram (level vs. frequency vs. time).
-* **spectrogram_lin** : Linear scaled spectrogram (level vs. frequency vs. time).
-* **waveform_simple** : Simple monochrome waveform image.
-* **waveform_centroid** : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.
-* **waveform_contour_black** : Black amplitude contour waveform.
-* **waveform_contour_white** : an white amplitude contour wavform.
-* **waveform_transparent** : Transparent waveform.
-
-IAnalyzer
----------
-
-* **mean_dc_shift** : Mean DC shift analyzer
-* **level** : Audio level analyzer
-* **aubio_melenergy** : Aubio Mel Energy analyzer
-* **aubio_mfcc** : Aubio MFCC analyzer
-* **aubio_pitch** : Aubio Pitch estimation analyzer
-* **aubio_specdesc** : Aubio Spectral Descriptors collection analyzer
-* **aubio_temporal** : Aubio Temporal analyzer
-* **yaafe** : Yaafe feature extraction library interface analyzer
-* **spectrogram_analyzer** : Spectrogram image builder with an extensible buffer based on tables
-* **onset_detection_function** : Onset Detection Function analyzer
-* **spectrogram_analyzer_buffer** : Spectrogram image builder with an extensible buffer based on tables
-* **waveform_analyzer** : Waveform analyzer
-
-IEffect
--------
-
-* **fx_gain** : Gain effect processor
-
-=======
->>>>>>> release/0.8
 API / Documentation
 ====================
 
@@ -255,10 +184,6 @@ API / Documentation
 Install
 =======
 
-<<<<<<< HEAD
-Any platform
---------------
-=======
 Any platform - *with Docker*
 -----------------------------
 
@@ -274,47 +199,10 @@ and then run the docker container as an interactive shell::
 
 In this shell, you have access to `python` and `ipython` to play with TimeSide. And you have access to the current working directory inside the container in the /home/timeside directory.
 
->>>>>>> release/0.8
-
-Thanks to Docker, TimeSide is now fully available as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few minutes.
-
-<<<<<<< HEAD
-First install `Git <http://git-scm.com/downloads>`_, `Docker <https://docs.docker.com/installation/>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_, then copy these commands in a terminal and hit ENTER::
-
-    git clone https://github.com/Parisson/TimeSide.git
-    cd TimeSide
-    docker-compose up
-
-That's it! You can now browse the TimeSide API: http://localhost:8000/api/
-
-and the admin: http://localhost:8000/admin (admin/admin)
-
-To process some data by hand, you can also start a python shell session into the sandbox::
-
-    docker-compose run app python examples/sandbox/manage.py shell
-
-To build your own audido project on top of TimeSide, just pull our latest master image::
-
-    docker pull parisson/timeside:latest
-
-WARNING: our docker composition already bundles some powerfull containers and bleeding edge frameworks (Nginx, MySQL, RabbitMQ, Celery, Python, Django) that can be scaled from development to massive production environments very easily. But you *must* modify all the passwords and secret keys of the sandbox before any serious usecase.
-
-More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
-
 
 Debian, Ubuntu
 ---------------
 
-For Debian based distributions, we provide a safe repository giving additional dependencies that are not included in Debian yet. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_.
-
-Some of the needed dependencies
---------------------------------
-
-python (2.7.x) python-setuptools python-numpy python-scipy python-h5py python-matplotlib python-imaging
-python-simplejson python-yaml python-mutagen libhdf5-serial-dev python-tables python-gst0.10
-gstreamer0.10-gnonlin gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
-aubio yaafe python-aubio python-yaafe vamp-examples django (1.6.x) django-south djangorestframework django-extensions
-=======
 For Debian based distributions, we provide a safe public repository giving all additional binary dependencies that are not included in Debian yet. They ensure TimeSide to be installed natively although the setup is not trivial. Please follow the instructions on `this page <http://debian.parisson.com/debian/>`_ and the old NOT up to date install howto.
 
 
@@ -357,7 +245,6 @@ Thanks to Celery, each TimeSide worker of the server will process each task asyn
 
 To scale it up through your cluster, Docker provides some nice tools for orchestrating it very easily: `Machine and Swarm <https://blog.docker.com/2015/02/orchestrating-docker-with-machine-swarm-and-compose/>`_.
 
->>>>>>> release/0.8
 
 User Interfaces
 ===============
@@ -370,7 +257,7 @@ As IPython is really great for discovering objects with completion, writing note
 
   sudo apt-get install ipython
   ipython
-  >>> import timeside
+  >>> import timeside.core
 
 
 Shell
@@ -418,18 +305,6 @@ Web player
 TimeSide comes with a smart and pure **HTML5** audio player.
 
 Features:
-<<<<<<< HEAD
-* embed it in any audio web application
-* stream, playback and download various audio formats on the fly
-* synchronize sound with text, bitmap and vectorial events
-* seek through various semantic, analytic and time synced data
-* fully skinnable with CSS style
-
-Screenshot:
- .. image:: https://raw.github.com/Parisson/TimeSide/master/doc/images/timeside_player_01.png
-
-Examples of the player embeded in the Telemeta open web audio CMS:
-=======
 
 * embed it in any audio web application
 * stream, playback and download various audio formats on the fly
@@ -442,22 +317,15 @@ Examples of the player embeded in the Telemeta open web audio CMS:
 
 Examples of the player embeded in the Telemeta open web audio CMS:
 
->>>>>>> release/0.8
 * http://parisson.telemeta.org/archives/items/PRS_07_01_03/
 * http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/
 
 Development documentation:
-<<<<<<< HEAD
-* https://github.com/Parisson/TimeSide/wiki/Ui-Guide
-
-TODO list:
-=======
 
 * https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 
 TODO list:
 
->>>>>>> release/0.8
 * zoom
 * layers
 
@@ -520,28 +388,6 @@ or get our latest-dev image::
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
 
-<<<<<<< HEAD
-
-Native
--------
-
-First, install TimeSide (see Install).
-
-Then::
-
- sudo apt-get build-dep python-timeside
- sudo apt-get install git
- git clone https://github.com/Parisson/TimeSide.git
- cd TimeSide
- git checkout dev
- sudo pip install -e .
- echo "export PYTHONPATH=$PYTHONPATH:`pwd`" >> ~/.bashrc
- source ~/.bashrc
- tests/run_all_tests
-
-
-=======
->>>>>>> release/0.8
 Sponsors and Partners
 =====================
 
