@@ -63,6 +63,7 @@ setup(
         'django-bootstrap-pagination',
         'django-angular',
         'django-bower',
+        'django-environ',
         'south',
         'traits',
         'networkx',

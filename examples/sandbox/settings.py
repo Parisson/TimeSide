@@ -1,4 +1,7 @@
-    # Django settings for server project.
+import environ
+
+env = environ.Env()
+# Django settings for server project.
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -15,7 +18,7 @@ MANAGERS = ADMINS
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
-    'default': {
+    'default': env.db('DATABASE_URL')
         # SQLite config
         # 'ENGINE': 'django.db.backends.sqlite',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         # 'NAME': os.path.join(PROJECT_ROOT, 'timeside.sql'),  # Or path to database file if using sqlite3.
@@ -23,22 +26,15 @@ DATABASES = {
         #     'timeout': 60,
         # }
 
-        # MySQL config
-        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'USER': 'root',      # Not used with sqlite3.
-        'PASSWORD': 'mysecretpassword',  # Not used with sqlite3.
-        'NAME': 'sandbox',
-        'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',      # Set to empty string for default. Not used with sqlite3.
     }
-}
+
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7'
+SECRET_KEY = env('SECRET_KEY')
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
