@@ -1,8 +1,8 @@
 import environ
 
-env = environ.Env()
+env = environ.Env(DEBUG=(bool, False),) # set default values and casting
 # Django settings for server project.
-DEBUG = True
+DEBUG = env('DEBUG') # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
 
 import os, sys
