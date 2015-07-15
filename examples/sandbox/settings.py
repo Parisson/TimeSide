@@ -25,7 +25,6 @@ DATABASES = {
         # 'OPTIONS': {
         #     'timeout': 60,
         # }
-
     }
 
 
