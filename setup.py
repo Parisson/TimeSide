@@ -57,7 +57,7 @@ setup(
         'matplotlib',
         'django==1.6.11',
         'django-extensions',
-        'djangorestframework==2.4.4',
+        'djangorestframework==2.4.5',
         'django-celery',
         'django-bootstrap3',
         'django-bootstrap-pagination',
