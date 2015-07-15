@@ -181,8 +181,7 @@ LOGGING = {
 REST_FRAMEWORK = {
 }
 
-# replace rabbitmq by localhost if you start your app outside docker-compose
-BROKER_URL = 'amqp://guest:guest@rabbitmq//'
+BROKER_URL = env('BROKER_URL')
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
