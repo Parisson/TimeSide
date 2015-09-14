@@ -29,7 +29,7 @@ before_install:
 # Useful for debugging any issues with conda
   - conda info -a
 # Install binary dependencies with conda
-  - conda create -q -n test-environment -c thomasfillon --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
+  - conda create -q -n test-environment -c piem --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
   - source activate test-environment
 
 # Install TimeSide

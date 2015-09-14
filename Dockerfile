@@ -47,7 +47,7 @@ RUN conda install pip && \
 # Install binary dependencies with conda
 ADD conda-requirements.txt /opt/TimeSide/
 #ADD requirements.txt /opt/TimeSide/
-RUN conda install -c thomasfillon  --file conda-requirements.txt
+RUN conda install -c https://conda.anaconda.org/piem  --file conda-requirements.txt
 
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7

@@ -17,5 +17,5 @@ scipy=0.15.1=np19py27_0
 setuptools=18.0.1=py27_0
 tornado=4.2=py27_0
 traits=4.5.0=py27_0
-# From thomasfillon channel
-aubio
+# From Piem channel
+aubio=0.4.2
