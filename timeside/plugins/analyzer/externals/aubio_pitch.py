@@ -58,7 +58,7 @@ class AubioPitch(Analyzer):
             self.input_blocksize = 2048
 
         if self._stepsize_s:
-            self.input_stepsize = nextpow2(self._stepsize_s * samplerate)
+            self.input_stepsize = int(np.round(self._stepsize_s * samplerate))
         else:
             self.input_stepsize = self.input_blocksize / 2
 
