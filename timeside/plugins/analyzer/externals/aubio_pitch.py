@@ -101,8 +101,7 @@ class AubioPitch(Analyzer):
     def process(self, frames, eod=False):
         #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
         self.pitches += [self.aubio_pitch(frames)[0]]
-        self.pitch_confidences += [
-            np.nan_to_num(self.aubio_pitch.get_confidence())]
+        self.pitch_confidences += [self.aubio_pitch.get_confidence()]
         self.block_read += 1
         return frames, eod
 
