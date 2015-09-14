@@ -26,7 +26,7 @@ static:
   image: debian:jessie
   volumes:
     - /var/www/static
-  command: true
+  command: "true"
 
 log:
   image: debian:jessie
@@ -34,7 +34,7 @@ log:
     - /var/log/nginx
     - /var/log/postgres
     - /var/log/uwsgi
-  command: /bin/true
+  command: "true"
 
 lib:
   image: debian:jessie
@@ -42,13 +42,13 @@ lib:
     - /var/lib/rabbitmq
     - /var/lib/postgres
     - /var/lib/mysql
-  command: /bin/true
+  command: "true"
 
 home:
   image: debian:jessie
   volumes:
     - ./examples/sandbox:/home/sandbox
-  command: /bin/true
+  command: "true"
 
 db:
   image: mysql
@@ -106,4 +106,3 @@ nginx:
     - log
   links:
     - app
-
