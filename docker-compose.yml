@@ -54,6 +54,7 @@ db:
   image: mysql
   volumes_from:
     - log
+    - lib
   env_file:
     - examples/sandbox/sandbox-docker.env
 
