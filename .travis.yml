@@ -9,7 +9,7 @@ env:
   - TEST_TARGET=default  # Default unit test
   - TEST_TARGET=cli      # Test for TimeSide command line interfaces
   - TEST_TARGET=doc      # Test documentation and included doctest
-  # - TEST_TARGET=server   # Test timeside.server
+  - TEST_TARGET=server   # Test timeside.server
 
 
 # command to prepare the system to install prerequisites or dependencies
@@ -29,7 +29,7 @@ before_install:
 # Useful for debugging any issues with conda
   - conda info -a
 # Install binary dependencies with conda
-  - conda create -q -n test-environment -c thomasfillon --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
+  - conda create -q -n test-environment -c piem --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
   - source activate test-environment
 
 # Install TimeSide
@@ -68,7 +68,9 @@ script:
        ./tests/test_scripts.sh;
     fi
   # -------------SERVER-------------------------
+  #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
+       export $(egrep -v "^\s*(#|$)" examples/sandbox-travis.env);
        ./tests/test_server.sh;
     fi
 

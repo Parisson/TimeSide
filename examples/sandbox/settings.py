@@ -1,5 +1,8 @@
-    # Django settings for server project.
-DEBUG = True
+import environ
+
+env = environ.Env(DEBUG=(bool, False),) # set default values and casting
+# Django settings for server project.
+DEBUG = env('DEBUG') # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
 
 import os, sys
@@ -15,30 +18,22 @@ MANAGERS = ADMINS
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
-    'default': {
+    'default': env.db('DATABASE_URL')
         # SQLite config
         # 'ENGINE': 'django.db.backends.sqlite',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         # 'NAME': os.path.join(PROJECT_ROOT, 'timeside.sql'),  # Or path to database file if using sqlite3.
         # 'OPTIONS': {
         #     'timeout': 60,
         # }
-
-        # MySQL config
-        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'USER': 'root',      # Not used with sqlite3.
-        'PASSWORD': 'mysecretpassword',  # Not used with sqlite3.
-        'NAME': 'sandbox',
-        'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',      # Set to empty string for default. Not used with sqlite3.
     }
-}
+
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7'
+SECRET_KEY = env('SECRET_KEY')
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -186,8 +181,7 @@ LOGGING = {
 REST_FRAMEWORK = {
 }
 
-# replace rabbitmq by localhost if you start your app outside docker-compose
-BROKER_URL = 'amqp://guest:guest@rabbitmq//'
+BROKER_URL = env('BROKER_URL')
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'

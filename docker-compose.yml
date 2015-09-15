@@ -23,13 +23,13 @@
 
 
 static:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
     - /var/www/static
   command: "true"
 
 log:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
     - /var/log/nginx
     - /var/log/postgres
@@ -37,7 +37,7 @@ log:
   command: "true"
 
 lib:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
     - /var/lib/rabbitmq
     - /var/lib/postgres
@@ -45,7 +45,7 @@ lib:
   command: "true"
 
 home:
-  image: debian:wheezy
+  image: debian:jessie
   volumes:
     - ./examples/sandbox:/home/sandbox
   command: "true"
@@ -54,12 +54,8 @@ db:
   image: mysql
   volumes_from:
     - log
-    - lib
-  environment:
-    - MYSQL_ROOT_PASSWORD=mysecretpassword
-    - MYSQL_DATABASE=sandbox
-    - MYSQL_USER=root
-    - MYSQL_PASSWORD=mysecretpassword
+  env_file:
+    - examples/sandbox/sandbox-docker.env
 
 rabbitmq:
   image: rabbitmq:3-management
@@ -74,6 +70,8 @@ app:
     - static
     - home
     - log
+  env_file:
+    - examples/sandbox/sandbox-docker.env
   command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
   ports:
     - "9000:9000"
@@ -89,6 +87,8 @@ worker:
     - app
     - home
     - log
+  env_file:
+    - examples/sandbox/sandbox-docker.env
   command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
   links:
     - rabbitmq
