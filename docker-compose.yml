@@ -54,6 +54,7 @@ db:
   image: mysql
   volumes_from:
     - log
+    - lib
   environment:
     - MYSQL_ROOT_PASSWORD=mysecretpassword
     - MYSQL_DATABASE=sandbox
