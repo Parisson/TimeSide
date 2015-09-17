@@ -64,16 +64,15 @@ rabbitmq:
     - "15672:15672"
 
 app:
-  build: .
+  extends:
+    file: docker-compose-base.yml
+    service: app
   volumes:
     - .:/opt/TimeSide
   volumes_from:
     - static
     - home
     - log
-  env_file:
-    - examples/sandbox/sandbox-docker.env
-  command: /bin/sh /opt/TimeSide/examples/deploy/start_app.sh
   ports:
     - "9000:9000"
   expose:
@@ -83,14 +82,14 @@ app:
     - db
 
 worker:
-  build: .
+  extends:
+    file: docker-compose-base.yml
+    service: app
   volumes_from:
-    - app
     - home
     - log
-  env_file:
-    - examples/sandbox/sandbox-docker.env
-  command: /bin/sh /opt/TimeSide/examples/deploy/celery_app.sh
+    - app
+  command: /bin/bash /opt/TimeSide/examples/deploy/celery_app.sh
   links:
     - rabbitmq
     - db
