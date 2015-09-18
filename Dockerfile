@@ -49,7 +49,7 @@ RUN conda install --file conda-requirements.txt  && \
     if [ -e /opt/miniconda/lib/libm.so.6 ]; then rm /opt/miniconda/lib/libm.so.6; fi  # use the system libm; see github.com/ContinuumIO/anaconda-issues/issues/182
 
 # Install Aubio
-RUN conda install -c thomasfillon aubio
+RUN conda install -c piem aubio
 
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
