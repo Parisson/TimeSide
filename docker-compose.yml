@@ -41,13 +41,7 @@ lib:
   volumes:
     - /var/lib/rabbitmq
     - /var/lib/postgres
-    - /var/lib/mysql
-  command: "true"
-
-home:
-  image: debian:jessie
-  volumes:
-    - ./examples/sandbox:/home/sandbox
+    - ./var/lib/mysql:/var/lib/mysql
   command: "true"
 
 db:
@@ -63,15 +57,28 @@ rabbitmq:
   ports:
     - "15672:15672"
 
+nginx:
+  image: nginx
+  ports:
+    - "8000:80"
+  volumes:
+    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
+  volumes_from:
+    - app
+    - static
+    - log
+  links:
+    - app
+
 app:
   extends:
     file: docker-compose-base.yml
     service: app
   volumes:
     - .:/opt/TimeSide
+    - ./examples/sandbox:/home/sandbox
   volumes_from:
     - static
-    - home
     - log
   ports:
     - "9000:9000"
@@ -86,23 +93,9 @@ worker:
     file: docker-compose-base.yml
     service: app
   volumes_from:
-    - home
     - log
     - app
   command: /bin/bash /opt/TimeSide/examples/deploy/celery_app.sh
   links:
     - rabbitmq
     - db
-
-nginx:
-  image: nginx
-  ports:
-    - "8000:80"
-  volumes:
-    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
-  volumes_from:
-    - static
-    - home
-    - log
-  links:
-    - app

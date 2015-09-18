@@ -21,7 +21,7 @@ RUN mkdir /opt/TimeSide
 WORKDIR /opt/TimeSide
 
 # install confs, keys and deps
-ADD debian-requirements.txt /opt/TimeSide/
+COPY debian-requirements.txt /opt/TimeSide/
 RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
     DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" /opt/TimeSide/debian-requirements.txt) && \
@@ -45,27 +45,30 @@ RUN conda install pip && \
 
 
 # Install binary dependencies with conda
-ADD conda-requirements.txt /opt/TimeSide/
-#ADD requirements.txt /opt/TimeSide/
+COPY conda-requirements.txt /opt/TimeSide/
 RUN conda install -c https://conda.anaconda.org/piem  --file conda-requirements.txt
 
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 
 # Clone app
-ADD . /opt/TimeSide
+COPY . /opt/TimeSide
 WORKDIR /opt/TimeSide
+
+# Clone Sandbox
+COPY ./examples/sandbox/ /home/sandbox/
 
 RUN pip install -r requirements.txt
 
 RUN apt-get install -y --force-yes nodejs-legacy
 RUN npm install -g bower
 
-# install new deps from the local repo
-#RUN pip install -e /opt/TimeSide
+ENV DEBUG=True
+ENV SECRET_KEY=ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7
+ENV DATABASE_URL=sqlite:///timeside.sql?timeout=60
+ENV BROKER_URL=amqp://guest:guest@localhost//
 
-# add dev repo path
-#RUN cd /opt/TimeSide; python setup.py develop
+RUN python /home/sandbox/manage.py bower_install -- --allow-root
 
 # Sandbox setup
 # RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
