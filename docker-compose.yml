@@ -50,7 +50,7 @@ db:
     - log
     - lib
   env_file:
-    - examples/sandbox/sandbox-docker.env
+    - examples/sandbox/ts-docker-compose.env
 
 rabbitmq:
   image: rabbitmq:3-management

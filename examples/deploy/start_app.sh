@@ -17,4 +17,10 @@ watchmedo shell-command --patterns="*.js;*.css" --recursive \
     --command='python '$manage' collectstatic --noinput' $static &
 
 # app start
-uwsgi --socket :8000 --wsgi-file $wsgi --chdir $sandbox --master --processes 4 --threads 2 --py-autoreload 3
+if [ $1 = "--runserver" ]
+then
+    python $manage runserver_plus 0.0.0.0:8000
+else
+    uwsgi --socket :8000 --wsgi-file $wsgi --chdir $sandbox --master --processes 4 --threads 2 --py-autoreload 3
+fi
+

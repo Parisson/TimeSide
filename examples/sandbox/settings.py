@@ -1,6 +1,9 @@
 import environ
 
-env = environ.Env(DEBUG=(bool, False),) # set default values and casting
+# set default values and casting
+env = environ.Env(DEBUG=(bool, False),
+                  CELERY_ALWAYS_EAGER=(bool, False),
+                  ) 
 # Django settings for server project.
 DEBUG = env('DEBUG') # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
@@ -33,6 +36,7 @@ DATABASES = {
 ALLOWED_HOSTS = ['*']
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# Make this unique, and don't share it with anybody.
 SECRET_KEY = env('SECRET_KEY')
 
 # Local time zone for this installation. Choices can be found here:
@@ -93,8 +97,6 @@ STATICFILES_FINDERS = (
     'djangobower.finders.BowerFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '5%z&amp;a3r@t0=xr2eaio+400qf-32$b5zp897pr*wh5i^s4(-+3('
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -187,6 +189,7 @@ CELERY_IMPORTS = ("timeside.server.tasks",)
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER') # If this is True, all tasks will be executed locally by blocking until the task returns.
 
 from celery_app import app
 

@@ -70,7 +70,7 @@ script:
   # -------------SERVER-------------------------
   #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
-       export $(egrep -v "^\s*(#|$)" examples/sandbox-travis.env);
+       export $(egrep -v "^\s*(#|$)" ./examples/sandbox/ts-sqlite.env);
        ./tests/test_server.sh;
     fi
 

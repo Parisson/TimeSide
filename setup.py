@@ -69,6 +69,7 @@ setup(
         'networkx',
         'django-celery',
         'watchdog',
+        'Werkzeug',
         'pympi-ling',
         ],
     platforms=['OS Independent'],
