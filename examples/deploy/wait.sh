@@ -6,7 +6,6 @@ set -e
 
 host=$(env | grep _TCP_ADDR | cut -d = -f 2)
 port=$(env | grep _TCP_PORT | cut -d = -f 2)
-echo $host
 
 if [ -n "${host:1}" ]; then
     echo -n "waiting for TCP connection to $host:$port..."
