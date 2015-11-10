@@ -114,6 +114,7 @@ News
 * Add *Docker* support for easy installation of TimeSide across any OS platform
 * Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
 * Various bugfixes
+* Add `Jupyter Notebook <http://jupyter.org/>`_ support.    
 
 0.7.1
 
@@ -163,6 +164,16 @@ and then run the docker container as an interactive shell::
     docker run -it --name timeside -v $(pwd):/home/timeside parisson/timeside:latest /bin/bash
 
 In this shell, you have access to `python` and `ipython` to play with TimeSide. And you have access to the current working directory inside the container in the /home/timeside directory.
+
+You could also run your code in a `Jupyter Notebook <http://jupyter.org/>`_ ::
+
+  docker-compose run --service-ports app sh /opt/TimeSide/examples/deploy/notebook.sh
+
+ 
+and  then visit  http://localhost:8888 to acces the Jupyter notebook interface.
+  
+.. warning :: Security issue
+Running a Jupyter notebook server with this setup in a non secure network is not safe. See `Running a notebook server<http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/>`_ for a documented solution to this security problem.
 
 
 Debian, Ubuntu
