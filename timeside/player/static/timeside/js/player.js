@@ -98,8 +98,8 @@ Timeside.classes.Player = Timeside.classes.TimesideClass.extend({
                     multiShot: false
                 };
             //do a raw check to see if it is a soundmanager object
-            }else if(!sound.hasWonProperty('sID') || !sound.hasWonProperty('_iO') || !sound.hasWonProperty('url')){
-                if(!sound.hasWonProperty('url') || !sound.hasWonProperty('id')){ //it is not a soundManager object, has at least an url???
+            }else if(!sound.hasOwnProperty('sID') || !sound.hasOwnProperty('_iO') || !sound.hasOwnProperty('url')){
+                if(!sound.hasOwnProperty('url') || !sound.hasOwnProperty('id')){ //it is not a soundManager object, has at least an url???
                     this.soundErrorMsg = 'bad sound parameter: object requires properties url and id at minimum';
                 }else{
                     createSound = true;
