@@ -20,9 +20,6 @@ api_router.register(r'presets', views.PresetViewSet)
 api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 
-
-
-
 urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
