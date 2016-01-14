@@ -24,17 +24,16 @@
 data:
   image: debian:jessie
   volumes:
-     - ./media/:/srv/media
-     - ./static/:/srv/static
-     - ./backup/:/srv/backup
+     - ./data/media/:/srv/media
+     - ./data/static/:/srv/static
+     - ./data/backup/:/srv/backup
   command: "true"
 
 db:
   image: mysql
   volumes:
-    # - ./app/deploy/my.cnf:/etc/mysql/my.cnf
-    - ./var/lib/mysql/:/var/lib/mysql
-    - ./var/log/mysql/:/var/log/mysql
+    - ./data/var/lib/mysql/:/var/lib/mysql
+    - ./data/var/log/mysql/:/var/log/mysql
   volumes_from:
     - data
   env_file:
@@ -77,7 +76,7 @@ nginx:
     - "8000:80"
   volumes:
     - ./app/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
-    - ./var/log/nginx/:/var/log/nginx
+    - ./data/var/log/nginx/:/var/log/nginx
   volumes_from:
     - app
     - data

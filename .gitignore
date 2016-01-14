@@ -4,9 +4,9 @@
 *.~[0-9]~
 *.swp
 tests/samples
-TimeSide.egg-info
+*.egg-info
 *.rst~
 *.py~
 *.log
 .tags/
-app/sandbox/ts-docker-compose.env
+./data/

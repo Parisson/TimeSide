@@ -22,7 +22,6 @@
 # Thomas Fillon <thomas@parisson.com>
 
 
-
 app:
   extends:
     file: docker-compose-base.yml
@@ -31,7 +30,7 @@ app:
     - app/sandbox/ts-sqlite.env
   volumes:
     - ./app/:/srv/app
-    - ./timeside/:/srv/src/app/timeside/timeside
+    - ./timeside/:/srv/src/timeside/timeside
   ports:
     - "8000:8000"
   command: /bin/bash deploy/start_app.sh --runserver
