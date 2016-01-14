@@ -9,3 +9,4 @@ TimeSide.egg-info
 *.py~
 *.log
 .tags/
+app/sandbox/ts-docker-compose.env
