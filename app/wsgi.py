@@ -16,8 +16,9 @@ framework.
 import os, sys
 
 #os.environ[ 'MPLCONFIGDIR' ] = '/home/$USER/.matplotlib'
+sys.path.append(os.path.dirname('sandbox'))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sandbox.settings")
 
 # Force matplotlib to not use any Xwindows backend.
 import matplotlib

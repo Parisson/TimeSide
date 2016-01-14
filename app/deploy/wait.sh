@@ -1,7 +1,5 @@
 #!/bin/bash
 
-apt-get install -y --force-yes netcat
-
 set -e
 
 host=$(env | grep _TCP_ADDR | cut -d = -f 2)

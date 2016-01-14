@@ -21,72 +21,42 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-
-static:
+data:
   image: debian:jessie
   volumes:
-    - /var/www/static
-  command: "true"
-
-log:
-  image: debian:jessie
-  volumes:
-    - /var/log/nginx
-    - /var/log/postgres
-    - /var/log/uwsgi
-  command: "true"
-
-lib:
-  image: debian:jessie
-  volumes:
-    - /var/lib/rabbitmq
-    - /var/lib/postgres
-    - ./var/lib/mysql:/var/lib/mysql
+     - ./media/:/srv/media
+     - ./static/:/srv/static
+     - ./backup/:/srv/backup
   command: "true"
 
 db:
   image: mysql
-  volumes_from:
-    - log
-    - lib
-  env_file:
-    - examples/sandbox/ts-docker-compose.env
-
-rabbitmq:
-  image: rabbitmq:3-management
-  ports:
-    - "15672:15672"
-
-nginx:
-  image: nginx
-  ports:
-    - "8000:80"
   volumes:
-    - ./examples/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
+    # - ./app/deploy/my.cnf:/etc/mysql/my.cnf
+    - ./var/lib/mysql/:/var/lib/mysql
+    - ./var/log/mysql/:/var/log/mysql
   volumes_from:
-    - app
-    - static
-    - log
-  links:
-    - app
+    - data
+  env_file:
+    - app/sandbox/ts-docker-compose.env
+
+broker:
+  image: redis
 
 app:
   extends:
     file: docker-compose-base.yml
     service: app
   volumes:
-    - .:/opt/TimeSide
-    - ./examples/sandbox:/home/sandbox
+    - ./app/:/srv/app
+    - ./timeside/:/srv/src/timeside/timeside
   volumes_from:
-    - static
-    - log
+    - data
   ports:
     - "9000:9000"
     - "8888:8888"
-  expose:
-    - "8000"
   links:
-    - rabbitmq
+    - broker
     - db
 
 worker:
@@ -94,9 +64,22 @@ worker:
     file: docker-compose-base.yml
     service: app
   volumes_from:
-    - log
+    - data
     - app
-  command: /bin/bash /opt/TimeSide/examples/deploy/celery_app.sh
+  command: /bin/bash deploy/celery_app.sh
   links:
-    - rabbitmq
+    - broker
     - db
+
+nginx:
+  image: nginx
+  ports:
+    - "8000:80"
+  volumes:
+    - ./app/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
+    - ./var/log/nginx/:/var/log/nginx
+  volumes_from:
+    - app
+    - data
+  links:
+    - app

@@ -17,14 +17,17 @@ FROM debian:jessie
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
-RUN mkdir /opt/TimeSide
-WORKDIR /opt/TimeSide
+# RUN mkdir /opt/TimeSide
+RUN mkdir /srv/app
+RUN mkdir /srv/src
+RUN mkdir /srv/src/timeside
+WORKDIR /srv/src/timeside
 
 # install confs, keys and deps
-COPY debian-requirements.txt /opt/TimeSide/
+COPY debian-requirements.txt /srv/src/timeside
 RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
-    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" /opt/TimeSide/debian-requirements.txt) && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get install -y --force-yes python-yaafe && \
     apt-get install -y --force-yes git wget bzip2 build-essential netcat npm libmysqlclient-dev libxml2-dev libxslt1-dev && \
@@ -43,36 +46,23 @@ RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O 
 RUN conda install pip && \
     pip install uwsgi
 
-
 # Install binary dependencies with conda
-COPY conda-requirements.txt /opt/TimeSide/
+COPY conda-requirements.txt /srv/src/timeside
 RUN conda install -c https://conda.anaconda.org/piem  --file conda-requirements.txt
 
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 
-# Clone app
-COPY . /opt/TimeSide
-WORKDIR /opt/TimeSide
+COPY . /srv/src/timeside
 
-# Clone Sandbox
-COPY ./examples/sandbox/ /home/sandbox/
+ENV PYTHON_EGG_CACHE=/srv/.python-eggs
+RUN mkdir $PYTHON_EGG_CACHE
+RUN chown www-data:www-data $PYTHON_EGG_CACHE
 
 RUN pip install -r requirements.txt
 
 RUN apt-get install -y --force-yes nodejs-legacy
 RUN npm install -g bower
 
-ENV DEBUG=True
-ENV SECRET_KEY=ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7
-ENV DATABASE_URL=sqlite:///timeside.sql?timeout=60
-ENV BROKER_URL=amqp://guest:guest@localhost//
-
-RUN python /home/sandbox/manage.py bower_install -- --allow-root
-
-# Sandbox setup
-# RUN /opt/TimeSide/examples/sandbox/manage.py syncdb --noinput && \
-#     /opt/TimeSide/examples/sandbox/manage.py migrate --noinput && \
-#     /opt/TimeSide/examples/sandbox/manage.py collectstatic --noinput
-
+WORKDIR /srv/app
 EXPOSE 8000

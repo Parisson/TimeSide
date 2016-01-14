@@ -28,10 +28,10 @@ app:
     file: docker-compose-base.yml
     service: app
   env_file:
-    - examples/sandbox/ts-sqlite.env
+    - app/sandbox/ts-sqlite.env
   volumes:
-    - .:/opt/TimeSide
-    - ./examples/sandbox:/home/sandbox
+    - ./app/:/srv/app
+    - ./timeside/:/srv/src/app/timeside/timeside
   ports:
     - "8000:8000"
-  command: /bin/bash /opt/TimeSide/examples/deploy/start_app.sh --runserver
+  command: /bin/bash deploy/start_app.sh --runserver

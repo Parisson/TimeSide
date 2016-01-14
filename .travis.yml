@@ -17,7 +17,7 @@ before_install:
   - sudo add-apt-repository -y ppa:donk/gstreamer
   - sudo apt-get -qq update
   - export DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt)
-  - sudo apt-get install -qq $DEBIAN_PACKAGES 
+  - sudo apt-get install -qq $DEBIAN_PACKAGES
 
 # Install conda
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -70,7 +70,7 @@ script:
   # -------------SERVER-------------------------
   #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
-       export $(egrep -v "^\s*(#|$)" ./examples/sandbox/ts-sqlite.env);
+       export $(egrep -v "^\s*(#|$)" ./app/sandbox/ts-sqlite.env);
        ./tests/test_server.sh;
     fi
 

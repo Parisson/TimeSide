@@ -3,7 +3,7 @@ import environ
 # set default values and casting
 env = environ.Env(DEBUG=(bool, False),
                   CELERY_ALWAYS_EAGER=(bool, False),
-                  ) 
+                  )
 # Django settings for server project.
 DEBUG = env('DEBUG') # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
@@ -21,15 +21,15 @@ MANAGERS = ADMINS
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 DATABASES = {
-    'default': env.db('DATABASE_URL')
-        # SQLite config
-        # 'ENGINE': 'django.db.backends.sqlite',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        # 'NAME': os.path.join(PROJECT_ROOT, 'timeside.sql'),  # Or path to database file if using sqlite3.
-        # 'OPTIONS': {
-        #     'timeout': 60,
-        # }
+    'default': {
+    'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'USER': os.environ.get('DB_ENV_MYSQL_USER'),      # Not used with sqlite3.
+        'PASSWORD': os.environ.get('DB_ENV_MYSQL_PASSWORD'),  # Not used with sqlite3.
+        'NAME': os.environ.get('DB_ENV_MYSQL_DATABASE'),
+        'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',      # Set to empty string for default. Not used with sqlite3.
     }
-
+}
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.4/ref/settings/#allowed-hosts
@@ -64,7 +64,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = PROJECT_ROOT + '/media/'
+MEDIA_ROOT = '/srv/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -75,7 +75,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/var/www/static'
+STATIC_ROOT = '/srv/static'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -117,7 +117,7 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'sandbox.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'wsgi.application'

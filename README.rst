@@ -110,11 +110,12 @@ News
 
 0.8
 
-* Analyzer Result : fix and improve some results containers and add export to Elan files.
-* Add *Docker* support for easy installation of TimeSide across any OS platform
-* Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
+* Add *Docker* support for easier installation across any OS platform (see Install)
+* Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy experiment writing and sharing
+* Add an experimental web service and RESTFull API based on Django REST Framework, Celery, Angular and WavesJS.
+* Add metadata export to Elan annotation files.
+* Fix and improve some analyzer results containers
 * Various bugfixes
-* Add `Jupyter Notebook <http://jupyter.org/>`_ support.    
 
 0.7.1
 
@@ -169,9 +170,9 @@ You could also run your code in a `Jupyter Notebook <http://jupyter.org/>`_ ::
 
   docker-compose run --service-ports app sh /opt/TimeSide/examples/deploy/notebook.sh
 
- 
+
 and  then visit  http://localhost:8888 to acces the Jupyter notebook interface.
-  
+
 .. warning :: Security issue
 Running a Jupyter notebook server with this setup in a non secure network is not safe. See `Running a notebook server<http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/>`_ for a documented solution to this security problem.
 
@@ -409,4 +410,3 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 See LICENSE for more details.
-

@@ -1,6 +1,5 @@
 app:
   build: .
   env_file:
-    - examples/sandbox/ts-docker-compose.env
-  command: /bin/bash /opt/TimeSide/examples/deploy/start_app.sh
-
+    - app/sandbox/ts-docker-compose.env
+  command: /bin/bash deploy/start_app.sh

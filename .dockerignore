@@ -1,7 +1,11 @@
 .git
 *.pyc
 *.egg-info
+app/
 build/
 dist/
-examples/sandbox/media
-examples/sanbox/timeside.sql
+media/
+static/
+var/
+backup/
+tmp/

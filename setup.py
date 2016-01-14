@@ -71,6 +71,7 @@ setup(
         'watchdog',
         'Werkzeug',
         'pympi-ling',
+        'redis',
         ],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
