@@ -174,7 +174,7 @@ You could also run your code in a `Jupyter Notebook <http://jupyter.org/>`_ ::
 and  then visit  http://localhost:8888 to acces the Jupyter notebook interface.
 
 .. warning :: Security issue
-Running a Jupyter notebook server with this setup in a non secure network is not safe. See `Running a notebook server<http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/>`_ for a documented solution to this security problem.
+Running a Jupyter notebook server with this setup in a non secure network is not safe. See `Running a notebook server  <http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/>`_ for a documented solution to this security problem.
 
 
 Debian, Ubuntu
