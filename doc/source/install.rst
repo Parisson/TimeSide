@@ -1,6 +1,6 @@
 
-Install and use
-===============
+Install and start
+==================
 
 Thanks to Docker, TimeSide is now fully available for every platform as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few seconds.
 

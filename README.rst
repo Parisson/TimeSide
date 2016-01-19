@@ -105,6 +105,7 @@ Show the analyzer results:
 So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.
 
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
+
 News
 =====
 
@@ -136,6 +137,7 @@ News
 * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
+
 API / Documentation
 ====================
 
@@ -148,7 +150,7 @@ API / Documentation
 * Example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install and start
-=================
+==================
 
 Thanks to Docker, TimeSide is now fully available for every platform as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few seconds.
 
@@ -200,7 +202,7 @@ On MacOS or Windows, you will need to know the IP of the virtual machine first::
 If the IP is 192.168.59.103 for example, you should be able to browse the notebook system at http://192.168.59.103:8888/
 
 
-Webserver (experimental)
+Web Server (experimental)
 -------------------------
 
 TimeSide now includes an experimental web service with a REST API. You can start it up with::
@@ -248,6 +250,7 @@ Scaling
 Thanks to Celery, each TimeSide worker of the server will process each task asynchronously over independant threads so that you can load all the cores of your CPU.
 
 To scale it up through your cluster, Docker provides some nice tools for orchestrating it very easily: `Machine and Swarm <https://blog.docker.com/2015/02/orchestrating-docker-with-machine-swarm-and-compose/>`_.
+
 User Interfaces
 ===============
 
@@ -347,6 +350,7 @@ A sandbox is provided in timeside/server/sandbox and you can initialize it and t
 and browse http://localhost:8000/api/
 
 At the moment, this server is NOT connected to the player using TimeSide alone. Please use Telemeta.
+
 Development
 ===========
 
@@ -383,6 +387,7 @@ or get our latest-dev image::
   docker pull parisson/timeside:latest-dev
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
+
 Sponsors and Partners
 =====================
 
