@@ -8,4 +8,3 @@ API / Documentation
 * Player / UI : https://github.com/Parisson/TimeSide/wiki/Ui-Guide (see also "Web player")
 * Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
 * Example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
-

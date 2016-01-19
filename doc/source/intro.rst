@@ -19,17 +19,17 @@ TimeSide : audio processing framework for the web
    :alt: Downloads
 
 
-TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic frontend.
+TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic web frontend.
 
 
 Use cases
 ==========
 
-* Scaled audio computing
-* Pseudo-realtime streaming
+* Scaled audio computing (filtering, machine learning, etc)
+* Web audio visualization
 * Plugin prototyping
-* Audio metadata management and visualization
-* Automatic segmentation and labelling synchronized with audio events.
+* Pseudo-realtime transcoding and streaming
+* Automatic segmentation and labelling synchronized with audio events
 
 
 Goals
@@ -43,6 +43,7 @@ Goals
 * **Serialize** feature analysis data through various portable formats,
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
+* **Deploy** and **scale** your own audio processing engine through any infrastructure
 
 
 Funding and support
@@ -110,4 +111,3 @@ Show the analyzer results:
 So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.
 
 For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.
-

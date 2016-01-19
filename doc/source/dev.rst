@@ -11,11 +11,6 @@ Development
 
 The easiest way to develop with TimeSide framework is to use our `DevBox <https://github.com/Parisson/DevBox>`_
 
-Docker (recommended)
---------------------
-
-Docker is a great tool for developing and deploying processing environments. We provide a docker image which contains TimeSide and all the necessary packages (nginx, uwsgi, etc) to run it either in development or in production stages.
-
 First, install Docker: https://docs.docker.com/installation/
 
 Then, simply pull the image and run it::
@@ -39,4 +34,3 @@ or get our latest-dev image::
   docker pull parisson/timeside:latest-dev
 
 More infos: https://registry.hub.docker.com/u/parisson/timeside/
-

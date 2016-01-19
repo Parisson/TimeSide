@@ -1,9 +1,9 @@
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2015 Parisson Sarl
-* Copyright (c) 2006, 2015 Guillaume Pellerin
-* Copyright (c) 2013, 2015 Thomas Fillon
+* Copyright (c) 2006, 2016 Parisson Sarl
+* Copyright (c) 2006, 2016 Guillaume Pellerin
+* Copyright (c) 2013, 2016 Thomas Fillon
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
@@ -24,4 +24,3 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 See LICENSE for more details.
-

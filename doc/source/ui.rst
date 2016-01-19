@@ -97,4 +97,3 @@ A sandbox is provided in timeside/server/sandbox and you can initialize it and t
 and browse http://localhost:8000/api/
 
 At the moment, this server is NOT connected to the player using TimeSide alone. Please use Telemeta.
-
