@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-cd examples/sandbox
+cd app
 ./manage.py syncdb --noinput
 ./manage.py migrate
 ./manage.py runserver &
