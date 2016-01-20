@@ -8,7 +8,6 @@ services:
 virtualenv:
   system_site_packages: true
 
-
 env:
   - TEST_TARGET=default  # Default unit test
   - TEST_TARGET=cli      # Test for TimeSide command line interfaces
@@ -29,8 +28,9 @@ before_install:
 
 # Install TimeSide
 install:
-  #- pip install -r requirements.txt
-  - python setup.py install
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+  #- python setup.py install
 
 
 # command to run tests
@@ -60,7 +60,6 @@ script:
     fi
   # -------------CLI-------------------------
   - if [[ $TEST_TARGET == 'cli' ]]; then
-       mysql -e 'create database sandbox;';
        ./tests/test_scripts.sh;
     fi
   # -------------SERVER-------------------------
