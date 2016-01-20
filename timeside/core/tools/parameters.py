@@ -22,7 +22,7 @@
 #   Thomas Fillon <thomas  at parisson.com>
 
 
-from traits.api import HasTraits, Unicode, Int, Float, Range, Enum
+from traits.api import HasTraits, Unicode, Int, Float, Range, Enum, Bool
 from traits.api import ListUnicode, List, Tuple
 from traits.api import TraitError
 
