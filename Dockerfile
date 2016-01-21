@@ -47,13 +47,13 @@ RUN conda install pip && \
     pip install uwsgi
 
 # Install binary dependencies with conda
-COPY conda-requirements.txt /srv/src/timeside
+COPY conda-requirements.txt /srv/src/timeside/
 RUN conda install -c https://conda.anaconda.org/piem  --file conda-requirements.txt
 
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 
-COPY . /srv/src/timeside
+COPY . /srv/src/timeside/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir $PYTHON_EGG_CACHE
