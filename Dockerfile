@@ -24,7 +24,7 @@ RUN mkdir /srv/src/timeside
 WORKDIR /srv/src/timeside
 
 # install confs, keys and deps
-ADD debian-requirements.txt /srv/src/timeside
+ADD debian-requirements.txt /srv/src/timeside/
 RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources.list.d/parisson.list && \
     apt-get update && \
     DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
