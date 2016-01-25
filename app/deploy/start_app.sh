@@ -4,7 +4,6 @@ SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/start_app_base.sh"
 
 # django init
-python $manage syncdb --noinput
 python $manage migrate --noinput
 python $manage collectstatic --noinput
 

@@ -22,3 +22,6 @@ chown $uid:$gid $media
 
 # wait for other services
 bash $app/deploy/wait.sh
+
+# wait for available database
+python $app/wait.py
