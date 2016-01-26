@@ -47,6 +47,9 @@ class Cache(object):
         self.params = params
         self.files = self.get_files()
 
+    def get_path(self, file):
+        return os.path.join(self.dir, file)
+
     def get_files(self):
         list = []
         for root, dirs, files in os.walk(self.dir):
@@ -59,22 +62,19 @@ class Cache(object):
         return file in self.files
 
     def write_bin(self, data, file):
-        path = self.dir + os.sep + file
-        f = open(path, 'w')
+        f = open(self.get_path(file), 'w')
         f.write(data)
         f.close()
 
     def read_bin(self, file):
-        path = self.dir + os.sep + file
-        f = open(path, 'r')
+        f = open(self.get_path(file), 'r')
         data = f.read()
         f.close()
         return data
 
     def read_stream_bin(self, file):
-        path = self.dir + os.sep + file
         chunk_size = 0x1000
-        f = open(path, 'r')
+        f = open(self.get_path(file), 'r')
         while True:
             _chunk = f.read(chunk_size)
             if not len(_chunk):
@@ -87,8 +87,7 @@ class Cache(object):
 
     def read_analyzer_xml(self, file):
         list = []
-        path = self.dir + os.sep + file
-        doc = xml.dom.minidom.parse(path)
+        doc = xml.dom.minidom.parse(self.get_path(file))
         for data in doc.documentElement.getElementsByTagName('data'):
             name = data.getAttribute('name')
             id = data.getAttribute('id')
@@ -98,7 +97,6 @@ class Cache(object):
         return list
 
     def write_analyzer_xml(self, data_list, file):
-        path = self.dir + os.sep + file
         doc = xml.dom.minidom.Document()
         root = doc.createElement('telemeta')
         doc.appendChild(root)
@@ -113,6 +111,6 @@ class Cache(object):
             node.setAttribute('unit', unit)
             node.setAttribute('value', str(value))
             root.appendChild(node)
-        f = open(path, "w")
+        f = open(self.get_path(file), "w")
         f.write(xml.dom.minidom.Document.toprettyxml(doc))
         f.close()
