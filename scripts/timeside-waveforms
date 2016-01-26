@@ -84,7 +84,7 @@ class Media2Waveform(object):
     def get_path_dict(self):
         path_dict = {}
         for media in self.media_list:
-            filename = os.path.basename(media.split)
+            filename = os.path.basename(media)
             img_file = filename.replace('.',  '_') + '.png'
             path_dict[media] = os.path.join(self.img_dir, img_file)
 
