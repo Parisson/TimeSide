@@ -43,33 +43,35 @@ broker:
   image: redis
 
 app:
-  extends:
-    file: docker-compose-base.yml
-    service: app
+  build: .
   volumes:
     - ./app/:/srv/app
-    - ./timeside/:/srv/src/timeside/timeside
+    - ./:/srv/src/timeside/
   volumes_from:
     - data
   ports:
     - "9000:9000"
     - "8888:8888"
+  env_file:
+    - app/sandbox/ts-docker-compose.env
   links:
     - broker
     - db
+  command: /bin/bash deploy/start_app.sh
 
+    
 worker:
-  extends:
-    file: docker-compose-base.yml
-    service: app
+  build: .
   volumes_from:
     - data
     - app
-  command: /bin/bash deploy/celery_app.sh
+  env_file:
+    - app/sandbox/ts-docker-compose.env
   links:
     - broker
     - db
-
+  command: /bin/bash deploy/celery_app.sh
+  
 nginx:
   image: nginx
   ports:
