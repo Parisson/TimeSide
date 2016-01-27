@@ -1,5 +1,0 @@
-app:
-  build: .
-  env_file:
-    - app/sandbox/ts-docker-compose.env
-  command: /bin/bash deploy/start_app.sh
