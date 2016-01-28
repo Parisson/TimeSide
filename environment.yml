@@ -1,0 +1,32 @@
+name: timeside
+channels:
+  - piem
+dependencies:
+  - aubio  # in piem channel (optionnal)
+  - h5py
+  - matplotlib
+  - networkx
+  - numpy
+  - pillow
+  - python=2.7
+  - pyyaml
+  - redis
+  - scipy
+  - simplejson
+  - pytables  # named tables in Pypi ... 
+  - traits
+  - Werkzeug
+  - pip:
+      - django-angular
+      - django-bootstrap-pagination
+      - django-bootstrap3
+      - django-bower
+      - django-celery
+      - django-environ
+      - django-extensions
+      - django==1.6.*
+      - djangorestframework==2.*
+      - mutagen
+      - pympi-ling
+      - south
+      - watchdog
