@@ -22,7 +22,7 @@ RUN if [ ! -d /srv/src/ ]; then mkdir /srv/src/; fi
 RUN if [ ! -d /srv/src/externals ]; then mkdir /srv/src/externals; fi
 COPY . /srv/src/externals
 WORKDIR /srv/src/externals
-RUN for plugin in *; do pip install -e -r $plugin/requirements.txt --src /srv/src/externals; done
+RUN for external in *; do pip install -e -r $external/requirements.txt --src /srv/src/externals; done
 
 WORKDIR /srv/app
 EXPOSE 8000
