@@ -38,6 +38,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  readme     to build the README.rst file"
+	@echo "  publish	to publish the doc"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
@@ -158,3 +159,6 @@ readme:
 	cat source/news.rst source/divein.rst source/doc.rst source/install.rst source/related.rst source/copyright.rst >> ../README.rst
 	@echo
 	@echo "Build finished. The README.rst file is up to date."
+
+publish:
+	rsync -a --delete build/html/ files.parisson.com:/var/www/files/timeside/doc/
