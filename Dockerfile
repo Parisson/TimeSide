@@ -29,8 +29,7 @@ RUN echo 'deb http://debian.parisson.com/debian/ jessie main' > /etc/apt/sources
     apt-get update && \
     DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
-    apt-get install -y --force-yes python-yaafe && \
-    apt-get install -y --force-yes git wget bzip2 build-essential netcat npm libmysqlclient-dev libxml2-dev libxslt1-dev && \
+    apt-get install -y --force-yes python-yaafe  && \
     apt-get clean
 
 # Install conda in /opt/miniconda
@@ -42,17 +41,19 @@ RUN wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O 
     conda config --set always_yes yes --set changeps1 yes && \
     conda update -q conda
 
-# Install uwsgi
-RUN conda install pip && \
-    pip install uwsgi
-
 # Install binary dependencies with conda
-COPY environment.yml /srv/src/timeside/
-RUN conda env update --file environment.yml --name root
-RUN pip list 
-RUN conda list 
+COPY environment-pinned.yml /srv/src/timeside/
+RUN conda config --add channels piem &&\
+    conda env update --name root --file environment-pinned.yml
+
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
+
+# Install bower
+RUN npm install -g bower
+
+# Install uwsgi
+RUN pip install uwsgi
 
 COPY . /srv/src/timeside/
 
@@ -60,10 +61,8 @@ ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir $PYTHON_EGG_CACHE
 RUN chown www-data:www-data $PYTHON_EGG_CACHE
 
-RUN pip install -r requirements.txt
-
-RUN apt-get install -y --force-yes nodejs-legacy
-RUN npm install -g bower
+# Install TimeSide
+RUN pip install -e .
 
 WORKDIR /srv/app
 EXPOSE 8000

@@ -29,14 +29,15 @@ before_install:
 # Useful for debugging any issues with conda
   - conda info -a
 # Install binary and pip dependencies with conda
-  - conda env create --name app --file environment.yml
+  - conva config --add channel piem 
+  - conda env create --name app --file environment-pinned.yml
   - source activate app
 
 # Install TimeSide
 install:
   #- pip install --upgrade pip
   #- pip install -r requirements.txt
-  - python setup.py install
+  - pip install .
 
 
 # command to run tests
