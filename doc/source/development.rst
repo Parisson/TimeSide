@@ -19,7 +19,7 @@ Just use the development composition in the dev branch::
     git clone https://github.com/Parisson/TimeSide.git
     cd TimeSide
     git checkout dev
-    docker-compose -f docker-compose.yml -f docker-compose-dev.yml up
+    docker-compose -f docker-compose.yml -f conf/dev.yml up
 
 
 Developing your own plugins
@@ -32,4 +32,12 @@ Clone the dummy plugin repository inside the TimeSide directory and use the dumm
     git clone https://github.com/Parisson/TimeSide.git
     cd TimeSide
     git clone https://github.com/Parisson/timeside-dummy.git
-    docker-compose -f docker-compose.yml -f docker-compose-dev.yml -f docker-compose-dev-dummy.yml up
+    docker-compose -f docker-compose.yml -f conf/dev-dummy.yml up
+
+
+Build your own image
+---------------------
+
+You can also re-build your own image locally::
+
+    docker-compose -f docker-compose.yml conf/dev-build.yml up
