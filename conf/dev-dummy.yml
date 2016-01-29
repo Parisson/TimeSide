@@ -29,5 +29,9 @@ app:
   ports:
     - "9000:9000"
     - "8888:8888"
-  environment:
-    - PYTHONPATH=$PYTHONPATH:/srv/src/timeside/timeside-dummy/
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env
+
+worker:
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env

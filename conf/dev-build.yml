@@ -24,6 +24,11 @@
 
 app:
   build: .
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env
+
 
 worker:
   build: .
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env

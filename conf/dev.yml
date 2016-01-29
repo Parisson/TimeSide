@@ -27,3 +27,10 @@ app:
     - ./:/srv/src/timeside/
   ports:
     - "9000:9000"
+    - "8888:8888"
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env
+
+worker:
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env
