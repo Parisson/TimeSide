@@ -1,13 +1,16 @@
+
 News
 =====
 
 0.8
 
-* Analyzer Result : fix and improve some results containers and add export to Elan files.
-* Add *Docker* support for easy installation of TimeSide across any OS platform
-* Start the development of a web service and API (experimental) with *docker-compose* support based on Django REST Framework, Celery, Angular and WavesJS.
+* Add *Docker* support for instant installation across any OS platform (see Install and use)
+* Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy experimental writing and sharing
+* Add an experimental web server and REST API based on Django REST Framework, Celery, Angular and WavesJS.
+* Add metadata export to Elan annotation files.
+* Fix and improve some data structures in analyzer result containers
 * Various bugfixes
-* Add `Jupyter Notebook <http://jupyter.org/>`_ support.    
+* See Release notes
 
 0.7.1
 
@@ -27,4 +30,3 @@ News
 * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
 For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
-

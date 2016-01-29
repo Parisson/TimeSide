@@ -43,28 +43,48 @@ broker:
   image: redis
 
 app:
+<<<<<<< HEAD
   image: parisson/timeside:latest
   volumes:
     - ./app/:/srv/app
+=======
+  build: .
+  volumes:
+    - ./app/:/srv/app
+    - ./:/srv/src/timeside/
+>>>>>>> dev
   volumes_from:
     - data
   ports:
     - "8888:8888"
+  env_file:
+    - app/sandbox/ts-docker-compose.env
   links:
     - broker
     - db
+  command: /bin/bash deploy/start_app.sh
 
+    
 worker:
+<<<<<<< HEAD
   image: parisson/timeside:latest
+=======
+  build: .
+>>>>>>> dev
   volumes_from:
     - data
     - app
-  command: /bin/bash deploy/celery_app.sh
+  env_file:
+    - app/sandbox/ts-docker-compose.env
   links:
     - broker
     - db
   command: /bin/bash deploy/celery_app.sh
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> dev
 nginx:
   image: nginx
   ports:

@@ -34,8 +34,9 @@ before_install:
 
 # Install TimeSide
 install:
-  #- pip install -r requirements.txt
-  - python setup.py install
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+  #- python setup.py install
 
 
 # command to run tests

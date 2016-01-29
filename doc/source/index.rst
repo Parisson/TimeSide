@@ -16,12 +16,13 @@ Contents:
    architecture
    processors
    install
-   UI
    Tutorials <tutorials/index>
+   UI
    API <api/index>
-   Development <dev>
+   development
+   production
    related
-   Copyright <copyright>
+   copyright
 
 
 Indices and tables

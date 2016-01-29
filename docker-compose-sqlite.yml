@@ -23,9 +23,7 @@
 
 
 app:
-  extends:
-    file: docker-compose-base.yml
-    service: app
+  build: .
   env_file:
     - app/sandbox/ts-sqlite.env
   volumes:

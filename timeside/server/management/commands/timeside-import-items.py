@@ -35,11 +35,12 @@ class Command(BaseCommand):
 
         for root, dirs, files in os.walk(import_dir):
             for filename in files:
-                path = root + os.sep + filename
-                path = path[len(media_dir)+1:]
+                path = os.path.join(root, filename)
+                os.path.relpath(path, media_dir)
+                relpath = path[len(media_dir)+1:]
                 name, ext = os.path.splitext(filename)
                 title = unicode(selection_title + '_' + filename)
-                item, c = Item.objects.get_or_create(title=title, file=path)
+                item, c = Item.objects.get_or_create(title=title, file=relpath)
                 if c:
                     print 'Item "' + title + '" created'
                 if not item in selection.items.all():

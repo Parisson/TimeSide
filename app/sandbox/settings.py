@@ -3,7 +3,7 @@ import environ
 # set default values and casting
 env = environ.Env(DEBUG=(bool, False),
                   CELERY_ALWAYS_EAGER=(bool, False),
-                  )
+                 )
 # Django settings for server project.
 DEBUG = env('DEBUG') # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
@@ -18,7 +18,8 @@ ADMINS = (
 MANAGERS = ADMINS
 
 # Full filesystem path to the project.
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+project_root = environ.Path(__file__) - 1
+data_root = project_root - 2
 
 DATABASES = {
     'default': {
@@ -64,7 +65,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/srv/media/'
+MEDIA_ROOT =  data_root('media') + os.sep
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -75,7 +76,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/srv/static'
+STATIC_ROOT = data_root('static') + os.sep
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -193,7 +194,7 @@ CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER') # If this is True, all tasks wi
 
 from celery_app import app
 
-BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'bower')
+BOWER_COMPONENTS_ROOT = project_root('bower')
 BOWER_PATH = '/usr/local/bin/bower'
 BOWER_INSTALLED_APPS = (
     'jquery',
