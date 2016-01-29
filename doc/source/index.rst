@@ -16,8 +16,8 @@ Contents:
    architecture
    processors
    install
-   Tutorials <tutorials/index>
    UI
+   Tutorials <tutorials/index>
    API <api/index>
    development
    production
