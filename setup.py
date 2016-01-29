@@ -6,6 +6,32 @@ from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 
+def get_dependencies(env_yml_file):
+    """
+    Read the dependencies from a Conda environment file in YAML
+    and return a list of such dependencies (from conda and pip list)
+    Be sure to match packages specification for each of:
+    - Conda : http://conda.pydata.org/docs/spec.html#build-version-spec
+    - Pip & Setuptool :
+       - http://pythonhosted.org/setuptools/setuptools.html?highlight=install_require#declaring-dependencies
+       - https://pythonhosted.org/setuptools/pkg_resources.html#requirement-objects
+    """
+    import yaml
+    with open(env_yml_file, 'r') as f:
+        environment = yaml.load(f)
+    conda_dependencies = []
+    
+    for dep in environment['dependencies']:
+        if isinstance(dep, str) and not(dep.startswith('python')):
+            if dep.startswith('pytables'):
+                conda_dependencies.append(dep[2:])  # insert 'tables' instead of 'pytables'
+            else:
+                conda_dependencies.append(dep)
+        elif isinstance(dep, dict) and 'pip' in dep:
+             pip_dependencies = dep['pip']
+    
+    return conda_dependencies + pip_dependencies
+
 # Pytest
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -45,34 +71,7 @@ setup(
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
     version='0.8',
-    install_requires=[
-        'numpy',
-        'mutagen',
-        'pillow',
-        'h5py',
-        'tables',
-        'pyyaml',
-        'simplejson',
-        'scipy',
-        'matplotlib',
-        'django==1.6.11',
-        'django-extensions',
-        'djangorestframework==2.4.5',
-        'django-celery',
-        'django-bootstrap3',
-        'django-bootstrap-pagination',
-        'django-angular',
-        'django-bower',
-        'django-environ',
-        'south',
-        'traits',
-        'networkx',
-        'django-celery',
-        'watchdog',
-        'Werkzeug',
-        'pympi-ling',
-        'redis',
-        ],
+    install_requires=get_dependencies('environment.yml'),
     platforms=['OS Independent'],
     license='Gnu Public License V2',
     classifiers=CLASSIFIERS,

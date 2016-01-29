@@ -47,9 +47,10 @@ RUN conda install pip && \
     pip install uwsgi
 
 # Install binary dependencies with conda
-COPY conda-requirements.txt /srv/src/timeside/
-RUN conda install -c https://conda.anaconda.org/piem  --file conda-requirements.txt
-
+COPY environment.yml /srv/src/timeside/
+RUN conda env update --file environment.yml --name root
+RUN pip list 
+RUN conda list 
 # Link Yaafe in site-packages
 RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 

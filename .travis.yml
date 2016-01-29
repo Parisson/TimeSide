@@ -28,15 +28,15 @@ before_install:
   - conda update -q conda
 # Useful for debugging any issues with conda
   - conda info -a
-# Install binary dependencies with conda
-  - conda create -q -n test-environment -c piem --file conda-requirements.txt python=$TRAVIS_PYTHON_VERSION
-  - source activate test-environment
+# Install binary and pip dependencies with conda
+  - conda env create --name app --file environment.yml
+  - source activate app
 
 # Install TimeSide
 install:
-  - pip install --upgrade pip
-  - pip install -r requirements.txt
-  #- python setup.py install
+  #- pip install --upgrade pip
+  #- pip install -r requirements.txt
+  - python setup.py install
 
 
 # command to run tests
@@ -55,7 +55,7 @@ script:
   #
   # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-       coverage run --source=timeside --omit=timeside/plugins/analyzer/externals/aubio/aubio_*.py,timeside/plugins/analyzer/external/yaafe.py setup.py test;
+       coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test;
     fi
   # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
