@@ -13,14 +13,16 @@ Contents:
 
    intro
    news
-   Processors <processors>
-   Installation <install>
+   architecture
+   processors
+   install
    Tutorial <tutorial/index>
-   ui
+   UI
    API <api/index>
-   Development <dev>
+   development
+   production
    related
-   Copyright <copyright>
+   copyright
 
 
 Indices and tables

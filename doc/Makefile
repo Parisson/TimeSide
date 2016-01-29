@@ -37,6 +37,7 @@ help:
 	@echo "  changes    to make an overview of all changed/added/deprecated items"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
+	@echo "  readme     to build the README.rst file"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
@@ -151,3 +152,9 @@ doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+
+readme:
+	sed '/doctest/d' source/intro.rst | sed '/testcleanup/d' > ../README.rst
+	cat source/news.rst source/divein.rst source/doc.rst source/install.rst source/related.rst source/copyright.rst >> ../README.rst
+	@echo
+	@echo "Build finished. The README.rst file is up to date."
