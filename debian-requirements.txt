@@ -1,7 +1,24 @@
+# TimeSide Core need Gstreamer
 python-gst0.10 
 gstreamer0.10-plugins-good 
 gstreamer0.10-gnonlin 
 gstreamer0.10-plugins-ugly 
 gstreamer0.10-plugins-bad
 gstreamer0.10-alsa
+
+# Optionnal Audio Analysis library
 vamp-examples
+# from http://debian.parisson.com/debian/
+#python-yaafe
+
+# Misc. 
+git
+wget
+bzip2
+build-essential
+netcat
+
+# DB & Server
+npm
+libmysqlclient-dev
+nodejs-legacy
