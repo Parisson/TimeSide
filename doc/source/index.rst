@@ -13,10 +13,11 @@ Contents:
 
    intro
    news
-   Processors <processors>
-   Installation <install>
-   Tutorial <tutorial/index>
-   ui
+   architecture
+   processors
+   install
+   UI
+   Tutorials <tutorials/index>
    API <api/index>
    Development <dev>
    related
@@ -29,4 +30,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

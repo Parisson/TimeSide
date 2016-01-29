@@ -43,25 +43,19 @@ broker:
   image: redis
 
 app:
-  extends:
-    file: docker-compose-base.yml
-    service: app
+  image: parisson/timeside:latest
   volumes:
     - ./app/:/srv/app
-    - ./timeside/:/srv/src/timeside/timeside
   volumes_from:
     - data
   ports:
-    - "9000:9000"
     - "8888:8888"
   links:
     - broker
     - db
 
 worker:
-  extends:
-    file: docker-compose-base.yml
-    service: app
+  image: parisson/timeside:latest
   volumes_from:
     - data
     - app
@@ -69,6 +63,7 @@ worker:
   links:
     - broker
     - db
+  command: /bin/bash deploy/celery_app.sh
 
 nginx:
   image: nginx
