@@ -25,7 +25,7 @@ Just use the development composition in the dev branch::
 Developing your own plugins
 ----------------------------
 
-TimeSide is using a namespace so you can develop your own plugins outside the core module. Then, adding your module to the PYTHONPATH will automatically import your plugins within TimeSide. An example of what you can do is available in the `DIADEMS project repository <https://github.com/ANR-DIADEMS/timeside-diadems/>`.
+TimeSide is using a namespace so you can develop your own plugins outside the core module. Then, adding your module to the PYTHONPATH will automatically import your plugins within TimeSide. An example of what you can do is available in the `DIADEMS project repository <https://github.com/ANR-DIADEMS/timeside-diadems/>`_.
 
 Clone the dummy plugin repository inside the TimeSide directory and use the dummy development composition::
 
