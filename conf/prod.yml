@@ -23,12 +23,11 @@
 
 
 app:
-  build: .
+  volumes:
+    - ./app/:/srv/app
   env_file:
-    - app/sandbox/ts-docker-compose-dev.env
-
+    - app/sandbox/ts-docker-compose.env
 
 worker:
-  build: .
   env_file:
-    - app/sandbox/ts-docker-compose-dev.env
+    - app/sandbox/ts-docker-compose.env

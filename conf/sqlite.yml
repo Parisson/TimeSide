@@ -23,12 +23,8 @@
 
 
 app:
-  build: .
   env_file:
     - app/sandbox/ts-sqlite.env
-  volumes:
-    - ./app/:/srv/app
-    - ./:/srv/src/timeside
   ports:
     - "8000:8000"
   command: /bin/bash deploy/start_app.sh --runserver
