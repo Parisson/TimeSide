@@ -21,63 +21,13 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-data:
-  image: debian:jessie
-  volumes:
-     - ./data/media/:/srv/media
-     - ./data/static/:/srv/static
-     - ./data/backup/:/srv/backup
-  command: "true"
-
-db:
-  image: mysql
-  volumes:
-    - ./data/var/lib/mysql/:/var/lib/mysql
-    - ./data/var/log/mysql/:/var/log/mysql
-  volumes_from:
-    - data
-  env_file:
-    - app/sandbox/ts-docker-compose.env
-
-broker:
-  image: redis
 
 app:
-  image: parisson/timeside:latest
   volumes:
     - ./app/:/srv/app
-  volumes_from:
-    - data
-  ports:
-    - "8888:8888"
   env_file:
     - app/sandbox/ts-docker-compose.env
-  links:
-    - broker
-    - db
-  command: /bin/bash deploy/start_app.sh
 
 worker:
-  image: parisson/timeside:latest
-  volumes_from:
-    - data
-    - app
   env_file:
     - app/sandbox/ts-docker-compose.env
-  links:
-    - broker
-    - db
-  command: /bin/bash deploy/celery_app.sh
-
-nginx:
-  image: nginx
-  ports:
-    - "8000:80"
-  volumes:
-    - ./app/deploy/nginx-app.conf:/etc/nginx/conf.d/default.conf
-    - ./data/var/log/nginx/:/var/log/nginx
-  volumes_from:
-    - app
-    - data
-  links:
-    - app

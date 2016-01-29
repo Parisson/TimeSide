@@ -23,12 +23,15 @@
 
 
 app:
-  build: .
-  env_file:
-    - app/sandbox/ts-sqlite.env
   volumes:
     - ./app/:/srv/app
-    - ./timeside/:/srv/src/timeside/timeside
+    - ./:/srv/src/timeside/
   ports:
-    - "8000:8000"
-  command: /bin/bash deploy/start_app.sh --runserver
+    - "9000:9000"
+    - "8888:8888"
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env
+
+worker:
+  env_file:
+    - app/sandbox/ts-docker-compose-dev.env
