@@ -23,7 +23,10 @@
 
 
 app:
-  build: timeside-dummy
+  build: externals
+  volumes:
+    - ./app/:/srv/app
+    - ./externals/:/srv/src/externals/
 
 worker:
-  build: timeside-dummy
+  build: externals
