@@ -36,18 +36,27 @@ class Mp3Encoder(GstEncoder):
 
     implements(IEncoder)
 
+    def __init__(self, output, streaming=False, overwrite=False, target="quality", target_value=2, cbr=False):
+        super(Mp3Encoder, self).__init__(output, streaming=streaming, overwrite=overwrite)
+        self.target = target
+        self.target_value = target_value
+        self.cbr = cbr
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):
         super(Mp3Encoder, self).setup(channels, samplerate, blocksize,
                                       totalframes)
 
+        # http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/gst-plugins-ugly-plugins-lamemp3enc.html#GstLameMP3Enc--cbr
+        # cbr only makes sense when target is equal to `bitrate`
+        str_cbr = ' cbr=%s' % self.cbr if self.target == 'bitrate' else ''
         self.pipe = '''appsrc name=src
                   ! audioconvert ! audioresample
-                  ! lamemp3enc target=quality quality=2 encoding-engine-quality=standard
+                  ! lamemp3enc target=%(target)s %(target)s=%(target_value)d%(str_cbr)s encoding-engine-quality=standard
                   ! xingmux
                   ! id3v2mux
-                  '''
+                  ''' % {'target': self.target, 'target_value': self.target_value, 'str_cbr': str_cbr}
 
         if self.filename and self.streaming:
             self.pipe += ''' ! tee name=t
