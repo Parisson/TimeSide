@@ -20,13 +20,12 @@ env:
 # command to prepare the system to install prerequisites or dependencies
 before_install:
   - sudo pip install docker-compose
-  - docker-compose build
 
 # Install TimeSide
 install:
   #- pip install --upgrade pip
   #- pip install -r requirements.txt
-  - docker-compose  -f docker-compose.yml -f conf/build.yml run app  sh -c "cd /srv/src/timeside; python setup.py test"
+  - docker-compose build
 
 
 # command to run tests
@@ -41,12 +40,13 @@ install:
 #    fi
 
 
-#script:
+script:
 #  #
 #  # -------------DEFAULT--------------------
-#  - if [[ $TEST_TARGET == 'default' ]]; then
+  - if [[ $TEST_TARGET == 'default' ]]; then
+      docker-compose  -f docker-compose.yml -f conf/build.yml run app  sh -c "cd /srv/src/timeside; python setup.py test"
 #       coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test;
-#    fi
+    fi
 #  # -------------DOC------------------------
 #  - if [[ $TEST_TARGET == 'doc' ]]; then
 #       cd doc;
