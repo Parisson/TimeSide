@@ -61,20 +61,23 @@ News
 =====
 
 0.8
+---
 
-* Add *Docker* support for instant installation across any OS platform (see Install and use)
-* Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy experimental writing and sharing
-* Add an experimental web server and REST API based on Django REST Framework, Celery, Angular and WavesJS.
+* Add *Docker* support for instant installation. This allows to run TimeSide now on *any* OS platform!
+* Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy prototyping, experimenting and sharing (see the examples in the doc).
+* Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).
+* Start the development of a new player interface thanks to Angular and WavesJS.
 * Add metadata export to Elan annotation files.
-* Fix and improve some data structures in analyzer result containers
-* Various bugfixes
-* See Release notes
+* Fix and improve some data structures in analyzer result containers.
+* Many various bugfixes.
 
 0.7.1
+-----
 
 * fix django version to 1.6.10 (sync with Telemeta 1.5)
 
 0.7
+----
 
 * Code refactoring:
 
