@@ -55,10 +55,12 @@ script:
     fi
 #  # -------------SERVER-------------------------
 #  #  Get environment variables from .env file and run test
-#  - if [[ $TEST_TARGET == 'server' ]]; then
-#       export $(egrep -v "^\s*(#|$)" ./app/sandbox/ts-sqlite.env);
-#       ./tests/test_server.sh;
-#    fi
+  - if [[ $TEST_TARGET == 'server' ]]; then
+       docker-compose up;
+       sleep 20;
+       curl --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/items/1/;
+       docker-compose stop;
+    fi
 #
 after_success:
 #  -  # -------------DEFAULT--------------------
