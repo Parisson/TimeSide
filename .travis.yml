@@ -26,7 +26,7 @@ before_install:
 install:
   #- pip install --upgrade pip
   #- pip install -r requirements.txt
-  - docker-compose run app python setup.py test
+  - docker-compose  -f docker-compose.yml -f conf/build.yml run app  sh -c "cd /srv/src/timeside; python setup.py test"
 
 
 # command to run tests
