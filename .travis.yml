@@ -25,7 +25,7 @@ before_install:
 install:
   #- pip install --upgrade pip
   #- pip install -r requirements.txt
-  - docker-compose build
+  - docker-compose -f docker-compose.yml -f conf/build.yml build
 
 
 # command to run tests
@@ -43,7 +43,7 @@ install:
 script:
 # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-      docker-compose  -f docker-compose.yml -f conf/build.yml run app  sh -c "cd /srv/src/timeside; python setup.py test";
+      docker-compose -f docker-compose.yml -f conf/build.yml run app  sh -c "cd /srv/src/timeside; python setup.py test";
     fi
 #       coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test;
 #  # -------------DOC------------------------
