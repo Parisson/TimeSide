@@ -17,7 +17,6 @@ FROM parisson/docker:master
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
-# RUN mkdir /opt/TimeSide
 RUN mkdir /srv/app
 RUN mkdir /srv/src
 RUN mkdir /srv/src/timeside
@@ -51,9 +50,6 @@ RUN ln -s /usr/lib/python2.7/dist-packages/yaafelib /opt/miniconda/lib/python2.7
 
 # Install bower
 RUN npm install -g bower
-
-# Install uwsgi
-RUN pip install uwsgi
 
 COPY . /srv/src/timeside/
 
