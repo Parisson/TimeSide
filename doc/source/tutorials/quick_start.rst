@@ -10,7 +10,7 @@ A most basic operation, transcoding, is easily performed with two processors:
 
 .. testcleanup:: test_1
 
-   os.remove('sweepi.ogg')
+   os.remove('sweep.ogg')
 
 .. testcleanup:: test_2
 
@@ -27,7 +27,7 @@ A most basic operation, transcoding, is easily performed with two processors:
    >>> from timeside.core.tools.test_samples import samples
    >>> from timeside.core import get_processor
    >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
-   >>> encoder = get_processor('vorbis_encoder')("sweepi.ogg")
+   >>> encoder = get_processor('vorbis_encoder')("sweep.ogg")
    >>> pipe = decoder | encoder
    >>> pipe.run()
 
