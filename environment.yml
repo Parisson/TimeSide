@@ -29,4 +29,5 @@ dependencies:
       - mutagen
       - pympi-ling
       - south
+      - uwsgi
       - watchdog

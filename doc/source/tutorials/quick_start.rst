@@ -23,13 +23,13 @@ A most basic operation, transcoding, is easily performed with two processors:
 
 .. doctest:: test_1
 
- >>> import timeside
- >>> from timeside.core.tools.test_samples import samples
- >>> from timeside.core import get_processor
- >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
- >>> encoder = get_processor('vorbis_encoder')("sweep.ogg")
- >>> pipe = decoder | encoder
- >>> pipe.run()
+   >>> import timeside
+   >>> from timeside.core.tools.test_samples import samples
+   >>> from timeside.core import get_processor
+   >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
+   >>> encoder = get_processor('vorbis_encoder')("sweep.ogg")
+   >>> pipe = decoder | encoder
+   >>> pipe.run()
 
 As one can see in the above example, creating a processing pipe is performed with
 the binary OR operator.
