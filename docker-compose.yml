@@ -48,8 +48,6 @@ app:
     - ./app/:/srv/app
   volumes_from:
     - data
-  ports:
-    - "8888:8888"
   env_file:
     - app/sandbox/ts-docker-compose.env
   links:

@@ -4,6 +4,7 @@ channels:
 dependencies:
   - aubio  # in piem channel (optionnal)
   - h5py
+  - jupyter
   - matplotlib
   - networkx
   - numpy

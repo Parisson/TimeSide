@@ -29,8 +29,8 @@ You can also run your code in the wonderful `Jupyter Notebook <http://jupyter.or
 
    git clone https://github.com/Parisson/TimeSide.git
    cd TimeSide
-   docker-compose run --service-ports app sh /srv/app/deploy/notebook.sh
-
+   docker-compose -f docker-compose.yml -f conf/dev.yml run --service-ports notebook
+   
 and then browse  http://localhost:8888 to acces the Jupyter notebook interface.
 
 On MacOS or Windows, you will need to ask the IP of the virtual machine to docker-machine::

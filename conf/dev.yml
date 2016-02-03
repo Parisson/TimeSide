@@ -34,3 +34,9 @@ app:
 worker:
   env_file:
     - app/sandbox/ts-docker-compose-dev.env
+
+notebook:
+  build: .
+  ports:
+    - "8888:8888"
+  command: sh -c "cd /srv/src/timeside/doc/ipynb; jupyter notebook --no-browser --ip=0.0.0.0"
