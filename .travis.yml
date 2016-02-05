@@ -17,12 +17,11 @@ env:
   - TEST_TARGET=server   # Test timeside.server
 
 
-# command to prepare the system to install prerequisites or dependencies
-#before_install:
-#  - sudo pip install docker-compose
-
 # Install TimeSide
 install:
+  - sudo apt-get install -y linux-image-virtual kernel linux-image-extra-virtual
+  - curl -sSL https://get.docker.com/ | sudo sh
+  - sudo pip install docker-compose
   #- pip install --upgrade pip
   #- pip install -r requirements.txt
   - docker-compose -f docker-compose.yml -f conf/build.yml build
