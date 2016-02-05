@@ -1,11 +1,14 @@
 .. This file is part of TimeSide
    @author: Thomas Fillon
 
-==========================
- Analyzer Result examples
-==========================
+========================
+Data management examples
+========================
 
-Example of use of the Analyzer Result structure
+`AnalyzerResult` is the python data structure specific to TimeSide that embeds all the data resulting from a given analyzer processors after a run.
+It is thus the base object to access the analysis results and all the corresponding metadata.
+
+Bellow are examples of use of the Analyzer Result structure.
 
 Usage : AnalyzerResult(data_mode=None, time_mode=None)
 
