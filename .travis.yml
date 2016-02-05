@@ -18,8 +18,8 @@ env:
 
 
 # command to prepare the system to install prerequisites or dependencies
-before_install:
-  - sudo pip install docker-compose
+#before_install:
+#  - sudo pip install docker-compose
 
 # Install TimeSide
 install:
