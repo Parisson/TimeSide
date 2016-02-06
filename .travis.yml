@@ -13,18 +13,20 @@ env:
   - TEST_TARGET=doc      # Test documentation and included doctest
   - TEST_TARGET=server   # Test timeside.server
 
+env:
+  DOCKER_COMPOSE_VERSION: 1.5.2
+
 before_install:
-  - sudo docker --version
   - docker-compose --version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose --version
+
 
 # Install TimeSide
 install:
-  #- sudo apt-get install -y linux-image-virtual kernel linux-image-extra-virtual
-  #- curl -sSL https://get.docker.com/ | sudo sh
-  - sudo pip install docker-compose
-  - docker-compose --version
-  #- pip install --upgrade pip
-  #- pip install -r requirements.txt
   - docker-compose -f docker-compose.yml -f conf/build.yml build
 
 
