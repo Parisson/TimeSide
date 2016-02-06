@@ -1,9 +1,10 @@
 
-API / Documentation
-====================
+Documentation
+==============
 
-* General : http://files.parisson.com/timeside/doc/
+* General documentation : http://files.parisson.com/timeside/doc/
 * Tutorials : http://files.parisson.com/timeside/doc/tutorials/index.html
+* API : http://files.parisson.com/timeside/doc/api/index.html
 * Notebooks : http://nbviewer.ipython.org/github/thomasfillon/Timeside-demos/tree/master/
 * Publications : https://github.com/Parisson/Telemeta-doc
 * Player / UI (old wiki) : https://github.com/Parisson/TimeSide/wiki/Ui-Guide

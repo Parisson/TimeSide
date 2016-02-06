@@ -5,10 +5,7 @@
 Data management examples
 ========================
 
-`AnalyzerResult` is the python data structure specific to TimeSide that embeds all the data resulting from a given analyzer processors after a run.
-It is thus the base object to access the analysis results and all the corresponding metadata.
-
-Bellow are examples of use of the Analyzer Result structure.
+TimeSide offers various ways to access to audio data or metadata. `AnalyzerResult` is the python data structure where TimeSide embeds all the data resulting from a given analyzer processors after a run. It is thus the base object to access the analysis results and all the corresponding metadata. Bellow are some examples of use of the AnalyzerResult object and some of its methods.
 
 Usage : AnalyzerResult(data_mode=None, time_mode=None)
 

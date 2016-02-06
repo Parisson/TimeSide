@@ -7,6 +7,6 @@ Contents:
    :maxdepth: 2
 
    Quick start <quick_start>
-   Usage of AnalyzerResult <AnalyzerResult>
-   Running a pipe with previously decoded frames <frames_stack>
-   Streaming out encoded audio <Streaming>
+   Data management examples <data_management>
+   Using the 'stack' (previously decoded frames) <frames_stack>
+   Streaming out encoded audio <streaming>
