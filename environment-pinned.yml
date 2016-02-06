@@ -58,7 +58,7 @@ dependencies:
 - qtconsole=4.1.1=py27_0
 - readline=6.2=2
 - redis=2.6.9=0
-- scipy=0.16.1=np110py27_0
+- scipy=0.17.0=np110py27_0
 - setuptools=19.6.2=py27_0
 - simplegeneric=0.8.1=py27_0
 - simplejson=3.8.1=py27_0

@@ -15,8 +15,10 @@ Contents:
    news
    architecture
    processors
+   divein
    install
-   UI
+   ui
+   doc
    Tutorials <tutorials/index>
    API <api/index>
    development

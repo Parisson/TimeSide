@@ -2,10 +2,10 @@
    @author: Thomas Fillon
 
 ===============================================
- Running a pipe with previously decoded frames
+ Using the 'stack' (previously decoded frames)
 ===============================================
 
-Example of use of the `stack` argument in :class:`timeside.plugins.decoder.file.FileDecoder` to run a pipe with previously decoded frames stacked in memory on a second pass.
+This is an example of using the `stack` argument in :class:`timeside.plugins.decoder.file.FileDecoder` to run a pipe with previously decoded frames stacked in memory on a second pass.
 
 First, let's import everything and define the audio file source :
 
