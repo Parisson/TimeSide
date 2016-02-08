@@ -6,6 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
+DEPENDENCIES  = sphinx numpydoc
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -39,6 +40,7 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  readme     to build the README.rst file"
 	@echo "  publish	to publish the doc"
+	@echo "  install_deps  to install the build dependencies"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
@@ -162,3 +164,8 @@ readme:
 
 publish:
 	rsync -a --delete build/html/ files.parisson.com:/var/www/files/timeside/doc/
+	
+install_deps:
+	pip install $(DEPENDENCIES)
+	@echo
+	@echo "All dependencies installed."
