@@ -1,9 +1,9 @@
 .. This file is part of TimeSide
    @author: Thomas Fillon
 
-========================
-Data management examples
-========================
+===============
+Data management
+===============
 
 TimeSide offers various ways to access to audio data or metadata. `AnalyzerResult` is the python data structure where TimeSide embeds all the data resulting from a given analyzer processors after a run. It is thus the base object to access the analysis results and all the corresponding metadata. Bellow are some examples of use of the AnalyzerResult object and some of its methods.
 
@@ -11,15 +11,15 @@ Usage : AnalyzerResult(data_mode=None, time_mode=None)
 
 Four different *time_mode* can be specified :
 
-- 'framewise' : Data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
-- 'global' : A global data value is return for the entire audio item
-- 'segment' : Data are returned on a segmnet basis (i.e. with specified start time and duration)
-- 'event' :  Data are returned on a segment basis (i.e. with specified start time)
+- 'framewise' : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
+- 'global' : a global data value is return for the entire audio item
+- 'segment' : data are returned on a segmnet basis (i.e. with specified start time and duration)
+- 'event' :  data are returned on a segment basis (i.e. with specified start time)
 
 Two different *data_mode* can be specified :
 
-- 'value' : Data are returned as numpy Array of arbitrary type
-- 'label' : Data are returned as label indexes (specified by the label_metadata key)
+- 'value' : data are returned as numpy Array of arbitrary type
+- 'label' : data are returned as label indexes (specified by the label_metadata key)
 
 Default values are *time_mode = 'framewise'* and *data_mode = 'value'*
 
@@ -50,10 +50,10 @@ Specification of time_mode
 ==========================
 Four different time_mode can be specified :
 
-- 'framewise' : Data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
-- 'global' : A global data value is return for the entire audio item
-- 'segment' : Data are returned on a segmnet basis (i.e. with specified start time and duration)
-- 'event' :  Data are returned on a segment basis (i.e. with specified start time)
+- 'framewise' : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
+- 'global' : a global data value is return for the entire audio item
+- 'segment' : data are returned on a segmnet basis (i.e. with specified start time and duration)
+- 'event' :  data are returned on a segment basis (i.e. with specified start time)
 
 
 Framewise
@@ -100,8 +100,8 @@ Specification of data_mode
 ==========================
 Two different data_mode can be specified :
 
-- 'value' : Data are returned as numpy Array of arbitrary type
-- 'label' : Data are returned as label indexes (specified by the label_metadata key)
+- 'value' : data are returned as numpy Array of arbitrary type
+- 'label' : data are returned as label indexes (specified by the label_metadata key)
 
 Value
 -----
