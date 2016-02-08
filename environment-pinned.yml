@@ -10,7 +10,7 @@ dependencies:
 - h5py=2.5.0=np110py27_4
 - hdf5=1.8.15.1=2
 - ipykernel=4.2.2=py27_0
-- ipython=4.0.3=py27_0
+- ipython=4.1.1=py27_0
 - ipython_genutils=0.1.0=py27_0
 - ipywidgets=4.1.1=py27_0
 - jbig=2.1=0
@@ -29,13 +29,13 @@ dependencies:
 - markupsafe=0.23=py27_0
 - matplotlib=1.5.1=np110py27_0
 - mistune=0.7.1=py27_0
+- mkl=11.3.1=0
 - nbconvert=4.1.0=py27_0
 - nbformat=4.0.1=py27_0
 - networkx=1.11=py27_0
 - notebook=4.1.0=py27_0
-- numexpr=2.4.6=np110py27_0
-- numpy=1.10.2=py27_0
-- openblas=0.2.14=3
+- numexpr=2.4.6=np110py27_1
+- numpy=1.10.4=py27_0
 - openssl=1.0.2f=0
 - path.py=8.1.2=py27_1
 - pexpect=3.3=py27_0
@@ -58,7 +58,7 @@ dependencies:
 - qtconsole=4.1.1=py27_0
 - readline=6.2=2
 - redis=2.6.9=0
-- scipy=0.17.0=np110py27_0
+- scipy=0.17.0=np110py27_1
 - setuptools=19.6.2=py27_0
 - simplegeneric=0.8.1=py27_0
 - simplejson=3.8.1=py27_0
@@ -90,7 +90,7 @@ dependencies:
   - django-angular==0.7.15
   - django-bootstrap-pagination==1.5.1
   - django-bootstrap3==6.2.2
-  - django-bower==5.0.4
+  - django-bower==5.1.0
   - django-celery==3.1.17
   - django-environ==0.4.0
   - django-extensions==1.6.1
