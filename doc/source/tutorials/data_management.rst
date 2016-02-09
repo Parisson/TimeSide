@@ -41,7 +41,7 @@ Create a new analyzer result without default arguments
    ...     print '%s : %s' % (key, value)
    ...
    id_metadata : {'description': '', 'author': '', 'version': '', 'date': '', 'proc_uuid': '', 'id': '', 'unit': '', 'name': ''}
-   data_object : {'y_value': array([], dtype=float64), 'value': array([], dtype=float64), 'frame_metadata': FrameMetadata(samplerate=None, blocksize=None, stepsize=None)}
+   data_object : {'y_value': array([], dtype=float64), 'value': array([], dtype=float64), 'frame_metadata': {'blocksize': None, 'samplerate': None, 'stepsize': None}}
    audio_metadata : {'sha1': '', 'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
    parameters : {}
 

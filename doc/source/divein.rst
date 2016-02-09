@@ -25,12 +25,6 @@ Define some processors:
    >>> analyzer =  get_processor('level')()
    >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
-.. testcleanup::
-
-  import os
-  os.remove('sweep.ogg')
-
-
 
 Then run the *magic* pipeline:
 
@@ -48,6 +42,7 @@ Render the grapher results:
 
    import os
    os.remove('waveform.png')
+   os.remove('sweep.ogg')
 
 
 Show the analyzer results:
