@@ -26,5 +26,5 @@ Authors:
  * Riccardo Zaccarelli <riccardo.zaccarelli gmail.com>
  * Olivier Guilyardi <olivier samalyse com>
 
-TimeSide is released under the terms of the GNU General Public License
+TimeSide is released under the terms of the GNU Affero General Public License
 version 2. Please see the LICENSE file for details.
