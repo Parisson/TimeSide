@@ -26,7 +26,6 @@ app:
   volumes:
     - ./app/:/srv/app
     - ./:/srv/src/timeside/
-    - ./doc/
   ports:
     - "9000:9000"
   env_file:
