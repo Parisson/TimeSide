@@ -8,13 +8,13 @@ services:
   - docker
 
 env:
-  - TEST_TARGET=default  # Default unit test
-  - TEST_TARGET=cli      # Test for TimeSide command line interfaces
-  - TEST_TARGET=doc      # Test documentation and included doctest
-  - TEST_TARGET=server   # Test timeside.server
-
-env:
-  DOCKER_COMPOSE_VERSION: 1.5.2
+  global:
+    - DOCKER_COMPOSE_VERSION: 1.5.2
+  matrix:
+    - TEST_TARGET=default  # Default unit test
+    - TEST_TARGET=cli      # Test for TimeSide command line interfaces
+    - TEST_TARGET=doc      # Test documentation and included doctest
+    - TEST_TARGET=server   # Test timeside.server
 
 before_install:
   - docker-compose --version
