@@ -5,16 +5,16 @@ source "$SCRIPT_DIR/start_app_base.sh"
 
 # django init
 python $manage migrate --noinput
+python $manage bower_install -- --allow-root
 python $manage collectstatic --noinput
 
 python $manage timeside-create-admin-user
 python $manage timeside-create-boilerplate
-python $manage bower_install -- --allow-root
 
 
 # static files auto update
 watchmedo shell-command --patterns="*.js;*.css" --recursive \
-    --command='python '$manage' collectstatic --noinput' $static &
+    --command='python '$manage' collectstatic --noinput' $src &
 
 # app start
 if [ $1 == "--runserver" ]

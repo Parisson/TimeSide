@@ -2,6 +2,7 @@
 
 # paths
 app='/srv/app'
+src='/srv/src'
 manage=$app'/manage.py'
 wsgi=$app'/wsgi.py'
 static='/srv/static/'

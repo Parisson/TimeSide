@@ -53,7 +53,7 @@ function waveform(div_id) {
 	    function update_segment() {
 		seg_start = graph_sub.xScale.domain()[0]
 		seg_end = graph_sub.xScale.domain()[1]
-		
+
 		if ( seg_start < 0 || seg_end > audioBuffer.duration) {
 		    seg_start = Math.max(0, seg_start);
 		    seg_end = Math.min(audioBuffer.duration, seg_end);
@@ -70,7 +70,7 @@ function waveform(div_id) {
 
 	    };
 
-	    
+
 	    segmentLayer.on('drag', function(item, e) {
 		update_waveform(graph_sub, data)
 	    });
@@ -81,7 +81,7 @@ function waveform(div_id) {
 
             // 4. draw graph
             d3.select(id).call(graph.draw);
-	    
+
             var graph_sub = wavesUI.timeline()
                 .xDomain([0, audioBuffer.duration])
                 .width(graph_width)
@@ -95,7 +95,7 @@ function waveform(div_id) {
 
             graph_sub.add(waveformLayerSub);
 	    update_waveform(graph_sub, data)
-	    
+
             d3.select(id_sub).call(graph_sub.draw);
 
 	    // Add X-Ticks addTicks(id_sub, graph_sub);
@@ -134,7 +134,7 @@ function waveform(div_id) {
 
 		    // update axis
 		    axis.call(xAxis);
-		    
+
 		})
 		.on('mouseup', function(e) {
 		    // set the final xZoom value of the graph
@@ -142,7 +142,7 @@ function waveform(div_id) {
 		    // update axis
 		    axis.call(xAxis);
 		});
-	    
+
         } catch (err) {
             console.log(err);
         }
@@ -163,11 +163,11 @@ function timeline_get_data(json_url, div_id) {
         .xDomain([0, duration])
         .width(graph_width)
         .height(height);
-		
+
 	for (var i = 0; i < data_list.length; i++) {
             var data = data_list[i];
 	    var ytop = i * (graph_height + 10)
-	    
+
             timeline_result(data, graph, ytop);
 	}
 
@@ -225,7 +225,7 @@ function timeline_result(data, graph, ytop) {
             timeline_framewise_value(data, graph, ytop);
             break;
 	case 'label':
-	    timeline_framewise_label(data, graph, ytop); 
+	    timeline_framewise_label(data, graph, ytop);
             break;
 	}
 	break;
@@ -248,7 +248,7 @@ function timeline_framewise_value(data, graph, ytop) {
     }
 
 
-    
+
     if (dim == 0) {
 	// format data
 	var min_value = 1;
@@ -256,7 +256,7 @@ function timeline_framewise_value(data, graph, ytop) {
 	var data = values.map(function(dummy, index) {
 	    min_value = Math.min(min_value, values[index])
 	    max_value = Math.max(max_value, values[index])
-	    
+
 	    return {
 		cx: (blocksize / 2 +  stepsize * index ) / samplerate,
 		cy: values[index]
@@ -272,13 +272,13 @@ function timeline_framewise_value(data, graph, ytop) {
             .data(data)
             .color('steelblue')
             .opacity(0.8);
-	
+
 	// 3. add layers to graph
 	graph.add(breakpointLayer);
-	
+
     } else {
 	var colors = d3.scale.category20().domain(d3.set(Math.min(dim, 20)).values()).range();
-	
+
 	for (var i = 0; i < dim; i++) {
 	    // format data
 	    var min_value = 0;
@@ -286,7 +286,7 @@ function timeline_framewise_value(data, graph, ytop) {
 	    var data = values.map(function(dummy, index) {
 		min_value = Math.min(min_value, values[index][i])
 		max_value = Math.max(max_value, values[index][i])
-		
+
 		return {
 		    cx: (blocksize / 2 +  stepsize * index ) / samplerate,
 		    cy: values[index][i]
@@ -302,7 +302,7 @@ function timeline_framewise_value(data, graph, ytop) {
 		.data(data)
 		.color(colors[i % 20])
 		.opacity(0.8);
-	    
+
 	    // 3. add layers to graph
 	    graph.add(breakpointLayer);
 	};
@@ -322,7 +322,7 @@ function timeline_segment_value(data, graph, ytop) {
             height: values[index]
         };
     });
-    
+
 
     // var minValue = Math.min.apply(null, values);
     var max_value = Math.max.apply(null, values);
@@ -336,10 +336,10 @@ function timeline_segment_value(data, graph, ytop) {
 	    top: ytop,
 	    yDomain: [0, max_value]
 	});
-    
+
     // 3. add layers to graph
     graph.add(segmentLayer);
-    
+
 }
 
 function timeline_segment_label(data, graph, ytop) {
@@ -358,7 +358,7 @@ function timeline_segment_label(data, graph, ytop) {
     });
 
     var colors = d3.scale.category10().domain(d3.set(labels).values()).range();
-    
+
     var segmentLayer = wavesUI.segment()
         .data(data)
         .color(function(d) { return colors[d.label]})
@@ -368,11 +368,11 @@ function timeline_segment_label(data, graph, ytop) {
 	    top: ytop,
 	    handlerOpacity: 1
 	});
-	
+
 
     // 3. add layers to graph
     graph.add(segmentLayer);
-    
+
 }
 
 function timeline_event_label(data, graph, ytop) {
@@ -400,7 +400,7 @@ function timeline_event_label(data, graph, ytop) {
 	    top: ytop,
 	    yDomain: [0, max_value],
 	});
-    
+
     // 3. add layers to graph
     graph.add(markerLayer);
 
@@ -426,7 +426,7 @@ function timeline_framewise_label(data, graph, ytop) {
     });
 
     var colors = d3.scale.category10().domain(d3.set(labels).values()).range();
-    
+
     var segmentLayer = wavesUI.segment()
         .data(data)
         .color(function(d) { return colors[d.label]})
@@ -436,9 +436,9 @@ function timeline_framewise_label(data, graph, ytop) {
 	    top: ytop,
 	    handlerOpacity: 1
 	});
-	
+
 
     // 3. add layers to graph
     graph.add(segmentLayer);
-    
+
 }
