@@ -194,7 +194,7 @@ CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER') # If this is True, all tasks wi
 
 from celery_app import app
 
-BOWER_COMPONENTS_ROOT = project_root('bower')
+BOWER_COMPONENTS_ROOT = '/srv/bower'
 BOWER_PATH = '/usr/local/bin/bower'
 BOWER_INSTALLED_APPS = (
     'jquery',
