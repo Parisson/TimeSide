@@ -198,9 +198,16 @@ BOWER_COMPONENTS_ROOT = project_root('bower')
 BOWER_PATH = '/usr/local/bin/bower'
 BOWER_INSTALLED_APPS = (
     'jquery',
-    'jquery-migrate',
+    'jquery-migrate#~1.2.1',
     'underscore',
+    'bootstrap',
     'bootstrap-select#1.5.4',
+    'font-awesome#~4.4.0',
+    'angular#1.2.26',
     'angular-bootstrap-select',
-    'font-awesome',
+    'angular-resource#1.2.26',
+    'raphael',
+    'soundmanager',
+    'https://github.com/Parisson/loaders.git',
+    'https://github.com/Parisson/ui.git',
 )

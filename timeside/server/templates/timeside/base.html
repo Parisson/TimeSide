@@ -10,7 +10,7 @@
 <title></title>
 
 {% block stylesheets %}
-{% bootstrap_css %}
+<link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap.min.css" type="text/css" media="all" rel="stylesheet" />
 <link href="{{ STATIC_URL }}bootstrap-select/bootstrap-select.css" type="text/css" media="all" rel="stylesheet" />
 <link href="{{ STATIC_URL }}timeside/css/timeside.css" type="text/css" media="all" rel="stylesheet" />
 {% endblock %}
@@ -21,16 +21,16 @@
     <script src="{{ STATIC_URL }}jquery/dist/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}jquery-migrate/jquery-migrate.min.js"></script>
 
-    {% bootstrap_javascript %}
+    <script src="{{ STATIC_URL }}bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}bootstrap-select/bootstrap-select.min.js"></script>
 
     <script src="{{ STATIC_URL }}angular/angular.min.js"></script>
     <script src="{{ STATIC_URL }}angular-bootstrap-select/build/angular-bootstrap-select.min.js"></script>
-    <script src="{{ STATIC_URL }}timeside/lib/angular-resource.min.js"></script>
+    <script src="{{ STATIC_URL }}angular-resource/angular-resource.min.js"></script>
     <script src="{{ STATIC_URL }}djangular/js/django-angular.js"></script>
 
-    <script src="{{ STATIC_URL }}timeside/lib/waves/ui/waves-ui.umd.js"></script>
-    <script src="{{ STATIC_URL }}timeside/lib/waves/loaders/loaders.min.js"></script>
+    <script src="{{ STATIC_URL }}ui/waves-ui.umd.js"></script>
+    <script src="{{ STATIC_URL }}loaders/loaders.min.js"></script>
 
     <script src="{{ STATIC_URL }}timeside/js/timeside.js"></script>
     <script src="{{ STATIC_URL }}timeside/js/timeside-waves.js"></script>
