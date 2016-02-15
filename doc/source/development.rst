@@ -4,7 +4,7 @@ Development
 
 |travis_dev| |coveralls_dev|
 
-.. |travis_dev| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=dev
+.. |travis_dev| image:: https://travis-ci.org/Parisson/TimeSide.svg?branch=dev
     :target: https://travis-ci.org/Parisson/TimeSide/
 
 .. |coveralls_dev| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev
