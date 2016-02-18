@@ -20,7 +20,7 @@ def get_dependencies(env_yml_file):
     with open(env_yml_file, 'r') as f:
         environment = yaml.load(f)
     conda_dependencies = []
-    
+
     for dep in environment['dependencies']:
         if isinstance(dep, str) and not(dep.startswith('python')):
             if dep.startswith('pytables'):
@@ -29,7 +29,7 @@ def get_dependencies(env_yml_file):
                 conda_dependencies.append(dep)
         elif isinstance(dep, dict) and 'pip' in dep:
              pip_dependencies = dep['pip']
-    
+
     return conda_dependencies + pip_dependencies
 
 # Pytest
@@ -66,7 +66,7 @@ KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize p
 setup(
     name='TimeSide',
     url='https://github.com/Parisson/TimeSide/',
-    description="open web audio processing framework",
+    description="Audio processing framework for the web",
     long_description=open('README.rst').read(),
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
