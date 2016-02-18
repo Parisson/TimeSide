@@ -158,13 +158,13 @@ doctest:
 
 readme:
 	sed '/doctest/d' source/intro.rst | sed '/testcleanup/d' > ../README.rst
-	cat source/news.rst source/divein.rst source/doc.rst source/install.rst source/related.rst source/copyright.rst >> ../README.rst
+	cat source/news.rst source/doc.rst source/install.rst source/related.rst source/copyright.rst >> ../README.rst
 	@echo
 	@echo "Build finished. The README.rst file is up to date."
 
 publish:
 	rsync -a --delete build/html/ yomguy@files.parisson.com:/var/www/files/timeside/doc/
-	
+
 install_deps:
 	pip install $(DEPENDENCIES)
 	@echo
