@@ -4,7 +4,7 @@ TimeSide : audio processing framework for the web
 
 |version| |downloads| |travis_master| |coveralls_master|
 
-.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg?branch=master
+.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg
     :target: https://travis-ci.org/Parisson/TimeSide/
 
 .. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
