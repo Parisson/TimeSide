@@ -27,8 +27,8 @@ Use cases
 
 * Scaled audio computing (filtering, machine learning, etc)
 * Web audio visualization
-* Plugin prototyping
-* Pseudo-realtime transcoding and streaming
+* Audio process prototyping
+* Realtime and on-demand transcoding and streaming over the web
 * Automatic segmentation and labelling synchronized with audio events
 
 

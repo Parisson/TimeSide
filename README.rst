@@ -4,7 +4,7 @@ TimeSide : audio processing framework for the web
 
 |version| |downloads| |travis_master| |coveralls_master|
 
-.. |travis_master| image:: https://secure.travis-ci.org/Parisson/TimeSide.png?branch=master
+.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg?branch=master
     :target: https://travis-ci.org/Parisson/TimeSide/
 
 .. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
@@ -27,8 +27,8 @@ Use cases
 
 * Scaled audio computing (filtering, machine learning, etc)
 * Web audio visualization
-* Plugin prototyping
-* Pseudo-realtime transcoding and streaming
+* Audio process prototyping
+* Realtime and on-demand transcoding and streaming over the web
 * Automatic segmentation and labelling synchronized with audio events
 
 
@@ -67,6 +67,7 @@ News
 * Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy prototyping, experimenting and sharing (see the examples in the doc).
 * Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).
 * Start the development of a new player interface thanks to Angular and WavesJS.
+* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
 * Add metadata export to Elan annotation files.
 * Fix and improve some data structures in analyzer result containers.
 * Many various bugfixes.

@@ -9,6 +9,7 @@ News
 * Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy prototyping, experimenting and sharing (see the examples in the doc).
 * Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).
 * Start the development of a new player interface thanks to Angular and WavesJS.
+* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
 * Add metadata export to Elan annotation files.
 * Fix and improve some data structures in analyzer result containers.
 * Many various bugfixes.
