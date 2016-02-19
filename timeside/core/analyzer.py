@@ -946,6 +946,35 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         # Create legend from custom artist/label lists
         ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
 
+    def merge_segment(self):
+        # Merge adjacent segments if they share the same label
+        if all(np.diff(self.label)):
+            # Nothing to merge
+            return
+        # Merge adjacent segments
+        label = self.label.tolist()
+        time = self.time.tolist()
+        duration = self.duration.tolist()
+
+        start = 0
+        while True:
+            try:
+                if label[start]==label[start+1]:
+                    del label[start+1]
+                    del time[start+1]
+                    duration[start] += duration[start+1]
+                    del duration[start+1]
+                else:
+                    start = start + 1
+
+            except IndexError:
+                break
+        # Copy back data to data_object               
+        self.label = label
+        self.time = time
+        self.duration = duration
+
+    
     def to_elan(self, elan_file, media_file=None, label_per_tier = 'ALL'):
         import pympi
         elan = pympi.Elan.Eaf(author='TimeSide')
