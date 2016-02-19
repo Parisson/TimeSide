@@ -930,18 +930,21 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                   ('duration', None)])
 
     def _render_plot(self, ax, size=(1024,256)):
+        import matplotlib.patches as mpatches
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
-        artist = {}
+        legend_patches = []
         for key, label in self.label_metadata.label.items():
             ax_color[key] = colors.next()
-            artist[key] = plt.axvspan(0, 0, color=ax_color[key], alpha=0.3)
+            # Creating artists specifically for adding to the legend (aka. Proxy artists)
+            legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
+            
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 
-        #Create legend from custom artist/label lists
-        ax.legend(artist.values(), self.label_metadata.label.values())
+        # Create legend from custom artist/label lists
+        ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
 
     def to_elan(self, elan_file, media_file=None, label_per_tier = 'ALL'):
         import pympi
