@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
+import os, sys
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
+
+# Utility function to read file in the setup.py directory
+def open_here(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname))
+
 
 
 def get_dependencies(env_yml_file):
@@ -17,7 +22,7 @@ def get_dependencies(env_yml_file):
        - https://pythonhosted.org/setuptools/pkg_resources.html#requirement-objects
     """
     import yaml
-    with open(env_yml_file, 'r') as f:
+    with open_here(env_yml_file) as f:
         environment = yaml.load(f)
     conda_dependencies = []
     
@@ -67,11 +72,12 @@ setup(
     name='TimeSide',
     url='https://github.com/Parisson/TimeSide/',
     description="open web audio processing framework",
-    long_description=open('README.rst').read(),
+    long_description=open_here('README.rst').read(),
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
     version='0.8',
-    install_requires=get_dependencies('environment.yml'),
+    setup_requires=['pyyaml'],
+    install_requires=[get_dependencies('environment.yml')],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
     classifiers=CLASSIFIERS,
