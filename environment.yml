@@ -6,6 +6,7 @@ dependencies:
   - h5py
   - jupyter
   - matplotlib
+  - mysql-python
   - networkx
   - numpy
   - pillow

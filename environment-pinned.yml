@@ -3,14 +3,14 @@ dependencies:
 - aubio=0.4.2=np110py27_1
 - backports_abc=0.4=py27_0
 - cairo=1.12.18=6
-- cycler=0.9.0=py27_0
-- decorator=4.0.6=py27_0
+- cycler=0.10.0=py27_0
+- decorator=4.0.9=py27_0
 - fontconfig=2.11.1=5
 - freetype=2.5.5=0
 - h5py=2.5.0=np110py27_4
 - hdf5=1.8.15.1=2
-- ipykernel=4.2.2=py27_0
-- ipython=4.1.1=py27_0
+- ipykernel=4.3.1=py27_0
+- ipython=4.1.2=py27_0
 - ipython_genutils=0.1.0=py27_0
 - ipywidgets=4.1.1=py27_0
 - jbig=2.1=0
@@ -18,50 +18,51 @@ dependencies:
 - jpeg=8d=0
 - jsonschema=2.4.0=py27_0
 - jupyter=1.0.0=py27_1
-- jupyter_client=4.1.1=py27_0
-- jupyter_console=4.1.0=py27_0
-- jupyter_core=4.0.6=py27_0
-- libgfortran=1.0=0
+- jupyter_client=4.2.2=py27_0
+- jupyter_console=4.1.1=py27_0
+- jupyter_core=4.1.0=py27_0
+- libgfortran=3.0=0
 - libpng=1.6.17=0
 - libsodium=1.0.3=0
 - libtiff=4.0.6=1
 - libxml2=2.9.2=0
 - markupsafe=0.23=py27_0
 - matplotlib=1.5.1=np110py27_0
-- mistune=0.7.1=py27_0
+- mistune=0.7.2=py27_0
 - mkl=11.3.1=0
+- mysql-python=1.2.5=py27_0
 - nbconvert=4.1.0=py27_0
 - nbformat=4.0.1=py27_0
 - networkx=1.11=py27_0
-- notebook=4.1.0=py27_0
+- notebook=4.1.0=py27_1
 - numexpr=2.4.6=np110py27_1
-- numpy=1.10.4=py27_0
-- openssl=1.0.2f=0
+- numpy=1.10.4=py27_1
+- openssl=1.0.2g=0
 - path.py=8.1.2=py27_1
 - pexpect=3.3=py27_0
 - pickleshare=0.5=py27_0
-- pillow=3.1.0=py27_0
-- pip=8.0.2=py27_0
+- pillow=3.1.1=py27_0
+- pip=8.1.1=py27_0
 - pixman=0.32.6=0
 - ptyprocess=0.5=py27_0
 - pycairo=1.10.0=py27_0
-- pygments=2.1=py27_0
+- pygments=2.1.1=py27_0
 - pyparsing=2.0.3=py27_0
 - pyqt=4.11.4=py27_1
 - pytables=3.2.2=np110py27_0
 - python=2.7.11=0
-- python-dateutil=2.4.2=py27_0
-- pytz=2015.7=py27_0
+- python-dateutil=2.5.0=py27_0
+- pytz=2016.1=py27_0
 - pyyaml=3.11=py27_1
 - pyzmq=15.2.0=py27_0
 - qt=4.8.7=1
-- qtconsole=4.1.1=py27_0
+- qtconsole=4.1.1=py27_1
 - readline=6.2=2
 - redis=2.6.9=0
-- scipy=0.17.0=np110py27_1
-- setuptools=19.6.2=py27_0
+- scipy=0.17.0=np110py27_2
+- setuptools=20.3=py27_0
 - simplegeneric=0.8.1=py27_0
-- simplejson=3.8.1=py27_0
+- simplejson=3.8.2=py27_0
 - singledispatch=3.4.0.3=py27_0
 - sip=4.16.9=py27_0
 - six=1.10.0=py27_0
@@ -72,9 +73,9 @@ dependencies:
 - tornado=4.3=py27_0
 - traitlets=4.1.0=py27_0
 - traits=4.5.0=py27_0
-- werkzeug=0.11.3=py27_0
-- wheel=0.26.0=py27_1
-- xz=5.0.5=0
+- werkzeug=0.11.4=py27_0
+- wheel=0.29.0=py27_0
+- xz=5.0.5=1
 - yaml=0.1.6=0
 - zeromq=4.1.3=0
 - zlib=1.2.8=0
@@ -84,25 +85,25 @@ dependencies:
   - argh==0.26.1
   - backports-abc==0.4
   - backports.ssl-match-hostname==3.4.0.2
-  - billiard==3.3.0.22
-  - celery==3.1.20
+  - billiard==3.3.0.23
+  - celery==3.1.23
   - django==1.6.11
-  - django-angular==0.7.15
-  - django-bootstrap-pagination==1.5.1
-  - django-bootstrap3==6.2.2
+  - django-angular==0.8.1
+  - django-bootstrap-pagination==1.6.1
+  - django-bootstrap3==7.0.0
   - django-bower==5.1.0
   - django-celery==3.1.17
   - django-environ==0.4.0
   - django-extensions==1.6.1
   - djangorestframework==2.4.8
   - ipython-genutils==0.1.0
-  - jupyter-client==4.1.1
-  - jupyter-console==4.1.0
-  - jupyter-core==4.0.6
-  - kombu==3.0.33
+  - jupyter-client==4.2.2
+  - jupyter-console==4.1.1
+  - jupyter-core==4.1.0
+  - kombu==3.0.34
   - mutagen==1.31
   - pathtools==0.1.2
-  - pympi-ling==1.40
+  - pympi-ling==1.69
   - south==1.0.2
   - tables==3.2.2
   - uwsgi==2.0.12
