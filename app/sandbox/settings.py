@@ -113,7 +113,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Manage Django URLs for AngularJS with django-angular
-    'djangular.middleware.DjangularUrlMiddleware',
+    'djng.middleware.djngUrlMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -148,7 +148,7 @@ INSTALLED_APPS = (
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
-    'djangular',
+    'djng',
     'djangobower',
 )
 
