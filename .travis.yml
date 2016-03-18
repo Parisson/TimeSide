@@ -61,9 +61,12 @@ script:
        docker-compose up -d;
        sleep 20;
        curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/items/1/;
-       docker-compose stop;
     fi
 #
+after_script:
+    - if [[ $TEST_TARGET == 'server' ]]; then
+           docker-compose stop;
+      fi
 after_success:
 #  -  # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
