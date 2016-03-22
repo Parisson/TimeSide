@@ -25,14 +25,19 @@ class Command(BaseCommand):
             result.delete()
 
     def handle(self, *args, **options):
-       
         media_dir =  os.path.join('items','tests')
         samples_dir = os.path.join(settings.MEDIA_ROOT, media_dir)
- 
+
         selection, c = Selection.objects.get_or_create(title='Tests')
-        selection.items.count()
-        if c | selection.items.count()==0:
+        if c | (selection.items.count() == 0):
+            print "---------------------------"
+            print "-- CREATE BOILERPLATE    --"
+            print "---------------------------"
+            print " -  generate samples"
+
+            
             samples = generateSamples(samples_dir=samples_dir)
+
 
             for sample in samples.iteritems():
                 filename, path = sample

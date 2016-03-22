@@ -17,7 +17,7 @@ watchmedo shell-command --patterns="*.js;*.css" --recursive \
     --command='python '$manage' collectstatic --noinput' $src &
 
 # app start
-if [ $1 == "--runserver" ]
+if [ "$1" = "--runserver" ]
 then
     python $manage runserver_plus 0.0.0.0:8000
 else
