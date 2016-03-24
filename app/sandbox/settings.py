@@ -148,7 +148,7 @@ INSTALLED_APPS = (
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
-    'djangular',
+    'djng',
     'djangobower',
 )
 

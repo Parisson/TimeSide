@@ -14,7 +14,7 @@ dependencies:
   - redis
   - scipy
   - simplejson
-  - pytables  # named tables in Pypi ... 
+  - pytables  # named tables in Pypi ...
   - traits
   - Werkzeug
   - pip:
