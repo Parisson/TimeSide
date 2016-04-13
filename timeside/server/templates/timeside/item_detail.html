@@ -16,7 +16,7 @@ $(window).ready(function() {
     });
 });
 
-var ts_API = angular.module('ts_API', ['ngResource', 'ng.django.urls']);
+var ts_API = angular.module('ts_API', ['ngResource']);
 
 ts_API.factory('Results', ['$resource',
   function($resource){
@@ -26,7 +26,7 @@ ts_API.factory('Results', ['$resource',
 }]);
 
 
-var ts_select_result_App = angular.module("TimeSide", ['angular-bootstrap-select', 'angular-bootstrap-select.extra', 'ts_API', 'ng.django.urls']);
+var ts_select_result_App = angular.module("TimeSide", ['angular-bootstrap-select', 'angular-bootstrap-select.extra', 'ts_API', 'djng.urls']);
 
 ts_select_result_App.config(function($locationProvider){
     $locationProvider.html5Mode(true);
