@@ -20,41 +20,43 @@ Your browser does not support the audio element.
 
 <h2>Results</h2>
 <ul>
-{% for name, result in Results.items %}
-<li> <b>{{name}} :</b>
-  {% if result.json %}
-  <a href="{% url 'timeside-result-json' result.id %}"> JSON <span class="glyphicon glyphicon-download-alt" ></span></a>
-  {% endif %}
-  {% if result.audio %}
-  <a href="{% url 'timeside-result-audio' result.id %}"> AUDIO <span class="glyphicon glyphicon-headphones" ></span></a>
-  {% endif %}
-  {% if result.image %}
-  <a href="{% url 'timeside-result-png' result.id %}"> IMAGE <span class="glyphicon glyphicon-picture" ></span></a>
-  {% endif %}
-  
-  <ul>
-  {% for res_id, res in result.list.items %}
-  <li>
-    <b>{{res.name}}</b>
-    {% if res.elan %} 
-    <a href="{% url 'timeside-result-elan' result.id res_id %}"> ELAN <span class="glyphicon glyphicon-download-alt" ></span></a></br>
+  {% for name, result in Results.items %}
+  <li> <b>{{name}} :</b>
+    {% if result.json %}
+    <a href="{% url 'timeside-result-json' result.id %}"> JSON <span class="glyphicon glyphicon-download-alt" ></span></a>
     {% endif %}
+    {% if result.audio %}
+    <a href="{% url 'timeside-result-audio' result.id %}"> AUDIO <span class="glyphicon glyphicon-headphones" ></span></a>
+    {% endif %}
+    {% if result.image %}
+    <a href="{% url 'timeside-result-png' result.id %}"> IMAGE <span class="glyphicon glyphicon-picture" ></span></a>
+    {% endif %}
+    
     <ul>
-      <li>Identifier : {{ res_id }}</li> 
-    {% if res.Parameters %}
-    <li> Parameters :</li>
-    <ul>
-      {% for param_name, param_value in res.Parameters.items %}
-      <li> {{ param_name }} : {{ param_value }}</li>
+      {% for res_id, res in result.list.items %}
+      <li>
+	<b>{{res.name}}</b>
+	{% if res.elan %} 
+	<a href="{% url 'timeside-result-elan' result.id res_id %}"> ELAN <span class="glyphicon glyphicon-download-alt" ></span></a></br>
+	{% endif %}
+	<ul>
+	  <li>Identifier : {{ res_id }}</li> 
+	  {% if res.Parameters %}
+	  <li> Parameters :
+	    <ul>
+	      {% for param_name, param_value in res.Parameters.items %}
+	      <li> {{ param_name }} : {{ param_value }}</li>
+	      {% endfor %}
+	    </ul>
+	  </li>
+	  {% endif %}
+	</ul>
+
+      </li>
       {% endfor %}
     </ul>
-    </ul>
-    {% endif %}
   </li>
   {% endfor %}
-  </ul>
-</li>
-{% endfor %}
 </ul>
 
 
