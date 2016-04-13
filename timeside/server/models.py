@@ -231,9 +231,15 @@ class Item(DocBaseResource):
             if proc.type == 'analyzer':
                 for result_id in proc.results.keys():
                     parameters = proc.results[result_id].parameters
-                    preset, c = Preset.objects.get_or_create(
-                        processor=preset.processor,
+                    presets = Preset.objects.filter(processor=preset.processor,
                         parameters=unicode(parameters))
+                    if presets:
+                        preset = presets[0]
+                    else:
+                        preset = Preset(processor=preset.processor,
+                        parameters=unicode(parameters))
+                        preset.save()
+
                     result, c = Result.objects.get_or_create(preset=preset,
                                                              item=self)
                     hdf5_file = str(result.uuid) + '.hdf5'
