@@ -39,6 +39,9 @@ Your browser does not support the audio element.
 	{% if res.elan %} 
 	<a href="{% url 'timeside-result-elan' result.id res_id %}"> ELAN <span class="glyphicon glyphicon-download-alt" ></span></a></br>
 	{% endif %}
+	{% if res.sv %} 
+	<a href="{% url 'timeside-result-sonic' result.id res_id %}"> Sonic Visualiser <span class="glyphicon glyphicon-download-alt" ></span></a></br>
+	{% endif %}
 	<ul>
 	  <li>Identifier : {{ res_id }}</li> 
 	  {% if res.Parameters %}
