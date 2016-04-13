@@ -293,7 +293,7 @@ class Item(DocBaseResource):
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
                 
-                if proc.parents['analyzer']:
+                if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
                     set_results_from_processor(analyzer)
                     
