@@ -193,8 +193,8 @@ class Item(DocBaseResource):
             source = self.url
             source_type = 'url'
         return source, source_type
-        
-        
+
+
     def get_results_path(self):
         return os.path.join(results_path, self.uuid)
 
@@ -241,7 +241,7 @@ class Item(DocBaseResource):
                 proc = proc()
             if proc.type == 'analyzer':
                 proc.set_parameters(preset.parameters)
-                   
+
             presets[preset] = proc
             pipe = pipe | proc
 
@@ -261,9 +261,16 @@ class Item(DocBaseResource):
                 processor, c=Processor.objects.get_or_create(pid=proc.id())
             else:
                 processor = preset.processor
-            preset, c = Preset.objects.get_or_create(
-                    processor=processor,
+
+            presets = Preset.objects.filter(processor=processor,
                     parameters=unicode(parameters))
+            if presets:
+                preset = presets[0]
+            else:
+                preset = Preset(processor=processor,
+                        parameters=unicode(parameters))
+                preset.save()
+
             result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
             hdf5_file = str(result.uuid) + '.hdf5'
@@ -275,12 +282,10 @@ class Item(DocBaseResource):
             # result.lock_setter(False)
             result.status_setter(_DONE)
 
-            
         for preset, proc in presets.iteritems():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
                 set_results_from_processor(proc)
-                   
 
             elif proc.type == 'grapher':
                 parameters = {}
@@ -296,7 +301,7 @@ class Item(DocBaseResource):
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
                     set_results_from_processor(analyzer)
-                    
+
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=self)
                 result.mime_type_setter(get_mime_type(result.file.path))
