@@ -172,7 +172,36 @@ class ResultAnalyzerToElanView(View):
         response['Content-Length'] = file_size
         return response
 
+class ResultAnalyzerToSVView(View):
 
+    model = Result
+
+    def get(self, request, *args, **kwargs):
+        result = Result.objects.get(pk=kwargs['pk'])
+        res_id = kwargs['res_id']
+        container = AnalyzerResultContainer()
+        container.from_hdf5(result.hdf5.path)
+
+        segment_result = container[res_id]
+        import tempfile
+        tmp_dir = tempfile.mkdtemp(suffix=res_id+'_sv')
+        # Pympi will not overwrite the file
+        audio_file = os.path.abspath(result.item.file.name)
+        tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[0] + '_' + res_id + '.sv'
+        abs_tmp_sv_file = os.path.join(tmp_dir,tmp_sv_file)
+        segment_result.data_object.to_sonic_visualiser(svenv_file=abs_tmp_sv_file,
+                                                       audio_file=audio_file) 
+        file_size = os.path.getsize(abs_tmp_sv_file)
+        # read file
+        with open(abs_tmp_sv_file, "rb") as f:
+            sv_data = f.read()
+        import shutil
+        shutil.rmtree(tmp_dir)
+
+        response = HttpResponse(sv_data, content_type='application/xml')
+        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_sv_file +'\"' 
+        response['Content-Length'] = file_size
+        return response
 
 class ResultGrapherView(View):
 
@@ -225,9 +254,16 @@ class ItemDiadems(DetailView):
                 if res.time_mode == 'segment':
                     if res.data_mode == 'label':
                         Results[proc_id]['list'][res_id] = {'elan': True,
-                                                          'Parameters': res.parameters,
-                                                          'name': res.name}
-                        
+                                                            'sv': True,
+                                                            'Parameters': res.parameters,
+                                                            'name': res.name}
+                if res.time_mode == 'framewise':
+                    if res.data_mode == 'value':
+                        Results[proc_id]['list'][res_id] = {'elan': False,
+                                                            'sv': True,
+                                                            'Parameters': res.parameters,
+                                                            'name': res.name}
+       
                         
         context['Results'] = Results
         

@@ -44,5 +44,8 @@ urlpatterns = patterns(
     url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(),
         name="timeside-result-audio"),
     url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/elan/$', views.ResultAnalyzerToElanView.as_view(),
-        name="timeside-result-elan"), 
+        name="timeside-result-elan"),
+    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$', views.ResultAnalyzerToSVView.as_view(),
+        name="timeside-result-sonic"), 
+ 
     )

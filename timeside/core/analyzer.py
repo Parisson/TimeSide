@@ -45,6 +45,7 @@ if 'DISPLAY' not in os.environ:
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from py_sonicvisualiser import SVEnv
 
 numpy_data_types = [
     #'float128',
@@ -884,6 +885,20 @@ class FrameValueObject(ValueObject, FramewiseObject):
                               self.y_value[0], self.y_value[-1]],
                       aspect='auto')
 
+    def to_sonic_visualiser(self, svenv_file, audio_file):
+        #audio_file = os.path.basename(audio_file)
+        # init a sonic visualiser environment file corresponding
+        # to the analysis of media wavfname
+        sve = SVEnv.init_from_wave_file(audio_file)
+
+        # append a spectrogram view
+        specview = sve.add_spectrogram()
+        
+        sve.add_continuous_annotations(self.time, self.data, view=specview)
+        
+        # save the environment to a sonic visualiser environment file
+        sve.save(svenv_file)
+ 
 
 class FrameLabelObject(LabelObject, FramewiseObject):
     # Define default values
@@ -1005,7 +1020,24 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                 value=label_id)
         
         elan.to_file(file_path=elan_file)
+
+    def to_sonic_visualiser(self, svenv_file, audio_file):
+        #audio_file = os.path.basename(audio_file)
+        # init a sonic visualiser environment file corresponding
+        # to the analysis of media wavfname
+        sve = SVEnv.init_from_wave_file(audio_file)
+
+        # append a spectrogram view
+        specview = sve.add_spectrogram()
         
+        
+        # append a labelled interval annotation layer on a new view
+        labels = [self.label_metadata.label[unicode(label_id)] for label_id in self.label]
+
+        sve.add_interval_annotations(self.time , self.duration, labels, self.label)
+
+        # save the environment to a sonic visualiser environment file
+        sve.save(svenv_file)
         
 
 class AnalyzerResultContainer(dict):
