@@ -49,10 +49,10 @@ Goals
 Funding and support
 ===================
 
-To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in development, please let us know:
+To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in a development or experimental setup, please let us know by:
 
-* star or fork the project on `GitHub <https://github.com/Parisson/TimeSide>`_
-* tweet something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@yomguy <https://twitter.com/omguy>`_
+* staring or forking the project on `GitHub <https://github.com/Parisson/TimeSide>`_
+* tweeting something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@telemeta <https://twitter.com/telemeta>`_
 * drop us an email <support@parisson.com>
 
 Thanks for your help!
