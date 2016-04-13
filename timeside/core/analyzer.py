@@ -975,7 +975,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         self.duration = duration
 
     
-    def to_elan(self, elan_file, media_file=None, label_per_tier = 'ALL'):
+    def to_elan(self, elan_file=None, media_file=None, label_per_tier = 'ALL'):
         import pympi
         elan = pympi.Elan.Eaf(author='TimeSide')
         if media_file is not None:
@@ -1004,8 +1004,9 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                 end=int(end*1000),
                                 value=label_id)
         
-        elan.to_file(elan_file)
-
+        elan.to_file(file_path=elan_file)
+        
+        
 
 class AnalyzerResultContainer(dict):
 

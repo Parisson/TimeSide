@@ -29,6 +29,7 @@ dependencies:
       - django==1.6.*
       - djangorestframework==2.*
       - mutagen
+      - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling
       - south
       - uwsgi
