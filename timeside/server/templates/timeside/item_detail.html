@@ -114,6 +114,12 @@ Your browser does not support the audio element.
    <li>lock : {{ object.lock }}</li>
 </ul>
 
+{% for name, res in Results.items %}
+<li>{{name}} - {{res}}</li>
+<a href="{% url 'timeside-result-elan' name res %}"> {{ res }}ELAN</a>
+{% endfor %}
+
+
 <h2>Results</h2>
 
 <section id="directives-bootstrap-select" ng-controller="SelectController">
