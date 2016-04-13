@@ -187,7 +187,7 @@ class ResultAnalyzerToSVView(View):
         tmp_dir = tempfile.mkdtemp(suffix=res_id+'_sv')
         # Pympi will not overwrite the file
         audio_file = os.path.abspath(result.item.file.name)
-        tmp_sv_file = os.path.splitext(audio_file)[0] + '_' + res_id + '.sv'
+        tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[0] + '_' + res_id + '.sv'
         abs_tmp_sv_file = os.path.join(tmp_dir,tmp_sv_file)
         segment_result.data_object.to_sonic_visualiser(svenv_file=abs_tmp_sv_file,
                                                        audio_file=audio_file) 
