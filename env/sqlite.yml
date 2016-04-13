@@ -23,11 +23,8 @@
 
 
 app:
-  volumes:
-    - ./app/:/srv/app
   env_file:
-    - app/sandbox/ts-docker-compose.env
-
-worker:
-  env_file:
-    - app/sandbox/ts-docker-compose.env
+    - anv/sqlite.env
+  ports:
+    - "8000:8000"
+  command: /bin/bash app/scripts/app.sh --runserver
