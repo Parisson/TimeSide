@@ -23,6 +23,9 @@
 
 
 app:
+  volumes:
+    - ./app/:/srv/app
+    - ./:/srv/src/timeside/
   env_file:
     - env/debug.env
   command: /bin/bash scripts/app.sh --runserver
