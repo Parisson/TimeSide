@@ -34,8 +34,8 @@ urlpatterns = patterns(
     # Ex: /item/5/download/ogg
     url(r'^items/(?P<pk>\d+)/download/(?P<extension>' + EXPORT_EXT + ')$',
         views.ItemExport.as_view(), name="item-export"),
-    url(r'^items/(?P<pk>\d+)/diadems/$', views.ItemDiadems.as_view(),
-        name='timeside-item-diadems'),
+    url(r'^items/(?P<pk>\d+)/export/$', views.ItemDetailExport.as_view(),
+        name='timeside-item-export'),
     url(r'^items/(?P<pk>\d+)/angular/$', views.ItemDetailAngular.as_view(),
         name='timeside-item-angular'),
       # Results

@@ -222,13 +222,13 @@ class ResultEncoderView(View):
         return StreamingHttpResponse(stream_from_file(result.file.path),
                             content_type=result.mime_type)
 
-class ItemDiadems(DetailView):
+class ItemDetailExport(DetailView):
 
     model = Item
-    template_name = 'timeside/item_diadems.html'
+    template_name = 'timeside/item_detail_export.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ItemDiadems, self).get_context_data(**kwargs)
+        context = super(ItemDetailExport, self).get_context_data(**kwargs)
         
         context['Result'] = 'Result'
         Results = {}
