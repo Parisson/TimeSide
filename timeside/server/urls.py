@@ -36,6 +36,8 @@ urlpatterns = patterns(
         views.ItemExport.as_view(), name="item-export"),
     url(r'^items/(?P<pk>\d+)/diadems/$', views.ItemDiadems.as_view(),
         name='timeside-item-diadems'),
+    url(r'^items/(?P<pk>\d+)/angular/$', views.ItemDetailAngular.as_view(),
+        name='timeside-item-angular'),
       # Results
     url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(),
         name="timeside-result-json"),

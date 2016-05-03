@@ -3,89 +3,8 @@
 
 {% block extra_stylesheets %}
 {% endblock %}
-
 {% block extra_javascript %}
-<script type="text/javascript">
-
-$(window).ready(function() {
-    div_wav_sub = waveform("waveform");
-    $('.timeline').each( function (){
-        var div_id = $(this).attr('id');
-        var json_url = $(this).attr('json');
-        timeline_get_data(json_url, div_id);
-    });
-});
-
-var ts_API = angular.module('ts_API', ['ngResource']);
-
-ts_API.factory('Results', ['$resource',
-  function($resource){
-    return $resource('/timeside/api/items/:Id/results/', {Id: "@Id"}, {
-      query: {method:'GET', params:{itemId:'id'}, isArray:true}
-    });
-}]);
-
-
-var ts_select_result_App = angular.module("TimeSide", ['angular-bootstrap-select', 'angular-bootstrap-select.extra', 'ts_API', 'djng.urls']);
-
-ts_select_result_App.config(function($locationProvider){
-    $locationProvider.html5Mode(true);
-});
-
-ts_select_result_App.config(function($interpolateProvider) {
-    $interpolateProvider.startSymbol('{$');
-    $interpolateProvider.endSymbol('$}');
-});
-
-
-ts_select_result_App.controller('SelectController', ['$scope', '$location', '$log', 'Results', 'djangoUrl', function($scope, $location, $log, Results, djangoUrl) {
-    $scope.form = undefined;
-    $scope.options = [];
-    $scope.itemId = $location.path().split('/items/')[1].split("/")[0];
-    $scope.list_results = Results.query({},{'Id': $scope.itemId});
-    $scope.list_results.$promise.then(function (results) {
-	angular.forEach(results, function(res) {
-	    var is_audio = !(res.mime_type.search('audio')==-1) || !(res.mime_type.search('ogg')==-1);
-            var is_video = !(res.mime_type.search('video')==-1);
-            var is_image = !(res.mime_type.search('image')==-1);
-	    var is_json = false;
-	    var result_url_type;
-	    if (is_audio) {
-		result_url_type = 'timeside-result-audio'
-	    } else if (is_video) {
-		result_url_type = 'timeside-result-audio'
-	    } else if (is_image) {
-		result_url_type = 'timeside-result-png'
-	    } else {
-		is_json = true;
-		result_url_type = 'timeside-result-json'
-	    };
-            $scope.options.push({"value":res.id,
-                                 "text":res.preset.processor.pid,
-                                 "mime_type":res.mime_type,
-                                 "result_url":djangoUrl.reverse(result_url_type, [res.id]),
-                                 "is_audio":is_audio,
-				 "is_video":is_video,
-				 "is_image":is_image,
-				 "is_json": is_json
-                                })
-        });
-
-    });
-
-$scope.submit = function() {
-        var div_id = 'graph-' + $scope.form.value;
-        timeline_get_data($scope.form.result_url, div_id);
-        $log.log(div_id,$scope.form.result_url);
-};
-
-}]);
-
-
-
-</script>
 {% endblock %}
-
 {% block content %}
 
 <h1>{{ object.title }}</h1>
@@ -98,50 +17,6 @@ Your browser does not support the audio element.
 </audio>
 {% endblock html5-player %}
 
-<div id="waveform"></div>
-<div id="waveform_sub"></div>
-
-<h2>Metadata</h2>
-
-<ul>
-   <li>File: {{ object.file }}</li>
-   {% if object.url %}<li>url : {{ object.url }}</li>{% endif %}
-   <li>mime_type : {{ object.mime_type }}</li>
-   <li>sha1 : {{ object.sha1 }}</li>
-   <li>hdf5 : {{ object.hdf5 }}</li>
-   <li>uuid : {{ object.uuid }}</li>
-   <li>author: {{ object.author }}</li>
-   <li>lock : {{ object.lock }}</li>
-</ul>
-
-{% for name, res in Results.items %}
-<li>{{name}} - {{res}}</li>
-<a href="{% url 'timeside-result-elan' name res %}"> {{ res }}ELAN</a>
-{% endfor %}
-
-
-<h2>Results</h2>
-
-<section id="directives-bootstrap-select" ng-controller="SelectController">
-    <select ng-model="form" ng-click="submit()" ng-options="res as res.text for res in options">
-    <option value="">Select result</option>
-    </select>
-    <br/><br/>
-    <img  ng-if="form.is_image" ng-src="{$ form.result_url $}">
-    <audio ng-if="form.is_audio" controls preload="none">
-    <source src="{$ form.result_url $}" type="{$ form.mime_type $}">
-    </audio>
-    <video ng-if="form.is_video" controls preload="none">
-    <source src="{$ form.result_url $}" type="{$ form.mime_type $}">
-    </video>
-    <div ng-if="form.is_json" id="graph-{$ form.value $}" class="timeline" json="{$ form.result_url $}">
-      <ul>
-        <li> Processor : {$ form.text $}
-        <li> Result Id  : {$ form.value $}
-        <li> <a href="{$ form.result_url $}">Result in JSON format</a>
-      </ul>
-    </div>
-</section>
 
 
 {% endblock content %}

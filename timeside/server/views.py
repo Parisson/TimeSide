@@ -269,15 +269,13 @@ class ItemDiadems(DetailView):
         
         return context
 
-
-    
-class ItemDetail(DetailView):
+class ItemDetailAngular(DetailView):
 
     model = Item
-    template_name = 'timeside/item_detail.html'
+    template_name = 'timeside/item_detail_angular.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ItemDetail, self).get_context_data(**kwargs)
+        context = super(ItemDetailAngular, self).get_context_data(**kwargs)
         
         context['Result'] = 'Result'
         Results = {}
@@ -295,6 +293,19 @@ class ItemDetail(DetailView):
                         
                         Results[result.id] = name
             context['Results'] = Results
+        
+        return context
+    
+class ItemDetail(DetailView):
+
+    model = Item
+    template_name = 'timeside/item_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemDetail, self).get_context_data(**kwargs)
+        
+        context['Result'] = 'Result'
+        Results = {}
         
         return context
 
