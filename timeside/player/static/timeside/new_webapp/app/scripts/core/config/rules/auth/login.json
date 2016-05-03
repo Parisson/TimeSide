@@ -1,0 +1,14 @@
+{
+  "username": [{
+    "rule": "required",
+    "message": "syk.register.email_missing"
+  },
+  {
+    "rule": "email",
+    "message": "syk.register.email_invalid"
+  }],
+  "password": [{
+    "rule": "required",
+    "message": "auth.form.errors.password.required"
+  }]
+}

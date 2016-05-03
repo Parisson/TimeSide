@@ -1,0 +1,20 @@
+<div class="table-container">
+  <div class="table-wrapper">      
+    <table class="table table-striped">
+    	<thead>
+    		{{#each headers}}
+    			<th>{{this}}</th>	
+    		{{/each}}
+    	</thead>
+    	<tbody>
+    	  {{#each items}}
+    	  	<tr>
+    	  		{{#each computed_values}}
+    	  			<td>{{{valGenericList this}}}</td>
+    	  		{{/each}}
+    	  	</tr>
+    	  {{/each}}
+      	</tbody>
+    </table>
+  </div>
+</div>

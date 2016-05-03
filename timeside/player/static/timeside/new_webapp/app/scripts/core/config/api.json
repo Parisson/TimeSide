@@ -1,0 +1,21 @@
+{
+  "api": {
+    "baseUrl": {
+      "PROD" : "/api",
+      "RECETTE" : "/total",
+      "DEV" : "/client",
+      "ERICRECETTE" : "/syk/client"
+    },
+    "services": {
+
+     
+      "dataref" : {
+        "path": "/ref"
+      }
+
+
+      
+    },
+    "withCredentials": true
+  }
+}

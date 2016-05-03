@@ -1,0 +1,14 @@
+{
+	"-------------------------------------------------------------------------------------------------" : "",
+	"Below --- controlles":"",
+
+	"trackInfoController" : "trackInfoController",
+	"dataLoader" : "dataLoader",
+
+	"-------------------------------------------------------------------------------------------------" : "",
+	"Below --- canvas":"",
+	"fakeserver_canvas" : "fakeserver_canvas",
+	"bitampdataprovider_canvas" : "bitampdataprovider_canvas"
+
+	
+}

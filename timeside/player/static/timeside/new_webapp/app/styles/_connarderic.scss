@@ -1,0 +1,80 @@
+.side-menu {
+	.panel {
+		&.active {
+			color: #2f7bb4;
+		}
+	}
+}
+
+.paginate-link {
+	cursor: pointer;
+
+	&.disabled {
+		cursor: not-allowed;
+	}
+
+	
+}
+
+.track-canvas {
+  canvas {
+    margin-left: 40px;
+  }
+}
+
+//////////////////////////////////
+//Below : d3 sample
+
+html {
+  margin: 1.0em;
+}
+h1 {
+  font-size:    48px;
+  font-weight:  bold;
+}
+h1 a,
+h1 a:visited {
+  text-decoration:  none;
+  font-weight:      normal;
+  font-size:        90%;
+  color:            #000;
+  border-bottom:    1px dashed #bbb;
+}
+h1 a:hover {
+  color: red;
+}
+.waveform > svg,
+.waveform > div {
+  border:       2px solid #ddd;
+  height:       200px;
+  margin-left:  40px;
+  padding:      2px;
+  position:     relative;
+  width:        880px;
+}
+.waveform h2 {
+  margin-left:  40px;
+  font-size:    36px;
+}
+.waveform > div div.bar {
+  background-color:  red;
+  position:          absolute;
+}
+.waveform .svg g rect {
+  fill:     red;
+  opacity:  0.5;
+}
+
+.axis {
+  position: absolute;
+  top:      4px;
+  left:    -40px;
+}
+.axis g path.domain {
+  display: none;
+}
+.axis g text {
+  font-family: 'Roboto', sans-serif;
+  opacity:      0.5;
+  font-size:    10px;
+}

@@ -1,0 +1,54 @@
+{
+  "envs" : ["PROD","RECETTE","DEV","ERICRECETTE"],
+  "env" : "RECETTE",
+  "envAdmin" : "RECETTE",
+  "remotes" : {
+    "DEV" : "http://localhost:8080/radiooo-server",
+    "RECETTE" : "https://bo.qeopa.quematech.fr",
+    "PROD" : "http://client-eu.syk.com",
+    "ERICRECETTE" : "http://192.168.1.3:8080"
+  },
+  "remotesWrite" : {
+    "DEV" : "http://localhost:8080/radiooo-server",
+    "RECETTE" : "https://bo.qeopa.quematech.fr",
+    "PROD" : "http://admin1.syk.com",
+    "ERICRECETTE" : "http://192.168.1.3:8080"
+  },
+  
+  "remotesFiles" : {
+    "DEV" : "",
+    "RECETTE" : "https://qeopa.quematech.fr/media/img/",
+    "PROD" : "",
+    "ERICRECETTE" : ""
+  },
+  "googleSiteVerification" : {
+    "DEV" : "",
+    "RECETTE" : "DoIgALdwZvnay9ZJiGHs5QJEFThfuVdxOnT2m9MjURQ",
+    "PROD" : "",
+    "ERICRECETTE" : "DoIgALdwZvnay9ZJiGHs5QJEFThfuVdxOnT2m9MjURQ"
+  },
+  "map": {
+    "datalayer": {
+      "path": "../map/:decade.json"
+    }
+  },
+  "song": {
+    "path": "/media/songs/"
+  },
+  "images": {
+    "basepath": "/media/images/",
+    "basepathes" : {
+      "DEV" : "/images/",
+      "RECETTE" : "/media/images/",
+      "PROD" : "/media/images/",
+      "ERICRECETTE" : "/media/images/"
+    }
+  },
+  "metadata": {
+    "title": {
+      "title": "Radiooooo",
+      "subtitle": "music player",
+      "format": "#title - #subtitle"
+    }
+  }
+}

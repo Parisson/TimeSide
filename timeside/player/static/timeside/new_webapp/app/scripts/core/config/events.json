@@ -1,0 +1,22 @@
+{
+
+	"comment" : "Un event défini aura automatiquement suffixé :api pour l'appel api, et chacun (event && api correspondant)a :ok et :error en retour",
+
+
+	"fakeserver"  : {
+		"getdata" : "fakeserver:getdata"
+	},
+
+	"navigator" : {
+		"newWindow" : "navigator:newWindow"
+	},
+
+	"audio" : {
+		"loadGlobalFile" 	: "audio:loadGlobalFile",
+		"loadSpecificFile" 	: "audio:loadSpecificFile",
+		"play" 				: "audio:play",
+		"pause"				: "audio:pause",
+		"setCurrentTime"	: "audio:setCurrentTime",
+		"newAudioTime"		: "audio:newAudioTime"	
+	}
+}

@@ -1,0 +1,43 @@
+{
+	
+	"comments" : {
+		
+	},
+
+	"qeopa" : {
+		
+		"home" : {
+			"viewid" : "home",
+			"needEvents" : "0",
+			"layoutid" : "normal",
+			"category" : "home"
+		},
+
+
+		"login" : {
+			"viewid" : "login",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+
+		"visu_test1" : {
+			"viewid" : "visu_test1",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+		"visu_test2" : {
+			"viewid" : "visu_test2",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		}
+		
+
+
+
+	},
+
+	"popups" : {
+
+	}
+
+}

@@ -1,0 +1,34 @@
+{
+  "email": [{
+    "rule": "required",
+    "message": "auth.form.errors.email.required"
+  },
+  {
+    "rule": "email",
+    "message": "auth.form.errors.email.invalid"
+  }],
+  "password": [{
+    "rule": "required",
+    "message": "auth.form.errors.password.required"
+  },
+  {
+    "rule": "minLength",
+    "message": "auth.form.errors.password.minlength"
+  }],
+  "password2": [{
+    "rule": "required",
+    "message": "auth.form.errors.password2.required"
+  },
+  {
+    "rule": "match",
+    "message": "auth.form.errors.password.mismatch"
+  }],
+  "surname": [{
+    "rule": "required",
+    "message": "auth.form.errors.surname.required"
+  }],
+  "country": [{
+    "rule": "required",
+    "message": "auth.form.errors.country.required"
+  }]
+}
