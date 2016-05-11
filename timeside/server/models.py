@@ -37,6 +37,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
+from celery.result import GroupResult
+
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
@@ -237,10 +239,12 @@ class Item(DocBaseResource):
                 result.save()
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
-            else:
+            elif proc.type == 'analyzer':
                 proc = proc()
-            if proc.type == 'analyzer':
                 proc.set_parameters(preset.parameters)
+            elif proc.type == 'grapher':
+                proc = proc()
+                # TODO : set parameters for graphers !!
 
             presets[preset] = proc
             pipe = pipe | proc
@@ -293,7 +297,7 @@ class Item(DocBaseResource):
                                                          item=self)
                 image_file = str(result.uuid) + '.png'
                 result.file = os.path.join(result_path, image_file)
-                proc.watermark('timeside', opacity=.6, margin=(5,5))
+                proc.watermark('timeside', opacity=.6, margin=(5,5))  # TODO : set as an option
                 proc.render(output=result.file.path)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
@@ -447,13 +451,14 @@ class Task(BaseResource):
         self.status = status
         self.save()
 
-    def run(self, streaming=False):
-        from timeside.server.tasks import experience_run
-        self.status_setter(_RUNNING)
-        for item in self.selection.get_all_items():
-            experience_run.delay(self.experience.id, item.id)
-        self.status_setter(_DONE)
+    def is_done(self):
+        return (self.status == _DONE)
 
+    def run(self, streaming=False):
+        from timeside.server.tasks import task_run
+        self.status_setter(_RUNNING)
+        task_run.delay(self.id)
+ 
 
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
@@ -487,11 +492,10 @@ def set_hash(sender, **kwargs):
 
 
 def run(sender, **kwargs):
-    from timeside.server.tasks import task_run
-    instance = kwargs['instance']
-    if instance.status == _PENDING:
-        task_run.delay(instance.id)
-
+    task = kwargs['instance']
+    if task.status == _PENDING:
+        task.run()
+        
 
 post_save.connect(set_mimetype, sender=Item)
 post_save.connect(set_hash, sender=Item)
