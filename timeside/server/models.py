@@ -27,7 +27,8 @@
 import os
 import uuid
 import mimetypes
-
+import ast
+                
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 
@@ -239,12 +240,8 @@ class Item(DocBaseResource):
                 result.save()
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
-            elif proc.type == 'analyzer':
-                proc = proc()
-                proc.set_parameters(preset.parameters)
-            elif proc.type == 'grapher':
-                proc = proc()
-                # TODO : set parameters for graphers !!
+            elif proc.type in ['analyzer', 'grapher']:
+                proc = proc(**ast.literal_eval(preset.parameters))
 
             presets[preset] = proc
             pipe = pipe | proc
