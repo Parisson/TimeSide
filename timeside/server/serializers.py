@@ -23,42 +23,42 @@ import django.db.models
 from django.contrib.auth.models import User
 
 
-class SelectionSerializer(serializers.ModelSerializer):
+class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Selection
         # fields = ('id', 'items', 'selections', 'author')
 
 
-class ItemSerializer(serializers.ModelSerializer):
+class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Item
-        # fields = ('id', 'title', 'file', 'mime_type', 'author')
+        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url')
 
 
-class ExperienceSerializer(serializers.ModelSerializer):
+class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Experience
         # fields = ('id', 'presets', 'experiences', 'is_public', 'author')
 
 
-class ProcessorSerializer(serializers.ModelSerializer):
+class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Processor
         # fields = ('id', 'pid', 'version')
 
 
-class ResultSerializer(serializers.ModelSerializer):
+class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Result
         # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
 
 
-class Result_ReadableSerializer(serializers.ModelSerializer):
+class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
 
 
     class Meta:
@@ -68,7 +68,7 @@ class Result_ReadableSerializer(serializers.ModelSerializer):
         depth = 2
         
 
-class PresetSerializer(serializers.ModelSerializer):
+class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Preset
@@ -97,14 +97,14 @@ class PresetSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Task
         # fields = ('id', 'experience', 'selection', 'status', 'author')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User

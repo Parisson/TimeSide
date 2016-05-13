@@ -141,6 +141,7 @@ class ResultAnalyzerView(View):
         return HttpResponse(container.to_json(),
                             content_type='application/json')
 
+
 class ResultAnalyzerToElanView(View):
 
     model = Result

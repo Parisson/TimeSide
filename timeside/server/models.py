@@ -99,11 +99,6 @@ def get_processor(pid):
     raise ValueError('Processor %s does not exists' % pid)
 
 
-class MetaCore:
-
-    app_label = 'TimeSide'
-
-
 class BaseResource(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True)
@@ -111,7 +106,8 @@ class BaseResource(models.Model):
                                          null=True)
     uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255)
 
-    class Meta(MetaCore):
+    class Meta:
+        app_label = 'Timeside'
         abstract = True
 
     def save(self, **kwargs):
@@ -128,7 +124,7 @@ class DocBaseResource(BaseResource):
     def __unicode__(self):
         return self.title
 
-    class Meta(MetaCore):
+    class Meta:
         abstract = True
 
 
@@ -145,7 +141,7 @@ class Selection(DocBaseResource):
                                verbose_name=_('author'), blank=True, null=True,
                                on_delete=models.SET_NULL)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_selections'
         verbose_name = _('selection')
 
@@ -161,9 +157,9 @@ class Item(DocBaseResource):
 
     element_type = 'timeside_item'
 
-    file = models.FileField(_('file'), upload_to='items/%Y/%m/%d',
+    source_file = models.FileField(_('file'), upload_to='items/%Y/%m/%d',
                             blank=True, max_length=1024)
-    url = models.URLField(_('URL'), blank=True, max_length=1024)
+    source_url = models.URLField(_('URL'), blank=True, max_length=1024)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'),
@@ -174,7 +170,7 @@ class Item(DocBaseResource):
                                on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_items'
         ordering = ['title']
         verbose_name = _('item')
@@ -189,11 +185,11 @@ class Item(DocBaseResource):
     def get_source(self):
         source = None
         source_type = None
-        if self.file and os.path.exists(self.file.path):
-            source = self.file.path
+        if self.source_file and os.path.exists(self.source_file.path):
+            source = self.source_file.path
             source_type = 'file'
-        elif self.url:
-            source = self.url
+        elif self.source_url:
+            source = self.source_url
             source_type = 'url'
         return source, source_type
 
@@ -221,10 +217,10 @@ class Item(DocBaseResource):
             os.makedirs(result_path)
 
 
-        if self.file :
-            uri = self.file.path
-        elif self.url:
-            uri = self.url
+        if self.source_file :
+            uri = self.source_file.path
+        elif self.source_url:
+            uri = self.source_url
 
         pipe = timeside.plugins.decoder.file.FileDecoder(uri=uri,
                                                          sha1=self.sha1)
@@ -328,7 +324,7 @@ class Experience(DocBaseResource):
                                on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=False)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_experiences'
         verbose_name = _('Experience')
 
@@ -338,7 +334,7 @@ class Processor(models.Model):
     pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max_length=256)
     version = models.CharField(_('version'), max_length=64, blank=True)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_processors'
         verbose_name = _('processor')
 
@@ -362,7 +358,7 @@ class Preset(BaseResource):
                                on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=False)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_presets'
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
@@ -402,7 +398,7 @@ class Result(BaseResource):
                                on_delete=models.SET_NULL)
     # lock = models.BooleanField(default=False)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_results'
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
@@ -436,7 +432,7 @@ class Task(BaseResource):
                                verbose_name=_('author'), blank=True, null=True,
                                on_delete=models.SET_NULL)
 
-    class Meta(MetaCore):
+    class Meta:
         db_table = app + '_tasks'
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
@@ -459,11 +455,13 @@ class Task(BaseResource):
 
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
-    if instance.file:
+    if (sender == Result) & instance.file :
         path = instance.file.path
     elif (sender == Item):
-        if instance.url:
-            path = instance.url
+        if instance.source_url:
+            path = instance.source_url
+        elif instance.source_file:
+            path = instance.source_file
     else:
         return
     mime_type = get_mime_type(path)
@@ -477,8 +475,8 @@ def set_hash(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file:
         sha1 = sha1sum_file(instance.file.path)
-    elif instance.url:
-        sha1 = sha1sum_url(instance.url)
+    elif instance.source_url:
+        sha1 = sha1sum_url(instance.source_url)
     else:
         return
     if instance.sha1 == sha1:
