@@ -31,13 +31,14 @@ from rest_framework import viewsets, generics
 from timeside.server.models import Experience, Item, Result, Processor
 from timeside.server.models import Preset, Selection, Task, User
 from timeside.server.models import _DRAFT, _DONE
-from timeside.server.serializers import ExperienceSerializer, ItemSerializer
+from timeside.server.serializers import ExperienceSerializer, ItemSerializer, ItemWaveformSerializer
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
 from timeside.server.serializers import ResultSerializer, Result_ReadableSerializer
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
+
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -74,7 +75,25 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
+class ItemWaveView(generics.RetrieveAPIView):
 
+    model = Item
+    queryset = Item.objects.all()
+    serializer_class = ItemWaveformSerializer
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ItemWaveView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        #context['plop'] = 91
+        return context
+    def get_serializer_context(self):
+        """
+        pass request attribute to serializer
+        """
+        context = super(ItemWaveView, self).get_serializer_context()
+        #context['plop'] = 92
+        return context
 class ExperienceViewSet(viewsets.ModelViewSet):
 
     model = Experience

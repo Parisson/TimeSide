@@ -32,9 +32,48 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
+    waveform_url = serializers.SerializerMethodField('get_waveform_url')
+    
     class Meta:
         model = Item
-        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url')
+        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url')
+
+    def get_url(self,obj):
+        from rest_framework.reverse import reverse
+        request = self.context['request']
+        return reverse('item-detail',kwargs={'pk':obj.pk},request=request)
+    
+    def get_waveform_url(self, obj):
+        return (self.get_url(obj)+'waveform/')
+
+    
+class ItemWaveformSerializer(ItemSerializer):
+
+    item_url = serializers.SerializerMethodField('get_url')
+    waveform = serializers.SerializerMethodField('get_waveform')
+    
+    class Meta:
+        model = Item
+        fields = ('item_url', 'title', 'waveform_url', 'waveform')
+    
+    def get_waveform(self, obj):
+        request = self.context['request']
+        start = request.GET.get('start', 0)
+        stop = request.GET.get('stop', -1)
+        nb_pixels = request.GET.get('nb_pixels', 1024)
+
+        #plop = self.context['plop']
+
+        import numpy as np
+        from scipy import signal
+        t = np.linspace(-1, 1, nb_pixels, endpoint=False)
+        sig = abs(signal.gausspulse(t, fc=5))
+                              
+        return {'start': start,
+                'stop': stop,
+                'nb_pixels': nb_pixels,
+                'min': -sig,
+                'max': sig}
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
