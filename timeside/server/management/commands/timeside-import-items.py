@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 relpath = path[len(media_dir)+1:]
                 name, ext = os.path.splitext(filename)
                 title = unicode(selection_title + '_' + filename)
-                item, c = Item.objects.get_or_create(title=title, file=relpath)
+                item, c = Item.objects.get_or_create(title=title, source_file=relpath)
                 if c:
                     print 'Item "' + title + '" created'
                 if not item in selection.items.all():

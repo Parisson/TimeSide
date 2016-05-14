@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 filename, path = sample
                 title = os.path.splitext(filename)[0]
                 path = os.path.join(media_dir, filename)
-                item, c = Item.objects.get_or_create(title=title, file=path)
+                item, c = Item.objects.get_or_create(title=title, source_file=path)
                 if not item in selection.items.all():
                     selection.items.add(item)
                 if self.cleanup:

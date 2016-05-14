@@ -455,13 +455,13 @@ class Task(BaseResource):
 
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
-    if (sender == Result) & instance.file :
+    if (sender == Result) and instance.file :
         path = instance.file.path
     elif (sender == Item):
         if instance.source_url:
             path = instance.source_url
         elif instance.source_file:
-            path = instance.source_file
+            path = instance.source_file.path
     else:
         return
     mime_type = get_mime_type(path)
@@ -473,8 +473,8 @@ def set_mimetype(sender, **kwargs):
 
 def set_hash(sender, **kwargs):
     instance = kwargs['instance']
-    if instance.file:
-        sha1 = sha1sum_file(instance.file.path)
+    if instance.source_file:
+        sha1 = sha1sum_file(instance.source_file.path)
     elif instance.source_url:
         sha1 = sha1sum_url(instance.source_url)
     else:
