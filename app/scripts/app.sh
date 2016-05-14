@@ -10,12 +10,17 @@ python $manage migrate --noinput
 python $manage bower_install -- --allow-root
 python $manage collectstatic --noinput
 
-if [ ! -f .init ]; then
-    chown -R www-data:www-data $media
-    python $manage timeside-create-admin-user
-    python $manage timeside-create-boilerplate
-    touch .init
-fi
+# timeside setup
+python $manage timeside-create-admin-user
+python $manage timeside-create-boilerplate
+
+# fix media access rights
+chown www-data:www-data $media
+for dir in $(ls $media); do
+    if [ ! $(stat -c %U $media/$dir) = 'www-data' ]; then
+        chown www-data:www-data $media/$dir
+    fi
+done
 
 if [ $DEBUG = "False" ]; then
     python $manage update_index --workers $processes &
