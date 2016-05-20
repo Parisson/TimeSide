@@ -115,7 +115,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -150,6 +151,7 @@ INSTALLED_APPS = (
     'bootstrap_pagination',
     'djng',
     'djangobower',
+    'corsheaders',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -211,3 +213,5 @@ BOWER_INSTALLED_APPS = (
     'https://github.com/Parisson/loaders.git',
     'https://github.com/Parisson/ui.git',
 )
+
+CORS_ORIGIN_ALLOW_ALL = True
