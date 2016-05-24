@@ -25,11 +25,11 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_router.urls)),
     url(r'^api/items/(?P<pk>\d+)/results/', views.ItemResultsList.as_view()),
-    url(r'^api/items/(?P<pk>\d+)/waveform/', views.ItemWaveView.as_view()),
+    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/waveform/', views.ItemWaveView.as_view()),
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),
     # Items
     # ex: /item/5/
-    url(r'^items/(?P<pk>\d+)/$', views.ItemDetail.as_view(),
+    url(r'^items/(?P<uuid>[0-9a-z-]+)/$', views.ItemDetail.as_view(),
         name='timeside-item-detail'),
     # Get transcoded audio
     # Ex: /item/5/download/ogg

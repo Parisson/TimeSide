@@ -67,6 +67,8 @@ class SelectionViewSet(viewsets.ModelViewSet):
     model = Selection
     queryset = Selection.objects.all()
     serializer_class = SelectionSerializer
+    #lookup_field='uuid'
+    #lookup_value_regex = '[0-9a-z_]+'
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -74,12 +76,16 @@ class ItemViewSet(viewsets.ModelViewSet):
     model = Item
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    lookup_field='uuid'
+    lookup_value_regex = '[0-9a-z-]+'
 
 class ItemWaveView(generics.RetrieveAPIView):
 
     model = Item
     queryset = Item.objects.all()
     serializer_class = ItemWaveformSerializer
+    lookup_field='uuid'
+    lookup_value_regex = '[0-9a-z-]+'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -99,13 +105,15 @@ class ExperienceViewSet(viewsets.ModelViewSet):
     model = Experience
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
-
+    
 
 class ProcessorViewSet(viewsets.ModelViewSet):
 
     model = Processor
     queryset = Processor.objects.all()
     serializer_class = ProcessorSerializer
+    lookup_field='pid'
+    lookup_value_regex = '[0-9a-z_]+'
 
 
 class ResultViewSet(viewsets.ModelViewSet):
@@ -120,6 +128,8 @@ class PresetViewSet(viewsets.ModelViewSet):
     model = Preset
     queryset = Preset.objects.all()
     serializer_class = PresetSerializer
+    #lookup_field='uuid'
+    #lookup_value_regex = '[0-9a-z_]+'
 
 
 class TaskViewSet(viewsets.ModelViewSet):

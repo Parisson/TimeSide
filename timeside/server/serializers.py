@@ -23,25 +23,19 @@ import django.db.models
 from django.contrib.auth.models import User
 
 
-class SelectionSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Selection
-        # fields = ('id', 'items', 'selections', 'author')
-
-
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField('get_waveform_url')
     
     class Meta:
         model = Item
+        lookup_field='uuid'
         fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url')
 
     def get_url(self,obj):
         from rest_framework.reverse import reverse
         request = self.context['request']
-        return reverse('item-detail',kwargs={'pk':obj.pk},request=request)
+        return reverse('item-detail',kwargs={'uuid':obj.uuid},request=request)
     
     def get_waveform_url(self, obj):
         return (self.get_url(obj)+'waveform/')
@@ -76,10 +70,23 @@ class ItemWaveformSerializer(ItemSerializer):
                 'max': sig}
 
 
+class SelectionSerializer(serializers.HyperlinkedModelSerializer):
+
+    items = serializers.HyperlinkedRelatedField(many=True,
+                                                view_name='item-detail',
+                                                lookup_field='uuid')
+
+    class Meta:
+        model = Selection
+        #lookup_field='uuid'
+        # fields = ('id', 'items', 'selections', 'author')
+
+
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Experience
+        
         # fields = ('id', 'presets', 'experiences', 'is_public', 'author')
 
 
@@ -87,31 +94,22 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Processor
+        lookup_field='pid'
+
         # fields = ('id', 'pid', 'version')
 
 
-class ResultSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Result
-        # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
-
-
-class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
-
-
-    class Meta:
-        model = Result
-        fields = ('id', 'preset', 'hdf5', 'file', 'mime_type')
-        read_only_fields = fields
-        depth = 2
-        
-
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
+    processor = serializers.HyperlinkedRelatedField(view_name='processor-detail',
+                                                    lookup_field='pid')
+
+    
     class Meta:
         model = Preset
-        #fields = ('id', 'processor', 'parameters', 'is_public')
+        #lookup_field='uuid'
+        
+        fields = ('url', 'uuid', 'processor', 'parameters')
 
     def validate_parameters(self, attrs, source):
 
@@ -135,6 +133,28 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
             attrs[source] =  processor.get_parameters()
         return attrs
 
+
+class ResultSerializer(serializers.HyperlinkedModelSerializer):
+
+    item = serializers.HyperlinkedRelatedField(read_only=True,
+                                               view_name='item-detail',
+                                               lookup_field='uuid')
+        
+    class Meta:
+        model = Result
+        
+        # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
+
+
+class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
+
+
+    class Meta:
+        model = Result
+        fields = ('id', 'preset', 'hdf5', 'file', 'mime_type')
+        read_only_fields = fields
+        depth = 2
+        
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
