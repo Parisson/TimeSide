@@ -2,16 +2,26 @@
   "api": {
     "baseUrl": {
       "PROD" : "/api",
-      "RECETTE" : "/total",
-      "DEV" : "/client",
-      "ERICRECETTE" : "/syk/client"
+      "RECETTE" : "/api",
+      "DEV" : "/api",
+      "ERICRECETTE" : "/api"
     },
     "services": {
 
      
-      "dataref" : {
-        "path": "/ref"
+      "getProcessors" : {
+        "path": "/processors"
+      },
+      "getItems" : {
+        "path": "/items"
+      },
+      "getOneItem" : {
+        "path": "/items/:id"
+      },
+      "getWaveform" : {
+        "path": "/items/:id/waveform"
       }
+
 
 
       

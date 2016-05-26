@@ -4,13 +4,14 @@ define([
 	'#auth_core/index',
   '#users/index',
   '#visu/index',
-  '#audio/index'
+  '#audio/index',
+  '#data/index'
   /*'#referentiel/index',
   '#clients/index',
   '#livraison/index',
   '#communication/index',*/
   
-], function (NavigationModule,BeanModule,AuthModule,UsersModule,VisuModule,AudioModule
+], function (NavigationModule,BeanModule,AuthModule,UsersModule,VisuModule,AudioModule,DataModule
   /*,RefModule,ClientsModule,LivraisonModule,ComModule*/) {
   'use strict';
 
@@ -21,7 +22,8 @@ define([
     	new AuthModule(),
       new UsersModule(),
       new VisuModule(),
-      new AudioModule()
+      new AudioModule(),
+      new DataModule()
     ]);
   };
 });

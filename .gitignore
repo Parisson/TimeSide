@@ -10,3 +10,8 @@ tests/samples
 *.log
 .tags/
 ./data/
+/timeside/player/static/timeside/new_webapp/node_modules/*
+/timeside/player/static/timeside2/node_modules/*
+/timeside/player/static/timeside2/app/bower_components/*
+.sass-cache
+.tmp

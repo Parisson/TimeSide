@@ -20,48 +20,24 @@ function (Backbone, Marionette, A,FakeData) {
 
 
     ////////////////////////////////////////////////////////////
-    //#1 : start init ref : CSRF
+    //#1 : start init ref : Pas de CSRF
     onInitStart:function() {
 
-      //tmp : pas de CSRF
-      console.error('Tmp : no CSRF!');
-      return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+      
+      //console.error('Tmp : no CSRF!');
 
-      //#1 : loginref for CSRF
-      A.ApiEventsHelper.listenOkErrorAndTrigger(
-        A.Cfg.eventApi(A.Cfg.events.init.loginForHeader),null,null,this.onCSRFOk,this.onCSRFError,this);
-      //vent.trigger(Cfg.eventOk(Cfg.events.init.start));     
-    },
-
-    onCSRFError:function() {
-      A.ApiEventsHelper.removeOkError(A.Cfg.eventApi(A.Cfg.events.init.loginForHeader),this.onCSRFOk,this.onCSRFError,this);
-      alert("CSRF Error");
-    },
-
-    onCSRFOk:function() {
-      //#2 : test /me
-      A.ApiEventsHelper.removeOkError(A.Cfg.eventApi(A.Cfg.events.init.loginForHeader),this.onCSRFOk,this.onCSRFError,this);
-
-       A.ApiEventsHelper.listenOkErrorAndTrigger2(
-        A.Cfg.eventApi(A.Cfg.events.users.me),null,null,function(result) {
-          //loggued and youpi
-          A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
-        },function(error) {
-          //not logued and youpi
-          A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
-        },this);
-
-
-      //en fait non
-      return 
-
-    },
+      //#1 Load all processors
+      A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.processors.get),null,null,
+        function(result) {
+          A._i.setOnCfg('allProcessors',result);
+          return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+        }, function(error) {
+          alert("Non1");
+      });
 
 
 
-   
-
-    
+    }
 
     
   });

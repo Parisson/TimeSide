@@ -7,6 +7,10 @@
 		"getdata" : "fakeserver:getdata"
 	},
 
+	"trueserver"  : {
+		"getdata" : "trueserver:getdata"
+	},
+
 	"navigator" : {
 		"newWindow" : "navigator:newWindow"
 	},
@@ -18,5 +22,17 @@
 		"pause"				: "audio:pause",
 		"setCurrentTime"	: "audio:setCurrentTime",
 		"newAudioTime"		: "audio:newAudioTime"	
+	},
+
+
+	"data" : {
+		"processors"		: {
+			"get" : "data:processors:get"
+		},
+		"items"				: {
+			"get" : "data:items:get",
+			"getOne" : "data:items:getOne",
+			"waveform" : "data:items:waveform"
+		}
 	}
 }

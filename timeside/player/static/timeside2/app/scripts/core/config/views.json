@@ -13,12 +13,31 @@
 			"category" : "home"
 		},
 
+		"list_items" : {
+			"viewid" : "list_items",
+			"needEvents" : "1",
+			"baseEvent" : "data:items:get",
+			"layoutid" : "full"
+		},
+
+		"item_detail" : {
+			"viewid" : "item_detail",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+
 
 		"login" : {
 			"viewid" : "login",
 			"needEvents" : "0",
 			"layoutid" : "full"
 		},
+
+		"item_view" : {
+			"viewid" : "item_view",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},		
 
 		"visu_test1" : {
 			"viewid" : "visu_test1",

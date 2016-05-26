@@ -10,10 +10,10 @@ function (A,d3) {
     initialize: function (options)	 {
       A._i.setOnCfg('trackInfoController',this);
 
-      this.trackDuration = 25093;
+      this.trackDuration = 2000;
       this.currentZoom=1; //means all visible
       this.currentStartTime = 0;
-      this.currentEndTime = 25093;
+      this.currentEndTime = 2000;
 
       this.max_value=6000;
     },

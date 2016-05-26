@@ -1,15 +1,20 @@
 define([
   'injector',
-  
+
+  './client/processor',
+  './client/item'
   
 ],
 
-function (injector) {
+function (injector,ProcessorModel,ItemModel) {
 
   var idGenerator=0;
 
   var hop= {
   	/*'device' : DeviceModel,*/
+
+    processor : ProcessorModel,
+    item : ItemModel,
    
 
     getNewId:function() {
