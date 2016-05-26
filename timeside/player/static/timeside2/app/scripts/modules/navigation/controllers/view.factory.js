@@ -8,12 +8,14 @@ define([
   '#navigation_core/baseviews/base_generic_confirmimport',
   '#auth/views/index',
   '#navigation/views/home',
+  '#navigation/views/tests',
+
   '#visu/views/index'
   
 ],
 
 function (_,injector,Backbone,CfgViews,BaseGenericListView,BaseGenericImportView,BaseGenericConfirmImportView,
-  AuthViews,HomeView,VisuViews
+  AuthViews,HomeView,TestsView,VisuViews
   ) {
   'use strict';
 

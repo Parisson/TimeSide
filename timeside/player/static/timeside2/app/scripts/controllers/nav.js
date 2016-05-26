@@ -49,13 +49,8 @@ function (Backbone, Marionette, vent,injector,Cfg,ApiEventsHelper) {
 
     home: function () {
 
-      return vent.trigger('navigate:page',Cfg.views.qeopa.visu_test1.viewid);
+      return vent.trigger('navigate:page',Cfg.views.qeopa.home.viewid);
 
-      if (this.userLoggued() )
-        vent.trigger('navigate:page',Cfg.views.qeopa.home.viewid);
-      else
-        vent.trigger('navigate:page',Cfg.views.qeopa.login.viewid);
-      return;
     },
 
     temp_home : function() {
