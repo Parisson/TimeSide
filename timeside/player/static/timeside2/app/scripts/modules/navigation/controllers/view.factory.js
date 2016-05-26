@@ -10,12 +10,13 @@ define([
   '#navigation/views/home',
   '#navigation/views/tests',
 
-  '#visu/views/index'
+  '#visu/views/index',
+  '#data/views/index',
   
 ],
 
 function (_,injector,Backbone,CfgViews,BaseGenericListView,BaseGenericImportView,BaseGenericConfirmImportView,
-  AuthViews,HomeView,TestsView,VisuViews
+  AuthViews,HomeView,TestsView,VisuViews,DataViews
   ) {
   'use strict';
 
@@ -36,7 +37,8 @@ function (_,injector,Backbone,CfgViews,BaseGenericListView,BaseGenericImportView
       {viewid : CfgViews.qeopa.login.viewid, constructor : AuthViews.views.login},
       {viewid : CfgViews.qeopa.home.viewid, constructor : HomeView},
       {viewid : CfgViews.qeopa.visu_test1.viewid, constructor : VisuViews.views.test1},
-      {viewid : CfgViews.qeopa.visu_test2.viewid, constructor : VisuViews.views.test2}
+      {viewid : CfgViews.qeopa.visu_test2.viewid, constructor : VisuViews.views.test2},
+      {viewid : CfgViews.qeopa.list_items.viewid, constructor : DataViews.views.listItems}
       /*{
         viewid : CfgViews.qeopa.list_users.viewid, 
         constructor : BaseGenericListView,

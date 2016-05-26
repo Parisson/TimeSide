@@ -1,13 +1,13 @@
 define([
-  
+  './liste_items'
 
 ],
 
-function () {
+function (ListItemsView) {
 
   return {
   	views : {
-  		
+  		listItems : ListItemsView
   	},
   	popups : {
   		

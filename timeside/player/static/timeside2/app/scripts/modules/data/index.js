@@ -2,11 +2,12 @@ define([
   '#qt_core/controllers/all',
   './controllers/data',
 
-  './commands/commands_processors'
+  './commands/commands_processors',
+  './commands/commands_items'
 ],
 
 function (A,Controller,
-		ProcessorCommands) {
+		ProcessorCommands,ItemCommands) {
   'use strict';
 
   return function (options) {
@@ -15,6 +16,7 @@ function (A,Controller,
     });
     
    	A.DataCommandHelper.createCommands(ProcessorCommands);
+    A.DataCommandHelper.createCommands(ItemCommands);
   };
 
 });

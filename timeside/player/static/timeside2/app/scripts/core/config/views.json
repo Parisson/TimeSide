@@ -13,6 +13,12 @@
 			"category" : "home"
 		},
 
+		"list_items" : {
+			"viewid" : "list_items",
+			"needEvents" : "1",
+			"baseEvent" : "data:items:get",
+			"layoutid" : "full"
+		},
 
 
 		"login" : {
