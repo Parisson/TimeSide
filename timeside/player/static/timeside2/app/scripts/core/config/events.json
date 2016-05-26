@@ -18,5 +18,15 @@
 		"pause"				: "audio:pause",
 		"setCurrentTime"	: "audio:setCurrentTime",
 		"newAudioTime"		: "audio:newAudioTime"	
+	},
+
+
+	"data" : {
+		"processors"		: {
+			"get" : "data:processors:get"
+		},
+		"items"				: {
+			"get" : "data:items:get" 
+		}
 	}
 }

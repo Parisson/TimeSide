@@ -34,6 +34,7 @@ require.config({
     '#users'              : './modules/users',
     '#visu'            : './modules/visu',
     '#audio'            : './modules/audio',
+    '#data'            : './modules/data',
 
     buzz                  : '../bower_components/buzz/dist/buzz',
     bootstrap             : '../bower_components/bootstrap/dist/js/bootstrap',
