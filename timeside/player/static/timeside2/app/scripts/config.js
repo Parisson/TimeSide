@@ -2,7 +2,7 @@
 
 var locale;
 
-var qtcore_url = '../bower_components/quematech_web_core/scripts';
+var qtcore_url = './core/quematech_web_core/scripts';
 
 require.config({
   waitSeconds: 0,
