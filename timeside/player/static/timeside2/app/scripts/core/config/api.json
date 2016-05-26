@@ -17,7 +17,11 @@
       },
       "getOneItem" : {
         "path": "/items/:id"
+      },
+      "getWaveform" : {
+        "path": "/items/:id/waveform"
       }
+
 
 
       
