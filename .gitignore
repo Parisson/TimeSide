@@ -12,5 +12,6 @@ tests/samples
 ./data/
 /timeside/player/static/timeside/new_webapp/node_modules/*
 /timeside/player/static/timeside2/node_modules/*
-/timeside/player/static/timeside2/app/bower_components
-/timeside/player/static/timeside/new_webapp/node_modules/grunt-bower-requirejs/node_modules/bower-requirejs/node_modules/file-utils/node_modules/glob/node_modules/inflight/node_modules/wrappy/*
+/timeside/player/static/timeside2/app/bower_components/*
+.sass-cache
+.tmp
