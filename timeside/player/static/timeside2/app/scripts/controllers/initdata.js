@@ -29,8 +29,8 @@ function (Backbone, Marionette, A,FakeData) {
       //#1 Load all processors
       A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.processors.get),null,null,
         function(result) {
-
           A._i.setOnCfg('allProcessors',result);
+          return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
         }, function(error) {
           alert("Non1");
       });
