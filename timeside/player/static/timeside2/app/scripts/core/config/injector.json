@@ -8,7 +8,12 @@
 	"-------------------------------------------------------------------------------------------------" : "",
 	"Below --- canvas":"",
 	"fakeserver_canvas" : "fakeserver_canvas",
-	"bitampdataprovider_canvas" : "bitampdataprovider_canvas"
+	"bitampdataprovider_canvas" : "bitampdataprovider_canvas",
+
+	"-------------------------------------------------------------------------------------------------" : "",
+	"Below --- Data from timeside server":"",
+
+	"allProcessors" : "allProcessors"
 
 	
 }

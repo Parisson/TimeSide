@@ -31,7 +31,11 @@ function (A) {
         onSuccess:function(res) {
           //@TODO
           //create model objects and return model
-          var result=[]
+          var result=[];
+          if (res && res.body)
+            result = _.map(res.body,function(obj) {
+              return new A.models.processor(obj);
+            }),
          
           A.vent.trigger(A.Cfg.eventApiOk(A.Cfg.events.data.processors.get),result);
 
