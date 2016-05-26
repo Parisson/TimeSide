@@ -10,22 +10,18 @@ function (Marionette,A,BaseQeopaView,d3) {
 
   return BaseQeopaView.extend({
 
-    template: templates['data/liste_items'],
-    className: 'list-items',
+    template: templates['data/item_detail'],
+    className: 'item-detail',
 
     ui: {
-      'items' : '[data-uuid]'
+      
     },
     events: {
-      'click @ui.items' : 'onClickItem'
+      
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Func
-    onClickItem:function(e) {
-      var uuid = e.currentTarget.dataset.uuid;
-      A._v.trigCfg('data.items.getOne','',uuid);
-    },
     
 
 
@@ -37,7 +33,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     //Life cycle
 
     initialize: function () {
-      this.items = A._i.getOnCfg('allItems');
+      this.item = A._i.getOnCfg('currentItem');
     },
 
     onRender:function() {
@@ -54,7 +50,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       
 
       return {
-       items : _.map(this.items,function(obj) {return obj.toJSON();})
+       item : this.item.toJSON()
       }
     },
 

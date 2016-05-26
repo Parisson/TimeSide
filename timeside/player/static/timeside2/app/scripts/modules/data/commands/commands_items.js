@@ -40,6 +40,20 @@ function (A) {
 
 
         }
+      },
+
+       ////////////////////////GET ONE
+      {
+        name : "getOne",
+        apiFunctionName : 'getOneItem',
+        createDataBeforeCall : function(data) {
+          return {data : undefined, dataApi : {id : data.id}};
+        },
+       
+        onSuccess:function(res) {
+          var result = new A.models.item(res.body);
+          A.vent.trigger(A.Cfg.eventApiOk(A.Cfg.events.data.item.getOne),result);
+        }
       }
 
 

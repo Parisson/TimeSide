@@ -26,7 +26,8 @@
 			"get" : "data:processors:get"
 		},
 		"items"				: {
-			"get" : "data:items:get" 
+			"get" : "data:items:get",
+			"getOne" : "data:items:getOne"
 		}
 	}
 }

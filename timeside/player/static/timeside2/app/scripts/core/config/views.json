@@ -20,6 +20,12 @@
 			"layoutid" : "full"
 		},
 
+		"item_detail" : {
+			"viewid" : "item_detail",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+
 
 		"login" : {
 			"viewid" : "login",

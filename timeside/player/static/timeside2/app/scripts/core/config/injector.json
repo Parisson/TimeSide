@@ -14,7 +14,9 @@
 	"Below --- Data from timeside server":"",
 
 	"allProcessors" : "allProcessors",
-	"allItems" : "allItems"
+	"allItems" : "allItems",
+
+	"currentItem" : "currentItem"
 
 	
 }
