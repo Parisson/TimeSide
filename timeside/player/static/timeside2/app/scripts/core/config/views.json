@@ -33,6 +33,12 @@
 			"layoutid" : "full"
 		},
 
+		"item_view" : {
+			"viewid" : "item_view",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},		
+
 		"visu_test1" : {
 			"viewid" : "visu_test1",
 			"needEvents" : "0",

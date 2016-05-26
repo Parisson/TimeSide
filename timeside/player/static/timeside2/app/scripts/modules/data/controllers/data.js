@@ -38,11 +38,23 @@ function (A) {
 
      /////////////////////////////////////////////////////////////////////
     // Get One Item & nivigate to view
-    onGetOneItem:function(id) {
+    onGetOneItem:function(id,viewid) {
+
+      console.error("Temp : get one item does not work direct from list");
+
+
+      var item = _.find(A._i.getOnCfg('allItems'),function(it) {return it.get('uuid')===id});
+      if (item) {
+        A._i.setOnCfg('currentItem',item);
+        return A._v.trigCfg('navigate.page','',viewid);
+      }
+      return;
+
       A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.items.getOne),{id : id},null,
         function(result) {
           A._i.setOnCfg('currentItem',result);
-          return A._v.trigCfg('navigate.page','','item_detail');
+          var _viewid = viewid || 'item_view';
+          return A._v.trigCfg('navigate.page','',_viewid);
         }, function(error) {
           alert("Non1");
       });

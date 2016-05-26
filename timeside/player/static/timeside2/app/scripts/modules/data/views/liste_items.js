@@ -24,7 +24,9 @@ function (Marionette,A,BaseQeopaView,d3) {
     //Func
     onClickItem:function(e) {
       var uuid = e.currentTarget.dataset.uuid;
-      A._v.trigCfg('data.items.getOne','',uuid);
+      var viewid = e.currentTarget.dataset.viewid;
+
+      A._v.trigCfg('data.items.getOne','',uuid,viewid);
     },
     
 
