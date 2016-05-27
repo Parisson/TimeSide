@@ -52,22 +52,49 @@ class ItemWaveformSerializer(ItemSerializer):
     
     def get_waveform(self, obj):
         request = self.context['request']
-        start = request.GET.get('start', 0)
-        stop = request.GET.get('stop', -1)
-        nb_pixels = request.GET.get('nb_pixels', 1024)
-
+        start = float(request.GET.get('start', 0))
+        stop = float(request.GET.get('stop', -1))
+        nb_pixels = int(request.GET.get('nb_pixels', 1024))
         #plop = self.context['plop']
 
+        from rest_framework import status
+        from rest_framework.response import Response
+        # Dummy signal
+        # Gaussian pulse of 10s at 16000 Hz 
         import numpy as np
         from scipy import signal
-        t = np.linspace(-1, 1, nb_pixels, endpoint=False)
-        sig = abs(signal.gausspulse(t, fc=5))
-                              
+        duration = 10
+        t = np.linspace(-1, 1, duration * 16000, endpoint=False)
+        sig = abs(signal.gausspulse(t, fc=5)) * np.random.randn(duration * 16000)
+        t = (t + 1)/2 * duration
+                
+        if start > duration:
+            raise serializers.ValidationError("start must be less than duration")
+        if stop == -1:
+            stop = duration
+
+        indexes = (t>=start) & (t<stop)
+        sig = sig[indexes]
+        t = t[indexes]
+        missing_samples = len(sig) % nb_pixels
+        if missing_samples != 0:
+            sig = np.append(sig, np.zeros(missing_samples))
+            
+        blocksize = len(sig) // nb_pixels
+
+        min_values = []
+        max_values = []
+        time_values = []
+        for i in xrange(0,nb_pixels):
+            min_values.append(min(sig[i*blocksize:(i+1)*blocksize]))
+            max_values.append(max(sig[i*blocksize:(i+1)*blocksize]))
+            time_values.append(t[i*blocksize])
         return {'start': start,
                 'stop': stop,
                 'nb_pixels': nb_pixels,
-                'min': -sig,
-                'max': sig}
+                'time': time_values,
+                'min': min_values,
+                'max': max_values}
 
 
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
@@ -96,7 +123,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
         model = Processor
         lookup_field='pid'
 
-        # fields = ('id', 'pid', 'version')
+        #fields = ('id', 'pid', 'version')
 
 
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
