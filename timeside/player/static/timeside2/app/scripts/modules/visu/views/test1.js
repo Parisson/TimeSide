@@ -56,6 +56,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     initialize: function () {
       window.home = this;
 
+      A._i.setOnCfg('useFakeData',true);
+
       A._v.onCfg('fakeserver.getdata','ok',this.onDataReceived,this);
     },
 

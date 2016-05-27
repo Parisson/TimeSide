@@ -23,6 +23,9 @@ function (A,d3) {
        
     },
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Definition
+
     /////////////////////////////////////////////////////////////////////////////
     //Gestion de la map de demande
     getDataFunction:function(type) {
@@ -41,10 +44,16 @@ function (A,d3) {
     //ok
     askDataFunc:function(type,timeStart,timeEnd,nbItem,callback) {
       A.log.log('loader','launching data ask for : '+type+','+timeStart+','+timeEnd+' : '+nbItem);
+      var useFakeData = A._i.getOnCfg('useFakeData');
 
-      A._v.trigCfg('fakeserver.getdata','',type,timeStart,timeEnd,nbItem,function(data) {
-        callback(data);
-      });
+      if (! useFakeData)
+        return  A._v.trigCfg('trueserver.getdata','',type,timeStart,timeEnd,nbItem,function(data) {
+          callback(data);
+        });
+      else
+        A._v.trigCfg('fakeserver.getdata','',type,timeStart,timeEnd,nbItem,function(data) {
+          callback(data);
+        });
 
     },
 

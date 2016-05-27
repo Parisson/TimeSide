@@ -29,11 +29,16 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    //Definition //un peu con car sur les autres tracks, c'est au niveau du loader qu'on décide ça.
+    isTrueDataServer : false,
+
+    ////////////////////////////////////////////////////////////////////////////////////
     //Define
-    /*input obj is {type : _type, width : width, height : height}*/
+    /*input obj is {type : _type, width : width, height : height, trueData : true/false}*/
     defineTrack:function(o) {
       this.width = o.width;
       this.height = o.height;
+      this.isTrueDataServer = o.trueData!==undefined ? o.trueData : false;
 
       
 
