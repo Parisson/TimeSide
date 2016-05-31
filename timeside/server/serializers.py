@@ -28,12 +28,12 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
     waveform_url = serializers.SerializerMethodField('get_waveform_url')
     audio_url = serializers.SerializerMethodField('get_audio_url')
     audio_ogg_url = serializers.SerializerMethodField('get_ogg_url')
-    
+    audio_duration = serializers.SerializerMethodField('get_audio_duration')
   
     class Meta:
         model = Item
         lookup_field='uuid'
-        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url', 'audio_url')
+        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url', 'audio_url', 'audio_duration')
 
     def get_url(self,obj):
         from rest_framework.reverse import reverse
@@ -49,6 +49,13 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
         return {'mp3': obj_url + 'download/mp3',
                 'ogg': obj_url + 'download/ogg'}
+
+    def get_audio_duration(self, obj):
+        import timeside.core as ts_core
+        decoder = ts_core.get_processor('file_decoder')(uri=obj.get_source()[0])
+        return decoder.uri_total_duration
+        
+
 
     
 class ItemWaveformSerializer(ItemSerializer):
