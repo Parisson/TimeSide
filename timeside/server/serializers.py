@@ -26,11 +26,14 @@ from django.contrib.auth.models import User
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField('get_waveform_url')
+    audio_url = serializers.SerializerMethodField('get_audio_url')
+    audio_ogg_url = serializers.SerializerMethodField('get_ogg_url')
     
+  
     class Meta:
         model = Item
         lookup_field='uuid'
-        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url')
+        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url', 'audio_url')
 
     def get_url(self,obj):
         from rest_framework.reverse import reverse
@@ -39,6 +42,13 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_waveform_url(self, obj):
         return (self.get_url(obj)+'waveform/')
+
+    def get_audio_url(self, obj):
+        obj_url = self.get_url(obj)
+
+
+        return {'mp3': obj_url + 'download/mp3',
+                'ogg': obj_url + 'download/ogg'}
 
     
 class ItemWaveformSerializer(ItemSerializer):
