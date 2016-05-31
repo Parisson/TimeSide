@@ -25,6 +25,7 @@ from django.http import Http404
 from django.views.generic.base import View
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
+from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics
 
@@ -330,6 +331,9 @@ class ItemDetail(DetailView):
 
     model = Item
     template_name = 'timeside/item_detail.html'
+
+    def get_object(self):
+        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
