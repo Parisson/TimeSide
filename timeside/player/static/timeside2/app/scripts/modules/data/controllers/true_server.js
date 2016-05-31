@@ -88,7 +88,15 @@ function (A,d3) {
 
       A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.items.waveform),data,null,
         function(result) {
-          alert('so?');
+          
+          //tmp : on ne renvoie que le max
+          var resultOk = [];
+          for (var i=0; i< result.waveform.time.length;i++) {
+            resultOk.push({time : result.waveform.time[i]*1000, value : result.waveform.max[i]});
+          }
+
+
+          callback(resultOk);
         }, function(error) {
           alert("Non6");
       });

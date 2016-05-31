@@ -40,7 +40,11 @@ function (A,d3,BaseDataProvider) {
       this.specificDataStartTime = 0; //in base
       this.specificDataEndTime = trackDuration; //in base
 
-      A._v.trigCfg('fakeserver.getdata','','waveform',0,trackDuration,this.CONST_NUMPOINTS,_.bind(this.onData,this));
+      var useFakeData = A._i.getOnCfg('useFakeData');
+      if (useFakeData)
+        A._v.trigCfg('fakeserver.getdata','','waveform',0,trackDuration,this.CONST_NUMPOINTS,_.bind(this.onData,this));
+      else
+        A._v.trigCfg('trueserver.getdata','','waveform',0,trackDuration,this.CONST_NUMPOINTS,_.bind(this.onData,this));
     },
 
     onData:function(data) {

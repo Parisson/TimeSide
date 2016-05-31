@@ -34,7 +34,16 @@ function (A) {
           var result=[];
 
           if (res && res.body)
-            result = _.map(res.body,function(obj) {return new A.models.item(obj);});
+            result = _.map(res.body,function(obj) {
+              var result =  new A.models.item(obj);
+              var url = result.get('url');
+              var index = url.indexOf("items/");
+              var uuid = url.substr(index+"items/".length);
+              uuid = uuid.substring(0,uuid.length-1); //virer le dernier carac
+
+              result.set("uuid",uuid);
+              return result;
+            });
           
           A.vent.trigger(A.Cfg.eventApiOk(A.Cfg.events.data.items.get),result);
 

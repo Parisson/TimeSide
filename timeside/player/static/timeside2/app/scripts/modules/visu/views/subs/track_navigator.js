@@ -25,8 +25,6 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
-    //Definition
-    isTrueDataServer : false,
 
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +64,9 @@ function (Marionette,A,BaseQeopaView,d3) {
     //1 : load data
     loadData:function() {
       var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
-      if (this.isTrueDataServer)
+      var useFakeData = A._i.getOnCfg('useFakeData');
+
+      if (!useFakeData)
         A._v.trigCfg('trueserver.getdata','','waveform',0,trackDuration,1024,_.bind(this.onData,this));      
       else
         A._v.trigCfg('fakeserver.getdata','','waveform',0,trackDuration,1024,_.bind(this.onData,this));
