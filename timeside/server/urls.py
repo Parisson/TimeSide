@@ -24,7 +24,7 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_router.urls)),
-    url(r'^api/items/(?P<pk>\d+)/results/', views.ItemResultsList.as_view()),
+    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/results/', views.ItemResultsList.as_view()),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/waveform/', views.ItemWaveView.as_view()),
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),
     # Items

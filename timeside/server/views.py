@@ -392,5 +392,5 @@ class ItemResultsList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = super(ItemResultsList, self).get_queryset()
-        return queryset.filter(item__pk=self.kwargs.get('pk'), status=_DONE)
+        return queryset.filter(item__uuid=self.kwargs.get('uuid'), status=_DONE)
 
