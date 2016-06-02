@@ -16,6 +16,7 @@ function (A,d3) {
       this.currentEndTime = 10*1000;
 
       this.max_value=6000;
+
     },
 
     onDestroy : function() {
@@ -36,6 +37,9 @@ function (A,d3) {
     //get set simple
     getDuration:function() {
       return this.trackDuration;
+    },
+    setDuration:function(durationMS) {
+      this.trackDuration = durationMS;
     },
 
     getNbPointVectoMax:function() {

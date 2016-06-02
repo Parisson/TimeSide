@@ -23,7 +23,8 @@ function (A) {
     var itemId = data.itemId;delete data.itemId;
     data.format = 'json'; 
     data.start = data.start/1000;
-    data.end=data.end/1000;
+    data.stop=data.end/1000;
+    delete data.end;
 
     return A.injector.get('api').getWaveform(data,{id : itemId})
       .on('success', success)

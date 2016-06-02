@@ -81,6 +81,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.item = A._i.getOnCfg('currentItem');
       this.navigatorReady=false;
 
+      A._i.getOnCfg('trackInfoController').setDuration(this.item.get('audio_duration')*1000);
+
       A._i.setOnCfg('useFakeData',false);
     },
 

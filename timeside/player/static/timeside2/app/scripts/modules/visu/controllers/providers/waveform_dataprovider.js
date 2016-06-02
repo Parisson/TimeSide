@@ -94,8 +94,9 @@ function (A,d3,BaseDataProvider) {
 
 
 
-      var self=this;
-      A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,this.CONST_NUMPOINTS,
+      var self=this;  
+      //Warning : we ask 3 more points because getSpecificDataNeededSegment va multiplier par 3 le segment demandé au serveur
+      A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,this.CONST_NUMPOINTS*3,
         function(data) {
           self.specificData=data;
           var _specificDataForView=self.getSpecificDataOnSegment(windowStart,windowEnd);
@@ -201,6 +202,8 @@ function (A,d3,BaseDataProvider) {
         if (_data.time>=timeStart && _data.time <=timeEnd)
           result.push(_data);
       });
+
+      A.log.log('WaveformDataProvider','getSpecificDataOnSegment from : '+this.specificData.length+"pts -> "+result.length+"pts");
 
       return result;
     },

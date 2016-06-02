@@ -20,7 +20,9 @@ function (Backbone,BaseModel) {
       sha1 : '',
       title : '',
       url : '',
-      uuid : ''
+      uuid : '',
+      audio_duration : 0, //en secondes!!
+      audio_url : {} //{mp3 : URL, ogg : URL}
 
     },
 
