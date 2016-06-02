@@ -53,7 +53,7 @@ function (A,buzz) {
       this.sound = this.createSound(url);
 
       //temp for test
-      this.playAudio();
+      //this.playAudio();
     },
 
 

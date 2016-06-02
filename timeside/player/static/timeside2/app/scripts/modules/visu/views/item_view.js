@@ -30,7 +30,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     //Action manager
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
-      var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform};
+      var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio};
 
       if (mapAction[action])
         (_.bind(mapAction[action],this))();
@@ -39,6 +39,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onStartLoading:function() {
       this.$el.find('[data-action="start"]').attr("disabled",true).text('loading');
       alert('start loading');
+
+      A.vent.trigger('audio:loadGlobalFile',this.item.get('audio_url').mp3);
 
       this.trackNavigatorView.isTrueDataServer = true;
 
@@ -52,11 +54,15 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
 
-     this.$el.find('[data-action="add"]').attr("disabled",false);
+     this.$el.find('[data-action]').attr("disabled",false);
      /* this.trackWaveformView_1.init();
       this.trackWaveformView_2.init();
       this.trackCanvasView.init();*/
 
+    },
+
+    onPlayAudio:function() {
+      A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +86,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     initialize: function () {
       this.item = A._i.getOnCfg('currentItem');
       this.navigatorReady=false;
+
+
 
       A._i.getOnCfg('trackInfoController').setDuration(this.item.get('audio_duration')*1000);
 
