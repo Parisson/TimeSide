@@ -67,14 +67,7 @@ function (A,d3,BaseDataProvider) {
 
       //2 do we need more proper data ? 
       if (testData.needsSpecificData) {
-        console.log('@TODO HERE');
         this.loadSpecificData();
-        //ICI!!!!
-        //Il faut inscrire une nouvelle demande de data auprès d'un provider unique
-        //Ce provider devra surveiller un peu par type les demandes et supprimer les vieilles non
-        //honorées...
-        //Et il appellera en retour une fonction de ce dataprovider qui
-        //selon testData.willUpdateViewWithSpecificData, updatera la vue ou non
       }
     },
 
