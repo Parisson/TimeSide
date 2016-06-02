@@ -28,6 +28,7 @@ import os
 import uuid
 import mimetypes
 import ast
+import time
                 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
@@ -447,10 +448,18 @@ class Task(BaseResource):
     def is_done(self):
         return (self.status == _DONE)
 
-    def run(self, streaming=False):
-        from timeside.server.tasks import task_run
+    def run(self, wait=False, streaming=False):
         self.status_setter(_RUNNING)
+
+        from timeside.server.tasks import task_run
         task_run.delay(self.id)
+
+        if wait:
+            status = Task.objects.get(id=self.id).status
+            while (status != _DONE):
+                time.sleep(0.5)
+                status = Task.objects.get(id=self.id).status
+
  
 
 def set_mimetype(sender, **kwargs):

@@ -22,15 +22,20 @@ from rest_framework import serializers
 import django.db.models
 from django.contrib.auth.models import User
 
+import numpy as np
+
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField('get_waveform_url')
-    
+    audio_url = serializers.SerializerMethodField('get_audio_url')
+    audio_ogg_url = serializers.SerializerMethodField('get_ogg_url')
+    audio_duration = serializers.SerializerMethodField('get_audio_duration')
+  
     class Meta:
         model = Item
         lookup_field='uuid'
-        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url')
+        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url', 'audio_url', 'audio_duration')
 
     def get_url(self,obj):
         from rest_framework.reverse import reverse
@@ -39,6 +44,20 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_waveform_url(self, obj):
         return (self.get_url(obj)+'waveform/')
+
+    def get_audio_url(self, obj):
+        obj_url = self.get_url(obj)
+
+
+        return {'mp3': obj_url + 'download/mp3',
+                'ogg': obj_url + 'download/ogg'}
+
+    def get_audio_duration(self, obj):
+        import timeside.core as ts_core
+        decoder = ts_core.get_processor('file_decoder')(uri=obj.get_source()[0])
+        return decoder.uri_total_duration
+        
+
 
     
 class ItemWaveformSerializer(ItemSerializer):
@@ -57,42 +76,42 @@ class ItemWaveformSerializer(ItemSerializer):
         nb_pixels = int(request.GET.get('nb_pixels', 1024))
         #plop = self.context['plop']
 
-        from rest_framework import status
-        from rest_framework.response import Response
-        # Dummy signal
-        # Gaussian pulse of 10s at 16000 Hz 
-        import numpy as np
-        from scipy import signal
-        duration = 10
-        t = np.linspace(-1, 1, duration * 16000, endpoint=False)
-        sig = abs(signal.gausspulse(t, fc=5)) * np.random.randn(duration * 16000)
-        t = (t + 1)/2 * duration
-                
+        from .utils import get_or_run_proc_result
+        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        import h5py
+
+        result_id = 'waveform_analyzer'
+        wav_res = h5py.File(result.hdf5.path, 'r').get(result_id)
+
+        duration = wav_res['audio_metadata'].attrs['duration']
+        samplerate = wav_res['data_object']['frame_metadata'].attrs['samplerate']
+
+        if start < 0:
+            start = 0
         if start > duration:
             raise serializers.ValidationError("start must be less than duration")
         if stop == -1:
             stop = duration
 
-        indexes = (t>=start) & (t<stop)
-        sig = sig[indexes]
-        t = t[indexes]
-        missing_samples = len(sig) % nb_pixels
-        if missing_samples != 0:
-            sig = np.append(sig, np.zeros(missing_samples))
-            
-        blocksize = len(sig) // nb_pixels
+        if stop > duration:
+            stop = duration
 
-        min_values = []
-        max_values = []
-        time_values = []
-        for i in xrange(0,nb_pixels):
-            min_values.append(min(sig[i*blocksize:(i+1)*blocksize]))
-            max_values.append(max(sig[i*blocksize:(i+1)*blocksize]))
-            time_values.append(t[i*blocksize])
+        min_values = np.zeros(nb_pixels)
+        max_values = np.zeros(nb_pixels)
+        time_values = np.linspace(start=start, stop=stop, num=nb_pixels+1,
+                                  endpoint=True)
+        
+        sample_values =  np.round(time_values*samplerate).astype('int')
+
+        for i in xrange(nb_pixels):
+            values = wav_res['data_object']['value'][sample_values[i]:sample_values[i+1]]
+            min_values[i] = np.min(values)
+            max_values[i] = np.max(values)
+        
         return {'start': start,
                 'stop': stop,
                 'nb_pixels': nb_pixels,
-                'time': time_values,
+                'time': time_values[0:-1],
                 'min': min_values,
                 'max': max_values}
 

@@ -24,21 +24,23 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_router.urls)),
-    url(r'^api/items/(?P<pk>\d+)/results/', views.ItemResultsList.as_view()),
+    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/results/', views.ItemResultsList.as_view()),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/waveform/', views.ItemWaveView.as_view()),
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),
     # Items
     # ex: /item/5/
-    url(r'^items/(?P<uuid>[0-9a-z-]+)/$', views.ItemDetail.as_view(),
-        name='timeside-item-detail'),
-    # Get transcoded audio
-    # Ex: /item/5/download/ogg
-    url(r'^items/(?P<pk>\d+)/download/(?P<extension>' + EXPORT_EXT + ')$',
-        views.ItemExport.as_view(), name="item-export"),
-    url(r'^items/(?P<pk>\d+)/export/$', views.ItemDetailExport.as_view(),
-        name='timeside-item-export'),
-    url(r'^items/(?P<pk>\d+)/angular/$', views.ItemDetailAngular.as_view(),
-        name='timeside-item-angular'),
+    url(r'^items/(?P<uuid>[0-9a-z-]+)/', include([
+        url(r'^$', views.ItemDetail.as_view(), name='timeside-item-detail'),
+        # Get transcoded audio
+        # Ex: /item/5/download/ogg
+        url(r'^download/(?P<extension>' + EXPORT_EXT + ')$',
+            views.ItemTranscode.as_view(), name="item-transcode"),
+        url(r'^export/$', views.ItemDetailExport.as_view(),
+            name='timeside-item-export'),
+        url(r'^angular/$', views.ItemDetailAngular.as_view(),
+            name='timeside-item-angular'),
+            ])
+        ),
       # Results
     url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(),
         name="timeside-result-json"),

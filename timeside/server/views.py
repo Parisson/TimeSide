@@ -25,12 +25,13 @@ from django.http import Http404
 from django.views.generic.base import View
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
+from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics
 
 from timeside.server.models import Experience, Item, Result, Processor
 from timeside.server.models import Preset, Selection, Task, User
-from timeside.server.models import _DRAFT, _DONE
+from timeside.server.models import _DRAFT, _DONE, _RUNNING
 from timeside.server.serializers import ExperienceSerializer, ItemSerializer, ItemWaveformSerializer
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
@@ -100,6 +101,8 @@ class ItemWaveView(generics.RetrieveAPIView):
         context = super(ItemWaveView, self).get_serializer_context()
         #context['plop'] = 92
         return context
+
+
 class ExperienceViewSet(viewsets.ModelViewSet):
 
     model = Experience
@@ -331,6 +334,9 @@ class ItemDetail(DetailView):
     model = Item
     template_name = 'timeside/item_detail.html'
 
+    def get_object(self):
+        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
+
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
         
@@ -339,10 +345,13 @@ class ItemDetail(DetailView):
         
         return context
 
-class ItemExport(DetailView):
+class ItemTranscode(DetailView):
     model = Item
 
-    def get(self, request, pk, extension):
+    def get_object(self):
+        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
+    
+    def get(self, request, uuid, extension):
         from . utils import TS_ENCODERS_EXT
 
         if extension not in TS_ENCODERS_EXT:
@@ -361,7 +370,7 @@ class ItemExport(DetailView):
             if not os.path.exists(result.file.path):
                 # Result exists but not file (may have been deleted)
                 result.delete()
-                return self.get(request, pk, extension)
+                return self.get(request, uuid, extension)
             # Result and file exist --> OK
             return StreamingHttpResponse(stream_from_file(result.file.path),
                                          content_type=result.mime_type)
@@ -370,10 +379,11 @@ class ItemExport(DetailView):
             # the corresponding task has to be created and run
             task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
                                                        selection=item.get_single_selection())
-
-            response = StreamingHttpResponse(streaming_content=stream_from_task(task),
-                                             content_type=mime_type)
-            return response
+            task.run(wait=True)
+            return self.get(request, uuid, extension)
+            #response = StreamingHttpResponse(streaming_content=stream_from_task(task),
+            #                                 content_type=mime_type)
+            #return response
 
 class ItemResultsList(generics.ListAPIView):
     model = Result
@@ -382,5 +392,5 @@ class ItemResultsList(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = super(ItemResultsList, self).get_queryset()
-        return queryset.filter(item__pk=self.kwargs.get('pk'), status=_DONE)
+        return queryset.filter(item__uuid=self.kwargs.get('uuid'), status=_DONE)
 
