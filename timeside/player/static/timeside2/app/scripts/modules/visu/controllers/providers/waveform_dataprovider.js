@@ -19,7 +19,7 @@ function (A,d3,BaseDataProvider) {
 
       this.CONST_NUMPOINTS = 1024;
 
-      this.CONST_DELTAZOOM_DONTGETDATA = 0.1;
+      this.CONST_DELTAZOOM_DONTGETDATA = 10; //cette valeur est énorme... A surveiller
 
       //Nombre de fois que l'on veut avoir AU MINIMUM le specific data avant et après la fenêtre en cours
       this.CONST_LENGTH_SPECIFICDATA_MIN_CACHE = 1; 
@@ -99,6 +99,8 @@ function (A,d3,BaseDataProvider) {
       A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,this.CONST_NUMPOINTS*3,
         function(data) {
           self.specificData=data;
+          console.log('ZOOM IS NOW : '+zoom);
+          self.zoomSpecificData = zoom;
           var _specificDataForView=self.getSpecificDataOnSegment(windowStart,windowEnd);
           self.view.setVisibleData(_specificDataForView);
         });
@@ -135,6 +137,7 @@ function (A,d3,BaseDataProvider) {
       }
 
       var zoomTrueChange = Math.abs(zoom - this.zoomSpecificData)>this.CONST_DELTAZOOM_DONTGETDATA;
+      console.log("Zoom true change : "+zoomTrueChange+" ? "+zoom+","+this.zoomSpecificData);
 
       //#2 si le zoom n'a pas ASSEZ changé, a-t-on la data en specific disponible ??? 
       if (! zoomTrueChange) {

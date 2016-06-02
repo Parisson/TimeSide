@@ -63,15 +63,15 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
 
       //debug value
-      var _debug = "",showDebug=false;
+      /*var _debug = "",showDebug=false;
       if (data.length<100) {
         _.each(data,function(_obj) {
           _debug=_debug+"("+_obj.time+','+_obj.value+")";
         })
         console.log('DEBUG : '+_debug);
         showDebug=true;
-      }
-      showDebug=false;//hop
+      }*/
+      var showDebug=false;//hop
 
       A.log.log('track_waveform','setVisibleData----------------- on '+data.length);
 
