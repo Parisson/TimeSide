@@ -8,7 +8,7 @@ python $manage wait-for-db
 python $manage syncdb --noinput
 python $manage migrate --noinput
 python $manage bower_install -- --allow-root
-python $manage collectstatic --noinput
+python $manage collectstatic --noinput -i *node_modules*
 
 # timeside setup
 python $manage timeside-create-admin-user
