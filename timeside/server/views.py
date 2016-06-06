@@ -40,7 +40,6 @@ from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
 
-
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
 import os
@@ -63,31 +62,33 @@ def stream_from_task(task):
     task.save()
 
 
-class SelectionViewSet(viewsets.ModelViewSet):
+class UUIDViewSetMixin(object):
+
+    lookup_field = 'uuid'
+    lookup_value_regex = '[0-9a-z-]+'
+
+
+class SelectionViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Selection
     queryset = Selection.objects.all()
     serializer_class = SelectionSerializer
-    lookup_field='uuid'
-    lookup_value_regex = '[0-9a-z_]+'
 
 
-class ItemViewSet(viewsets.ModelViewSet):
+class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Item
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    lookup_field='uuid'
+    lookup_field = 'uuid'
     lookup_value_regex = '[0-9a-z-]+'
 
 
-class ItemWaveView(generics.RetrieveAPIView):
+class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
 
     model = Item
     queryset = Item.objects.all()
     serializer_class = ItemWaveformSerializer
-    lookup_field='uuid'
-    lookup_value_regex = '[0-9a-z-]+'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -104,7 +105,7 @@ class ItemWaveView(generics.RetrieveAPIView):
         return context
 
 
-class ExperienceViewSet(viewsets.ModelViewSet):
+class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Experience
     queryset = Experience.objects.all()
@@ -116,27 +117,25 @@ class ProcessorViewSet(viewsets.ModelViewSet):
     model = Processor
     queryset = Processor.objects.all()
     serializer_class = ProcessorSerializer
-    lookup_field='pid'
+    lookup_field = 'pid'
     lookup_value_regex = '[0-9a-z_]+'
 
 
-class ResultViewSet(viewsets.ModelViewSet):
+class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Result
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
 
-class PresetViewSet(viewsets.ModelViewSet):
+class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Preset
     queryset = Preset.objects.all()
     serializer_class = PresetSerializer
-    #lookup_field='uuid'
-    #lookup_value_regex = '[0-9a-z_]+'
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Task
     queryset = Task.objects.all()
@@ -207,6 +206,7 @@ class ResultAnalyzerToElanView(View):
         response['Content-Length'] = file_size
         return response
 
+
 class ResultAnalyzerToSVView(View):
 
     model = Result
@@ -238,6 +238,7 @@ class ResultAnalyzerToSVView(View):
         response['Content-Length'] = file_size
         return response
 
+
 class ResultGrapherView(View):
 
     model = Result
@@ -264,7 +265,6 @@ class ItemDetailExport(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetailExport, self).get_context_data(**kwargs)
-
         context['Result'] = 'Result'
         Results = {}
 
@@ -280,12 +280,9 @@ class ItemDetailExport(DetailView):
                 Results[proc_id]['audio'] = ('audio' in result.mime_type) | ('ogg' in result.mime_type)
                 Results[proc_id]['image'] = ('image' in result.mime_type)
                 Results[proc_id]['video'] = ('video' in result.mime_type)
-
                 container = {}
 
-
             for res_id, res in container.items():
-
                 if res.time_mode == 'segment':
                     if res.data_mode == 'label':
                         Results[proc_id]['list'][res_id] = {'elan': True,
@@ -298,11 +295,10 @@ class ItemDetailExport(DetailView):
                                                             'sv': True,
                                                             'Parameters': res.parameters,
                                                             'name': res.name}
-
-
         context['Results'] = Results
 
         return context
+
 
 class ItemDetailAngular(DetailView):
 
@@ -331,6 +327,7 @@ class ItemDetailAngular(DetailView):
 
         return context
 
+
 class ItemDetail(DetailView):
 
     model = Item
@@ -346,6 +343,7 @@ class ItemDetail(DetailView):
         Results = {}
 
         return context
+
 
 class ItemTranscode(DetailView):
     model = Item
