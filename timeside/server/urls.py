@@ -39,15 +39,10 @@ urlpatterns = patterns(
             ])
         ),
       # Results
-    url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(),
-        name="timeside-result-json"),
-    url(r'^results/(?P<pk>.*)/png/$', views.ResultGrapherView.as_view(),
-        name="timeside-result-png"),
-    url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(),
-        name="timeside-result-audio"),
-    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/elan/$', views.ResultAnalyzerToElanView.as_view(),
-        name="timeside-result-elan"),
-    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$', views.ResultAnalyzerToSVView.as_view(),
-        name="timeside-result-sonic"), 
- 
+    url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(), name="timeside-result-json"),
+    url(r'^results/(?P<pk>.*)/png/$', views.ResultGrapherView.as_view(), name="timeside-result-png"),
+    url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(), name="timeside-result-audio"),
+    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/elan/$', views.ResultAnalyzerToElanView.as_view(), name="timeside-result-elan"),
+    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$', views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
+
     )

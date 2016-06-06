@@ -33,7 +33,6 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Item
-
         fields = ('uuid', 'url', 'title', 'description', 'mime_type', 'source_file',
                     'source_url', 'waveform_url', 'audio_url', 'audio_duration')
         extra_kwargs = {
@@ -118,19 +117,34 @@ class ItemWaveformSerializer(ItemSerializer):
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
     items = serializers.HyperlinkedRelatedField(many=True, view_name='item-detail', lookup_field='uuid', queryset=Item.objects.all())
+    selections = serializers.HyperlinkedRelatedField(many=True, view_name='selection-detail', lookup_field='uuid', queryset=Selection.objects.all())
+    author = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', queryset=User.objects.all())
 
     class Meta:
         model = Selection
-        lookup_field = 'uuid'
         fields = ('uuid', 'items', 'selections', 'author')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
+
+    def get_url(self, obj):
+        from rest_framework.reverse import reverse
+        request = self.context['request']
+        return reverse('selection-detail', kwargs={'uuid': obj.uuid}, request=request)
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
+    presets = serializers.HyperlinkedRelatedField(many=True, view_name='preset-detail', lookup_field='uuid', queryset=Preset.objects.all())
+    author = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', queryset=User.objects.all())
+
     class Meta:
         model = Experience
-        fields = ('uuid', 'presets', 'experiences', 'is_public', 'author')
-
+        lookup_field = 'uuid'
+        fields = ('uuid', 'presets', 'is_public', 'author')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -149,8 +163,11 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Preset
-        lookup_field='uuid'
+        lookup_field = 'uuid'
         fields = ('url', 'uuid', 'processor', 'parameters')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
 
     def validate_parameters(self, attrs, source):
 
@@ -178,10 +195,14 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
     item = serializers.HyperlinkedRelatedField(read_only=True, view_name='item-detail', lookup_field='uuid')
+    preset = serializers.HyperlinkedRelatedField(view_name='preset-detail', lookup_field='uuid', queryset=Preset.objects.all())
 
     class Meta:
         model = Result
         fields = ('uuid', 'item', 'preset', 'status', 'hdf5', 'file')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
 
 
 class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
@@ -195,6 +216,10 @@ class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
+    experience = serializers.HyperlinkedRelatedField(view_name='experience-detail', lookup_field='uuid', queryset=Experience.objects.all())
+    selection = serializers.HyperlinkedRelatedField(view_name='selection-detail', lookup_field='uuid', queryset=Selection.objects.all())
+    author = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', queryset=User.objects.all())
+
     class Meta:
         model = Task
         fields = ('uuid', 'experience', 'selection', 'status', 'author')
@@ -204,4 +229,5 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'fist_name', 'last_name') 
+        fields = ('username', 'first_name', 'last_name')
+        lookup_field = 'username'
