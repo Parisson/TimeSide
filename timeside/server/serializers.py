@@ -29,14 +29,16 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
     audio_url = serializers.SerializerMethodField()
-    audio_ogg_url = serializers.SerializerMethodField()
     audio_duration = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
-        lookup_field = 'uuid'
+        
         fields = ('uuid', 'url', 'title', 'description', 'mime_type', 'source_file',
-                    'source_url', 'waveform_url', 'audio_url', 'audio_ogg_url', 'audio_duration')
+                    'source_url', 'waveform_url', 'audio_url', 'audio_duration')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
 
     def get_url(self, obj):
         from rest_framework.reverse import reverse
@@ -60,7 +62,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 class ItemWaveformSerializer(ItemSerializer):
 
     item_url = serializers.SerializerMethodField('get_url')
-    waveform = serializers.SerializerMethodField('get_waveform')
+    waveform = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
