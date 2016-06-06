@@ -33,7 +33,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Item
-        
+
         fields = ('uuid', 'url', 'title', 'description', 'mime_type', 'source_file',
                     'source_url', 'waveform_url', 'audio_url', 'audio_duration')
         extra_kwargs = {
@@ -117,7 +117,7 @@ class ItemWaveformSerializer(ItemSerializer):
 
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
-    items = serializers.HyperlinkedRelatedField(many=True, view_name='timeside-item-detail', lookup_field='uuid', queryset=Item.objects.all())
+    items = serializers.HyperlinkedRelatedField(many=True, view_name='item-detail', lookup_field='uuid', queryset=Item.objects.all())
 
     class Meta:
         model = Selection
@@ -137,7 +137,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Processor
         lookup_field = 'pid'
-        fields = ('uuid', 'pid', 'version')
+        fields = ('pid', 'version')
 
 
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
