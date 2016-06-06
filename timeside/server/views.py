@@ -80,8 +80,6 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     model = Item
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    lookup_field = 'uuid'
-    lookup_value_regex = '[0-9a-z-]+'
 
 
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
@@ -338,10 +336,8 @@ class ItemDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
-
         context['Result'] = 'Result'
         Results = {}
-
         return context
 
 

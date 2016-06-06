@@ -138,7 +138,6 @@ class Selection(DocBaseResource):
         db_table = app + '_selections'
         verbose_name = _('selection')
 
-
     def get_all_items(self):
         qs_items = self.items.all()
         for selection in self.selections.all():
@@ -203,7 +202,6 @@ class Item(DocBaseResource):
         result_path = self.get_results_path()
         if not os.path.exists(result_path):
             os.makedirs(result_path)
-
 
         if self.source_file :
             uri = self.source_file.path
@@ -421,7 +419,6 @@ class Task(BaseResource):
                 status = Task.objects.get(id=self.id).status
 
 
-
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
     if (sender == Result) and instance.file :
@@ -439,6 +436,7 @@ def set_mimetype(sender, **kwargs):
     else:
         instance.mime_type = get_mime_type(path)
         super(sender, instance).save()
+
 
 def set_hash(sender, **kwargs):
     instance = kwargs['instance']
