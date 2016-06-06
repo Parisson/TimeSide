@@ -5,7 +5,6 @@ source "$SCRIPT_DIR/app_base.sh"
 
 # django init
 python $manage wait-for-db
-python $manage syncdb --noinput
 python $manage migrate --noinput
 python $manage bower_install -- --allow-root
 python $manage collectstatic --noinput -i *node_modules*

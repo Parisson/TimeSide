@@ -68,8 +68,8 @@ class SelectionViewSet(viewsets.ModelViewSet):
     model = Selection
     queryset = Selection.objects.all()
     serializer_class = SelectionSerializer
-    #lookup_field='uuid'
-    #lookup_value_regex = '[0-9a-z_]+'
+    lookup_field='uuid'
+    lookup_value_regex = '[0-9a-z_]+'
 
 
 class ItemViewSet(viewsets.ModelViewSet):
@@ -79,6 +79,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     serializer_class = ItemSerializer
     lookup_field='uuid'
     lookup_value_regex = '[0-9a-z-]+'
+
 
 class ItemWaveView(generics.RetrieveAPIView):
 
@@ -108,7 +109,7 @@ class ExperienceViewSet(viewsets.ModelViewSet):
     model = Experience
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializer
-    
+
 
 class ProcessorViewSet(viewsets.ModelViewSet):
 
@@ -201,7 +202,7 @@ class ResultAnalyzerToElanView(View):
         shutil.rmtree(tmp_dir)
 
         response = HttpResponse(eaf_data, content_type='application/xml')
-        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_eaf_file +'\"' 
+        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_eaf_file +'\"'
         response['Content-Length'] = file_size
         return response
 
@@ -223,7 +224,7 @@ class ResultAnalyzerToSVView(View):
         tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[0] + '_' + res_id + '.sv'
         abs_tmp_sv_file = os.path.join(tmp_dir,tmp_sv_file)
         segment_result.data_object.to_sonic_visualiser(svenv_file=abs_tmp_sv_file,
-                                                       audio_file=audio_file) 
+                                                       audio_file=audio_file)
         file_size = os.path.getsize(abs_tmp_sv_file)
         # read file
         with open(abs_tmp_sv_file, "rb") as f:
@@ -232,7 +233,7 @@ class ResultAnalyzerToSVView(View):
         shutil.rmtree(tmp_dir)
 
         response = HttpResponse(sv_data, content_type='application/xml')
-        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_sv_file +'\"' 
+        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_sv_file +'\"'
         response['Content-Length'] = file_size
         return response
 
@@ -262,10 +263,10 @@ class ItemDetailExport(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetailExport, self).get_context_data(**kwargs)
-        
+
         context['Result'] = 'Result'
         Results = {}
-        
+
         for result in self.get_object().results.all():
             proc_id = result.preset.processor.pid
             Results[proc_id] = {'id': result.id}
@@ -278,12 +279,12 @@ class ItemDetailExport(DetailView):
                 Results[proc_id]['audio'] = ('audio' in result.mime_type) | ('ogg' in result.mime_type)
                 Results[proc_id]['image'] = ('image' in result.mime_type)
                 Results[proc_id]['video'] = ('video' in result.mime_type)
-                                                                 
+
                 container = {}
 
-            
+
             for res_id, res in container.items():
-                 
+
                 if res.time_mode == 'segment':
                     if res.data_mode == 'label':
                         Results[proc_id]['list'][res_id] = {'elan': True,
@@ -296,10 +297,10 @@ class ItemDetailExport(DetailView):
                                                             'sv': True,
                                                             'Parameters': res.parameters,
                                                             'name': res.name}
-       
-                        
+
+
         context['Results'] = Results
-        
+
         return context
 
 class ItemDetailAngular(DetailView):
@@ -309,10 +310,10 @@ class ItemDetailAngular(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetailAngular, self).get_context_data(**kwargs)
-        
+
         context['Result'] = 'Result'
         Results = {}
-        
+
         for result in self.get_object().results.all():
             if result.hdf5:
                 container = AnalyzerResultContainer()
@@ -323,12 +324,12 @@ class ItemDetailAngular(DetailView):
             for name, res in container.items():
                  if res.time_mode == 'segment':
                     if res.data_mode == 'label':
-                        
+
                         Results[result.id] = name
             context['Results'] = Results
-        
+
         return context
-    
+
 class ItemDetail(DetailView):
 
     model = Item
@@ -339,10 +340,10 @@ class ItemDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
-        
+
         context['Result'] = 'Result'
         Results = {}
-        
+
         return context
 
 class ItemTranscode(DetailView):
@@ -350,7 +351,7 @@ class ItemTranscode(DetailView):
 
     def get_object(self):
         return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
-    
+
     def get(self, request, uuid, extension):
         from . utils import TS_ENCODERS_EXT
 
@@ -385,6 +386,7 @@ class ItemTranscode(DetailView):
             #                                 content_type=mime_type)
             #return response
 
+
 class ItemResultsList(generics.ListAPIView):
     model = Result
     queryset = Result.objects.all()
@@ -393,4 +395,3 @@ class ItemResultsList(generics.ListAPIView):
     def get_queryset(self):
         queryset = super(ItemResultsList, self).get_queryset()
         return queryset.filter(item__uuid=self.kwargs.get('uuid'), status=_DONE)
-

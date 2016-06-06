@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'djng',
     'djangobower',
     'corsheaders',
+    # 'south',
 )
 
 # A sample logging configuration. The only tangible logging

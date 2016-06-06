@@ -27,28 +27,27 @@ import numpy as np
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
-    waveform_url = serializers.SerializerMethodField('get_waveform_url')
-    audio_url = serializers.SerializerMethodField('get_audio_url')
-    audio_ogg_url = serializers.SerializerMethodField('get_ogg_url')
-    audio_duration = serializers.SerializerMethodField('get_audio_duration')
+    waveform_url = serializers.SerializerMethodField()
+    audio_url = serializers.SerializerMethodField()
+    audio_ogg_url = serializers.SerializerMethodField()
+    audio_duration = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
-        lookup_field='uuid'
-        fields = ('url', 'title', 'description', 'mime_type', 'source_file', 'source_url', 'waveform_url', 'audio_url', 'audio_duration')
+        lookup_field = 'uuid'
+        fields = ('uuid', 'url', 'title', 'description', 'mime_type', 'source_file',
+                    'source_url', 'waveform_url', 'audio_url', 'audio_ogg_url', 'audio_duration')
 
-    def get_url(self,obj):
+    def get_url(self, obj):
         from rest_framework.reverse import reverse
         request = self.context['request']
-        return reverse('item-detail',kwargs={'uuid':obj.uuid},request=request)
+        return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
 
     def get_waveform_url(self, obj):
         return (self.get_url(obj)+'waveform/')
 
     def get_audio_url(self, obj):
         obj_url = self.get_url(obj)
-
-
         return {'mp3': obj_url + 'download/mp3',
                 'ogg': obj_url + 'download/ogg'}
 
@@ -56,8 +55,6 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
         import timeside.core as ts_core
         decoder = ts_core.get_processor('file_decoder')(uri=obj.get_source()[0])
         return decoder.uri_total_duration
-
-
 
 
 class ItemWaveformSerializer(ItemSerializer):
@@ -118,43 +115,36 @@ class ItemWaveformSerializer(ItemSerializer):
 
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
-    items = serializers.HyperlinkedRelatedField(many=True,
-                                                view_name='item-detail',
-                                                lookup_field='uuid')
+    items = serializers.HyperlinkedRelatedField(many=True, view_name='timeside-item-detail', lookup_field='uuid', queryset=Item.objects.all())
 
     class Meta:
         model = Selection
-        #lookup_field='uuid'
-        # fields = ('id', 'items', 'selections', 'author')
+        lookup_field = 'uuid'
+        fields = ('uuid', 'items', 'selections', 'author')
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Experience
-
-        # fields = ('id', 'presets', 'experiences', 'is_public', 'author')
+        fields = ('uuid', 'presets', 'experiences', 'is_public', 'author')
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Processor
-        lookup_field='pid'
-
-        #fields = ('id', 'pid', 'version')
+        lookup_field = 'pid'
+        fields = ('uuid', 'pid', 'version')
 
 
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
-    processor = serializers.HyperlinkedRelatedField(view_name='processor-detail',
-                                                    lookup_field='pid')
-
+    processor = serializers.HyperlinkedRelatedField(view_name='processor-detail', lookup_field='pid', queryset=Processor.objects.all())
 
     class Meta:
         model = Preset
-        #lookup_field='uuid'
-
+        lookup_field='uuid'
         fields = ('url', 'uuid', 'processor', 'parameters')
 
     def validate_parameters(self, attrs, source):
@@ -186,15 +176,14 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Result
-        # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
+        fields = ('uuid', 'item', 'preset', 'status', 'hdf5', 'file')
 
 
 class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
 
-
     class Meta:
         model = Result
-        fields = ('id', 'preset', 'hdf5', 'file', 'mime_type')
+        fields = ('uuid', 'preset', 'hdf5', 'file', 'mime_type')
         read_only_fields = fields
         depth = 2
 
@@ -203,7 +192,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Task
-        # fields = ('id', 'experience', 'selection', 'status', 'author')
+        fields = ('uuid', 'experience', 'selection', 'status', 'author')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

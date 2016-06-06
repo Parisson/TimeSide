@@ -29,7 +29,7 @@ import uuid
 import mimetypes
 import ast
 import time
-                
+
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 
@@ -131,16 +131,9 @@ class DocBaseResource(BaseResource):
 
 class Selection(DocBaseResource):
 
-    items = models.ManyToManyField('Item', related_name="selections",
-                                   verbose_name=_('items'), blank=True,
-                                   null=True)
-    selections = models.ManyToManyField('Selection',
-                                        related_name="other_selections",
-                                        verbose_name=_('other selections'),
-                                        blank=True, null=True)
-    author = models.ForeignKey(User, related_name="selections",
-                               verbose_name=_('author'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
+    items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
+    selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True)
+    author = models.ForeignKey(User, related_name="selections", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = app + '_selections'
@@ -158,17 +151,12 @@ class Item(DocBaseResource):
 
     element_type = 'timeside_item'
 
-    source_file = models.FileField(_('file'), upload_to='items/%Y/%m/%d',
-                            blank=True, max_length=1024)
+    source_file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
     source_url = models.URLField(_('URL'), blank=True, max_length=1024)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
-    hdf5 = models.FileField(_('HDF5 result file'),
-                            upload_to='results/%Y/%m/%d',
-                            blank=True, max_length=1024)
-    author = models.ForeignKey(User, related_name="items",
-                               verbose_name=_('author'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
+    hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
+    author = models.ForeignKey(User, related_name="items", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
 
     class Meta:
@@ -295,7 +283,7 @@ class Item(DocBaseResource):
                 proc.render(output=result.file.path)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
-                
+
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
                     set_results_from_processor(analyzer)
@@ -313,16 +301,9 @@ class Item(DocBaseResource):
 
 class Experience(DocBaseResource):
 
-    presets = models.ManyToManyField('Preset', related_name="experiences",
-                                     verbose_name=_('presets'), blank=True,
-                                     null=True)
-    experiences = models.ManyToManyField('Experience',
-                                         related_name="other_experiences",
-                                         verbose_name=_('other experiences'),
-                                         blank=True, null=True)
-    author = models.ForeignKey(User, related_name="experiences",
-                               verbose_name=_('author'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
+    presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True)
+    experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True)
+    author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=False)
 
     class Meta:
@@ -350,13 +331,9 @@ class Processor(models.Model):
 
 class Preset(BaseResource):
 
-    processor = models.ForeignKey('Processor', related_name="presets",
-                                  verbose_name=_('processor'), blank=True,
-                                  null=True)
+    processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
-    author = models.ForeignKey(User, related_name="presets",
-                               verbose_name=_('author'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name="presets", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=False)
 
     class Meta:
@@ -380,23 +357,13 @@ class Preset(BaseResource):
 
 class Result(BaseResource):
 
-    item = models.ForeignKey('Item', related_name="results",
-                             verbose_name=_('item'), blank=True, null=True,
-                             on_delete=models.SET_NULL)
-    preset = models.ForeignKey('Preset', related_name="results",
-                               verbose_name=_('preset'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
-    hdf5 = models.FileField(_('HDF5 result file'),
-                            upload_to='results/%Y/%m/%d', blank=True,
-                            max_length=1024)
-    file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d',
-                            blank=True, max_length=1024)
-    mime_type = models.CharField(_('Output file MIME type'), blank=True,
-                                 max_length=256)
+    item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
+    preset = models.ForeignKey('Preset', related_name="results", verbose_name=_('preset'), blank=True, null=True, on_delete=models.SET_NULL)
+    hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
+    file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
+    mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-    author = models.ForeignKey(User, related_name="results",
-                               verbose_name=_('author'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name="results", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     # lock = models.BooleanField(default=False)
 
     class Meta:
@@ -422,16 +389,10 @@ class Result(BaseResource):
 
 class Task(BaseResource):
 
-    experience = models.ForeignKey('Experience', related_name="task",
-                                   verbose_name=_('experience'), blank=True,
-                                   null=True)
-    selection = models.ForeignKey('Selection', related_name="task",
-                                  verbose_name=_('selection'), blank=True,
-                                  null=True)
+    experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
+    selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-    author = models.ForeignKey(User, related_name="tasks",
-                               verbose_name=_('author'), blank=True, null=True,
-                               on_delete=models.SET_NULL)
+    author = models.ForeignKey(User, related_name="tasks", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = app + '_tasks'
@@ -460,7 +421,7 @@ class Task(BaseResource):
                 time.sleep(0.5)
                 status = Task.objects.get(id=self.id).status
 
- 
+
 
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
@@ -499,7 +460,7 @@ def run(sender, **kwargs):
     task = kwargs['instance']
     if task.status == _PENDING:
         task.run()
-        
+
 
 post_save.connect(set_mimetype, sender=Item)
 post_save.connect(set_hash, sender=Item)
