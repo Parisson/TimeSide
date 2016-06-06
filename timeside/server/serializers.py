@@ -31,7 +31,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
     audio_url = serializers.SerializerMethodField('get_audio_url')
     audio_ogg_url = serializers.SerializerMethodField('get_ogg_url')
     audio_duration = serializers.SerializerMethodField('get_audio_duration')
-  
+
     class Meta:
         model = Item
         lookup_field='uuid'
@@ -41,7 +41,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
         from rest_framework.reverse import reverse
         request = self.context['request']
         return reverse('item-detail',kwargs={'uuid':obj.uuid},request=request)
-    
+
     def get_waveform_url(self, obj):
         return (self.get_url(obj)+'waveform/')
 
@@ -56,19 +56,19 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
         import timeside.core as ts_core
         decoder = ts_core.get_processor('file_decoder')(uri=obj.get_source()[0])
         return decoder.uri_total_duration
-        
 
 
-    
+
+
 class ItemWaveformSerializer(ItemSerializer):
 
     item_url = serializers.SerializerMethodField('get_url')
     waveform = serializers.SerializerMethodField('get_waveform')
-    
+
     class Meta:
         model = Item
         fields = ('item_url', 'title', 'waveform_url', 'waveform')
-    
+
     def get_waveform(self, obj):
         request = self.context['request']
         start = float(request.GET.get('start', 0))
@@ -100,14 +100,14 @@ class ItemWaveformSerializer(ItemSerializer):
         max_values = np.zeros(nb_pixels)
         time_values = np.linspace(start=start, stop=stop, num=nb_pixels+1,
                                   endpoint=True)
-        
+
         sample_values =  np.round(time_values*samplerate).astype('int')
 
         for i in xrange(nb_pixels):
             values = wav_res['data_object']['value'][sample_values[i]:sample_values[i+1]]
             min_values[i] = np.min(values)
             max_values[i] = np.max(values)
-        
+
         return {'start': start,
                 'stop': stop,
                 'nb_pixels': nb_pixels,
@@ -132,7 +132,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Experience
-        
+
         # fields = ('id', 'presets', 'experiences', 'is_public', 'author')
 
 
@@ -150,11 +150,11 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
     processor = serializers.HyperlinkedRelatedField(view_name='processor-detail',
                                                     lookup_field='pid')
 
-    
+
     class Meta:
         model = Preset
         #lookup_field='uuid'
-        
+
         fields = ('url', 'uuid', 'processor', 'parameters')
 
     def validate_parameters(self, attrs, source):
@@ -182,13 +182,10 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
-    item = serializers.HyperlinkedRelatedField(read_only=True,
-                                               view_name='item-detail',
-                                               lookup_field='uuid')
-        
+    item = serializers.HyperlinkedRelatedField(read_only=True, view_name='item-detail', lookup_field='uuid')
+
     class Meta:
         model = Result
-        
         # fields = ('id', 'item', 'preset', 'status', 'hdf5', 'file')
 
 
@@ -200,7 +197,7 @@ class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'preset', 'hdf5', 'file', 'mime_type')
         read_only_fields = fields
         depth = 2
-        
+
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
