@@ -28,7 +28,7 @@ fi
 # app start
 if [ $1 = "--runserver" ]
 then
-    python $manage runserver_plus 0.0.0.0:8000
+    python $manage runserver 0.0.0.0:8000
 else
     # static files auto update
     watchmedo shell-command --patterns="*.js;*.css" --recursive \
