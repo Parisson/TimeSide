@@ -137,7 +137,10 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Processor
         lookup_field = 'pid'
-        fields = ('pid', 'version')
+        fields = ('pid', 'version', 'url')
+        extra_kwargs = {
+            'url': {'lookup_field': 'pid'}
+            }
 
 
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
