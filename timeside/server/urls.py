@@ -34,11 +34,18 @@ urlpatterns = patterns(
     # Ex: /item/5/download/ogg
     url(r'^items/(?P<pk>\d+)/download/(?P<extension>' + EXPORT_EXT + ')$',
         views.ItemExport.as_view(), name="item-export"),
-    # Results
+    url(r'^items/(?P<pk>\d+)/diadems/$', views.ItemDiadems.as_view(),
+        name='timeside-item-diadems'),
+      # Results
     url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(),
         name="timeside-result-json"),
     url(r'^results/(?P<pk>.*)/png/$', views.ResultGrapherView.as_view(),
         name="timeside-result-png"),
     url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(),
         name="timeside-result-audio"),
+    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/elan/$', views.ResultAnalyzerToElanView.as_view(),
+        name="timeside-result-elan"),
+    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$', views.ResultAnalyzerToSVView.as_view(),
+        name="timeside-result-sonic"), 
+ 
     )

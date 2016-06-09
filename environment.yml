@@ -6,6 +6,7 @@ dependencies:
   - h5py
   - jupyter
   - matplotlib
+  - mysql-python
   - networkx
   - numpy
   - pillow
@@ -14,7 +15,7 @@ dependencies:
   - redis
   - scipy
   - simplejson
-  - pytables  # named tables in Pypi ... 
+  - pytables  # named tables in Pypi ...
   - traits
   - Werkzeug
   - pip:
@@ -28,6 +29,7 @@ dependencies:
       - django==1.6.*
       - djangorestframework==2.*
       - mutagen
+      - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling
       - south
       - uwsgi

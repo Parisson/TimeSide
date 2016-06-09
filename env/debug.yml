@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2015 Parisson SARL
+# Copyright (c) 2015-2016 Parisson SARL
 
-# This file is part of TimeSide.
+# This file is part of Telemeta.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,8 @@
 
 app:
   env_file:
-    - app/sandbox/ts-sqlite.env
-  ports:
-    - "8000:8000"
-  command: /bin/bash deploy/start_app.sh --runserver
+    - env/debug.env
+
+worker:
+  env_file:
+    - env/debug.env

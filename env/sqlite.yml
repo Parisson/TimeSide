@@ -23,22 +23,8 @@
 
 
 app:
-  volumes:
-    - ./app/:/srv/app
-    - ./:/srv/src/timeside/
-  ports:
-    - "9000:9000"
   env_file:
-    - app/sandbox/ts-docker-compose-dev.env
-
-worker:
-  env_file:
-    - app/sandbox/ts-docker-compose-dev.env
-
-notebook:
-  build: .
+    - anv/sqlite.env
   ports:
-    - "8888:8888"
-  volumes_from:
-    - app
-  command: sh -c "cd /srv/src/timeside/doc/ipynb; jupyter notebook --no-browser --ip=0.0.0.0"
+    - "8000:8000"
+  command: /bin/bash app/scripts/app.sh --runserver

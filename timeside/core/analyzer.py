@@ -45,6 +45,7 @@ if 'DISPLAY' not in os.environ:
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from py_sonicvisualiser import SVEnv
 
 numpy_data_types = [
     #'float128',
@@ -884,6 +885,20 @@ class FrameValueObject(ValueObject, FramewiseObject):
                               self.y_value[0], self.y_value[-1]],
                       aspect='auto')
 
+    def to_sonic_visualiser(self, svenv_file, audio_file):
+        #audio_file = os.path.basename(audio_file)
+        # init a sonic visualiser environment file corresponding
+        # to the analysis of media wavfname
+        sve = SVEnv.init_from_wave_file(audio_file)
+
+        # append a spectrogram view
+        specview = sve.add_spectrogram()
+        
+        sve.add_continuous_annotations(self.time, self.data, view=specview)
+        
+        # save the environment to a sonic visualiser environment file
+        sve.save(svenv_file)
+ 
 
 class FrameLabelObject(LabelObject, FramewiseObject):
     # Define default values
@@ -930,20 +945,52 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                   ('duration', None)])
 
     def _render_plot(self, ax, size=(1024,256)):
+        import matplotlib.patches as mpatches
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
-        artist = {}
+        legend_patches = []
         for key, label in self.label_metadata.label.items():
             ax_color[key] = colors.next()
-            artist[key] = plt.axvspan(0, 0, color=ax_color[key], alpha=0.3)
+            # Creating artists specifically for adding to the legend (aka. Proxy artists)
+            legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
+            
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 
-        #Create legend from custom artist/label lists
-        ax.legend(artist.values(), self.label_metadata.label.values())
+        # Create legend from custom artist/label lists
+        ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
 
-    def to_elan(self, elan_file, media_file=None, label_per_tier = 'ALL'):
+    def merge_segment(self):
+        # Merge adjacent segments if they share the same label
+        if all(np.diff(self.label)):
+            # Nothing to merge
+            return
+        # Merge adjacent segments
+        label = self.label.tolist()
+        time = self.time.tolist()
+        duration = self.duration.tolist()
+
+        start = 0
+        while True:
+            try:
+                if label[start]==label[start+1]:
+                    del label[start+1]
+                    del time[start+1]
+                    duration[start] += duration[start+1]
+                    del duration[start+1]
+                else:
+                    start = start + 1
+
+            except IndexError:
+                break
+        # Copy back data to data_object               
+        self.label = label
+        self.time = time
+        self.duration = duration
+
+    
+    def to_elan(self, elan_file=None, media_file=None, label_per_tier = 'ALL'):
         import pympi
         elan = pympi.Elan.Eaf(author='TimeSide')
         if media_file is not None:
@@ -972,8 +1019,26 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                 end=int(end*1000),
                                 value=label_id)
         
-        elan.to_file(elan_file)
+        elan.to_file(file_path=elan_file)
 
+    def to_sonic_visualiser(self, svenv_file, audio_file):
+        #audio_file = os.path.basename(audio_file)
+        # init a sonic visualiser environment file corresponding
+        # to the analysis of media wavfname
+        sve = SVEnv.init_from_wave_file(audio_file)
+
+        # append a spectrogram view
+        specview = sve.add_spectrogram()
+        
+        
+        # append a labelled interval annotation layer on a new view
+        labels = [self.label_metadata.label[unicode(label_id)] for label_id in self.label]
+
+        sve.add_interval_annotations(self.time , self.duration, labels, self.label)
+
+        # save the environment to a sonic visualiser environment file
+        sve.save(svenv_file)
+        
 
 class AnalyzerResultContainer(dict):
 

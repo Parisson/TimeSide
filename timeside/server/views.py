@@ -141,6 +141,67 @@ class ResultAnalyzerView(View):
         return HttpResponse(container.to_json(),
                             content_type='application/json')
 
+class ResultAnalyzerToElanView(View):
+
+    model = Result
+
+    def get(self, request, *args, **kwargs):
+        result = Result.objects.get(pk=kwargs['pk'])
+        res_id = kwargs['res_id']
+        container = AnalyzerResultContainer()
+        container.from_hdf5(result.hdf5.path)
+
+        segment_result = container[res_id]
+        import tempfile
+        tmp_dir = tempfile.mkdtemp(suffix=res_id+'_eaf')
+        # Pympi will not overwrite the file
+        audio_file = os.path.basename(segment_result.audio_metadata.uri)
+        tmp_eaf_file = os.path.splitext(audio_file)[0] + '_' + res_id + '.eaf'
+        abs_tmp_eaf_file = os.path.join(tmp_dir,tmp_eaf_file)
+        segment_result.data_object.to_elan(elan_file=abs_tmp_eaf_file,
+                                           media_file=audio_file)
+        file_size = os.path.getsize(abs_tmp_eaf_file)
+        # read file
+        with open(abs_tmp_eaf_file, "rb") as f:
+            eaf_data = f.read()
+        import shutil
+        shutil.rmtree(tmp_dir)
+
+        response = HttpResponse(eaf_data, content_type='application/xml')
+        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_eaf_file +'\"' 
+        response['Content-Length'] = file_size
+        return response
+
+class ResultAnalyzerToSVView(View):
+
+    model = Result
+
+    def get(self, request, *args, **kwargs):
+        result = Result.objects.get(pk=kwargs['pk'])
+        res_id = kwargs['res_id']
+        container = AnalyzerResultContainer()
+        container.from_hdf5(result.hdf5.path)
+
+        segment_result = container[res_id]
+        import tempfile
+        tmp_dir = tempfile.mkdtemp(suffix=res_id+'_sv')
+        # Pympi will not overwrite the file
+        audio_file = os.path.abspath(result.item.file.name)
+        tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[0] + '_' + res_id + '.sv'
+        abs_tmp_sv_file = os.path.join(tmp_dir,tmp_sv_file)
+        segment_result.data_object.to_sonic_visualiser(svenv_file=abs_tmp_sv_file,
+                                                       audio_file=audio_file) 
+        file_size = os.path.getsize(abs_tmp_sv_file)
+        # read file
+        with open(abs_tmp_sv_file, "rb") as f:
+            sv_data = f.read()
+        import shutil
+        shutil.rmtree(tmp_dir)
+
+        response = HttpResponse(sv_data, content_type='application/xml')
+        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_sv_file +'\"' 
+        response['Content-Length'] = file_size
+        return response
 
 class ResultGrapherView(View):
 
@@ -161,12 +222,81 @@ class ResultEncoderView(View):
         return StreamingHttpResponse(stream_from_file(result.file.path),
                             content_type=result.mime_type)
 
+class ItemDiadems(DetailView):
 
+    model = Item
+    template_name = 'timeside/item_diadems.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemDiadems, self).get_context_data(**kwargs)
+        
+        context['Result'] = 'Result'
+        Results = {}
+        
+        for result in self.get_object().results.all():
+            proc_id = result.preset.processor.pid
+            Results[proc_id] = {'id': result.id}
+            if result.hdf5:
+                container = AnalyzerResultContainer()
+                container.from_hdf5(result.hdf5.path)
+                Results[proc_id]['json'] = True
+                Results[proc_id]['list']= {}
+            elif result.mime_type:
+                Results[proc_id]['audio'] = ('audio' in result.mime_type) | ('ogg' in result.mime_type)
+                Results[proc_id]['image'] = ('image' in result.mime_type)
+                Results[proc_id]['video'] = ('video' in result.mime_type)
+                                                                 
+                container = {}
+
+            
+            for res_id, res in container.items():
+                 
+                if res.time_mode == 'segment':
+                    if res.data_mode == 'label':
+                        Results[proc_id]['list'][res_id] = {'elan': True,
+                                                            'sv': True,
+                                                            'Parameters': res.parameters,
+                                                            'name': res.name}
+                if res.time_mode == 'framewise':
+                    if res.data_mode == 'value':
+                        Results[proc_id]['list'][res_id] = {'elan': False,
+                                                            'sv': True,
+                                                            'Parameters': res.parameters,
+                                                            'name': res.name}
+       
+                        
+        context['Results'] = Results
+        
+        return context
+
+
+    
 class ItemDetail(DetailView):
 
     model = Item
     template_name = 'timeside/item_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ItemDetail, self).get_context_data(**kwargs)
+        
+        context['Result'] = 'Result'
+        Results = {}
+        
+        for result in self.get_object().results.all():
+            if result.hdf5:
+                container = AnalyzerResultContainer()
+                container.from_hdf5(result.hdf5.path)
+            else:
+                container = {}
+
+            for name, res in container.items():
+                 if res.time_mode == 'segment':
+                    if res.data_mode == 'label':
+                        
+                        Results[result.id] = name
+            context['Results'] = Results
+        
+        return context
 
 class ItemExport(DetailView):
     model = Item
@@ -197,29 +327,8 @@ class ItemExport(DetailView):
         except Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
-            exp_title = "Transcode to %s" % extension
-            exp_description = ("Experience for transcoding an item to %s\n"
-                               "Automatically generated by the TimeSide "
-                               "application.") % mime_type
-            experience, created = Experience.objects.get_or_create(
-                title=exp_title,
-                description=exp_description)
-            if created:
-                experience.save()
-                experience.presets.add(preset)
-
-            sel_title = "Singleton selection for item %d" % item.id
-            sel_description = ("Singleton selection for item %d\n"
-                               "Automatically generated by the TimeSide "
-                               "application.") % item.id
-            selection, created = Selection.objects.get_or_create(
-                title=sel_title,
-                description=sel_description)
-            if created:
-                selection.save()
-                selection.items.add(item)
-            task, created = Task.objects.get_or_create(experience=experience,
-                                                       selection=selection)
+            task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
+                                                       selection=item.get_single_selection())
 
             response = StreamingHttpResponse(streaming_content=stream_from_task(task),
                                              content_type=mime_type)
