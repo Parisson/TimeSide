@@ -26,7 +26,7 @@ if [ $DEBUG = "False" ]; then
 fi
 
 # app start
-if [ $1 = "--runserver" ]
+if [ "$1" = "--runserver" ]
 then
     python $manage runserver 0.0.0.0:8000
 else
