@@ -59,7 +59,7 @@ script:
 #  #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
        docker-compose -f docker-compose.yml -f env/build.yml start db;
-       sleep 5;
+       sleep 20;
        docker-compose -f docker-compose.yml -f env/build.yml up -d;
        sleep 20;
        curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/api/items/;
