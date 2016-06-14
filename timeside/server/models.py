@@ -127,12 +127,19 @@ class DocBaseResource(BaseResource):
     class Meta:
         abstract = True
 
+        
+class ShareableResource(models.Model):
+    
+    author = models.ForeignKey(User, related_name="%(class)s", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+    is_public = models.BooleanField(default=True)
+        
+    class Meta:
+        abstract = True
 
-class Selection(DocBaseResource):
+class Selection(DocBaseResource, ShareableResource):
 
     items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
     selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True)
-    author = models.ForeignKey(User, related_name="selections", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = app + '_selections'
@@ -145,7 +152,7 @@ class Selection(DocBaseResource):
         return qs_items
 
 
-class Item(DocBaseResource):
+class Item(DocBaseResource, ShareableResource):
 
     element_type = 'timeside_item'
 
@@ -154,7 +161,6 @@ class Item(DocBaseResource):
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
-    author = models.ForeignKey(User, related_name="items", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     lock = models.BooleanField(default=False)
 
     class Meta:
@@ -296,12 +302,10 @@ class Item(DocBaseResource):
         # item.lock_setter(False)
 
 
-class Experience(DocBaseResource):
+class Experience(DocBaseResource, ShareableResource):
 
     presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True)
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True)
-    author = models.ForeignKey(User, related_name="experiences", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
-    is_public = models.BooleanField(default=False)
 
     class Meta:
         db_table = app + '_experiences'
@@ -310,8 +314,10 @@ class Experience(DocBaseResource):
 
 class Processor(models.Model):
 
-    pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, max_length=256)
+    pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, unique= True, max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
+    name = models.CharField(_('name'), max_length=256, blank=True)
+    
 
     class Meta:
         db_table = app + '_processors'
@@ -323,15 +329,23 @@ class Processor(models.Model):
     def save(self, **kwargs):
         if not self.version:
             self.version = timeside.core.__version__
+        if not self.name:
+            proc = timeside.core.get_processor(self.pid)()
+            self.name = proc.name()
         super(Processor, self).save(**kwargs)
 
 
-class Preset(BaseResource):
+class SubProcessor(models.Model):
+    """SubProcessor object are intended to store the different results id associated with a given Processor
+    """
+    sub_processor_id = models.CharField(_('sub_processor_id'), unique= True, max_length=128)
+    processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
+
+
+class Preset(BaseResource, ShareableResource):
 
     processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
-    author = models.ForeignKey(User, related_name="presets", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
-    is_public = models.BooleanField(default=False)
 
     class Meta:
         db_table = app + '_presets'
@@ -352,7 +366,7 @@ class Preset(BaseResource):
             experience.presets.add(self)
         return experience
 
-class Result(BaseResource):
+class Result(BaseResource, ShareableResource):
 
     item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
     preset = models.ForeignKey('Preset', related_name="results", verbose_name=_('preset'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -360,7 +374,7 @@ class Result(BaseResource):
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-    author = models.ForeignKey(User, related_name="results", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+
     # lock = models.BooleanField(default=False)
 
     class Meta:
@@ -384,12 +398,12 @@ class Result(BaseResource):
         return '_'.join([self.item.title, unicode(self.preset.processor)])
 
 
-class Task(BaseResource):
+class Task(BaseResource, ShareableResource):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
     selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-    author = models.ForeignKey(User, related_name="tasks", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+
 
     class Meta:
         db_table = app + '_tasks'
@@ -463,3 +477,12 @@ post_save.connect(set_mimetype, sender=Item)
 post_save.connect(set_hash, sender=Item)
 post_save.connect(set_mimetype, sender=Result)
 post_save.connect(run, sender=Task)
+
+
+
+# Session and Tracks related objects
+
+class AnalysisTrack(ShareableResource):
+    sub_processor_id = models.ForeignKey(SubProcessor, related_name="analysis_tracks", verbose_name=_('sub_processor'), blank=True, null=True)
+    preset = models.ForeignKey(Preset, related_name="analysis_tracks", verbose_name=_('preset'), blank=True, null=True)
+
