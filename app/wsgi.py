@@ -28,4 +28,4 @@ matplotlib.use('Agg')
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
 import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+application = django.core.wsgi.get_wsgi_application()
