@@ -63,12 +63,14 @@ script:
        curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/api/items/;
     fi
 #
-after_script:
-    - if [[ $TEST_TARGET == 'server' ]]; then
-           docker-compose stop;
-      fi
 after_success:
 #  -  # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
           docker-compose -f docker-compose.yml -f env/dev.yml run app  sh -c "cd /srv/src/timeside; pip install coveralls; coveralls";
+    fi
+
+after_script:
+  - if [[ $TEST_TARGET == 'server' ]]; then
+           docker-compose stop;
+           docker-compose logs app;
     fi
