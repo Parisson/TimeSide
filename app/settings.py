@@ -137,12 +137,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
     'django_extensions',
-    'south',
     'timeside.server',
     'timeside.player',
     'rest_framework',
@@ -152,6 +148,7 @@ INSTALLED_APPS = (
     'djng',
     'djangobower',
     'corsheaders',
+    # 'south',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -219,3 +216,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     'localhost:9000'
 )
+
+# SOUTH_MIGRATION_MODULES = {
+#     'timeside.server': 'timeside.server.south_migrations'
+# }

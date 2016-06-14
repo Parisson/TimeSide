@@ -24,10 +24,11 @@ dependencies:
       - django-bootstrap3
       - django-bower
       - django-celery
+      - django-cors-headers
       - django-environ
       - django-extensions
-      - django==1.6.*
-      - djangorestframework==2.*
+      - django==1.9.*
+      - djangorestframework==3.*
       - mutagen
       - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling

@@ -20,8 +20,8 @@ pip-log.txt
 .tox
 *.mo
 .mr.developer.cfg
-node_modules
-bower_components
+*node_modules*
+*bower_components*
 .sass-cache
 .tmp
 ./data/

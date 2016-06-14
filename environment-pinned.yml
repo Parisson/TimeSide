@@ -6,7 +6,7 @@ dependencies:
 - cairo=1.12.18=6
 - configparser=3.5.0b2=py27_1
 - cycler=0.10.0=py27_0
-- decorator=4.0.9=py27_0
+- decorator=4.0.10=py27_0
 - entrypoints=0.2=py27_1
 - fontconfig=2.11.1=5
 - freetype=2.5.5=1
@@ -94,15 +94,16 @@ dependencies:
   - backports.ssl-match-hostname==3.4.0.2
   - billiard==3.3.0.23
   - celery==3.1.23
-  - django==1.6.11
+  - django==1.9.7
   - django-angular==0.8.2
   - django-bootstrap-pagination==1.6.1
   - django-bootstrap3==7.0.1
   - django-bower==5.1.0
   - django-celery==3.1.17
+  - django-cors-headers==1.1.0
   - django-environ==0.4.0
   - django-extensions==1.6.7
-  - djangorestframework==2.4.8
+  - djangorestframework==3.3.3
   - ipython-genutils==0.1.0
   - jupyter-client==4.2.2
   - jupyter-console==4.1.1
