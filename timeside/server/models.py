@@ -330,8 +330,10 @@ class Processor(models.Model):
         if not self.version:
             self.version = timeside.core.__version__
         if not self.name:
-            proc = timeside.core.get_processor(self.pid)()
-            self.name = proc.name()
+            try:
+                self.name = timeside.core.get_processor(self.pid).name()
+            except AttributeError:
+                pass
         super(Processor, self).save(**kwargs)
 
 
