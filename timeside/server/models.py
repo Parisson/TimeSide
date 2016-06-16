@@ -345,6 +345,10 @@ class SubProcessor(models.Model):
 
     processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
 
+    class Meta:
+        db_table = app + '_subprocessors'
+        verbose_name = _('Subprocessor')
+        
     def __unicode__(self):
         return self.sub_processor_id
 
@@ -490,7 +494,10 @@ post_save.connect(run, sender=Task)
 # Session and Tracks related objects
 
 class AnalysisTrack(DocBaseResource, ShareableResource):
-    sub_processor_id = models.ForeignKey(SubProcessor, related_name="analysis_tracks", verbose_name=_('sub_processor'), blank=True, null=True)
+    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis_tracks", verbose_name=_('sub_processor'), blank=True, null=True)
     preset = models.ForeignKey(Preset, related_name="analysis_tracks", verbose_name=_('preset'), blank=True, null=True)
 
-
+    class Meta:
+        db_table = app + '_analysistracks'
+        verbose_name = _('Analysis Track')
+ 

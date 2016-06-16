@@ -29,16 +29,19 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics
 
-from timeside.server.models import Experience, Item, Result, Processor
+from timeside.server.models import Experience, Item, Result, Processor, SubProcessor
 from timeside.server.models import Preset, Selection, Task, User
+from timeside.server.models import AnalysisTrack
 from timeside.server.models import _DRAFT, _DONE, _RUNNING
 from timeside.server.serializers import ExperienceSerializer, ItemSerializer, ItemWaveformSerializer
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
+from timeside.server.serializers import SubProcessorSerializer
 from timeside.server.serializers import ResultSerializer, Result_ReadableSerializer
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
+from timeside.server.serializers import AnalysisSerializer
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -119,6 +122,15 @@ class ProcessorViewSet(viewsets.ModelViewSet):
     lookup_value_regex = '[0-9a-z_]+'
 
 
+class SubProcessorViewSet(viewsets.ModelViewSet):
+
+    model = SubProcessor
+    queryset = SubProcessor.objects.all()
+    serializer_class = SubProcessorSerializer
+    lookup_field = 'sub_processor_id'
+    lookup_value_regex = '[0-9a-z_.]+'
+
+
 class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Result
@@ -147,7 +159,17 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     lookup_field = 'username'
 
+    
+class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
+    model = AnalysisTrack
+    queryset = AnalysisTrack.objects.all()
+    serializer_class = AnalysisSerializer
+
+
+
+
+    
 class IndexView(ListView):
 
     model = Item

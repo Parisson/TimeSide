@@ -116,52 +116,57 @@ class ItemWaveformSerializer(ItemSerializer):
 
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
-    items = serializers.HyperlinkedRelatedField(many=True, view_name='item-detail', lookup_field='uuid', queryset=Item.objects.all())
-    selections = serializers.HyperlinkedRelatedField(many=True, view_name='selection-detail', lookup_field='uuid', queryset=Selection.objects.all())
-    author = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', queryset=User.objects.all())
-
     class Meta:
         model = Selection
         fields = ('uuid', 'items', 'selections', 'author')
         extra_kwargs = {
-            'url': {'lookup_field': 'uuid'}
+            'url': {'lookup_field': 'uuid'},
+            'selections': {'lookup_field': 'uuid'},
+            'items': {'lookup_field': 'uuid'},
+            'author': {'lookup_field': 'username'}
             }
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
-    presets = serializers.HyperlinkedRelatedField(many=True, view_name='preset-detail', lookup_field='uuid', queryset=Preset.objects.all())
-    author = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', queryset=User.objects.all())
-
     class Meta:
         model = Experience
-        lookup_field = 'uuid'
         fields = ('uuid', 'presets', 'is_public', 'author')
         extra_kwargs = {
-            'url': {'lookup_field': 'uuid'}
+            'url': {'lookup_field': 'uuid'},
+            'presets': {'lookup_field': 'uuid'},
+            'author': {'lookup_field': 'username'}
             }
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Processor
-        lookup_field = 'pid'
-        fields = ('pid', 'version', 'url')
+        fields = ('url', 'pid', 'version')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
             }
 
 
-class PresetSerializer(serializers.HyperlinkedModelSerializer):
+class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
+    
+    class Meta:
+        model = SubProcessor
+        fields = ('url', 'name', 'processor', 'sub_processor_id')
+        extra_kwargs = {
+            'url': {'lookup_field': 'sub_processor_id'},
+            'processor': {'lookup_field': 'pid'}
+            }
 
-    processor = serializers.HyperlinkedRelatedField(view_name='processor-detail', lookup_field='pid', queryset=Processor.objects.all())
+            
+class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Preset
-        lookup_field = 'uuid'
         fields = ('url', 'uuid', 'processor', 'parameters')
         extra_kwargs = {
-            'url': {'lookup_field': 'uuid'}
+            'url': {'lookup_field': 'uuid'},
+            'processor': {'lookup_field': 'pid'}
             }
 
     def validate_parameters(self, attrs, source):
@@ -189,15 +194,13 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
-    item = serializers.HyperlinkedRelatedField(read_only=True, view_name='item-detail', lookup_field='uuid')
-    preset = serializers.HyperlinkedRelatedField(view_name='preset-detail', lookup_field='uuid', queryset=Preset.objects.all())
-
     class Meta:
         model = Result
         fields = ('uuid', 'item', 'preset', 'status', 'hdf5', 'file')
         extra_kwargs = {
-            'url': {'lookup_field': 'uuid'}
-            }
+            'url': {'lookup_field': 'uuid'},
+            'item': {'lookup_field': 'uuid'},
+            'preset':  {'lookup_field': 'uuid'}}
 
 
 class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
@@ -211,18 +214,36 @@ class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
-    experience = serializers.HyperlinkedRelatedField(view_name='experience-detail', lookup_field='uuid', queryset=Experience.objects.all())
-    selection = serializers.HyperlinkedRelatedField(view_name='selection-detail', lookup_field='uuid', queryset=Selection.objects.all())
-    author = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', queryset=User.objects.all())
-
     class Meta:
         model = Task
-        fields = ('uuid', 'experience', 'selection', 'status', 'author')
+        fields = ('url', 'uuid', 'experience', 'selection', 'status', 'author')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'},
+            'experience': {'lookup_field': 'uuid'},
+            'selection':  {'lookup_field': 'uuid'},
+            'author' : {'lookup_field': 'username'}}
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name')
-        lookup_field = 'username'
+        fields = ('url', 'username', 'first_name', 'last_name')
+        extra_kwargs = {
+            'url': {'lookup_field': 'username'}
+            }
+
+class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = AnalysisTrack
+        fields = ('url', 'title', 'preset', 'sub_processor')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'},
+            'preset': {'lookup_field': 'uuid'},
+            'sub_processor': {'lookup_field': 'sub_processor_id'}
+            }
+            
+
+
+
