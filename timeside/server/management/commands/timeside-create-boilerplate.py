@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 import os
 import timeside.core
 from timeside.server.models import Selection, Item
-from timeside.server.models import Processor, Preset, Experience, Task
+from timeside.server.models import Processor, Preset, Experience, Task, AnalysisTrack, SubProcessor
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
 
@@ -73,5 +73,21 @@ class Command(BaseCommand):
         if c | task.status != _DONE :
             task.status = _PENDING
             task.save()
-        
+
+    
+        # ---- Graphers -----
+        for grapher in timeside.core.processor.processors(timeside.core.api.IGrapher):
+            if hasattr(grapher, '_from_analyzer') and grapher._from_analyzer and not(grapher._staging):
+                
+                processor, c = Processor.objects.get_or_create(pid=grapher._analyzer.id())
+                preset, c = Preset.objects.get_or_create(processor=processor,
+                                                         parameters = grapher._analyzer_parameters)
+
+                sub_processor, c = SubProcessor.objects.get_or_create(sub_processor_id = grapher._result_id,
+                                                                      processor = processor)
+              
+                track = AnalysisTrack.objects.get_or_create(sub_processor_id = sub_processor,
+                                                            preset = preset,
+                                                            title = grapher._grapher_name)
+
  

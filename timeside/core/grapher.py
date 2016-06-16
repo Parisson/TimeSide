@@ -376,7 +376,13 @@ class DisplayAnalyzer(Grapher):
 
             _id = grapher_id
             _staging = staging
+            _from_analyzer = True
 
+            _analyzer = analyzer
+            _analyzer_parameters = analyzer_parameters
+            _result_id = result_id
+            _grapher_name = grapher_name
+            
             implements(IGrapher)
 
             @interfacedoc

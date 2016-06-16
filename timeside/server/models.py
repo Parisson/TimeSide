@@ -102,7 +102,7 @@ def get_processor(pid):
 
 class BaseResource(models.Model):
 
-    date_added = models.DateTimeField(_('date added'), auto_now_add=True)
+    date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
     uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255)
 
@@ -341,7 +341,12 @@ class SubProcessor(models.Model):
     """SubProcessor object are intended to store the different results id associated with a given Processor
     """
     sub_processor_id = models.CharField(_('sub_processor_id'), unique= True, max_length=128)
+    name = models.CharField(_('name'), max_length=256, blank=True)
+
     processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
+
+    def __unicode__(self):
+        return self.sub_processor_id
 
 
 class Preset(BaseResource, ShareableResource):
@@ -484,7 +489,8 @@ post_save.connect(run, sender=Task)
 
 # Session and Tracks related objects
 
-class AnalysisTrack(ShareableResource):
+class AnalysisTrack(DocBaseResource, ShareableResource):
     sub_processor_id = models.ForeignKey(SubProcessor, related_name="analysis_tracks", verbose_name=_('sub_processor'), blank=True, null=True)
     preset = models.ForeignKey(Preset, related_name="analysis_tracks", verbose_name=_('preset'), blank=True, null=True)
+
 
