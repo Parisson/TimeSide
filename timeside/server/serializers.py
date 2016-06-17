@@ -237,7 +237,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = AnalysisTrack
-        fields = ('url', 'title', 'preset', 'sub_processor')
+        fields = ('url', 'uuid', 'title', 'preset', 'sub_processor')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},
