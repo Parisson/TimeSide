@@ -27,6 +27,7 @@ before_install:
 
 # Install TimeSide
 install:
+  - docker-compose -f docker-compose.yml -f env/build.yml pull
   - docker-compose -f docker-compose.yml -f env/build.yml build
 
 
@@ -58,7 +59,7 @@ script:
 #  # -------------SERVER-------------------------
 #  #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
-       docker-compose -f docker-compose.yml -f env/build.yml start db;
+       docker-compose -f docker-compose.yml -f env/build.yml up -d db;
        sleep 20;
        docker-compose -f docker-compose.yml -f env/build.yml up -d;
        sleep 20;
