@@ -26,18 +26,23 @@ urlpatterns = patterns(
     '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api_router.urls)),
-    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/results/', views.ItemResultsList.as_view()),
-    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/waveform/', views.ItemWaveView.as_view()),
-    # Get transcoded audio
-    # Ex: /api/item/--<uuid>--/download/ogg
-    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/download/(?P<extension>' + EXPORT_EXT + ')$', views.ItemTranscode.as_view(), name="item-transcode"),
+    url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
+            url(r'^results/', views.ItemResultsList.as_view()),
+            url(r'^waveform/', views.ItemWaveView.as_view()),
+            # Get transcoded audio
+            # Ex: /api/item/--<uuid>--/download/ogg
+            url(r'^download/(?P<extension>' + EXPORT_EXT + ')$', views.ItemTranscode.as_view(), name="item-transcode"),
+            # Analysis
+            url(r'^analysis/(?P<analysis_uuid>[0-9a-z-]+)/', views.ItemAnalysis.as_view(), name="item-analysis"),
+            ]),
+        ),
     url(r'^$', views.IndexView.as_view(), name="timeside-index"),
     # Items
     # ex: /item/5/
     url(r'^items/(?P<uuid>[0-9a-z-]+)/', include([
-        url(r'^$', views.ItemDetail.as_view(), name='timeside-item-detail'),
-        url(r'^export/$', views.ItemDetailExport.as_view(), name='timeside-item-export'),
-        url(r'^angular/$', views.ItemDetailAngular.as_view(), name='timeside-item-angular'),
+            url(r'^$', views.ItemDetail.as_view(), name='timeside-item-detail'),
+            url(r'^export/$', views.ItemDetailExport.as_view(), name='timeside-item-export'),
+            url(r'^angular/$', views.ItemDetailAngular.as_view(), name='timeside-item-angular'),
             ])
         ),
       # Results
@@ -46,5 +51,4 @@ urlpatterns = patterns(
     url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(), name="timeside-result-audio"),
     url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/elan/$', views.ResultAnalyzerToElanView.as_view(), name="timeside-result-elan"),
     url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$', views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
-
     )

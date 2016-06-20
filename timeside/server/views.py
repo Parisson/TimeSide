@@ -362,7 +362,50 @@ class ItemDetail(DetailView):
         Results = {}
         return context
 
+def get_result(item, preset, wait=True):
+    # Get Result with preset and item
+    try:
+        result = Result.objects.get(item=item, preset=preset)
+        if not os.path.exists(result.file.path):
+            # Result exists but there is no file (may have been deleted)
+            result.delete()
+            return get_result(item=item, preset=preset)
+    except Result.DoesNotExist:
+        # Result does not exist
+        # the corresponding task has to be created and run
+        task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
+                                                   selection=item.get_single_selection())
+        if task.status == _DRAFT:
+            task.run(wait=wait)
+        elif task.status == _RUNNING:
+            return 'Task Running'
+        else:
+            return task.status
+        return get_result(item=item, preset=preset)
 
+    
+class ItemAnalysis(DetailView):
+    model = Item
+
+    def get_object(self):
+        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
+
+    def get(self, request, uuid, analysis_uuid):
+        item = self.get_object()
+        try:
+            analysis, c = AnalysisTrack.objects.get_or_create(uuid = analysis_uuid)
+        except ResultAnalysisTrack.DoesNotExist:
+            return Http404('Unknown analysis: %s' % analysis_uuid)
+
+        preset = analysis.preset
+        task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
+                                                   selection=item.get_single_selection())
+ 
+        result = get_result(item=item, preset=preset)
+               
+        return HttpResponse([analysis, '  --  ', preset, '     :::      ', result])
+
+        
 class ItemTranscode(DetailView):
     model = Item
 
