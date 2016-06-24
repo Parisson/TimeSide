@@ -7,11 +7,14 @@ define([
   './subs/track_waveform',
   './subs/track_canvas',
   './subs/track_ruler',
+  './subs/track_annotations',
+
 
   '#audio/views/player'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackCanvasView,TrackRulerView,AudioPlayerView) {
+function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
+  AudioPlayerView) {
   'use strict';
 
   return BaseQeopaView.extend({
@@ -37,7 +40,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     //Action manager
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
-      var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio};
+      var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio,
+        "add_annot" : this.onAddTrackAnnotations};
 
       if (mapAction[action])
         (_.bind(mapAction[action],this))();
@@ -45,7 +49,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
     onStartLoading:function() {
       this.$el.find('[data-action="start"]').attr("disabled",true).text('loading');
-      alert('start loading');
+      //alert('start loading');
 
       A.vent.trigger('audio:loadGlobalFile',this.item.get('audio_url').mp3);
 
@@ -92,6 +96,15 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.trackWaveformView_1.init();
     },
     
+    onAddTrackAnnotations:function() {
+      if (!this.navigatorReady)
+        return;
+
+      this.trackWaveformView_Anno = new TrackAnnotationsView();
+      this.ui.containerOtherTracks.empty().append(this.trackWaveformView_Anno.render().$el);
+      this.trackWaveformView_Anno.defineTrack({type : "annotation", width : 800, height : 200});
+      this.trackWaveformView_Anno.init();
+    },
     
 
     ////////////////////////////////////////////////////////////////////////////////////
