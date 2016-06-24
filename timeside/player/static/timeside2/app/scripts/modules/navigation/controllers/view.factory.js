@@ -37,6 +37,7 @@ function (_,injector,Backbone,CfgViews,BaseGenericListView,BaseGenericImportView
       {viewid : CfgViews.qeopa.login.viewid, constructor : AuthViews.views.login},
       {viewid : CfgViews.qeopa.home.viewid, constructor : HomeView},
       {viewid : CfgViews.qeopa.item_view.viewid, constructor : VisuViews.views.itemView},
+      {viewid : CfgViews.qeopa.item_new_view.viewid, constructor : VisuViews.views.itemNewView},
       {viewid : CfgViews.qeopa.visu_test1.viewid, constructor : VisuViews.views.test1},
       {viewid : CfgViews.qeopa.visu_test2.viewid, constructor : VisuViews.views.test2},
       {viewid : CfgViews.qeopa.list_items.viewid, constructor : DataViews.views.listItems}

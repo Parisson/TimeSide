@@ -39,6 +39,12 @@
 			"layoutid" : "full"
 		},		
 
+		"item_new_view" : {
+			"viewid" : "item_new_view",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},		
+
 		"visu_test1" : {
 			"viewid" : "visu_test1",
 			"needEvents" : "0",
