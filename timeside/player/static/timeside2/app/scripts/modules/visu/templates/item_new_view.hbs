@@ -1,18 +1,33 @@
 <h2>Item : {{item.title}}</h2>
 
+
+<div data-layout="player_container"></div>
+
 <div>
 	<button data-action="start">Start loading</button>
 	<button data-action="add" disabled>Add waveform track</button>
-	<button data-action="play" disabled>Play</button>
 </div>
 
 <div class="row test d3">
 
 	<div class="">
-	    <h4>Navigation track</h4>
-	    <div class="navigation-track">
+
+		<div data-layout="header">
+			<label data-layout="select_tab" data-target="infos">Informations</label>	
+			<label data-layout="work" data-target="work">Annotations / Analyses</label>	
+
+
+			<button data-layout="add_annotation">+ Annotation.</button>
+			<button data-layout="add_analyse">+ Analyse.</button>
+		</div>
+
+		<div class="navigation-track">
+			
 	    </div>
 
+	    <div data-layout="ruler_container">
+			
+	    </div>
 
 	    <h4>Other tracks</h4>
 	    <div class="other-tracks">

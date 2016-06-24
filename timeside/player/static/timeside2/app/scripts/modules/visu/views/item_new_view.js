@@ -5,10 +5,13 @@ define([
   'd3',
   './subs/track_navigator',
   './subs/track_waveform',
-  './subs/track_canvas'
+  './subs/track_canvas',
+  './subs/track_ruler',
+
+  '#audio/views/player'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackCanvasView) {
+function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackCanvasView,TrackRulerView,AudioPlayerView) {
   'use strict';
 
   return BaseQeopaView.extend({
@@ -20,7 +23,11 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       
       'btnAction' : '[data-action]',
       'containerTrackNavigator' : '.navigation-track',
-      'containerOtherTracks' : '.other-tracks'
+      'containerRulerView' : '[data-layout="ruler_container"]',
+      'containerOtherTracks' : '.other-tracks',
+
+
+      'containerPlayer' : '[data-layout="player_container"]'
     },
     events: {
       'click @ui.btnAction' : 'onClickAction'
@@ -54,10 +61,17 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
 
+     //tmp
      this.$el.find('[data-action]').attr("disabled",false);
-     /* this.trackWaveformView_1.init();
-      this.trackWaveformView_2.init();
-      this.trackCanvasView.init();*/
+
+     //let's instanciate ruler
+     if (! this.rulerView) {
+        this.rulerView = new TrackRulerView();
+        this.ui.containerRulerView.empty().append(this.rulerView.render().$el);
+        this.rulerView.create(800,200);
+     }
+
+     //@Todo : get container track ruler & instanciate TrackRulerView
 
     },
 
@@ -99,10 +113,18 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           this.trackNavigatorView = new TrackNavigatorView();
           this.ui.containerTrackNavigator.empty().append(this.trackNavigatorView.render().$el);
        }
+       if (! this.audioPlayerView) {
+          this.audioPlayerView = new AudioPlayerView();
+          this.ui.containerPlayer.empty().append(this.audioPlayerView.render().$el);
+       }
     },
        
 
     onDestroy: function () {      
+      this.trackNavigatorView.destroy();
+      this.audioPlayerView.destroy();
+      if (this.rulerView)
+        this.rulerView.destroy();
     },
 
     onDomRefresh:function() {
