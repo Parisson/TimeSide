@@ -82,7 +82,7 @@ function (Marionette, templates, injector,$,vent,Hammer,
 
       var showHeader = layoutid && layoutid!=="full" && headerMode!=="none";
       
-      var _displayHeader = showHeader ? 'visible' : 'hidden';
+      var _displayHeader = 'hidden';//showHeader ? 'visible' : 'hidden';
       
       this.assertRegionElementsExist();
 
