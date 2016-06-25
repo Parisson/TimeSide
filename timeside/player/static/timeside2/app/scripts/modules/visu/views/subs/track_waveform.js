@@ -145,62 +145,6 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     },
 
 
-
-
-
-    /*BELOW : OLD FUNCS*/
-
-    /*startLoading:function(width,height) {
-      
-      this.width = width;
-      this.height = height;
-
-      //server to be ready
-      this.loadData();
-    },
-
-
-    //1 : load data
-    loadData:function() {
-      var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
-      A._v.trigCfg('fakeserver.getdata','',0,trackDuration,1024,_.bind(this.onData,this));
-    },
-
-    //2 : keep data & start rendering
-    onData:function(data) { 
-      console.log('hey im so happy');
-      this.data = data;
-      this.createBaseChart();
-    },*/
-
-    //////////////////////////////////
-    // Render methods
-
-    //1
-    //creates the chart, kept as this.d3chart
-    /*createBaseChart:function() {
-      
-
-      var bar_width = width / data.length;
-
-      var bar = chart.selectAll("g")
-        .data(data,function(d) {return d.time;})
-        .enter().append("g") // svg "group"
-        .attr("transform", function(d, i) {
-          return "translate(" + i * bar_width + ",0)";
-        })
-        .append("rect")
-        .attr("y", function(d) {
-          var yv = height - Math.abs(y(d.value)/2) - height/2 + 2;
-          return yv;
-        })
-        .attr("height", function(d) {
-          return Math.abs(y(d.value)); })
-        .attr("width", bar_width );
-    },*/
-
-    
-
     /////////////////////////////////////////////////////////////////////////////////////
     //new window navigator
 
