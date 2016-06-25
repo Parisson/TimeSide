@@ -39,7 +39,7 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
       this.width = o.width;
       this.height = o.height;
       this.isTrueDataServer = o.trueData!==undefined ? o.trueData : false;
-
+      this.type = o.type;
       
 
       this.dataProvider = new WaveformDataProvider();
@@ -61,16 +61,6 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     setVisibleData:function(data) {
       this.hadFirstData = true;
 
-
-      //debug value
-      /*var _debug = "",showDebug=false;
-      if (data.length<100) {
-        _.each(data,function(_obj) {
-          _debug=_debug+"("+_obj.time+','+_obj.value+")";
-        })
-        console.log('DEBUG : '+_debug);
-        showDebug=true;
-      }*/
       var showDebug=false;//hop
 
       A.log.log('track_waveform','setVisibleData----------------- on '+data.length);
@@ -150,11 +140,6 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
         .attr("width", width)
         .attr("height", height);
 
-
-      
-      //below a tester ensuite
-      //this.xScale = d3.scale.linear().domain([0, trackDuration]);
-
       var chart = node.attr("width", width).attr("height", height);
       this.d3chart = chart;  
     },
@@ -165,7 +150,7 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
     /*BELOW : OLD FUNCS*/
 
-    startLoading:function(width,height) {
+    /*startLoading:function(width,height) {
       
       this.width = width;
       this.height = height;
@@ -186,14 +171,14 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
       console.log('hey im so happy');
       this.data = data;
       this.createBaseChart();
-    },
+    },*/
 
     //////////////////////////////////
     // Render methods
 
     //1
     //creates the chart, kept as this.d3chart
-    createBaseChart:function() {
+    /*createBaseChart:function() {
       
 
       var bar_width = width / data.length;
@@ -212,7 +197,7 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
         .attr("height", function(d) {
           return Math.abs(y(d.value)); })
         .attr("width", bar_width );
-    },
+    },*/
 
     
 
