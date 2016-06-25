@@ -16,15 +16,22 @@ function (Marionette,A,BaseQeopaView) {
       
     },
     events: {
-      
+      'click [data-layout="action"]' : 'onClickAction'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Func
-    
+    onClickAction:function(ev) {
+      var action = ev.currentTarget.dataset.action;
+      var map = {'play' : _.bind(this.play,this)};
+      if (map[action])
+        map[action]();
+    },
 
 
-
+    play:function() {
+      A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
+    },
    
    
 
@@ -32,6 +39,7 @@ function (Marionette,A,BaseQeopaView) {
     //Life cycle
 
     initialize: function () {
+      this.item = A._i.getOnCfg('currentItem');
     },
 
     onRender:function() {
