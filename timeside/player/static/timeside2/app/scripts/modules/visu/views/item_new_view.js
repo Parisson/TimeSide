@@ -85,9 +85,18 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track
+    addTrack:function(trackView,type) {
+      this.tracks.push(trackView);
+      this.ui.containerOtherTracks.append(trackView.render().$el);
+      trackView.defineTrack({type : type, width : 800, height : 200});
+      trackView.init();
+    },
+
     onAddTrackWaveform:function() {
       if (!this.navigatorReady)
         return;
+
+      return this.addTrack(new TrackWaveformView(),"waveform");
 
       this.trackWaveformView_1 = new TrackWaveformView();
       this.ui.containerOtherTracks.empty().append(this.trackWaveformView_1.render().$el);
@@ -99,6 +108,9 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onAddTrackAnnotations:function() {
       if (!this.navigatorReady)
         return;
+
+
+      return this.addTrack(new TrackAnnotationsView(),"annotation");
 
       this.trackWaveformView_Anno = new TrackAnnotationsView();
       this.ui.containerOtherTracks.empty().append(this.trackWaveformView_Anno.render().$el);
@@ -113,7 +125,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     initialize: function () {
       this.item = A._i.getOnCfg('currentItem');
       this.navigatorReady=false;
-
+      this.tracks = [];
 
 
       A._i.getOnCfg('trackInfoController').setDuration(this.item.get('audio_duration')*1000);
@@ -138,6 +150,10 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.audioPlayerView.destroy();
       if (this.rulerView)
         this.rulerView.destroy();
+
+      _.each(this.tracks,function(t) {
+        t.destroy();
+      });
     },
 
     onDomRefresh:function() {
