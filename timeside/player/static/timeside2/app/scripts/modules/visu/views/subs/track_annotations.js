@@ -121,15 +121,19 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       var self=this;
       //ENTER
-      newdata.enter().append("g")
+      var g = newdata.enter().append("g")
         .attr("transform", function(d, i) {
           var translateX = self.xScale(d.start);
           var translateY = d.computed_y;// self.yScale(d.index);
           return "translate(" + translateX + ","+translateY+")";
         })
         .attr('class','annotation')
-        .on('click',_.bind(self.onClickElement,self))
-        .append("rect")
+        .on('click',_.bind(self.onClickElement,self));
+
+      g.append('text').attr('y',10)
+        .text(function(d) {return d.label;})
+
+      g.append("rect")
         .attr("height", function(d) {
           return d.computed_height; 
         })
@@ -159,14 +163,14 @@ function (Marionette,A,BaseQeopaView,d3) {
       var chart = node.attr("width", width).attr("height", height);
       this.d3chart = chart;
 
-      var xAxis = d3.svg.axis()
+      /*var xAxis = d3.svg.axis()
           .scale(this.xScale)
           .orient('bottom')
           .ticks(5);
 
       this.axis = xAxis;
 
-      this.d3chart.call(xAxis);
+      this.d3chart.call(xAxis);*/
     },
 
 
@@ -192,7 +196,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       console.log('Duration is : '+(time1-time0));
       //this.zoom.scale()
 
-      this.axis.scale(this.xScale);
+      //this.axis.scale(this.xScale);
       //this.d3chart.call(this.axis);
       var data = this.dataProvider.data;
       data = this.computeHeightElementsOnData(data);
