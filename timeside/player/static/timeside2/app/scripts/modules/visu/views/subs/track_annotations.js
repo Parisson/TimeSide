@@ -28,10 +28,12 @@ function (Marionette,A,BaseQeopaView,d3) {
   var DataProvider = Marionette.Controller.extend({
       init : function() {
         this.data = [];
-        for (var i=0; i<5;i++) {
+        var numItem = 50;
+        var stepPerItem = 200;
+        for (var i=0; i<numItem;i++) {
           //toutes les secondes on met un truc de taille variable
           var size = 0.2+Math.random()*0.7;
-          this.data.push({start:i*2000, end : i*2000+size*2000, index : i, label : "Annot_"+i, clicked : (i%3==0 ? true : false)});
+          this.data.push({start:i*stepPerItem, end : i*stepPerItem+size*stepPerItem, index : i, label : "Annot_"+i, clicked : (i%3==0 ? true : false)});
         }
 
       }
@@ -99,7 +101,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       var currentY = 0;
       _.each(this.dataProvider.data,function(_data) {
-        _data.computed_height = _data.clicked ? 2*heightPerDivision : heightPerDivision;
+        _data.computed_height = _data.clicked ? 4*heightPerDivision : heightPerDivision;
         _data.computed_y = currentY;
         currentY+=_data.computed_height;
 
