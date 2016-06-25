@@ -34,10 +34,13 @@ function (A,buzz) {
      //////////////////////////////////////////////////////////////////////////////
     //Basic buzz functions
     createSound:function(url) {
-      if (this.sound)
-        this.sound.unbind('timeupdate');
+      if (this.sound) {
+        clearInterval(this.updateInterval);
+        //this.sound.unbind('timeupdate');
+      }
       this.sound = new buzz.sound(url);
-      this.sound.bind('timeupdate',_.bind(this.onTimeUpdate,this));
+      
+      //this.sound.bind('timeupdate',_.bind(this.onTimeUpdate,this));
       return this.sound;  
 
     },
@@ -71,14 +74,21 @@ function (A,buzz) {
 
     playAudio:function() {
       //todo : load with buzz remote stuff
-      if (this.sound)
+      if (this.sound) {
         this.sound.play();
+        this.updateInterval = setInterval(_.bind(this.testTimeUpdate,this),50);
+      }
 
     },
   
     pauseAudio:function() {
-      if (this.sound)
+      if (this.sound) {
         this.sound.pause();
+        clearInterval(this.updateInterval);
+      }
+
+
+      
     },
    
 
@@ -91,7 +101,21 @@ function (A,buzz) {
         this.sound.setPercent(timePercent);
     },
 
+
+    testTimeUpdate:function() {
+
+      var percent = this.sound.getTime() / this.sound.getDuration();
+      A._v.trigCfg('audio.newAudioTime','',percent);
+    },
+
+    //DEPRECATED!!!! now pooling above
     onTimeUpdate:function(e) {
+      var now = (new Date()).getTime();
+      if (this.lastUpdateTime)
+        console.log('Delta update time : '+(now - this.lastUpdateTime));
+
+      this.lastUpdateTime = now;
+
 
       var percent = this.sound.getTime() / this.sound.getDuration();
       A._v.trigCfg('audio.newAudioTime','',percent);

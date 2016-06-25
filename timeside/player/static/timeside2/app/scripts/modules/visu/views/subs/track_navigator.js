@@ -33,7 +33,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       
       var time1 = (this.viewport.extent()[0]).getTime();
       var time2 = (this.viewport.extent()[1]).getTime();
-      console.log('new times : '+time1+','+time2);
+      //console.log('new times : '+time1+','+time2);
 
       if (time1===time2) {
         return console.log('@TODO : case when time1=time2');
@@ -106,7 +106,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     onNewTime:function(fraction) {
       var pixel = Math.round(fraction * this.width);
       if (this.cursorView)
-        this.cursorView.transition().attr('x',pixel);
+        this.cursorView/*.transition()*/.attr('x',pixel);
     },
 
     //////////////////////////////////
