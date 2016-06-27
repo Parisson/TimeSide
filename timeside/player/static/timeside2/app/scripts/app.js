@@ -13,7 +13,7 @@ function (Backbone,A ,NavController,InitDataController,Router, LayoutView,app) {
   
   //here app comes from core
   
-  app.addRegions({main: '.content'});
+  app.addRegions({main: '.ts-content'});
 
 
 

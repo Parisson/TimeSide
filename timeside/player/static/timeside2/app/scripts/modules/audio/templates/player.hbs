@@ -1,11 +1,44 @@
-<h2>Audio player</h2>
-
-<div>
-	<button data-layout="action" data-action="stop">stop</button>
-	<button data-layout="action" data-action="play">play</button>
-	<label data-layout="time-indicator">time</label>
-	<button data-layout="action" data-action="loop">loop</button>
-	<button data-layout="action" data-action="speaker">speaker</button>
-	<button data-layout="action" data-action="others">...</button>
-
-</div>
+<ul class="horizontal y-center">
+  <li class="active">
+    <button class="button" data-layout="action" data-action="stop">
+      <span class="content">stop</span>
+    </button>
+  </li>
+  <li>
+    <button class="button" data-layout="action" data-action="play">
+      <span class="content">play</span>
+    </button>
+  </li>
+  <li>
+      <label data-layout="time-indicator">time</label>
+  </li>
+  <li>
+    <button class="button" data-layout="action" data-action="loop">
+      <span class="content">loop</span>
+    </button>
+  </li>
+  <li>
+    <button class="button" data-layout="action" data-action="speaker">
+      <span class="content">speaker</span>
+    </button>
+  </li>
+  <li class="expandable">
+    <a href="javascript://" class="expand-toggle">
+      <span class="text">...</span>
+        {{#sprite . "arrow-bottom"}}{{/sprite}}
+      </span>
+    </a>
+    <ul class="expand horizontal x-end">
+      <li>
+        <button class="button" data-action="others" >
+          <span class="content">truc</span>
+        </button>
+      </li>
+      <li>
+        <button class="button" >
+          <span class="content">machin</span>
+        </button>
+      </li>
+    </ul>
+  </li>
+</ul>

@@ -5,15 +5,30 @@ define([
   'underscore',
   'jquery',
   '#qt_core/controllers/config',
-
+  'text!#qt_core/config/assets/svg/close.svg',
   
 ],
 
-function (Handlebars, config, injector, _,$,CfgClient) {
+function (Handlebars, config, injector, _,$,CfgClient, 
+  close) {
   
   'use strict';
   
-    
+  ///////////////////////////////////////////////////////////////////////////
+  //SPRITE HERE TEMP
+  Handlebars.registerHelper('sprite', function sprite(context, spriteCode) {
+    var toReturn = '';
+    //console.log(spriteCode);
+    switch (spriteCode) { 
+      case 'close' :
+        toReturn = _.template(close)();
+        break;
+      default :
+        toReturn = '';
+        break;
+    }
+    return '<span class="sprite '+spriteCode+'">' + toReturn + '</span>';
+  }); 
 
    //////////////////////////////////////////////////////////////////////////
   // I18N intern

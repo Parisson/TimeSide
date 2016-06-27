@@ -1,29 +1,8 @@
-//@import "../bower_components/bootstrap/dist/css/bootstrap.css";
+@import "reset";
+@import "vars";
+@import "general";
 
-//IMPORTART : comment //@import "bootstrap/variables"; in "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap"
-@import "overdrive/variables";
-//@import "bootstrap-initial-variables";
-@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
-@import "../bower_components/font-awesome/css/font-awesome.min.css";
-@import "../bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
-
-@import "overdrive/block";
-@import "overdrive/inline";
-
-@import "vendor/swiper";
-@import "vendor/jquery-ui.min";
-
-@import "responsive";  
-@import "spinner";
-
-@import "views/messages";
-@import "views/login";
+  @import "views/modal";
+  @import "views/home";
 
 @import "connarderic";
-
-
-
-
-
-    
-

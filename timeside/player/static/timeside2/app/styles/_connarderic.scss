@@ -1,9 +1,3 @@
-.audio-player {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-}
-
 
 //////////
 .side-menu {
@@ -33,24 +27,6 @@
 //////////////////////////////////
 //Below : d3 sample
 
-html {
-  margin: 1.0em;
-}
-h1 {
-  font-size:    48px;
-  font-weight:  bold;
-}
-h1 a,
-h1 a:visited {
-  text-decoration:  none;
-  font-weight:      normal;
-  font-size:        90%;
-  color:            #000;
-  border-bottom:    1px dashed #bbb;
-}
-h1 a:hover {
-  color: red;
-}
 .waveform > svg,
 .waveform > div {
   border:       2px solid #ddd;
@@ -58,7 +34,7 @@ h1 a:hover {
   margin-left:  40px;
   padding:      2px;
   position:     relative;
-  width:        880px;
+  width:        100%;
 }
 .waveform h2 {
   margin-left:  40px;
