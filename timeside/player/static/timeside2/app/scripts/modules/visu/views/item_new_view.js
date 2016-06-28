@@ -19,7 +19,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
   return BaseQeopaView.extend({
 
-      template: templates['visu/item_new_view'],
+    template: templates['visu/item_new_view'],
     className: 'item_view',
 
     ui: {
@@ -35,8 +35,17 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     events: {
       'click @ui.btnAction' : 'onClickAction'
     },
+    ////////////////////////////////////////////////////////////////////////////////////
+    //SIZES
+    updateSize : function() {
+      this.size = {
+        defaultHeight : 200,  //normal track height
+        navHeight     : 60,   // navigation track height
+        width         : this.$el.width()  //all tracks width
+      };
+    },
 
-     ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
     //Action manager
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
@@ -55,7 +64,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
       this.trackNavigatorView.isTrueDataServer = true;
 
-      this.trackNavigatorView.startLoading(800,200,_.bind(this.onNavigatorLoaded,this));
+      this.trackNavigatorView.startLoading(this.size.width, this.size.navHeight,_.bind(this.onNavigatorLoaded,this));
     },
 
 
@@ -72,7 +81,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
      if (! this.rulerView) {
         this.rulerView = new TrackRulerView();
         this.ui.containerRulerView.empty().append(this.rulerView.render().$el);
-        this.rulerView.create(800,200);
+        this.rulerView.create(this.size.width, this.size.navHeight);
      }
 
      //@Todo : get container track ruler & instanciate TrackRulerView
@@ -88,7 +97,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     addTrack:function(trackView,type) {
       this.tracks.push(trackView);
       this.ui.containerOtherTracks.append(trackView.render().$el);
-      trackView.defineTrack({type : type, width : 800, height : 200});
+      trackView.defineTrack({type : type, width : this.size.width, height : this.size.defaultHeight});
       trackView.init();
     },
 
@@ -100,7 +109,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
       this.trackWaveformView_1 = new TrackWaveformView();
       this.ui.containerOtherTracks.empty().append(this.trackWaveformView_1.render().$el);
-      this.trackWaveformView_1.defineTrack({type : "waveform", width : 800, height : 200});
+      this.trackWaveformView_1.defineTrack({type : "waveform", width : this.size.width, height : this.size.defaultHeight});
 
       this.trackWaveformView_1.init();
     },
@@ -114,7 +123,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
       this.trackWaveformView_Anno = new TrackAnnotationsView();
       this.ui.containerOtherTracks.empty().append(this.trackWaveformView_Anno.render().$el);
-      this.trackWaveformView_Anno.defineTrack({type : "annotation", width : 800, height : 200});
+      this.trackWaveformView_Anno.defineTrack({type : "annotation", width : this.size.width, height : this.size.defaultHeight});
       this.trackWaveformView_Anno.init();
     },
     
@@ -134,6 +143,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onRender:function() {
+      
        if (! this.trackNavigatorView) {
           this.trackNavigatorView = new TrackNavigatorView();
           this.ui.containerTrackNavigator.empty().append(this.trackNavigatorView.render().$el);
@@ -157,6 +167,9 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onDomRefresh:function() {
+      //once it is rendered, set the desired tracks width/height
+      this.updateSize();
+
     },
 
     serializeData: function () {

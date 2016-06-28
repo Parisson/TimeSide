@@ -1,26 +1,42 @@
 <div class="item">
-  <div class="horizontal">
+  <div class="horizontal y-center">
     <h1 class="flexible">{{item.title}}</h1>
     <div data-layout="player_container"></div>
   </div>
-  <div data-layout="header">
-    <label data-layout="select_tab" data-target="infos">Informations</label>  
-    <label data-layout="work" data-target="work">Annotations / Analyses</label> 
-
-
-    <button data-layout="add_annotation">+ Annotation.</button>
-    <button data-layout="add_analyse">+ Analyse.</button>
-  </div>
-
   <div>
-    <div>
       <button data-action="start">Start loading</button>
       <button data-action="add" disabled>Add waveform track</button>
       <button data-action="play" disabled>Play</button>
-    </div>
   </div>
+  <div class="navigation-track"></div>
+  <ul data-layout="header" class="tabs">
+    <li>
+      <button class="button" data-layout="select_tab" data-target="infos">
+        <span class="content">Informations</span>  
+      </button>
+    </li>
+    <li class="active">
+      <button class="button" data-layout="work" data-target="work">
+        <span class="content">Annotations / Analyses</span>  
+      </button>
+    </li> 
+    <li class="sub-tabs">
+      <ul class="horizontal x-end">
+        <li>
+          <button class="button" data-layout="add_annotation">
+            <span class="content">+ Annotation</span>  
+          </button>
+        </li>
+        <li>
+          <button class="button" data-layout="add_analyse">
+            <span class="content">+ Analyse</span>  
+          </button>
+        </li> 
+      </ul>
+    </li>
+  </ul>
+  
   <div class="tracks">
-    <div class="navigation-track"></div>
     <div data-layout="ruler_container"></div>
     <div class="other-tracks"></div>  
   </div>

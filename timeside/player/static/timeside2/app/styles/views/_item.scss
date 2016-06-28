@@ -1,0 +1,41 @@
+.ts-content {
+  //CONTROLS
+  .audio-player {
+    li {
+      margin:2px;
+    }
+    svg {
+      width:33px;height:33px;
+    }    
+  }
+
+  //NAV TRACK
+  .nav-track {
+    .domain {
+      display:none;
+    }
+    text {
+      transform: translate(0,-7px);
+      opacity:      0.5;
+      font-size:    10px;
+    }
+  }
+
+  //WAVE FORM
+  .waveform {
+    .chart-background  {
+      fill:$waveFormBackground;
+    }
+    .extent {
+      fill:  $brushColor;
+      position:          absolute;
+    }
+    .resize {
+      background-color:  $brushColor*0.9;
+    }
+    rect {
+      fill:     $waveFormColor;
+    }
+  }
+
+}

@@ -24,11 +24,23 @@ $lightGrey                          :#dedddd;
 $mediumGrey                         :#939393;
 $lightBrown                         :#dcceb3;
   
+  //TABS
+  $tabsBackground                   :#606161;
+  $tabsColor                        :#FFFFFF;
+  $subTabsBackground                :#4c4c4d;
+  $subTabsColor                     :#FFFFFF;
+  
+  $tabsActiveBackground             :#FFFFFF;
+  $tabsActiveColor                  :$darkColor;
+  
   //INPUTS
   $inputBorder                      :#eaeaea;
   $inputBackground                  :#eaeaea;
   $inputBorderFocus                 :#AAA;
 
+  $waveFormColor                    :#a9a8a8;
+  $waveFormBackground               :#F1F1F1;
+  $brushColor                       :rgba(68,178,229,0.77);
 
   //BUTTONS
   $defaultButton                    :#F3F3F3;
