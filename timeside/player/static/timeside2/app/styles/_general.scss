@@ -180,15 +180,6 @@ html {
         background:$tabsBackground*0.9;
       }
     }
-    &.sub-tab {
-      background: $subTabsBackground;color:$subTabsColor;
-      &:hover {
-        background: $subTabsBackground*0.9;;
-      }
-      .infos {
-        background:$subTabsBackground*0.9;
-      }
-    }
     &.active-tab {
       background: $tabsActiveBackground;color:$tabsActiveColor;
       &:hover {
@@ -198,6 +189,18 @@ html {
         background:$tabsActiveBackground*0.9;
       }
     }
+    
+    &.sub-tab {
+      background: $subTabsBackground;color:$subTabsColor;
+      border-left: 2px solid white;
+      &:hover {
+        background: $subTabsBackground*0.9;;
+      }
+      .infos {
+        background:$subTabsBackground*0.9;
+      }
+    }
+    
     &.red {
       background: $redButton;color:$redButtonColor;
       &:hover {
@@ -206,6 +209,9 @@ html {
       .infos {
         background:$redButton*0.9;
       }
+    }
+    &[disabled] {
+      opacity:0.5;
     }
     
   }
@@ -391,6 +397,10 @@ html {
   .tabs {
 
     &, ul {display:flex;align-content:stretch;}
+    button {
+      @extend .button;@extend .button.tab;
+      padding: 5px 10px;
+    }
     .sub-tabs {
       flex:1;
       background:$tabsBackground;
@@ -398,10 +408,7 @@ html {
         @extend .button.sub-tab;
       }
     }
-    button {
-      @extend .button;@extend .button.tab;
-      padding: 5px 10px;
-    }
+    
     .active button {
       @extend .button.active-tab;
     }

@@ -1,12 +1,18 @@
 <div class="item">
   <div class="horizontal y-center">
-    <h1 class="flexible">{{item.title}}</h1>
+    <div class="flexible">
+      <h1>{{item.title}}</h1>
+      <div class="horizontal y-center">
+        <span>DEBUG : </span>
+        <button class="button" ><span class="content" data-action="start">Start loading</span></button>
+        <button class="button" data-action="add" disabled><span class="content">Add waveform track</span></button>
+        <!--<button class="button" data-action="play" disabled><span class="content">Play</span></button>-->
+      </div>
+    </div>
     <div data-layout="player_container"></div>
   </div>
   <div>
-      <button data-action="start">Start loading</button>
-      <button data-action="add" disabled>Add waveform track</button>
-      <button data-action="play" disabled>Play</button>
+      
   </div>
   <div class="navigation-track"></div>
   <ul data-layout="header" class="tabs">

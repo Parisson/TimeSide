@@ -41,6 +41,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.size = {
         defaultHeight : 200,  //normal track height
         navHeight     : 60,   // navigation track height
+        rulerHeight   : 30,    //height of the ruler above tracks
         width         : this.$el.width()  //all tracks width
       };
     },
@@ -81,7 +82,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
      if (! this.rulerView) {
         this.rulerView = new TrackRulerView();
         this.ui.containerRulerView.empty().append(this.rulerView.render().$el);
-        this.rulerView.create(this.size.width, this.size.navHeight);
+        this.rulerView.create(this.size.width, this.size.rulerHeight);
      }
 
      //@Todo : get container track ruler & instanciate TrackRulerView

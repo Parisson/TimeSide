@@ -209,7 +209,7 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
     //SIZES
     updateSize : function() {
       this.size = {
-        axisHeight : 15
+        axisHeight : 0
       };
     }
 

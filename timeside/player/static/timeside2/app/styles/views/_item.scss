@@ -22,7 +22,16 @@
   }
 
   //WAVE FORM
+  .ruler-track {
+    .domain {
+      fill: #CCC;
+    }
+  }
+  
   .waveform {
+    .chart {
+      display:block;
+    }
     .chart-background  {
       fill:$waveFormBackground;
     }
