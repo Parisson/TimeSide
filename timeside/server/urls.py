@@ -33,6 +33,7 @@ urlpatterns = patterns(
             # Ex: /api/item/--<uuid>--/download/ogg
             url(r'^download/(?P<extension>' + EXPORT_EXT + ')$', views.ItemTranscode.as_view(), name="item-transcode"),
             # Analysis
+            url(r'^analysis/$', views.ItemAnalysisList.as_view(), name="item-analysis-list"),
             url(r'^analysis/(?P<analysis_uuid>[0-9a-z-]+)/', views.ItemAnalysis.as_view(), name="item-analysis"),
             ]),
         ),

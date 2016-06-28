@@ -41,7 +41,7 @@ from timeside.server.serializers import ResultSerializer, Result_ReadableSeriali
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
-from timeside.server.serializers import AnalysisSerializer
+from timeside.server.serializers import AnalysisSerializer, ItemAnalysisSerializer
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -97,6 +97,7 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
         # Add in a QuerySet of all the books
         #context['plop'] = 91
         return context
+
     def get_serializer_context(self):
         """
         pass request attribute to serializer
@@ -383,7 +384,7 @@ def get_result(item, preset, wait=True):
             return task.status
         return get_result(item=item, preset=preset)
 
-    
+
 class ItemAnalysis(DetailView):
     model = Item
 
@@ -405,7 +406,15 @@ class ItemAnalysis(DetailView):
                
         return HttpResponse([analysis, '  --  ', preset, '     :::      ', result])
 
-        
+class ItemAnalysisList(generics.RetrieveAPIView):
+    model = Item
+    queryset = Item.objects.all()
+    serializer_class = ItemAnalysisSerializer
+
+    def get_object(self):
+        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
+
+
 class ItemTranscode(DetailView):
     model = Item
 
