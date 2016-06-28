@@ -29,12 +29,14 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
     audio_url = serializers.SerializerMethodField()
+    analysis_url = serializers.SerializerMethodField()
     audio_duration = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Item
         fields = ('uuid', 'url', 'title', 'description', 'mime_type', 'source_file',
-                    'source_url', 'waveform_url', 'audio_url', 'audio_duration')
+                    'source_url', 'waveform_url', 'analysis_url', 'audio_url', 'audio_duration')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'}
             }
@@ -46,6 +48,9 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_waveform_url(self, obj):
         return (self.get_url(obj)+'waveform/')
+
+    def get_analysis_url(self, obj):
+        return (self.get_url(obj)+'analysis/')
 
     def get_audio_url(self, obj):
         obj_url = self.get_url(obj)
@@ -112,6 +117,28 @@ class ItemWaveformSerializer(ItemSerializer):
                 'time': time_values[0:-1],
                 'min': min_values,
                 'max': max_values}
+
+class ItemAnalysisSerializer(serializers.HyperlinkedModelSerializer):
+
+    analysis_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Item
+        fields = ('uuid', 'url', 'analysis_url')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
+
+    def get_url(self, obj):
+        from rest_framework.reverse import reverse
+        request = self.context['request']
+        return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
+
+    def get_analysis_url(self, obj):
+        analysis_url = self.get_url(obj) + 'analysis/'
+        analysis = AnalysisTrack.objects.all()
+        
+        return { a.title: analysis_url + a.uuid for a in analysis}
 
 
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
@@ -244,6 +271,4 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
             'sub_processor': {'lookup_field': 'sub_processor_id'}
             }
             
-
-
 
