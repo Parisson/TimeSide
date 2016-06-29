@@ -196,7 +196,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       //1 8 FILTER DATA TO HAVE THOSE IN THE TIME RAHGE
       var filtered = data.filter(function(d){
         if(
-          (d.start <= time0 && d.end>=time1)    // end of annotation is inside
+          (d.start <= time0 && d.end>=time0)    // end of annotation is inside
           || (d.start >= time0 && d.end<=time1) // all anotation inside
           || (d.start < time1 && d.end>=time1)  // start of annotation is inside
         ) {
@@ -234,7 +234,14 @@ function (Marionette,A,BaseQeopaView,d3) {
         } );*/
       
       //UPDATE ALL REMAINING
-      g.attr("transform", function(d, i) {
+      g.attr("class", function(d, i) {
+          if(d.clicked) {
+            return "annotation active";
+          }
+          return "annotation";
+          
+        })
+        .attr("transform", function(d, i) {
           var translateX = self.xScale(d.start);
           var translateY = d.computed_y;// self.yScale(d.index);
           return "translate(" + translateX + ","+translateY+")";

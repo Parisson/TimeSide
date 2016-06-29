@@ -51,5 +51,11 @@
     text {
       alignment-baseline:middle;
     }
+    .annotation {
+      opacity:0.5;
+    }
+    .active {
+      opacity:1;
+    }
   }
 }
