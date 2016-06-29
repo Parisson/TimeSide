@@ -27,7 +27,7 @@
       fill: #CCC;
     }
   }
-  
+
   .waveform {
     .chart {
       display:block;
@@ -47,4 +47,9 @@
     }
   }
 
+  .track-annotation {
+    .text {
+      alignment-baseline:middle;
+    }
+  }
 }

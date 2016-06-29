@@ -74,7 +74,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     init:function() {
       this.dataProvider.init();
       this.createGraphicBase();
-      this.generateGraphFromData();
+      this.onNavigatorNewWindow();
+      //this.generateGraphFromData();
       this.hadFirstData=true;
     },
 
@@ -90,62 +91,31 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       ////////////////////////////////////////////////////////////////////////////////////
     //Function to check the data clicked and compute heights / y
-    computeHeightElementsOnData:function() {
-      var numTotalData = this.dataProvider.data.length;
+    computeHeightElementsOnData:function(data) {
+      if(!data)
+        data = this.dataProvider.data;
+      var numTotalData = data.length;
       var numClickedData = 0;
-      _.each(this.dataProvider.data,function(_data) {if (_data.clicked) numClickedData++});
-
+      _.each(data,function(_data) {if (_data.clicked) numClickedData++});
       //Clicked  elements weight twice more than non clicked
       var numDivision = numClickedData*2 + (numTotalData-numClickedData );
+
       var heightPerDivision = Math.floor(this.height/numDivision);
 
       var currentY = 0;
-      _.each(this.dataProvider.data,function(_data) {
-        _data.computed_height = _data.clicked ? 4*heightPerDivision : heightPerDivision;
+      _.each(data,function(_data) {
+        _data.computed_height = _data.clicked ? 2*heightPerDivision : heightPerDivision;
         _data.computed_y = currentY;
         currentY+=_data.computed_height;
 
       });
-
-      return this.dataProvider.data;
+      console.log(numClickedData, numTotalData,numDivision,data);
+      return data;
     },
    
    
     ////////////////////////////////////////////////////////////////////////////////////
     //Generate graph
-
-    /*generate all data from provider data once and for all*/
-    generateGraphFromData:function() {
-      var data = this.dataProvider.data;
-      data = this.computeHeightElementsOnData(data);
-      var newdata =  this.d3chart.selectAll("g").data(data,function(d) {return d.start;});
-      
-
-      var self=this;
-      //ENTER
-      var g = newdata.enter().append("g")
-        .attr("transform", function(d, i) {
-          var translateX = self.xScale(d.start);
-          var translateY = d.computed_y;// self.yScale(d.index);
-          return "translate(" + translateX + ","+translateY+")";
-        })
-        .attr('class','annotation')
-        .on('click',_.bind(self.onClickElement,self));
-
-      g.append('text').attr('y',10)
-        .text(function(d) {return d.label;})
-
-      g.append("rect")
-        .attr("height", function(d) {
-          return d.computed_height; 
-        })
-        .attr("width", function(d) {
-          var duration = d.end - d.start;
-          var xScale = self.xScale(d.end - d.start);
-          return xScale;
-        } );
-    },
-
     /*Base chart creation*/
     createGraphicBase:function() {
       var height = this.height;
@@ -183,8 +153,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     //here : trackinfo is already updated
     onNavigatorNewWindow:function() {
       //new window selected!
-      if (! this.hadFirstData)
-        return;
+      //if (! this.hadFirstData)
+      //  return;
 
 
 
@@ -195,17 +165,14 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
       this.xScale = d3.time.scale().domain([time0,time1]).range([0,this.width]);
-      console.log('Duration is : '+(time1-time0));
+      //console.log('Duration is : '+(time1-time0));
       //this.zoom.scale()
 
       //this.axis.scale(this.xScale);
       //this.d3chart.call(this.axis);
       var data = this.dataProvider.data;
-      data = this.computeHeightElementsOnData(data);
-
-
-
-
+      //B : REMOVING
+      /*data = this.computeHeightElementsOnData(data);
       var self=this;
       this.d3chart.selectAll("g.annotation").data(data).attr("transform", function(d, i) {
           var translateX = self.xScale(d.start);
@@ -224,8 +191,67 @@ function (Marionette,A,BaseQeopaView,d3) {
           console.log(' * : '+d.index+"/"+duration+" : "+xScale);
           return xScale>0 ? xScale : 0;
         } );
+      */
+      
+      //1 8 FILTER DATA TO HAVE THOSE IN THE TIME RAHGE
+      var filtered = data.filter(function(d){
+        if(
+          (d.start <= time0 && d.end>=time1)    // end of annotation is inside
+          || (d.start >= time0 && d.end<=time1) // all anotation inside
+          || (d.start < time1 && d.end>=time1)  // start of annotation is inside
+        ) {
+          return true;
+        }
+        return false;
+      });
 
-
+      //2 MAGIC HEIGHT FROM ERIC
+      filtered = this.computeHeightElementsOnData(filtered);
+      
+      //BIND DATA TO ELEMENTS
+      var self=this;
+      var g = this.d3chart.selectAll("g.annotation").data(filtered, function(d) { return d.start; });
+      //REMOVE OUT OF SCOPE
+      g.exit().remove();
+      //ADD NEW
+      var newG = g.enter()
+        .append("g")
+        .attr('class','annotation')
+        .on('click',_.bind(self.onClickElement,self));
+      newG.append("rect");
+      newG.append('text')
+            .text(function(d) {return d.label;})
+      
+      /*
+        .attr("height", function(d) {
+          return d.computed_height; 
+        })
+        .attr("width", function(d) {
+          var duration = d.end - d.start;
+          var xScale = self.xScale(d.end) - self.xScale(d.start);
+          return xScale;
+        } );*/
+      
+      //UPDATE ALL REMAINING
+      g.attr("transform", function(d, i) {
+          var translateX = self.xScale(d.start);
+          var translateY = d.computed_y;// self.yScale(d.index);
+          return "translate(" + translateX + ","+translateY+")";
+        })
+        .selectAll("rect")
+         .attr("height", function(d) {
+            console.log(d);
+            return d.computed_height; 
+          })
+          .attr("width", function(d) {
+            var duration = d.end - d.start;
+            var xScale = self.xScale(d.end) - self.xScale(d.start);
+            return xScale;
+          } );
+          g.selectAll("text")
+            .attr('y',function(d){
+              return d.computed_height/2;
+            })
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -249,11 +275,6 @@ function (Marionette,A,BaseQeopaView,d3) {
       return {
        
       }
-    },
-
-
-    
-    
-   
+    }
   });
 });
