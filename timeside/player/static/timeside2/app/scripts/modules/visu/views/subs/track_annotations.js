@@ -220,7 +220,8 @@ function (Marionette,A,BaseQeopaView,d3) {
         .on('click',_.bind(self.onClickElement,self));
       newG.append("rect");
       newG.append('text')
-            .text(function(d) {return d.label;})
+        .attr('x',10)
+        .text(function(d) {return d.label;})
       
       /*
         .attr("height", function(d) {
