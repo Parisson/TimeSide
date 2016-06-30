@@ -18,6 +18,15 @@ function (Marionette,A,TrackWaveformView,d3) {
   **/
   return TrackWaveformView.extend({
 
+
+    createGraphicBase:function() {
+      TrackWaveformView.prototype.createGraphicBase.call(this);
+      /*this.d3area = d3.svg.area()
+        .x(function(d) { return x(d.date); })
+        .y0(return y(d.min))
+        .y1(function(d) { return y(d.close); });*/
+    },
+
     setVisibleData:function(data) {
       this.hadFirstData = true;
 
@@ -31,7 +40,6 @@ function (Marionette,A,TrackWaveformView,d3) {
       var width = this.width;
       var barHeight = this.height-this.size.axisHeight;
       var axisHeight = this.size.axisHeight;
-      var bar_width = width / data.length;
 
       //update scales
       this.yScale = d3.scale.linear().range([barHeight, -barHeight]);
@@ -40,7 +48,7 @@ function (Marionette,A,TrackWaveformView,d3) {
 
       var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
       //this.xScale = d3.scale.linear().domain([0, 1024]); //TMP
-      A.log.log('track_waveform:setVisibleData',' X scale will go from '+data[0].time+'->'+data[data.length-1].time);
+      A.log.log('track_waveform_V2:setVisibleData',' X scale will go from '+data[0].time+'->'+data[data.length-1].time);
       this.xScale = d3.time.scale().domain([data[0].time,data[data.length-1].time]).range([0,width]);
 
       //go
@@ -48,6 +56,8 @@ function (Marionette,A,TrackWaveformView,d3) {
       var x=this.xScale,y = this.yScale;
 
       var newdata =  chart.selectAll("g").data(data,function(d) {return d.time;});
+
+
 
 
 

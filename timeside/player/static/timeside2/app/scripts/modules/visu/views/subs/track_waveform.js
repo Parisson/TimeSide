@@ -74,14 +74,14 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
       var bar_width = width / data.length;
 
       //update scales
-      this.yScale = d3.scale.linear().range([barHeight, -barHeight]);
+      this.yScale.range([barHeight, -barHeight]);
       var max_val = this.MAX_VALUE;
       this.yScale.domain([-max_val, max_val]);
 
       var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
       //this.xScale = d3.scale.linear().domain([0, 1024]); //TMP
       A.log.log('track_waveform:setVisibleData',' X scale will go from '+data[0].time+'->'+data[data.length-1].time);
-      this.xScale = d3.time.scale().domain([data[0].time,data[data.length-1].time]).range([0,width]);
+      this.xScale.domain([data[0].time,data[data.length-1].time]).range([0,width]);
 
       //go
       var chart = this.d3chart;
@@ -96,10 +96,9 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
       newdata.enter().append("g") // svg "group"
         .attr("transform", function(d, i) {
           var translateX = self.xScale(d.time);
-          if (showDebug)
-            console.log('     X : '+d.time+' --> '+translateX);
-          return "translate(" + translateX /** bar_width*/ + ","+axisHeight+")";
-          //return "translate(" + i * bar_width + ",0)";
+          /*if (showDebug)
+            console.log('     X : '+d.time+' --> '+translateX);*/
+          return "translate(" + translateX + ","+axisHeight+")";
         })
         .append("rect")
         .attr("y", function(d) {
@@ -112,21 +111,13 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
       //STILL HERE
       //@Todo : optim : don't do width/height/y here
-      chart.selectAll("g")/*.transition(0.75)*/.attr("transform", function(d, i) {
+      chart.selectAll("g").attr("transform", function(d, i) {
           var translateX = self.xScale(d.time);
-
+/*
           if (showDebug)
-            console.log('     X2 : '+d.time+' --> '+translateX);
-          return "translate(" + translateX /** bar_width*/ + ","+axisHeight+")";
-          //return "translate(" + i * bar_width + ",0)";
-        }).select('rect')
-        .attr("y", function(d) {
-          var yv = height - Math.abs(y(d.value)/2) - height/2 + 2;
-          return yv;
-        })
-        .attr("height", function(d) {
-          return Math.abs(y(d.value)); })
-        .attr("width", bar_width );  
+            console.log('     X2 : '+d.time+' --> '+translateX);*/
+          return "translate(" + translateX + ","+axisHeight+")";
+        });  
 
       newdata.exit().remove();
         
@@ -164,7 +155,10 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
           .attr("height", height);
 
 
-      this.d3chart = chart.selectAll(".chart-data");  
+      this.d3chart = chart.selectAll(".chart-data"); 
+
+      this.yScale = d3.scale.linear();
+      this.xScale = d3.time.scale(); 
     },
 
 
