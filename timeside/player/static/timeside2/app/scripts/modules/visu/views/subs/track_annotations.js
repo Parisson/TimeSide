@@ -33,7 +33,13 @@ function (Marionette,A,BaseQeopaView,d3) {
         for (var i=0; i<numItem;i++) {
           //toutes les secondes on met un truc de taille variable
           var size = 0.2+Math.random()*0.7;
-          this.data.push({start:i*stepPerItem, end : i*stepPerItem+size*stepPerItem, index : i, label : "Annot_"+i, clicked : (i%3==0 ? true : false)});
+          this.data.push({
+            start:i*stepPerItem, 
+            end : i*stepPerItem+size*stepPerItem, 
+            index : i, label : "Annot_"+i, 
+            clicked : (i%3==0 ? true : false),
+            color :"#cf8e2a"
+          });
         }
 
       }
@@ -217,8 +223,24 @@ function (Marionette,A,BaseQeopaView,d3) {
       var newG = g.enter()
         .append("g")
         .attr('class','annotation')
+        .attr("style", function(d) {
+           return "clip-path: url(#"+("mettre-id-unique-ici"+d.start)+");";
+        })
         .on('click',_.bind(self.onClickElement,self));
-      newG.append("rect");
+      
+      //Add the clip path on this annotation
+      newG.append("defs").append("clipPath")
+        .attr("id", function(d) {
+          return "mettre-id-unique-ici"+d.start;
+        }).append("rect");
+      
+      //the visible rectangle
+      newG.append('rect')
+        .attr("fill", function(d){
+          return d.color;
+        });
+      
+      //and the text
       newG.append('text')
         .attr('x',10)
         .text(function(d) {return d.label;})
