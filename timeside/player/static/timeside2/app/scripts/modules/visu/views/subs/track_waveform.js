@@ -3,10 +3,12 @@ define([
   '#qt_core/controllers/all',
   '#navigation_core/baseviews/base_qeopaview',
   'd3',
-  '#visu/controllers/providers/waveform_dataprovider'
+  '#visu/controllers/providers/waveform_dataprovider',
+  '#behaviors/index',
+  '../params/param_simple'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
+function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider,behaviors,ParamSimpleView) {
   'use strict';
 
   /**
@@ -17,6 +19,20 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider) {
 
   **/
   return BaseQeopaView.extend({
+
+    behaviors: function () {
+      return {
+        Parameter : {
+          behaviorClass : behaviors.viewParameterTrack
+        }
+      };
+    },
+
+    parametersConfig : {
+      getParameterView:function() {
+        return new ParamSimpleView();
+      }
+    },
 
     template: templates['visu/sub_track_waveform'],
     className: 'track-waveform',
