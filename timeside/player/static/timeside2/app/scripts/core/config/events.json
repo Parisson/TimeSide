@@ -20,6 +20,7 @@
 		"loadSpecificFile" 	: "audio:loadSpecificFile",
 		"play" 				: "audio:play",
 		"pause"				: "audio:pause",
+		"stop"				: "audio:stop",
 		"setCurrentTime"	: "audio:setCurrentTime",
 		"newAudioTime"		: "audio:newAudioTime"	
 	},

@@ -23,7 +23,10 @@ function (Marionette,A,BaseQeopaView) {
     //Func
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
-      var map = {'play' : _.bind(this.play,this)};
+      var map = {
+        'play' : _.bind(this.play,this), 
+        'stop' : _.bind(this.stop,this)
+        };
       if (map[action])
         map[action]();
     },
@@ -31,6 +34,10 @@ function (Marionette,A,BaseQeopaView) {
 
     play:function() {
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
+    },
+
+    stop:function() {
+      A.vent.trigger('audio:stop',this.item.get('audio_url').mp3);
     },
    
    

@@ -12,6 +12,7 @@ function (A,buzz) {
       A._v.onCfg('audio.loadSpecificFile','',this.loadSpecificFile,this);
       A._v.onCfg('audio.play','',this.playAudio,this);
       A._v.onCfg('audio.pause','',this.pauseAudio,this);
+      A._v.onCfg('audio.stop','',this.stopAudio,this);
       A._v.onCfg('audio.setCurrentTime','',this.setCurrentTime,this);
 
       //vital
@@ -29,6 +30,7 @@ function (A,buzz) {
       A._v.offCfg('audio.play','',this.playAudio,this);
       A._v.offCfg('audio.pause','',this.pauseAudio,this);
       A._v.onCfg('audio.setCurrentTime','',this.setCurrentTime,this);
+      A._v.offCfg('audio.stop','',this.stopAudio,this);
     },
 
      //////////////////////////////////////////////////////////////////////////////
@@ -79,6 +81,13 @@ function (A,buzz) {
         this.updateInterval = setInterval(_.bind(this.testTimeUpdate,this),50);
       }
 
+    },
+
+    stopAudio:function() {
+      if (this.sound) {
+        this.sound.stop();
+        clearInterval(this.updateInterval);
+      }
     },
   
     pauseAudio:function() {
