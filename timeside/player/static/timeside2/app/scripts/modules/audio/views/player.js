@@ -46,7 +46,7 @@ function (Marionette,A,BaseQeopaView) {
       
       var value = A.telem.formatTimeMs(valueSec*1000);
       console.log('time : '+valueSec+" : "+value);
-      this.ui.timeLabel.empty().append(value);
+        this.ui.timeLabel.empty().append(value);
     },
    
    

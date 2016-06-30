@@ -40,7 +40,7 @@ function (A,d3) {
      /////////////////////////////////////////////////////////////////////////////
     //Global get data
     onGetData:function(type,startTime,endTime,nbItem,callback) {
-      if (type==="waveform")
+      if (type==="waveform" || type==="waveform_v2")
         return this._onGetWaveformData(startTime,endTime,nbItem,callback);
       /*else if (type==="testcanvas")
         return this._onGetBitmapData(startTime,endTime,callback);*/

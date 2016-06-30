@@ -5,6 +5,7 @@ define([
   'd3',
   './subs/track_navigator',
   './subs/track_waveform',
+  './subs/track_waveform_v2',
   './subs/track_canvas',
   './subs/track_ruler',
   './subs/track_annotations',
@@ -13,7 +14,7 @@ define([
   '#audio/views/player'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
+function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackWaveformViewV2,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
   AudioPlayerView) {
   'use strict';
 
@@ -51,7 +52,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
       var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio,
-        "add_annot" : this.onAddTrackAnnotations};
+        "add_annot" : this.onAddTrackAnnotations,"add_new_waveform" : this.onAddTrackWaveformV2};
 
       if (mapAction[action])
         (_.bind(mapAction[action],this))();
@@ -105,14 +106,13 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onAddTrackWaveform:function() {
       if (!this.navigatorReady)
         return;
-
       return this.addTrack(new TrackWaveformView(),"waveform");
+    },
 
-      this.trackWaveformView_1 = new TrackWaveformView();
-      this.ui.containerOtherTracks.empty().append(this.trackWaveformView_1.render().$el);
-      this.trackWaveformView_1.defineTrack({type : "waveform", width : this.size.width, height : this.size.defaultHeight});
-
-      this.trackWaveformView_1.init();
+    onAddTrackWaveformV2:function() {
+      if (!this.navigatorReady)
+        return;
+      return this.addTrack(new TrackWaveformViewV2(),"waveform_v2");
     },
     
     onAddTrackAnnotations:function() {
@@ -121,11 +121,6 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
 
       return this.addTrack(new TrackAnnotationsView(),"annotation");
-
-      this.trackWaveformView_Anno = new TrackAnnotationsView();
-      this.ui.containerOtherTracks.empty().append(this.trackWaveformView_Anno.render().$el);
-      this.trackWaveformView_Anno.defineTrack({type : "annotation", width : this.size.width, height : this.size.defaultHeight});
-      this.trackWaveformView_Anno.init();
     },
     
 
