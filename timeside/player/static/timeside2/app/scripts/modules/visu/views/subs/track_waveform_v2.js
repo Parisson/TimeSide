@@ -21,10 +21,16 @@ function (Marionette,A,TrackWaveformView,d3) {
 
     createGraphicBase:function() {
       TrackWaveformView.prototype.createGraphicBase.call(this);
-      /*this.d3area = d3.svg.area()
-        .x(function(d) { return x(d.date); })
-        .y0(return y(d.min))
-        .y1(function(d) { return y(d.close); });*/
+      var self=this;
+      this.d3area = d3.svg.area()
+        .x(function(d) { 
+          
+          return self.xScale(d.time); 
+        })
+        .y0(function(d) {return self.yScale(d.min); })
+        .y1(function(d) { return self.yScale(d.max); });
+
+      this.d3AreaSuite = this.d3chart.append('path').datum([]).attr("class","area").attr('d',this.d3area );
     },
 
     setVisibleData:function(data) {
@@ -42,14 +48,18 @@ function (Marionette,A,TrackWaveformView,d3) {
       var axisHeight = this.size.axisHeight;
 
       //update scales
-      this.yScale = d3.scale.linear().range([barHeight, -barHeight]);
+      this.yScale.range([barHeight, -barHeight]);
       var max_val = this.MAX_VALUE;
       this.yScale.domain([-max_val, max_val]);
 
       var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
       //this.xScale = d3.scale.linear().domain([0, 1024]); //TMP
       A.log.log('track_waveform_V2:setVisibleData',' X scale will go from '+data[0].time+'->'+data[data.length-1].time);
-      this.xScale = d3.time.scale().domain([data[0].time,data[data.length-1].time]).range([0,width]);
+      this.xScale.domain([data[0].time,data[data.length-1].time]).range([0,width]);
+
+
+      this.d3AreaSuite = this.d3chart.selectAll('path').datum(data).attr("class","area").attr('d',this.d3area );
+      return;
 
       //go
       var chart = this.d3chart;
