@@ -178,26 +178,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       //this.d3chart.call(this.axis);
       var data = this.dataProvider.data;
       //B : REMOVING
-      /*data = this.computeHeightElementsOnData(data);
-      var self=this;
-      this.d3chart.selectAll("g.annotation").data(data).attr("transform", function(d, i) {
-          var translateX = self.xScale(d.start);
-          var translateY = d.computed_y;//self.yScale(d.index);
-          if (_.isNaN(translateX))
-            console.log('wtf?');
-          return "translate(" + translateX + ","+translateY+")";
-        })
-        .selectAll("rect")
-        .attr("height", function(d) {
-          return d.computed_height; })
-        .attr("width", function(d) {
-          var duration = d.end - d.start;
-          var xScale = (duration*self.width) / (time1-time0);//self.xScale(duration);
-
-          console.log(' * : '+d.index+"/"+duration+" : "+xScale);
-          return xScale>0 ? xScale : 0;
-        } );
-      */
+      
       
       //1 8 FILTER DATA TO HAVE THOSE IN THE TIME RAHGE
       var filtered = data.filter(function(d){
