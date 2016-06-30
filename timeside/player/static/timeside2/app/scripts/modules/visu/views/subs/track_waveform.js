@@ -76,6 +76,7 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider,behaviors,ParamSimp
     **/
     setVisibleData:function(data) {
       this.hadFirstData = true;
+      this.lastReceivedData = data;
 
       var showDebug=false;//hop
 
@@ -149,23 +150,23 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider,behaviors,ParamSimp
       var barHeight = this.height-this.size.axisHeight;
       var axisHeight = this.size.axisHeight;
 
-      var node = d3.select(this.$el.find('.container_track_waveform > .svg')[0]).append("svg")
+      this.node = d3.select(this.$el.find('.container_track_waveform > .svg')[0]).append("svg")
         .attr("class","chart")
         .attr("width", width)
         .attr("height", height);
 
-      var chart = node.attr("width", width).attr("height", height);
+      var chart = this.node.attr("width", width).attr("height", height);
 
       //append the data background
-      node.append("rect")
+      /*this.node.append("rect")
           .attr("class","chart-background")
           .attr("y", axisHeight)
           .attr("x", 0)
           .attr("width", width)
-          .attr("height", height-axisHeight);
+          .attr("height", height-axisHeight);*/
 
       //append the data container
-      node.append("g")
+      this.node.append("g")
           .attr("class","chart-data")
           .attr("width", width)
           .attr("height", height);
@@ -175,6 +176,39 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider,behaviors,ParamSimp
 
       this.yScale = d3.scale.linear();
       this.xScale = d3.time.scale(); 
+    },
+
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    //Height change
+    changeHeight:function(newHeight) {
+      this.height = newHeight;
+      this.node.attr('height',newHeight);
+      this.d3chart.attr('height',newHeight);
+
+
+      var barHeight = this.height-this.size.axisHeight;
+      var axisHeight = this.size.axisHeight;
+      var bar_width = this.width / this.lastReceivedData.length;
+
+      //update scales
+      this.yScale.range([barHeight, -barHeight]);
+      var self=this;
+      var x=this.xScale,y = this.yScale;
+
+      this.d3chart.selectAll('g').attr("transform", function(d, i) {
+          var translateX = self.xScale(d.time);
+          return "translate(" + translateX + ","+axisHeight+")";
+        })
+        .selectAll("rect")
+        .attr("y", function(d) {
+          var yv = barHeight - Math.abs(y(d.value)/2) - barHeight/2 + 2;
+          return yv;
+        })
+        .attr("height", function(d) {
+          return Math.abs(y(d.value)); })
+        .attr("width", bar_width );
+      //this.
     },
 
 

@@ -34,7 +34,10 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       'containerPlayer' : '[data-layout="player_container"]'
     },
     events: {
-      'click @ui.btnAction' : 'onClickAction'
+      'click @ui.btnAction' : 'onClickAction',
+      'mousemove @ui.containerOtherTracks' : 'onMouseOverContainerTracks',
+      'mousedown @ui.containerOtherTracks' : 'onMouseDownContainerTracks',
+      'mouseup @ui.containerOtherTracks' : 'onMouseUpContainerTracks',
     },
     ////////////////////////////////////////////////////////////////////////////////////
     //SIZES
@@ -93,6 +96,60 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onPlayAudio:function() {
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Resize a track
+    onMouseOverContainerTracks:function(ev) {
+      /*console.log('overing : '+ev.pageX+":"+ev.pageY);*/
+
+      if (this.isResizing) {
+        //make true resize here
+        var deltaY = ev.pageY - this.YMouseDownForResize;
+        var newHeight = this.initialHeightComponent + deltaY;
+        if (this.trackSelected && this.trackSelected.changeHeight)
+          this.trackSelected.changeHeight(newHeight);
+        return;
+      }
+
+      var heightZoneCanResize = 30;
+      var trackSelected;
+      _.each(this.tracks,function(_tv) {
+/*        console.log('Testing : '+_tv.$el.position());*/
+        if (ev.pageY> ( _tv.$el.position().top + _tv.$el.height() - heightZoneCanResize ) 
+          && (ev.pageY <  ( _tv.$el.position().top + _tv.$el.height()) )) {
+          trackSelected = _tv;
+        }
+      },this);
+
+      if (trackSelected) {
+        this.ui.containerOtherTracks.css('cursor','row-resize');
+      }
+      else {
+        this.ui.containerOtherTracks.css('cursor','default');
+      }
+
+      this.trackSelected = trackSelected;
+    },
+
+
+    onMouseDownContainerTracks:function(ev) {
+      if (this.trackSelected) {
+        this.YMouseDownForResize = ev.pageY;
+        this.initialHeightComponent = this.trackSelected.$el.height();
+        this.isResizing=true;
+      }
+    },
+
+    onMouseUpContainerTracks:function(ev) { 
+      if (this.trackSelected) {
+        this.trackSelected=undefined;
+        this.isResizing=false;
+      }
+
+    },
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track
