@@ -92,9 +92,20 @@ function (Marionette,A,BaseQeopaView,d3) {
       positionArrow(this.triangleRight,X1);
     },
 
+
+    onResize:function() {
+      this.width = this.$el.width();
+      this.height = $('.other-tracks').height();
+
+      this.node.attr('height',this.height);
+      this.triangleLeft.selectAll('rect').attr('height',this.height);
+      this.triangleRight.selectAll('rect').attr('height',this.height);
+    },
+
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('navigator.newWindow','',this.onNavigatorNewWindow,this);
+      A._v.onCfg('ui_project.tracksHeightChanged','',this.onResize,this);
     },
 
     onRender:function() {
@@ -106,6 +117,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         return;
 
       this.width = this.$el.width();
+      this.height = $('.other-tracks').height();
 
       console.log('coucou');
 
@@ -115,13 +127,24 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("width", self.$el.width())
         .attr("height", self.$el.height());
 
+
+
       var triangleLeftPoints = this.generateTriangleLeft(15,true);//'10 0, 15 5, 10 10, 10 0';
-      this.triangleLeft = this.node.append('polyline').attr('points',triangleLeftPoints).style('stroke','black');
+      this.triangleLeft = this.node.append('g');
+      this.triangleLeft.append('polyline').attr('points',triangleLeftPoints).style('stroke','black');
+      this.triangleLeft.append('rect').attr('width',1).attr('height',this.height)
+        .attr('transform','translate(0,15)')
+        .style('stroke','black');
       this.triangleLeftTime = this.getTimeFromX(0);
 
       var triangleRightPoints = this.generateTriangleLeft(15,false);//'10 0, 15 5, 10 10, 10 0';
-      this.triangleRight = this.node.append('polyline').attr('points',triangleRightPoints).style('stroke','black')
-        .attr("transform","translate(100,0)");
+      this.triangleRight = this.node.append('g');
+      this.triangleRight.append('polyline').attr('points',triangleRightPoints).style('stroke','black')
+      this.triangleRight.append('rect').attr('width',1).attr('height',this.height)
+        .attr('transform','translate(7,15)')
+        .style('stroke','black');
+      this.triangleRight.attr("transform","translate(100,0)");
+
       this.triangleRightTime = this.getTimeFromX(100);
 
 
@@ -150,6 +173,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     onDestroy: function () { 
       A._v.offCfg('navigator.newWindow','',this.onNavigatorNewWindow,this);    
+      A._v.offCfg('ui_project.tracksHeightChanged','',this.onResize,this);
     },
 
 

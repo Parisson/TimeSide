@@ -160,6 +160,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.ui.containerOtherTracks.append(trackView.render().$el);
       trackView.defineTrack({type : type, width : this.size.width, height : this.size.defaultHeight});
       trackView.init();
+      A._v.trigCfg('ui_project.tracksHeightChanged');
     },
 
     onAddTrackWaveform:function() {

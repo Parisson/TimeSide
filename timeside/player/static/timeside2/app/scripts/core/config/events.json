@@ -15,6 +15,10 @@
 		"newWindow" : "navigator:newWindow"
 	},
 
+	"ui_project" : {
+		"tracksHeightChanged" : "ui:tracksHeightChanged"
+	},
+
 	"audio" : {
 		"loadGlobalFile" 	: "audio:loadGlobalFile",
 		"loadSpecificFile" 	: "audio:loadSpecificFile",
