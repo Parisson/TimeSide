@@ -10,12 +10,14 @@ define([
   './subs/track_ruler',
   './subs/track_annotations',
 
+  './subs/sub_overlay',
+
 
   '#audio/views/player'
 ],
 
 function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackWaveformViewV2,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
-  AudioPlayerView) {
+  OverlayView,AudioPlayerView) {
   'use strict';
 
   return BaseQeopaView.extend({
@@ -29,9 +31,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       'containerTrackNavigator' : '.navigation-track',
       'containerRulerView' : '[data-layout="ruler_container"]',
       'containerOtherTracks' : '.other-tracks',
-
-
-      'containerPlayer' : '[data-layout="player_container"]'
+      'containerPlayer' : '[data-layout="player_container"]',
+      'containerOverlay' : '[data-layout="overlay-container"]'
     },
     events: {
       'click @ui.btnAction' : 'onClickAction',
@@ -76,6 +77,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     //when navigator is ready
     onNavigatorLoaded:function() {
      this.navigatorReady=true;
+     //this.onDomRefresh();
 
      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
 
@@ -205,7 +207,13 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           this.audioPlayerView = new AudioPlayerView();
           this.ui.containerPlayer.empty().append(this.audioPlayerView.render().$el);
        }
+       if (! this.overlayView) {
+        this.overlayView = new OverlayView();
+        this.ui.containerOverlay.empty().append(this.overlayView.render().$el);
+       }
     },
+
+   
        
 
     onDestroy: function () {      
@@ -213,6 +221,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.audioPlayerView.destroy();
       if (this.rulerView)
         this.rulerView.destroy();
+      this.overlayView.destroy();
 
       _.each(this.tracks,function(t) {
         t.destroy();
@@ -220,6 +229,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onDomRefresh:function() {
+      this.overlayView.onDomRefresh();
       //once it is rendered, set the desired tracks width/height
       this.updateSize();
 
