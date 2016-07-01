@@ -25,7 +25,16 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    onNewSegmentLoop:function() {
+      var timeSegment1 = A._i.getOnCfg('currentLoopSegment')[0];
+      var timeSegment2 = A._i.getOnCfg('currentLoopSegment')[1];
+      var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
 
+      var x1 = this.xScale(timeSegment1);
+      var x2 = this.xScale(timeSegment2);
+
+      this.loopSegmentRectangle.attr('x',x1).attr('width',(x2-x1));
+    },
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Func
@@ -82,6 +91,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.createAxis();
       this.createBrush();
       this.createCursor();
+      this.createLoopSegment();
 
       //pour click curseur // @TODO : CREATE CURSEUR
       this.clickContainer = this.$el.find('.container_track_navigator > .svg');
@@ -199,22 +209,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       this.xScale = xScale;
 
-      //NO Y AXIS IN NAVIGATOR
-      /*
-      var yScale = d3.scale.linear()
-        .domain([-max_val, max_val]).nice()
-        .range([height, 0]),
-        yAxis = d3.svg.axis()
-          .scale(yScale)
-          .orient('left');
-
-      chart.append('g')
-          .attr('class', 'y axis')
-          .attr('transform', 'translate(40,0)')
-          .call(yAxis);  
-
-      this.yScale=yScale;
-      */
+      
     },
 
     //3
@@ -248,13 +243,22 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     },
 
+    //5
+    //create segment loop
+    createLoopSegment:function() {
+      this.loopSegmentRectangle = this.d3chart.append("rect")
+        .attr('x',0).attr('y',0)
+        .attr('width',2).attr('height',this.height)
+        .attr('opacity',0.6);
+    },
+
 
 
 
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('audio.newAudioTime','',this.onNewTime,this);
-
+      A._v.onCfg('ui_project.segmentLoopUpdate','',this.onNewSegmentLoop,this);
       //on initialize specify the sizes
       this.updateSize();
     },
@@ -269,6 +273,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.$el.find('.container_track_navigator > .svg').off('click'); 
 
       A._v.offCfg('audio.newAudioTime','',this.onNewTime,this);
+      A._v.offCfg('ui_project.segmentLoopUpdate','',this.onNewSegmentLoop,this);
     },
 
 

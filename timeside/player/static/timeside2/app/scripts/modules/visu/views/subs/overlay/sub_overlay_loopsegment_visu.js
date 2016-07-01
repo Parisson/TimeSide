@@ -42,14 +42,19 @@ function (Marionette,A,BaseQeopaView,d3) {
       else
         this.triangleRightTime  = this.getTimeFromX(ev.pageX);
 
+      A._i.setOnCfg('currentLoopSegment',[this.triangleLeftTime,this.triangleRightTime]);
+      A._v.trigCfg('ui_project.segmentLoopUpdate');
+
       return this.onNavigatorNewWindow();
 
-      var target = targetIsLeft ? this.triangleLeft : this.triangleRight;
+      /*var target = targetIsLeft ? this.triangleLeft : this.triangleRight;
 
       target.attr("transform", function(d, i) {
           var translateX = ev.pageX;
           return "translate(" + translateX + ",0)";
-        })
+        })*/
+
+     
     },
 
     redrawLoopSegment:function() {
