@@ -5,12 +5,18 @@ define([
   'underscore',
   'jquery',
   '#qt_core/controllers/config',
+  'text!#qt_core/config/assets/svg/arrow-bottom.svg',
   'text!#qt_core/config/assets/svg/close.svg',
-  
+  'text!#qt_core/config/assets/svg/etc.svg',
+  'text!#qt_core/config/assets/svg/loop.svg',
+  'text!#qt_core/config/assets/svg/play.svg',
+  'text!#qt_core/config/assets/svg/stop.svg',
+  'text!#qt_core/config/assets/svg/volume.svg',
+  'text!#qt_core/config/assets/svg/settings.svg',
 ],
 
 function (Handlebars, config, injector, _,$,CfgClient, 
-  close) {
+  arrowBottom,close, etc, loop, play, stop, volume,settings) {
   
   'use strict';
   
@@ -20,8 +26,29 @@ function (Handlebars, config, injector, _,$,CfgClient,
     var toReturn = '';
     //console.log(spriteCode);
     switch (spriteCode) { 
+      case 'arrow-bottom' :
+        toReturn = _.template(arrowBottom)();
+        break;
+      case 'settings' :
+        toReturn = _.template(settings)();
+        break;
       case 'close' :
         toReturn = _.template(close)();
+        break;
+      case 'etc' :
+        toReturn = _.template(etc)();
+        break;
+      case 'loop' :
+        toReturn = _.template(loop)();
+        break;
+      case 'play' :
+        toReturn = _.template(play)();
+        break;
+      case 'stop' :
+        toReturn = _.template(stop)();
+        break;
+      case 'volume' :
+        toReturn = _.template(volume)();
         break;
       default :
         toReturn = '';

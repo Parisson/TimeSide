@@ -40,7 +40,7 @@ function (A,d3) {
      /////////////////////////////////////////////////////////////////////////////
     //Global get data
     onGetData:function(type,startTime,endTime,nbItem,callback) {
-      if (type==="waveform")
+      if (type==="waveform" || type==="waveform_v2")
         return this._onGetWaveformData(startTime,endTime,nbItem,callback);
       /*else if (type==="testcanvas")
         return this._onGetBitmapData(startTime,endTime,callback);*/
@@ -92,7 +92,8 @@ function (A,d3) {
           //tmp : on ne renvoie que le max
           var resultOk = [];
           for (var i=0; i< result.waveform.time.length;i++) {
-            resultOk.push({time : result.waveform.time[i]*1000, value : result.waveform.max[i]});
+            resultOk.push({time : result.waveform.time[i]*1000, value : result.waveform.max[i],
+              max : result.waveform.max[i], min : result.waveform.min[i]});
           }
 
 

@@ -11,12 +11,13 @@ define([
   'views/helpers/admin_helper',
 
   'core/models/index',
+  'moment'
 
   
 
 ],
 
-function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,AdminViewHelper,Models
+function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,AdminViewHelper,Models,Moment
   ) {
 
   
@@ -60,7 +61,21 @@ function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,A
     deepClone:function(obj) {
        return JSON.parse(JSON.stringify(obj))
     }
-  }
+  };
+
+  //////////////////////////////////////////////////////////////////////
+  // Specific Telemeta tools
+  all.telem = {
+    formatTimeMs:function(t) {
+      var mom = Moment(new Date(t));
+
+      if (t<1000*60*60)
+        return mom.format('ss.SSS');
+      var result = mom.format('mm:ss.SSS');
+      return result;
+
+    }
+  };
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Injector quick

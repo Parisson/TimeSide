@@ -15,11 +15,17 @@
 		"newWindow" : "navigator:newWindow"
 	},
 
+	"ui_project" : {
+		"tracksHeightChanged" : "ui:tracksHeightChanged",
+		"segmentLoopUpdate" : "ui:segmentLoopUpdate"
+	},
+
 	"audio" : {
 		"loadGlobalFile" 	: "audio:loadGlobalFile",
 		"loadSpecificFile" 	: "audio:loadSpecificFile",
 		"play" 				: "audio:play",
 		"pause"				: "audio:pause",
+		"stop"				: "audio:stop",
 		"setCurrentTime"	: "audio:setCurrentTime",
 		"newAudioTime"		: "audio:newAudioTime"	
 	},

@@ -1,12 +1,12 @@
 <ul class="horizontal y-center">
   <li class="active">
     <button class="button" data-layout="action" data-action="stop">
-      <span class="content">stop</span>
+      <span class="content">{{#sprite . "stop"}}{{/sprite}}</span>
     </button>
   </li>
   <li>
     <button class="button" data-layout="action" data-action="play">
-      <span class="content">play</span>
+      <span class="content">{{#sprite . "play"}}{{/sprite}}</span>
     </button>
   </li>
   <li>
@@ -14,20 +14,23 @@
   </li>
   <li>
     <button class="button" data-layout="action" data-action="loop">
-      <span class="content">loop</span>
+      <span class="content">{{#sprite . "loop"}}{{/sprite}}</span>
     </button>
   </li>
   <li>
     <button class="button" data-layout="action" data-action="speaker">
-      <span class="content">speaker</span>
+      <span class="content">{{#sprite . "volume"}}{{/sprite}}</span>
     </button>
   </li>
   <li class="expandable">
-    <a href="javascript://" class="expand-toggle">
-      <span class="text">...</span>
+    <button  class="button expand-toggle">
+      <span class="content horizontal y-center">
+        {{#sprite . "etc"}}{{/sprite}}
         {{#sprite . "arrow-bottom"}}{{/sprite}}
       </span>
-    </a>
+        
+      </span>
+    </button>
     <ul class="expand horizontal x-end">
       <li>
         <button class="button" data-action="others" >

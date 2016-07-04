@@ -26,39 +26,7 @@
 
 //////////////////////////////////
 //Below : d3 sample
-
-.waveform > svg,
-.waveform > div {
-  border:       2px solid #ddd;
-  height:       200px;
-  margin-left:  40px;
-  padding:      2px;
-  position:     relative;
-  width:        100%;
-}
 .waveform h2 {
   margin-left:  40px;
   font-size:    36px;
-}
-.waveform > div div.bar {
-  background-color:  red;
-  position:          absolute;
-}
-.waveform .svg g rect {
-  fill:     red;
-  opacity:  0.5;
-}
-
-.axis {
-  position: absolute;
-  top:      4px;
-  left:    -40px;
-}
-.axis g path.domain {
-  display: none;
-}
-.axis g text {
-  font-family: 'Roboto', sans-serif;
-  opacity:      0.5;
-  font-size:    10px;
 }

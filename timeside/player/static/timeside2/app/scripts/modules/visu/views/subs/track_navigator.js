@@ -25,7 +25,16 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    onNewSegmentLoop:function() {
+      var timeSegment1 = A._i.getOnCfg('currentLoopSegment')[0];
+      var timeSegment2 = A._i.getOnCfg('currentLoopSegment')[1];
+      var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
 
+      var x1 = this.xScale(timeSegment1);
+      var x2 = this.xScale(timeSegment2);
+
+      this.loopSegmentRectangle.attr('x',x1).attr('width',(x2-x1));
+    },
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Func
@@ -82,6 +91,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.createAxis();
       this.createBrush();
       this.createCursor();
+      this.createLoopSegment();
 
       //pour click curseur // @TODO : CREATE CURSEUR
       this.clickContainer = this.$el.find('.container_track_navigator > .svg');
@@ -116,6 +126,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     //creates the chart, kept as this.d3chart
     createBaseChart:function() {
       var height = this.height;
+      var barHeight = this.height-this.size.axisHeight;
+      var axisHeight = this.size.axisHeight;
       var width = this.width;
       var data = this.data;
 
@@ -124,9 +136,24 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("width", width)
         .attr("height", height);
 
+        //append the data background
+        node.append("rect")
+            .attr("class","chart-background")
+            .attr("y", axisHeight)
+            .attr("x", 0)
+            .attr("width", width)
+            .attr("height", height-axisHeight);
+
+        //append the data container
+        node.append("g")
+            .attr("class","chart-data")
+            .attr("width", width)
+            .attr("height", height);
+
+
 
       //creating y  
-      var y = d3.scale.linear().range([height, -height]);
+      var y = d3.scale.linear().range([barHeight, -barHeight]);
       var max_val = d3.max(data, function(d) { return d.value; });
       this.max_val = max_val;
       y.domain([-max_val, max_val]);
@@ -144,15 +171,15 @@ function (Marionette,A,BaseQeopaView,d3) {
       var chart = node.attr("width", width).attr("height", height);
       this.d3chart = chart;
 
-      var bar = chart.selectAll("g")
+      var bar = chart.selectAll(".chart-data").selectAll("g")
         .data(data,function(d) {return d.time;})
         .enter().append("g") // svg "group"
         .attr("transform", function(d, i) {
-          return "translate(" + i * bar_width + ",0)";
+          return "translate(" + i * bar_width + ","+axisHeight+")";
         })
         .append("rect")
         .attr("y", function(d) {
-          var yv = height - Math.abs(y(d.value)/2) - height/2 + 2;
+          var yv = barHeight - Math.abs(y(d.value)/2) - barHeight/2 + 2;
           return yv;
         })
         .attr("height", function(d) {
@@ -166,62 +193,65 @@ function (Marionette,A,BaseQeopaView,d3) {
       var height = this.height, width = this.width, data = this.data, chart = this.d3chart,
         max_val=this.max_val;
 
-      var xScale = this.xScale,/*d3.scale.linear()
+      var xScale = this.xScale;/*d3.scale.linear()
         .domain([0, data.length])
         .range([0, width]),*/
-      yScale = d3.scale.linear()
-        .domain([-max_val, max_val]).nice()
-        .range([height, 0]); 
       
       var xAxis = d3.svg.axis()
           .scale(xScale)
           .orient('bottom')
-          .ticks(5),
-          yAxis = d3.svg.axis()
-          .scale(yScale)
-          .orient('left');
-
+          .ticks(5);
+          
       chart.append('g')
           .attr('class', 'x axis')
-          .attr('transform', 'translate(0,' + (height-30) + ')')
+          //.attr('transform', 'translate(0,' + (height-30) + ')')
           .call(xAxis);
 
-      chart.append('g')
-          .attr('class', 'y axis')
-          .attr('transform', 'translate(40,0)')
-          .call(yAxis);  
-
       this.xScale = xScale;
-      this.yScale=yScale;
+
+      
     },
 
     //3
     //create the brush
     createBrush:function() {
       var height = this.height, width = this.width, data = this.data, chart = this.d3chart,
-        max_val=this.max_val;
+        max_val=this.max_val,
+        axisHeight = this.size.axisHeight;
+
 
       this.viewport = d3.svg.brush()
         .x(this.xScale)
         .on("brush", _.bind(this.brushed,this));
 
-
       chart.append("g")
         .attr("class", "viewport")
         .call(this.viewport)
         .selectAll("rect")
-        .attr("height", height);  
+        .attr("height", height-axisHeight)
+        .attr('transform', 'translate(0,'+axisHeight+')');  
     },
 
     //4
     //create cursor
     createCursor:function() {
       this.cursorView = this.d3chart.append("rect")
-        .attr('x',200)
+        .attr('class',"cursor")
+        .attr('x',0)
         .attr('y',0)
         .attr('width',2)
         .attr('height',this.height);
 
+    },
+
+    //5
+    //create segment loop
+    createLoopSegment:function() {
+      this.loopSegmentRectangle = this.d3chart.insert("rect",":first-child")
+        .attr('class',"loop-segment")
+        .attr('x',0).attr('y',0)
+        .attr('width',2).attr('height',this.height)
+        .attr('opacity',0.6);
     },
 
 
@@ -230,6 +260,9 @@ function (Marionette,A,BaseQeopaView,d3) {
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('audio.newAudioTime','',this.onNewTime,this);
+      A._v.onCfg('ui_project.segmentLoopUpdate','',this.onNewSegmentLoop,this);
+      //on initialize specify the sizes
+      this.updateSize();
     },
 
     onRender:function() {
@@ -242,6 +275,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.$el.find('.container_track_navigator > .svg').off('click'); 
 
       A._v.offCfg('audio.newAudioTime','',this.onNewTime,this);
+      A._v.offCfg('ui_project.segmentLoopUpdate','',this.onNewSegmentLoop,this);
     },
 
 
@@ -253,6 +287,13 @@ function (Marionette,A,BaseQeopaView,d3) {
       }
     },
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //SIZES
+    updateSize : function() {
+      this.size = {
+        axisHeight : 15
+      };
+    }
 
     
     

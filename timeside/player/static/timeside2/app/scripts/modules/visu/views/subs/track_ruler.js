@@ -83,14 +83,17 @@ function (Marionette,A,BaseQeopaView,d3) {
       
       var xAxis = d3.svg.axis()
           .scale(xScale)
-          .orient('bottom')
-          .ticks(5);
+          .orient('top')
+          .ticks(10)
+          .tickFormat(function(arg) {
+            return A.telem.formatTimeMs(arg.getTime());
+          });
 
       this.axis = xAxis;
 
       this.d3chart = chart.append('g')
           .attr('class', 'x axis')
-          .attr('transform', 'translate(0,' + (height-30) + ')');
+          .attr('transform', 'translate(0,' + (height) + ')');
 
       this.d3chart.call(xAxis);
 

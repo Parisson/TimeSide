@@ -5,21 +5,24 @@ define([
   'd3',
   './subs/track_navigator',
   './subs/track_waveform',
+  './subs/track_waveform_v2',
   './subs/track_canvas',
   './subs/track_ruler',
   './subs/track_annotations',
+
+  './subs/sub_overlay',
 
 
   '#audio/views/player'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
-  AudioPlayerView) {
+function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackWaveformViewV2,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
+  OverlayView,AudioPlayerView) {
   'use strict';
 
   return BaseQeopaView.extend({
 
-      template: templates['visu/item_new_view'],
+    template: templates['visu/item_new_view'],
     className: 'item_view',
 
     ui: {
@@ -28,20 +31,32 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       'containerTrackNavigator' : '.navigation-track',
       'containerRulerView' : '[data-layout="ruler_container"]',
       'containerOtherTracks' : '.other-tracks',
-
-
-      'containerPlayer' : '[data-layout="player_container"]'
+      'containerPlayer' : '[data-layout="player_container"]',
+      'containerOverlay' : '[data-layout="overlay-container"]'
     },
     events: {
-      'click @ui.btnAction' : 'onClickAction'
+      'click @ui.btnAction' : 'onClickAction',
+      'mousemove @ui.containerOtherTracks' : 'onMouseOverContainerTracks',
+      'mousedown @ui.containerOtherTracks' : 'onMouseDownContainerTracks',
+      'mouseup @ui.containerOtherTracks' : 'onMouseUpContainerTracks',
+    },
+    ////////////////////////////////////////////////////////////////////////////////////
+    //SIZES
+    updateSize : function() {
+      this.size = {
+        defaultHeight : 200,  //normal track height
+        navHeight     : 60,   // navigation track height
+        rulerHeight   : 30,    //height of the ruler above tracks
+        width         : this.$el.width()  //all tracks width
+      };
     },
 
-     ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
     //Action manager
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
       var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio,
-        "add_annot" : this.onAddTrackAnnotations};
+        "add_annot" : this.onAddTrackAnnotations,"add_new_waveform" : this.onAddTrackWaveformV2};
 
       if (mapAction[action])
         (_.bind(mapAction[action],this))();
@@ -55,13 +70,14 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
       this.trackNavigatorView.isTrueDataServer = true;
 
-      this.trackNavigatorView.startLoading(800,200,_.bind(this.onNavigatorLoaded,this));
+      this.trackNavigatorView.startLoading(this.size.width, this.size.navHeight,_.bind(this.onNavigatorLoaded,this));
     },
 
 
     //when navigator is ready
     onNavigatorLoaded:function() {
      this.navigatorReady=true;
+     //this.onDomRefresh();
 
      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
 
@@ -72,7 +88,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
      if (! this.rulerView) {
         this.rulerView = new TrackRulerView();
         this.ui.containerRulerView.empty().append(this.rulerView.render().$el);
-        this.rulerView.create(800,200);
+        this.rulerView.create(this.size.width, this.size.rulerHeight);
      }
 
      //@Todo : get container track ruler & instanciate TrackRulerView
@@ -83,26 +99,80 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
 
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Resize a track
+    onMouseOverContainerTracks:function(ev) {
+      /*console.log('overing : '+ev.pageX+":"+ev.pageY);*/
+
+      if (this.isResizing) {
+        //make true resize here
+        var deltaY = ev.pageY - this.YMouseDownForResize;
+        var newHeight = this.initialHeightComponent + deltaY;
+        if (this.trackSelected && this.trackSelected.changeHeight)
+          this.trackSelected.changeHeight(newHeight);
+        return;
+      }
+
+      var heightZoneCanResize = 30;
+      var trackSelected;
+      _.each(this.tracks,function(_tv) {
+/*        console.log('Testing : '+_tv.$el.position());*/
+        if (ev.pageY> ( _tv.$el.position().top + _tv.$el.height() - heightZoneCanResize ) 
+          && (ev.pageY <  ( _tv.$el.position().top + _tv.$el.height()) )) {
+          trackSelected = _tv;
+        }
+      },this);
+
+      if (trackSelected) {
+        this.ui.containerOtherTracks.css('cursor','row-resize');
+      }
+      else {
+        this.ui.containerOtherTracks.css('cursor','default');
+      }
+
+      this.trackSelected = trackSelected;
+    },
+
+
+    onMouseDownContainerTracks:function(ev) {
+      if (this.trackSelected) {
+        this.YMouseDownForResize = ev.pageY;
+        this.initialHeightComponent = this.trackSelected.$el.height();
+        this.isResizing=true;
+      }
+    },
+
+    onMouseUpContainerTracks:function(ev) { 
+      if (this.trackSelected) {
+        this.trackSelected=undefined;
+        this.isResizing=false;
+      }
+
+    },
+
+
+
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track
     addTrack:function(trackView,type) {
       this.tracks.push(trackView);
       this.ui.containerOtherTracks.append(trackView.render().$el);
-      trackView.defineTrack({type : type, width : 800, height : 200});
+      trackView.defineTrack({type : type, width : this.size.width, height : this.size.defaultHeight});
       trackView.init();
+      A._v.trigCfg('ui_project.tracksHeightChanged');
     },
 
     onAddTrackWaveform:function() {
       if (!this.navigatorReady)
         return;
-
       return this.addTrack(new TrackWaveformView(),"waveform");
+    },
 
-      this.trackWaveformView_1 = new TrackWaveformView();
-      this.ui.containerOtherTracks.empty().append(this.trackWaveformView_1.render().$el);
-      this.trackWaveformView_1.defineTrack({type : "waveform", width : 800, height : 200});
-
-      this.trackWaveformView_1.init();
+    onAddTrackWaveformV2:function() {
+      if (!this.navigatorReady)
+        return;
+      return this.addTrack(new TrackWaveformViewV2(),"waveform_v2");
     },
     
     onAddTrackAnnotations:function() {
@@ -111,11 +181,6 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
 
       return this.addTrack(new TrackAnnotationsView(),"annotation");
-
-      this.trackWaveformView_Anno = new TrackAnnotationsView();
-      this.ui.containerOtherTracks.empty().append(this.trackWaveformView_Anno.render().$el);
-      this.trackWaveformView_Anno.defineTrack({type : "annotation", width : 800, height : 200});
-      this.trackWaveformView_Anno.init();
     },
     
 
@@ -134,6 +199,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onRender:function() {
+      
        if (! this.trackNavigatorView) {
           this.trackNavigatorView = new TrackNavigatorView();
           this.ui.containerTrackNavigator.empty().append(this.trackNavigatorView.render().$el);
@@ -142,7 +208,13 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           this.audioPlayerView = new AudioPlayerView();
           this.ui.containerPlayer.empty().append(this.audioPlayerView.render().$el);
        }
+       if (! this.overlayView) {
+        this.overlayView = new OverlayView();
+        this.ui.containerOverlay.empty().append(this.overlayView.render().$el);
+       }
     },
+
+   
        
 
     onDestroy: function () {      
@@ -150,6 +222,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.audioPlayerView.destroy();
       if (this.rulerView)
         this.rulerView.destroy();
+      this.overlayView.destroy();
 
       _.each(this.tracks,function(t) {
         t.destroy();
@@ -157,6 +230,10 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onDomRefresh:function() {
+      this.overlayView.onDomRefresh();
+      //once it is rendered, set the desired tracks width/height
+      this.updateSize();
+
     },
 
     serializeData: function () {

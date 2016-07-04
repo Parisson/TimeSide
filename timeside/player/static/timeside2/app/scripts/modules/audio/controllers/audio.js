@@ -12,6 +12,7 @@ function (A,buzz) {
       A._v.onCfg('audio.loadSpecificFile','',this.loadSpecificFile,this);
       A._v.onCfg('audio.play','',this.playAudio,this);
       A._v.onCfg('audio.pause','',this.pauseAudio,this);
+      A._v.onCfg('audio.stop','',this.stopAudio,this);
       A._v.onCfg('audio.setCurrentTime','',this.setCurrentTime,this);
 
       //vital
@@ -29,20 +30,31 @@ function (A,buzz) {
       A._v.offCfg('audio.play','',this.playAudio,this);
       A._v.offCfg('audio.pause','',this.pauseAudio,this);
       A._v.onCfg('audio.setCurrentTime','',this.setCurrentTime,this);
+      A._v.offCfg('audio.stop','',this.stopAudio,this);
     },
 
      //////////////////////////////////////////////////////////////////////////////
     //Basic buzz functions
     createSound:function(url) {
       if (this.sound) {
-        clearInterval(this.updateInterval);
-        //this.sound.unbind('timeupdate');
+        this.destroySound();
       }
       this.sound = new buzz.sound(url);
+      this.sound.bind('ended',_.bind(this.onSoundEnded,this));
       
       //this.sound.bind('timeupdate',_.bind(this.onTimeUpdate,this));
       return this.sound;  
 
+    },
+
+    destroySound:function() {
+      if (this.updateInterval) {      
+        console.log('clearing : '+this.updateInterval);
+        clearInterval(this.updateInterval); 
+        this.updateInterval=undefined;
+      }
+      this.sound.unbind('ended');
+      this.sound=undefined;
     },
 
     //////////////////////////////////////////////////////////////////////////////
@@ -73,22 +85,45 @@ function (A,buzz) {
     //Audio play/pause
 
     playAudio:function() {
+      if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+        this.updateInterval=undefined;
+      }
+
       //todo : load with buzz remote stuff
       if (this.sound) {
         this.sound.play();
-        this.updateInterval = setInterval(_.bind(this.testTimeUpdate,this),50);
+        this.updateInterval = setInterval(_.bind(this.testTimeUpdate,this),30);
+        console.log('*** Created interval : '+this.updateInterval);
       }
 
+    },
+
+    stopAudio:function() {
+      if (this.sound) {
+        this.sound.stop();
+      }
+      if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+        this.updateInterval=undefined;
+      }
     },
   
     pauseAudio:function() {
       if (this.sound) {
         this.sound.pause();
-        clearInterval(this.updateInterval);
       }
+      if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+        this.updateInterval=undefined;
+      }
+    },
 
-
-      
+    onSoundEnded:function() {
+      if (this.updateInterval) {
+        clearInterval(this.updateInterval);
+        this.updateInterval=undefined;
+      }
     },
    
 
@@ -103,9 +138,9 @@ function (A,buzz) {
 
 
     testTimeUpdate:function() {
-
-      var percent = this.sound.getTime() / this.sound.getDuration();
-      A._v.trigCfg('audio.newAudioTime','',percent);
+      var timeSound = this.sound.getTime() ;
+      var percent =timeSound / this.sound.getDuration();
+      A._v.trigCfg('audio.newAudioTime','',percent,timeSound);
     },
 
     //DEPRECATED!!!! now pooling above
