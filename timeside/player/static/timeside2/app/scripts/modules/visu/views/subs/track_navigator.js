@@ -236,6 +236,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     //create cursor
     createCursor:function() {
       this.cursorView = this.d3chart.append("rect")
+        .attr('class',"cursor")
         .attr('x',0)
         .attr('y',0)
         .attr('width',2)
@@ -247,6 +248,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     //create segment loop
     createLoopSegment:function() {
       this.loopSegmentRectangle = this.d3chart.insert("rect",":first-child")
+        .attr('class',"loop-segment")
         .attr('x',0).attr('y',0)
         .attr('width',2).attr('height',this.height)
         .attr('opacity',0.6);

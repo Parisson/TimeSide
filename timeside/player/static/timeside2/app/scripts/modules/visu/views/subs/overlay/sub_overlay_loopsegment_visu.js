@@ -95,6 +95,9 @@ function (Marionette,A,BaseQeopaView,d3) {
       };
       positionArrow(this.triangleLeft,X0);
       positionArrow(this.triangleRight,X1);
+
+
+      this.loopSegmentRectangle.attr('x',X0).attr('width',(X1-X0));
     },
 
 
@@ -133,25 +136,30 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("height", self.$el.height());
 
 
-
+      //INIT LEFT TRIANGLE
       var triangleLeftPoints = this.generateTriangleLeft(15,true);//'10 0, 15 5, 10 10, 10 0';
-      this.triangleLeft = this.node.append('g');
-      this.triangleLeft.append('polyline').attr('points',triangleLeftPoints).style('stroke','black');
+      this.triangleLeft = this.node.append('g').attr("class", "time-arrow");
+      this.triangleLeft.append('polygon').attr('points',triangleLeftPoints)
       this.triangleLeft.append('rect').attr('width',1).attr('height',this.height)
-        .attr('transform','translate(0,15)')
-        .style('stroke','black');
+        .attr('transform','translate(0,15)');
       this.triangleLeftTime = this.getTimeFromX(0);
 
+      //INIT RIGHT TRIANGLE
       var triangleRightPoints = this.generateTriangleLeft(15,false);//'10 0, 15 5, 10 10, 10 0';
-      this.triangleRight = this.node.append('g');
-      this.triangleRight.append('polyline').attr('points',triangleRightPoints).style('stroke','black')
+      this.triangleRight = this.node.append('g').attr("class", "time-arrow");
+      this.triangleRight.append('polygon').attr('points',triangleRightPoints)
       this.triangleRight.append('rect').attr('width',1).attr('height',this.height)
-        .attr('transform','translate(7,15)')
-        .style('stroke','black');
-      this.triangleRight.attr("transform","translate(100,8)");
+        .attr('transform','translate(-1,15)');
+      this.triangleRight.attr("transform","translate(0,8)");
 
-      this.triangleRightTime = this.getTimeFromX(100);
+      this.triangleRightTime = this.getTimeFromX(0);
 
+      //INIT SMALL RECT BETWEEN TRIANGLES
+      this.loopSegmentRectangle = this.node.insert("rect",":first-child")
+        .attr('class',"loop-segment")
+        .attr('x',0).attr('y',8)
+        .attr('width',0).attr('height',16)
+        .attr('opacity',0.6);
 
       this.initDone=true;
     },
@@ -160,7 +168,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     //generate triange
     generateTriangleLeft(width,isLeft) {
       var positionsLeft = [ [0,0], [Math.round(width/2),Math.round(width/2)], [0,Math.round(width)] ];
-      var positionsRight = [ [Math.round(width/2),0], [Math.round(width/2),Math.round(width)], [0,Math.round(width/2)] ];
+      var positionsRight = [ [0,0], [-Math.round(width/2),Math.round(width)/2], [0,Math.round(width)] ];
 
       var positions = isLeft ? positionsLeft : positionsRight;
 

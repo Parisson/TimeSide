@@ -1,4 +1,5 @@
 .ts-content {
+  
   //CONTROLS
   .audio-player {
     li {
@@ -17,6 +18,22 @@
     .svg{
       position:relative;
       border-bottom:2px solid transparent;
+    }
+  }
+
+  //GENERAL ELEMENTS
+  .cursor {
+    fill:red;
+  }
+  .loop-segment {
+    fill:rgba(0,0,0,0.3);
+  }
+  .time-arrow {
+    rect,polygon {
+      fill:$darkColor;
+    }
+    rect {
+      stroke: $darkColor;
     }
   }
 
@@ -94,7 +111,7 @@
     height: 100%;
     position: absolute;
     top: 0;
-    opacity: 0.4;
+    //opacity: 0.4;
     pointer-events: none;
   }
 
@@ -113,7 +130,7 @@
   //WAVE FORM
   .ruler-track {
     .domain {
-      fill: #CCC;
+      fill: $darkColor;
     }
   }
   .click-catcher {
@@ -137,7 +154,7 @@
     .resize {
       background-color:  $brushColor*0.9;
     }
-    rect {
+    g rect {
       fill:     $waveFormColor;
     }
   }
