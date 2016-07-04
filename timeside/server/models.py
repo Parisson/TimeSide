@@ -186,6 +186,11 @@ class Item(DocBaseResource, ShareableResource):
             source_type = 'url'
         return source, source_type
 
+    def get_audio_duration(self):
+        import timeside.core as ts_core
+        decoder = ts_core.get_processor('file_decoder')(uri=self.get_source()[0])
+        return decoder.uri_total_duration
+
 
     def get_results_path(self):
         return os.path.join(results_path, self.uuid)
@@ -247,21 +252,22 @@ class Item(DocBaseResource, ShareableResource):
             for result_id in proc.results.keys():
                 parameters = proc.results[result_id].parameters
             if preset is None:
-                processor, c=Processor.objects.get_or_create(pid=proc.id())
+                processor, c = Processor.objects.get_or_create(pid=proc.id())
+                presets = Preset.objects.filter(processor=processor,
+                                                parameters=unicode(parameters))
+                if presets:
+                    preset = presets[0]
+                else:
+                    preset = Preset(processor=processor,
+                                    parameters=unicode(parameters))
+                    preset.save()
             else:
                 processor = preset.processor
 
-            presets = Preset.objects.filter(processor=processor,
-                    parameters=unicode(parameters))
-            if presets:
-                preset = presets[0]
-            else:
-                preset = Preset(processor=processor,
-                        parameters=unicode(parameters))
-                preset.save()
+           
 
             result, c = Result.objects.get_or_create(preset=preset,
-                                                         item=self)
+                                                     item=self)
             hdf5_file = str(result.uuid) + '.hdf5'
             result.hdf5 = os.path.join(result_path, hdf5_file)
             # while result.lock:
@@ -274,7 +280,7 @@ class Item(DocBaseResource, ShareableResource):
         for preset, proc in presets.iteritems():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
-                set_results_from_processor(proc)
+                set_results_from_processor(proc, preset)
 
             elif proc.type == 'grapher':
                 parameters = {}
@@ -375,6 +381,10 @@ class Preset(BaseResource, ShareableResource):
         if created:
             experience.save()
             experience.presets.add(self)
+        elif (experience.presets.count() > 1) or (self not in experience.presets.all()) :
+            experience.presets.clear()
+            experience.presets.add(self)
+                    
         return experience
 
 class Result(BaseResource, ShareableResource):
@@ -493,11 +503,21 @@ post_save.connect(run, sender=Task)
 
 # Session and Tracks related objects
 
-class AnalysisTrack(DocBaseResource, ShareableResource):
-    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis_tracks", verbose_name=_('sub_processor'), blank=True, null=True)
-    preset = models.ForeignKey(Preset, related_name="analysis_tracks", verbose_name=_('preset'), blank=True, null=True)
+class Analysis(DocBaseResource, ShareableResource):
+    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=True, null=True)
+    preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=True, null=True)
 
     class Meta:
-        db_table = app + '_analysistracks'
+        db_table = app + '_analysis'
+        verbose_name = _('Analysis')
+
+
+class AnalysisTrack(DocBaseResource, ShareableResource):
+
+    analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=True, null=True)
+    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=True, null=True) 
+
+    class Meta:
+        db_table = app + '_analysis_tracks'
         verbose_name = _('Analysis Track')
  

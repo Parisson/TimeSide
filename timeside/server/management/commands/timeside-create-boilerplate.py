@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 import os
 import timeside.core
 from timeside.server.models import Selection, Item
-from timeside.server.models import Processor, Preset, Experience, Task, AnalysisTrack, SubProcessor
+from timeside.server.models import Processor, Preset, Experience, Task, Analysis, SubProcessor
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
 
@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 sub_processor, c = SubProcessor.objects.get_or_create(sub_processor_id = grapher._result_id,
                                                                       processor = processor)
               
-                track = AnalysisTrack.objects.get_or_create(sub_processor = sub_processor,
+                analysis, c = Analysis.objects.get_or_create(sub_processor = sub_processor,
                                                             preset = preset,
                                                             title = grapher._grapher_name)
 

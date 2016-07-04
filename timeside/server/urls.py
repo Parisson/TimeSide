@@ -21,6 +21,7 @@ api_router.register(r'presets', views.PresetViewSet)
 api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 api_router.register(r'analysis', views.AnalysisViewSet)
+api_router.register(r'analysis_track', views.AnalysisTrackViewSet)
 
 urlpatterns = patterns(
     '',

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from timeside.server.models import *
+import timeside.server as ts
 from rest_framework import serializers
 import django.db.models
 from django.contrib.auth.models import User
@@ -34,7 +34,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
 
     class Meta:
-        model = Item
+        model = ts.models.Item
         fields = ('uuid', 'url', 'title', 'description', 'mime_type', 'source_file',
                     'source_url', 'waveform_url', 'analysis_url', 'audio_url', 'audio_duration')
         extra_kwargs = {
@@ -58,9 +58,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
                 'ogg': obj_url + 'download/ogg'}
 
     def get_audio_duration(self, obj):
-        import timeside.core as ts_core
-        decoder = ts_core.get_processor('file_decoder')(uri=obj.get_source()[0])
-        return decoder.uri_total_duration
+        return obj.get_audio_duration()
 
 
 class ItemWaveformSerializer(ItemSerializer):
@@ -69,7 +67,7 @@ class ItemWaveformSerializer(ItemSerializer):
     waveform = serializers.SerializerMethodField()
 
     class Meta:
-        model = Item
+        model = ts.models.Item
         fields = ('item_url', 'title', 'waveform_url', 'waveform')
 
     def get_waveform(self, obj):
@@ -123,7 +121,7 @@ class ItemAnalysisSerializer(serializers.HyperlinkedModelSerializer):
     analysis_url = serializers.SerializerMethodField()
 
     class Meta:
-        model = Item
+        model = ts.models.Item
         fields = ('uuid', 'url', 'analysis_url')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'}
@@ -136,15 +134,93 @@ class ItemAnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_analysis_url(self, obj):
         analysis_url = self.get_url(obj) + 'analysis/'
-        analysis = AnalysisTrack.objects.all()
+        analysis = ts.models.Analysis.objects.all()
         
         return { a.title: analysis_url + a.uuid for a in analysis}
 
+def get_result(item, preset, wait=True):
+    # Get Result with preset and item
+    try:
+        result = ts.models.Result.objects.get(item=item, preset=preset)
+        if not os.path.exists(result.hdf5.path):
+            # Result exists but there is no file (may have been deleted)
+            result.delete()
+            return get_result(item=item, preset=preset)
+        return result
+    except ts.models.Result.DoesNotExist:
+        # Result does not exist
+        # the corresponding task has to be created and run
+        task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
+                                                   selection=item.get_single_selection())
+        if created:
+            task.run(wait=False)
+        elif task.status == _RUNNING:
+            return 'Task Running'
+        else:
+            # Result does not exist but task exist and is done, draft or pending
+            task.status = _PENDING
+            task.save()
+        return 'Task Created and launched'
 
+    
+class ItemAnalysisResultSerializer(serializers.HyperlinkedModelSerializer):
+
+    #analysis_url = serializers.HyperlinkedRelatedField(read_only=True,
+    #                                                   
+    #    )
+    audio_duration = serializers.SerializerMethodField()
+    result = serializers.SerializerMethodField()
+    analysis_uuid = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ts.models.Item
+        fields = ('uuid', 'url', 'audio_duration', 'analysis_uuid', 'analysis_url', 'result')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+            }
+
+    def get_url(self, obj):
+        from rest_framework.reverse import reverse
+        request = self.context['request']
+        return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
+
+    def get_analysis_uuid(self, obj):
+        
+        return self.lookup_url_kwarg['analysis_uuid']
+
+            
+    def get_analysis_url(self, obj):
+        analysis_url = self.get_url(obj) + 'analysis/'
+        analysis_uuid = self.get_analysis_uuid(obj)
+        
+        
+        return analysis_url + analysis_uuid
+
+    def get_audio_duration(self, obj):
+        return obj.get_audio_duration()
+
+    def get_result(self, obj):
+        analysis_uuid = self.get_analysis_uuid(obj)
+        try:
+            analysis, c = ts.models.Analysis.objects.get(uuid = analysis_uuid)
+        except ts.models.Analysis.DoesNotExist:
+            return {'Unknown analysis': analysis_uuid}
+
+        preset = analysis.preset
+ 
+        result = get_result(item=obj, preset=preset)
+        if isinstance(result, Result):
+            res_msg = result.uuid
+        else:
+            res_msg = result
+        return {'analysis': analysis.uuid,
+                'item': item.uuid}
+
+    
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Selection
+        model = ts.models.Selection
         fields = ('uuid', 'items', 'selections', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
@@ -157,7 +233,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Experience
+        model = ts.models.Experience
         fields = ('uuid', 'presets', 'is_public', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
@@ -168,7 +244,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Processor
+        model = ts.models.Processor
         fields = ('url', 'pid', 'version')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
@@ -178,7 +254,7 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
-        model = SubProcessor
+        model = ts.models.SubProcessor
         fields = ('url', 'name', 'processor', 'sub_processor_id')
         extra_kwargs = {
             'url': {'lookup_field': 'sub_processor_id'},
@@ -189,7 +265,7 @@ class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Preset
+        model = ts.models.Preset
         fields = ('url', 'uuid', 'processor', 'parameters')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
@@ -222,7 +298,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Result
+        model = ts.models.Result
         fields = ('uuid', 'item', 'preset', 'status', 'hdf5', 'file')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
@@ -233,7 +309,7 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
 class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Result
+        model = ts.models.Result
         fields = ('uuid', 'preset', 'hdf5', 'file', 'mime_type')
         read_only_fields = fields
         depth = 2
@@ -242,7 +318,7 @@ class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = Task
+        model = ts.models.Task
         fields = ('url', 'uuid', 'experience', 'selection', 'status', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
@@ -254,7 +330,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = User
+        model = ts.models.User
         fields = ('url', 'username', 'first_name', 'last_name')
         extra_kwargs = {
             'url': {'lookup_field': 'username'}
@@ -263,7 +339,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = AnalysisTrack
+        model = ts.models.Analysis
         fields = ('url', 'uuid', 'title', 'preset', 'sub_processor')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
@@ -272,3 +348,26 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
             }
             
 
+#class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
+#
+#    class Meta:
+#        model = ts.models.AnalysisTrack
+#        fields = ('url', 'uuid', 'analysis', 'item')
+
+class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = ts.models.AnalysisTrack
+        fields = ('url', 'uuid', 'analysis', 'item')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'},
+            'item': {'lookup_field': 'uuid'},
+            'analysis': {'lookup_field': 'uuid'},
+            }
+
+    ## def get_url(self, obj, view_name, request, format):
+    ##     url_kwargs = {
+    ##         'item_uuid': obj.item.uuid,
+    ##         'analysis_uuid': obj.analysis.uuid.pk
+    ##     }
+    ##     return reverse(view_name, kwargs=url_kwargs, request=request, format=format)

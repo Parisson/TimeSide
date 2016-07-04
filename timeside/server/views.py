@@ -28,11 +28,12 @@ from django.http import HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics
+from rest_framework.response import Response
 
 from timeside.server.models import Experience, Item, Result, Processor, SubProcessor
 from timeside.server.models import Preset, Selection, Task, User
-from timeside.server.models import AnalysisTrack
-from timeside.server.models import _DRAFT, _DONE, _RUNNING
+from timeside.server.models import Analysis, AnalysisTrack
+from timeside.server.models import _DRAFT, _DONE, _RUNNING, _PENDING
 from timeside.server.serializers import ExperienceSerializer, ItemSerializer, ItemWaveformSerializer
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
@@ -41,7 +42,7 @@ from timeside.server.serializers import ResultSerializer, Result_ReadableSeriali
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
-from timeside.server.serializers import AnalysisSerializer, ItemAnalysisSerializer
+from timeside.server.serializers import AnalysisSerializer, AnalysisTrackSerializer, ItemAnalysisSerializer, ItemAnalysisResultSerializer
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -163,11 +164,16 @@ class UserViewSet(viewsets.ModelViewSet):
     
 class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = AnalysisTrack
-    queryset = AnalysisTrack.objects.all()
+    model = Analysis
+    queryset = Analysis.objects.all()
     serializer_class = AnalysisSerializer
 
 
+class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+
+    model = AnalysisTrack
+    queryset = AnalysisTrack.objects.all()
+    serializer_class = AnalysisTrackSerializer
 
 
     
@@ -363,48 +369,33 @@ class ItemDetail(DetailView):
         Results = {}
         return context
 
-def get_result(item, preset, wait=True):
-    # Get Result with preset and item
-    try:
-        result = Result.objects.get(item=item, preset=preset)
-        if not os.path.exists(result.file.path):
-            # Result exists but there is no file (may have been deleted)
-            result.delete()
-            return get_result(item=item, preset=preset)
-    except Result.DoesNotExist:
-        # Result does not exist
-        # the corresponding task has to be created and run
-        task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
-                                                   selection=item.get_single_selection())
-        if task.status == _DRAFT:
-            task.run(wait=wait)
-        elif task.status == _RUNNING:
-            return 'Task Running'
-        else:
-            return task.status
-        return get_result(item=item, preset=preset)
 
-
-class ItemAnalysis(DetailView):
+class ItemAnalysis(generics.RetrieveAPIView):
     model = Item
-
+    queryset = Item.objects.all()
+    serializer_class = ItemAnalysisResultSerializer
+    
     def get_object(self):
         return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
 
-    def get(self, request, uuid, analysis_uuid):
-        item = self.get_object()
-        try:
-            analysis, c = AnalysisTrack.objects.get_or_create(uuid = analysis_uuid)
-        except ResultAnalysisTrack.DoesNotExist:
-            return Http404('Unknown analysis: %s' % analysis_uuid)
+    ## def get(self, request, uuid, analysis_uuid):
+    ##     item = self.get_object()
+    ##     try:
+    ##         analysis, c = Analysis.objects.get_or_create(uuid = analysis_uuid)
+    ##     except ResultAnalysis.DoesNotExist:
+    ##         return Http404('Unknown analysis: %s' % analysis_uuid)
 
-        preset = analysis.preset
-        task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
-                                                   selection=item.get_single_selection())
+    ##     preset = analysis.preset
  
-        result = get_result(item=item, preset=preset)
-               
-        return HttpResponse([analysis, '  --  ', preset, '     :::      ', result])
+    ##     result = get_result(item=item, preset=preset)
+    ##     if isinstance(result, Result):
+    ##         res_msg = {'uuid': result.uuid,
+    ##                    'status': result.status}
+    ##     else:
+    ##         res_msg = {'status': result}
+    ##     return Response([{'analysis': analysis.uuid,
+    ##                          'item': item.uuid,
+    ##                          'result': res_msg}])
 
 class ItemAnalysisList(generics.RetrieveAPIView):
     model = Item
