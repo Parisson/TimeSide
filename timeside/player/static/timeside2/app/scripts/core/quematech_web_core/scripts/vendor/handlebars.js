@@ -12,11 +12,11 @@ define([
   'text!#qt_core/config/assets/svg/play.svg',
   'text!#qt_core/config/assets/svg/stop.svg',
   'text!#qt_core/config/assets/svg/volume.svg',
-  
+  'text!#qt_core/config/assets/svg/settings.svg',
 ],
 
 function (Handlebars, config, injector, _,$,CfgClient, 
-  arrowBottom,close, etc, loop, play, stop, volume) {
+  arrowBottom,close, etc, loop, play, stop, volume,settings) {
   
   'use strict';
   
@@ -28,6 +28,9 @@ function (Handlebars, config, injector, _,$,CfgClient,
     switch (spriteCode) { 
       case 'arrow-bottom' :
         toReturn = _.template(arrowBottom)();
+        break;
+      case 'settings' :
+        toReturn = _.template(settings)();
         break;
       case 'close' :
         toReturn = _.template(close)();

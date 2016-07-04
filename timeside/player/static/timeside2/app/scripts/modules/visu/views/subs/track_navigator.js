@@ -246,7 +246,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     //5
     //create segment loop
     createLoopSegment:function() {
-      this.loopSegmentRectangle = this.d3chart.append("rect")
+      this.loopSegmentRectangle = this.d3chart.insert("rect",":first-child")
         .attr('x',0).attr('y',0)
         .attr('width',2).attr('height',this.height)
         .attr('opacity',0.6);

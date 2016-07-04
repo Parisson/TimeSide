@@ -91,7 +91,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         arrow.attr('opacity',visible ? 1 : 0);
 
         var trueX = visible ? X : 0;
-        arrow.attr("transform", function() {return "translate("+trueX+",0)";});
+        arrow.attr("transform", function() {return "translate("+trueX+",8)";});
       };
       positionArrow(this.triangleLeft,X0);
       positionArrow(this.triangleRight,X1);
@@ -100,7 +100,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     onResize:function() {
       this.width = this.$el.width();
-      this.height = $('.other-tracks').height();
+      this.height = $('.tracks').height();
 
       this.node.attr('height',this.height);
       this.triangleLeft.selectAll('rect').attr('height',this.height);
@@ -148,7 +148,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.triangleRight.append('rect').attr('width',1).attr('height',this.height)
         .attr('transform','translate(7,15)')
         .style('stroke','black');
-      this.triangleRight.attr("transform","translate(100,0)");
+      this.triangleRight.attr("transform","translate(100,8)");
 
       this.triangleRightTime = this.getTimeFromX(100);
 

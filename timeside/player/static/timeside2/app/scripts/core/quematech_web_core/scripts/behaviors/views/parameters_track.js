@@ -35,8 +35,7 @@ function ($,Marionette, _, vent,behaviors) {
     },
 
     onClickShowParameters:function() {
-      var hidden = this.ui.parametersContainer.hasClass('hidden');
-      this.ui.parametersContainer.toggleClass('hidden');
+      this.$el.toggleClass('parameters-visible');
     },
 
     //////////////////////////////////////////////////////////////////
