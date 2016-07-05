@@ -504,8 +504,8 @@ post_save.connect(run, sender=Task)
 # Session and Tracks related objects
 
 class Analysis(DocBaseResource, ShareableResource):
-    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=True, null=True)
-    preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=True, null=True)
+    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False)
+    preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False)
 
     class Meta:
         db_table = app + '_analysis'
@@ -514,8 +514,8 @@ class Analysis(DocBaseResource, ShareableResource):
 
 class AnalysisTrack(DocBaseResource, ShareableResource):
 
-    analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=True, null=True)
-    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=True, null=True) 
+    analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=False)
+    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False) 
 
     class Meta:
         db_table = app + '_analysis_tracks'
