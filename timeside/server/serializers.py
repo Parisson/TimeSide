@@ -18,11 +18,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import timeside.server as ts
+from timeside.server.models import _DRAFT, _DONE, _RUNNING, _PENDING
+
 from rest_framework import serializers
+from rest_framework.reverse import reverse
+
 import django.db.models
 from django.contrib.auth.models import User
 
 import numpy as np
+import os
 
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
@@ -42,7 +47,6 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
             }
 
     def get_url(self, obj):
-        from rest_framework.reverse import reverse
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
 
@@ -150,7 +154,7 @@ def get_result(item, preset, wait=True):
     except ts.models.Result.DoesNotExist:
         # Result does not exist
         # the corresponding task has to be created and run
-        task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
+        task, created = ts.models.Task.objects.get_or_create(experience=preset.get_single_experience(),
                                                    selection=item.get_single_selection())
         if created:
             task.run(wait=False)
@@ -209,7 +213,7 @@ class ItemAnalysisResultSerializer(serializers.HyperlinkedModelSerializer):
         preset = analysis.preset
  
         result = get_result(item=obj, preset=preset)
-        if isinstance(result, Result):
+        if isinstance(result, ts.models.Result):
             res_msg = result.uuid
         else:
             res_msg = result
@@ -356,15 +360,56 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
 
+    #result_uuid = serializers.SerializerMethodField()
+    result_url = serializers.SerializerMethodField()
+     
     class Meta:
         model = ts.models.AnalysisTrack
-        fields = ('url', 'uuid', 'analysis', 'item')
+        fields = ('url', 'uuid', 'analysis', 'item', 'result_url')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},
             'analysis': {'lookup_field': 'uuid'},
             }
+        read_only_fields = ('uuid',)
 
+
+    def create(self, validated_data):
+        item = validated_data['item']
+        analysis = validated_data['analysis']
+
+        preset = analysis.preset
+
+        result = get_result(item=item, preset=preset)
+        
+        #if isinstance(result, Result):
+        #    res_msg = result.uuid
+        #else:
+        #    res_msg = result
+        #return {'analysis': analysis.uuid,
+        #        'item': item.uuid}
+        
+        return super(AnalysisTrackSerializer, self).create(validated_data)
+
+    def get_result_uuid(self, obj):
+        result =  get_result(item=obj.item, preset=obj.analysis.preset)
+        if isinstance(result, ts.models.Result):
+            self._result_uuid = result.uuid
+            return result.uuid
+        else:
+            self._result_uuid = None
+        return  self._result_uuid
+    
+
+    def get_result_url(self, obj):
+        self.get_result_uuid(obj)
+        if self._result_uuid is not None:
+            url_kwargs = {'uuid': self._result_uuid}
+            request = self.context['request']
+            return reverse('result-detail', kwargs=url_kwargs, request=request)
+        else:
+            return 'Task running'
+        
     ## def get_url(self, obj, view_name, request, format):
     ##     url_kwargs = {
     ##         'item_uuid': obj.item.uuid,

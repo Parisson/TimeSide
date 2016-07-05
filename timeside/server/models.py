@@ -515,7 +515,7 @@ class Analysis(DocBaseResource, ShareableResource):
 class AnalysisTrack(DocBaseResource, ShareableResource):
 
     analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=False)
-    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False) 
+    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False)
 
     class Meta:
         db_table = app + '_analysis_tracks'
