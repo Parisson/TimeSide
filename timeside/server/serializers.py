@@ -21,6 +21,7 @@ import timeside.server as ts
 from timeside.server.models import _DRAFT, _DONE, _RUNNING, _PENDING
 
 from rest_framework import serializers
+from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 import django.db.models
@@ -319,6 +320,71 @@ class Result_ReadableSerializer(serializers.HyperlinkedModelSerializer):
         depth = 2
 
 
+class ResultVisualizationSerializer(serializers.BaseSerializer):
+    """
+    A read-only serializer that deals with subprocessor results
+    """
+    def to_representation(self, obj):
+        subprocessor_id = self.context.get('request').query_params.get('id')
+
+        start = float(self.context.get('request').query_params.get('start', 0))
+        stop = float(self.context.get('request').query_params.get('stop', -1))
+        width = int(self.context.get('request').query_params.get('width', 1024))
+        height = int(self.context.get('request').query_params.get('height', 128))
+
+        import h5py
+        sub_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
+
+        duration = sub_result['audio_metadata'].attrs['duration']
+        
+        if start < 0:
+            start = 0
+        if start > duration:
+            raise serializers.ValidationError("start must be less than duration")
+        if stop == -1:
+            stop = duration
+
+        if stop > duration:
+            stop = duration
+
+        def display_dummy_image(start, stop, duration, width, height) :
+            from matplotlib import pyplot as plt
+            import numpy as np
+            import StringIO
+            import PIL
+ 
+            t = np.linspace(start, stop, width)
+            DPI = 96
+            fig = plt.figure(figsize=(width/float(DPI), height/float(DPI)), dpi=DPI, frameon=False)
+            #fig.set_tight_layout(True)
+            #ax1 = plt.Axes(fig, [0., 0., 1., 1.])
+            #ax1 = fig.add_subplot(111)
+            ax1 = plt.axes([0,0,1,1])
+            ax1.plot(t, t, 'b-', linewidth=2)
+            ax1.axis([start, stop, 0, duration])
+            ax1.set_axis_off()
+                        
+            buffer = StringIO.StringIO()
+            canvas = plt.get_current_fig_manager().canvas
+            canvas.draw()
+            pil_image = PIL.Image.frombytes('RGB', canvas.get_width_height(), 
+                                             canvas.tostring_rgb())
+            pil_image.save(buffer, 'PNG')
+            plt.close()
+            # Django's HttpResponse reads the buffer and extracts the image
+            return buffer.getvalue()
+
+       
+
+        return display_dummy_image(start, stop, duration, width, height)
+    #{
+    #        'id': subprocessor_id,
+    #        'start': start,
+    #        'stop': stop,
+    #        'nb_pixels': nb_pixels
+    #        }
+    
+
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -406,7 +472,8 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         if self._result_uuid is not None:
             url_kwargs = {'uuid': self._result_uuid}
             request = self.context['request']
-            return reverse('result-detail', kwargs=url_kwargs, request=request)
+            parameters = '?id=%s' % obj.analysis.sub_processor
+            return reverse('timeside-result-visualization', kwargs=url_kwargs, request=request) + parameters 
         else:
             return 'Task running'
         

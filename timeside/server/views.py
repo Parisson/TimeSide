@@ -27,7 +27,7 @@ from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, renderers
 from rest_framework.response import Response
 
 from timeside.server.models import Experience, Item, Result, Processor, SubProcessor
@@ -38,7 +38,7 @@ from timeside.server.serializers import ExperienceSerializer, ItemSerializer, It
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
 from timeside.server.serializers import SubProcessorSerializer
-from timeside.server.serializers import ResultSerializer, Result_ReadableSerializer
+from timeside.server.serializers import ResultSerializer, Result_ReadableSerializer, ResultVisualizationSerializer
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
@@ -139,6 +139,23 @@ class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     queryset = Result.objects.all()
     serializer_class = ResultSerializer
 
+
+class PNGRenderer(renderers.BaseRenderer):
+    media_type = 'image/png'
+    format = 'png'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+    
+class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
+
+    model = Result
+    queryset = Result.objects.all()
+    serializer_class = ResultVisualizationSerializer
+
+    renderer_classes = (PNGRenderer,)
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 

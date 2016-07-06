@@ -47,7 +47,8 @@ urlpatterns = patterns(
             url(r'^angular/$', views.ItemDetailAngular.as_view(), name='timeside-item-angular'),
             ])
         ),
-      # Results
+    # Results
+    url(r'^api/results/(?P<uuid>[0-9a-z-]+)/visual/', views.ResultVisualizationViewSet.as_view(), name="timeside-result-visualization"),
     url(r'^results/(?P<pk>.*)/json/$', views.ResultAnalyzerView.as_view(), name="timeside-result-json"),
     url(r'^results/(?P<pk>.*)/png/$', views.ResultGrapherView.as_view(), name="timeside-result-png"),
     url(r'^results/(?P<pk>.*)/audio/$', views.ResultEncoderView.as_view(), name="timeside-result-audio"),
