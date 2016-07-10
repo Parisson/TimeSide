@@ -11,7 +11,7 @@ function (A) {
 
   //used for create && edit
   var beforeSubmitData = function(data) {
-    return result;
+    return {data : data};
   };
 
   //config
@@ -19,7 +19,17 @@ function (A) {
     name : "analysis",
     baseEvent : "data:analysis",
     commands : [
-     
+      ////////////////////////CREATE // DEPRECATED ? (problem : get default, not post... ? )
+       {
+        name : "create",
+        apiFunctionName : 'createAnalysis',
+        createDataBeforeCall : beforeSubmitData,
+        onSuccess : function(res) {
+          alert('success! '+JSON.stringify(res.body));
+        }
+      },  
+
+
       ////////////////////////GET LIST
       {
         name : "get",

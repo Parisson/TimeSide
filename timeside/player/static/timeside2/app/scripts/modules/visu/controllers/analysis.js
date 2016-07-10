@@ -16,20 +16,42 @@ function (A,d3) {
 
   var analysisAsked = function(analysis,item) {
     this.analysis = analysis;
-    this.item = item;
+    this.item = item.toJSON ? item.toJSON() : item;
 
     this.launch = function() {
 
 
-      this.interval = setInterval(_.bind(this.testIfFinished,this),3000);
+      this.interval = setInterval(_.bind(this.testIfFinished,this),4000);
     };
 
     this.testIfFinished = function() {
       console.log('testing if finished my analysis : '+JSON.stringify(this.analysis));
+      var data = {
+        analysis : this.analysis.url,
+        item : this.item.url
+      }, self=this;
+      var url = $.post('http://149.202.199.160:8000/timeside/api/analysis_track/',data,function(a,b,c) {
+        console.log('Ok donc on fait quoi ?');
+
+        if (a.result_url && a.result_url.indexOf('http://')===0) {
+          alert('success');
+          self.onFinished(a);
+        }
+        else
+          console.log('Still not finished');
+      });
     };
 
-    this.onFinished = function() {
+    this.onFinished = function(result) {
       clearInterval(this.interval);
+      //@TODO
+      @TODO
+
+      // créer un model de result_analysis
+      // côté vue : 
+      // quand le controleur lance un loading, ikl doit lancer un event analysis_started avec un token unique 
+      // comme ça un segment se met en place visuellement en mode waiting
+      // quand ok, il doit mettre sur le currentItem l'analyse et ensuite remplacer le analysis started par le bon resultat
     };
 
 

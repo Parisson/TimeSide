@@ -41,7 +41,8 @@
 			"get" : "data:processors:get"
 		},
 		"analysis"		: {
-			"get" : "data:analysis:get"
+			"get" 		: "data:analysis:get",
+			"create" 	: "data:analysis:create" 
 		},
 		"items"				: {
 			"get" : "data:items:get",
