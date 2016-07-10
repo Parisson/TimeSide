@@ -18,7 +18,8 @@
 
 	"useFakeData" : "useFakeData",
 
-	"allProcessors" : "allProcessors",
+	"allProcessors" : "allProcessors - DEPRECATED!!!",
+	"allAnalysis"	: "allAnalysis",
 	"allItems" : "allItems",
 
 	"currentItem" : "currentItem"

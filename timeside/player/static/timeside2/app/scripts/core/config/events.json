@@ -35,6 +35,9 @@
 		"processors"		: {
 			"get" : "data:processors:get"
 		},
+		"analysis"		: {
+			"get" : "data:analysis:get"
+		},
 		"items"				: {
 			"get" : "data:items:get",
 			"getOne" : "data:items:getOne",

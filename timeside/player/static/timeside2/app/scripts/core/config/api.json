@@ -12,6 +12,9 @@
       "getProcessors" : {
         "path": "/processors"
       },
+      "getAnalysis" : {
+        "path": "/analysis"
+      },
       "getItems" : {
         "path": "/items"
       },

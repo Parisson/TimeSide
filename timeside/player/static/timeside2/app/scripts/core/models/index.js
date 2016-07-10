@@ -2,11 +2,12 @@ define([
   'injector',
 
   './client/processor',
+  './client/analysis',
   './client/item'
   
 ],
 
-function (injector,ProcessorModel,ItemModel) {
+function (injector,ProcessorModel,AnalysisModel,ItemModel) {
 
   var idGenerator=0;
 
@@ -15,6 +16,7 @@ function (injector,ProcessorModel,ItemModel) {
 
     processor : ProcessorModel,
     item : ItemModel,
+    analysis : AnalysisModel,
    
 
     getNewId:function() {

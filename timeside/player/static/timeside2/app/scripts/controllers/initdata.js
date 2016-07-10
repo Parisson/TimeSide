@@ -25,11 +25,21 @@ function (Backbone, Marionette, A,FakeData) {
 
       
       //console.error('Tmp : no CSRF!');
+       //return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
 
       //#1 Load all processors
-      A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.processors.get),null,null,
+     /* A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.processors.get),null,null,
         function(result) {
           A._i.setOnCfg('allProcessors',result);
+          return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+        }, function(error) {
+          alert("Non1");
+      });*/
+
+
+       A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.analysis.get),null,null,
+        function(result) {
+          A._i.setOnCfg('allAnalysis',result);
           return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
         }, function(error) {
           alert("Non1");

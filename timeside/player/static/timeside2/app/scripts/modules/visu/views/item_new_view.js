@@ -56,7 +56,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
       var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio,
-        "add_annot" : this.onAddTrackAnnotations,"add_new_waveform" : this.onAddTrackWaveformV2};
+        "add_annot" : this.onAddTrackAnnotations,"add_new_waveform" : this.onAddTrackWaveformV2, "add_anal" : this.onAddNewAnalysis};
 
       if (mapAction[action])
         (_.bind(mapAction[action],this))();
@@ -71,6 +71,20 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.trackNavigatorView.isTrueDataServer = true;
 
       this.trackNavigatorView.startLoading(this.size.width, this.size.navHeight,_.bind(this.onNavigatorLoaded,this));
+    },
+
+    onAddNewAnalysis:function() {
+      var allAnalysis =  _.map(A._i.getOnCfg('allAnalysis'),function(obj) {
+        return obj.toJSON()
+      }), self=this;
+      A._v.trigCfg('ui.popup.show',"",'selectItem', {
+        title : 'Blblblb',
+        items : allAnalysis,
+        callbackSelect:function(idAnalsysis) {
+          var analysis = _.find(allAnalysis,function(_anal) {return _anal.uuid===idAnalsysis});
+          alert('selected : '+JSON.stringify(analysis));
+        }
+      });
     },
 
 

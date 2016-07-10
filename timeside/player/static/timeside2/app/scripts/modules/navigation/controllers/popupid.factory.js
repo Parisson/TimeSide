@@ -1,9 +1,10 @@
 define([
   'json!#config/views.json',
-  '#auth/views/index'
+  '#auth/views/index',
+  '#visu/views/index'
 ],
 
-function (Cfg,AuthViews,LivraisonViews,PopupEnterText,PopupSelectValue,PopupPositivePrice) {
+function (Cfg,AuthViews,VisuViews) {
   'use strict';
 
   /**
@@ -20,7 +21,12 @@ function (Cfg,AuthViews,LivraisonViews,PopupEnterText,PopupSelectValue,PopupPosi
 
     getPopup: function (popupId) {
       switch (popupId) {
-        case Cfg.popups.auth_forgetpassword.popupid : 
+
+        case Cfg.popups.selectItem.popupid : 
+          return new VisuViews.popups.selectItem();
+          break;
+
+        /*case Cfg.popups.auth_forgetpassword.popupid : 
           return new AuthViews.popups.forgetPassword();
           break;
         case Cfg.popups.auth_newpassword.popupid : 

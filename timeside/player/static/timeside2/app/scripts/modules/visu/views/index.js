@@ -4,10 +4,12 @@ define([
   './test2',
 
   './item_view',
-  './item_new_view'
+  './item_new_view',
+
+  './popups/popup_select_item'
 ],
 
-function (Test1View,Test2View,ItemView,ItemNewView) {
+function (Test1View,Test2View,ItemView,ItemNewView,PopupSelectItem) {
 
   return {
   	views : {
@@ -18,7 +20,7 @@ function (Test1View,Test2View,ItemView,ItemNewView) {
         itemNewView : ItemNewView
   	},
   	popups : {
-  		
+  		selectItem : PopupSelectItem
   	},
   	configList : {
     }

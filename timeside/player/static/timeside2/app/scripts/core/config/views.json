@@ -62,7 +62,7 @@
 	},
 
 	"popups" : {
-
+		"selectItem" : {"popupid" : "selectItem"}
 	}
 
 }
