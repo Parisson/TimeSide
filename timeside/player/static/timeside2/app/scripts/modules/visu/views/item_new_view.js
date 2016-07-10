@@ -78,11 +78,12 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         return obj.toJSON()
       }), self=this;
       A._v.trigCfg('ui.popup.show',"",'selectItem', {
-        title : 'Blblblb',
+        title : 'Nouvelle analyse',
         items : allAnalysis,
         callbackSelect:function(idAnalsysis) {
           var analysis = _.find(allAnalysis,function(_anal) {return _anal.uuid===idAnalsysis});
           alert('selected : '+JSON.stringify(analysis));
+          A._v.trigCfg('analysis.ask','',analysis);
         }
       });
     },

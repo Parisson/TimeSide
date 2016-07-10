@@ -30,6 +30,11 @@
 		"newAudioTime"		: "audio:newAudioTime"	
 	},
 
+	"analysis" : {
+		"ask" : "analysis:ask",
+		"result" : "analysis:result"
+	},
+
 
 	"data" : {
 		"processors"		: {
