@@ -39,9 +39,13 @@ function (A,d3) {
 
      /////////////////////////////////////////////////////////////////////////////
     //Global get data
-    onGetData:function(type,startTime,endTime,nbItem,callback) {
+    onGetData:function(type,startTime,endTime,nbItem,resultAnalysis,callback) {
       if (type==="waveform" || type==="waveform_v2")
-        return this._onGetWaveformData(startTime,endTime,nbItem,callback);
+        return this._onGetWaveformData(startTime,endTime,nbItem,resultAnalysis,callback);
+      if (type==="canvas")
+        return this._onGetBitmapData(startTime,endTime,resultAnalysis, callback);
+      
+
       /*else if (type==="testcanvas")
         return this._onGetBitmapData(startTime,endTime,callback);*/
     },
@@ -49,7 +53,45 @@ function (A,d3) {
     /////////////////////////////////////////////////////////////////////////////
     //Get data picture
     //times are in MS
-    _onGetBitmapData:function(startTime,endTime,callback,inputData) {
+    _onGetBitmapData:function(startTime,endTime,resultAnalysis,callback,inputData) {
+
+      //todo : call result_url of resultAnalysis
+      /**
+        args of call : 
+          start en secondes
+          stop en secondes
+          width : largeux en pixel
+          height : heuteur en pixel
+
+        Donc : 
+          1 : call server telemeta with proper (target) width and height
+          2 : return with image, no canvas needed!!!
+      **/
+
+      //do : load the image in an img object
+      var startSec = startTime/1000, endSec = endTime/1000,
+        self=this;
+
+      
+
+      //TODO : see if got from view
+      var width=800,height=200;
+
+      var url = resultAnalysis.get('result_url');
+      url=url+"&start="+startSec+"&stop="+endSec+"&width="+width+"&height="+height;
+
+      var imgPicture = new Image();
+      imgPicture.onload = function() {
+        console.log('image loaded!');
+        callback(imgPicture);
+      };
+      imgPicture.src = url;
+
+     /* $.get(url,function(data) {
+        console.log('Here data :! ');
+        console.dir(data);
+      });*/
+
 
       /*var startPx = Math.floor(this.imgPicture.width * (startTime/this.dataDuration));
       var endPx = Math.floor(this.imgPicture.width * (endTime/this.dataDuration));
@@ -76,7 +118,7 @@ function (A,d3) {
     /////////////////////////////////////////////////////////////////////////////
     //Get data waveform
     //times are in MS
-    _onGetWaveformData:function(startTime,endTime,nbItem,callback) {
+    _onGetWaveformData:function(startTime,endTime,nbItem,resultAnalysis,callback) {
       var currentItem = A._i.getOnCfg('currentItem');
       var result = [];
       var data = {

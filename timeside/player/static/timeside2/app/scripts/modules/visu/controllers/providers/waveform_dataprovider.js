@@ -44,7 +44,7 @@ function (A,d3,BaseDataProvider) {
       if (useFakeData)
         A._v.trigCfg('fakeserver.getdata','','waveform',0,trackDuration,this.CONST_NUMPOINTS,_.bind(this.onData,this));
       else
-        A._v.trigCfg('trueserver.getdata','','waveform',0,trackDuration,this.CONST_NUMPOINTS,_.bind(this.onData,this));
+        A._v.trigCfg('trueserver.getdata','','waveform',0,trackDuration,this.CONST_NUMPOINTS,this.resultAnalysis, _.bind(this.onData,this));
     },
 
     onData:function(data) {
@@ -90,6 +90,7 @@ function (A,d3,BaseDataProvider) {
       var self=this;  
       //Warning : we ask 3 more points because getSpecificDataNeededSegment va multiplier par 3 le segment demandé au serveur
       A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,this.CONST_NUMPOINTS*3,
+        this.resultAnalysis,
         function(data) {
           self.specificData=data;
           self.specificDataStartTime = timeStart;

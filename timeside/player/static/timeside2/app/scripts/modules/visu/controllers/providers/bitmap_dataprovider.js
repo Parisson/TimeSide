@@ -47,7 +47,13 @@ function (A,d3,BaseDataProvider) {
 
       var callback = _.bind(this.onData,this);
 
-      A._v.trigCfg('fakeserver.getdata','','testcanvas',0,trackDuration,-1,callback);
+      var useFakeData = A._i.getOnCfg('useFakeData');
+      if (useFakeData)
+        A._v.trigCfg('fakeserver.getdata','','testcanvas',0,trackDuration,-1,callback);
+      else
+        A._v.trigCfg('trueserver.getdata','','canvas',0,trackDuration,-1,this.resultAnalysis,_.bind(this.onData,this)); //@@TOD : //voir ce que récupère 
+      //true server et faire en sorte qu'il appelle l'url dynamique du resultAnalysis sur cet objet
+
     },
 
     onData:function(data) {

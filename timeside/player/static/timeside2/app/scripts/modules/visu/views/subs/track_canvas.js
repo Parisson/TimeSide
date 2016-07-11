@@ -34,8 +34,10 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
       this.width = o.width;
       this.height = o.height;
 
+      this.resultAnalysis = o.resultAnalysis;
+
       this.dataProvider = new BitmapDataProvider();
-      this.dataProvider.define(o.type,this);
+      this.dataProvider.define(o.type,this,this.resultAnalysis);
     },
 
     /**

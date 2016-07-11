@@ -39,9 +39,10 @@ function (A,d3) {
     //////////////////////////////////////////////////////////
 
 
-    define:function(typeData,view) {
+    define:function(typeData,view,resultAnalysis) {
       this.typeData = typeData;
       this.view = view;
+      this.resultAnalysis = resultAnalysis;
     },
 
    

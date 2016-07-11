@@ -37,17 +37,17 @@ function (A,d3) {
 
     /////////////////////////////////////////////////////////////////////////////
     //Demande de la part d'un provider
-    askNewData:function(type,timeStart,timeEnd,nbItem,callback) {
-      ( this.getDataFunction(type) )(type,timeStart,timeEnd,nbItem,callback);
+    askNewData:function(type,timeStart,timeEnd,nbItem,resultAnalysis,callback) {
+      ( this.getDataFunction(type) )(type,timeStart,timeEnd,nbItem,resultAnalysis,callback);
     },
 
     //ok
-    askDataFunc:function(type,timeStart,timeEnd,nbItem,callback) {
+    askDataFunc:function(type,timeStart,timeEnd,nbItem,resultAnalysis,callback) {
       A.log.log('loader','launching data ask for : '+type+','+timeStart+','+timeEnd+' : '+nbItem);
       var useFakeData = A._i.getOnCfg('useFakeData');
 
       if (! useFakeData)
-        return  A._v.trigCfg('trueserver.getdata','',type,timeStart,timeEnd,nbItem,function(data) {
+        return  A._v.trigCfg('trueserver.getdata','',type,timeStart,timeEnd,nbItem,resultAnalysis,function(data) {
           callback(data);
         });
       else

@@ -76,9 +76,9 @@ function (Marionette,A,BaseQeopaView,d3) {
       var useFakeData = A._i.getOnCfg('useFakeData');
 
       if (!useFakeData)
-        A._v.trigCfg('trueserver.getdata','','waveform',0,trackDuration,1024,_.bind(this.onData,this));      
+        A._v.trigCfg('trueserver.getdata','','waveform',0,trackDuration,1024,null,_.bind(this.onData,this));      
       else
-        A._v.trigCfg('fakeserver.getdata','','waveform',0,trackDuration,1024,_.bind(this.onData,this));
+        A._v.trigCfg('fakeserver.getdata','','waveform',0,trackDuration,1024,null,_.bind(this.onData,this));
 
       
     },

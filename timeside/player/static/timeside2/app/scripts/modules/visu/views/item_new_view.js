@@ -197,15 +197,18 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       waiting.$el.remove();
 
       alert('todo : load canvas track with true result');
+
+      //pour l'instant, on part du principe qu'on est sur du canvas toujours pour ces retours
+      return this.addTrack(new TrackCanvasView(),"canvas",resultAnalysis);
     },
 
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track
-    addTrack:function(trackView,type) {
+    addTrack:function(trackView,type,resultAnalysis) {
       this.tracks.push(trackView);
       this.ui.containerOtherTracks.append(trackView.render().$el);
-      trackView.defineTrack({type : type, width : this.size.width, height : this.size.defaultHeight});
+      trackView.defineTrack({type : type, width : this.size.width, height : this.size.defaultHeight, resultAnalysis : resultAnalysis});
       trackView.init();
       A._v.trigCfg('ui_project.tracksHeightChanged');
     },
