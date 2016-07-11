@@ -14,6 +14,8 @@ define([
 function (A,d3) {
   'use strict';
 
+  var UNIQUE_ID_ANALYSIS = 1;
+
   var analysisAsked = function(analysis,item) {
     this.analysis = analysis;
     this.item = item.toJSON ? item.toJSON() : item;
@@ -22,6 +24,10 @@ function (A,d3) {
 
 
       this.interval = setInterval(_.bind(this.testIfFinished,this),4000);
+
+      //so view knows we're launching something
+      this.uniqueIdAnalysis = UNIQUE_ID_ANALYSIS++;
+      A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis);
     };
 
     this.testIfFinished = function() {
@@ -44,8 +50,12 @@ function (A,d3) {
 
     this.onFinished = function(result) {
       clearInterval(this.interval);
+      var resultModel = new A.models.resultAnalysis(result);
+      resultModel.set('uniqueIDForView',this.uniqueIdAnalysis),
+
+      A._v.trigCfg('analysis.result','',resultModel);
       //@TODO
-      @TODO
+      //@TODO
 
       // créer un model de result_analysis
       // côté vue : 

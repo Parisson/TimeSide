@@ -32,6 +32,7 @@
 
 	"analysis" : {
 		"ask" : "analysis:ask",
+		"asked" : "analysis:asked",
 		"result" : "analysis:result"
 	},
 

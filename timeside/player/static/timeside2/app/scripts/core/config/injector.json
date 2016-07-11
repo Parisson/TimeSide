@@ -5,6 +5,8 @@
 	"trackInfoController" : "trackInfoController",
 	"dataLoader" : "dataLoader",
 
+	"analysisController" : "analysisController",
+
 	"Below ----- Currenty loop segment defined" : "",
 	"currentLoopSegment" : "currentLoopSegment",
 

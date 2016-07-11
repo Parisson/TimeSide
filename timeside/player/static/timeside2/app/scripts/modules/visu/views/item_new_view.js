@@ -9,6 +9,7 @@ define([
   './subs/track_canvas',
   './subs/track_ruler',
   './subs/track_annotations',
+  './subs/track_waiting',
 
   './subs/sub_overlay',
 
@@ -16,7 +17,8 @@ define([
   '#audio/views/player'
 ],
 
-function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackWaveformViewV2,TrackCanvasView,TrackRulerView,TrackAnnotationsView,
+function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,TrackWaveformViewV2,TrackCanvasView
+  ,TrackRulerView,TrackAnnotationsView,TrackWaiting,
   OverlayView,AudioPlayerView) {
   'use strict';
 
@@ -62,6 +64,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         (_.bind(mapAction[action],this))();
     },
 
+    //Start loading item
     onStartLoading:function() {
       this.$el.find('[data-action="start"]').attr("disabled",true).text('loading');
       //alert('start loading');
@@ -73,6 +76,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.trackNavigatorView.startLoading(this.size.width, this.size.navHeight,_.bind(this.onNavigatorLoaded,this));
     },
 
+    //ask for a new analysis
     onAddNewAnalysis:function() {
       var allAnalysis =  _.map(A._i.getOnCfg('allAnalysis'),function(obj) {
         return obj.toJSON()
@@ -167,6 +171,34 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Add a track --- TRUE VERSIONS!!!
+
+    //called by analysis controller when it starts loading a track
+    //adds a temp track
+    onAnalysisAsked:function(uniqueId) {
+      if (! this.waitingTracks)
+        this.waitingTracks = [];
+      var trackView = new TrackWaiting();
+      trackView.setUniqueId(uniqueId);
+      this.waitingTracks.push(trackView);
+      this.ui.containerOtherTracks.append(trackView.render().$el);
+      A._v.trigCfg('ui_project.tracksHeightChanged');
+    },
+
+
+    onResultAnalysis:function(resultAnalysis) {
+      //find waiting view
+      var waiting = _.find(this.waitingTracks,function(_wait) {return _wait.getUniqueId() === resultAnalysis.get('uniqueIDForView')});
+      if (!waiting)
+        return console.error('no waiting track found for : '+resultAnalysis);
+
+      this.waitingTracks = _.without(this.waitingTracks,waiting);
+      waiting.$el.remove();
+
+      alert('todo : load canvas track with true result');
+    },
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track
@@ -178,6 +210,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       A._v.trigCfg('ui_project.tracksHeightChanged');
     },
 
+    //below :  --- DEBUG VERSIONS!!!
     onAddTrackWaveform:function() {
       if (!this.navigatorReady)
         return;
@@ -209,7 +242,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
 
       A._i.getOnCfg('trackInfoController').setDuration(this.item.get('audio_duration')*1000);
-
+      A._v.onCfg('analysis.asked','',this.onAnalysisAsked,this);
+      A._v.onCfg('analysis.result','',this.onResultAnalysis,this);
       A._i.setOnCfg('useFakeData',false);
     },
 
@@ -238,6 +272,9 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       if (this.rulerView)
         this.rulerView.destroy();
       this.overlayView.destroy();
+
+       A._v.offCfg('analysis.asked','',this.onAnalysisAsked,this);
+       A._v.offCfg('analysis.result','',this.onResultAnalysis,this);
 
       _.each(this.tracks,function(t) {
         t.destroy();
