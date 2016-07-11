@@ -196,7 +196,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.waitingTracks = _.without(this.waitingTracks,waiting);
       waiting.$el.remove();
 
-      alert('todo : load canvas track with true result');
+      //alert('todo : load canvas track with true result');
 
       //pour l'instant, on part du principe qu'on est sur du canvas toujours pour ces retours
       return this.addTrack(new TrackCanvasView(),"canvas",resultAnalysis);

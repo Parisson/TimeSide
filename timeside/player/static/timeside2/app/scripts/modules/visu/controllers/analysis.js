@@ -28,6 +28,7 @@ function (A,d3) {
       //so view knows we're launching something
       this.uniqueIdAnalysis = UNIQUE_ID_ANALYSIS++;
       A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis);
+      this.testIfFinished();
     };
 
     this.testIfFinished = function() {
@@ -40,7 +41,8 @@ function (A,d3) {
         console.log('Ok donc on fait quoi ?');
 
         if (a.result_url && a.result_url.indexOf('http://')===0) {
-          alert('success');
+          //alert('success');
+          console.log('success');
           self.onFinished(a);
         }
         else
