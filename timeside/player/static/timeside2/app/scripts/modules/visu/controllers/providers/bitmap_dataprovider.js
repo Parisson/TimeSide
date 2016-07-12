@@ -117,7 +117,7 @@ function (A,d3,BaseDataProvider) {
 
 
       var self=this;
-      A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,-1,
+      A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,-1,this.resultAnalysis,
         function(data) {
           self.specificData=data; //is an img
 
