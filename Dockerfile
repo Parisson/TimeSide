@@ -43,5 +43,11 @@ RUN chown www-data:www-data $PYTHON_EGG_CACHE
 # Install TimeSide
 RUN pip install -e .
 
+# Install Timeside plugins from ./lib
+COPY ./app/scripts/setup_plugins.sh /srv/app/scripts/setup_plugins.sh
+COPY ./lib/ /srv/src/plugins/
+
+RUN /bin/bash /srv/app/scripts/setup_plugins.sh
+
 WORKDIR /srv/app
 EXPOSE 8000
