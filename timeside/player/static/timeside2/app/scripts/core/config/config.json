@@ -4,13 +4,13 @@
   "envAdmin" : "RECETTE",
   "remotes" : {
     "DEV" : "http://localhost:8080/radiooo-server",
-    "RECETTE" : "http://149.202.199.160:8000/timeside",
+    "RECETTE" : " http://timeside-dev.telemeta.org/timeside",
     "PROD" : "http://client-eu.syk.com",
     "ERICRECETTE" : "http://192.168.1.3:8080"
   },
   "remotesWrite" : {
     "DEV" : "http://localhost:8080/radiooo-server",
-    "RECETTE" : "http://149.202.199.160:8000/timeside",
+    "RECETTE" : " http://timeside-dev.telemeta.org/timeside",
     "PROD" : "http://admin1.syk.com",
     "ERICRECETTE" : "http://192.168.1.3:8080"
   },
