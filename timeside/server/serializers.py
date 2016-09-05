@@ -334,7 +334,8 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
 
         import h5py
         sub_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
-
+        from timeside.core.analyzer import AnalyzerResult
+        A_Result = AnalyzerResult().from_hdf5(sub_result)
         duration = sub_result['audio_metadata'].attrs['duration']
         
         if start < 0:
@@ -374,9 +375,12 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
             # Django's HttpResponse reads the buffer and extracts the image
             return buffer.getvalue()
 
-       
-
-        return display_dummy_image(start, stop, duration, width, height)
+        import StringIO
+        import PIL
+        pil_image = A_Result._render_PIL(size=(width, height), dpi=80, xlim=(start, stop))
+        buffer = StringIO.StringIO()
+        pil_image.save(buffer, 'PNG')
+        return buffer.getvalue()#display_dummy_image(start, stop, duration, width, height)
     #{
     #        'id': subprocessor_id,
     #        'start': start,
