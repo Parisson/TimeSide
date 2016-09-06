@@ -26,7 +26,20 @@ function (Marionette,A,BaseQeopaView,d3) {
     ui: {
     },
     events: {
-      'click [data-layout="click_catcher"]' : 'onClickCatcher'
+      'click [data-layout="click_catcher"]' : 'onClickCatcher',
+      'click [data-layout="reset"]' : 'onClickReset'
+    },
+
+    onClickReset:function(ev) {
+      this.triangleLeftTime =0;
+      var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
+      this.triangleRightTime = trackDuration;
+
+      A._i.setOnCfg('currentLoopSegment',[this.triangleLeftTime,this.triangleRightTime]);
+      A._v.trigCfg('ui_project.segmentLoopUpdate');
+
+      return this.onNavigatorNewWindow();
+
     },
 
     onClickCatcher:function(ev) {

@@ -13,7 +13,8 @@ function (Marionette,A,BaseQeopaView) {
     className: 'audio-player',
 
     ui: {
-      timeLabel : '[data-layout="time-indicator"]'
+      timeLabel : '[data-layout="time-indicator"]',
+
     },
     events: {
       'click [data-layout="action"]' : 'onClickAction'
@@ -25,12 +26,18 @@ function (Marionette,A,BaseQeopaView) {
       var action = ev.currentTarget.dataset.action;
       var map = {
         'play' : _.bind(this.play,this), 
-        'stop' : _.bind(this.stop,this)
+        'stop' : _.bind(this.stop,this),
+        'loop' : _.bind(this.loop,this)
         };
       if (map[action])
         map[action]();
     },
+    loop:function() {
+      this.isLooping = !this.isLooping; //undefined -> true -> false
+      A._i.setOnCfg('playerIsLooping',this.isLooping);
+      this.$el.find('[data-action="loop"]').css('background-color', this.isLooping ? 'red' : 'white');
 
+    },
 
     play:function() {
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);

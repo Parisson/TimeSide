@@ -7,8 +7,12 @@
 
 	"analysisController" : "analysisController",
 
+	"audioWebApiController" : "audioWebApiController",
+
 	"Below ----- Currenty loop segment defined" : "",
 	"currentLoopSegment" : "currentLoopSegment",
+
+	"playerIsLooping" : "playerIsLooping",
 
 	"-------------------------------------------------------------------------------------------------" : "",
 	"Below --- canvas":"",

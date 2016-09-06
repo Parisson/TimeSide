@@ -98,7 +98,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
      this.navigatorReady=true;
      //this.onDomRefresh();
 
-     A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
+      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
+      A._i.getOnCfg('trackInfoController').currentEndTime = A._i.getOnCfg('trackInfoController').getDuration();
 
      //tmp
      this.$el.find('[data-action]').attr("disabled",false);
@@ -115,7 +116,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onPlayAudio:function() {
-      A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
+      //no more : triggered by player
+      //A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
 
     ////////////////////////////////////////////////////////////////////////////////////

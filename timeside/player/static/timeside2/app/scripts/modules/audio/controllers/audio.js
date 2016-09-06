@@ -65,6 +65,8 @@ function (A,buzz) {
       if (this.sound)
         this.sound.stop();
 
+      this.soundUrl = url; //temp
+
       this.sound = this.createSound(url);
 
       //temp for test
@@ -90,6 +92,19 @@ function (A,buzz) {
         this.updateInterval=undefined;
       }
 
+      this.isPlayingOnWebAudioApi=false;
+      //TEST : if duration less than 5 secondes, web-api goes on!
+      if (A._i.getOnCfg('currentLoopSegment') && A._i.getOnCfg('currentLoopSegment').length===2) {
+        var windowStart = A._i.getOnCfg('currentLoopSegment')[0]; //ms
+        var windowEnd = A._i.getOnCfg('currentLoopSegment')[1]; //ms
+        if (Math.abs(windowEnd - windowStart)<5000) {
+          //alert('goto webapi');
+          this.isPlayingOnWebAudioApi=true;
+          return A._i.getOnCfg('audioWebApiController').createSound(this.soundUrl); //done from loading
+        }
+      }
+
+
       //todo : load with buzz remote stuff
       if (this.sound) {
         this.sound.play();
@@ -100,6 +115,10 @@ function (A,buzz) {
     },
 
     stopAudio:function() {
+      if (this.isPlayingOnWebAudioApi) {
+         return A._i.getOnCfg('audioWebApiController').stopAudio();
+      }
+
       if (this.sound) {
         this.sound.stop();
       }
@@ -110,6 +129,10 @@ function (A,buzz) {
     },
   
     pauseAudio:function() {
+      if (this.isPlayingOnWebAudioApi) {
+         return A._i.getOnCfg('audioWebApiController').stopAudio();
+       }
+      
       if (this.sound) {
         this.sound.pause();
       }

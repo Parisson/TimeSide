@@ -50,7 +50,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       A._i.getOnCfg('trackInfoController').updateStartEndTimeFromNav(time1,time2);
 
-      console.log('Brushed : '+time1+","+time2);
+      //console.log('Brushed : '+time1+","+time2);
 
       //let's tell the tracks the good news!
       A._v.trigCfg('navigator.newWindow','');
