@@ -117,6 +117,15 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
 
     },
 
+    /////////////////////////////////////////////////////////////////////////////////////
+    //Height change
+    changeHeight:function(newHeight) {
+      this.height = newHeight;
+      this.canvas.height = newHeight;
+      this.dataProvider.redrawSameCanvas();
+      
+    },
+
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('navigator.newWindow','',this.onNavigatorNewWindow,this);

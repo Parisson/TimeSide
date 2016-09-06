@@ -303,7 +303,21 @@ function (A,d3,BaseDataProvider) {
       var canvasContext = this.view.canvasContext;
       var data = source==="global" ? this.globalData : this.specificData;
 
+      this.lastDrawInfos = {data : data, pixelStart : pixelStart, pixelEnd : pixelEnd};  
+
       canvasContext.drawImage(data,pixelStart,0,(pixelEnd-pixelStart),data.height,0,0,canvas.width,canvas.height);
+    },
+
+    //on resize height, called by view
+    redrawSameCanvas:function() {
+        if (this.lastDrawInfos) {
+            var canvas = this.view.canvas;
+            var canvasContext = this.view.canvasContext;
+
+            canvasContext.drawImage(this.lastDrawInfos.data,this.lastDrawInfos.pixelStart,0,
+              (this.lastDrawInfos.pixelEnd-this.lastDrawInfos.pixelStart),
+              this.lastDrawInfos.data.height,0,0,canvas.width,canvas.height);            
+        }
     },
 
 

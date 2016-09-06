@@ -133,14 +133,24 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         return;
       }
 
+
+      console.log('=============');  
       var heightZoneCanResize = 30;
+      var offsetContainerOtherTracks = this.ui.containerOtherTracks.offset().top;
       var trackSelected;
-      _.each(this.tracks,function(_tv) {
-/*        console.log('Testing : '+_tv.$el.position());*/
-        if (ev.pageY> ( _tv.$el.position().top + _tv.$el.height() - heightZoneCanResize ) 
-          && (ev.pageY <  ( _tv.$el.position().top + _tv.$el.height()) )) {
+      var trueYInContainer = ev.pageY - offsetContainerOtherTracks;
+      var cummulatedHeight = 0;
+      _.each(this.tracks,function(_tv,index) {
+        var boundInf = /*_tv.$el.position().top*/ cummulatedHeight+ _tv.$el.height() - heightZoneCanResize;
+        var boundSup =  /*_tv.$el.position().top*/ cummulatedHeight+ _tv.$el.height(); 
+        console.log(index+'Testing : '+trueYInContainer+" || "+_tv.$el.position().top+" ? "+_tv.$el.height()+"\n"
+              +"  >? "+(boundInf)+" <? "+( boundSup) );
+
+        if (trueYInContainer>boundInf && (trueYInContainer <  boundSup)) {
           trackSelected = _tv;
         }
+        cummulatedHeight+=_tv.$el.height();
+
       },this);
 
       if (trackSelected) {
