@@ -37,7 +37,7 @@ function (A,d3) {
         analysis : this.analysis.url,
         item : this.item.url
       }, self=this;
-      var url = $.post('http://149.202.199.160:8000/timeside/api/analysis_track/',data,function(a,b,c) {
+      var url = $.post('http://timeside-dev.telemeta.org/timeside/api/analysis_track/',data,function(a,b,c) {
         console.log('Ok donc on fait quoi ?');
 
         if (a.result_url && a.result_url.indexOf('http://')===0) {

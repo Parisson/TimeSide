@@ -72,7 +72,7 @@ function (A,d3) {
       var startSec = startTime/1000, endSec = endTime/1000,
         self=this;
 
-      
+      console.log('True server call : '+startTime+','+endTime+" -> "+startSec+","+endSec);
 
       //TODO : see if got from view
       var width=800,height=200;

@@ -11,6 +11,10 @@ define([
 
   !!!!
     les data seront des objets Image() !!!
+
+
+  Bug inquiry
+      cf getSpecificDataOnSegment
 **/
 function (A,d3,BaseDataProvider) {
   'use strict';
@@ -114,12 +118,25 @@ function (A,d3,BaseDataProvider) {
       var timeEnd = neededSegment.end;
       var duration = timeEnd-timeStart;
 
+      //inquiry
+      /**
+          Ici, on va demander de la nouvelle data sur un segment supérieur à ce qui est sélectionné
+              segment available devrait être this.specificDataStartTime && End
+              (jamais mis à jour)
+
+          windowStart & windowEnd sont les sélectionnés par user
+          timeStart et timeEnd sont eux les plus larges utilisés pour le cache
+      **/
 
 
       var self=this;
-      A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,-1,
+      A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,-1,this.resultAnalysis,
         function(data) {
           self.specificData=data; //is an img
+
+          //test ED bug fix
+          self.specificDataStartTime = timeStart;
+          self.specificDataEndTime = timeEnd; //so getSpecificDataOnSegment will have a proper ratio
 
           //NON, écriture depuis le controller
           var _specificDataForView=self.getSpecificDataOnSegment(windowStart,windowEnd);
@@ -241,6 +258,9 @@ function (A,d3,BaseDataProvider) {
     //renvoie les points spécifiques disponibles sur l'intervalle
 
     //NEW : ne renvoie que un objet avec le segment de pixels à conserver
+    //WARN : il va renvoyer un pixel Start et pixelEnd en comparant timeStart/End (voulu) sur this.specificDataStartTime/End
+    //Qui lui est tout le temps sur start et end et jamais mis à jour!
+
     getSpecificDataOnSegment:function(timeStart,timeEnd) {
       var durationSource = this.specificDataEndTime - this.specificDataStartTime;
       var ratioPointStart = (timeStart - this.specificDataStartTime)/durationSource;
