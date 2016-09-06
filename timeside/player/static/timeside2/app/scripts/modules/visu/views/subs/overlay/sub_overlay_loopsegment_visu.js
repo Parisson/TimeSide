@@ -45,9 +45,12 @@ function (Marionette,A,BaseQeopaView,d3) {
       if (ev.altKey)
         targetIsLeft=false;  
 
-      if (targetIsLeft)
+      var newTime = this.getTimeFromX(ev.pageX);
+
+      if (targetIsLeft && newTime < this.triangleRightTime)
         this.triangleLeftTime  = this.getTimeFromX(ev.pageX);
-      else
+      
+      if ((!targetIsLeft) && newTime > this.triangleLeftTime)
         this.triangleRightTime  = this.getTimeFromX(ev.pageX);
 
 
