@@ -960,7 +960,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
             
         
         for time, duration, label in zip(self.time, self.duration, self.data):
-            ax.axvspan(time, time + duration, color=ax_color[str(label)], alpha=0.3)
+            ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 
         # Create legend from custom artist/label lists
         ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
