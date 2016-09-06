@@ -16,8 +16,9 @@
 	},
 
 	"ui_project" : {
-		"tracksHeightChanged" : "ui:tracksHeightChanged",
-		"segmentLoopUpdate" : "ui:segmentLoopUpdate"
+		"tracksHeightChanged" 		: "ui:tracksHeightChanged",
+		"segmentLoopUpdate" 		: "ui:segmentLoopUpdate",
+		"deleteTrack"				: "ui:deleteTrack"
 	},
 
 	"audio" : {

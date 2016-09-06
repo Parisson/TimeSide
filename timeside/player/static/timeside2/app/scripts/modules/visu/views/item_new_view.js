@@ -118,6 +118,25 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Delete a track
+
+    /**
+        Called by param_simple or parameter item. argument is the trackView.
+    **/
+    onDeleteTrackView:function(trackView) {
+      if (!trackView)
+        return;
+
+      this.tracks = this.tracks.filter(function(_tv) {
+          return _tv!==trackView;
+      });
+
+      trackView.remove(); //@TODO : memory checks
+      trackView.destroy();
+    },
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Resize a track
@@ -134,7 +153,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       }
 
 
-      console.log('=============');  
+      //console.log('=============');  
       var heightZoneCanResize = 30;
       var offsetContainerOtherTracks = this.ui.containerOtherTracks.offset().top;
       var trackSelected;
@@ -143,8 +162,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       _.each(this.tracks,function(_tv,index) {
         var boundInf = /*_tv.$el.position().top*/ cummulatedHeight+ _tv.$el.height() - heightZoneCanResize;
         var boundSup =  /*_tv.$el.position().top*/ cummulatedHeight+ _tv.$el.height(); 
-        console.log(index+'Testing : '+trueYInContainer+" || "+_tv.$el.position().top+" ? "+_tv.$el.height()+"\n"
-              +"  >? "+(boundInf)+" <? "+( boundSup) );
+        /*console.log(index+'Testing : '+trueYInContainer+" || "+_tv.$el.position().top+" ? "+_tv.$el.height()+"\n"
+              +"  >? "+(boundInf)+" <? "+( boundSup) );*/
 
         if (trueYInContainer>boundInf && (trueYInContainer <  boundSup)) {
           trackSelected = _tv;
@@ -257,6 +276,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       A._i.getOnCfg('trackInfoController').setDuration(this.item.get('audio_duration')*1000);
       A._v.onCfg('analysis.asked','',this.onAnalysisAsked,this);
       A._v.onCfg('analysis.result','',this.onResultAnalysis,this);
+      A._v.onCfg('ui_project.deleteTrack','',this.onDeleteTrackView,this);
       A._i.setOnCfg('useFakeData',false);
     },
 
