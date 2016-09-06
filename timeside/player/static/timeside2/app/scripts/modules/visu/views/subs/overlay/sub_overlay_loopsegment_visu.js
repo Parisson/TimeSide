@@ -33,14 +33,24 @@ function (Marionette,A,BaseQeopaView,d3) {
       var _timeForClick = this.getTimeFromX(ev.pageX);
       console.log('Click : '+ev.pageX+" -> "+_timeForClick);
 
+      
+
 
       var distances = [Math.abs(_timeForClick - this.triangleLeftTime), Math.abs(_timeForClick - this.triangleRightTime)];
       var targetIsLeft = distances[0] < distances[1]; //le plus proche
+
+      //if crl key : targetisLeft = true
+      if (ev.ctrlKey)
+        targetIsLeft = true;
+      if (ev.altKey)
+        targetIsLeft=false;  
 
       if (targetIsLeft)
         this.triangleLeftTime  = this.getTimeFromX(ev.pageX);
       else
         this.triangleRightTime  = this.getTimeFromX(ev.pageX);
+
+
 
       A._i.setOnCfg('currentLoopSegment',[this.triangleLeftTime,this.triangleRightTime]);
       A._v.trigCfg('ui_project.segmentLoopUpdate');
