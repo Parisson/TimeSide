@@ -74,7 +74,7 @@ worker:
 nginx:
   image: nginx
   ports:
-    - "8000:80"
+    - "8006:80"
   volumes:
     - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
   volumes_from:
