@@ -672,7 +672,7 @@ class AnalyzerResult(MetadataObject):
         self.data_object._render_plot(ax)
         return fig
 
-    def _render_PIL(self, size=(1024, 256), dpi=80):
+    def _render_PIL(self, size=(1024, 256), dpi=80, xlim=None):
         from .grapher import Image
         image_width, image_height = size
 
@@ -684,8 +684,11 @@ class AnalyzerResult(MetadataObject):
         ax = fig.add_axes([0, 0, 1, 1], frame_on=False)
 
         self.data_object._render_plot(ax, size)
-
-        ax.autoscale(axis='x', tight=True)
+        if xlim is not None:
+            ax.set_xlim(xlim[0],xlim[1])
+        else:
+            ax.autoscale(axis='x', tight=True)
+        
 
         # Export to PIL image
         from StringIO import StringIO
@@ -955,6 +958,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
             legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
             
+        
         for time, duration, label in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
 

@@ -19,7 +19,7 @@ html {
   outline: none;
 }
 
-//EVERYTHING IN THE ts-content ELEMENT
+//EVERYTHING_IN_THE_ts-content ELEMENT
 .ts-content {
   .hidden {
     display:none !important;
@@ -69,7 +69,7 @@ html {
   }
   .flexible {flex:1;}
 
-//APP SIZE
+//APP_SIZE
 //----------------------------------------------------------------
 
   &:not(.full) {
@@ -254,7 +254,7 @@ html {
     }
   }
 
-  //FILE INPUT
+  //FILE_INPUT
   .image-upload-container  {border-bottom:none !important;cursor: pointer;}
   input[type=file] {
       width:1px;height:1px;display:inline-block;opacity:0.001;overflow:hidden;

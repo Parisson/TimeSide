@@ -21,7 +21,7 @@
     }
   }
 
-  //GENERAL ELEMENTS
+  //GENERAL_ELEMENTS
   .cursor {
     fill:red;
   }
@@ -115,7 +115,7 @@
     pointer-events: none;
   }
 
-  //NAV TRACK
+  //NAV_TRACK
   .nav-track {
     .domain {
       display:none;
@@ -127,7 +127,7 @@
     }
   }
 
-  //WAVE FORM
+  //WAVE_FORM
   .ruler-track {
     .domain {
       fill: $darkColor;

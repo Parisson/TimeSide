@@ -2,10 +2,12 @@ define([
   'marionette',
   '#qt_core/controllers/all',
   '#navigation_core/baseviews/base_qeopaview',
-  '#visu/controllers/providers/bitmap_dataprovider'
+  '#visu/controllers/providers/bitmap_dataprovider',
+  '#behaviors/index',
+  '../params/param_simple'
 ],
 
-function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
+function (Marionette,A,BaseQeopaView,BitmapDataProvider,behaviors,ParamSimpleView) {
   'use strict';
 
   /**
@@ -16,6 +18,20 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
 
   **/
   return BaseQeopaView.extend({
+
+    behaviors: function () {
+      return {
+        Parameter : {
+          behaviorClass : behaviors.viewParameterTrack
+        }
+      };
+    },
+
+    parametersConfig : {
+      getParameterView:function() {
+        return new ParamSimpleView();
+      }
+    },
 
     template: templates['visu/sub_track_canvas'],
     className: 'track-canvas',
@@ -65,17 +81,9 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
 
       A.log.log('track_canvas','set visible data. Data dims : '+data.width+' : '+data.height);
 
-      /*if (data instanceof HTMLImageElement)*/
+      if (data instanceof HTMLImageElement)
         this.canvasContext.drawImage(data, 0, 0, data.width,data.height,
           0, 0, this.canvas.width, this.canvas.height);
-      /*else
-        this.canvasContext.putImageData(data, 0, 0, 0, 0,
-          this.canvas.width, this.canvas.height);*/
-/*
-       this.canvasContext.putImageData(data, 0, 0, 0, 0,
-        this.canvas.width, this.canvas.height);
-       */
-        
     },
    
     ////////////////////////////////////////////////////////////////////////////////////
@@ -100,9 +108,6 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
     },
 
 
-
-
-
     
     /////////////////////////////////////////////////////////////////////////////////////
     //new window navigator
@@ -114,6 +119,15 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider) {
         return;
       this.dataProvider.getUpdatedDataForView();
 
+
+    },
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    //Height change
+    changeHeight:function(newHeight) {
+      this.height = newHeight;
+      this.canvas.height = newHeight;
+      this.dataProvider.redrawSameCanvas();
 
     },
 

@@ -47,6 +47,7 @@ function ($,Marionette, _, vent,behaviors) {
         var paramView = this.parametersConfig.getParameterView();
         this.ui.parametersContainer.append(paramView.render().$el);
         this.paramView = paramView;
+        this.paramView.setDaddy(this.view);
       }
     },
 

@@ -98,7 +98,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
      this.navigatorReady=true;
      //this.onDomRefresh();
 
-     A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
+      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
+      A._i.getOnCfg('trackInfoController').currentEndTime = A._i.getOnCfg('trackInfoController').getDuration();
 
      //tmp
      this.$el.find('[data-action]').attr("disabled",false);
@@ -115,8 +116,28 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onPlayAudio:function() {
-      A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
+      //no more : triggered by player
+      //A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Delete a track
+
+    /**
+        Called by param_simple or parameter item. argument is the trackView.
+    **/
+    onDeleteTrackView:function(trackView) {
+      if (!trackView)
+        return;
+
+      this.tracks = this.tracks.filter(function(_tv) {
+          return _tv!==trackView;
+      });
+
+      trackView.remove(); //@TODO : memory checks
+      trackView.destroy();
+    },
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -133,14 +154,24 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         return;
       }
 
+
+      //console.log('=============');  
       var heightZoneCanResize = 30;
+      var offsetContainerOtherTracks = this.ui.containerOtherTracks.offset().top;
       var trackSelected;
-      _.each(this.tracks,function(_tv) {
-/*        console.log('Testing : '+_tv.$el.position());*/
-        if (ev.pageY> ( _tv.$el.position().top + _tv.$el.height() - heightZoneCanResize ) 
-          && (ev.pageY <  ( _tv.$el.position().top + _tv.$el.height()) )) {
+      var trueYInContainer = ev.pageY - offsetContainerOtherTracks;
+      var cummulatedHeight = 0;
+      _.each(this.tracks,function(_tv,index) {
+        var boundInf = /*_tv.$el.position().top*/ cummulatedHeight+ _tv.$el.height() - heightZoneCanResize;
+        var boundSup =  /*_tv.$el.position().top*/ cummulatedHeight+ _tv.$el.height(); 
+        /*console.log(index+'Testing : '+trueYInContainer+" || "+_tv.$el.position().top+" ? "+_tv.$el.height()+"\n"
+              +"  >? "+(boundInf)+" <? "+( boundSup) );*/
+
+        if (trueYInContainer>boundInf && (trueYInContainer <  boundSup)) {
           trackSelected = _tv;
         }
+        cummulatedHeight+=_tv.$el.height();
+
       },this);
 
       if (trackSelected) {
@@ -247,6 +278,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       A._i.getOnCfg('trackInfoController').setDuration(this.item.get('audio_duration')*1000);
       A._v.onCfg('analysis.asked','',this.onAnalysisAsked,this);
       A._v.onCfg('analysis.result','',this.onResultAnalysis,this);
+      A._v.onCfg('ui_project.deleteTrack','',this.onDeleteTrackView,this);
       A._i.setOnCfg('useFakeData',false);
     },
 
