@@ -1,7 +1,8 @@
 #!/bin/bash
 
 plugins=/srv/src/plugins
-#apt-get update
+
+apt-get update
 
 for dir in $(ls $plugins); do
     env=$plugins/$dir/conda-environment.yml
@@ -18,4 +19,4 @@ for dir in $(ls $plugins); do
     fi
 done
 
-#apt-get clean
+apt-get clean

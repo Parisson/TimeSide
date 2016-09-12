@@ -107,6 +107,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     # Manage Django URLs for AngularJS with django-angular
     'djng.middleware.AngularUrlMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -116,7 +117,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -211,11 +211,11 @@ BOWER_INSTALLED_APPS = (
     'https://github.com/Parisson/ui.git',
 )
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'localhost:9000'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'localhost:9000'
+# )
 
 # SOUTH_MIGRATION_MODULES = {
 #     'timeside.server': 'timeside.server.south_migrations'
