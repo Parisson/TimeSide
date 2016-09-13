@@ -12,24 +12,24 @@ require.config({
 
       
     '#config': 'core/config',
-    '#config_core': qtcore_url+'/config',
-    '#behaviors' : qtcore_url+'/behaviors',
+    '#config_core': './core/quematech_web_core/scripts'+'/config',
+    '#behaviors' : './core/quematech_web_core/scripts'+'/behaviors',
     '#controllers' : './controllers',
 
-    '#qt_core' : qtcore_url,
+    '#qt_core' : './core/quematech_web_core/scripts',
     
 
-    injector: qtcore_url+'/injector',
-    vent: qtcore_url+'/vent',
-    logger: qtcore_url+'/controllers/logger',
+    injector: './core/quematech_web_core/scripts'+'/injector',
+    vent: './core/quematech_web_core/scripts'+'/vent',
+    logger: './core/quematech_web_core/scripts'+'/controllers/logger',
     //modules core
-    '#beans'              : qtcore_url+'/modules/beans',
-    '#upload'             : qtcore_url+'/modules/upload',
+    '#beans'              : './core/quematech_web_core/scripts'+'/modules/beans',
+    '#upload'             : './core/quematech_web_core/scripts'+'/modules/upload',
 
     //modules in
     '#navigation'         : './modules/navigation',
-    '#navigation_core'         :  qtcore_url+'/modules/navigation',
-    '#auth_core'               :  qtcore_url+'/modules/auth',
+    '#navigation_core'         :  './core/quematech_web_core/scripts'+'/modules/navigation',
+    '#auth_core'               :  './core/quematech_web_core/scripts'+'/modules/auth',
     '#auth'               : './modules/auth',
     '#users'              : './modules/users',
     '#visu'            : './modules/visu',
@@ -44,7 +44,7 @@ require.config({
     backbone              : '../bower_components/backbone/backbone',
     underscore            : '../bower_components/underscore/underscore',
     'handlebars.runtime'  : '../bower_components/handlebars/handlebars.runtime.amd',
-    handlebars            : qtcore_url+'/vendor/handlebars',
+    handlebars            : './core/quematech_web_core/scripts'+'/vendor/handlebars',
     marionette            : '../bower_components/backbone.marionette/lib/core/backbone.marionette',
     'backbone.babysitter' : '../bower_components/backbone.babysitter/lib/backbone.babysitter',
     'backbone.wreqr'      : '../bower_components/backbone.wreqr/lib/backbone.wreqr',
@@ -56,21 +56,21 @@ require.config({
     fixtures              : '../fixtures',
     
     commando              : '../bower_components/commandojs/dist/commando.amd',
-    superapi              : qtcore_url+'/vendor/superapi2',/*'../bower_components/superapi/dist/amd/superapi.amd',*/
+    superapi              : './core/quematech_web_core/scripts'+'/vendor/superapi2',/*'../bower_components/superapi/dist/amd/superapi.amd',*/
     'superagent-es6'      : '../bower_components/radiooooo_core/lib/scripts/vendor/superagent-es6',
-    'wreqr.injector'      : qtcore_url+'/vendor/wreqr.injector2'/*'../bower_components/wreqr.injector/dist/wreqr.injector'*/,
+    'wreqr.injector'      : './core/quematech_web_core/scripts'+'/vendor/wreqr.injector2'/*'../bower_components/wreqr.injector/dist/wreqr.injector'*/,
     localforage           : '../bower_components/localforage/dist/localforage',
     'backbone.associations': '../bower_components/backbone-associations/backbone-associations',
     velocity              : '../bower_components/velocity/velocity',
     swiper                : '../bower_components/swiper/dist/js/swiper',
     modernizr             : '../bower_components/modernizr/modernizr',
 
-    exif                  : qtcore_url+'/vendor/exif',
-    binaryajax            : qtcore_url+'/vendor/binaryajax',
-    'canvasresize'          : qtcore_url+'/vendor/canvasresize',
+    exif                  : './core/quematech_web_core/scripts'+'/vendor/exif',
+    binaryajax            : './core/quematech_web_core/scripts'+'/vendor/binaryajax',
+    'canvasresize'          : './core/quematech_web_core/scripts'+'/vendor/canvasresize',
     '_moment'               : '../bower_components/moment/moment',
     'moment-fr'             : '../bower_components/moment/locale/fr',
-    'moment'                : qtcore_url+'/vendor/moment',
+    'moment'                : './core/quematech_web_core/scripts'+'/vendor/moment',
     hammer                  : '../bower_components/hammerjs/hammer',
     fastclick               : '../bower_components/fastclick/lib/fastclick',
     validator               : '../bower_components/validate.js/validate',
