@@ -1,7 +1,8 @@
 #!/bin/bash
 
 plugins=/srv/src/plugins
-#apt-get update
+
+apt-get update
 
 for dir in $(ls $plugins); do
     env=$plugins/$dir/conda-environment.yml
@@ -13,9 +14,9 @@ for dir in $(ls $plugins); do
         packs=$(egrep -v "^\s*(#|$)" $req)
         apt-get install -y --force-yes $packs
     fi
-    pip install -e $plugins/$dir/.
+    if [ -f $plugins/$dir/setup.py ]; then
+        pip install -e $plugins/$dir/.
+    fi
 done
 
-#apt-get clean
-
-
+apt-get clean

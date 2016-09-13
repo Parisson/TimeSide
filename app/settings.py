@@ -107,6 +107,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     # Manage Django URLs for AngularJS with django-angular
     'djng.middleware.AngularUrlMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -116,7 +117,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -196,26 +196,26 @@ from worker import app
 BOWER_COMPONENTS_ROOT = '/srv/bower/'
 BOWER_PATH = '/usr/local/bin/bower'
 BOWER_INSTALLED_APPS = (
-    'jquery',
+    'jquery#2.2.4',
     'jquery-migrate#~1.2.1',
-    'underscore',
-    'bootstrap',
+    'underscore#1.8.3',
+    'bootstrap#3.3.6',
     'bootstrap-select#1.5.4',
     'font-awesome#~4.4.0',
     'angular#1.2.26',
-    'angular-bootstrap-select',
+    'angular-bootstrap-select#0.0.5',
     'angular-resource#1.2.26',
-    'raphael',
-    'soundmanager',
+    'raphael#2.2.0',
+    'soundmanager#V2.97a.20150601',
     'https://github.com/Parisson/loaders.git',
     'https://github.com/Parisson/ui.git',
 )
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'localhost:9000'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'localhost:9000'
+# )
 
 # SOUTH_MIGRATION_MODULES = {
 #     'timeside.server': 'timeside.server.south_migrations'
