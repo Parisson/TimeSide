@@ -33,16 +33,19 @@ from rest_framework.response import Response
 from timeside.server.models import Experience, Item, Result, Processor, SubProcessor
 from timeside.server.models import Preset, Selection, Task, User
 from timeside.server.models import Analysis, AnalysisTrack
+from timeside.server.models import AnnotationTrack, Annotation
 from timeside.server.models import _DRAFT, _DONE, _RUNNING, _PENDING
 from timeside.server.serializers import ExperienceSerializer, ItemSerializer, ItemWaveformSerializer
 from timeside.server.serializers import PresetSerializer
 from timeside.server.serializers import ProcessorSerializer
 from timeside.server.serializers import SubProcessorSerializer
-from timeside.server.serializers import ResultSerializer, Result_ReadableSerializer, ResultVisualizationSerializer
+from timeside.server.serializers import ResultSerializer, ResultVisualizationSerializer
 from timeside.server.serializers import SelectionSerializer
 from timeside.server.serializers import TaskSerializer
 from timeside.server.serializers import UserSerializer
 from timeside.server.serializers import AnalysisSerializer, AnalysisTrackSerializer, ItemAnalysisSerializer, ItemAnalysisResultSerializer
+from timeside.server.serializers import ItemAnnotationsSerializer
+from timeside.server.serializers import AnnotationTrackSerializer, AnnotationSerializer
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -86,6 +89,20 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = ItemSerializer
 
 
+class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+
+    model = AnnotationTrack
+    queryset = AnnotationTrack.objects.all()
+    serializer_class = AnnotationTrackSerializer
+
+
+class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+
+    model = Annotation
+    queryset = Annotation.objects.all()
+    serializer_class = AnnotationSerializer
+
+
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
 
     model = Item
@@ -95,8 +112,8 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ItemWaveView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        #context['plop'] = 91
+        # Here we can modify the context
+        # context['plop'] = 'plop'
         return context
 
     def get_serializer_context(self):
@@ -104,7 +121,7 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
         pass request attribute to serializer
         """
         context = super(ItemWaveView, self).get_serializer_context()
-        #context['plop'] = 92
+        # context['plop'] = 92
         return context
 
 
@@ -148,7 +165,8 @@ class PNGRenderer(renderers.BaseRenderer):
 
     def render(self, data, media_type=None, renderer_context=None):
         return data
-    
+
+
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
 
     model = Result
@@ -156,6 +174,7 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     serializer_class = ResultVisualizationSerializer
 
     renderer_classes = (PNGRenderer,)
+
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
@@ -178,7 +197,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     lookup_field = 'username'
 
-    
+
 class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = Analysis
@@ -193,7 +212,6 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = AnalysisTrackSerializer
 
 
-    
 class IndexView(ListView):
 
     model = Item
@@ -231,11 +249,11 @@ class ResultAnalyzerToElanView(View):
 
         segment_result = container[res_id]
         import tempfile
-        tmp_dir = tempfile.mkdtemp(suffix=res_id+'_eaf')
+        tmp_dir = tempfile.mkdtemp(suffix=res_id + '_eaf')
         # Pympi will not overwrite the file
         audio_file = os.path.basename(segment_result.audio_metadata.uri)
         tmp_eaf_file = os.path.splitext(audio_file)[0] + '_' + res_id + '.eaf'
-        abs_tmp_eaf_file = os.path.join(tmp_dir,tmp_eaf_file)
+        abs_tmp_eaf_file = os.path.join(tmp_dir, tmp_eaf_file)
         segment_result.data_object.to_elan(elan_file=abs_tmp_eaf_file,
                                            media_file=audio_file)
         file_size = os.path.getsize(abs_tmp_eaf_file)
@@ -246,7 +264,8 @@ class ResultAnalyzerToElanView(View):
         shutil.rmtree(tmp_dir)
 
         response = HttpResponse(eaf_data, content_type='application/xml')
-        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_eaf_file +'\"'
+        response['Content-Disposition'] = 'attachment; filename=' + \
+            '\"' + tmp_eaf_file + '\"'
         response['Content-Length'] = file_size
         return response
 
@@ -263,11 +282,12 @@ class ResultAnalyzerToSVView(View):
 
         segment_result = container[res_id]
         import tempfile
-        tmp_dir = tempfile.mkdtemp(suffix=res_id+'_sv')
+        tmp_dir = tempfile.mkdtemp(suffix=res_id + '_sv')
         # Pympi will not overwrite the file
         audio_file = os.path.abspath(result.item.file.name)
-        tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[0] + '_' + res_id + '.sv'
-        abs_tmp_sv_file = os.path.join(tmp_dir,tmp_sv_file)
+        tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[
+            0] + '_' + res_id + '.sv'
+        abs_tmp_sv_file = os.path.join(tmp_dir, tmp_sv_file)
         segment_result.data_object.to_sonic_visualiser(svenv_file=abs_tmp_sv_file,
                                                        audio_file=audio_file)
         file_size = os.path.getsize(abs_tmp_sv_file)
@@ -278,7 +298,8 @@ class ResultAnalyzerToSVView(View):
         shutil.rmtree(tmp_dir)
 
         response = HttpResponse(sv_data, content_type='application/xml')
-        response['Content-Disposition'] = 'attachment; filename=' + '\"' + tmp_sv_file +'\"'
+        response['Content-Disposition'] = 'attachment; filename=' + \
+            '\"' + tmp_sv_file + '\"'
         response['Content-Length'] = file_size
         return response
 
@@ -300,7 +321,8 @@ class ResultEncoderView(View):
     def get(self, request, *args, **kwargs):
         result = Result.objects.get(pk=kwargs['pk'])
         return StreamingHttpResponse(stream_from_file(result.file.path),
-                            content_type=result.mime_type)
+                                     content_type=result.mime_type)
+
 
 class ItemDetailExport(DetailView):
 
@@ -319,9 +341,10 @@ class ItemDetailExport(DetailView):
                 container = AnalyzerResultContainer()
                 container.from_hdf5(result.hdf5.path)
                 Results[proc_id]['json'] = True
-                Results[proc_id]['list']= {}
+                Results[proc_id]['list'] = {}
             elif result.mime_type:
-                Results[proc_id]['audio'] = ('audio' in result.mime_type) | ('ogg' in result.mime_type)
+                Results[proc_id]['audio'] = ('audio' in result.mime_type) | (
+                    'ogg' in result.mime_type)
                 Results[proc_id]['image'] = ('image' in result.mime_type)
                 Results[proc_id]['video'] = ('video' in result.mime_type)
                 container = {}
@@ -363,7 +386,7 @@ class ItemDetailAngular(DetailView):
                 container = {}
 
             for name, res in container.items():
-                 if res.time_mode == 'segment':
+                if res.time_mode == 'segment':
                     if res.data_mode == 'label':
 
                         Results[result.id] = name
@@ -385,42 +408,6 @@ class ItemDetail(DetailView):
         context['Result'] = 'Result'
         Results = {}
         return context
-
-
-class ItemAnalysis(generics.RetrieveAPIView):
-    model = Item
-    queryset = Item.objects.all()
-    serializer_class = ItemAnalysisResultSerializer
-    
-    def get_object(self):
-        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
-
-    ## def get(self, request, uuid, analysis_uuid):
-    ##     item = self.get_object()
-    ##     try:
-    ##         analysis, c = Analysis.objects.get_or_create(uuid = analysis_uuid)
-    ##     except ResultAnalysis.DoesNotExist:
-    ##         return Http404('Unknown analysis: %s' % analysis_uuid)
-
-    ##     preset = analysis.preset
- 
-    ##     result = get_result(item=item, preset=preset)
-    ##     if isinstance(result, Result):
-    ##         res_msg = {'uuid': result.uuid,
-    ##                    'status': result.status}
-    ##     else:
-    ##         res_msg = {'status': result}
-    ##     return Response([{'analysis': analysis.uuid,
-    ##                          'item': item.uuid,
-    ##                          'result': res_msg}])
-
-class ItemAnalysisList(generics.RetrieveAPIView):
-    model = Item
-    queryset = Item.objects.all()
-    serializer_class = ItemAnalysisSerializer
-
-    def get_object(self):
-        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
 
 
 class ItemTranscode(DetailView):
@@ -459,16 +446,6 @@ class ItemTranscode(DetailView):
                                                        selection=item.get_single_selection())
             task.run(wait=True)
             return self.get(request, uuid, extension)
-            #response = StreamingHttpResponse(streaming_content=stream_from_task(task),
+            # response = StreamingHttpResponse(streaming_content=stream_from_task(task),
             #                                 content_type=mime_type)
-            #return response
-
-
-class ItemResultsList(generics.ListAPIView):
-    model = Result
-    queryset = Result.objects.all()
-    serializer_class = Result_ReadableSerializer
-
-    def get_queryset(self):
-        queryset = super(ItemResultsList, self).get_queryset()
-        return queryset.filter(item__uuid=self.kwargs.get('uuid'), status=_DONE)
+            # return response
