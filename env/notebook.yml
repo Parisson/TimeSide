@@ -22,7 +22,8 @@
 # Thomas Fillon <thomas@parisson.com>
 
 notebook:
-  image: parisson/timeside
+  #image: parisson/timeside
+  build: .
   ports:
     - "8888:8888"
   volumes_from:
