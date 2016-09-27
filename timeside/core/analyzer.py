@@ -959,8 +959,8 @@ class SegmentLabelObject(LabelObject, SegmentObject):
             legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
             
         
-        for time, duration, label in zip(self.time, self.duration, self.data):
-            ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
+        for time, duration, key in zip(self.time, self.duration, self.data):
+            ax.axvspan(time, time + duration, color=ax_color[key], alpha=0.3)
 
         # Create legend from custom artist/label lists
         ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
