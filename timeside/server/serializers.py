@@ -378,47 +378,13 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
         if stop > duration:
             stop = duration
 
-        def display_dummy_image(start, stop, duration, width, height):
-            from matplotlib import pyplot as plt
-            import numpy as np
-            import StringIO
-            import PIL
-
-            t = np.linspace(start, stop, width)
-            DPI = 96
-            fig = plt.figure(figsize=(width / float(DPI),
-                                      height / float(DPI)), dpi=DPI, frameon=False)
-            # fig.set_tight_layout(True)
-            # ax1 = plt.Axes(fig, [0., 0., 1., 1.])
-            # ax1 = fig.add_subplot(111)
-            ax1 = plt.axes([0, 0, 1, 1])
-            ax1.plot(t, t, 'b-', linewidth=2)
-            ax1.axis([start, stop, 0, duration])
-            ax1.set_axis_off()
-
-            buffer = StringIO.StringIO()
-            canvas = plt.get_current_fig_manager().canvas
-            canvas.draw()
-            pil_image = PIL.Image.frombytes('RGB', canvas.get_width_height(),
-                                            canvas.tostring_rgb())
-            pil_image.save(buffer, 'PNG')
-            plt.close()
-            # Django's HttpResponse reads the buffer and extracts the image
-            return buffer.getvalue()
-
         import StringIO
         import PIL
         pil_image = A_Result._render_PIL(
             size=(width, height), dpi=80, xlim=(start, stop))
         buffer = StringIO.StringIO()
         pil_image.save(buffer, 'PNG')
-        return buffer.getvalue()  # display_dummy_image(start, stop, duration, width, height)
-    #{
-    #        'id': subprocessor_id,
-    #        'start': start,
-    #        'stop': stop,
-    #        'nb_pixels': nb_pixels
-    #        }
+        return buffer.getvalue()
 
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
@@ -457,7 +423,6 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
 
-    # result_uuid = serializers.SerializerMethodField()
     result_url = serializers.SerializerMethodField()
 
     class Meta:
