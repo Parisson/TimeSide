@@ -100,14 +100,21 @@ def get_processor(pid):
     raise ValueError('Processor %s does not exists' % pid)
 
 
-class BaseResource(models.Model):
+
+class Dated(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
     date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class UUID(models.Model):
+
     uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255)
 
     class Meta:
-        app_label = 'Timeside'
         abstract = True
 
     def save(self, **kwargs):
@@ -116,7 +123,7 @@ class BaseResource(models.Model):
         super(BaseResource, self).save(**kwargs)
 
 
-class DocBaseResource(BaseResource):
+class Titled(models.Model):
 
     title = models.CharField(_('title'), blank=True, max_length=512)
     description = models.TextField(_('description'), blank=True)
@@ -128,7 +135,7 @@ class DocBaseResource(BaseResource):
         abstract = True
 
 
-class ShareableResource(models.Model):
+class Shareable(models.Model):
 
     author = models.ForeignKey(User, related_name="%(class)s", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
     is_public = models.BooleanField(default=True)
@@ -137,7 +144,7 @@ class ShareableResource(models.Model):
         abstract = True
 
 
-class Selection(DocBaseResource, ShareableResource):
+class Selection(Titled, UUID, Dated, Shareable):
 
     items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
     selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True)
@@ -153,7 +160,7 @@ class Selection(DocBaseResource, ShareableResource):
         return qs_items
 
 
-class Item(DocBaseResource, ShareableResource):
+class Item(Titled, UUID, Dated, Shareable):
 
     element_type = 'timeside_item'
 
@@ -308,7 +315,7 @@ class Item(DocBaseResource, ShareableResource):
         # item.lock_setter(False)
 
 
-class Experience(DocBaseResource, ShareableResource):
+class Experience(Titled, UUID, Dated, Shareable):
 
     presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True)
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True)
@@ -358,7 +365,7 @@ class SubProcessor(models.Model):
         return self.sub_processor_id
 
 
-class Preset(BaseResource, ShareableResource):
+class Preset(UUID, Dated, Shareable):
 
     processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
@@ -387,7 +394,7 @@ class Preset(BaseResource, ShareableResource):
         return experience
 
 
-class Result(BaseResource, ShareableResource):
+class Result(UUID, Dated, Shareable):
 
     item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
     preset = models.ForeignKey('Preset', related_name="results", verbose_name=_('preset'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -419,7 +426,7 @@ class Result(BaseResource, ShareableResource):
         return '_'.join([self.item.title, unicode(self.preset.processor)])
 
 
-class Task(BaseResource, ShareableResource):
+class Task(UUID, Dated, Shareable):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
     selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
@@ -501,7 +508,7 @@ post_save.connect(run, sender=Task)
 
 # Session and Tracks related objects
 
-class Analysis(DocBaseResource, ShareableResource):
+class Analysis(Titled, UUID, Dated, Shareable):
     sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False)
     preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False)
 
@@ -510,7 +517,7 @@ class Analysis(DocBaseResource, ShareableResource):
         verbose_name = _('Analysis')
 
 
-class AnalysisTrack(DocBaseResource, ShareableResource):
+class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
     analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=False)
     item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False)
@@ -520,7 +527,7 @@ class AnalysisTrack(DocBaseResource, ShareableResource):
         verbose_name = _('Analysis Track')
 
 
-class AnnotationTrack(DocBaseResource, ShareableResource):
+class AnnotationTrack(Titled, UUID, Dated, Shareable):
 
     item = models.ForeignKey(Item, related_name='annotation_tracks', verbose_name=_('item'), blank=False)  # noqa
     overlapping = models.BooleanField(default=False)
@@ -530,7 +537,7 @@ class AnnotationTrack(DocBaseResource, ShareableResource):
         verbose_name = _('Annotation Track')
 
 
-class Annotation(DocBaseResource):
+class Annotation(Titled, UUID, Dated):
 
     track = models.ForeignKey(AnnotationTrack, related_name='annotations', verbose_name=_('annotation'), blank=False)
     start_time = models.FloatField(_('start time (s)'), default=0)

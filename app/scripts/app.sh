@@ -7,7 +7,6 @@ source "$SCRIPT_DIR/app_base.sh"
 python $manage wait-for-db
 python $manage migrate --noinput
 python $manage bower_install -- --allow-root
-python $manage collectstatic --noinput -i *node_modules*
 
 # timeside setup
 python $manage timeside-create-admin-user
@@ -31,8 +30,10 @@ then
     python $manage runserver 0.0.0.0:8000
 else
     # static files auto update
-    watchmedo shell-command --patterns="*.js;*.css" --recursive \
-        --command='python '$manage' collectstatic --noinput' $src &
+    python $manage collectstatic --noinput -i *node_modules*
+
+    # watchmedo shell-command --patterns="*.js;*.css" --recursive \
+    #     --command='python '$manage' collectstatic --noinput' $src &
 
     uwsgi --socket :$port --wsgi-file $wsgi --chdir $app --master \
         --processes $processes --threads $threads \
