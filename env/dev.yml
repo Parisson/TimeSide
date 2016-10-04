@@ -23,7 +23,6 @@
 
 
 app:
-  image: parisson/timeside:latest-dev
   volumes:
     - ./app/:/srv/app
     - ./:/srv/src/timeside/
@@ -34,6 +33,5 @@ app:
     - 9000:8000
 
 worker:
-  image: parisson/timeside:latest-dev
   env_file:
     - env/debug.env
