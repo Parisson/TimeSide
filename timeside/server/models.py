@@ -537,7 +537,7 @@ class AnnotationTrack(Titled, UUID, Dated, Shareable):
         verbose_name = _('Annotation Track')
 
 
-class Annotation(Titled, UUID, Dated):
+class Annotation(Titled, UUID, Dated, Shareable):
 
     track = models.ForeignKey(AnnotationTrack, related_name='annotations', verbose_name=_('annotation'), blank=False)
     start_time = models.FloatField(_('start time (s)'), default=0)
