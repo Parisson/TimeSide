@@ -23,15 +23,7 @@
 
 
 app:
-  volumes:
-    - ./app/:/srv/app
-    - ./:/srv/src/timeside/
-  env_file:
-    - env/debug.env
-  command: /bin/bash /srv/app/scripts/app.sh --runserver
-  ports:
-    - 9000:8000
+  image: parisson/timeside:latest-dev
 
 worker:
-  env_file:
-    - env/debug.env
+  image: parisson/timeside:latest-dev
