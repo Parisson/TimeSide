@@ -34,6 +34,7 @@ import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 
 from django.db import models
+from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
@@ -49,10 +50,12 @@ _processor_types = {'Analyzers': timeside.core.api.IAnalyzer,
                     'Encoders': timeside.core.api.IEncoder,
                     'Graphers': timeside.core.api.IGrapher}
 
-PROCESSOR_PIDS = [(name, [(processor.id(), processor.id())
-                          for processor
-                          in timeside.core.processor.processors(proc_type)])
-                  for name, proc_type in _processor_types.items()]
+
+def get_processor_pids():
+    return [(name, [(processor.id(), processor.id())
+                    for processor
+                    in timeside.core.processor.processors(proc_type)])
+            for name, proc_type in _processor_types.items()]
 
 public_extra_types = {
     '.webm': 'video/webm',
@@ -100,7 +103,6 @@ def get_processor(pid):
     raise ValueError('Processor %s does not exists' % pid)
 
 
-
 class Dated(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
@@ -120,7 +122,7 @@ class UUID(models.Model):
     def save(self, **kwargs):
         if not self.uuid:
             self.uuid = uuid.uuid4()
-        super(BaseResource, self).save(**kwargs)
+        super(UUID, self).save(**kwargs)
 
 
 class Titled(models.Model):
@@ -313,6 +315,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
         del pipe
         # item.lock_setter(False)
+lazy
 
 
 class Experience(Titled, UUID, Dated, Shareable):
@@ -327,9 +330,13 @@ class Experience(Titled, UUID, Dated, Shareable):
 
 class Processor(models.Model):
 
-    pid = models.CharField(_('pid'), choices=PROCESSOR_PIDS, unique=True, max_length=128)
+    pid = models.CharField(_('pid'), unique=True, max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
     name = models.CharField(_('name'), max_length=256, blank=True)
+
+    def __init__(self, *args, **kwargs):
+        super(Processor, self).__init__(*args, **kwargs)
+        self._meta.get_field_by_name('pid')[0]._choices = lazy(get_processor_pids, list)()
 
     class Meta:
         db_table = app + '_processors'

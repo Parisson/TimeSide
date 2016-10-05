@@ -283,6 +283,8 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
+    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
+
     class Meta:
         model = ts.models.Processor
         fields = ('url', 'pid', 'version')
@@ -343,7 +345,7 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},
-            'preset':  {'lookup_field': 'uuid'}}
+            'preset': {'lookup_field': 'uuid'}}
 
 
 class ResultVisualizationSerializer(serializers.BaseSerializer):
@@ -362,10 +364,10 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
             'request').query_params.get('height', 128))
 
         import h5py
-        sub_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
+        hdf5_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
         from timeside.core.analyzer import AnalyzerResult
-        A_Result = AnalyzerResult().from_hdf5(sub_result)
-        duration = sub_result['audio_metadata'].attrs['duration']
+        result = AnalyzerResult().from_hdf5(hdf5_result)
+        duration = hdf5_result['audio_metadata'].attrs['duration']
 
         if start < 0:
             start = 0
@@ -375,16 +377,20 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
         if stop == -1:
             stop = duration
 
-        if stop > duration:
-            stop = duration
+            if stop > duration:
+                stop = duration
 
-        import StringIO
-        import PIL
-        pil_image = A_Result._render_PIL(
-            size=(width, height), dpi=80, xlim=(start, stop))
-        buffer = StringIO.StringIO()
-        pil_image.save(buffer, 'PNG')
-        return buffer.getvalue()
+        if True:
+            # if result.data_object.y_value.size:
+
+            import StringIO
+            pil_image = result._render_PIL(
+                size=(width, height), dpi=80, xlim=(start, stop))
+            image_buffer = StringIO.StringIO()
+            pil_image.save(image_buffer, 'PNG')
+            return image_buffer.getvalue()
+        else:
+            return result.to_json()
 
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
@@ -395,7 +401,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
-            'selection':  {'lookup_field': 'uuid'},
+            'selection': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}}
 
 
