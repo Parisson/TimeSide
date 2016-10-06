@@ -30,3 +30,12 @@
   margin-left:  40px;
   font-size:    36px;
 }
+
+.track-annotations {
+	background-color: antiquewhite;
+    margin-bottom: 2px;
+}
+
+[data-connard="annotation_title"] {
+	background-color: aqua;				
+}

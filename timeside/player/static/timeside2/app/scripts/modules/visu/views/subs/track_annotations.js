@@ -26,7 +26,14 @@ function (Marionette,A,BaseQeopaView,d3) {
   **/
 
   var DataProvider = Marionette.Controller.extend({
-      init : function() {
+      init : function(annotationTrackObject) {
+
+        this.data = [];
+        if (annotationTrackObject) {
+          console.error('TODO on annotation track object');
+          return;
+        }  
+
         this.data = [];
         var numItem = 50;
         var stepPerItem = 200;
@@ -69,7 +76,8 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.height = o.height;
       this.isTrueDataServer = o.trueData!==undefined ? o.trueData : false;
 
-      
+      this.resultAnalysis = o.resultAnalysis; //will be the annotation track object
+
 
       this.dataProvider = new DataProvider();
     },
@@ -78,7 +86,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       Init function : va récupérer les data globales et le specific data
     **/
     init:function() {
-      this.dataProvider.init();
+      this.dataProvider.init(this.resultAnalysis);
       this.createGraphicBase();
       this.onNavigatorNewWindow();
       //this.generateGraphFromData();
@@ -281,10 +289,10 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
     serializeData: function () {
-      
+      var title = this.resultAnalysis ? this.resultAnalysis.get('title') : 'New Annotation track'
 
       return {
-       
+          title : title       
       }
     }
   });
