@@ -46,7 +46,13 @@ function (A) {
       var item = _.find(A._i.getOnCfg('allItems'),function(it) {return it.get('uuid')===id});
       if (item) {
         A._i.setOnCfg('currentItem',item);
-        return A._v.trigCfg('navigate.page','',viewid);
+
+        //new : get all annotations on item
+        return this.getAllAnotations(item,function(result) {
+          item.set('annotationTracksObjects',result);
+          return A._v.trigCfg('navigate.page','',viewid);
+        });
+
       }
       return;
 
@@ -59,6 +65,31 @@ function (A) {
           alert("Non1");
       });
     },
+
+
+    //get all annotations
+    getAllAnotations:function(item,callback) {
+        var indexCurrentAnnotation = 0;
+        var result = [];
+
+        if ( (!item.get('annotation_tracks')) || item.get('annotation_tracks').length==0 )
+          return callback();
+
+        var getNewAnnotation = function() {
+          if (indexCurrentAnnotation >= item.get('annotation_tracks').length)
+            return callback(result);
+
+          var urlAnnotation = item.get('annotation_tracks')[indexCurrentAnnotation];
+          $.get(urlAnnotation,function(res) {
+              result.push(res);
+              indexCurrentAnnotation++;
+              return getNewAnnotation();
+          });
+        };
+
+        return getNewAnnotation();  
+
+    }   
 
 
   
