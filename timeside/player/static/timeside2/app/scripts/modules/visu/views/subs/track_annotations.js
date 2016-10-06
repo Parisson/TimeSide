@@ -101,9 +101,13 @@ function (Marionette,A,BaseQeopaView,d3) {
       
       //console.log('new times : '+time1+','+time2);
 
+      //var a = this.xScale.
+
+
       var a = (this.viewport.extent()[0]);
       var b = (this.viewport.extent()[1]);
-      //console.log('brushed annot track : '+JSON.stringify(a)+" -> "+JSON.stringify(b));
+      this.lastBrushData = this.viewport.extent();
+      console.log('brushed annot track : '+JSON.stringify(a)+" -> "+JSON.stringify(b));
 
     },
 
@@ -223,7 +227,12 @@ function (Marionette,A,BaseQeopaView,d3) {
       //if (! this.hadFirstData)
       //  return;
 
-
+      //UPDATE BRUSH
+      /**
+          brush.extent([new Date(2000),new Date(3000)]); &&
+          chart.call(brush);
+              font quelque chose mais wtf? 
+      **/
 
 
       console.log('onNavigatorNewWindow');
@@ -232,6 +241,14 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
       this.xScale = d3.time.scale().domain([time0,time1]).range([0,this.width]);
+      this.viewport.x(this.xScale);
+
+      //update brush scale
+      if (this.lastBrushData) {
+        this.viewport.extent(this.lastBrushData);
+        this.d3chart.call(this.viewport);
+      }  
+
       //console.log('Duration is : '+(time1-time0));
       //this.zoom.scale()
 
