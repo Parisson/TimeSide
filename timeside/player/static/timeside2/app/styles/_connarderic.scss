@@ -37,5 +37,21 @@
 }
 
 [data-connard="annotation_title"] {
-	background-color: aqua;				
+	background-color: aqua;			
+
+	button {
+		&.active {
+			background-color: red;
+		}	
+	}	
+}
+
+.container_track_annotations {
+	rect.extent {
+		opacity: 0.1;
+
+		&.creation-mode {
+			opacity : 0.5;
+		}
+	}
 }

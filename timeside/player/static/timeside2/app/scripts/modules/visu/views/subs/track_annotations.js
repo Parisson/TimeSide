@@ -58,10 +58,10 @@ function (Marionette,A,BaseQeopaView,d3) {
     className: 'track-annotations',
 
     ui: {
-     
+      btnCreateNewAnnotation : '[data-layout="create_new_annotation"]'
     },
     events: {
-      
+      'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -88,10 +88,43 @@ function (Marionette,A,BaseQeopaView,d3) {
     init:function() {
       this.dataProvider.init(this.resultAnalysis);
       this.createGraphicBase();
+      this.createBrush();
       this.onNavigatorNewWindow();
       //this.generateGraphFromData();
       this.hadFirstData=true;
     },
+
+     ////////////////////////////////////////////////////////////////////////////////////
+    //Brush listener
+
+    brushed:function(e1,e2,e3) {
+      
+      //console.log('new times : '+time1+','+time2);
+
+      var a = (this.viewport.extent()[0]);
+      var b = (this.viewport.extent()[1]);
+      //console.log('brushed annot track : '+JSON.stringify(a)+" -> "+JSON.stringify(b));
+
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Button to toggle creation mode
+    onClickCreateNewAnnotation:function() {
+      var newModeIsCreation = ! this.isModeCreation;
+      var brush = this.$el.find('rect.extent');
+      if (newModeIsCreation) {
+        this.ui.btnCreateNewAnnotation.addClass('active');
+        brush.attr('class','extent creation-mode');
+        this.$el.find('.viewport').css('display','auto');
+      }
+      else {
+        this.ui.btnCreateNewAnnotation.removeClass('active'); 
+        brush.attr('class','creation-mode');
+        this.$el.find('.viewport').css('display','none');
+      }
+      this.isModeCreation = newModeIsCreation;
+    },
+    
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Click listener
@@ -157,6 +190,26 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.axis = xAxis;
 
       this.d3chart.call(xAxis);*/
+    },
+
+    createBrush:function() {
+      var height = this.height, width = this.width, chart = this.d3chart;
+
+
+      this.viewport = d3.svg.brush()
+        .x(this.xScale)
+        /*.y(this.yScale)*/
+        .on("brush", _.bind(this.brushed,this));
+
+      chart.append("g")
+        .attr("class", "viewport")
+        .call(this.viewport)
+        .selectAll("rect")
+        .attr("height", this.height-50)
+        .attr('transform', 'translate(0,'+25+')');  
+
+      //we do not start in creation mode
+      this.$el.find('.viewport').css('display','none');
     },
 
 
