@@ -58,10 +58,13 @@ function (Marionette,A,BaseQeopaView,d3) {
     className: 'track-annotations',
 
     ui: {
-      btnCreateNewAnnotation : '[data-layout="create_new_annotation"]'
+      btnCreateNewAnnotation : '[data-layout="create_new_annotation"]',
+      confirmAnnotationCreationForm : '[data-layout="create_annotation_form"]',
+      lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]'
     },
     events: {
-      'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation'
+      'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
+      'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -102,11 +105,14 @@ function (Marionette,A,BaseQeopaView,d3) {
       //console.log('new times : '+time1+','+time2);
 
       //var a = this.xScale.
+      if (!this.isModeCreation)
+        return;
 
 
       var a = (this.viewport.extent()[0]);
       var b = (this.viewport.extent()[1]);
       this.lastBrushData = this.viewport.extent();
+      this.ui.lblConfirmAnnotationCreation.empty().append('From '+a.getTime()+" to "+b.getTime());
       console.log('brushed annot track : '+JSON.stringify(a)+" -> "+JSON.stringify(b));
 
     },
@@ -120,13 +126,20 @@ function (Marionette,A,BaseQeopaView,d3) {
         this.ui.btnCreateNewAnnotation.addClass('active');
         brush.attr('class','extent creation-mode');
         this.$el.find('.viewport').css('display','auto');
+        this.ui.confirmAnnotationCreationForm.removeClass('hidden');
       }
       else {
         this.ui.btnCreateNewAnnotation.removeClass('active'); 
         brush.attr('class','extent');
         this.$el.find('.viewport').css('display','none');
+        this.ui.confirmAnnotationCreationForm.addClass('hidden');
       }
       this.isModeCreation = newModeIsCreation;
+    },
+
+
+    onClickConfirmCreateAnnotation:function() {
+        alert('go!');
     },
     
 
