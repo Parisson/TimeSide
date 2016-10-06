@@ -119,7 +119,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       }
       else {
         this.ui.btnCreateNewAnnotation.removeClass('active'); 
-        brush.attr('class','creation-mode');
+        brush.attr('class','extent');
         this.$el.find('.viewport').css('display','none');
       }
       this.isModeCreation = newModeIsCreation;
