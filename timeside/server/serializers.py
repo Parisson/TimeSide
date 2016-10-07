@@ -486,28 +486,16 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     # format=format)
 
 
-class AnnotationTrackSerializer(serializers.HyperlinkedModelSerializer):
-
-    annotations = serializers.HyperlinkedRelatedField(
-        many=True,
-        read_only=True,
-        view_name='annotation-detail',
-        lookup_field='uuid'
-    )
+class AnnotationSerializer_inTrack(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = ts.models.AnnotationTrack
-        fields = ('url', 'uuid', 'item',
+        model = ts.models.Annotation
+        fields = ('url', 'uuid',
                   'title', 'description',
-                  'author',
-                  'is_public',
-                  'overlapping',
-                  'annotations')
+                  'start_time', 'stop_time')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
-            'item': {'lookup_field': 'uuid'},
-            'author': {'lookup_field': 'username'},
-            'annotations': {'lookup_field': 'uuid'},
+            'track': {'lookup_field': 'uuid'},
         }
         read_only_fields = ('uuid',)
 
@@ -522,5 +510,26 @@ class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'track': {'lookup_field': 'uuid'},
+        }
+        read_only_fields = ('uuid',)
+
+
+class AnnotationTrackSerializer(serializers.HyperlinkedModelSerializer):
+
+     annotations = AnnotationSerializer_inTrack(many=True, read_only=True)
+
+    class Meta:
+        model = ts.models.AnnotationTrack
+        fields = ('url', 'uuid', 'item',
+                  'title', 'description',
+                  'author',
+                  'is_public',
+                  'overlapping',
+                  'annotations')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'},
+            'item': {'lookup_field': 'uuid'},
+            'author': {'lookup_field': 'username'},
+            'annotations': {'lookup_field': 'uuid'},
         }
         read_only_fields = ('uuid',)
