@@ -26,7 +26,14 @@ function (Marionette,A,BaseQeopaView,d3) {
   **/
 
   var DataProvider = Marionette.Controller.extend({
-      init : function() {
+      init : function(annotationTrackObject) {
+
+        this.data = [];
+        if (annotationTrackObject) {
+          console.error('TODO on annotation track object');
+          return;
+        }  
+
         this.data = [];
         var numItem = 50;
         var stepPerItem = 200;
@@ -51,10 +58,14 @@ function (Marionette,A,BaseQeopaView,d3) {
     className: 'track-annotations',
 
     ui: {
-     
+      btnCreateNewAnnotation : '[data-layout="create_new_annotation"]',
+      confirmAnnotationCreationForm : '[data-layout="create_annotation_form"]',
+      lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]',
+      inputContentAnnotation : '[data-layout="annotation_content"]'
     },
     events: {
-      
+      'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
+      'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +80,8 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.height = o.height;
       this.isTrueDataServer = o.trueData!==undefined ? o.trueData : false;
 
-      
+      this.resultAnalysis = o.resultAnalysis; //will be the annotation track object
+
 
       this.dataProvider = new DataProvider();
     },
@@ -78,12 +90,73 @@ function (Marionette,A,BaseQeopaView,d3) {
       Init function : va récupérer les data globales et le specific data
     **/
     init:function() {
-      this.dataProvider.init();
+      this.dataProvider.init(this.resultAnalysis);
       this.createGraphicBase();
+      this.createBrush();
       this.onNavigatorNewWindow();
       //this.generateGraphFromData();
       this.hadFirstData=true;
     },
+
+     ////////////////////////////////////////////////////////////////////////////////////
+    //Brush listener
+
+    brushed:function(e1,e2,e3) {
+      
+      //console.log('new times : '+time1+','+time2);
+
+      //var a = this.xScale.
+      if (!this.isModeCreation)
+        return;
+
+
+      var a = (this.viewport.extent()[0]);
+      var b = (this.viewport.extent()[1]);
+      this.lastBrushData = this.viewport.extent();
+      this.ui.lblConfirmAnnotationCreation.empty().append('From '+a.getTime()+" to "+b.getTime());
+      this.selectedDatesForAnnotation = [a.getTime(),b.getTime()]
+      console.log('brushed annot track : '+JSON.stringify(a)+" -> "+JSON.stringify(b));
+
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Button to toggle creation mode
+    onClickCreateNewAnnotation:function() {
+      var newModeIsCreation = ! this.isModeCreation;
+      var brush = this.$el.find('rect.extent');
+      if (newModeIsCreation) {
+        this.ui.btnCreateNewAnnotation.addClass('active');
+        brush.attr('class','extent creation-mode');
+        this.$el.find('.viewport').css('display','auto');
+        this.ui.confirmAnnotationCreationForm.removeClass('hidden');
+      }
+      else {
+        this.ui.btnCreateNewAnnotation.removeClass('active'); 
+        brush.attr('class','extent');
+        this.$el.find('.viewport').css('display','none');
+        this.ui.confirmAnnotationCreationForm.addClass('hidden');
+      }
+      this.isModeCreation = newModeIsCreation;
+    },
+
+
+    onClickConfirmCreateAnnotation:function() {
+        if (!this.selectedDatesForAnnotation || this.selectedDatesForAnnotation.length!=2)
+          return;
+        var txt = this.ui.inputContentAnnotation.val(),
+            timeStart = this.selectedDatesForAnnotation[0],
+            timeEnd = this.selectedDatesForAnnotation[1];
+
+        if (txt.length<1)
+            return;
+        A._i.getOnCfg('annotationControlller').postAnnotation(this.resultAnalysis,timeStart,timeEnd,
+          txt,function() {
+            alert('impact view from success')
+          });      
+
+        alert('go!');
+    },
+    
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Click listener
@@ -151,6 +224,26 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.d3chart.call(xAxis);*/
     },
 
+    createBrush:function() {
+      var height = this.height, width = this.width, chart = this.d3chart;
+
+
+      this.viewport = d3.svg.brush()
+        .x(this.xScale)
+        /*.y(this.yScale)*/
+        .on("brush", _.bind(this.brushed,this));
+
+      chart.append("g")
+        .attr("class", "viewport")
+        .call(this.viewport)
+        .selectAll("rect")
+        .attr("height", this.height-50)
+        .attr('transform', 'translate(0,'+25+')');  
+
+      //we do not start in creation mode
+      this.$el.find('.viewport').css('display','none');
+    },
+
 
 
     /////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +255,12 @@ function (Marionette,A,BaseQeopaView,d3) {
       //if (! this.hadFirstData)
       //  return;
 
-
+      //UPDATE BRUSH
+      /**
+          brush.extent([new Date(2000),new Date(3000)]); &&
+          chart.call(brush);
+              font quelque chose mais wtf? 
+      **/
 
 
       console.log('onNavigatorNewWindow');
@@ -171,6 +269,14 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
       this.xScale = d3.time.scale().domain([time0,time1]).range([0,this.width]);
+      this.viewport.x(this.xScale);
+
+      //update brush scale
+      if (this.lastBrushData) {
+        this.viewport.extent(this.lastBrushData);
+        this.d3chart.call(this.viewport);
+      }  
+
       //console.log('Duration is : '+(time1-time0));
       //this.zoom.scale()
 
@@ -281,10 +387,10 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
     serializeData: function () {
-      
+      var title = this.resultAnalysis ? this.resultAnalysis.get('title') : 'New Annotation track'
 
       return {
-       
+          title : title       
       }
     }
   });

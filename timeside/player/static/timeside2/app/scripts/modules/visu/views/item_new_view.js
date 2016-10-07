@@ -64,6 +64,10 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         (_.bind(mapAction[action],this))();
     },
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Loading
+
     //Start loading item
     onStartLoading:function() {
       this.$el.find('[data-action="start"]').attr("disabled",true).text('loading');
@@ -76,7 +80,47 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.trackNavigatorView.startLoading(this.size.width, this.size.navHeight,_.bind(this.onNavigatorLoaded,this));
     },
 
-    //ask for a new analysis
+    //when navigator is ready
+    onNavigatorLoaded:function() {
+     this.navigatorReady=true;
+     //this.onDomRefresh();
+
+      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
+      A._i.getOnCfg('trackInfoController').currentEndTime = A._i.getOnCfg('trackInfoController').getDuration();
+
+      //tmp
+      this.$el.find('[data-action]').attr("disabled",false);
+
+     //let's instanciate ruler
+      if (! this.rulerView) {
+        this.rulerView = new TrackRulerView();
+        this.ui.containerRulerView.empty().append(this.rulerView.render().$el);
+        this.rulerView.create(this.size.width, this.size.rulerHeight);
+      }
+
+      //@Todo instanciate needed tracks
+
+      var item = A._i.getOnCfg('currentItem');
+      if (item && item.get('annotationTracksObjects')) {
+        var self=this;
+        item.get('annotationTracksObjects').each(function(annotationTrack) {
+          self.addTrack(new TrackAnnotationsView(),"annotation",annotationTrack);
+        });
+      }
+      
+
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Actions on track
+
+    onPlayAudio:function() {
+      //no more : triggered by player
+      //A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
+    },
+
+     //ask for a new analysis
     onAddNewAnalysis:function() {
       var allAnalysis =  _.map(A._i.getOnCfg('allAnalysis'),function(obj) {
         return obj.toJSON()
@@ -90,34 +134,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           A._v.trigCfg('analysis.ask','',analysis);
         }
       });
-    },
 
 
-    //when navigator is ready
-    onNavigatorLoaded:function() {
-     this.navigatorReady=true;
-     //this.onDomRefresh();
-
-      A._i.getOnCfg('dataLoader').isTrueDataServer=true; //IMPORTANT (pas à sa place)
-      A._i.getOnCfg('trackInfoController').currentEndTime = A._i.getOnCfg('trackInfoController').getDuration();
-
-     //tmp
-     this.$el.find('[data-action]').attr("disabled",false);
-
-     //let's instanciate ruler
-     if (! this.rulerView) {
-        this.rulerView = new TrackRulerView();
-        this.ui.containerRulerView.empty().append(this.rulerView.render().$el);
-        this.rulerView.create(this.size.width, this.size.rulerHeight);
-     }
-
-     //@Todo : get container track ruler & instanciate TrackRulerView
-
-    },
-
-    onPlayAudio:function() {
-      //no more : triggered by player
-      //A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
     },
 
     ////////////////////////////////////////////////////////////////////////////////////

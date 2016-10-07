@@ -1,9 +1,10 @@
 define([
   'backbone.associations',
-  '../qt_basemodel'
+  '../qt_basemodel',
+  './annotation_track'
 ],
 
-function (Backbone,BaseModel) {
+function (Backbone,BaseModel,AnnotationTrackModel) {
 
   'use strict';
 
@@ -22,11 +23,20 @@ function (Backbone,BaseModel) {
       url : '',
       uuid : '',
       audio_duration : 0, //en secondes!!
-      audio_url : {} //{mp3 : URL, ogg : URL}
+      audio_url : {}, //{mp3 : URL, ogg : URL}
+
+      annotation_tracks : [], //urls from server
+      annotationTracksObjects : [], //intern objects
+      analysis_tracks : []
 
     },
 
-    relations: [],
+    relations: [
+     {
+        type: Backbone.Many,
+        key: 'annotationTracksObjects',
+        relatedModel: AnnotationTrackModel
+      }],
 
     //////////////////////////////////////////
 
