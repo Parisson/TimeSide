@@ -516,7 +516,7 @@ class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnnotationTrackSerializer(serializers.HyperlinkedModelSerializer):
 
-     annotations = AnnotationSerializer_inTrack(many=True, read_only=True)
+    annotations = AnnotationSerializer_inTrack(many=True, read_only=True)
 
     class Meta:
         model = ts.models.AnnotationTrack
