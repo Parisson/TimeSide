@@ -30,7 +30,19 @@ function (Marionette,A,BaseQeopaView,d3) {
 
         this.data = [];
         if (annotationTrackObject) {
-          console.error('TODO on annotation track object');
+          _.each(annotationTrackObject.get('annotations'),function(annotation,index) {
+              var dataOk = {
+                start : annotation.start_time,
+                end : annotation.stop_time,
+                index : index,
+                label : annotation.description,
+                clicked : false,
+                color :"#cf8e2a"
+              }
+              this.data.push(dataOk);
+          },this);  
+
+          //console.error('TODO on annotation track object');
           return;
         }  
 

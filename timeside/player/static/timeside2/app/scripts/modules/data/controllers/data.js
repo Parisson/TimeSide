@@ -48,7 +48,7 @@ function (A) {
         A._i.setOnCfg('currentItem',item);
 
         //new : get all annotations on item
-        return this.getAllAnotations(item,function(result) {
+        return this.getAllAnotationsTracks(item,function(result) {
           item.set('annotationTracksObjects',result);
           return A._v.trigCfg('navigate.page','',viewid);
         });
@@ -56,19 +56,19 @@ function (A) {
       }
       return;
 
-      A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.items.getOne),{id : id},null,
+      /*A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.items.getOne),{id : id},null,
         function(result) {
           A._i.setOnCfg('currentItem',result);
           var _viewid = viewid || 'item_view';
           return A._v.trigCfg('navigate.page','',_viewid);
         }, function(error) {
           alert("Non1");
-      });
+      });*/
     },
 
 
-    //get all annotations
-    getAllAnotations:function(item,callback) {
+    //get all annotations tracks
+    getAllAnotationsTracks:function(item,callback) {
         var indexCurrentAnnotation = 0;
         var result = [];
 
