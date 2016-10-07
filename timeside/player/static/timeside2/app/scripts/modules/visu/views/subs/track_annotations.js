@@ -60,7 +60,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     ui: {
       btnCreateNewAnnotation : '[data-layout="create_new_annotation"]',
       confirmAnnotationCreationForm : '[data-layout="create_annotation_form"]',
-      lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]'
+      lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]',
+      inputContentAnnotation : '[data-layout="annotation_content"]'
     },
     events: {
       'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
@@ -113,6 +114,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       var b = (this.viewport.extent()[1]);
       this.lastBrushData = this.viewport.extent();
       this.ui.lblConfirmAnnotationCreation.empty().append('From '+a.getTime()+" to "+b.getTime());
+      this.selectedDatesForAnnotation = [a.getTime(),b.getTime()]
       console.log('brushed annot track : '+JSON.stringify(a)+" -> "+JSON.stringify(b));
 
     },
@@ -139,6 +141,19 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
     onClickConfirmCreateAnnotation:function() {
+        if (!this.selectedDatesForAnnotation || this.selectedDatesForAnnotation.length!=2)
+          return;
+        var txt = this.ui.inputContentAnnotation.val(),
+            timeStart = this.selectedDatesForAnnotation[0],
+            timeEnd = this.selectedDatesForAnnotation[1];
+
+        if (txt.length<1)
+            return;
+        A._i.getOnCfg('annotationControlller').postAnnotation(this.resultAnalysis,timeStart,timeEnd,
+          txt,function() {
+            alert('impact view from success')
+          });      
+
         alert('go!');
     },
     

@@ -5,6 +5,8 @@
 	"trackInfoController" : "trackInfoController",
 	"dataLoader" : "dataLoader",
 
+	"annotationControlller" : "annotationControlller",
+
 	"analysisController" : "analysisController",
 
 	"audioWebApiController" : "audioWebApiController",

@@ -2,6 +2,7 @@ define([
   '#qt_core/controllers/all',
   './controllers/data',
   './controllers/true_server',
+  './controllers/annotation',
 
 
   './commands/commands_processors',
@@ -11,7 +12,7 @@ define([
   './commands/get_waveform'
 ],
 
-function (A,Controller,TrueServerController,
+function (A,Controller,TrueServerController,AnnotationController,
 		ProcessorCommands,ItemCommands,AnalysisCommand,GetWaveformCommand) {
   'use strict';
 
@@ -21,6 +22,7 @@ function (A,Controller,TrueServerController,
     });
 
     this.trueServerController = new TrueServerController();
+    this.annotationController = new AnnotationController();
     
    	A.DataCommandHelper.createCommands(ProcessorCommands);
     A.DataCommandHelper.createCommands(ItemCommands);
