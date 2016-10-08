@@ -29,6 +29,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       init : function(annotationTrackObject) {
 
         this.data = [];
+
         if (annotationTrackObject) {
           _.each(annotationTrackObject.get('annotations'),function(annotation,index) {
               var dataOk = {
@@ -39,6 +40,7 @@ function (Marionette,A,BaseQeopaView,d3) {
                 clicked : false,
                 color :"#cf8e2a"
               }
+              this.lastIndex = index;
               this.data.push(dataOk);
           },this);  
 
@@ -46,7 +48,7 @@ function (Marionette,A,BaseQeopaView,d3) {
           return;
         }  
 
-        this.data = [];
+       /* this.data = [];
         var numItem = 50;
         var stepPerItem = 200;
         for (var i=0; i<numItem;i++) {
@@ -59,9 +61,19 @@ function (Marionette,A,BaseQeopaView,d3) {
             clicked : (i%3==0 ? true : false),
             color :"#cf8e2a"
           });
-        }
+        }*/
+      },
 
-      }
+      //after create/edit/delete
+      updateFromServer:function(view,model) {
+        var self=this;
+        A._i.getOnCfg('annotationControlller').udpateTrackDataFromServer(model,function(modelUpdated) {
+          view.resultAnalysis = modelUpdated;
+          self.init(modelUpdated);
+          view.onNavigatorNewWindow();
+        });
+      },
+
   });
 
   return BaseQeopaView.extend({
@@ -155,7 +167,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     onClickConfirmCreateAnnotation:function() {
         if (!this.selectedDatesForAnnotation || this.selectedDatesForAnnotation.length!=2)
           return;
-        var txt = this.ui.inputContentAnnotation.val(),
+        var self=this,
+            txt = this.ui.inputContentAnnotation.val(),
             timeStart = this.selectedDatesForAnnotation[0],
             timeEnd = this.selectedDatesForAnnotation[1];
 
@@ -163,7 +176,7 @@ function (Marionette,A,BaseQeopaView,d3) {
             return;
         A._i.getOnCfg('annotationControlller').postAnnotation(this.resultAnalysis,timeStart,timeEnd,
           txt,function() {
-            alert('impact view from success')
+            self.dataProvider.updateFromServer(self,self.resultAnalysis);
           });      
 
         alert('go!');
