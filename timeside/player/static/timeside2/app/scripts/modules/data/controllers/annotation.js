@@ -34,7 +34,7 @@ function (A) {
           return console.error('udpateTrackDataFromServer : old track not found on : '+oldTrackObject.get('uuid'));
         }
 
-        oldTrack.set('annotations',res.body.annotations);
+        oldTrack.set('annotations',res.annotations);
         return callback(oldTrack); //du coup, on garde oldTrack comme objet dans le modèle
       });
     },

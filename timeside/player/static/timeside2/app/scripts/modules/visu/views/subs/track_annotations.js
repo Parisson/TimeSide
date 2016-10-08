@@ -22,7 +22,9 @@ function (Marionette,A,BaseQeopaView,d3) {
         En affichage, nous allons juste modifier le scale x pour le temps et le scale y de sorte que
         toute la hauteur soit prise par les barres visibles.
 
-
+    intern vars
+      isModeCreation : false/true 
+      selectedElement : null / object
   **/
 
   var DataProvider = Marionette.Controller.extend({
@@ -36,6 +38,7 @@ function (Marionette,A,BaseQeopaView,d3) {
                 start : annotation.start_time,
                 end : annotation.stop_time,
                 index : index,
+                uuid : annotation.uuid,
                 label : annotation.description,
                 clicked : false,
                 color :"#cf8e2a"
@@ -70,7 +73,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         A._i.getOnCfg('annotationControlller').udpateTrackDataFromServer(model,function(modelUpdated) {
           view.resultAnalysis = modelUpdated;
           self.init(modelUpdated);
-          view.onNavigatorNewWindow();
+          (_.bind(view.onNavigatorNewWindow,view))();
         });
       },
 
@@ -85,11 +88,15 @@ function (Marionette,A,BaseQeopaView,d3) {
       btnCreateNewAnnotation : '[data-layout="create_new_annotation"]',
       confirmAnnotationCreationForm : '[data-layout="create_annotation_form"]',
       lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]',
-      inputContentAnnotation : '[data-layout="annotation_content"]'
+      inputContentAnnotation : '[data-layout="annotation_content"]',
+      lblEditAnnotationMode : '[data-layout="edit_annotation_mode"]',
+
+      container : '.container_track_annotations'
     },
     events: {
       'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
-      'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation'
+      'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation',
+      'mousemove .container_track_annotations' : 'onMouseMove'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -144,9 +151,75 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    //Click listener
+    onClickElement:function(d,i) {
+      console.log('click ELEMENT!');
+
+      _.each(this.dataProvider.data,function(obj) {obj.clicked=false});
+
+      d.clicked = true;//!d.clicked;
+      this.selectedElement = d;
+      this.updateViewEditAnnotation();
+      this.onNavigatorNewWindow();
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Listen for mouse over - always on, but used only when we have a selected element
+    onMouseMove:function(ev) {
+      console.log('Mouse over...'+ev.pageX);
+      var timeForMouse = this.xScale.invert(ev.pageX);
+      if (!this.selectedElement)
+        return;
+
+      var lowerBound = this.selectedElement.start+0.1*(this.selectedElement.end - this.selectedElement.start);
+      var upperBound = this.selectedElement.end - 0.1*(this.selectedElement.end - this.selectedElement.start);
+      var inBounds=false, isMovingLowerBound = false;
+      if (timeForMouse<lowerBound && timeForMouse > this.selectedElement.start) {
+        inBounds=true;isMovingLowerBound=true;
+        this.ui.container.css('cursor','row-resize');
+      }
+      else if (timeForMouse>upperBound && timeForMouse < this.selectedElement.end) {
+        inBounds=true;isMovingLowerBound=false;
+        this.ui.container.css('cursor','row-resize');
+      }
+      else {
+        this.ui.container.css('cursor','default');
+      }
+    },
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Mode to edit an annotation
+    updateViewEditAnnotation:function() {
+      if (this.isModeCreation) {
+        this.updateViewOnNewModeCreation(false);
+      }
+      var element = this.selectedElement;
+      if (!element) {
+        return console.error('ERROR : no selected element on updateViewEditAnnotation')
+      }
+      this.ui.lblEditAnnotationMode.empty()
+      this.ui.lblEditAnnotationMode.append('Edit '+element.uuid);
+      this.ui.confirmAnnotationCreationForm.removeClass('hidden');
+      this.ui.lblConfirmAnnotationCreation.empty().append('From '+element.start+" to "+element.end);
+      this.ui.inputContentAnnotation.val(element.label);
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
     //Button to toggle creation mode
     onClickCreateNewAnnotation:function() {
       var newModeIsCreation = ! this.isModeCreation;
+      this.updateViewOnNewModeCreation(newModeIsCreation);
+      if (newModeIsCreation)
+        _.each(this.dataProvider.data,function(obj) {obj.clicked=false});
+      this.selectedElement=null;
+    },
+
+    updateViewOnNewModeCreation:function(newModeIsCreation) {
+      this.selectedElement = null;
+      this.ui.lblEditAnnotationMode.empty().val('Creating new annotation....');
+
       var brush = this.$el.find('rect.extent');
       if (newModeIsCreation) {
         this.ui.btnCreateNewAnnotation.addClass('active');
@@ -165,6 +238,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
 
     onClickConfirmCreateAnnotation:function() {
+
         if (!this.selectedDatesForAnnotation || this.selectedDatesForAnnotation.length!=2)
           return;
         var self=this,
@@ -174,24 +248,18 @@ function (Marionette,A,BaseQeopaView,d3) {
 
         if (txt.length<1)
             return;
-        A._i.getOnCfg('annotationControlller').postAnnotation(this.resultAnalysis,timeStart,timeEnd,
-          txt,function() {
-            self.dataProvider.updateFromServer(self,self.resultAnalysis);
-          });      
+        if (this.isModeCreation) {  
+          A._i.getOnCfg('annotationControlller').postAnnotation(this.resultAnalysis,timeStart,timeEnd,
+            txt,function() {
+              self.dataProvider.updateFromServer(self,self.resultAnalysis);
 
-        alert('go!');
+              (_.bind(self.updateViewOnNewModeCreation,self))();
+            });      
+        }
+
     },
     
 
-    ////////////////////////////////////////////////////////////////////////////////////
-    //Click listener
-
-    
-    onClickElement:function(d,i) {
-      console.log('click ELEMENT!');
-      d.clicked = !d.clicked;
-      this.onNavigatorNewWindow();
-    },
 
       ////////////////////////////////////////////////////////////////////////////////////
     //Function to check the data clicked and compute heights / y
@@ -357,15 +425,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr('x',10)
         .text(function(d) {return d.label;})
       
-      /*
-        .attr("height", function(d) {
-          return d.computed_height; 
-        })
-        .attr("width", function(d) {
-          var duration = d.end - d.start;
-          var xScale = self.xScale(d.end) - self.xScale(d.start);
-          return xScale;
-        } );*/
+      
       
       //UPDATE ALL REMAINING
       g.attr("class", function(d, i) {
@@ -403,7 +463,6 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     onRender:function() {
-       
     },
 
     onDestroy: function () {      
