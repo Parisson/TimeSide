@@ -19,6 +19,29 @@ function (A) {
     },
 
     /////////////////////////////////////////////////////////////////////
+    // delete a track
+    deleteTrackAnnotation:function(trackModel,callback) {
+     /* var data = {
+          track : track.get('url'),
+          start_time : timeStart,
+          stop_time : timeEnd,
+          uuid : itemUUID,
+          title : "Annotation Title",
+          description : text
+        };*/
+        return $.ajax({
+          url : 'http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/'+trackModel.get('uuid'),
+          type : 'DELETE'/*,
+          data : data*/,
+          success : function(res) {
+            console.log('delete done');
+            return callback();
+          }
+        });
+        
+    },
+
+    /////////////////////////////////////////////////////////////////////
     // get updated data for a track
     udpateTrackDataFromServer:function(oldTrackObject,callback) {
       var urlAnnotation = oldTrackObject.get('url');

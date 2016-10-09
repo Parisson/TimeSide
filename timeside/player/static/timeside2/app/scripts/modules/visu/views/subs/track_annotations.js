@@ -114,6 +114,8 @@ function (Marionette,A,BaseQeopaView,d3) {
       'mousemove .container_track_annotations' : 'onMouseMove',
        'mousedown .container_track_annotations' : 'onMouseDown',
       'mouseup .container_track_annotations' : 'onMouseUp',
+
+      'click [data-layout="delete_annotation_track"]' : 'onClickDeleteAnnotationTrack'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +146,12 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.onNavigatorNewWindow();
       //this.generateGraphFromData();
       this.hadFirstData=true;
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Delete button. just pass the word to the main view!
+    onClickDeleteAnnotationTrack:function() {
+      A._v.trigCfg('ui.deleteAnnotationTrack','',this.resultAnalysis);
     },
 
      ////////////////////////////////////////////////////////////////////////////////////

@@ -156,6 +156,12 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       trackView.destroy();
     },
 
+    onDeleteAnnotationTrackView:function(trackModel) {
+      A._i.getOnCfg('annotationControlller').deleteTrackAnnotation(trackModel,function() {
+        alert('suppression track réussie!');
+      })
+    },
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -297,6 +303,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       A._v.onCfg('analysis.asked','',this.onAnalysisAsked,this);
       A._v.onCfg('analysis.result','',this.onResultAnalysis,this);
       A._v.onCfg('ui_project.deleteTrack','',this.onDeleteTrackView,this);
+      A._v.onCfg('ui_project.deleteAnnotationTrack','',this.onDeleteAnnotationTrackView,this);
       A._i.setOnCfg('useFakeData',false);
     },
 

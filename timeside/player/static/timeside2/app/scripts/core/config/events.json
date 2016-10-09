@@ -15,10 +15,15 @@
 		"newWindow" : "navigator:newWindow"
 	},
 
+	"annotation" : {
+
+	},
+
 	"ui_project" : {
 		"tracksHeightChanged" 		: "ui:tracksHeightChanged",
 		"segmentLoopUpdate" 		: "ui:segmentLoopUpdate",
-		"deleteTrack"				: "ui:deleteTrack"
+		"deleteTrack"				: "ui:deleteTrack",
+		"deleteAnnotationTrack" 	: "ui:deleteAnnotationTrack"
 	},
 
 	"audio" : {
