@@ -29,9 +29,13 @@ function (Marionette,A,BaseQeopaView,d3) {
 
   var DataProvider = Marionette.Controller.extend({
       init : function(annotationTrackObject) {
+        if (!this.data)
+          this.data = [];
 
-        this.data = [];
-
+        /**
+          D3.js objects lifecycle can be a pain in the ass (if we bluntly replace the data with another one, 
+            we'll have to rework the drawing main function). So we do update only if edit, or add if create
+        **/
         if (annotationTrackObject) {
           _.each(annotationTrackObject.get('annotations'),function(annotation,index) {
               var dataOk = {
@@ -43,8 +47,19 @@ function (Marionette,A,BaseQeopaView,d3) {
                 clicked : false,
                 color :"#cf8e2a"
               }
+
+              var alreadyThere = _.find(this.data,function(oldDataObj) {return oldDataObj.uuid==dataOk.uuid;});
+              if (alreadyThere) {
+                alreadyThere.start = dataOk.start;
+                alreadyThere.end = dataOk.end;
+                alreadyThere.label = dataOk.label;
+                alreadyThere.clicked=false;
+              }
+              else {
+                this.data.push(dataOk);
+              }
+
               this.lastIndex = index;
-              this.data.push(dataOk);
           },this);  
 
           //console.error('TODO on annotation track object');
@@ -170,13 +185,13 @@ function (Marionette,A,BaseQeopaView,d3) {
     //Listen for mouse over - always on, but used only when we have a selected element
     //--- EDIT ANNOTATION DRAG && DROP left & right
     onMouseMove:function(ev) {
-      console.log('Mouse over...'+ev.pageX);
+      //console.log('Mouse over...'+ev.pageX);
       var timeForMouse = this.xScale.invert(ev.pageX);
       if (!this.selectedElement)
         return;
 
       if (this.isMouseDownForResizingAnnotation) {
-        //resizing an annotation
+        //resizing an annotation actual code
         var newTime = this.xScale.invert(ev.pageX);
         if (this.isResizingLowerBound)
           this.selectedElement.start = newTime.getTime();
@@ -205,7 +220,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         this.ui.container.css('cursor','default');
       }
 
-      console.log('   comps : ['+this.selectedElement.start+","+lowerBound+" -> "+upperBound+","+this.selectedElement.end);
+      //console.log('   comps : ['+this.selectedElement.start+","+lowerBound+" -> "+upperBound+","+this.selectedElement.end);
 
       this.canResizeAnnotation = inBounds;
       this.isResizingLowerBound = isMovingLowerBound;
@@ -481,7 +496,8 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr('x',10)
         .text(function(d) {return d.label;})
       
-      
+      g.selectAll('text')
+        .text(function(d) {return d.label;})
       
       //UPDATE ALL REMAINING
       g.attr("class", function(d, i) {
@@ -504,6 +520,7 @@ function (Marionette,A,BaseQeopaView,d3) {
           .attr("width", function(d) {
             var duration = d.end - d.start;
             var xScale = self.xScale(d.end) - self.xScale(d.start);
+            console.log('---> '+d.start+","+d.end+" -> "+duration+","+xScale);
             return xScale;
           } );
           g.selectAll("text")
