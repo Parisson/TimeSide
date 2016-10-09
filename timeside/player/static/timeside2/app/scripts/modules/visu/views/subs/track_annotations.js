@@ -154,6 +154,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Click listener
+    //Start selection of annotation
     onClickElement:function(d,i) {
       console.log('click ELEMENT!');
 
@@ -167,6 +168,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Listen for mouse over - always on, but used only when we have a selected element
+    //--- EDIT ANNOTATION DRAG && DROP left & right
     onMouseMove:function(ev) {
       console.log('Mouse over...'+ev.pageX);
       var timeForMouse = this.xScale.invert(ev.pageX);
@@ -274,13 +276,30 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
 
-    onClickConfirmCreateAnnotation:function() {
 
+    ///USED FOR CREATION && EDITION DEPENDING OF CONTEXT
+    onClickConfirmCreateAnnotation:function() {
+        var self=this,
+          txt = this.ui.inputContentAnnotation.val();
+        //-------MODE EDITION
+        if (this.selectedElement) {
+          var timeStart = this.selectedElement.start,
+            timeEnd = this.selectedElement.end;
+
+
+          return A._i.getOnCfg('annotationControlller').updateAnnotation(this.resultAnalysis,timeStart,timeEnd,
+            txt,this.selectedElement.uuid,function() {
+              self.dataProvider.updateFromServer(self,self.resultAnalysis);
+
+              (_.bind(self.updateViewOnNewModeCreation,self))();
+            });      
+        }
+
+        //-------MODE CREATION
         if (!this.selectedDatesForAnnotation || this.selectedDatesForAnnotation.length!=2)
           return;
-        var self=this,
-            txt = this.ui.inputContentAnnotation.val(),
-            timeStart = this.selectedDatesForAnnotation[0],
+
+        var timeStart = this.selectedDatesForAnnotation[0],
             timeEnd = this.selectedDatesForAnnotation[1];
 
         if (txt.length<1)

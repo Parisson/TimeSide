@@ -59,6 +59,29 @@ function (A) {
 
     },
 
+    updateAnnotation:function(track,timeStart,timeEnd,text,itemUUID,callback) {
+      var data = {
+          track : track.get('url'),
+          start_time : timeStart,
+          stop_time : timeEnd,
+          uuid : itemUUID,
+          title : "Annotation Title",
+          description : text
+        };
+        return $.ajax({
+          url : 'http://timeside-dev.telemeta.org/timeside/api/annotations/'+itemUUID,
+          type : 'PUT',
+          data : data,
+          success : function(res) {
+            console.log('post done');
+            return callback();
+          }
+        });
+        
+        
+
+    }
+
      /////////////////////////////////////////////////////////////////////
     // Get One Item & nivigate to view
     
