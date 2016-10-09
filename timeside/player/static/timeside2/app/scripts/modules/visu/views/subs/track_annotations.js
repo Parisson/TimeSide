@@ -96,7 +96,9 @@ function (Marionette,A,BaseQeopaView,d3) {
     events: {
       'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
       'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation',
-      'mousemove .container_track_annotations' : 'onMouseMove'
+      'mousemove .container_track_annotations' : 'onMouseMove',
+       'mousedown .container_track_annotations' : 'onMouseDown',
+      'mouseup .container_track_annotations' : 'onMouseUp',
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -171,6 +173,21 @@ function (Marionette,A,BaseQeopaView,d3) {
       if (!this.selectedElement)
         return;
 
+      if (this.isMouseDownForResizingAnnotation) {
+        //resizing an annotation
+        var newTime = this.xScale.invert(ev.pageX);
+        if (this.isResizingLowerBound)
+          this.selectedElement.start = newTime.getTime();
+        else
+          this.selectedElement.end = newTime.getTime();
+
+        console.log(' new time while selecting : '+newTime.getTime());
+        this.ui.lblConfirmAnnotationCreation.empty().append('From '+this.selectedElement.start+" to "+this.selectedElement.end);
+
+        this.onNavigatorNewWindow();
+        return;
+      }
+
       var lowerBound = this.selectedElement.start+0.1*(this.selectedElement.end - this.selectedElement.start);
       var upperBound = this.selectedElement.end - 0.1*(this.selectedElement.end - this.selectedElement.start);
       var inBounds=false, isMovingLowerBound = false;
@@ -185,6 +202,26 @@ function (Marionette,A,BaseQeopaView,d3) {
       else {
         this.ui.container.css('cursor','default');
       }
+
+      console.log('   comps : ['+this.selectedElement.start+","+lowerBound+" -> "+upperBound+","+this.selectedElement.end);
+
+      this.canResizeAnnotation = inBounds;
+      this.isResizingLowerBound = isMovingLowerBound;
+
+    },
+
+    onMouseDown:function(ev) {
+      if (!this.selectedElement)
+        return;
+      if (!this.canResizeAnnotation)
+        return;
+
+      this.timeBaseForResize = this.xScale.invert(ev.pageX);
+      this.isMouseDownForResizingAnnotation=true;
+    },
+
+    onMouseUp:function(ev) {
+      this.isMouseDownForResizingAnnotation=false;
     },
 
 
@@ -281,7 +318,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         currentY+=_data.computed_height;
 
       });
-      console.log(numClickedData, numTotalData,numDivision,data);
+      //console.log(numClickedData, numTotalData,numDivision,data);
       return data;
     },
    
@@ -442,7 +479,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         })
         .selectAll("rect")
          .attr("height", function(d) {
-            console.log(d);
+            //console.log(d);
             return d.computed_height; 
           })
           .attr("width", function(d) {
