@@ -107,6 +107,18 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           self.addTrack(new TrackAnnotationsView(),"annotation",annotationTrack);
         });
       }
+
+      alert('next todo : check creation analysis back (cf analysis.js controller). En th, en load, on a déjà les analyses, donc '
+        +'on peut caller direct \n '+"A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis);"+' et ensuite \n'
+        +"resultModel.set('uniqueIDForView',this.uniqueIdAnalysis);A._v.trigCfg('analysis.result','',resultModel);\n"
+        +"et item_new_view devrait chopper son résultat et y arriver");
+      if (item && item.get('analysisTracksObjects')) {
+        var self = this;
+
+        item.get('analysisTracksObjects').each(function(analysisTrack) {
+          console.log('todo : add analysisTrack');
+        });
+      }
       
 
     },

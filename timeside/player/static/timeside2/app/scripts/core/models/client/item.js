@@ -1,10 +1,11 @@
 define([
   'backbone.associations',
   '../qt_basemodel',
-  './annotation_track'
+  './annotation_track',
+  './analysis_track'
 ],
 
-function (Backbone,BaseModel,AnnotationTrackModel) {
+function (Backbone,BaseModel,AnnotationTrackModel,AnalysisTrackModel) {
 
   'use strict';
 
@@ -27,7 +28,8 @@ function (Backbone,BaseModel,AnnotationTrackModel) {
 
       annotation_tracks : [], //urls from server
       annotationTracksObjects : [], //intern objects
-      analysis_tracks : []
+      analysis_tracks : [], //urls from server
+      analysisTracksObjects : [] //intern objects
 
     },
 
@@ -36,6 +38,11 @@ function (Backbone,BaseModel,AnnotationTrackModel) {
         type: Backbone.Many,
         key: 'annotationTracksObjects',
         relatedModel: AnnotationTrackModel
+      },
+      {
+        type: Backbone.Many,
+        key: 'analysisTracksObjects',
+        relatedModel: AnalysisTrackModel
       }],
 
     //////////////////////////////////////////
