@@ -151,7 +151,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     ////////////////////////////////////////////////////////////////////////////////////
     //Delete button. just pass the word to the main view!
     onClickDeleteAnnotationTrack:function() {
-      A._v.trigCfg('ui.deleteAnnotationTrack','',this.resultAnalysis);
+      A._v.trigCfg('ui_project.deleteAnnotationTrack','',this.resultAnalysis);
     },
 
      ////////////////////////////////////////////////////////////////////////////////////

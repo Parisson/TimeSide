@@ -7,6 +7,23 @@ define([
   Ce contrôleur a pour objet de lancer les chargements d'analyse pour l'item en cours et
     de pouvoir ensuite définir lesquels sont disponibles ou non.
 
+    Ici, la création par item_new_view d'une analyse (post choix popup) appellera donc onAskAnalysis
+    avec : 
+        "{"url":"http://timeside-dev.telemeta.org/timeside/api/analysis/c36a5e2f-9b2a-4034-811b-344b9cb86800/",
+            "uuid":"c36a5e2f-9b2a-4034-811b-344b9cb86800",
+            "title":"Singings detection",
+            "preset":"http://timeside-dev.telemeta.org/timeside/api/presets/cd8d57f2-eaf9-4906-9c51-e7bf7babd19f/",
+            "sub_processor":"http://timeside-dev.telemeta.org/timeside/api/subprocessors/irit_singing.segments/"}"
+
+      ==> Appel d'un post sur http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/ qui va créer la track
+          en question.
+
+
+      Pendant ce traitement : 
+          A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis); -> annonce à la vue qu'un item est en cours de création
+      puis : 
+          A._v.trigCfg('analysis.result','',resultModel); -> traitement est ready
+
 
 
 **/
@@ -37,7 +54,7 @@ function (A,d3) {
         analysis : this.analysis.url,
         item : this.item.url
       }, self=this;
-      var url = $.post('http://timeside-dev.telemeta.org/timeside/api/analysis_track/',data,function(a,b,c) {
+      var url = $.post('http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/',data,function(a,b,c) {
         console.log('Ok donc on fait quoi ?');
 
         if (a.result_url && a.result_url.indexOf('http://')===0) {

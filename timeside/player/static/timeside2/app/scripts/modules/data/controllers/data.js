@@ -42,30 +42,56 @@ function (A) {
 
       console.error("Temp : get one item does not work direct from list");
 
-
       var item = _.find(A._i.getOnCfg('allItems'),function(it) {return it.get('uuid')===id});
-      if (item) {
-        A._i.setOnCfg('currentItem',item);
+      if (!item)
+        return console.error('no item found on '+id);
 
-        //new : get all annotations on item
-        return this.getAllAnotationsTracks(item,function(result) {
+      var self=this;
+      A._i.setOnCfg('currentItem',item);
+
+      return this.getAllAnalysisTracks(item,function(resultAnalysis) {
+        item.set('analysisTracksObjects',resultAnalysis);
+         //new : get all annotations on item
+        return self.getAllAnotationsTracks(item,function(result) {
           item.set('annotationTracksObjects',result);
           return A._v.trigCfg('navigate.page','',viewid);
         });
 
-      }
-      return;
+      })
 
-      /*A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.items.getOne),{id : id},null,
-        function(result) {
-          A._i.setOnCfg('currentItem',result);
-          var _viewid = viewid || 'item_view';
-          return A._v.trigCfg('navigate.page','',_viewid);
-        }, function(error) {
-          alert("Non1");
-      });*/
+        
+
+      
     },
 
+    //get all analysis tracks
+    getAllAnalysisTracks:function(item,callback) {
+        var indexAnalysis = 0;
+        var result = [];
+
+        if ( (!item.get('analysis_tracks')) || item.get('analysis_tracks').length==0 )
+          return callback();
+
+        var getNewAnalysis = function() {
+          if (indexAnalysis>=6) {
+            console.error('tmp debug, 6 analysis track limit')
+            return callback(result);
+          }
+
+          if (indexAnalysis >= item.get('analysis_tracks').length)
+            return callback(result);
+
+          var urlAnnotation = item.get('analysis_tracks')[indexAnalysis];
+          $.get(urlAnnotation,function(res) {
+              result.push(res);
+              indexAnalysis++;
+              return getNewAnalysis();
+          });
+        };
+
+        return getNewAnalysis();  
+
+    },
 
     //get all annotations tracks
     getAllAnotationsTracks:function(item,callback) {
