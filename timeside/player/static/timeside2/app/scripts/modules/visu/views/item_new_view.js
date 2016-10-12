@@ -112,12 +112,40 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         +'on peut caller direct \n '+"A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis);"+' et ensuite \n'
         +"resultModel.set('uniqueIDForView',this.uniqueIdAnalysis);A._v.trigCfg('analysis.result','',resultModel);\n"
         +"et item_new_view devrait chopper son résultat et y arriver");
+
+
+
       if (item && item.get('analysisTracksObjects')) {
         var self = this;
+        var tracksToCreate = item.get('analysisTracksObjects').models,
+          indexTrack = 0;
 
-        item.get('analysisTracksObjects').each(function(analysisTrack) {
+        var addNewTrack = function() {
+          if (indexTrack==tracksToCreate.length)
+            return console.log('All tracks loaded!');
+          var track = tracksToCreate[indexTrack];
+          var uniqueId = "FROMSTART_"+indexTrack;
+
+          //1 event for view
+          A._v.trigCfg('analysis.asked','',uniqueId);
+
+          setTimeout(function() {
+            var resultModel = track;
+            resultModel.set('uniqueIDForView',uniqueId),
+            A._v.trigCfg('analysis.result','',resultModel); //will update view
+
+            setTimeout(function() {
+              indexTrack++;
+              return addNewTrack();
+            },200);
+          },300);
+        };
+
+        return addNewTrack();
+
+        /*item.get('analysisTracksObjects').each(function(analysisTrack) {
           console.log('todo : add analysisTrack');
-        });
+        });*/
       }
       
 

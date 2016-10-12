@@ -67,6 +67,8 @@ function (A,d3) {
       });
     };
 
+
+    //here, result is a js obj following analysis_track object
     this.onFinished = function(result) {
       clearInterval(this.interval);
       var resultModel = new A.models.resultAnalysis(result);
