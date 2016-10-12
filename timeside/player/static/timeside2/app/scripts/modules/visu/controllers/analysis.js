@@ -100,6 +100,19 @@ function (A,d3) {
     },
 
     //////////////////////////////////////////////////////////////////////////////////////////////
+    //Delete
+    deleteAnalysisTrack:function(model,callback) {
+      return $.ajax({
+          url : 'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'+model.get('uuid'),
+          type : 'DELETE'/*,
+          data : data*/,
+          success : function(res) {
+            return callback();
+          }
+        });
+    },
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
     //
     onAskAnalysis:function(analysis) {
 

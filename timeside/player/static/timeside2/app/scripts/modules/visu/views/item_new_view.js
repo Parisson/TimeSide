@@ -179,21 +179,30 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
     //Delete a track
 
     /**
         Called by param_simple or parameter item. argument is the trackView.
+        Called for visual tracks
     **/
     onDeleteTrackView:function(trackView) {
       if (!trackView)
         return;
 
-      this.tracks = this.tracks.filter(function(_tv) {
+      var trackModel = trackView.resultAnalysis;
+      var self=this;
+      A._i.getOnCfg('analysisController').deleteAnalysisTrack(trackModel,function() {
+        self.tracks = self.tracks.filter(function(_tv) {
           return _tv!==trackView;
+        });
+
+        trackView.remove(); //@TODO : memory checks
+        trackView.destroy();
       });
 
-      trackView.remove(); //@TODO : memory checks
-      trackView.destroy();
+
+      
     },
 
     onDeleteAnnotationTrackView:function(trackModel) {
@@ -203,7 +212,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
 
-
+    ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
     //Resize a track
     onMouseOverContainerTracks:function(ev) {
@@ -267,7 +276,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
 
 
     ////////////////////////////////////////////////////////////////////////////////////
-    //Add a track --- TRUE VERSIONS!!!
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Add a track --- Model call
 
     //called by analysis controller when it starts loading a track
     //adds a temp track
@@ -297,9 +307,10 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       return this.addTrack(new TrackCanvasView(),"canvas",resultAnalysis);
     },
 
-
+    ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track
+
     addTrack:function(trackView,type,resultAnalysis) {
       this.tracks.push(trackView);
       this.ui.containerOtherTracks.append(trackView.render().$el);

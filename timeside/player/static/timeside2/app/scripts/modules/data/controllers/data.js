@@ -73,7 +73,7 @@ function (A) {
           return callback();
 
         var getNewAnalysis = function() {
-          if (indexAnalysis>=6) {
+          if (indexAnalysis>=12) {
             console.error('tmp debug, 6 analysis track limit')
             return callback(result);
           }
