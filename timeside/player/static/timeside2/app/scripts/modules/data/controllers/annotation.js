@@ -19,6 +19,23 @@ function (A) {
     },
 
     /////////////////////////////////////////////////////////////////////
+    // create a track
+    createTrackAnnotation:function(callback) {
+      var currentItem = A._i.getOnCfg('currentItem');
+      var data = {item : currentItem.get('url')};
+
+      return $.post('http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/',data,function(a,b,c) {
+        var model = new A.models.annotationTrack(a);
+        if (!currentItem.get('annotationTracksObjects'))
+          currentItem.set('annotationTracksObjects',[]);
+        currentItem.get('annotationTracksObjects').add(model);
+
+        return callback(model);
+
+      });
+    },
+
+    /////////////////////////////////////////////////////////////////////
     // delete a track
     deleteTrackAnnotation:function(trackModel,callback) {
      /* var data = {

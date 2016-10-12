@@ -67,6 +67,8 @@ function (A,d3) {
       });
     };
 
+
+    //here, result is a js obj following analysis_track object
     this.onFinished = function(result) {
       clearInterval(this.interval);
       var resultModel = new A.models.resultAnalysis(result);
@@ -95,6 +97,19 @@ function (A,d3) {
 
     onDestroy : function() {
        A._v.offCfg('analysis.ask','',this.onAskAnalysis,this);
+    },
+
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //Delete
+    deleteAnalysisTrack:function(model,callback) {
+      return $.ajax({
+          url : 'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'+model.get('uuid'),
+          type : 'DELETE'/*,
+          data : data*/,
+          success : function(res) {
+            return callback();
+          }
+        });
     },
 
     //////////////////////////////////////////////////////////////////////////////////////////////
