@@ -4,11 +4,12 @@ define([
   './client/processor',
   './client/analysis',
   './client/item',
-  './client/result_analysis'
+  './client/result_analysis',
+  './client/annotation_track'
   
 ],
 
-function (injector,ProcessorModel,AnalysisModel,ItemModel,ResultAnalysisModel) {
+function (injector,ProcessorModel,AnalysisModel,ItemModel,ResultAnalysisModel,AnnotationTrackModel) {
 
   var idGenerator=0;
 
@@ -19,6 +20,7 @@ function (injector,ProcessorModel,AnalysisModel,ItemModel,ResultAnalysisModel) {
     item : ItemModel,
     analysis : AnalysisModel,
     resultAnalysis : ResultAnalysisModel,
+    annotationTrack : AnnotationTrackModel,
    
 
     getNewId:function() {

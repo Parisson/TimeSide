@@ -58,7 +58,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     onClickAction:function(ev) {
       var action = ev.currentTarget.dataset.action;
       var mapAction = {"start" : this.onStartLoading, "add" : this.onAddTrackWaveform, "play" : this.onPlayAudio,
-        "add_annot" : this.onAddTrackAnnotations,"add_new_waveform" : this.onAddTrackWaveformV2, "add_anal" : this.onAddNewAnalysis};
+        "add_annot" : this.askNewAnnotationTrack,"add_new_waveform" : this.onAddTrackWaveformV2, "add_anal" : this.onAddNewAnalysis};
 
       if (mapAction[action])
         (_.bind(mapAction[action],this))();
@@ -71,7 +71,6 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     //Start loading item
     onStartLoading:function() {
       this.$el.find('[data-action="start"]').attr("disabled",true).text('loading');
-      //alert('start loading');
 
       A.vent.trigger('audio:loadGlobalFile',this.item.get('audio_url').mp3);
 
@@ -107,12 +106,6 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           self.addTrack(new TrackAnnotationsView(),"annotation",annotationTrack);
         });
       }
-
-      alert('next todo : check creation analysis back (cf analysis.js controller). En th, en load, on a déjà les analyses, donc '
-        +'on peut caller direct \n '+"A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis);"+' et ensuite \n'
-        +"resultModel.set('uniqueIDForView',this.uniqueIdAnalysis);A._v.trigCfg('analysis.result','',resultModel);\n"
-        +"et item_new_view devrait chopper son résultat et y arriver");
-
 
 
       if (item && item.get('analysisTracksObjects')) {
@@ -170,7 +163,7 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         items : allAnalysis,
         callbackSelect:function(idAnalsysis) {
           var analysis = _.find(allAnalysis,function(_anal) {return _anal.uuid===idAnalsysis});
-          alert('selected : '+JSON.stringify(analysis));
+          
           A._v.trigCfg('analysis.ask','',analysis);
         }
       });
@@ -206,8 +199,21 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     },
 
     onDeleteAnnotationTrackView:function(trackModel) {
+      var trackViewForModel = _.find(this.tracks,function(_trackView) {
+        return _trackView.resultAnalysis===trackModel;
+      });
+      var self=this;
+
       A._i.getOnCfg('annotationControlller').deleteTrackAnnotation(trackModel,function() {
-        alert('suppression track réussie!');
+        
+        if (trackViewForModel) {
+          self.tracks = self.tracks.filter(function(_tv) {
+          return _tv!==trackViewForModel;
+        });
+
+        trackViewForModel.remove(); //@TODO : memory checks
+        trackViewForModel.destroy();
+        }
       })
     },
 
@@ -279,6 +285,9 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
     ////////////////////////////////////////////////////////////////////////////////////
     //Add a track --- Model call
 
+
+    //--------------------------------ANALYSIS -- TRACK
+
     //called by analysis controller when it starts loading a track
     //adds a temp track
     onAnalysisAsked:function(uniqueId) {
@@ -301,10 +310,17 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.waitingTracks = _.without(this.waitingTracks,waiting);
       waiting.$el.remove();
 
-      //alert('todo : load canvas track with true result');
 
       //pour l'instant, on part du principe qu'on est sur du canvas toujours pour ces retours
       return this.addTrack(new TrackCanvasView(),"canvas",resultAnalysis);
+    },
+
+    //--------------------------------ANNOTATION -- TRACK
+    askNewAnnotationTrack:function() {
+      var self=this;
+      A._i.getOnCfg('annotationControlller').createTrackAnnotation(function(model) {
+        return self.addTrack(new TrackAnnotationsView(),"annotation",model);
+      }); 
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -332,14 +348,14 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       return this.addTrack(new TrackWaveformViewV2(),"waveform_v2");
     },
     
-    onAddTrackAnnotations:function() {
+    /*onAddTrackAnnotations:function(model) {
       if (!this.navigatorReady)
         return;
 
 
       return this.addTrack(new TrackAnnotationsView(),"annotation");
     },
-    
+    */
 
     ////////////////////////////////////////////////////////////////////////////////////
     //Life cycle
