@@ -21,6 +21,8 @@
 # Authors : Guillaume Pellerin <yomguy@parisson.com>
 #           Thomas Fillon <thomas@parisson.com>
 
+import json
+
 from django.http import Http404
 from django.views.generic.base import View
 from django.views.generic import DetailView, ListView
@@ -29,6 +31,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics, renderers
 from rest_framework.response import Response
+from rest_framework.reverse import reverse, reverse_lazy
 
 from timeside.server.models import Experience, Item, Result, Processor, SubProcessor
 from timeside.server.models import Preset, Selection, Task, User
@@ -173,7 +176,7 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     queryset = Result.objects.all()
     serializer_class = ResultVisualizationSerializer
 
-    renderer_classes = (PNGRenderer,)
+    renderer_classes = (PNGRenderer,)  # renderers.JSONRenderer,
 
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
@@ -405,8 +408,10 @@ class ItemDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
-        context['Result'] = 'Result'
-        Results = {}
+        ts_item = {'ts_api_root': str(reverse_lazy('api-root', request=self.request)),
+                   'ts_item_uuid': self.get_object().uuid
+                  }
+        context['ts_item'] = json.dumps(ts_item)
         return context
 
 
@@ -421,6 +426,15 @@ class ItemTranscode(DetailView):
 
         if extension not in TS_ENCODERS_EXT:
             raise Http404('Unknown export file extension: %s' % extension)
+
+        # Extract transcoding parameters from request
+        start = float(request.GET.get('start', 0))
+        stop = float(request.GET.get('stop', -1))
+        if stop > start:
+            duration = stop - start
+        else:
+            duration = None
+        parameters = {'start': start, 'duration': duration}
 
         encoder = TS_ENCODERS_EXT[extension]
         mime_type = timeside.core.get_processor(encoder).mime_type()
