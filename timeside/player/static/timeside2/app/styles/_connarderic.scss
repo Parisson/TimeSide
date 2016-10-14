@@ -24,38 +24,9 @@
   }
 }
 
-.ts-content .edit-track {
-	    position: relative !important; 
-}
-
 //////////////////////////////////
 //Below : d3 sample
 .waveform h2 {
   margin-left:  40px;
   font-size:    36px;
-}
-
-.track-annotations {
-	background-color: antiquewhite;
-    margin-bottom: 2px;
-}
-
-[data-connard="annotation_title"] {
-	background-color: aqua;			
-
-	button {
-		&.active {
-			background-color: red;
-		}	
-	}	
-}
-
-.container_track_annotations {
-	rect.extent {
-		opacity: 0.1;
-
-		&.creation-mode {
-			opacity : 0.5;
-		}
-	}
 }

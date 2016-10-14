@@ -15,6 +15,9 @@
   }
 
   .other-tracks {
+    .track-container {
+      position:relative;
+    } 
     .svg{
       position:relative;
       border-bottom:2px solid transparent;
@@ -59,8 +62,7 @@
   .parameters {
     padding: 10px;
     border:2px solid $darkColor;
-    border-top:none;
-    
+  
     //hidden by default
     display:none;
     
@@ -86,11 +88,12 @@
   .parameters-visible {
     z-index: 10;
     position: relative;
-    background: white;
+    //background: white;
     //aesthetic tricks 
     .svg{
       border-color:$darkColor;
     }
+
     .edit-track {
       border:2px solid $darkColor;
       background:white;
@@ -102,6 +105,7 @@
     //parameters visible
     .parameters {
       display:flex;
+      background: #fff;
     }
   }
 
@@ -156,19 +160,6 @@
     }
     g rect {
       fill:     $waveFormColor;
-    }
-  }
-
-  .track-annotations {
-    text {
-      alignment-baseline:middle;
-      fill: white;
-    }
-    .annotation {
-      opacity:0.5;
-    }
-    .active {
-      opacity:1;
     }
   }
 }
