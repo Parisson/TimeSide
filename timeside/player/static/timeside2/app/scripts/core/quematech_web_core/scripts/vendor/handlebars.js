@@ -13,10 +13,11 @@ define([
   'text!#qt_core/config/assets/svg/stop.svg',
   'text!#qt_core/config/assets/svg/volume.svg',
   'text!#qt_core/config/assets/svg/settings.svg',
+  'text!#qt_core/config/assets/svg/add.svg'
 ],
 
 function (Handlebars, config, injector, _,$,CfgClient, 
-  arrowBottom,close, etc, loop, play, stop, volume,settings) {
+  arrowBottom,close, etc, loop, play, stop, volume,settings,add) {
   
   'use strict';
   
@@ -49,6 +50,9 @@ function (Handlebars, config, injector, _,$,CfgClient,
         break;
       case 'volume' :
         toReturn = _.template(volume)();
+        break;
+      case 'add' :
+        toReturn = _.template(add)();
         break;
       default :
         toReturn = '';

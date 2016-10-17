@@ -114,6 +114,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       'mousemove .container_track_annotations' : 'onMouseMove',
        'mousedown .container_track_annotations' : 'onMouseDown',
       'mouseup .container_track_annotations' : 'onMouseUp',
+      'click [data-layout="show_parameters"]' : 'onClickShowParameters',
 
       'click [data-layout="delete_annotation_track"]' : 'onClickDeleteAnnotationTrack'
     },
@@ -189,6 +190,9 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.onNavigatorNewWindow();
     },
 
+    onClickShowParameters:function() {
+      this.$el.toggleClass('parameters-visible');
+    },
     ////////////////////////////////////////////////////////////////////////////////////
     //Listen for mouse over - always on, but used only when we have a selected element
     //--- EDIT ANNOTATION DRAG && DROP left & right
@@ -284,16 +288,18 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       var brush = this.$el.find('rect.extent');
       if (newModeIsCreation) {
-        this.ui.btnCreateNewAnnotation.addClass('active');
+        this.$el.addClass("creating-new-annotation");
+        //this.ui.btnCreateNewAnnotation.addClass('active');
         brush.attr('class','extent creation-mode');
         this.$el.find('.viewport').css('display','auto');
-        this.ui.confirmAnnotationCreationForm.removeClass('hidden');
+        //this.ui.confirmAnnotationCreationForm.removeClass('hidden');
       }
       else {
-        this.ui.btnCreateNewAnnotation.removeClass('active'); 
+        //this.ui.btnCreateNewAnnotation.removeClass('active'); 
+        this.$el.removeClass("creating-new-annotation");
         brush.attr('class','extent');
         this.$el.find('.viewport').css('display','none');
-        this.ui.confirmAnnotationCreationForm.addClass('hidden');
+        //this.ui.confirmAnnotationCreationForm.addClass('hidden');
       }
       this.isModeCreation = newModeIsCreation;
     },
