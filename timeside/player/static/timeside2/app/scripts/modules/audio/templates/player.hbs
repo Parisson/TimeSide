@@ -1,4 +1,4 @@
-<ul class="horizontal y-center">
+<ul class="horizontal y-stretch">
   <li class="active">
     <button class="button" data-layout="action" data-action="stop">
       <span class="content">{{#sprite . "stop"}}{{/sprite}}</span>
@@ -9,8 +9,8 @@
       <span class="content">{{#sprite . "play"}}{{/sprite}}</span>
     </button>
   </li>
-  <li>
-      <label data-layout="time-indicator">time</label>
+  <li class="horizontal y-stretch">
+      <label class="horizontal x-center y-center time-indicator" data-layout="time-indicator">time</label>
   </li>
   <li>
     <button class="button" data-layout="action" data-action="loop">

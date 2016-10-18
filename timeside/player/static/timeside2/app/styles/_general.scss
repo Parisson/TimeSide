@@ -69,6 +69,18 @@ html {
   }
   .flexible {flex:1;}
 
+.audio-player {
+  .button.active {
+    background:$darkColor;color:white;
+    path {
+      fill:white;
+    }
+  }
+  .time-indicator {
+    min-width: 100px;
+    border: 1px solid #EEE;
+  }
+}
 //APP_SIZE
 //----------------------------------------------------------------
 
@@ -369,7 +381,8 @@ html {
     }
   }
   .expand {
-    z-index: 1;
+    z-index: 1; background: white;
+    padding: 10px;
     @include hidden();
     &, ul {
       position:absolute;top:100%;

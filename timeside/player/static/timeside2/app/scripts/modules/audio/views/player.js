@@ -35,16 +35,21 @@ function (Marionette,A,BaseQeopaView) {
     loop:function() {
       this.isLooping = !this.isLooping; //undefined -> true -> false
       A._i.setOnCfg('playerIsLooping',this.isLooping);
-      this.$el.find('[data-action="loop"]').css('background-color', this.isLooping ? 'red' : 'white');
+      if(this.isLooping)
+        this.$el.find('[data-action="loop"]').addClass("active");
+      else
+        this.$el.find('[data-action="loop"]').removeClass("active");
 
     },
 
     play:function() {
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
+      this.$el.find('[data-action="play"]').addClass("active");
     },
 
     stop:function() {
       A.vent.trigger('audio:stop',this.item.get('audio_url').mp3);
+      this.$el.find('[data-action="play"]').removeClass("active");
     },
 
 
