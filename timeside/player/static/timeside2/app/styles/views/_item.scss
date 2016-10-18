@@ -1,5 +1,7 @@
 .ts-content {
-  
+  canvas {
+    display: block;
+  }
   //CONTROLS
   .audio-player {
     li {
@@ -15,12 +17,14 @@
   }
 
   .other-tracks {
+    > div {
+      margin-bottom: 2px;
+    }
     .track-container {
       position:relative;
     } 
     .svg{
       position:relative;
-      border-bottom:2px solid transparent;
     }
   }
 
