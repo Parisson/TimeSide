@@ -1,6 +1,7 @@
 name: timeside
 channels:
   - piem
+  - yaafe
 dependencies:
   - aubio  # in piem channel (optionnal)
   - h5py
@@ -9,6 +10,7 @@ dependencies:
   - mysql-python
   - networkx
   - numpy
+  - pandas
   - pillow
   - python=2.7
   - pyyaml
@@ -18,6 +20,7 @@ dependencies:
   - pytables  # named tables in Pypi ...
   - traits
   - Werkzeug
+  - yaafe  # in yaafe channel (optionnal)
   - pip:
       - django-angular
       - django-bootstrap-pagination
