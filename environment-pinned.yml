@@ -1,8 +1,8 @@
 name: app
-channels: !!python/tuple
-- !!python/unicode 'yaafe'
-- !!python/unicode 'piem'
-- !!python/unicode 'defaults'
+channels:
+- yaafe
+- piem
+- defaults
 dependencies:
 - _nb_ext_conf=0.3.0=py27_0
 - anaconda-client=1.5.2=py27_0
