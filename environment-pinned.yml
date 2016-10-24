@@ -6,6 +6,7 @@ channels:
 dependencies:
 - _nb_ext_conf=0.3.0=py27_0
 - anaconda-client=1.5.2=py27_0
+- aubio=0.4.2=np110py27_1
 - backports=1.0=py27_0
 - backports_abc=0.4=py27_0
 - cairo=1.12.18=6
@@ -64,7 +65,6 @@ dependencies:
 - pathlib2=2.1.0=py27_0
 - pexpect=4.0.1=py27_0
 - pickleshare=0.7.4=py27_0
-- piem::aubio=0.4.2=np110py27_1
 - pillow=3.4.2=py27_0
 - pip=8.1.2=py27_0
 - pixman=0.32.6=0
@@ -104,16 +104,16 @@ dependencies:
 - wheel=0.29.0=py27_0
 - widgetsnbextension=1.2.6=py27_0
 - xz=5.2.2=0
-- yaafe::argtable2=2.13=0
-- yaafe::eigen=3.2.7=0
-- yaafe::fftw=3.3.4=0
-- yaafe::lapack=3.5.0=0
-- yaafe::libflac=1.3.1=0
-- yaafe::libmpg123=1.23.1=0
-- yaafe::libogg=1.3.2=0
-- yaafe::libsndfile=1.0.26=0
-- yaafe::libvorbis=1.3.5=0
-- yaafe::yaafe=0.70=py27_0
+- argtable2=2.13=0
+- eigen=3.2.7=0
+- fftw=3.3.4=0
+- lapack=3.5.0=0
+- libflac=1.3.1=0
+- libmpg123=1.23.1=0
+- libogg=1.3.2=0
+- libsndfile=1.0.26=0
+- libvorbis=1.3.5=0
+- yaafe=0.70=py27_0
 - yaml=0.1.6=0
 - zeromq=4.1.5=0
 - zlib=1.2.8=3
