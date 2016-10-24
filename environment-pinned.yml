@@ -153,4 +153,3 @@ dependencies:
   - tables==3.2.2
   - uwsgi==2.0.14
   - watchdog==0.8.3
-prefix: /opt/miniconda/envs/app
