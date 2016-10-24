@@ -59,6 +59,8 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'}
         }
 
+        read_only_fields = ('uuid',)
+
     def get_url(self, obj):
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
@@ -267,6 +269,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
+        read_only_fields = ('uuid',)
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
@@ -279,6 +282,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
             'presets': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
+        read_only_fields = ('uuid',)
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -313,6 +317,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'},
             'processor': {'lookup_field': 'pid'}
         }
+        read_only_fields = ('uuid',)
 
     def validate_parameters(self, attrs, source):
 
@@ -341,11 +346,13 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Result
-        fields = ('uuid', 'item', 'preset', 'status', 'hdf5', 'file')
+        fields = ('uuid', 'url', 'item', 'preset', 'status', 'hdf5', 'file')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},
-            'preset': {'lookup_field': 'uuid'}}
+            'preset': {'lookup_field': 'uuid'}
+        }
+        read_only_fields = ('uuid',)
 
 
 class ResultVisualizationSerializer(serializers.BaseSerializer):
