@@ -88,13 +88,13 @@ class AubioMfcc(Analyzer):
 
         fftgrain = self.pvoc(frames)
         coeffs = self.mfcc(fftgrain)
-        self.mfcc_results = np.vstack((self.mfcc_results, coeffs))
+        self.mfcc_results = np.nan_to_num(np.vstack((self.mfcc_results, coeffs)))
         self.block_read += 1
         return frames, eod
 
     def post_process(self):
-        mfcc = self.new_result(data_mode='value', time_mode='framewise')
-        mfcc.parameters = dict(n_filters=self.n_filters,
-                               n_coeffs=self.n_coeffs)
-        mfcc.data_object.value = self.mfcc_results
-        self.add_result(mfcc)
+        mfcc_res = self.new_result(data_mode='value', time_mode='framewise')
+        mfcc_res.parameters = dict(n_filters=self.n_filters,
+                                   n_coeffs=self.n_coeffs)
+        mfcc_res.data_object.value = self.mfcc_results
+        self.add_result(mfcc_res)
