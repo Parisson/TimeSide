@@ -34,9 +34,9 @@ class TestAnalyzerResult(unittest.TestCase):
         pass
 
 # Get good and bad types for AnalyzerResult.data_object.data.value
-from timeside.core.analyzer import numpy_data_types as good_dtypes
-good_numpy_data_types = [str(dtype)[13:-2] for dtype in good_dtypes]
-bad_numpy_data_types = [
+from timeside.core.analyzer import NUMPY_DATA_TYPES as GOOD_DTYPES
+GOOD_NUMPY_DATA_TYPES = [str(dtype)[13:-2] for dtype in GOOD_DTYPES]
+BAD_NUMPY_DATA_TYPES = [
     # not understood by json or yaml
     'float128',
     # Not supported by h5py for version < 2.2
@@ -50,7 +50,7 @@ bad_numpy_data_types = [
     'timedelta64',
     'unicode_',
     'string_'
-    ]
+]
 
 
 class TestAnalyzerResultBadType(TestAnalyzerResult):
@@ -74,12 +74,13 @@ class TestAnalyzerResultBadType(TestAnalyzerResult):
         setattr(cls, test_method.__name__, test_method)
 
 # Add tests for each type in bad_numpy_data_types
-for numpy_data_type in bad_numpy_data_types:
+for numpy_data_type in BAD_NUMPY_DATA_TYPES:
     TestAnalyzerResultBadType.add_method(numpy_data_type)
 
 
 class TestAnalyzerResultGoodType(TestAnalyzerResult):
     """ test AnalyzerResult on good numpy data type"""
+
     def testOnFloat(self):
         "float result"
         self.result.data_object.value = 1.2
@@ -148,7 +149,7 @@ class TestAnalyzerResultGoodType(TestAnalyzerResult):
         setattr(cls, test_method.__name__, test_method)
 
 # Add tests for each type in good_numpy_data_types
-for numpy_data_type in good_numpy_data_types:
+for numpy_data_type in GOOD_NUMPY_DATA_TYPES:
     TestAnalyzerResultGoodType.add_method(numpy_data_type)
 
 
@@ -166,6 +167,7 @@ class TestAnalyzerResultNumpy(TestAnalyzerResultGoodType):
 
 
 class LevelAnalyzer(object):
+
     def testOnLevelAnaylyzer(self):
         from timeside.core import get_processor
         from timeside.core.tools.test_samples import samples
@@ -184,7 +186,7 @@ class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
     def tearDown(self):
         if isinstance(self.result, AnalyzerResult):
             results = AnalyzerResultContainer([self.result])
-        elif isinstance(self.result, AnalyzerResultContainer) :
+        elif isinstance(self.result, AnalyzerResultContainer):
             results = self.result
         else:
             raise(TypeError, "Wrong type for self.result")
@@ -202,8 +204,10 @@ class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
         self.assertEqual(results, from_results)
         h5_file.close()
 
+
 class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
     """ test AnalyzerResult yaml serialize """
+
     def tearDown(self):
         results = AnalyzerResultContainer(self.result)
         r_yaml = results.to_yaml()
@@ -218,8 +222,10 @@ class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
         self.assertEqual(type(self.result.data_object.frame_metadata),
                          type(from_results['foo_bar'].data_object.frame_metadata))
 
+
 class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
     """ test AnalyzerResult xml serialize """
+
     def tearDown(self):
         results = AnalyzerResultContainer([self.result])
         r_xml = results.to_xml()
@@ -233,12 +239,13 @@ class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
             print '%15s' % 'from xml:',
             print from_results
 
-        #for i in range(len(d_xml)):
+        # for i in range(len(d_xml)):
         self.assertEqual(results, from_results)
 
 
 class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
     """ test AnalyzerResult """
+
     def tearDown(self):
         results = AnalyzerResultContainer([self.result])
         try:

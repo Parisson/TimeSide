@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2007-2013 Parisson SARL
+# Copyright (c) 2007-2016 Parisson SARL
 
 # This file is part of TimeSide.
 
@@ -35,6 +35,7 @@ import numpy as np
 from collections import OrderedDict
 import h5py
 import simplejson as json
+import pandas
 
 import os
 
@@ -47,7 +48,11 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from py_sonicvisualiser import SVEnv
 
-numpy_data_types = [
+import xml.etree.ElementTree as ET
+import ast
+from datetime import datetime
+
+NUMPY_DATA_TYPES = [
     #'float128',
     'float64',
     'float32',
@@ -69,8 +74,28 @@ numpy_data_types = [
     #'complex128',
     #'complex64',
 ]
-numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
-# numpy_data_types += [np.ndarray]
+NUMPY_DATA_TYPES = [getattr(np, data_type) for data_type in NUMPY_DATA_TYPES]
+# NUMPY_DATA_TYPES += [np.ndarray]
+
+
+def dict_to_xml(dictionary):
+    root = ET.Element('Metadata')
+
+    for key in dictionary.keys():
+        child = ET.SubElement(root, key)
+        child.text = repr(dictionary[key])
+
+    return ET.tostring(root, encoding="utf-8", method="xml")
+
+
+def dict_from_xml(xml_string):
+    dictionary = {}
+    root = ET.fromstring(xml_string)
+    for child in root:
+        key = child.tag
+        if child.text:
+            dictionary[key] = ast.literal_eval(child.text)
+    return dictionary
 
 
 class Parameters(dict):
@@ -79,23 +104,10 @@ class Parameters(dict):
         return self
 
     def to_xml(self):
-        import xml.etree.ElementTree as ET
-        root = ET.Element('Metadata')
-
-        for key in self.keys():
-            child = ET.SubElement(root, key)
-            child.text = repr(self[key])
-
-        return ET.tostring(root, encoding="utf-8", method="xml")
+        return dict_to_xml(self)
 
     def from_xml(self, xml_string):
-        import xml.etree.ElementTree as ET
-        import ast
-        root = ET.fromstring(xml_string)
-        for child in root:
-            key = child.tag
-            if child.text:
-                self[key] = ast.literal_eval(child.text)
+        self = dict_from_xml(xml_string)
 
     def to_hdf5(self, h5group):
         hdf5.dict_to_hdf5(self, h5group)
@@ -158,9 +170,6 @@ class MetadataObject(Parameters):
             setattr(self, key, value)
 
     def __setattr__(self, name, value):
-        if name not in self._default_value.keys():
-            raise AttributeError("%s is not a valid attribute in %s" %
-                                 (name, self.__class__.__name__))
         try:
             super(MetadataObject, self).__setattr__(name, value)
         except AttributeError:
@@ -385,7 +394,7 @@ class DataObject(MetadataObject):
         # Set Data with the proper type
         if name == 'value':
             value = np.asarray(value)
-            if value.dtype.type not in numpy_data_types:
+            if value.dtype.type not in NUMPY_DATA_TYPES:
                 raise TypeError(
                     'Result Data can not accept type %s for %s' %
                     (value.dtype.type, name))
@@ -438,7 +447,6 @@ class DataObject(MetadataObject):
         return as_dict
 
     def to_xml(self):
-        import xml.etree.ElementTree as ET
         root = ET.Element('Metadata')
 
         for key in self.keys():
@@ -453,8 +461,6 @@ class DataObject(MetadataObject):
         return ET.tostring(root, encoding="utf-8", method="xml")
 
     def from_xml(self, xml_string):
-        import xml.etree.ElementTree as ET
-        import ast
         root = ET.fromstring(xml_string)
         for child in root:
             key = child.tag
@@ -555,9 +561,7 @@ class AnalyzerResult(MetadataObject):
     """
 
     # Define default values
-    _default_value = OrderedDict([('id_metadata', None),
-                                  ('data_object', None),
-                                  ('audio_metadata', None),
+    _default_value = OrderedDict([('data_object', None),
                                   ('parameters', None)
                                   ])
 
@@ -565,12 +569,30 @@ class AnalyzerResult(MetadataObject):
         super(AnalyzerResult, self).__init__()
         self._data_mode = data_mode
         self._time_mode = time_mode
-        self.id_metadata = IdMetadata()
-        self.audio_metadata = AudioMetadata()
+        self.id_metadata = {
+            'date': datetime.now().replace(microsecond=0).isoformat(' '),
+            'version': timeside.core.__version__,
+            'author': 'TimeSide',
+            'id': None,
+            'name': None,
+            'unit': None,
+            'description': None,
+            'proc_uuid': None
+        }
+        self.audio_metadata = {
+            'uri': '',
+            'start': 0,
+            'duration': None,
+            'is_segment': None,
+            'sha1': '',
+            'channels': None,
+            'channelsManagement': ''
+        }
         self.parameters = Parameters()
         self.data_object = data_objet_class(data_mode, time_mode)()
-
-#        self.label_metadata = LabelMetadata()
+        self.frame_metadata = None
+        self.label_metada = None
+        self.label_type = None
 
     def __setattr__(self, name, value):
         if name in ['_data_mode', '_time_mode']:
@@ -598,10 +620,9 @@ class AnalyzerResult(MetadataObject):
         # TODO : check if it can be simplified now
 
     def to_xml(self):
-        import xml.etree.ElementTree as ET
         root = ET.Element('result')
-        root.metadata = {'name': self.id_metadata.name,
-                         'id': self.id_metadata.id}
+        root.metadata = {'name': self.id_metadata['name'],
+                         'id': self.id_metadata['id']}
 
         for name in ['data_mode', 'time_mode']:
             child = ET.SubElement(root, name)
@@ -613,12 +634,16 @@ class AnalyzerResult(MetadataObject):
             child = ET.fromstring(self[key].to_xml())
             child.tag = key
             root.append(child)
+        # id_metadata, audio_metadata
+        for key in ['id_metadata', 'audio_metadata']:
+            child = ET.fromstring(dict_to_xml(self.__getattribute__(key)))
+            child.tag = key
+            root.append(child)
 
         return ET.tostring(root, encoding="utf-8", method="xml")
 
     @staticmethod
     def from_xml(xml_string):
-        import xml.etree.ElementTree as ET
         root = ET.fromstring(xml_string)
 
         data_mode_child = root.find('data_mode')
@@ -627,10 +652,12 @@ class AnalyzerResult(MetadataObject):
                                 time_mode=time_mode_child.text)
         for child in root:
             key = child.tag
-            if key not in ['data_mode', 'time_mode']:
+            if key in ['id_metadata', 'audio_metadata']:
+                child_string = ET.tostring(child)
+                result[key] = dict_from_xml(child_string)
+            elif key not in ['data_mode', 'time_mode']:
                 child_string = ET.tostring(child)
                 result[key].from_xml(child_string)
-
         return result
 
     def to_hdf5(self, h5_file):
@@ -715,28 +742,28 @@ class AnalyzerResult(MetadataObject):
     @property
     def time(self):
         if self._time_mode == 'global':
-            return self.audio_metadata.start
+            return self.audio_metadata['start']
         else:
-            return self.audio_metadata.start + self.data_object.time
+            return self.audio_metadata['start'] + self.data_object.time
 
     @property
     def duration(self):
         if self._time_mode == 'global':
-            return self.audio_metadata.duration
+            return self.audio_metadata['duration']
         else:
             return self.data_object.duration
 
     @property
     def id(self):
-        return self.id_metadata.id
+        return self.id_metadata['id']
 
     @property
     def name(self):
-        return self.id_metadata.name
+        return self.id_metadata['name']
 
     @property
     def unit(self):
-        return self.id_metadata.unit
+        return self.id_metadata['unit']
 
 
 class ValueObject(DataObject):
@@ -1081,7 +1108,7 @@ class AnalyzerResultContainer(dict):
             return
         # Check result
         if not isinstance(analyzer_result, AnalyzerResult):
-            raise TypeError('Only AnalyzerResult can be added')
+            raise TypeError('Only AnalyzerResult can be added not %s' % type(analyzer_result))
 
         if (not analyzer_result.id in self) or overwrite:
             self[analyzer_result.id] = analyzer_result
@@ -1094,7 +1121,7 @@ class AnalyzerResultContainer(dict):
         if self.list_id().count(result_id) > 1:
             raise ValueError('Result id shared by several procesors in the pipe. Get result from the processor instead')
         for res in self.values():
-            if res.id_metadata.id == result_id:
+            if res.id_metadata['id'] == result_id:
                 return res
         raise KeyError('No such result id: %s' % result_id)
 
@@ -1103,7 +1130,6 @@ class AnalyzerResultContainer(dict):
 
     def to_xml(self, output_file=None):
 
-        import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
         root = ET.Element('timeside')
 
@@ -1118,7 +1144,6 @@ class AnalyzerResultContainer(dict):
             return xml_str
 
     def from_xml(self, xml_string):
-        import xml.etree.ElementTree as ET
 
         # TODO : from file
         # tree = ET.parse(xml_file)
@@ -1212,7 +1237,6 @@ class AnalyzerResultContainer(dict):
                 res.to_hdf5(h5_file)
 
     def from_hdf5(self, input_file):
-        import h5py
         # TODO : enable import for yaafe hdf5 format
 
         # Open HDF5 file for reading and get results
@@ -1239,6 +1263,10 @@ class Analyzer(Processor):
 
     def __init__(self):
         super(Analyzer, self).__init__()
+        self.result_channels = None
+        self.result_samplerate = None
+        self.result_blocksize = None
+        self.result_stepsize = None
 
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
@@ -1279,44 +1307,44 @@ class Analyzer(Processor):
 
         Attributes
         ----------
-        data_object : MetadataObject
-        id_metadata : MetadataObject
-        audio_metadata : MetadataObject
-        frame_metadata : MetadataObject
-        label_metadata : MetadataObject
+        data_object : Pandas.DataFrame
+        id_metadata : dict
+        audio_metadata : dict
+        frame_metadata : dict
+        label_metadata : dict
         parameters : dict
 
         '''
-
-        from datetime import datetime
 
         result = AnalyzerResult(data_mode=data_mode,
                                 time_mode=time_mode)
 
         # Automatically write known metadata
-        result.id_metadata.date = datetime.now().replace(
-            microsecond=0).isoformat(' ')
-        result.id_metadata.version = timeside.core.__version__
-        result.id_metadata.author = 'TimeSide'
-        result.id_metadata.id = self.id()
-        result.id_metadata.name = self.name()
-        result.id_metadata.description = self.description()
-        result.id_metadata.unit = self.unit()
-        result.id_metadata.proc_uuid = self.uuid()
+        result.id_metadata.update({
+            'id': self.id(),
+            'name': self.name(),
+            'description': self.description(),
+            'unit': self.unit(),
+            'proc_uuid': self.uuid()
+        })
 
-        result.audio_metadata.uri = self.mediainfo()['uri']
-        result.audio_metadata.sha1 = self.mediainfo()['sha1']
-        result.audio_metadata.start = self.mediainfo()['start']
-        result.audio_metadata.duration = self.mediainfo()['duration']
-        result.audio_metadata.is_segment = self.mediainfo()['is_segment']
-        result.audio_metadata.channels = self.channels()
+        result.audio_metadata.update({
+            'uri': self.mediainfo()['uri'],
+            'sha1': self.mediainfo()['sha1'],
+            'start': self.mediainfo()['start'],
+            'duration': self.mediainfo()['duration'],
+            'is_segment': self.mediainfo()['is_segment'],
+            'channels': self.channels()
+        })
 
-        result.parameters = Parameters(json.loads(self.get_parameters()))
+        result.parameters = json.loads(self.get_parameters())
 
         if time_mode == 'framewise':
-            result.data_object.frame_metadata.samplerate = self.result_samplerate
-            result.data_object.frame_metadata.blocksize = self.result_blocksize
-            result.data_object.frame_metadata.stepsize = self.result_stepsize
+            result.frame_metadata.update({
+                'samplerate': self.result_samplerate,
+                'blocksize': self.result_blocksize,
+                'stepsize': self.result_stepsize
+            })
 
         return result
 
