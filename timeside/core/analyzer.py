@@ -1183,44 +1183,6 @@ class AnalyzerResultContainer(dict):
                     res[key].from_dict(res_json[key])
             self.add(res, overwrite=True)
 
-    def to_yaml(self, output_file=None):
-        # if data_list == None: data_list = self.results
-        import yaml
-
-        # Define Specialize Yaml encoder for numpy array
-        def numpyArray_representer(dumper, obj):
-            return dumper.represent_mapping(u'!numpyArray',
-                                            {'dtype': obj.dtype.__str__(),
-                                             'array': obj.tolist()})
-
-        yaml.add_representer(np.ndarray, numpyArray_representer)
-
-        yaml_str = yaml.dump([res.as_dict() for res in self.values()])
-        if output_file:
-            open(output_file, 'w').write(yaml_str)
-        else:
-            return yaml_str
-
-    def from_yaml(self, yaml_str):
-        import yaml
-
-        # Define Specialize Yaml encoder for numpy array
-        def numpyArray_constructor(loader, node):
-            mapping = loader.construct_mapping(node, deep=True)
-            return np.asarray(mapping['array'], dtype=mapping['dtype'])
-
-        yaml.add_constructor(u'!numpyArray', numpyArray_constructor)
-
-        results_yaml = yaml.load(yaml_str)
-        for res_yaml in results_yaml:
-            res = AnalyzerResult(data_mode=res_yaml['data_mode'],
-                                 time_mode=res_yaml['time_mode'])
-            for key in res_yaml.keys():
-                if key not in ['data_mode', 'time_mode']:
-                    res[key].from_dict(res_yaml[key])
-
-            self.add(res, overwrite=True)
-
     def to_numpy(self, output_file=None):
         if output_file:
             np.save(output_file, self)

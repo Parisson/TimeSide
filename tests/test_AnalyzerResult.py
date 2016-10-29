@@ -205,24 +205,6 @@ class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
         h5_file.close()
 
 
-class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
-    """ test AnalyzerResult yaml serialize """
-
-    def tearDown(self):
-        results = AnalyzerResultContainer(self.result)
-        r_yaml = results.to_yaml()
-        if verbose:
-            print 'to yaml:'
-            print r_yaml
-        from_results = AnalyzerResultContainer()
-        from_results.from_yaml(r_yaml)
-        if verbose:
-            print '%15s' % 'from yaml:',
-            print from_results
-        self.assertEqual(type(self.result.data_object.frame_metadata),
-                         type(from_results['foo_bar'].data_object.frame_metadata))
-
-
 class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
     """ test AnalyzerResult xml serialize """
 
