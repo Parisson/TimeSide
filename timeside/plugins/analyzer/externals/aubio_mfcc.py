@@ -74,7 +74,7 @@ class AubioMfcc(Analyzer):
     def process(self, frames, eod=False):
         fftgrain = self.pvoc(frames)
         coeffs = self.mfcc(fftgrain)
-        self.mfcc_results = numpy.vstack((self.mfcc_results, coeffs))
+        self.mfcc_results = numpy.nan_to_num(numpy.vstack((self.mfcc_results, coeffs)))
         self.block_read += 1
         return frames, eod
 

@@ -25,11 +25,14 @@ def get_dependencies(env_yml_file):
     with open_here(env_yml_file) as f:
         environment = yaml.load(f)
     conda_dependencies = []
-
+    package_map = {
+        'pytables': 'tables',  # insert 'tables' instead of 'pytables'
+        'yaafe': ''
+        }
     for dep in environment['dependencies']:
         if isinstance(dep, str) and not(dep.startswith('python')):
-            if dep.startswith('pytables'):
-                conda_dependencies.append(dep[2:])  # insert 'tables' instead of 'pytables'
+            if dep in package_map:
+                conda_dependencies.append(package_map[dep])  
             else:
                 conda_dependencies.append(dep)
         elif isinstance(dep, dict) and 'pip' in dep:

@@ -114,7 +114,7 @@ class Dated(models.Model):
 
 class UUID(models.Model):
 
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255)
+    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
 
     class Meta:
         abstract = True
