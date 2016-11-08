@@ -35,7 +35,7 @@ import numpy as np
 from collections import OrderedDict
 import h5py
 import simplejson as json
-import pandas
+import pandas as pd
 
 import os
 
@@ -88,7 +88,7 @@ def dict_to_xml(dictionary):
     return ET.tostring(root, encoding="utf-8", method="xml")
 
 
-def dict_from_xml(xml_string):
+def xml_to_dict(xml_string):
     dictionary = {}
     root = ET.fromstring(xml_string)
     for child in root:
@@ -107,7 +107,7 @@ class Parameters(dict):
         return dict_to_xml(self)
 
     def from_xml(self, xml_string):
-        self = dict_from_xml(xml_string)
+        self = xml_to_dict(xml_string)
 
     def to_hdf5(self, h5group):
         hdf5.dict_to_hdf5(self, h5group)
@@ -530,7 +530,7 @@ def data_objet_class(data_mode='value', time_mode='framewise'):
         raise ValueError('Wrong arguments')
 
 
-class AnalyzerResult(MetadataObject):
+class AnalyzerResult(object):
 
     """
     Object that contains the metadata and parameters of an analyzer process
@@ -565,10 +565,22 @@ class AnalyzerResult(MetadataObject):
                                   ('parameters', None)
                                   ])
 
+    VALID_DATA_MODES = ['value', 'label', 'custom']
+    VALID_TIME_MODES = ['global', 'event', 'segment', 'framewise']
+
     def __init__(self, data_mode='value', time_mode='framewise'):
-        super(AnalyzerResult, self).__init__()
-        self._data_mode = data_mode
-        self._time_mode = time_mode
+
+        if data_mode in self.VALID_DATA_MODES:
+            self.data_mode = data_mode
+        else:
+            raise ValueError('Wrong arguments for data_mode must be in %s' %
+                             self.VALID_DATA_MODES)
+        if time_mode in self.VALID_TIME_MODES:
+            self.time_mode = time_mode
+        else:
+            raise ValueError('Wrong arguments for time_mode must be in %s' %
+                             self.VALID_TIME_MODES)
+
         self.id_metadata = {
             'date': datetime.now().replace(microsecond=0).isoformat(' '),
             'version': timeside.core.__version__,
@@ -588,36 +600,48 @@ class AnalyzerResult(MetadataObject):
             'channels': None,
             'channelsManagement': ''
         }
-        self.parameters = Parameters()
-        self.data_object = data_objet_class(data_mode, time_mode)()
+        self.parameters = {}
+        self.data_object = {
+
+            'data': None,
+            'time': None,
+            'duration': None
+        }
         self.frame_metadata = None
         self.label_metada = None
         self.label_type = None
 
-    def __setattr__(self, name, value):
-        if name in ['_data_mode', '_time_mode']:
-            super(MetadataObject, self).__setattr__(name, value)
-            return
+        if self.time_mode == 'framewise':
+            self.frame_metadata = {
+                'samplerate': None,
+                'blocksize': None,
+                'stepsize': None
+            }
 
-        elif name in self.keys():
-            if isinstance(value, dict) and value:
-                for (sub_name, sub_value) in value.items():
-                    self[name][sub_name] = sub_value
-                return
+    # def __setattr__(self, name, value):
+    #     if name in ['_data_mode', '_time_mode']:
+    #         super(MetadataObject, self).__setattr__(name, value)
+    #         return
 
-        super(AnalyzerResult, self).__setattr__(name, value)
+    #     elif name in self.keys():
+    #         if isinstance(value, dict) and value:
+    #             for (sub_name, sub_value) in value.items():
+    #                 self[name][sub_name] = sub_value
+    #             return
 
-    def __len__(self):
-        if self.data_mode == 'value':
-            return len(self.data_object.value)
-        else:
-            return len(self.data_object.label)
+    #     super(AnalyzerResult, self).__setattr__(name, value)
 
-    def as_dict(self):
-        return dict([(key, self[key].as_dict())
-                     for key in self.keys()] +  # if hasattr(self[key], 'as_dict')] +
-                    [('data_mode', self.data_mode), ('time_mode', self.time_mode)])
-        # TODO : check if it can be simplified now
+    # def __len__(self):
+    #     if self.data_mode == 'value':
+    #         return len(self.data_object.value)
+    #     else:
+    #         return len(self.data_object.label)
+
+    # def as_dict(self):
+    #     return dict([(key, self[key].as_dict())
+    #                  for key in self.keys()] +  # if hasattr(self[key], 'as_dict')] +
+    #                 [('data_mode', self.data_mode), ('time_mode', self.time_mode)])
+    #     # TODO : check if it can be simplified now
 
     def to_xml(self):
         root = ET.Element('result')
@@ -654,7 +678,7 @@ class AnalyzerResult(MetadataObject):
             key = child.tag
             if key in ['id_metadata', 'audio_metadata']:
                 child_string = ET.tostring(child)
-                result[key] = dict_from_xml(child_string)
+                result[key] = xml_to_dict(child_string)
             elif key not in ['data_mode', 'time_mode']:
                 child_string = ET.tostring(child)
                 result[key].from_xml(child_string)
@@ -728,30 +752,30 @@ class AnalyzerResult(MetadataObject):
         return Image.open(imgdata)
 
     @property
-    def data_mode(self):
-        return self._data_mode
-
-    @property
-    def time_mode(self):
-        return self._time_mode
-
-    @property
     def data(self):
-        return self.data_object.data
+        return self.data_object['data']
 
     @property
     def time(self):
-        if self._time_mode == 'global':
+        if self.time_mode == 'global':
             return self.audio_metadata['start']
+        elif self.time_mode == 'framewise':
+            segment_time = pd.Series(np.arange(0, len(self.data) * self.frame_metadata['stepsize'], self.frame_metadata['stepsize']) / self.frame_metadata['samplerate'])
+
         else:
-            return self.audio_metadata['start'] + self.data_object.time
+            segment_time = self.data_object['time']
+        return self.audio_metadata['start'] + segment_time
 
     @property
     def duration(self):
-        if self._time_mode == 'global':
+        if self.time_mode == 'global':
             return self.audio_metadata['duration']
+        elif self.time_mode == 'event':
+            return pd.Series(np.zeros(len(self.time)))
+        elif self.time_mode == 'framewise':
+            return pd.Series(self.frame_metadata['blocksize'] / self.frame_metadata['samplerate'] * np.ones(len(self.data)))
         else:
-            return self.data_object.duration
+            return self.data_object['duration']
 
     @property
     def id(self):

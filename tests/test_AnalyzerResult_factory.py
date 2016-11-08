@@ -4,6 +4,7 @@ from __future__ import division
 from unit_timeside import unittest, TestRunner
 from timeside.core.analyzer import AnalyzerResult
 import numpy as np
+import pandas as pd
 
 
 class TestAnalyzerResult_factory(unittest.TestCase):
@@ -14,19 +15,23 @@ class TestAnalyzerResult_factory(unittest.TestCase):
 
     def test_factory(self):
         time_mode_list = ['global', 'event', 'segment', 'framewise']
-        data_mode_list = ['value', 'label']
+        data_mode_list = ['value', 'label', 'custom']
 
         for time_mode in time_mode_list:
             for data_mode in data_mode_list:
                 result = AnalyzerResult(data_mode, time_mode)
                 self.assertEqual(result.data_mode, data_mode)
                 self.assertEqual(result.time_mode, time_mode)
-                self.assertEqual(result.keys(), ['id_metadata',
-                                                 'data_object',
-                                                 'audio_metadata',
-                                                 'parameters'])
+
+        with self.assertRaises(ValueError):
+            result = AnalyzerResult(data_mode='bad_data_mode',
+                                    time_mode='framewise')
+        with self.assertRaises(ValueError):
+            result = AnalyzerResult(data_mode='value',
+                                    time_mode='bad_time_mode')
 
 
+@unittest.skip
 class TestAnalyzerResult_classes(unittest.TestCase):
     """ test AnalyzerResult factory for all AnalyzerResult classes"""
 
@@ -101,9 +106,9 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         self.time = 0
         self.duration = self.audio_duration
         # Set data in result
-        self.result.data_object.value = self.data
-        self.result.audio_metadata.start = self.audio_start
-        self.result.audio_metadata.duration = self.audio_duration
+        self.result.data_object['data'] = self.data
+        self.result.audio_metadata['start'] = self.audio_start
+        self.result.audio_metadata['duration'] = self.audio_duration
 
     def test_GlobalLabelResult(self):
         "Data methods for Global & Label Result"
@@ -118,9 +123,9 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         self.time = 0
         self.duration = self.audio_duration
         # Set data in result
-        self.result.data_object.label = self.data
-        self.result.audio_metadata.start = self.audio_start
-        self.result.audio_metadata.duration = self.audio_duration
+        self.result.data_object['data'] = self.data
+        self.result.audio_metadata['start'] = self.audio_start
+        self.result.audio_metadata['duration'] = self.audio_duration
 
     def test_FrameValueResult(self):
         "Data methods for Framewise & Value Result"
@@ -136,13 +141,13 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         samplerate = 44100
         self.data = np.random.rand(nb_frames, 1)
         self.duration = blocksize / samplerate * np.ones(nb_frames)
-        self.time = np.arange(0, nb_frames*stepsize, stepsize) / samplerate
+        self.time = np.arange(0, nb_frames * stepsize, stepsize) / samplerate
         # Set data in result
-        self.result.data_object.value = self.data
-        self.result.data_object.frame_metadata.blocksize = blocksize
-        self.result.data_object.frame_metadata.stepsize = stepsize
-        self.result.data_object.frame_metadata.samplerate = samplerate
-        self.result.audio_metadata.start = self.audio_start
+        self.result.data_object['data'] = self.data
+        self.result.frame_metadata['blocksize'] = blocksize
+        self.result.frame_metadata['stepsize'] = stepsize
+        self.result.frame_metadata['samplerate'] = samplerate
+        self.result.audio_metadata['start'] = self.audio_start
 
     def test_FrameLabelResult(self):
         "Data methods for Framewise & Label Result"
@@ -156,15 +161,15 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         blocksize = 1024
         stepsize = 512
         samplerate = 44100
-        self.data = np.random.randint(10, size=nb_frames)
+        self.data = np.random.randint(10, size=(nb_frames, 1))
         self.duration = blocksize / samplerate * np.ones(nb_frames)
-        self.time = np.arange(0, nb_frames*stepsize, stepsize) / samplerate
+        self.time = np.arange(0, nb_frames * stepsize, stepsize) / samplerate
         # Set data in result
-        self.result.data_object.label = self.data
-        self.result.data_object.frame_metadata.blocksize = blocksize
-        self.result.data_object.frame_metadata.stepsize = stepsize
-        self.result.data_object.frame_metadata.samplerate = samplerate
-        self.result.audio_metadata.start = self.audio_start
+        self.result.data_object['data'] = pd.DataFrame(self.data)
+        self.result.frame_metadata['blocksize'] = blocksize
+        self.result.frame_metadata['stepsize'] = stepsize
+        self.result.frame_metadata['samplerate'] = samplerate
+        self.result.audio_metadata['start'] = self.audio_start
 
     def test_EventValueResult(self):
         "Data methods for Event & Value Result"
@@ -176,12 +181,12 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         # Expected data
         nb_val = 200
         self.data = np.random.randn(nb_val, 4)
-        self.time = np.random.rand(1, nb_val) * 500
+        self.time = np.random.rand(nb_val,) * 500
         self.duration = np.zeros(nb_val)
         # Set data in result
-        self.result.data_object.value = self.data
-        self.result.data_object.time = self.time
-        self.result.audio_metadata.start = self.audio_start
+        self.result.data_object['data'] = pd.DataFrame(self.data)
+        self.result.data_object['time'] = pd.Series(self.time)
+        self.result.audio_metadata['start'] = self.audio_start
 
     def test_EventLabelResult(self):
         "Data methods for Event & Label Result"
@@ -192,13 +197,14 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         self.audio_start = np.random.rand(1) * 50
         # Expected data
         nb_val = 200
-        self.data = np.random.randint(10, size=nb_val)
-        self.time = np.random.rand(1, nb_val) * 500
+        self.data = np.random.randint(10, size=(nb_val, 1))
+        self.time = np.random.rand(nb_val, ) * 500
         self.duration = np.zeros(nb_val)
         # Set data in result
-        self.result.data_object.label = self.data
-        self.result.data_object.time = self.time
-        self.result.audio_metadata.start = self.audio_start
+        self.result.data_object['data'] = pd.DataFrame(self.data)
+        self.result.data_object['time'] = pd.Series(self.time)
+
+        self.result.audio_metadata['start'] = self.audio_start
 
     def test_SegmentValueResult(self):
         "Data methods for Segment & Value Result"
@@ -210,14 +216,13 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         # Expected data
         nb_val = 200
         self.data = np.random.randn(nb_val, 4)
-        self.time = np.random.rand(1, nb_val) * 500
-        self.duration = np.random.rand(1, nb_val) * 50
+        self.time = np.random.rand(nb_val,) * 500
+        self.duration = np.random.rand(nb_val,) * 50
         # Set data in result
-        self.result.data_object.value = self.data
-        self.result.data_object.time = self.time
-        self.result.data_object.duration = self.duration
-        self.result.audio_metadata.start = self.audio_start
-        self.result.audio_metadata.duration = self.duration
+        self.result.data_object['data'] = pd.DataFrame(self.data)
+        self.result.data_object['time'] = pd.Series(self.time)
+        self.result.data_object['duration'] = pd.Series(self.duration)
+        self.result.audio_metadata['start'] = self.audio_start
 
     def test_SegmentLabelResult(self):
         "Data methods for Segment & Label Result"
@@ -228,14 +233,14 @@ class TestAnalyzerResult_Data_Methods(unittest.TestCase):
         self.audio_start = np.random.rand(1) * 50
         # Expected data
         nb_val = 200
-        self.data = np.random.randint(10, size=nb_val)
-        self.time = np.random.rand(1, nb_val) * 500
-        self.duration = np.random.rand(1, nb_val) * 50
+        self.data = np.random.randint(10, size=(nb_val, 1))
+        self.time = np.random.rand(nb_val,) * 500
+        self.duration = np.random.rand(nb_val,) * 50
         # Set data in result
-        self.result.data_object.label = self.data
-        self.result.data_object.time = self.time
-        self.result.data_object.duration = self.duration
-        self.result.audio_metadata.start = self.audio_start
+        self.result.data_object['data'] = pd.DataFrame(self.data)
+        self.result.data_object['time'] = pd.Series(self.time)
+        self.result.data_object['duration'] = pd.Series(self.duration)
+        self.result.audio_metadata['start'] = self.audio_start
 
     def tearDown(self):
         np.testing.assert_array_equal(self.result.data, self.data)
