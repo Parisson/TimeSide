@@ -11,6 +11,9 @@ function (Marionette) {
       '': 'home',
       'temp_hom' : 'temp_home',
 
+
+      'item/:idItem' : 'item_view',
+
       /*----------------- Auth---------------------------*/
       'auth/forgetpassword' : 'auth_forgetpassword',
       'reset/:token' : 'auth_newpassword',

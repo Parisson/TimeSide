@@ -57,6 +57,10 @@ function (Backbone, Marionette, vent,injector,Cfg,ApiEventsHelper) {
       vent.trigger('navigate:page',Cfg.views.qeopa.home.viewid);
     },
 
+    item_view : function(uuid) {
+      vent.trigger('data:items:getOne',uuid,'item_new_view');
+    },
+
     ///////////////////////////////////////////////////////////////////
     // auth specific routes
     auth_forgetpassword:function() {
