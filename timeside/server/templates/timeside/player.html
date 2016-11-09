@@ -11,16 +11,15 @@
         <meta name="mobile-web-app-capable" content="yes">
         {% block stylesheets %}
         {% load static %}
-        <link rel="stylesheet" href="{% static "timeside2/dist/styles/main.css" %}">
-        {endblock stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{% static 'timeside2/dist/styles/main.css' %}" />
+        {% endblock stylesheets %}
     </head>
-    <body>
-
-{% block player %}
-<h1>Player</h1>
-<div class="ts-content full"></div>
-{% load static %}
-<script data-main="{% static "timeside2/dist/scripts/main.js" %}" src="{% static "timeside2/dist/scripts/require.js" %}"></script>
-{% endblock player %}
-</body>
+    <body>   
+      {% block player %}
+      <h1>Player</h1>
+      <div class="ts-content full"></div>
+      
+      <script data-main="{% static "timeside2/dist/scripts/main.js" %}" src="{% static "timeside2/dist/scripts/require.js" %}"></script>
+      {% endblock player %}
+    </body>
 </html>
