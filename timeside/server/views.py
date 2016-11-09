@@ -24,7 +24,7 @@
 import json
 
 from django.http import Http404
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
@@ -410,7 +410,7 @@ class ItemDetail(DetailView):
         context = super(ItemDetail, self).get_context_data(**kwargs)
         ts_item = {'ts_api_root': str(reverse_lazy('api-root', request=self.request)),
                    'ts_item_uuid': self.get_object().uuid
-                  }
+                   }
         context['ts_item'] = json.dumps(ts_item)
         return context
 
@@ -463,3 +463,7 @@ class ItemTranscode(DetailView):
             # response = StreamingHttpResponse(streaming_content=stream_from_task(task),
             #                                 content_type=mime_type)
             # return response
+
+
+class PlayerView(TemplateView):
+    template_name = "timeside/player.html"

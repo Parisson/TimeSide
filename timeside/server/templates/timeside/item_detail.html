@@ -16,10 +16,10 @@
 Your browser does not support the audio element.
 </audio>
 {% endblock html5-player %}
-{% block ts-data %}
-<script type="text/javascript">
-  var timeside_item_json = {{ ts_item | safe }};
-</script>
-{% endblock ts-data %}
+{% block ts-player %}
+
+<iframe src={% url "timeside-player" %}#item/{{object.uuid}}  width="1200" height="1000"></iframe>
+
+{% endblock ts-player %}
 
 {% endblock content %}
