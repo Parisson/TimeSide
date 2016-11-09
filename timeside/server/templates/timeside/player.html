@@ -9,9 +9,10 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
         <meta name="mobile-web-app-capable" content="yes">
-
-        <link rel="stylesheet" href="timeside2/dist/styles/main.css">
-        
+        {% block stylesheets %}
+        {% load static %}
+        <link rel="stylesheet" href="{% static "timeside2/dist/styles/main.css" %}">
+        {endblock stylesheets %}
     </head>
     <body>
 
