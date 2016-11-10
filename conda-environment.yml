@@ -22,7 +22,6 @@ dependencies:
   - Werkzeug
   - yaafe  # in yaafe channel (optionnal)
   - pip:
-      - django-angular
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
