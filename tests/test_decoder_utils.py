@@ -56,6 +56,11 @@ class TestGetMediaInfo(unittest.TestCase):
         self.expected_samplerate = 44100
         self.expected_depth = 0  # ?
 
+
+    def testUriFromHTTP(self):
+        "Test URI decoding from HTTP"
+        self.source = "https://raw.githubusercontent.com/yomguy/timeside-samples/master/samples/sweep.mp3"
+        
     def testWav(self):
         "Test wav decoding"
         self.source = samples["sweep.wav"]
