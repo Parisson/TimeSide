@@ -38,7 +38,7 @@ import threading
 from timeside.plugins.decoder.utils import get_uri, get_media_uri_info, stack, get_sha1
 
 import Queue
-from gst import _gst as gst
+import gst
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
