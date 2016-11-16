@@ -27,6 +27,7 @@ from django.http import Http404
 from django.views.generic.base import View, TemplateView
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics, renderers
@@ -451,8 +452,8 @@ class ItemTranscode(DetailView):
                 result.delete()
                 return self.get(request, uuid, extension)
             # Result and file exist --> OK
-            return StreamingHttpResponse(stream_from_file(result.file.path),
-                                         content_type=result.mime_type)
+            return FileResponse(open(result.file.path, 'rb'),
+                                content_type=result.mime_type)
         except Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
