@@ -13,6 +13,7 @@ function (Marionette) {
 
 
       'item/:idItem' : 'item_view',
+      'item/:idItem/' : 'item_view',
 
       /*----------------- Auth---------------------------*/
       'auth/forgetpassword' : 'auth_forgetpassword',
