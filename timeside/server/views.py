@@ -422,6 +422,18 @@ class ItemTranscode(DetailView):
     def get_object(self):
         return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
 
+    def transcode_segment(self, uri, start, duration, encoder_pid, mime_type):
+        decoder = timeside.core.get_processor('file_decoder')(uri, start=start, duration=duration)
+        import tempfile
+        with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
+            encoder = timeside.core.get_processor(encoder_pid)(tmp_file.name, overwrite=True)
+            pipe = (decoder | encoder)
+            pipe.run()
+            
+            return FileResponse(open(tmp_file.name, 'rb'),
+                                content_type=mime_type)
+
+        
     def get(self, request, uuid, extension):
         from . utils import TS_ENCODERS_EXT
 
@@ -439,6 +451,14 @@ class ItemTranscode(DetailView):
 
         encoder = TS_ENCODERS_EXT[extension]
         mime_type = timeside.core.get_processor(encoder).mime_type()
+
+        if (start, duration) != (0, None):
+            uri =  self.get_object().get_source()[0]
+            return self.transcode_segment(uri = uri,
+                                          start = start,
+                                          duration = duration,
+                                          encoder_pid = encoder,
+                                          mime_type = mime_type)
         # Get or Create Processor = encoder
         processor, created = Processor.objects.get_or_create(pid=encoder)
         # Get or Create Preset with processor
