@@ -262,7 +262,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Selection
-        fields = ('uuid', 'items', 'selections', 'author')
+        fields = ('uuid', 'url', 'items', 'selections', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'selections': {'lookup_field': 'uuid'},
@@ -276,7 +276,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Experience
-        fields = ('uuid', 'presets', 'is_public', 'author')
+        fields = ('uuid', 'url', 'presets', 'is_public', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'presets': {'lookup_field': 'uuid'},
