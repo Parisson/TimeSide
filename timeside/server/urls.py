@@ -39,15 +39,13 @@ urlpatterns = patterns(
     ]),
     ),
     # ----- Timeside ------
-    url(r'^$', views.IndexView.as_view(), name="timeside-index"),
+    url(r'^$', views.ItemList.as_view(), name="timeside-item-list"),
     # Items
     # ex: /item/5/
     url(r'^items/(?P<uuid>[0-9a-z-]+)/', include([
-        url(r'^$', views.ItemDetail.as_view(), name='timeside-item-detail'),
+        url(r'^$', views.ItemDetail.as_view(), name="timeside-item-detail"),
         url(r'^export/$', views.ItemDetailExport.as_view(),
             name='timeside-item-export'),
-        url(r'^angular/$', views.ItemDetailAngular.as_view(),
-            name='timeside-item-angular'),
         url(r'^download/(?P<extension>' + EXPORT_EXT + ')$',
             views.ItemTranscode.as_view(), name="item-transcode"),
     ])

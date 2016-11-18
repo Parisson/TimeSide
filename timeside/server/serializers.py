@@ -26,6 +26,18 @@ import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
 
+class ItemListSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ts.models.Item
+        fields = ('uuid', 'url','title', 'description',
+                  'source_file', 'source_url', 'mime_type')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+        }
+    def get_url(self, obj):
+        request = self.context['request']
+        return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
+    
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
