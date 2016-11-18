@@ -3,12 +3,13 @@ import environ
 # set default values and casting
 env = environ.Env(DEBUG=(bool, False),
                   CELERY_ALWAYS_EAGER=(bool, False),
-                 )
+                  )
 # Django settings for server project.
-DEBUG = env('DEBUG') # False if not in os.environ
+DEBUG = env('DEBUG')  # False if not in os.environ
 TEMPLATE_DEBUG = DEBUG
 
-import os, sys
+import os
+import sys
 sys.dont_write_bytecode = True
 
 ADMINS = (
@@ -94,7 +95,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
     'djangobower.finders.BowerFinder',
 )
 
@@ -103,7 +104,7 @@ STATICFILES_FINDERS = (
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#    'django.template.loaders.eggs.Loader',
+    #    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -145,13 +146,12 @@ INSTALLED_APPS = (
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
-    'djng',
     'djangobower',
     'corsheaders',
     # 'south',
 )
 
-# A sample logging configuration. The only tangible logging
+# dj A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
@@ -186,10 +186,10 @@ REST_FRAMEWORK = {
 BROKER_URL = env('BROKER_URL')
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER') # If this is True, all tasks will be executed locally by blocking until the task returns.
+CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
 from worker import app
 
@@ -202,13 +202,8 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#3.3.6',
     'bootstrap-select#1.5.4',
     'font-awesome#~4.4.0',
-    'angular#1.2.26',
-    'angular-bootstrap-select#0.0.5',
-    'angular-resource#1.2.26',
     'raphael#2.2.0',
     'soundmanager#V2.97a.20150601',
-    'https://github.com/Parisson/loaders.git',
-    'https://github.com/Parisson/ui.git',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True

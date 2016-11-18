@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os, sys
+import os
+import sys
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 # Utility function to read file in the setup.py directory
+
+
 def open_here(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
-
 
 
 def get_dependencies(env_yml_file):
@@ -28,27 +30,30 @@ def get_dependencies(env_yml_file):
     package_map = {
         'pytables': 'tables',  # insert 'tables' instead of 'pytables'
         'yaafe': ''
-        }
+    }
     for dep in environment['dependencies']:
         if isinstance(dep, str) and not(dep.startswith('python')):
             if dep in package_map:
-                conda_dependencies.append(package_map[dep])  
+                conda_dependencies.append(package_map[dep])
             else:
                 conda_dependencies.append(dep)
         elif isinstance(dep, dict) and 'pip' in dep:
-             pip_dependencies = dep['pip']
+            pip_dependencies = dep['pip']
 
     return conda_dependencies + pip_dependencies
 
 # Pytest
+
+
 class PyTest(TestCommand):
+
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = ['tests', '--ignore', 'tests/sandbox', '--verbose']
         self.test_suite = True
 
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
@@ -67,7 +72,7 @@ CLASSIFIERS = [
     'Topic :: Multimedia :: Sound/Audio :: Conversion',
     'Topic :: Scientific/Engineering :: Information Analysis',
     'Topic :: Software Development :: Libraries :: Python Modules',
-    ]
+]
 
 KEYWORDS = 'audio analysis features extraction MIR transcoding graph visualize plot HTML5 interactive metadata player'
 
@@ -91,4 +96,4 @@ setup(
     scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest},
-    )
+)

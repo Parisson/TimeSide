@@ -11,13 +11,16 @@ define([
   'views/helpers/admin_helper',
 
   'core/models/index',
-  'moment'
+  'moment',
+  'json!#config/config.json',
+  'json!#config/api.json'
 
   
 
 ],
 
-function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,AdminViewHelper,Models,Moment
+function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,
+  AdminViewHelper,Models,Moment,ConfigJSON,ApiJSON
   ) {
 
   
@@ -37,6 +40,12 @@ function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,A
 
 
   };
+
+  //////////////////////////////////////////////////////////////////////
+  // Get basis for config url (quickfix)
+  all.getApiUrl = function() {
+    return ApiJSON.api.baseUrl;
+  },
 
   //////////////////////////////////////////////////////////////////////
   // Sys tools

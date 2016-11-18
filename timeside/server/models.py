@@ -229,8 +229,8 @@ class Item(Titled, UUID, Dated, Shareable):
         elif self.source_url:
             uri = self.source_url
 
-        pipe = timeside.plugins.decoder.file.FileDecoder(uri=uri,
-                                                         sha1=self.sha1)
+        decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
+                                                            sha1=self.sha1)
         presets = {}
         for preset in experience.presets.all():
             proc = get_processor(preset.processor.pid)
@@ -247,7 +247,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 proc = proc(**ast.literal_eval(preset.parameters))
 
             presets[preset] = proc
-            pipe = pipe | proc
+            pipe = decoder | proc
 
         # item.lock_setter(True)
 
@@ -315,7 +315,6 @@ class Item(Titled, UUID, Dated, Shareable):
 
         del pipe
         # item.lock_setter(False)
-lazy
 
 
 class Experience(Titled, UUID, Dated, Shareable):
@@ -458,7 +457,7 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        task_run.delay(self.id)
+        task_run.delay(task_id=self.id)
 
         if wait:
             status = Task.objects.get(id=self.id).status

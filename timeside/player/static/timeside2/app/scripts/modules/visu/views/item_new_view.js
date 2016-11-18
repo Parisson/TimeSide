@@ -388,6 +388,13 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         this.overlayView = new OverlayView();
         this.ui.containerOverlay.empty().append(this.overlayView.render().$el);
        }
+
+       //loading start done in onDomRefresh!
+
+       /*if (! this.hasStartedLoading) {
+        this.hasStartedLoading=true;
+        //this.onStartLoading();
+       }*/
     },
 
    
@@ -412,6 +419,11 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
       this.overlayView.onDomRefresh();
       //once it is rendered, set the desired tracks width/height
       this.updateSize();
+
+      if (! this.hasStartedLoading) {
+        this.hasStartedLoading=true;
+        this.onStartLoading();
+      }
 
     },
 

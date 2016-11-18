@@ -65,4 +65,6 @@ urlpatterns = patterns(
         views.ResultAnalyzerToElanView.as_view(), name="timeside-result-elan"),
     url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$',
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
+    # Player
+    url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),
 )

@@ -61,7 +61,14 @@ function (A) {
        
         onSuccess:function(res) {
           var result = new A.models.item(res.body);
-          A.vent.trigger(A.Cfg.eventApiOk(A.Cfg.events.data.item.getOne),result);
+          var url = result.get('url');
+          var index = url.indexOf("items/");
+          var uuid = url.substr(index+"items/".length);
+          uuid = uuid.substring(0,uuid.length-1); //virer le dernier carac
+
+          result.set("uuid",uuid);
+          
+          A.vent.trigger(A.Cfg.eventApiOk(A.Cfg.events.data.items.getOne),result);
         }
       }
 

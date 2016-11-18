@@ -10,16 +10,30 @@
 <h1>{{ object.title }}</h1>
 
 {% block html5-player %}
- <audio controls preload="none">
+<h2>Audio</h2>
+<audio controls preload="none">
   <source src="download/ogg" type="audio/ogg">
   <source src="download/mp3" type="audio/mpeg">
-Your browser does not support the audio element.
+  Your browser does not support the audio element.
 </audio>
+<h2>Information</h2>
+  <ul>
+    <li><b>Title</b>: {{ object.title }}</li>
+    <li><b>Description:</b> {{ object.description }}</li>
+    <li> <b>Source and type:</b>
+      <ul>
+        {% for source in object.get_source %}
+        <li> {{ source }}</li>
+        {% endfor %}
+      </ul>
+  </ul>
 {% endblock html5-player %}
-{% block ts-data %}
-<script type="text/javascript">
-  var timeside_item_json = {{ ts_item | safe }};
-</script>
-{% endblock ts-data %}
+
+  {% block ts-player %}
+  <h2>Player</h2>
+
+<iframe src={% url "timeside-player" %}#item/{{object.uuid}}  width="1200" height="1000"></iframe>
+
+{% endblock ts-player %}
 
 {% endblock content %}

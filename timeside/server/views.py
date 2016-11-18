@@ -24,9 +24,10 @@
 import json
 
 from django.http import Http404
-from django.views.generic.base import View
+from django.views.generic.base import View, TemplateView
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics, renderers
@@ -410,7 +411,7 @@ class ItemDetail(DetailView):
         context = super(ItemDetail, self).get_context_data(**kwargs)
         ts_item = {'ts_api_root': str(reverse_lazy('api-root', request=self.request)),
                    'ts_item_uuid': self.get_object().uuid
-                  }
+                   }
         context['ts_item'] = json.dumps(ts_item)
         return context
 
@@ -421,6 +422,18 @@ class ItemTranscode(DetailView):
     def get_object(self):
         return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
 
+    def transcode_segment(self, uri, start, duration, encoder_pid, mime_type):
+        decoder = timeside.core.get_processor('file_decoder')(uri, start=start, duration=duration)
+        import tempfile
+        with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
+            encoder = timeside.core.get_processor(encoder_pid)(tmp_file.name, overwrite=True)
+            pipe = (decoder | encoder)
+            pipe.run()
+            
+            return FileResponse(open(tmp_file.name, 'rb'),
+                                content_type=mime_type)
+
+        
     def get(self, request, uuid, extension):
         from . utils import TS_ENCODERS_EXT
 
@@ -438,6 +451,14 @@ class ItemTranscode(DetailView):
 
         encoder = TS_ENCODERS_EXT[extension]
         mime_type = timeside.core.get_processor(encoder).mime_type()
+
+        if (start, duration) != (0, None):
+            uri =  self.get_object().get_source()[0]
+            return self.transcode_segment(uri = uri,
+                                          start = start,
+                                          duration = duration,
+                                          encoder_pid = encoder,
+                                          mime_type = mime_type)
         # Get or Create Processor = encoder
         processor, created = Processor.objects.get_or_create(pid=encoder)
         # Get or Create Preset with processor
@@ -451,8 +472,8 @@ class ItemTranscode(DetailView):
                 result.delete()
                 return self.get(request, uuid, extension)
             # Result and file exist --> OK
-            return StreamingHttpResponse(stream_from_file(result.file.path),
-                                         content_type=result.mime_type)
+            return FileResponse(open(result.file.path, 'rb'),
+                                content_type=result.mime_type)
         except Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
@@ -463,3 +484,7 @@ class ItemTranscode(DetailView):
             # response = StreamingHttpResponse(streaming_content=stream_from_task(task),
             #                                 content_type=mime_type)
             # return response
+
+
+class PlayerView(TemplateView):
+    template_name = "timeside/player.html"
