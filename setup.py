@@ -49,7 +49,7 @@ class PyTest(TestCommand):
 
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = ['tests', '--ignore', 'tests/sandbox', '--verbose']
+        self.test_args = ['tests', '--ignore', 'tests/sandbox', '--verbose', '--ds=app.test_settings']
         self.test_suite = True
 
     def run_tests(self):
@@ -94,6 +94,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
-    tests_require=['pytest'],
+    tests_require=['pytest>=3', 'pytest-django'],
     cmdclass={'test': PyTest},
 )
