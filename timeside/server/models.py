@@ -40,8 +40,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
-from celery.result import GroupResult
-
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
@@ -185,21 +183,18 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_source(self):
+    def get_uri(self):
         source = None
         source_type = None
         if self.source_file and os.path.exists(self.source_file.path):
-            source = self.source_file.path
-            source_type = 'file'
+            return self.source_file.path
         elif self.source_url:
-            source = self.source_url
-            source_type = 'url'
-        return source, source_type
+            return self.source_url
+        return None
 
     def get_audio_duration(self):
-        import timeside.core as ts_core
-        decoder = ts_core.get_processor(
-            'file_decoder')(uri=self.get_source()[0])
+        decoder = timeside.core.get_processor('file_decoder')(
+            uri=self.get_uri())
         return decoder.uri_total_duration
 
     def get_results_path(self):

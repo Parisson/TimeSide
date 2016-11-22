@@ -76,12 +76,11 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.Item
     queryset = models.Item.objects.all()
-    
+
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.ItemListSerializer
         return serializers.ItemSerializer
-        
 
 
 class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
@@ -361,6 +360,7 @@ class ItemList(ListView):
     def dispatch(self, *args, **kwargs):
         return super(ItemList, self).dispatch(*args, **kwargs)
 
+
 class ItemDetail(DetailView):
 
     model = models.Item
@@ -391,11 +391,10 @@ class ItemTranscode(DetailView):
             encoder = timeside.core.get_processor(encoder_pid)(tmp_file.name, overwrite=True)
             pipe = (decoder | encoder)
             pipe.run()
-            
+
             return FileResponse(open(tmp_file.name, 'rb'),
                                 content_type=mime_type)
 
-        
     def get(self, request, uuid, extension):
         from . utils import TS_ENCODERS_EXT
 
@@ -415,12 +414,12 @@ class ItemTranscode(DetailView):
         mime_type = timeside.core.get_processor(encoder).mime_type()
 
         if (start, duration) != (0, None):
-            uri =  self.get_object().get_source()[0]
-            return self.transcode_segment(uri = uri,
-                                          start = start,
-                                          duration = duration,
-                                          encoder_pid = encoder,
-                                          mime_type = mime_type)
+            uri = self.get_object().get_uri()
+            return self.transcode_segment(uri=uri,
+                                          start=start,
+                                          duration=duration,
+                                          encoder_pid=encoder,
+                                          mime_type=mime_type)
         # Get or Create Processor = encoder
         processor, created = models.Processor.objects.get_or_create(pid=encoder)
         # Get or Create Preset with processor
