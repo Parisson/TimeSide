@@ -334,7 +334,7 @@ class Processor(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Processor, self).__init__(*args, **kwargs)
-        self._meta.get_field('pid')[0]._choices = lazy(get_processor_pids, list)()
+        self._meta.get_field('pid')._choices = lazy(get_processor_pids, list)()
 
     class Meta:
         db_table = app + '_processors'
