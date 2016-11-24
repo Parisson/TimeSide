@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
 from rest_framework import routers
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
@@ -25,8 +26,7 @@ api_router.register(r'analysis_tracks', views.AnalysisTrackViewSet)
 api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
@@ -65,4 +65,11 @@ urlpatterns = patterns(
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
     # Player
     url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),
-)
+]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]

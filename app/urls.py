@@ -5,7 +5,7 @@ from django.views.generic import RedirectView
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/timeside/')),
     url(r'^timeside/', include('timeside.server.urls')),
 
@@ -18,4 +18,4 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-)
+]

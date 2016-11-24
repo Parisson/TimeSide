@@ -84,10 +84,9 @@ STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_DONE, _('done')))
 
 
-results_root = 'results'
-results_path = os.path.join(settings.MEDIA_ROOT, results_root)
-if not os.path.exists(results_path):
-    os.makedirs(results_path)
+RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
+if not os.path.exists(RESULTS_ROOT):
+    os.makedirs(RESULTS_ROOT)
 
 
 def get_mime_type(path):
@@ -101,6 +100,7 @@ def get_processor(pid):
     raise ValueError('Processor %s does not exists' % pid)
 
 
+# --- Abstract classes -----
 class Dated(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
@@ -144,6 +144,8 @@ class Shareable(models.Model):
         abstract = True
 
 
+# ----- Timeside server models ------
+
 class Selection(Titled, UUID, Dated, Shareable):
 
     items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
@@ -184,8 +186,7 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_uri(self):
-        source = None
-        source_type = None
+        """Return the Item source"""
         if self.source_file and os.path.exists(self.source_file.path):
             return self.source_file.path
         elif self.source_url:
@@ -193,12 +194,21 @@ class Item(Titled, UUID, Dated, Shareable):
         return None
 
     def get_audio_duration(self):
+        """
+        Return item audio duration
+        """
         decoder = timeside.core.get_processor('file_decoder')(
             uri=self.get_uri())
         return decoder.uri_total_duration
 
     def get_results_path(self):
-        return os.path.join(results_path, self.uuid)
+        """
+        Return Item result path
+        """
+        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        if not os.path.exists(result_path):
+            os.makedirs(result_path)
+        return result_path
 
     def get_single_selection(self):
         # TODO : have singleton selection has a foreign key of Item ???
@@ -216,13 +226,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def run(self, experience):
         result_path = self.get_results_path()
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
-
-        if self.source_file:
-            uri = self.source_file.path
-        elif self.source_url:
-            uri = self.source_url
+        uri = self.get_uri()
 
         decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
                                                             sha1=self.sha1)
@@ -330,7 +334,7 @@ class Processor(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Processor, self).__init__(*args, **kwargs)
-        self._meta.get_field_by_name('pid')[0]._choices = lazy(get_processor_pids, list)()
+        self._meta.get_field('pid')[0]._choices = lazy(get_processor_pids, list)()
 
     class Meta:
         db_table = app + '_processors'
