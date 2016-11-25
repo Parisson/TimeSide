@@ -33,6 +33,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics, renderers
 from rest_framework.response import Response
 from rest_framework.reverse import reverse, reverse_lazy
+from rest_framework.decorators import detail_route
 
 from . import models
 from . import serializers
@@ -133,6 +134,11 @@ class ProcessorViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProcessorSerializer
     lookup_field = 'pid'
     lookup_value_regex = '[0-9a-z_]+'
+
+    @detail_route(methods=['get'])
+    def get_parameters_schema(self, request, pid=None):
+        serializer = serializers.ParametersSchemaSerializer(self.get_object())
+        return Response(serializer.data)
 
 
 class SubProcessorViewSet(viewsets.ModelViewSet):

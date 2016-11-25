@@ -27,6 +27,7 @@ api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
 
 urlpatterns = [
+    # ----- ADMIN -------
     url(r'^admin/', include(admin.site.urls)),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
