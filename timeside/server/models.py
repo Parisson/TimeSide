@@ -40,8 +40,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 
-from celery.result import GroupResult
-
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
@@ -86,10 +84,9 @@ STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_DONE, _('done')))
 
 
-results_root = 'results'
-results_path = os.path.join(settings.MEDIA_ROOT, results_root)
-if not os.path.exists(results_path):
-    os.makedirs(results_path)
+RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
+if not os.path.exists(RESULTS_ROOT):
+    os.makedirs(RESULTS_ROOT)
 
 
 def get_mime_type(path):
@@ -103,6 +100,7 @@ def get_processor(pid):
     raise ValueError('Processor %s does not exists' % pid)
 
 
+# --- Abstract classes -----
 class Dated(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
@@ -146,6 +144,8 @@ class Shareable(models.Model):
         abstract = True
 
 
+# ----- Timeside server models ------
+
 class Selection(Titled, UUID, Dated, Shareable):
 
     items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
@@ -185,25 +185,30 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_source(self):
-        source = None
-        source_type = None
+    def get_uri(self):
+        """Return the Item source"""
         if self.source_file and os.path.exists(self.source_file.path):
-            source = self.source_file.path
-            source_type = 'file'
+            return self.source_file.path
         elif self.source_url:
-            source = self.source_url
-            source_type = 'url'
-        return source, source_type
+            return self.source_url
+        return None
 
     def get_audio_duration(self):
-        import timeside.core as ts_core
-        decoder = ts_core.get_processor(
-            'file_decoder')(uri=self.get_source()[0])
+        """
+        Return item audio duration
+        """
+        decoder = timeside.core.get_processor('file_decoder')(
+            uri=self.get_uri())
         return decoder.uri_total_duration
 
     def get_results_path(self):
-        return os.path.join(results_path, self.uuid)
+        """
+        Return Item result path
+        """
+        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        if not os.path.exists(result_path):
+            os.makedirs(result_path)
+        return result_path
 
     def get_single_selection(self):
         # TODO : have singleton selection has a foreign key of Item ???
@@ -221,13 +226,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def run(self, experience):
         result_path = self.get_results_path()
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
-
-        if self.source_file:
-            uri = self.source_file.path
-        elif self.source_url:
-            uri = self.source_url
+        uri = self.get_uri()
 
         decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
                                                             sha1=self.sha1)
@@ -335,7 +334,7 @@ class Processor(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Processor, self).__init__(*args, **kwargs)
-        self._meta.get_field_by_name('pid')[0]._choices = lazy(get_processor_pids, list)()
+        self._meta.get_field('pid')._choices = lazy(get_processor_pids, list)()
 
     class Meta:
         db_table = app + '_processors'
@@ -353,6 +352,40 @@ class Processor(models.Model):
             except AttributeError:
                 pass
         super(Processor, self).save(**kwargs)
+
+    def get_parameters_schema(self):
+        schema = {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "title": "Parameters Schema",
+            "type": "object",
+            "processor": self.pid,
+            "properties":
+            {
+                "blocksize": {
+                    "description": "Blocksize for frame by frame signal analysis",
+                    "type": "integer"
+                },
+                "stepsize": {
+                    "description": "stepsize for frame by frame signal analysis",
+                    "type": "integer"
+                },
+                "dummy_param1": {
+                    "description": "Dummy parameter that pick one value among a given list",
+                    "enum": [
+                        "choice_1",
+                        "choice_2"
+                        "choice_3"
+                        "choice_4"]
+                },
+                "dummy_param2": {
+                    "description": "Dummy float parameter",
+                    "type": "float"
+                },
+            },
+            "required": ["blocksize"]
+        }
+
+        return schema
 
 
 class SubProcessor(models.Model):
@@ -386,8 +419,8 @@ class Preset(UUID, Dated, Shareable):
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
-        exp_description = exp_title + "\n" + \
-            "Automatically generated by the TimeSide application."
+        exp_description = "\n".join(exp_title,
+                                    "Automatically generated by the TimeSide application.")
         experience, created = Experience.objects.get_or_create(title=exp_title,
                                                                description=exp_description)
         if created:

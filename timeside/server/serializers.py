@@ -26,6 +26,21 @@ import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
 
+class ItemListSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = ts.models.Item
+        fields = ('uuid', 'url', 'title', 'description',
+                  'source_file', 'source_url', 'mime_type')
+        extra_kwargs = {
+            'url': {'lookup_field': 'uuid'}
+        }
+
+    def get_url(self, obj):
+        request = self.context['request']
+        return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
+
+
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
@@ -288,13 +303,29 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
+    parameters_schema = serializers.SerializerMethodField()
 
     class Meta:
         model = ts.models.Processor
-        fields = ('url', 'pid', 'version')
+        fields = ('url', 'pid', 'version', 'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }
+
+    def get_parameters_schema(self, obj):
+        return obj.get_parameters_schema()
+
+
+class ParametersSchemaSerializer(serializers.HyperlinkedModelSerializer):
+
+    parameters_schema = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('parameters_schema',)
+
+    def get_parameters_schema(self, obj):
+        return obj.get_parameters_schema()
 
 
 class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
 from rest_framework import routers
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
@@ -25,8 +26,8 @@ api_router.register(r'analysis_tracks', views.AnalysisTrackViewSet)
 api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
+    # ----- ADMIN -------
     url(r'^admin/', include(admin.site.urls)),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
@@ -39,15 +40,13 @@ urlpatterns = patterns(
     ]),
     ),
     # ----- Timeside ------
-    url(r'^$', views.IndexView.as_view(), name="timeside-index"),
+    url(r'^$', views.ItemList.as_view(), name="timeside-item-list"),
     # Items
     # ex: /item/5/
     url(r'^items/(?P<uuid>[0-9a-z-]+)/', include([
-        url(r'^$', views.ItemDetail.as_view(), name='timeside-item-detail'),
+        url(r'^$', views.ItemDetail.as_view(), name="timeside-item-detail"),
         url(r'^export/$', views.ItemDetailExport.as_view(),
             name='timeside-item-export'),
-        url(r'^angular/$', views.ItemDetailAngular.as_view(),
-            name='timeside-item-angular'),
         url(r'^download/(?P<extension>' + EXPORT_EXT + ')$',
             views.ItemTranscode.as_view(), name="item-transcode"),
     ])
@@ -67,4 +66,11 @@ urlpatterns = patterns(
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
     # Player
     url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),
-)
+]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
