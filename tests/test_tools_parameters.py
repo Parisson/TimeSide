@@ -87,6 +87,13 @@ class TestHasParam(unittest.TestCase):
         self.assertRaises(ValidationError, cls_instance.validate_parameters,
                           bad_param)
 
+    def test_schema_from_argspec(self):
+        """
+        Get schema from class __init__ arguments
+        """
+        self.assertDictEqual(self.has_param_cls.schema_from_argspec(),
+                             self.schema['properties'])
+
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

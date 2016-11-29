@@ -73,13 +73,32 @@ class HasParam(object):
     @classmethod
     def validate_parameters(cls, parameters, schema=None):
         """Validate parameters format against schema specification
-        Raises:	
+        Raises:
           - ValidationError if the instance is invalid
           - SchemaError if the schema itself is invalid
         """
         if schema is None:
             schema = cls._schema
         jsonschema.validate(parameters, schema)
+
+    @classmethod
+    def schema_from_argspec(cls):
+        default_param = cls.get_parameters_default()
+        schema = {}
+        for key, value in default_param.items():
+            if isinstance(value, basestring):
+                val_type = "string"
+            elif isinstance(value, float):
+                val_type = "number"
+            elif isinstance(value, (int, long)):
+                val_type = "integer"
+            elif isinstance(value, bool):
+                val_type = "boolean"
+            schema.update({key: {"type": val_type,
+                                 "default": value}
+                           }
+                          )
+        return schema
 
 
 if __name__ == "__main__":
