@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright (c) 2007-2014 Parisson SARL
+# Copyright (c) 2007-2016 Parisson SARL
 
 # This file is part of TimeSide.
 
@@ -26,8 +26,7 @@ from traits.api import HasTraits, Unicode, Int, Float, Range, Enum, Bool
 from traits.api import ListUnicode, List, Tuple
 from traits.api import TraitError
 
-import inspect
-import simplejson as json
+
 import jsonschema
 
 TRAIT_TYPES = {Unicode: 'str',

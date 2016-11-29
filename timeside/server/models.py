@@ -348,44 +348,16 @@ class Processor(models.Model):
             self.version = timeside.core.__version__
         if not self.name:
             try:
-                self.name = timeside.core.get_processor(self.pid).name()
+                self.name = self.get_processor().name()
             except AttributeError:
                 pass
         super(Processor, self).save(**kwargs)
 
-    def get_parameters_schema(self):
-        schema = {
-            "$schema": "http://json-schema.org/draft-04/schema#",
-            "title": "Parameters Schema",
-            "type": "object",
-            "processor": self.pid,
-            "properties":
-            {
-                "blocksize": {
-                    "description": "Blocksize for frame by frame signal analysis",
-                    "type": "integer"
-                },
-                "stepsize": {
-                    "description": "stepsize for frame by frame signal analysis",
-                    "type": "integer"
-                },
-                "dummy_param1": {
-                    "description": "Dummy parameter that pick one value among a given list",
-                    "enum": [
-                        "choice_1",
-                        "choice_2"
-                        "choice_3"
-                        "choice_4"]
-                },
-                "dummy_param2": {
-                    "description": "Dummy float parameter",
-                    "type": "float"
-                },
-            },
-            "required": ["blocksize"]
-        }
+    def get_processor(self):
+        return timeside.core.get_processor(self.pid)
 
-        return schema
+    def get_parameters_schema(self):
+        return self.get_processor().get_parameters_schema()
 
 
 class SubProcessor(models.Model):
