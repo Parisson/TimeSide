@@ -5,6 +5,7 @@ channels:
 dependencies:
   - aubio  # in piem channel (optionnal)
   - h5py
+  - jsonschema
   - jupyter
   - matplotlib
   - mysql-python

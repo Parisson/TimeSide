@@ -26,8 +26,9 @@ from traits.api import HasTraits, Unicode, Int, Float, Range, Enum, Bool
 from traits.api import ListUnicode, List, Tuple
 from traits.api import TraitError
 
+import inspect
 import simplejson as json
-
+import jsonschema
 
 TRAIT_TYPES = {Unicode: 'str',
                Int: 'int',
@@ -39,92 +40,38 @@ TRAIT_TYPES = {Unicode: 'str',
 
 
 class HasParam(object):
+    """Abstract class for handling parameters
     """
-    >>> class ParamClass(HasParam):
-    ...    class _Param(HasTraits):
-    ...        param1 = Unicode(desc='first or personal name',
-    ...                      label='First Name')
-    ...        param2 = Int()
-    ...        param3 = Float()
-    ...        param4 = Range(low=0, high=10, value=3)
-    >>>
-    >>> p = ParamClass()
-    >>> param_json = p.get_parameters()
-    >>> print param_json
-    {"param4": 3, "param3": 0.0, "param2": 0, "param1": ""}
-    >>> new_param_json = '{"param1": "plop", "param2": 7, "param3": 0.5, \
-    "param4": 8}'
-    >>> p.set_parameters(new_param_json)
-    >>> print p.get_parameters()
-    {"param4": 8, "param3": 0.5, "param2": 7, "param1": "plop"}
-    >>> v = p.param_view()
-    >>> print v
-    {"param4": {"default": 3, "type": "range"}, \
-"param3": {"default": 0.0, "type": "float"}, \
-"param2": {"default": 0, "type": "int"}, \
-"param1": {"default": "", "type": "str"}}
-    """
-    class _Param(HasTraits):
-        pass
+    _schema = {"type": "object",
+               "properties": {}
+               }
 
-    def __init__(self):
-        super(HasParam, self).__init__()
-        self._parameters = self._Param()
+    @classmethod
+    def get_parameters_schema(cls):
+        # TODO : add default values
+        return cls._schema
 
-    def __setattr__(self, name, value):
-        if name is '_parameters':
-            super(HasParam, self).__setattr__(name, value)
-        elif name in self._parameters.trait_names():
-            self._parameters.__setattr__(name, value)
-            # Copy attributes as a regular attribute at class level
-            _value = self._parameters.__getattribute__(name)
-            super(HasParam, self).__setattr__(name, _value)
-        else:
-            super(HasParam, self).__setattr__(name, value)
-
-    def get_parameters(self):
-        list_traits = self._parameters.editable_traits()
-        param_dict = self._parameters.get(list_traits)
-        return json.dumps(param_dict)
-
-    def set_parameters(self, parameters):
-        if isinstance(parameters, basestring):
-            self.set_parameters(json.loads(parameters))
-        else:
-            for name, value in parameters.items():
-                self.__setattr__(name, value)
-
-    def validate_parameters(self, parameters):
-        """Validate parameters format against Traits specification
-        Input can be either a dictionary or a JSON string
-        Returns the validated parameters or raises a ValueError"""
-
-        if isinstance(parameters, basestring):
-            return self.validate_parameters(json.loads(parameters))
-        # Check key against traits name
-        traits_name = self._parameters.editable_traits()
-        for name in parameters:
-            if name not in traits_name:
-                raise KeyError(name)
+    def get_parameters(self, schema=None):
+        if schema is None:
+            schema = self._schema
 
         try:
-            valid_params = {name: self._parameters.validate_trait(name, value)
-                            for name, value in parameters.items()}
-        except TraitError as e:
-            raise ValueError(str(e))
+            keys = schema["properties"].keys()
+        except KeyError:
+            keys = schema.keys()
 
-        return valid_params
+        return {key: self.__getattribute__(key)
+                for key in keys}
 
-    def param_view(self):
-        list_traits = self._parameters.editable_traits()
-        view = {}
-        for key in list_traits:
-            trait_type = self._parameters.trait(key).trait_type.__class__
-            default = self._parameters.trait(key).default
-            d = {'type': TRAIT_TYPES[trait_type],
-                 'default': default}
-            view[key] = d
-        return json.dumps(view)
+    def validate_parameters(self, parameters, schema=None):
+        """Validate parameters format against schema specification
+        Raises:	
+          - ValidationError if the instance is invalid
+          - SchemaError if the schema itself is invalid
+        """
+        if schema is None:
+            schema = self._schema
+        jsonschema.validate(parameters, schema)
 
 
 if __name__ == "__main__":
