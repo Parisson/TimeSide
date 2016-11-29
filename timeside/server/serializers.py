@@ -26,6 +26,7 @@ import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
 from jsonschema import ValidationError
+import json
 
 
 class ItemListSerializer(serializers.HyperlinkedModelSerializer):
@@ -361,8 +362,10 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
             default_params = processor.get_parameters()
             default_msg = "Defaut parameters:\n%s" % default_params
 
+            if data['parameters'] == u'':
+                data['parameters'] = '{}'
             try:
-                processor.validate_parameters(data['parameters'])
+                processor.validate_parameters(json.loads(data['parameters']))
             except ValidationError as e:
                 msg = '\n'.join([str(e), default_msg])
                 raise serializers.ValidationError(msg)
@@ -370,9 +373,9 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
                 msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
                 raise serializers.ValidationError(msg)
 
-            processor = proc(**data['parameters'])
+            processor = proc(**json.loads(data['parameters']))
             data['parameters'] = processor.get_parameters()
-        return attrs
+        return data
 
 
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
