@@ -28,6 +28,7 @@ from traits.api import TraitError
 
 
 import jsonschema
+import inspect
 
 TRAIT_TYPES = {Unicode: 'str',
                Int: 'int',
@@ -62,14 +63,22 @@ class HasParam(object):
         return {key: self.__getattribute__(key)
                 for key in keys}
 
-    def validate_parameters(self, parameters, schema=None):
+    @classmethod
+    def get_parameters_default(cls):
+        args, _, _, defaults = inspect.getargspec(cls.__init__)
+        args.remove('self')  # remove 'self' from arguments list
+        return {arg: default for arg, default
+                in zip(args[-len(defaults):], defaults)}
+
+    @classmethod
+    def validate_parameters(cls, parameters, schema=None):
         """Validate parameters format against schema specification
         Raises:	
           - ValidationError if the instance is invalid
           - SchemaError if the schema itself is invalid
         """
         if schema is None:
-            schema = self._schema
+            schema = cls._schema
         jsonschema.validate(parameters, schema)
 
 

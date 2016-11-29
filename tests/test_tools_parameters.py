@@ -61,14 +61,16 @@ class TestHasParam(unittest.TestCase):
         "get_parameters method with default values"
         cls_instance = self.has_param_cls()
         param_dict = cls_instance.get_parameters()
-        self.assertEqual(param_dict,
-                         self.param_default)
+        self.assertDictEqual(param_dict,
+                             self.param_default)
+        self.assertDictEqual(self.param_default,
+                             cls_instance.get_parameters_default())
 
-        def test_get_parameters_schema(self):
-            "get_parameters schema"
+    def test_get_parameters_schema(self):
+        "get_parameters schema"
 
-            self.assertEqual(self.schema,
-                             self.has_param_cls.get_parameters_schema())
+        self.assertEqual(self.schema,
+                         self.has_param_cls.get_parameters_schema())
 
     def test_validate_True(self):
         "Validate parameters with good format"
