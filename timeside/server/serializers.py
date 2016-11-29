@@ -25,6 +25,8 @@ from rest_framework.reverse import reverse
 import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
+from jsonschema import ValidationError
+
 
 class ItemListSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -350,26 +352,26 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ('uuid',)
 
-    def validate_parameters(self, attrs, source):
+    def validate(self, data):
 
         import timeside.core
-        proc = timeside.core.get_processor(attrs['processor'].pid)
+        proc = timeside.core.get_processor(data['processor'].pid)
         if proc.type == 'analyzer':
             processor = proc()
             default_params = processor.get_parameters()
             default_msg = "Defaut parameters:\n%s" % default_params
 
             try:
-                processor.validate_parameters(attrs[source])
-            except ValueError as e:
+                processor.validate_parameters(data['parameters'])
+            except ValidationError as e:
                 msg = '\n'.join([str(e), default_msg])
                 raise serializers.ValidationError(msg)
             except KeyError as e:
                 msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
                 raise serializers.ValidationError(msg)
 
-            processor.set_parameters(attrs[source])
-            attrs[source] = processor.get_parameters()
+            processor = proc(**data['parameters'])
+            data['parameters'] = processor.get_parameters()
         return attrs
 
 
