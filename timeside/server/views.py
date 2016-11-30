@@ -135,8 +135,18 @@ class ProcessorViewSet(viewsets.ModelViewSet):
     lookup_field = 'pid'
     lookup_value_regex = '[0-9a-z_]+'
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ProcessorListSerializer
+        return serializers.ProcessorSerializer
+
     @detail_route(methods=['get'])
     def get_parameters_schema(self, request, pid=None):
+        serializer = serializers.ParametersSchemaSerializer(self.get_object())
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def get_parameters_default(self, request, pid=None):
         serializer = serializers.ParametersSchemaSerializer(self.get_object())
         return Response(serializer.data)
 

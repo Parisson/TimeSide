@@ -310,13 +310,25 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Processor
-        fields = ('url', 'pid', 'version', 'parameters_schema')
+        fields = ('name', 'pid', 'url', 'version', 'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }
 
     def get_parameters_schema(self, obj):
         return obj.get_parameters_schema()
+
+
+class ProcessorListSerializer(serializers.HyperlinkedModelSerializer):
+
+    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('name', 'pid', 'url', 'version')
+        extra_kwargs = {
+            'url': {'lookup_field': 'pid'}
+        }
 
 
 class ParametersSchemaSerializer(serializers.HyperlinkedModelSerializer):
