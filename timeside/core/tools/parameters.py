@@ -42,19 +42,18 @@ TRAIT_TYPES = {Unicode: 'str',
 class HasParam(object):
     """Abstract class for handling parameters
     """
-    _schema = {"type": "object",
-               "properties": {}
-               }
+    _schema = None
 
     @classmethod
     def get_parameters_schema(cls):
-
+        if cls._schema is None:
+            cls._schema = {"type": "object", "properties": {}}
         argspec_schema = cls.schema_from_argspec()
         if argspec_schema and cls._schema['properties']:
             for key in argspec_schema:
                 if key in cls._schema['properties']:
                     argspec_schema[key].update(cls._schema['properties'][key])
-            cls._schema['properties'] = argspec_schema
+        cls._schema['properties'] = argspec_schema
 
         return cls._schema
 
@@ -74,8 +73,12 @@ class HasParam(object):
     def get_parameters_default(cls):
         args, _, _, defaults = inspect.getargspec(cls.__init__)
         args.remove('self')  # remove 'self' from arguments list
-        return {arg: default for arg, default
-                in zip(args[-len(defaults):], defaults)}
+        if defaults:
+            return {arg: default for arg, default
+                    in zip(args[-len(defaults):], defaults)
+                    if default is not None}
+        else:
+            return {}
 
     @classmethod
     def validate_parameters(cls, parameters, schema=None):
@@ -101,6 +104,10 @@ class HasParam(object):
                 val_type = "number"
             elif isinstance(value, (int, long)):
                 val_type = "integer"
+            elif isinstance(value, list):
+                val_type = "array"
+            else:
+                continue
 
             schema.update({key: {"type": val_type,
                                  "default": value}
