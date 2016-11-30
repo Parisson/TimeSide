@@ -48,7 +48,14 @@ class HasParam(object):
 
     @classmethod
     def get_parameters_schema(cls):
-        # TODO : add default values
+
+        argspec_schema = cls.schema_from_argspec()
+        if argspec_schema and cls._schema['properties']:
+            for key in argspec_schema:
+                if key in cls._schema['properties']:
+                    argspec_schema[key].update(cls._schema['properties'][key])
+            cls._schema['properties'] = argspec_schema
+
         return cls._schema
 
     def get_parameters(self, schema=None):
@@ -88,12 +95,13 @@ class HasParam(object):
         for key, value in default_param.items():
             if isinstance(value, basestring):
                 val_type = "string"
+            elif isinstance(value, bool):
+                val_type = "boolean"  # warning : boolean is an int instance
             elif isinstance(value, float):
                 val_type = "number"
             elif isinstance(value, (int, long)):
                 val_type = "integer"
-            elif isinstance(value, bool):
-                val_type = "boolean"
+
             schema.update({key: {"type": val_type,
                                  "default": value}
                            }

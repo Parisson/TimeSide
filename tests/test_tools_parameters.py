@@ -14,16 +14,17 @@ class TestHasParam(unittest.TestCase):
     def setUp(self):
         self.schema = {"type": "object",
                        "properties": {
-                           "param1": {"type": "string"},
-                           "param2": {"type": "integer"},
-                           "param3": {"type": "number"},
-                           "param4": {"type": "integer",
+                           "param1": {"type": "string", "default": "default"},
+                           "param2": {"type": "integer", "default": 3},
+                           "param3": {"type": "number", "default": 5.9},
+                           "param4": {"type": "integer", "default": 33,
                                       "minimum": 0,
                                       "maximum": 100,
                                       },
-                           "param5": {"type": "boolean"}
+                           "param5": {"type": "boolean", "default": True}
                        }
                        }
+
         self.param_default = {"param1": "default",
                               "param2": 3,
                               "param3": 5.9,
@@ -72,6 +73,17 @@ class TestHasParam(unittest.TestCase):
         self.assertEqual(self.schema,
                          self.has_param_cls.get_parameters_schema())
 
+        incomplete_schema = self.schema
+        del incomplete_schema['properties']['param1']['default']
+        del incomplete_schema['properties']['param2']['default']
+        del incomplete_schema['properties']['param3']
+        del incomplete_schema['properties']['param5']
+
+        has_param_cls = self.has_param_cls()
+        has_param_cls._schema = incomplete_schema
+        self.assertEqual(self.schema,
+                         has_param_cls.get_parameters_schema())
+
     def test_validate_True(self):
         "Validate parameters with good format"
         # Validate from dict
@@ -91,8 +103,14 @@ class TestHasParam(unittest.TestCase):
         """
         Get schema from class __init__ arguments
         """
+        schema = self.schema.copy()
+        for param in schema['properties']:
+            keys_to_delete = [key for key in schema['properties'][param]
+                              if not key in ['type', 'default']]
+            for key in keys_to_delete:
+                del schema['properties'][param][key]
         self.assertDictEqual(self.has_param_cls.schema_from_argspec(),
-                             self.schema['properties'])
+                             schema['properties'])
 
 
 if __name__ == '__main__':
