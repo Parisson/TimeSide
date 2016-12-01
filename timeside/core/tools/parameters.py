@@ -59,7 +59,7 @@ class HasParam(object):
 
     def get_parameters(self, schema=None):
         if schema is None:
-            schema = self._schema
+            schema = self.get_parameters_schema()
 
         try:
             keys = schema["properties"].keys()

@@ -1311,7 +1311,7 @@ class Analyzer(Processor):
         result.audio_metadata.is_segment = self.mediainfo()['is_segment']
         result.audio_metadata.channels = self.channels()
 
-        result.parameters = Parameters(json.loads(self.get_parameters()))
+        result.parameters = Parameters(self.get_parameters())
 
         if time_mode == 'framewise':
             result.data_object.frame_metadata.samplerate = self.result_samplerate
