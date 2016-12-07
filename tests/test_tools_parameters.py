@@ -4,6 +4,7 @@
 from unit_timeside import unittest, TestRunner
 from timeside.core.tools.parameters import HasParam, HasTraits
 from timeside.core.tools.parameters import Unicode, Int, Float, Range
+from timeside.core.tools.parameters import store_parameters
 
 import simplejson as json
 from jsonschema import ValidationError
@@ -34,6 +35,7 @@ class TestHasParam(unittest.TestCase):
         class ParamClass(HasParam):
             _schema = self.schema
 
+            @store_parameters
             def __init__(self,
                          param1=self.param_default["param1"],
                          param2=self.param_default["param2"],
@@ -41,11 +43,6 @@ class TestHasParam(unittest.TestCase):
                          param4=self.param_default["param4"],
                          param5=self.param_default["param5"]):
                 super(ParamClass, self).__init__()
-                self.param1 = param1
-                self.param2 = param2
-                self.param3 = param3
-                self.param4 = param4
-                self.param5 = param5
 
         self.param_dict = {"param1": "", "param2": 0, "param3": 0.0,
                            "param4": 3, "param5": False}

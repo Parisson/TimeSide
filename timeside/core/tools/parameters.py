@@ -29,6 +29,9 @@ from traits.api import TraitError
 
 import jsonschema
 import inspect
+import functools
+import decorator
+from copy import deepcopy
 
 TRAIT_TYPES = {Unicode: 'str',
                Int: 'int',
@@ -37,6 +40,18 @@ TRAIT_TYPES = {Unicode: 'str',
                Enum: 'enum',
                ListUnicode: 'list of str',
                List: 'list'}
+
+
+@decorator.decorator
+def store_parameters(__init__func, *args):
+    self = args[0]
+    argsname, _, _, _ = inspect.getargspec(__init__func)
+
+    parameters = {key: value
+                  for key, value in zip(argsname, args)}
+    del parameters['self']
+    __init__func(*args)
+    self._parameters = parameters
 
 
 class HasParam(object):
@@ -57,17 +72,8 @@ class HasParam(object):
 
         return cls._schema
 
-    def get_parameters(self, schema=None):
-        if schema is None:
-            schema = self.get_parameters_schema()
-
-        try:
-            keys = schema["properties"].keys()
-        except KeyError:
-            keys = schema.keys()
-
-        return {key: self.__getattribute__(key)
-                for key in keys}
+    def get_parameters(self):
+        return self._parameters
 
     @classmethod
     def get_parameters_default(cls):
@@ -75,8 +81,7 @@ class HasParam(object):
         args.remove('self')  # remove 'self' from arguments list
         if defaults:
             return {arg: default for arg, default
-                    in zip(args[-len(defaults):], defaults)
-                    if default is not None}
+                    in zip(args[-len(defaults):], defaults)}
         else:
             return {}
 
@@ -107,7 +112,7 @@ class HasParam(object):
             elif isinstance(value, list):
                 val_type = "array"
             else:
-                continue
+                raise ValueError("You need to provide a JSON schema or instance % s in % s" % (key, self.__str__))
 
             schema.update({key: {"type": val_type,
                                  "default": value}

@@ -9,7 +9,6 @@ from timeside.plugins.decoder.file import FileDecoder
 from timeside.core.tools.test_samples import samples
 
 
-
 class TestAnalyzers_with_default(unittest.TestCase):
     """Test analyzer with default parameters"""
 
@@ -23,6 +22,10 @@ class TestAnalyzers_with_default(unittest.TestCase):
         of a given analyzer"""
 
         analyzer = analyzer_cls()
+
+        self.assertEqual(analyzer.get_parameters(),
+                         analyzer.get_parameters_default())
+
         pipe = (self.decoder | analyzer)
         pipe.run()
         for key, result in analyzer.results.items():
@@ -57,15 +60,15 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 # Define test to skip and corresponding reasons
 skip_reasons = {}
 # Define test to skip and corresponding reasons
-skip_reasons = {#'IRITDiverg': 'IRIT_Diverg has to be fixed',
-                #'IRITMusicSLN': 'IRITMusicSLN has to be fixed',
-                #'IRITMusicSNB': 'IRITMusicSNB has to be fixed',
-                'IRITSinging': 'IRITSingings has to be fixed',
-                'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',
-                'IRITHarmoCluster': 'IRIT_HarmoCluster fails the stress test',
-                'LABRIInstru': 'LABRIInstru has to be fixed',
-                'LABRIMultipitch': 'LABRIMultipitch has to be fixed'
-               }
+skip_reasons = {  # 'IRITDiverg': 'IRIT_Diverg has to be fixed',
+    #'IRITMusicSLN': 'IRITMusicSLN has to be fixed',
+    #'IRITMusicSNB': 'IRITMusicSNB has to be fixed',
+    'IRITSinging': 'IRITSingings has to be fixed',
+    'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',
+    'IRITHarmoCluster': 'IRIT_HarmoCluster fails the stress test',
+    'LABRIInstru': 'LABRIInstru has to be fixed',
+    'LABRIMultipitch': 'LABRIMultipitch has to be fixed'
+}
 
 # For each analyzer in TimeSide, test with constant input
 _tests_factory(test_class=TestAnalyzers_with_default,
