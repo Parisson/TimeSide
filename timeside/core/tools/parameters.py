@@ -93,7 +93,7 @@ class HasParam(object):
           - SchemaError if the schema itself is invalid
         """
         if schema is None:
-            schema = cls._schema
+            schema = cls.get_parameters_schema()
         jsonschema.validate(parameters, schema)
 
     @classmethod
@@ -112,7 +112,7 @@ class HasParam(object):
             elif isinstance(value, list):
                 val_type = "array"
             else:
-                raise ValueError("You need to provide a JSON schema or instance % s in % s" % (key, self.__str__))
+                raise ValueError("You need to provide a JSON schema or instance % s in % s" % (key, cls.__str__()))
 
             schema.update({key: {"type": val_type,
                                  "default": value}

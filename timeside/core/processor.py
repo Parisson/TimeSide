@@ -61,9 +61,10 @@ class MetaProcessor(MetaComponent):
                 elif new_path == id_path:
                     new_class = _processors[id]
                 else:
-                    raise ApiError("%s and %s have the same id: '%s'"
-                                   % (new_class.__name__,
-                                      _processors[id].__name__, id))
+                    raise ApiError("%s at %s and %s at %s have the same id: '%s'"
+                                   % (new_class.__name__, new_path,
+                                      _processors[id].__name__, id_path,
+                                      id))
             if not MetaProcessor.valid_id.match(id):
                 raise ApiError("%s has a malformed id: '%s'"
                                % (new_class.__name__, id))
