@@ -5,6 +5,7 @@ from unit_timeside import unittest, TestRunner
 from timeside.core.tools.parameters import HasParam, HasTraits
 from timeside.core.tools.parameters import Unicode, Int, Float, Range
 from timeside.core.tools.parameters import store_parameters
+from timeside.core.tools.parameters import DEFAULT_SCHEMA
 
 import simplejson as json
 from jsonschema import ValidationError
@@ -13,18 +14,16 @@ from jsonschema import ValidationError
 class TestHasParam(unittest.TestCase):
 
     def setUp(self):
-        self.schema = {"type": "object",
-                       "properties": {
-                           "param1": {"type": "string", "default": "default"},
-                           "param2": {"type": "integer", "default": 3},
-                           "param3": {"type": "number", "default": 5.9},
-                           "param4": {"type": "integer", "default": 33,
-                                      "minimum": 0,
-                                      "maximum": 100,
-                                      },
-                           "param5": {"type": "boolean", "default": True}
-                       }
-                       }
+        self.schema = DEFAULT_SCHEMA()
+        self.schema['properties'].update(
+            {"param1": {"type": "string", "default": "default"},
+             "param2": {"type": "integer", "default": 3},
+             "param3": {"type": "number", "default": 5.9},
+             "param4": {"type": "integer", "default": 33,
+                        "minimum": 0,
+                        "maximum": 100, },
+             "param5": {"type": "boolean", "default": True}}
+        )
 
         self.param_default = {"param1": "default",
                               "param2": 3,
@@ -107,7 +106,7 @@ class TestHasParam(unittest.TestCase):
             for key in keys_to_delete:
                 del schema['properties'][param][key]
         self.assertDictEqual(self.has_param_cls.schema_from_argspec(),
-                             schema['properties'])
+                             schema)
 
 
 if __name__ == '__main__':

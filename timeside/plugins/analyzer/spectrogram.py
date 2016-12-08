@@ -24,7 +24,7 @@ from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 from timeside.core.tools.buffering import BufferTable
-from timeside.core.tools.parameters import Int, HasTraits
+from timeside.core.tools.parameters import store_parameters, Int, HasTraits
 
 import numpy as np
 
@@ -90,6 +90,7 @@ class Spectrogram(Analyzer):
         input_blocksize = Int()
         input_stepsize = Int()
 
+    @store_parameters
     def __init__(self, input_blocksize=2048, input_stepsize=None,
                  fft_size=None):
         super(Spectrogram, self).__init__()

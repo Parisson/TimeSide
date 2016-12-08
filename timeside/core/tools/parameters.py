@@ -54,6 +54,12 @@ def store_parameters(__init__func, *args):
     self._parameters = parameters
 
 
+def DEFAULT_SCHEMA():
+    return {"type": "object",
+            "properties": {},
+            "$schema": "http://json-schema.org/schema#"}
+
+
 class HasParam(object):
     """Abstract class for handling parameters
     """
@@ -62,8 +68,8 @@ class HasParam(object):
     @classmethod
     def get_parameters_schema(cls):
         if cls._schema is None:
-            cls._schema = {"type": "object", "properties": {}}
-        argspec_schema = cls.schema_from_argspec()
+            cls._schema = DEFAULT_SCHEMA()
+        argspec_schema = cls.schema_from_argspec()['properties']
         if argspec_schema and cls._schema['properties']:
             for key in argspec_schema:
                 if key in cls._schema['properties']:
@@ -99,7 +105,7 @@ class HasParam(object):
     @classmethod
     def schema_from_argspec(cls):
         default_param = cls.get_parameters_default()
-        schema = {}
+        schema = DEFAULT_SCHEMA()
         for key, value in default_param.items():
             if isinstance(value, basestring):
                 val_type = "string"
@@ -112,14 +118,15 @@ class HasParam(object):
             elif isinstance(value, list):
                 val_type = "array"
             else:
-                raise ValueError("You need to provide a JSON schema or instance % s in % s" % (key, cls.__str__()))
-
-            schema.update({key: {"type": val_type,
-                                 "default": value}
-                           }
-                          )
+                val_type = "Unknown_type"
+            schema['properties'].update({key: {"type": val_type,
+                                               "default": value}})
         return schema
 
+    @classmethod
+    def check_schema(cls):
+        """Validate the class schema against the Draft 4 meta-schema"""
+        jsonschema.Draft4Validator.check_schema(cls.get_parameters_schema())
 
 if __name__ == "__main__":
     import doctest

@@ -7,6 +7,21 @@ import numpy as np
 import timeside.core
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.core.tools.test_samples import samples
+from jsonschema import Draft4Validator
+
+
+class TestAnalyzers_parameters(unittest.TestCase):
+    """Test analyzer parameters and schema specification"""
+
+    def _perform_test(self, analyzer_cls):
+        """Internal function that test analyzer schema and default parameters"""
+
+        analyzer = analyzer_cls()
+
+        self.assertEqual(analyzer.get_parameters(),
+                         analyzer.get_parameters_default())
+
+        analyzer.check_schema()
 
 
 class TestAnalyzers_with_default(unittest.TestCase):
@@ -22,10 +37,6 @@ class TestAnalyzers_with_default(unittest.TestCase):
         of a given analyzer"""
 
         analyzer = analyzer_cls()
-
-        self.assertEqual(analyzer.get_parameters(),
-                         analyzer.get_parameters_default())
-
         pipe = (self.decoder | analyzer)
         pipe.run()
         for key, result in analyzer.results.items():
@@ -59,6 +70,13 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 
 # Define test to skip and corresponding reasons
 skip_reasons = {}
+# For each analyzer in TimeSide, test default parameters and schema
+_tests_factory(test_class=TestAnalyzers_parameters,
+               test_doc="Test analyzer %s schema and default parameters",
+               list_analyzers=timeside.core.processor.processors(timeside.core.api.IAnalyzer),
+               skip_reasons=skip_reasons)
+
+
 # Define test to skip and corresponding reasons
 skip_reasons = {  # 'IRITDiverg': 'IRIT_Diverg has to be fixed',
     #'IRITMusicSLN': 'IRITMusicSLN has to be fixed',
