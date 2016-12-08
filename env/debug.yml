@@ -26,6 +26,7 @@ app:
     - env/debug.env
   volumes:
     - ./:/srv/src/timeside/
+    - ./lib/:/srv/src/plugins/
 
 worker:
   env_file:
