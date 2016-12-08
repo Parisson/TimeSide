@@ -19,7 +19,7 @@ class TestAnalyzers_parameters(unittest.TestCase):
         analyzer = analyzer_cls()
 
         self.assertEqual(analyzer.get_parameters(),
-                         analyzer.get_parameters_default())
+                         analyzer.get_parameters_default_from_argspec())
 
         analyzer.check_schema()
 

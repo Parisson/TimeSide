@@ -141,13 +141,13 @@ class ProcessorViewSet(viewsets.ModelViewSet):
         return serializers.ProcessorSerializer
 
     @detail_route(methods=['get'])
-    def get_parameters_schema(self, request, pid=None):
+    def parameters_schema(self, request, pid=None):
         serializer = serializers.ParametersSchemaSerializer(self.get_object())
         return Response(serializer.data)
 
     @detail_route(methods=['get'])
-    def get_parameters_default(self, request, pid=None):
-        serializer = serializers.ParametersSchemaSerializer(self.get_object())
+    def parameters_default(self, request, pid=None):
+        serializer = serializers.ParametersDefaultSerializer(self.get_object())
         return Response(serializer.data)
 
 

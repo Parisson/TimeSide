@@ -343,6 +343,18 @@ class ParametersSchemaSerializer(serializers.HyperlinkedModelSerializer):
         return obj.get_parameters_schema()
 
 
+class ParametersDefaultSerializer(serializers.HyperlinkedModelSerializer):
+
+    parameters_default = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('parameters_default',)
+
+    def get_parameters_default(self, obj):
+        return obj.get_parameters_default()
+
+
 class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:

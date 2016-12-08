@@ -82,7 +82,20 @@ class HasParam(object):
         return self._parameters
 
     @classmethod
+    def get_parameters_default_from_argspec(cls):
+        args, _, _, defaults = inspect.getargspec(cls.__init__)
+        args.remove('self')  # remove 'self' from arguments list
+        if defaults:
+            return {arg: default for arg, default
+                    in zip(args[-len(defaults):], defaults)}
+        else:
+            return {}
+
+    @classmethod
     def get_parameters_default(cls):
+        schema = cls.get_parameters_schema()
+        return {key: schema['properties'][key]['default']
+                for key in schema['properties']}
         args, _, _, defaults = inspect.getargspec(cls.__init__)
         args.remove('self')  # remove 'self' from arguments list
         if defaults:
@@ -104,7 +117,7 @@ class HasParam(object):
 
     @classmethod
     def schema_from_argspec(cls):
-        default_param = cls.get_parameters_default()
+        default_param = cls.get_parameters_default_from_argspec()
         schema = DEFAULT_SCHEMA()
         for key, value in default_param.items():
             if isinstance(value, basestring):
