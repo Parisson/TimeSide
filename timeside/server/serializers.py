@@ -486,7 +486,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Analysis
-        fields = ('url', 'uuid', 'title', 'preset', 'sub_processor')
+        fields = ('url', 'uuid', 'title', 'preset', 'sub_processor', 'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},

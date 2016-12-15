@@ -32,6 +32,7 @@ import time
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
+from timeside.core.tools.parameters import DEFAULT_SCHEMA
 
 from django.db import models
 from django.utils.functional import lazy
@@ -39,6 +40,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
+import jsonfield
+import json
 
 app = 'timeside'
 
@@ -91,13 +94,6 @@ if not os.path.exists(RESULTS_ROOT):
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
-
-
-def get_processor(pid):
-    for proc in processors:
-        if proc.id() == pid:
-            return proc
-    raise ValueError('Processor %s does not exists' % pid)
 
 
 # --- Abstract classes -----
@@ -231,8 +227,9 @@ class Item(Titled, UUID, Dated, Shareable):
         decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
                                                             sha1=self.sha1)
         presets = {}
+        pipe = decoder
         for preset in experience.presets.all():
-            proc = get_processor(preset.processor.pid)
+            proc = preset.processor.get_processor()
             if proc.type == 'encoder':
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
@@ -243,10 +240,11 @@ class Item(Titled, UUID, Dated, Shareable):
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
             elif proc.type in ['analyzer', 'grapher']:
-                proc = proc(**ast.literal_eval(preset.parameters))
+                print json.loads(preset.parameters)
+                proc = proc(**json.loads(preset.parameters))
 
             presets[preset] = proc
-            pipe = decoder | proc
+            pipe |= proc
 
         # item.lock_setter(True)
 
@@ -263,12 +261,12 @@ class Item(Titled, UUID, Dated, Shareable):
             if preset is None:
                 processor, c = Processor.objects.get_or_create(pid=proc.id())
                 presets = Preset.objects.filter(processor=processor,
-                                                parameters=unicode(parameters))
+                                                parameters=json.dumps(parameters))
                 if presets:
                     preset = presets[0]
                 else:
                     preset = Preset(processor=processor,
-                                    parameters=unicode(parameters))
+                                    parameters=json.dumps(parameters))
                     preset.save()
             else:
                 processor = preset.processor
@@ -290,7 +288,6 @@ class Item(Titled, UUID, Dated, Shareable):
                 set_results_from_processor(proc, preset)
 
             elif proc.type == 'grapher':
-                parameters = {}
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
                 image_file = str(result.uuid) + '.png'
@@ -525,10 +522,12 @@ post_save.connect(run, sender=Task)
 class Analysis(Titled, UUID, Dated, Shareable):
     sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False)
     preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False)
+    parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:
         db_table = app + '_analysis'
         verbose_name = _('Analysis')
+        verbose_name_plural = _('Analyses')
 
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
