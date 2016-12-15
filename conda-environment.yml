@@ -33,6 +33,7 @@ dependencies:
       - django-extensions
       - django==1.9.*
       - djangorestframework==3.*
+      - jsonfield
       - mutagen
       - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling

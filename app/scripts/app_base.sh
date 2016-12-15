@@ -19,6 +19,7 @@ gid='www-data'
 # staging apps
 pip install -U django-cors-headers
 pip install django-debug-toolbar
+pip install jsonfield
 
 # wait for other services
 bash $app/scripts/wait.sh
