@@ -386,7 +386,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
             default_params = processor.get_parameters()
             default_msg = "Defaut parameters:\n%s" % default_params
 
-            if data['parameters'] == u'':
+            if not data['parameters']:
                 data['parameters'] = '{}'
             try:
                 processor.validate_parameters(json.loads(data['parameters']))
@@ -398,7 +398,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
                 raise serializers.ValidationError(msg)
 
             processor = proc(**json.loads(data['parameters']))
-            data['parameters'] = processor.get_parameters()
+            data['parameters'] = json.dumps(processor.get_parameters())
         return data
 
 

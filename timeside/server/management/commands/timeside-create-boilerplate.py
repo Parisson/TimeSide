@@ -11,6 +11,7 @@ from timeside.server.models import Selection, Item
 from timeside.server.models import Processor, Preset, Experience, Task, Analysis, SubProcessor
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
+import simplejson as json
 
 
 class Command(BaseCommand):
@@ -83,7 +84,7 @@ class Command(BaseCommand):
                 processor, c = Processor.objects.get_or_create(pid=grapher._analyzer.id())
                 try:
                     preset, c = Preset.objects.get_or_create(processor=processor,
-                                                             parameters=grapher._analyzer_parameters)
+                                                             parameters=json.dumps(grapher._analyzer_parameters))
                 except MultipleObjectsReturned:
                     print Preset.objects.get(processor=processor,
                                              parameters=grapher._analyzer_parameters)
