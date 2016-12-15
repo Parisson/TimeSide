@@ -23,6 +23,7 @@ dependencies:
   - Werkzeug
   - yaafe  # in yaafe channel (optionnal)
   - pip:
+      - celery==3.*
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
