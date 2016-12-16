@@ -954,12 +954,12 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         ax_color = {}
         legend_patches = []
         for key, label in self.label_metadata.label.items():
-            ax_color[key] = colors.next()
+            ax_color[int(key)] = colors.next()
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
-            legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
+            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=label))
 
         for time, duration, key in zip(self.time, self.duration, self.data):
-            ax.axvspan(time, time + duration, color=ax_color[key], alpha=0.3)
+            ax.axvspan(time, time + duration, color=ax_color[int(key)], alpha=0.3)
 
         # Create legend from custom artist/label lists
         ax.legend(handles=legend_patches)  # , self.label_metadata.label.values())
