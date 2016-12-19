@@ -23,5 +23,5 @@
 
 app:
   volumes:
-    - ./.coverage:./.coverage
+    - .:/srv/src/timeside
 
