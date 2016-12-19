@@ -12,6 +12,7 @@ import os.path
 
 class TestGetUri(unittest.TestCase):
     "Test get_uri function"
+
     def testFileName(self):
         "Retrieve the uri from a filename"
         self.source = samples["sweep.wav"]
@@ -28,6 +29,7 @@ class TestGetUri(unittest.TestCase):
 
 
 class TestGetUriWrongUri(unittest.TestCase):
+
     def testMissingFile(self):
         "Missing file raise IOerror"
         self.source = os.path.join(os.path.dirname(__file__),
@@ -56,11 +58,12 @@ class TestGetMediaInfo(unittest.TestCase):
         self.expected_samplerate = 44100
         self.expected_depth = 0  # ?
 
-
     def testUriFromHTTP(self):
         "Test URI decoding from HTTP"
         self.source = "https://raw.githubusercontent.com/yomguy/timeside-samples/master/samples/sweep.mp3"
-        
+        self.test_exact_duration = False
+        self.expected_depth = 32
+
     def testWav(self):
         "Test wav decoding"
         self.source = samples["sweep.wav"]
