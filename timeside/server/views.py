@@ -31,6 +31,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics, renderers
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import detail_route
@@ -41,17 +42,6 @@ from . import serializers
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
 import os
-
-
-def stream_from_file(file):
-    chunk_size = 0x10000
-    f = open(file, 'r')
-    while True:
-        chunk = f.read(chunk_size)
-        if not len(chunk):
-            f.close()
-            break
-        yield chunk
 
 
 def stream_from_task(task):
@@ -221,6 +211,57 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     queryset = model.objects.all()
     serializer_class = serializers.AnalysisTrackSerializer
 
+    @detail_route(methods=['post'])
+    def set_parameters(self, request, uuid=None):
+        # Get current Analysis track Preset
+        track = self.get_object()
+        context = {'request': request}
+        preset_data = serializers.PresetSerializer(track.analysis.preset,
+                                                   context=context).data
+        # Create a new Preset from parameters post in request data
+        preset_data['parameters'] = json.dumps(request.data)
+        preset_serializer = serializers.PresetSerializer(data=preset_data,
+                                                         context=context)
+        if preset_serializer.is_valid():
+            preset = preset_serializer.save()
+        else:
+            return Response(data=preset_serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Create a new Analysis with this Preset
+        analysis_data = serializers.AnalysisSerializer(track.analysis,
+                                                       context=context).data
+        # Update preset field
+        analysis_data['preset'] = preset_serializer.data['url']
+
+        analysis_serializer = serializers.AnalysisSerializer(data=analysis_data,
+                                                             context=context)
+        if analysis_serializer.is_valid():
+            analysis = analysis_serializer.save()
+        else:
+            return Response(data=analysis_serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Update Analysis track with partial data
+        new_analysis = {'analysis': analysis_serializer.data['url']}
+        serializer_track = self.serializer_class(track,
+                                                 data=new_analysis,
+                                                 context=context,
+                                                 partial=True)
+
+        # Return Analysis Track data as response to POST request
+        if serializer_track.is_valid():
+            serializer_track.save()
+            return Response(data=serializer_track.data,
+                            status=status.HTTP_200_OK)
+        else:
+            return Response(data=serializer_track.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['get'])
+    def parameters_default(self, request, uuid=None):
+        serializer = serializers.ParametersDefaultSerializer(self.get_object())
+        return Response(serializer.data)
+
 
 class ResultAnalyzerView(View):
 
@@ -307,7 +348,7 @@ class ResultGrapherView(View):
 
     def get(self, request, *args, **kwargs):
         result = models.Result.objects.get(pk=kwargs['pk'])
-        return HttpResponse(stream_from_file(result.file.path),
+        return FileResponse(open(result.file.path, 'rb'),
                             content_type='image/png')
 
 
@@ -317,8 +358,8 @@ class ResultEncoderView(View):
 
     def get(self, request, *args, **kwargs):
         result = models.Result.objects.get(pk=kwargs['pk'])
-        return StreamingHttpResponse(stream_from_file(result.file.path),
-                                     content_type=result.mime_type)
+        return FileResponse(open(result.file.path, 'rb'),
+                            content_type=result.mime_type)
 
 
 class ItemDetailExport(DetailView):

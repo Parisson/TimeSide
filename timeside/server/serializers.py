@@ -77,7 +77,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'}
         }
 
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
     def get_url(self, obj):
         request = self.context['request']
@@ -287,7 +287,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
@@ -300,7 +300,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
             'presets': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -375,7 +375,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'},
             'processor': {'lookup_field': 'pid'}
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
     def validate(self, data):
 
@@ -492,21 +492,27 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
             'preset': {'lookup_field': 'uuid'},
             'sub_processor': {'lookup_field': 'sub_processor_id'}
         }
+        read_only_fields = ('url', 'uuid',)
 
 
 class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
 
     result_url = serializers.SerializerMethodField()
+    parameters_schema = serializers.SerializerMethodField()
+    parameters_default = serializers.SerializerMethodField()
+    parametrizable = serializers.SerializerMethodField()
 
     class Meta:
         model = ts.models.AnalysisTrack
-        fields = ('url', 'uuid', 'analysis', 'item', 'result_url')
+        fields = ('url', 'uuid', 'analysis', 'item', 'result_url',
+                  'parameters_schema', 'parameters_default',
+                  'parametrizable')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},
             'analysis': {'lookup_field': 'uuid'},
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
     def create(self, validated_data):
         item = validated_data['item']
@@ -544,6 +550,19 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         else:
             return 'Task running'
 
+    def get_parameters_schema(self, obj):
+        return obj.analysis.parameters_schema
+
+    def get_parameters_default(self, obj):
+        return obj.analysis.preset.processor.get_parameters_default()
+
+    def get_parametrizable(self, obj):
+        schema = json.loads(self.get_parameters_schema(obj))
+        if not schema or not schema['properties']:
+            return False
+        # TODO : Manage User permission to parametrize Analysis
+        return True
+
     # def get_url(self, obj, view_name, request, format):
     # url_kwargs = {
     # 'item_uuid': obj.item.uuid,
@@ -564,7 +583,7 @@ class AnnotationSerializer_inTrack(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'},
             'track': {'lookup_field': 'uuid'},
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
 
 class AnnotationSerializer(serializers.HyperlinkedModelSerializer):

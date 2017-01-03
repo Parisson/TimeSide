@@ -97,5 +97,5 @@ class Command(BaseCommand):
                                                              title=grapher._grapher_name)
 
         for analysis in Analysis.objects.all():
-            analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
+            analysis.parameters_schema = json.dumps(analysis.preset.processor.get_parameters_schema())
             analysis.save()

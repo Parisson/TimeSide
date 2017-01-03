@@ -96,13 +96,6 @@ class HasParam(object):
         schema = cls.get_parameters_schema()
         return {key: schema['properties'][key]['default']
                 for key in schema['properties']}
-        args, _, _, defaults = inspect.getargspec(cls.__init__)
-        args.remove('self')  # remove 'self' from arguments list
-        if defaults:
-            return {arg: default for arg, default
-                    in zip(args[-len(defaults):], defaults)}
-        else:
-            return {}
 
     @classmethod
     def validate_parameters(cls, parameters, schema=None):
