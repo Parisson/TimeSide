@@ -5,35 +5,59 @@ from timeside.server.models import *
 
 class PresetAdmin(admin.ModelAdmin):
     model = Preset
-    list_display = ['__unicode__', 'processor', 'parameters', 'date_added', 'date_modified']
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'processor', 'parameters', 'date_added', 'date_modified']
     list_filter = ['date_modified', 'processor']
+    search_fields = ['uuid']
 
 
 class SelectionAdmin(admin.ModelAdmin):
     model = Selection
-    list_display = ['__unicode__', 'date_added', 'date_modified']
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     filter_horizontal = ['items', 'selections']
+    search_fields = ['uuid']
 
 
 class ExperienceAdmin(admin.ModelAdmin):
     model = Experience
-    list_display = ['__unicode__', 'date_added', 'date_modified']
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     filter_horizontal = ['presets', 'experiences']
+    search_fields = ['uuid']
 
 
 class TaskAdmin(admin.ModelAdmin):
     model = Task
-    list_display = ['__unicode__', 'date_added', 'date_modified', 'status']
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
+    search_fields = ['uuid']
 
 
 class ResultAdmin(admin.ModelAdmin):
     modele = Result
-    list_display = ['__unicode__', 'date_added', 'date_modified', 'status']
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
+    search_fields = ['uuid']
 
+
+class AnalysisAdmin(admin.ModelAdmin):
+    modele = Analysis
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    list_filter = ['date_modified', ]
+
+
+class AnalysisTrackAdmin(admin.ModelAdmin):
+    modele = AnalysisTrack
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    list_filter = ['date_modified']
+    search_fields = ['uuid', 'title']
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item)
@@ -44,7 +68,7 @@ admin.site.register(SubProcessor)
 admin.site.register(Preset, PresetAdmin)
 admin.site.register(Result, ResultAdmin)
 admin.site.register(Task, TaskAdmin)
-admin.site.register(Analysis)
-admin.site.register(AnalysisTrack)
+admin.site.register(Analysis, AnalysisAdmin)
+admin.site.register(AnalysisTrack, AnalysisTrackAdmin)
 admin.site.register(Annotation)
 admin.site.register(AnnotationTrack)
