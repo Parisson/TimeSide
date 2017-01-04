@@ -208,8 +208,24 @@ class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.AnalysisTrack
-    queryset = model.objects.all()
     serializer_class = serializers.AnalysisTrackSerializer
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases analysis track to 
+        a given analysis and/or a given item,
+        by filtering against `analysis` and `item` query parameters in the URL.
+        The query parameters values should be the uuid of the analysis or of the item
+        """
+        queryset = self.model.objects.all()
+        analysis_uuid = self.request.query_params.get('analysis', None)
+        item_uuid = self.request.query_params.get('item', None)
+        if analysis_uuid is not None:
+            queryset = queryset.filter(analysis__uuid=analysis_uuid)
+        if item_uuid is not None:
+            queryset = queryset.filter(item__uuid=item_uuid)
+
+        return queryset
 
     @detail_route(methods=['post'])
     def set_parameters(self, request, uuid=None):
