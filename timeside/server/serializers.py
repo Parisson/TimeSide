@@ -484,9 +484,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
+    parameters_schema = serializers.JSONField()
+
     class Meta:
         model = ts.models.Analysis
-        fields = ('url', 'uuid', 'title', 'preset', 'sub_processor', 'parameters_schema')
+        fields = ('url', 'uuid',
+                  'title', 'description',
+                  'preset', 'sub_processor',
+                  'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},
@@ -504,7 +509,9 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.AnalysisTrack
-        fields = ('url', 'uuid', 'analysis', 'item', 'result_url',
+        fields = ('url', 'uuid',
+                  'title', 'description',
+                  'analysis', 'item', 'result_url',
                   'parameters_schema', 'parameters_default',
                   'parametrizable')
         extra_kwargs = {
@@ -557,7 +564,7 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         return obj.analysis.preset.processor.get_parameters_default()
 
     def get_parametrizable(self, obj):
-        schema = json.loads(self.get_parameters_schema(obj))
+        schema = self.get_parameters_schema(obj)
         if not schema or not schema['properties']:
             return False
         # TODO : Manage User permission to parametrize Analysis
