@@ -7,7 +7,21 @@ import numpy as np
 import timeside.core
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.core.tools.test_samples import samples
+from jsonschema import Draft4Validator
 
+
+class TestAnalyzers_parameters(unittest.TestCase):
+    """Test analyzer parameters and schema specification"""
+
+    def _perform_test(self, analyzer_cls):
+        """Internal function that test analyzer schema and default parameters"""
+
+        analyzer = analyzer_cls()
+
+        self.assertEqual(analyzer.get_parameters(),
+                         analyzer.get_parameters_default_from_argspec())
+
+        analyzer.check_schema()
 
 
 class TestAnalyzers_with_default(unittest.TestCase):
@@ -56,16 +70,23 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 
 # Define test to skip and corresponding reasons
 skip_reasons = {}
+# For each analyzer in TimeSide, test default parameters and schema
+_tests_factory(test_class=TestAnalyzers_parameters,
+               test_doc="Test analyzer %s schema and default parameters",
+               list_analyzers=timeside.core.processor.processors(timeside.core.api.IAnalyzer),
+               skip_reasons=skip_reasons)
+
+
 # Define test to skip and corresponding reasons
-skip_reasons = {#'IRITDiverg': 'IRIT_Diverg has to be fixed',
-                #'IRITMusicSLN': 'IRITMusicSLN has to be fixed',
-                #'IRITMusicSNB': 'IRITMusicSNB has to be fixed',
-                'IRITSinging': 'IRITSingings has to be fixed',
-                'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',
-                'IRITHarmoCluster': 'IRIT_HarmoCluster fails the stress test',
-                'LABRIInstru': 'LABRIInstru has to be fixed',
-                'LABRIMultipitch': 'LABRIMultipitch has to be fixed'
-               }
+skip_reasons = {  # 'IRITDiverg': 'IRIT_Diverg has to be fixed',
+    #'IRITMusicSLN': 'IRITMusicSLN has to be fixed',
+    #'IRITMusicSNB': 'IRITMusicSNB has to be fixed',
+    'IRITSinging': 'IRITSingings has to be fixed',
+    'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',
+    'IRITHarmoCluster': 'IRIT_HarmoCluster fails the stress test',
+    'LABRIInstru': 'LABRIInstru has to be fixed',
+    'LABRIMultipitch': 'LABRIMultipitch has to be fixed'
+}
 
 # For each analyzer in TimeSide, test with constant input
 _tests_factory(test_class=TestAnalyzers_with_default,

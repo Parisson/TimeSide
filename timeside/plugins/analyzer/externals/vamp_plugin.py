@@ -27,6 +27,7 @@ from timeside.core.tools.parameters import HasTraits, List
 import subprocess
 import tempfile
 import numpy as np
+from timeside.core.tools.parameters import store_parameters
 
 
 def simple_host_process(argslist):
@@ -52,6 +53,13 @@ except OSError:
     raise VampImportError
 
 
+def get_plugins_list():
+    arg = ['--list-outputs']
+    stdout = simple_host_process(arg)
+
+    return [line.split(':')[1:] for line in stdout]
+
+
 class VampSimpleHost(Analyzer):
 
     """Vamp plugins library interface analyzer"""
@@ -61,10 +69,20 @@ class VampSimpleHost(Analyzer):
     class _Param(HasTraits):
         plugin_list = List
 
+    _schema = {'$schema': 'http://json-schema.org/schema#',
+               'properties': {'plugin_list': {'default': get_plugins_list(),
+                                              'type': 'array',
+                                              'items': {'type': 'array',
+                                                        'items': {'type': 'string'}}
+                                              }
+                              },
+               'type': 'object'}
+
+    @store_parameters
     def __init__(self, plugin_list=None):
         super(VampSimpleHost, self).__init__()
         if plugin_list is None:
-            plugin_list = self.get_plugins_list()
+            plugin_list = get_plugins_list()
             #plugin_list = [['vamp-example-plugins', 'percussiononsets', 'detectionfunction']]
 
         self.plugin_list = plugin_list
@@ -143,7 +161,6 @@ class VampSimpleHost(Analyzer):
 
             self.add_result(plugin_res)
 
-
     @staticmethod
     def vamp_plugin(plugin, wavfile):
         def get_vamp_result(txt_file):
@@ -194,10 +211,3 @@ class VampSimpleHost(Analyzer):
         # Get the results
 
         return get_vamp_result(vamp_output_file)
-
-    @staticmethod
-    def get_plugins_list():
-        arg = ['--list-outputs']
-        stdout = simple_host_process(arg)
-
-        return [line.split(':')[1:] for line in stdout]

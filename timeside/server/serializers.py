@@ -25,6 +25,9 @@ from rest_framework.reverse import reverse
 import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
+from jsonschema import ValidationError
+import json
+
 
 class ItemListSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -74,7 +77,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'}
         }
 
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
     def get_url(self, obj):
         request = self.context['request']
@@ -284,7 +287,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
@@ -297,7 +300,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
             'presets': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -307,13 +310,25 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Processor
-        fields = ('url', 'pid', 'version', 'parameters_schema')
+        fields = ('name', 'pid', 'url', 'version', 'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }
 
     def get_parameters_schema(self, obj):
         return obj.get_parameters_schema()
+
+
+class ProcessorListSerializer(serializers.HyperlinkedModelSerializer):
+
+    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('name', 'pid', 'url', 'version')
+        extra_kwargs = {
+            'url': {'lookup_field': 'pid'}
+        }
 
 
 class ParametersSchemaSerializer(serializers.HyperlinkedModelSerializer):
@@ -326,6 +341,18 @@ class ParametersSchemaSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_parameters_schema(self, obj):
         return obj.get_parameters_schema()
+
+
+class ParametersDefaultSerializer(serializers.HyperlinkedModelSerializer):
+
+    parameters_default = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('parameters_default',)
+
+    def get_parameters_default(self, obj):
+        return obj.get_parameters_default()
 
 
 class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -348,29 +375,31 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'},
             'processor': {'lookup_field': 'pid'}
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
-    def validate_parameters(self, attrs, source):
+    def validate(self, data):
 
         import timeside.core
-        proc = timeside.core.get_processor(attrs['processor'].pid)
+        proc = timeside.core.get_processor(data['processor'].pid)
         if proc.type == 'analyzer':
             processor = proc()
             default_params = processor.get_parameters()
             default_msg = "Defaut parameters:\n%s" % default_params
 
+            if not data['parameters']:
+                data['parameters'] = '{}'
             try:
-                processor.validate_parameters(attrs[source])
-            except ValueError as e:
+                processor.validate_parameters(json.loads(data['parameters']))
+            except ValidationError as e:
                 msg = '\n'.join([str(e), default_msg])
                 raise serializers.ValidationError(msg)
             except KeyError as e:
                 msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
                 raise serializers.ValidationError(msg)
 
-            processor.set_parameters(attrs[source])
-            attrs[source] = processor.get_parameters()
-        return attrs
+            processor = proc(**json.loads(data['parameters']))
+            data['parameters'] = json.dumps(processor.get_parameters())
+        return data
 
 
 class ResultSerializer(serializers.HyperlinkedModelSerializer):
@@ -455,29 +484,42 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
+    parameters_schema = serializers.JSONField()
+
     class Meta:
         model = ts.models.Analysis
-        fields = ('url', 'uuid', 'title', 'preset', 'sub_processor')
+        fields = ('url', 'uuid',
+                  'title', 'description',
+                  'preset', 'sub_processor',
+                  'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},
             'sub_processor': {'lookup_field': 'sub_processor_id'}
         }
+        read_only_fields = ('url', 'uuid',)
 
 
 class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
 
     result_url = serializers.SerializerMethodField()
+    parameters_schema = serializers.SerializerMethodField()
+    parameters_default = serializers.SerializerMethodField()
+    parametrizable = serializers.SerializerMethodField()
 
     class Meta:
         model = ts.models.AnalysisTrack
-        fields = ('url', 'uuid', 'analysis', 'item', 'result_url')
+        fields = ('url', 'uuid',
+                  'title', 'description',
+                  'analysis', 'item', 'result_url',
+                  'parameters_schema', 'parameters_default',
+                  'parametrizable')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},
             'analysis': {'lookup_field': 'uuid'},
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
     def create(self, validated_data):
         item = validated_data['item']
@@ -515,6 +557,19 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         else:
             return 'Task running'
 
+    def get_parameters_schema(self, obj):
+        return obj.analysis.parameters_schema
+
+    def get_parameters_default(self, obj):
+        return obj.analysis.preset.processor.get_parameters_default()
+
+    def get_parametrizable(self, obj):
+        schema = self.get_parameters_schema(obj)
+        if not schema or not schema['properties']:
+            return False
+        # TODO : Manage User permission to parametrize Analysis
+        return True
+
     # def get_url(self, obj, view_name, request, format):
     # url_kwargs = {
     # 'item_uuid': obj.item.uuid,
@@ -535,7 +590,7 @@ class AnnotationSerializer_inTrack(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'},
             'track': {'lookup_field': 'uuid'},
         }
-        read_only_fields = ('uuid',)
+        read_only_fields = ('url', 'uuid',)
 
 
 class AnnotationSerializer(serializers.HyperlinkedModelSerializer):

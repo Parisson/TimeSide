@@ -5,6 +5,7 @@ channels:
 dependencies:
   - aubio  # in piem channel (optionnal)
   - h5py
+  - jsonschema
   - jupyter
   - matplotlib
   - mysql-python
@@ -22,6 +23,7 @@ dependencies:
   - Werkzeug
   - yaafe  # in yaafe channel (optionnal)
   - pip:
+      - celery==3.*
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
@@ -32,6 +34,7 @@ dependencies:
       - django-extensions
       - django==1.9.*
       - djangorestframework==3.*
+      - jsonfield
       - mutagen
       - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling

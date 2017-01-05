@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #
-# Copyright (c) 2007-2014 Parisson SARL
+# Copyright (c) 2007-2016 Parisson SARL
 
 # This file is part of TimeSide.
 
@@ -26,8 +26,12 @@ from traits.api import HasTraits, Unicode, Int, Float, Range, Enum, Bool
 from traits.api import ListUnicode, List, Tuple
 from traits.api import TraitError
 
-import simplejson as json
 
+import jsonschema
+import inspect
+import functools
+import decorator
+from copy import deepcopy
 
 TRAIT_TYPES = {Unicode: 'str',
                Int: 'int',
@@ -38,94 +42,97 @@ TRAIT_TYPES = {Unicode: 'str',
                List: 'list'}
 
 
+@decorator.decorator
+def store_parameters(__init__func, *args):
+    self = args[0]
+    argsname, _, _, _ = inspect.getargspec(__init__func)
+
+    parameters = {key: value
+                  for key, value in zip(argsname, args)}
+    del parameters['self']
+    __init__func(*args)
+    self._parameters = parameters
+
+
+def DEFAULT_SCHEMA():
+    return {"type": "object",
+            "properties": {},
+            "$schema": "http://json-schema.org/schema#"}
+
+
 class HasParam(object):
+    """Abstract class for handling parameters
     """
-    >>> class ParamClass(HasParam):
-    ...    class _Param(HasTraits):
-    ...        param1 = Unicode(desc='first or personal name',
-    ...                      label='First Name')
-    ...        param2 = Int()
-    ...        param3 = Float()
-    ...        param4 = Range(low=0, high=10, value=3)
-    >>>
-    >>> p = ParamClass()
-    >>> param_json = p.get_parameters()
-    >>> print param_json
-    {"param4": 3, "param3": 0.0, "param2": 0, "param1": ""}
-    >>> new_param_json = '{"param1": "plop", "param2": 7, "param3": 0.5, \
-    "param4": 8}'
-    >>> p.set_parameters(new_param_json)
-    >>> print p.get_parameters()
-    {"param4": 8, "param3": 0.5, "param2": 7, "param1": "plop"}
-    >>> v = p.param_view()
-    >>> print v
-    {"param4": {"default": 3, "type": "range"}, \
-"param3": {"default": 0.0, "type": "float"}, \
-"param2": {"default": 0, "type": "int"}, \
-"param1": {"default": "", "type": "str"}}
-    """
-    class _Param(HasTraits):
-        pass
+    _schema = None
 
-    def __init__(self):
-        super(HasParam, self).__init__()
-        self._parameters = self._Param()
+    @classmethod
+    def get_parameters_schema(cls):
+        if cls._schema is None:
+            cls._schema = DEFAULT_SCHEMA()
+        argspec_schema = cls.schema_from_argspec()['properties']
+        if argspec_schema and cls._schema['properties']:
+            for key in argspec_schema:
+                if key in cls._schema['properties']:
+                    argspec_schema[key].update(cls._schema['properties'][key])
+        cls._schema['properties'] = argspec_schema
 
-    def __setattr__(self, name, value):
-        if name is '_parameters':
-            super(HasParam, self).__setattr__(name, value)
-        elif name in self._parameters.trait_names():
-            self._parameters.__setattr__(name, value)
-            # Copy attributes as a regular attribute at class level
-            _value = self._parameters.__getattribute__(name)
-            super(HasParam, self).__setattr__(name, _value)
-        else:
-            super(HasParam, self).__setattr__(name, value)
+        return cls._schema
 
     def get_parameters(self):
-        list_traits = self._parameters.editable_traits()
-        param_dict = self._parameters.get(list_traits)
-        return json.dumps(param_dict)
+        return self._parameters
 
-    def set_parameters(self, parameters):
-        if isinstance(parameters, basestring):
-            self.set_parameters(json.loads(parameters))
+    @classmethod
+    def get_parameters_default_from_argspec(cls):
+        args, _, _, defaults = inspect.getargspec(cls.__init__)
+        args.remove('self')  # remove 'self' from arguments list
+        if defaults:
+            return {arg: default for arg, default
+                    in zip(args[-len(defaults):], defaults)}
         else:
-            for name, value in parameters.items():
-                self.__setattr__(name, value)
+            return {}
 
-    def validate_parameters(self, parameters):
-        """Validate parameters format against Traits specification
-        Input can be either a dictionary or a JSON string
-        Returns the validated parameters or raises a ValueError"""
+    @classmethod
+    def get_parameters_default(cls):
+        schema = cls.get_parameters_schema()
+        return {key: schema['properties'][key]['default']
+                for key in schema['properties']}
 
-        if isinstance(parameters, basestring):
-            return self.validate_parameters(json.loads(parameters))
-        # Check key against traits name
-        traits_name = self._parameters.editable_traits()
-        for name in parameters:
-            if name not in traits_name:
-                raise KeyError(name)
+    @classmethod
+    def validate_parameters(cls, parameters, schema=None):
+        """Validate parameters format against schema specification
+        Raises:
+          - ValidationError if the instance is invalid
+          - SchemaError if the schema itself is invalid
+        """
+        if schema is None:
+            schema = cls.get_parameters_schema()
+        jsonschema.validate(parameters, schema)
 
-        try:
-            valid_params = {name: self._parameters.validate_trait(name, value)
-                            for name, value in parameters.items()}
-        except TraitError as e:
-            raise ValueError(str(e))
+    @classmethod
+    def schema_from_argspec(cls):
+        default_param = cls.get_parameters_default_from_argspec()
+        schema = DEFAULT_SCHEMA()
+        for key, value in default_param.items():
+            if isinstance(value, basestring):
+                val_type = "string"
+            elif isinstance(value, bool):
+                val_type = "boolean"  # warning : boolean is an int instance
+            elif isinstance(value, float):
+                val_type = "number"
+            elif isinstance(value, (int, long)):
+                val_type = "integer"
+            elif isinstance(value, list):
+                val_type = "array"
+            else:
+                val_type = "Unknown_type"
+            schema['properties'].update({key: {"type": val_type,
+                                               "default": value}})
+        return schema
 
-        return valid_params
-
-    def param_view(self):
-        list_traits = self._parameters.editable_traits()
-        view = {}
-        for key in list_traits:
-            trait_type = self._parameters.trait(key).trait_type.__class__
-            default = self._parameters.trait(key).default
-            d = {'type': TRAIT_TYPES[trait_type],
-                 'default': default}
-            view[key] = d
-        return json.dumps(view)
-
+    @classmethod
+    def check_schema(cls):
+        """Validate the class schema against the Draft 4 meta-schema"""
+        jsonschema.Draft4Validator.check_schema(cls.get_parameters_schema())
 
 if __name__ == "__main__":
     import doctest

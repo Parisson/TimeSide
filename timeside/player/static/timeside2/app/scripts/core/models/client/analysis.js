@@ -13,7 +13,8 @@ function (Backbone,BaseModel) {
       uuid : '',
       title : '',
       preset : '', //url du preset
-      sub_processor : '' //url du subprocessor
+      sub_processor : '', //url du subprocessor
+      parameters_schema : '' //schema des paramètres  
     },
 
     relations: [],

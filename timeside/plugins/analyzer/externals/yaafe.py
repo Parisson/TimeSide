@@ -30,6 +30,7 @@ import yaafelib
 import numpy
 from timeside.core.preprocessors import downmix_to_mono
 from timeside.core.tools.parameters import HasTraits, ListUnicode, Float
+from timeside.core.tools.parameters import store_parameters
 
 
 class Yaafe(Analyzer):
@@ -78,6 +79,17 @@ class Yaafe(Analyzer):
         feature_plan = ListUnicode
         input_samplerate = Float
 
+    _schema = {'$schema': 'http://json-schema.org/schema#',
+               'type': 'object',
+               'properties': {'feature_plan': {'type': 'array',
+                                               'items': {'type': 'string'},
+                                               'default': ['mfcc: MFCC blockSize=512 stepSize=256']},
+                              'input_samplerate': {'default': 32000,
+                                                   'type': 'integer'}
+                              }
+               }
+
+    @store_parameters
     def __init__(self, feature_plan=None, input_samplerate=32000):
         super(Yaafe, self).__init__()
 
@@ -109,8 +121,8 @@ class Yaafe(Analyzer):
         self.yaafe_engine = yaafelib.Engine()
         self.yaafe_engine.load(self.data_flow)
         self.yaafe_engine.reset()
-        #self.input_samplerate = samplerate
-        #self.input_blocksize = blocksize
+        # self.input_samplerate = samplerate
+        # self.input_blocksize = blocksize
 
     @property
     def force_samplerate(self):

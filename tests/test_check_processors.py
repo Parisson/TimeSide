@@ -9,19 +9,22 @@ from unit_timeside import unittest, TestRunner
 import timeside.core
 import inspect
 
+#@unittest.skip
+
 
 class TestCheckProcessorsParam(unittest.TestCase):
+
     def _check_param_test(self, processor_cls):
         """Internal function that test if a given processor
-        has Trait parameters as __init__ arguments"""
+        has schema parameters as __init__ arguments"""
 
         argspec = inspect.getargspec(processor_cls.__init__)
         argspec.args.remove('self')  # remove 'self' from arguments list
 
-        #print argspec.args
-        traits_parameters = processor_cls._Param().editable_traits()
-        #print traits_parameters
-        self.assertSetEqual(set(argspec.args), set(traits_parameters))
+        # print argspec.args
+        parameters = processor_cls.get_parameters_schema()['properties'].keys()
+        # print traits_parameters
+        self.assertTrue(set(parameters).issubset(argspec.args))
 
 
 def _tests_factory(test_class, test_doc, list_processors, skip_reasons={}):

@@ -31,10 +31,14 @@ RUN apt-get update && \
 
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
-RUN conda config --add channels piem --add channels yaafe &&\
+RUN conda update conda &&\
+    conda config --add channels piem --add channels yaafe &&\
     conda env update --name root --file environment-pinned.yml &&\
     conda clean --all --yes
 
+# Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
+RUN rm /opt/miniconda/lib/libgio* &&\
+    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
 
 COPY . /srv/src/timeside/
 
@@ -48,6 +52,7 @@ RUN pip install -e .
 # Install Timeside plugins from ./lib
 COPY ./app/scripts/setup_plugins.sh /srv/app/scripts/setup_plugins.sh
 COPY ./lib/ /srv/src/plugins/
+
 
 RUN /bin/bash /srv/app/scripts/setup_plugins.sh
 
