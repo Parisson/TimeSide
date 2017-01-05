@@ -317,8 +317,8 @@ class LabelMetadata(MetadataObject):
     '''
 
     # Define default values
-    _default_value = OrderedDict([('label', {}),
-                                  ('description', {}),
+    _default_value = OrderedDict([('label', None),
+                                  ('description', None),
                                   ('label_type', 'mono')])
 
     def to_hdf5(self, h5group):
@@ -335,6 +335,8 @@ class LabelMetadata(MetadataObject):
             hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
 
     def from_hdf5(self, h5group):
+        self.label = {}
+        self.description = {}
         self['label_type'] = h5group.attrs['label_type']
         for subgroup_name, h5subgroup in h5group.items():
             hdf5.dict_from_hdf5(self[subgroup_name], h5subgroup)
@@ -956,7 +958,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         for key, label in self.label_metadata.label.items():
             ax_color[int(key)] = colors.next()
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
-            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=label))
+            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=unicode(label)))
 
         for time, duration, key in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[int(key)], alpha=0.3)

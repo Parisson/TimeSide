@@ -26,10 +26,9 @@ def dict_to_hdf5(dict_like, h5group):
     Save a dictionnary-like object inside a h5 file group
     """
     # Write attributes
-    attrs = dict_like.keys()
-    for name in attrs:
-        if dict_like[name] is not None:
-            h5group.attrs[str(name)] = dict_like[name]
+    for key, value in dict_like.items():
+        if value is not None:
+            h5group.attrs[str(key)] = value
 
 
 def dict_from_hdf5(dict_like, h5group):
