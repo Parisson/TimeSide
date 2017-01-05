@@ -124,4 +124,4 @@ A *label_metadata* key is added.
 ['label', 'label_metadata', 'frame_metadata']
 
 >>> res.data_object
-FrameLabelObject(label=array([], dtype=int64), label_metadata=LabelMetadata(label={}, description={}, label_type='mono'), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))
+FrameLabelObject(label=array([], dtype=int64), label_metadata=LabelMetadata(label=None, description=None, label_type='mono'), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))
