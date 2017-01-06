@@ -68,7 +68,7 @@ class Waveform(Analyzer):
 
     def post_process(self):
         waveform = self.new_result(data_mode='value', time_mode='framewise')
-        waveform.data_object.value = np.vstack(self.values)
+        waveform.data_object['data'] = np.vstack(self.values)
         self.add_result(waveform)
 
 
@@ -79,4 +79,3 @@ DisplayWaveform = DisplayAnalyzer.create(analyzer=Waveform,
                                          grapher_id='grapher_waveform',
                                          grapher_name='Waveform from Analyzer',
                                          staging=True)
-

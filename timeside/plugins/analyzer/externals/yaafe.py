@@ -171,18 +171,18 @@ class Yaafe(Analyzer):
         for featName in featNames:
 
             result = self.new_result(data_mode='value', time_mode='framewise')
-            result.id_metadata.id += '.' + featName
-            result.id_metadata.name += ' ' + featName
+            result.id_metadata['id'] += '.' + featName
+            result.id_metadata['name'] += ' ' + featName
             # Read Yaafe Results
-            result.data_object.value = self.yaafe_engine.readOutput(featName)
+            result.data_object['data'] = self.yaafe_engine.readOutput(featName)
 
             yaafe_metadata = self.yaafe_engine.getOutputs()[featName]
-            result.data_object.frame_metadata.blocksize = yaafe_metadata['frameLength']
-            result.data_object.frame_metadata.stepsize = yaafe_metadata['sampleStep']
-            result.data_object.frame_metadata.samplerate = yaafe_metadata['sampleRate']
+            result.frame_metadata['blocksize'] = yaafe_metadata['frameLength']
+            result.frame_metadata['stepsize'] = yaafe_metadata['sampleStep']
+            result.frame_metadata['samplerate'] = yaafe_metadata['sampleRate']
 
             # Store results in Container
-            if len(result.data_object.value):
+            if len(result.data_object['data']):
                 self.add_result(result)
 
 if __name__ == "__main__":

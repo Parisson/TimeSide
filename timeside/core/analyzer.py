@@ -619,6 +619,8 @@ class AnalyzerResult(object):
                 'blocksize': None,
                 'stepsize': None
             }
+        if self.data_mode == 'label':
+            self.label_metada = pd.DataFrame(index=['label', 'description'])
 
     # def __setattr__(self, name, value):
     #     if name in ['_data_mode', '_time_mode']:
@@ -1325,7 +1327,7 @@ class Analyzer(Processor):
             'channels': self.channels()
         })
 
-        result.parameters = json.loads(self.get_parameters())
+        result.parameters = self.get_parameters()
 
         if time_mode == 'framewise':
             result.frame_metadata.update({

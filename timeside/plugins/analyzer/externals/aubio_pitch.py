@@ -118,18 +118,18 @@ class AubioPitch(Analyzer):
         # parameters : None # TODO check with Piem "default" and "freq" in
         # setup
 
-        pitch.id_metadata.id += '.' + "pitch"
-        pitch.id_metadata.name += ' ' + "pitch"
+        pitch.id_metadata['id'] += '.' + "pitch"
+        pitch.id_metadata['name'] += ' ' + "pitch"
         pitch.id_metadata.unit = "Hz"
-        pitch.data_object.value = self.pitches
+        pitch.data_object['data'] = self.pitches
         self.add_result(pitch)
 
         pitch_confidence = self.new_result(
             data_mode='value', time_mode='framewise')
-        pitch_confidence.id_metadata.id += '.' + "pitch_confidence"
-        pitch_confidence.id_metadata.name += ' ' + "pitch confidence"
+        pitch_confidence.id_metadata['id'] += '.' + "pitch_confidence"
+        pitch_confidence.id_metadata['name'] += ' ' + "pitch confidence"
         pitch_confidence.id_metadata.unit = None
-        pitch_confidence.data_object.value = self.pitch_confidences
+        pitch_confidence.data_object['data'] = self.pitch_confidences
         self.add_result(pitch_confidence)
 
 

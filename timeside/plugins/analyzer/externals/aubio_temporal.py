@@ -91,10 +91,10 @@ class AubioTemporal(Analyzer):
         #  Onsets: Event (time, "Onset")
         #---------------------------------
         onsets = self.new_result(data_mode='label', time_mode='event')
-        onsets.id_metadata.id += '.' + 'onset'
-        onsets.id_metadata.name += ' ' + 'Onset'
+        onsets.id_metadata['id'] += '.' + 'onset'
+        onsets.id_metadata['name'] += ' ' + 'Onset'
         onsets.id_metadata.unit = 's'
-        onsets.data_object.time = self.onsets
+        onsets.data_object['time'] = self.onsets
         onsets.data_object.label = numpy.ones(len(self.onsets))
         onsets.data_object.label_metadata.label = {1: 'Onset'}
 
@@ -104,18 +104,18 @@ class AubioTemporal(Analyzer):
         #  Onset Rate: Segment (time, duration, value)
         #---------------------------------
         onsetrate = self.new_result(data_mode='value', time_mode='segment')
-        onsetrate.id_metadata.id += '.' + "onset_rate"
-        onsetrate.id_metadata.name = " " + "Onset Rate"
+        onsetrate.id_metadata['id'] += '.' + "onset_rate"
+        onsetrate.id_metadata['name'] = " " + "Onset Rate"
         onsetrate.id_metadata.unit = "bpm"
         if len(self.onsets) > 1:
             periods = numpy.diff(self.onsets)
             periods = numpy.append(periods, periods[-1])
-            onsetrate.data_object.time = self.onsets
+            onsetrate.data_object['time'] = self.onsets
             onsetrate.data_object.duration = periods
-            onsetrate.data_object.value = 60. / periods
+            onsetrate.data_object['data'] = 60. / periods
         else:
-            onsetrate.data_object.value = []
-            onsetrate.data_object.time = []
+            onsetrate.data_object['data'] = []
+            onsetrate.data_object['time'] = []
 
         self.add_result(onsetrate)
 
@@ -123,10 +123,10 @@ class AubioTemporal(Analyzer):
         #  Beats: Event (time, "Beat")
         #---------------------------------
         beats = self.new_result(data_mode='label', time_mode='event')
-        beats.id_metadata.id += '.' + "beat"
-        beats.id_metadata.name += " " + "Beats"
+        beats.id_metadata['id'] += '.' + "beat"
+        beats.id_metadata['name'] += " " + "Beats"
         beats.id_metadata.unit = "s"
-        beats.data_object.time = self.beats
+        beats.data_object['time'] = self.beats
         beats.data_object.label = numpy.ones(len(self.beats))
         beats.data_object.label_metadata.label = {1: 'Beat'}
 
@@ -137,11 +137,11 @@ class AubioTemporal(Analyzer):
         #---------------------------------
         beat_confidences = self.new_result(
             data_mode='value', time_mode='event')
-        beat_confidences.id_metadata.id += '.' + "beat_confidence"
-        beat_confidences.id_metadata.name += " " + "Beat confidences"
+        beat_confidences.id_metadata['id'] += '.' + "beat_confidence"
+        beat_confidences.id_metadata['name'] += " " + "Beat confidences"
         beat_confidences.id_metadata.unit = None
-        beat_confidences.data_object.time = self.beats
-        beat_confidences.data_object.value = self.beat_confidences
+        beat_confidences.data_object['time'] = self.beats
+        beat_confidences.data_object['data'] = self.beat_confidences
 
         self.add_result(beat_confidences)
 
@@ -149,16 +149,16 @@ class AubioTemporal(Analyzer):
         #  BPM: Segment (time, duration, value)
         #---------------------------------
         bpm = self.new_result(data_mode='value', time_mode='segment')
-        bpm.id_metadata.id += '.' + "bpm"
-        bpm.id_metadata.name += ' ' + "bpm"
+        bpm.id_metadata['id'] += '.' + "bpm"
+        bpm.id_metadata['name'] += ' ' + "bpm"
         bpm.id_metadata.unit = "bpm"
         if len(self.beats) > 1:
             periods = numpy.diff(self.beats)
             periods = numpy.append(periods, periods[-1])
-            bpm.data_object.time = self.beats
+            bpm.data_object['time'] = self.beats
             bpm.data_object.duration = periods
-            bpm.data_object.value = 60. / periods
+            bpm.data_object['data'] = 60. / periods
         else:
-            bpm.data_object.value = []
+            bpm.data_object['data'] = []
 
         self.add_result(bpm)

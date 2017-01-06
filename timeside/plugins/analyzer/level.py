@@ -91,27 +91,27 @@ class Level(Analyzer):
         # Max level
         max_level = self.new_result(data_mode='value', time_mode='global')
 
-        max_level.id_metadata.id += '.' + "max"
-        max_level.id_metadata.name += ' ' + "Max"
+        max_level.id_metadata['id'] += '.' + "max"
+        max_level.id_metadata['name'] += ' ' + "Max"
 
         if self.max_value == 0:  # Prevent np.log10(0) = Inf
             self.max_value = MACHINE_EPSILON
 
-        max_level.data_object.value = np.round(
+        max_level.data_object['data'] = np.round(
             20 * np.log10(self.max_value), 3)
         self.add_result(max_level)
 
         # RMS level
         rms_level = self.new_result(data_mode='value', time_mode='global')
-        rms_level.id_metadata.id += '.' + "rms"
-        rms_level.id_metadata.name += ' ' + "RMS"
+        rms_level.id_metadata['id'] += '.' + "rms"
+        rms_level.id_metadata['name'] += ' ' + "RMS"
 
         rms_val = np.sqrt(np.mean(self.mean_values))
 
         if rms_val == 0:
             rms_val = MACHINE_EPSILON
 
-        rms_level.data_object.value = np.round(20 * np.log10(rms_val), 3)
+        rms_level.data_object['data'] = np.round(20 * np.log10(rms_val), 3)
         self.add_result(rms_level)
 
 if __name__ == "__main__":

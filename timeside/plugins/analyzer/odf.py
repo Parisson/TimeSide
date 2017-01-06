@@ -122,7 +122,7 @@ class OnsetDetectionFunction(Analyzer):
 
         odf = self.new_result(data_mode='value', time_mode='framewise')
         #odf.parameters = {'FFT_SIZE': self.FFT_SIZE}
-        odf.data_object.value = odf_diff
+        odf.data_object['data'] = odf_diff
         self.add_result(odf)
 
 

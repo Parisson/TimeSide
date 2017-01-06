@@ -61,6 +61,6 @@ class MeanDCShift(Analyzer):
 
     def post_process(self):
         dc_result = self.new_result(data_mode='value', time_mode='global')
-        dc_result.data_object.value = numpy.round(
+        dc_result.data_object['data'] = numpy.round(
             numpy.mean(100 * self.values), 3)
         self.add_result(dc_result)

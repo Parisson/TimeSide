@@ -78,5 +78,5 @@ class AubioMelEnergy(Analyzer):
         melenergy = self.new_result(data_mode='value', time_mode='framewise')
         melenergy.parameters = dict(n_filters=self.n_filters,
                                     n_coeffs=self.n_coeffs)
-        melenergy.data_object.value = self.melenergy_results
+        melenergy.data_object['data'] = self.melenergy_results
         self.add_result(melenergy)

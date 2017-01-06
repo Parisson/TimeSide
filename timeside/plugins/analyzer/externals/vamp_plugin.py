@@ -132,8 +132,8 @@ class VampSimpleHost(Analyzer):
                 plugin_res = self.new_result(
                     data_mode='value', time_mode='event')
 
-            plugin_res.data_object.time = time
-            plugin_res.data_object.value = value
+            plugin_res.data_object['time'] = time
+            plugin_res.data_object['data'] = value
 
 # Fix strat, duration issues if audio is a segment
 #            if self.mediainfo()['is_segment']:
@@ -155,8 +155,8 @@ class VampSimpleHost(Analyzer):
 #                plugin_res.audio_metadata.duration = fixed_duration
 #
 #                value = value[start_index:stop_index + 1]
-            plugin_res.id_metadata.id += '.' + '.'.join(plugin_line[1:])
-            plugin_res.id_metadata.name += ' ' + \
+            plugin_res.id_metadata['id'] += '.' + '.'.join(plugin_line[1:])
+            plugin_res.id_metadata['name'] += ' ' + \
                 ' '.join(plugin_line[1:])
 
             self.add_result(plugin_res)
