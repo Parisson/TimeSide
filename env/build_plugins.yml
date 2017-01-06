@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2015-2016 Parisson SARL
+
+# This file is part of Telemeta.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
+# Authors:
+# Guillaume Pellerin <yomguy@parisson.com>
+# Thomas Fillon <thomas@parisson.com>
+
+# README :
+# This compositon file enables to run the build command for plugins in development mode
+# this was needed because Timeside-diadems IRIT_DIVERG2 plugin generated .so files in the timeside/plugins/diadems directory
+# Those files were thus not present if the plugins setup was done only during the build and not with the lib/timeside-diadems volume mounted at run time
+#
+# Usage : docker-compose -f docker-compose.yml -f env/build.yml -f env/build_plugins.yml run app
+#
+
+app:
+  volumes:
+    - ./lib:/srv/src/plugins
+  command: /bin/bash /srv/app/scripts/setup_plugins.sh
+
