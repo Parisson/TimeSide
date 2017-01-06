@@ -221,7 +221,7 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
         analysis_uuid = self.request.query_params.get('analysis', None)
         item_uuid = self.request.query_params.get('item', None)
         if analysis_uuid is not None:
-            queryset = queryset.filter(analysis__uuid___startswith=analysis_uuid)
+            queryset = queryset.filter(analysis__uuid__startswith=analysis_uuid)
         if item_uuid is not None:
             queryset = queryset.filter(item__uuid__startswith=item_uuid)
 
