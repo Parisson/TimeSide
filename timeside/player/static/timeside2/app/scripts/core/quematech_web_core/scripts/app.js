@@ -31,8 +31,25 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
   //A déplacer!!!!
   api.setInterceptEndCallFunction(function(res) {
     try {
-      
-      var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
+
+      // Get CSRF Token value from Cookie using jQuery
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = jQuery.trim(cookies[i]);
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+      var csrfToken = getCookie('csrftoken');
+      //var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
       if (csrfToken) {
         //console.log("Ok CSRF : "+csrfToken);
         injector.set(injector.cfg.csrfToken,csrfToken);
