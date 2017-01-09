@@ -145,6 +145,18 @@ class Spectrogram(Analyzer):
                                            self.samplerate() / self.fft_size)
         self.add_result(spectrogram)
 
+        
+# Generate Grapher for IRITSpeech4Hz analyzer
+from timeside.core.grapher import DisplayAnalyzer
+
+DisplayIritTempogram = DisplayAnalyzer.create(
+    analyzer=Spectrogram,
+    result_id='spectrogram_analyzer',
+    grapher_id='spectrogram',
+    grapher_name='Linear Spectrogram',
+    staging=False)
+
+
 
 if __name__ == "__main__":
     import doctest
