@@ -203,7 +203,7 @@ def get_result(item, preset, wait=True):
     # Get Result with preset and item
     try:
         result = ts.models.Result.objects.get(item=item, preset=preset)
-        if not os.path.exists(result.hdf5.path):
+        if not result.hdf5 or not os.path.exists(result.hdf5.path):
             # Result exists but there is no file (may have been deleted)
             result.delete()
             return get_result(item=item, preset=preset)
