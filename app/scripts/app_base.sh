@@ -17,7 +17,7 @@ uid='www-data'
 gid='www-data'
 
 # staging apps
-pip install -U django-cors-headers
+# pip install -U django-cors-headers
 
 # wait for other services
 bash $app/scripts/wait.sh
