@@ -17,9 +17,9 @@ FROM parisson/docker:v0.3
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
-RUN mkdir /srv/app
-RUN mkdir /srv/src
-RUN mkdir /srv/src/timeside
+RUN mkdir -p /srv/app
+RUN mkdir -p /srv/src
+RUN mkdir -p /srv/src/timeside
 WORKDIR /srv/src/timeside
 
 # install confs, keys and deps
@@ -31,17 +31,30 @@ RUN apt-get update && \
 
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
-RUN conda config --add channels piem &&\
-    conda env update --name root --file environment-pinned.yml
+RUN conda update conda &&\
+    conda config --add channels piem --add channels yaafe &&\
+    conda env update --name root --file environment-pinned.yml &&\
+    conda clean --all --yes
+
+# Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
+RUN rm /opt/miniconda/lib/libgio* &&\
+    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
 
 COPY . /srv/src/timeside/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
-RUN mkdir $PYTHON_EGG_CACHE
+RUN mkdir -p $PYTHON_EGG_CACHE
 RUN chown www-data:www-data $PYTHON_EGG_CACHE
 
 # Install TimeSide
 RUN pip install -e .
+
+# Install Timeside plugins from ./lib
+COPY ./app/scripts/setup_plugins.sh /srv/app/scripts/setup_plugins.sh
+COPY ./lib/ /srv/src/plugins/
+
+
+RUN /bin/bash /srv/app/scripts/setup_plugins.sh
 
 WORKDIR /srv/app
 EXPOSE 8000

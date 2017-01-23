@@ -1,0 +1,109 @@
+.track-annotations {
+  text {
+    alignment-baseline:middle;
+    fill: white;
+  }
+  .annotation {
+    opacity:0.5;
+  }
+  .active {
+    opacity:1;
+  }
+}
+
+.add-annotation {
+  @extend .button.transparent;
+  border:2px solid transparent;
+  border-bottom:none !important;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+
+  svg {
+    width:34px;height:34px;
+  }
+  polygon {
+    fill:white;
+    stroke: $darkColor;
+    stroke-width: 5;
+  } 
+}
+
+.track-annotations {
+  background-color: antiquewhite;
+  margin-bottom: 2px;
+}
+
+//when visible
+.annotation-title {
+  padding: 10px;
+  border:2px solid $darkColor;
+
+  //hidden by default
+  display:none; 
+  background:white;
+}
+
+.creating-new-annotation {
+  z-index: 10;
+  position: relative;
+  
+
+  .add-annotation {
+    border:2px solid $darkColor;
+    background:white !important;
+    border-color:$darkColor;background:white;
+    polygon {
+      fill:$darkColor;
+    } 
+  }
+  .annotation-creation-form {
+    display: block;
+    width: 100%;
+    h3 {
+      padding: 10px 0;
+    }
+  }
+  //parameters visible
+  .annotation-title {
+    display:flex;
+    background: #fff;
+    ul {
+      display:flex;
+    }
+    .from-to {
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+    .title {
+      flex:1;
+      input {
+        display: block;
+        width: 100%;
+        box-sizing:border-box;
+      }
+    }
+  }
+
+}
+
+.annotation-title {
+  background-color: aqua;     
+  display:none;
+  button {
+    &.active {
+      background-color: red;
+    } 
+  } 
+}
+
+.container_track_annotations {
+  rect.extent {
+    opacity: 0.1;
+
+    &.creation-mode {
+      opacity : 0.5;
+    }
+  }
+}

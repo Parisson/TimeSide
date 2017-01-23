@@ -1,0 +1,169 @@
+.ts-content {
+  canvas {
+    display: block;
+  }
+  //CONTROLS
+  .audio-player {
+    li {
+      margin:2px;
+    }
+    svg {
+      width:33px;height:33px;
+    }    
+  }
+
+  .tracks {
+    position: relative;
+  }
+
+  .other-tracks {
+    > div {
+      margin-bottom: 2px;
+    }
+    .track-container {
+      position:relative;
+    } 
+    .svg{
+      position:relative;
+    }
+  }
+
+  //GENERAL_ELEMENTS
+  .cursor {
+    fill:red;
+  }
+  .loop-segment {
+    fill:rgba(0,0,0,0.3);
+  }
+  .time-arrow {
+    rect,polygon {
+      fill:$darkColor;
+    }
+    rect {
+      stroke: $darkColor;
+    }
+  }
+
+  //PARAMETERS
+  .edit-track {
+    @extend .button.transparent;
+    border:2px solid transparent;
+    border-bottom:none !important;
+    position: absolute;
+    right: 0;
+    bottom: -2px;
+
+    svg {
+      width:34px;height:34px;
+    }
+    path {
+      fill:white;
+      stroke: $darkColor;
+      stroke-width: 5;
+    } 
+  }
+  //PARAMETERS
+  .parameters {
+    padding: 10px;
+    border:2px solid $darkColor;
+  
+    //hidden by default
+    display:none;
+    
+
+    //default layout manager horizontal and then vertical for each param
+    .param-simple,ul {
+      display:flex;flex-direction:column;
+    }
+    li {
+      display:flex;
+      align-items: center;
+      margin-bottom: 1px;
+      label {
+        flex-basis:200px;
+        flex-shrink:0;
+      }
+      input,select,textarea {
+        flex:1;
+      }
+    }
+  }
+  //when visible
+  .parameters-visible {
+    z-index: 10;
+    position: relative;
+    //background: white;
+    //aesthetic tricks 
+    .svg{
+      border-color:$darkColor;
+    }
+
+    .edit-track {
+      border:2px solid $darkColor;
+      background:white;
+      border-color:$darkColor;
+      path {
+        fill:$darkColor;
+      } 
+    }
+    //parameters visible
+    .parameters {
+      display:flex;
+      background: #fff;
+    }
+  }
+
+  //OVERLAY
+  .overlay-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    //opacity: 0.4;
+    pointer-events: none;
+  }
+
+  //NAV_TRACK
+  .nav-track {
+    .domain {
+      display:none;
+    }
+    text {
+      transform: translate(0,-7px);
+      opacity:      0.5;
+      font-size:    10px;
+    }
+  }
+
+  //WAVE_FORM
+  .ruler-track {
+    .domain {
+      fill: $darkColor;
+    }
+  }
+  .click-catcher {
+    width: 100%;
+    height: 26px;
+    pointer-events: all;
+    position: absolute;
+    top: 0;
+  }
+  .waveform {
+    .chart {
+      display:block;
+    }
+    .chart-background  {
+      fill:$waveFormBackground;
+    }
+    .extent {
+      fill:  $brushColor;
+      position:          absolute;
+    }
+    .resize {
+      background-color:  $brushColor*0.9;
+    }
+    g rect {
+      fill:     $waveFormColor;
+    }
+  }
+}

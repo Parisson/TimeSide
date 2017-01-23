@@ -1,0 +1,10 @@
+{
+  "email": [{
+    "rule": "required",
+    "message": "auth.form.errors.email.required"
+  },
+  {
+    "rule": "email",
+    "message": "auth.form.errors.email.invalid"
+  }]
+}

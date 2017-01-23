@@ -1,0 +1,43 @@
+{
+
+	"--------------------------------------------------------------------------------------------":"",
+	"BELOW":"Base func data",
+
+	"csrfToken" : "csrfToken",
+	"baseServerUrl" : "baseServerUrl",
+	"models" : "models",
+
+	"--------------------------------------------------------------------------------------------":"",
+	"BELOW":"main controllers / items",
+
+	"commando.pool" : "commando.pool",
+	"api"	 : "api",
+	"apiController"	 : "apiController",
+	"sessionController" : "sessionController",
+	"beanController" : "beanController",
+	"mainRouter" : "mainRouter",
+	"navigationController" : "navigationController",
+
+	"--------------------------------------------------------------------------------------------":"",
+	"BELOW":"Auth",
+
+	"auth_token_newpassword" : "auth_token_newpassword",
+	"currentUser" : "currentUser",
+
+	"--------------------------------------------------------------------------------------------":"",
+	"BELOW":"Pagination",
+
+	"pagination_currentNumpage_comment" : "updated in nav.js to know which pagination request we call",
+	"pagination_currentNumpage" : "pagination_currentNumpage",
+	"pagination_data_comment" : "données de paginate sur la liste en cours (updated on command result)",
+	"pagination_data" : "pagination_data",
+
+	"allLocales" : "allLocales",
+	"currentMainLocale" : "currentMainLocale",
+	"currentSubLocales" : "currentSubLocales"
+
+	
+
+	
+	
+}

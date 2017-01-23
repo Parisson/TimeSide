@@ -1,0 +1,26 @@
+
+//////////
+.side-menu {
+	.panel {
+		&.active {
+			color: #2f7bb4;
+		}
+	}
+}
+
+.paginate-link {
+	cursor: pointer;
+
+	&.disabled {
+		cursor: not-allowed;
+	}
+
+	
+}
+
+//////////////////////////////////
+//Below : d3 sample
+.waveform h2 {
+  margin-left:  40px;
+  font-size:    36px;
+}

@@ -1,0 +1,63 @@
+{
+	"locales" : [
+		{
+			"code" : "fr",
+			"nom" : "Français"
+		},
+		{
+			"code" : "en",
+			"nom" : "English"
+		},
+		{
+			"code" : "es",
+			"nom" : "Spanish"
+		}
+	],
+	"restaurants" : [
+		{
+			"id" : 1,
+			"nom" : "Chez lolo",
+			"description" : {
+				"fr" : "C'est sympa ici",
+				"en" : "Oh yeah"
+			},
+			"mainLocale" : "fr",
+			"subLocales"  : ["en"]
+		},
+		{
+			"id" : 2,
+			"nom" : "PizzaPute",
+			"mainLocale" : "en",
+			"subLocales"  : []
+		}
+	],
+	"users" : [
+		{
+			"id" : 1, "email" : "connard_1@lenez.net", "role" : "ADMINISTRATEUR", "_restaurantid" : 0
+		},
+		{
+			"id" : 2, "email" : "connard_2@lenez.net", "role" : "ADMINISTRATEUR", "_restaurantid" : 0
+		},
+		{
+			"id" : 3, "email" : "connard_3@lenez.net", "role" : "RESTAURATEUR", "_restaurantid" : 1
+		},
+		{
+			"id" : 4, "email" : "connard_4@lenez.net", "role" : "RESTAURATEUR", "_restaurantid" : 2
+		},
+		{
+			"id" : 5, "email" : "connard_5@lenez.net", "role" : "RESTAURATEUR", "_restaurantid" : 2
+		},
+		{
+			"id" : 6, "email" : "connard_6@lenez.net", "role" : "RESTAURATEUR", "_restaurantid" : 2
+		},
+		{
+			"id" : 7, "email" : "connard_7@lenez.net", "role" : "RESTAURATEUR", "_restaurantid" : 2
+		},
+		{
+			"id" : 8, "email" : "connard_8@lenez.net", "role" : "RESTAURATEUR", "_restaurantid" : 2
+		}
+
+	]
+
+
+}

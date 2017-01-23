@@ -1,0 +1,220 @@
+{
+	"home" : [
+		{"name" : "Home", "url" : "/#"}
+	],
+
+
+	"login" : [
+		
+	],
+
+
+
+	"list_users" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Users", "url" : ""}
+	],
+
+	"edit_user" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Users", "url" : "/#users/list"},
+		{"name" : "Edit user", "url" : ""}
+	],
+	"edit_my_profile" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "My profile", "url" : ""}
+	],
+	"new_user" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Users", "url" : "/#users/list"},
+		{"name" : "New user", "url" : ""}
+	],
+
+	"list_datarefs" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Global data", "url" : ""}
+	],
+	"edit_dataref" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Global data", "url" : ""},
+		{"name" : "Edit global data", "url" : ""}
+	],
+	"new_dataref" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Global data", "url" : ""},
+		{"name" : "New global data", "url" : ""}
+	],
+
+
+	"list_depots" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Depots", "url" : ""}
+	],
+	"edit_depot" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Warehouses", "url" : "/#depots/list"},
+		{"name" : "Edit depot", "url" : ""}
+	],
+	"new_depot" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Warehouses", "url" : "/#depots/list"},
+		{"name" : "New depot", "url" : ""}
+	],
+
+	"list_produits" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Products", "url" : ""}
+	],
+	"edit_produit" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Products", "url" : "/#produits/list"},
+		{"name" : "Edit product", "url" : ""}
+	],
+	"new_produit" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Products", "url" : "/#produits/list"},
+		{"name" : "New product", "url" : ""}
+	],
+	"import_produits" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Import products", "url" : ""}
+	],
+	"confirm_import_produits" :[
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Confirm import products", "url" : ""}
+	],
+
+	"list_zones_commerciales" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Commercial areas", "url" : ""}
+	],
+	"edit_zone_commerciale" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Commercial areas", "url" : "/#zones_commerciales/list"},
+		{"name" : "Edit commercial area", "url" : ""}
+	],
+	"new_zone_commerciale" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Commercial areas", "url" : "/#zones_commerciales/list"},
+		{"name" : "New commercial area", "url" : ""}
+	],
+
+
+	"list_clients" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Clients", "url" : ""}
+	],
+	"edit_client" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Clients", "url" : "/#clients/list"},
+		{"name" : "Edit client", "url" : ""}
+	],
+	"new_client" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Clients", "url" : "/#clients/list"},
+		{"name" : "New client", "url" : ""}
+	],
+	"import_clients" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Import clients", "url" : ""}
+	],
+	"confirm_import_clients" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Confirm import clients", "url" : ""}
+	],
+
+	"list_transporteurs" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Transporters", "url" : ""}
+	],
+	"edit_transporteur" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Transporters", "url" : "/#transporteurs/list"},
+		{"name" : "Edit transporter", "url" : ""}
+	],
+	"new_transporteur" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Transporters", "url" : "/#transporteurs/list"},
+		{"name" : "New transporter", "url" : ""}
+	],
+	"import_transporteurs" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Import transporters", "url" : ""}
+	],
+
+	"list_all_camions" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Trucks", "url" : ""}
+	],
+	"list_camions_ontransporteur" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Trucks on transporter", "url" : ""}
+	],
+	"edit_camion" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Trucks", "url" : "/#camions/list"},
+		{"name" : "Edit truck", "url" : ""}
+	],
+	"new_camion" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Trucks", "url" : "/#camions/list"},
+		{"name" : "New truck", "url" : ""}
+	],
+	"confirm_import_camions" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Confirm import transporters", "url" : ""}
+	],
+
+	"list_typemessages" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Message types", "url" : ""}
+	],
+	"edit_typemessage" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Message types", "url" : "/#typemessages/list"},
+		{"name" : "Edit message type", "url" : ""}
+	],
+	"new_typemessage" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Message types", "url" : "/#typemessages/list"},
+		{"name" : "New message type", "url" : ""}
+	],
+
+	"list_livraisons" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Deliveries", "url" : ""}
+	],
+	"edit_livraison" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Deliveries", "url" : "/#livraison/list"},
+		{"name" : "Edit delivery", "url" : ""}
+	],
+	"new_livraison" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Deliveries", "url" : "/#livraison/list"},
+		{"name" : "New delivery", "url" : ""}
+	],
+	"import_livraisons" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Import deliveries", "url" : ""}
+	],
+	"confirm_import_livraisons" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Confirm import deliveries", "url" : ""}
+	],
+
+	"list_noteapplications" :  [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Feedbacks", "url" : ""}
+	],
+
+	"edit_acces_ws" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Web service credentials", "url" : ""}
+	],
+
+	"list_messages" : [
+		{"name" : "Home", "url" : "/#"},
+		{"name" : "Messages", "url" : ""}
+	]
+}

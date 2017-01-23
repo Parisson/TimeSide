@@ -26,7 +26,7 @@ from timeside.core.api import IAnalyzer
 import numpy as np
 from numpy import pi as Pi
 from scipy import signal
-from timeside.core.tools.parameters import Int, HasTraits
+from timeside.core.tools.parameters import store_parameters, Int, HasTraits
 
 
 class OnsetDetectionFunction(Analyzer):
@@ -39,6 +39,14 @@ class OnsetDetectionFunction(Analyzer):
         input_blocksize = Int()
         input_stepsize = Int()
 
+    _schema = {'$schema': 'http://json-schema.org/schema#',
+               'properties': {'input_blocksize': {'default': 1024,
+                                                  'type': 'integer'},
+                              'input_stepsize': {'default': 512,
+                                                 'type': 'integer'}},
+               'type': 'object'}
+
+    @store_parameters
     def __init__(self, input_blocksize=1024, input_stepsize=None):
         super(OnsetDetectionFunction, self).__init__()
 
@@ -125,4 +133,3 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     result_id='onset_detection_function',
     grapher_id='grapher_onset_detection_function',
     grapher_name='Onset detection')
-

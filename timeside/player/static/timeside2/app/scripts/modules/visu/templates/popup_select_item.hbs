@@ -1,0 +1,13 @@
+<div class="modal-title">
+  <h3>{{title}}</h3>
+  {{#sprite . "close"}}{{/sprite}}
+</div>
+<div class="modal-content">
+  <ul>
+  	{{#each items}}
+      <li class="checkbox">
+        <button data-layout="item" data-id="{{uuid}}">{{title}}</button>
+      </li>
+  	{{/each}}
+  </ul>
+</div>

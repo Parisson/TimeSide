@@ -1,0 +1,47 @@
+<ul class="horizontal y-stretch">
+  <li class="active">
+    <button class="button" data-layout="action" data-action="stop">
+      <span class="content">{{#sprite . "stop"}}{{/sprite}}</span>
+    </button>
+  </li>
+  <li>
+    <button class="button" data-layout="action" data-action="play">
+      <span class="content">{{#sprite . "play"}}{{/sprite}}</span>
+    </button>
+  </li>
+  <li class="horizontal y-stretch">
+      <label class="horizontal x-center y-center time-indicator" data-layout="time-indicator">time</label>
+  </li>
+  <li>
+    <button class="button" data-layout="action" data-action="loop">
+      <span class="content">{{#sprite . "loop"}}{{/sprite}}</span>
+    </button>
+  </li>
+  <li>
+    <button class="button" data-layout="action" data-action="speaker">
+      <span class="content">{{#sprite . "volume"}}{{/sprite}}</span>
+    </button>
+  </li>
+  <li class="expandable">
+    <button  class="button expand-toggle">
+      <span class="content horizontal y-center">
+        {{#sprite . "etc"}}{{/sprite}}
+        {{#sprite . "arrow-bottom"}}{{/sprite}}
+      </span>
+        
+      </span>
+    </button>
+    <ul class="expand horizontal x-end">
+      <li>
+        <button class="button" data-action="others" >
+          <span class="content">truc</span>
+        </button>
+      </li>
+      <li>
+        <button class="button" >
+          <span class="content">machin</span>
+        </button>
+      </li>
+    </ul>
+  </li>
+</ul>

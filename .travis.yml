@@ -8,8 +8,6 @@ services:
   - docker
 
 env:
-  global:
-    - DOCKER_COMPOSE_VERSION: 1.5.2
   matrix:
     - TEST_TARGET=default  # Default unit test
     - TEST_TARGET=cli      # Test for TimeSide command line interfaces
@@ -18,15 +16,11 @@ env:
 
 before_install:
   - docker-compose --version
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker-compose --version
 
 
 # Install TimeSide
 install:
+  - docker-compose -f docker-compose.yml -f env/build.yml pull
   - docker-compose -f docker-compose.yml -f env/build.yml build
 
 
@@ -45,7 +39,7 @@ install:
 script:
 # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-      docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/src/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
+      docker-compose -f docker-compose.yml -f env/build.yml -f env/coverage.yml run app  sh -c "cd /srv/src/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
     fi
 # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
@@ -58,17 +52,20 @@ script:
 #  # -------------SERVER-------------------------
 #  #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
+       docker-compose -f docker-compose.yml -f env/build.yml up -d db;
+       sleep 20;
        docker-compose -f docker-compose.yml -f env/build.yml up -d;
        sleep 20;
-       curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/items/1/;
+       curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/api/items/;
     fi
 #
-after_script:
-    - if [[ $TEST_TARGET == 'server' ]]; then
-           docker-compose stop;
-      fi
 after_success:
 #  -  # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-          docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/src/timeside; pip install coveralls; coveralls";
+          docker-compose -f docker-compose.yml -f env/build.yml -f env/coverage.yml run app  sh -c "cd /srv/src/timeside; pip install coveralls; coveralls";
+    fi
+
+after_script:
+  - if [[ $TEST_TARGET == 'server' ]]; then
+           docker-compose stop;
     fi

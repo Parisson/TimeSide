@@ -1,0 +1,60 @@
+{
+
+	"comment" : "Un event défini aura automatiquement suffixé :api pour l'appel api, et chacun (event && api correspondant)a :ok et :error en retour",
+
+
+	"fakeserver"  : {
+		"getdata" : "fakeserver:getdata"
+	},
+
+	"trueserver"  : {
+		"getdata" : "trueserver:getdata"
+	},
+
+	"navigator" : {
+		"newWindow" : "navigator:newWindow"
+	},
+
+	"annotation" : {
+
+	},
+
+	"ui_project" : {
+		"tracksHeightChanged" 		: "ui:tracksHeightChanged",
+		"segmentLoopUpdate" 		: "ui:segmentLoopUpdate",
+		"deleteTrack"				: "ui:deleteTrack",
+		"deleteAnnotationTrack" 	: "ui:deleteAnnotationTrack"
+	},
+
+	"audio" : {
+		"loadGlobalFile" 	: "audio:loadGlobalFile",
+		"loadSpecificFile" 	: "audio:loadSpecificFile",
+		"play" 				: "audio:play",
+		"pause"				: "audio:pause",
+		"stop"				: "audio:stop",
+		"setCurrentTime"	: "audio:setCurrentTime",
+		"newAudioTime"		: "audio:newAudioTime"	
+	},
+
+	"analysis" : {
+		"ask" : "analysis:ask",
+		"asked" : "analysis:asked",
+		"result" : "analysis:result"
+	},
+
+
+	"data" : {
+		"processors"		: {
+			"get" : "data:processors:get"
+		},
+		"analysis"		: {
+			"get" 		: "data:analysis:get",
+			"create" 	: "data:analysis:create" 
+		},
+		"items"				: {
+			"get" : "data:items:get",
+			"getOne" : "data:items:getOne",
+			"waveform" : "data:items:waveform"
+		}
+	}
+}
