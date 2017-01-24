@@ -32,7 +32,7 @@ RUN apt-get update && \
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
 RUN conda update conda &&\
-    conda config --add channels piem --add channels yaafe &&\
+    conda config --append channels piem --append channels yaafe &&\
     conda env update --name root --file environment-pinned.yml &&\
     conda clean --all --yes
 
