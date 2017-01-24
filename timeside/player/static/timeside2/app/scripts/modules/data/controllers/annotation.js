@@ -24,7 +24,8 @@ function (A) {
       var currentItem = A._i.getOnCfg('currentItem');
       var data = {item : currentItem.get('url')};
 
-      return $.post('http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/',data,function(a,b,c) {
+      return $.post(/*'http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/'*/
+        A.getApiUrl()+'/annotation_tracks/',data,function(a,b,c) {
         var model = new A.models.annotationTrack(a);
         if (!currentItem.get('annotationTracksObjects'))
           currentItem.set('annotationTracksObjects',[]);
@@ -47,7 +48,9 @@ function (A) {
           description : text
         };*/
         return $.ajax({
-          url : 'http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/'+trackModel.get('uuid'),
+          url : /*'http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/'*/
+            A.getApiUrl()+'/annotation_tracks/'
+              +trackModel.get('uuid'),
           type : 'DELETE'/*,
           data : data*/,
           success : function(res) {
@@ -92,7 +95,8 @@ function (A) {
         };
 
         
-        return $.post('http://timeside-dev.telemeta.org/timeside/api/annotations/',data,function(res) {
+        return $.post(/*'http://timeside-dev.telemeta.org/timeside/api/annotations/'*/
+          A.getApiUrl()+'/annotations/',data,function(res) {
           console.log('post done');
           return callback();
         });
@@ -109,7 +113,9 @@ function (A) {
           description : text
         };
         return $.ajax({
-          url : 'http://timeside-dev.telemeta.org/timeside/api/annotations/'+itemUUID,
+          url : /*'http://timeside-dev.telemeta.org/timeside/api/annotations/'*/
+          A.getApiUrl()+'/annotations/'
+            +itemUUID,
           type : 'PUT',
           data : data,
           success : function(res) {

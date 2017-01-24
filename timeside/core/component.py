@@ -129,9 +129,6 @@ class Component(object):
     """Base class of all components"""
     __metaclass__ = MetaComponent
 
-    def __init__(self):
-        super(Component, self).__init__()
-
 
 def extend_unique(list1, list2):
     """Extend list1 with list2 as list.extend(), but doesn't append duplicates

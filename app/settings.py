@@ -3,12 +3,13 @@ import environ
 # set default values and casting
 env = environ.Env(DEBUG=(bool, False),
                   CELERY_ALWAYS_EAGER=(bool, False),
-                 )
+                  )
 # Django settings for server project.
-DEBUG = env('DEBUG') # False if not in os.environ
-TEMPLATE_DEBUG = DEBUG
+DEBUG = env('DEBUG')  # False if not in os.environ
 
-import os, sys
+
+import os
+import sys
 sys.dont_write_bytecode = True
 
 ADMINS = (
@@ -94,22 +95,35 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
     'djangobower.finders.BowerFinder',
 )
 
-
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#    'django.template.loaders.eggs.Loader',
-)
-
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        #'DEBUG': DEBUG,
+        'DIRS': [
+            # insert your TEMPLATE_DIRS here
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
-    # Manage Django URLs for AngularJS with django-angular
-    'djng.middleware.AngularUrlMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -117,6 +131,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Debug Toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -124,11 +140,6 @@ ROOT_URLCONF = 'urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -145,13 +156,13 @@ INSTALLED_APPS = (
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
-    'djng',
     'djangobower',
     'corsheaders',
+    'debug_toolbar',
     # 'south',
 )
 
-# A sample logging configuration. The only tangible logging
+# dj A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
@@ -186,10 +197,10 @@ REST_FRAMEWORK = {
 BROKER_URL = env('BROKER_URL')
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER') # If this is True, all tasks will be executed locally by blocking until the task returns.
+CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
 from worker import app
 
@@ -202,13 +213,8 @@ BOWER_INSTALLED_APPS = (
     'bootstrap#3.3.6',
     'bootstrap-select#1.5.4',
     'font-awesome#~4.4.0',
-    'angular#1.2.26',
-    'angular-bootstrap-select#0.0.5',
-    'angular-resource#1.2.26',
     'raphael#2.2.0',
     'soundmanager#V2.97a.20150601',
-    'https://github.com/Parisson/loaders.git',
-    'https://github.com/Parisson/ui.git',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -221,3 +227,9 @@ CORS_ALLOW_CREDENTIALS = True
 # SOUTH_MIGRATION_MODULES = {
 #     'timeside.server': 'timeside.server.south_migrations'
 # }
+
+
+if DEBUG:
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda x : True
+    }

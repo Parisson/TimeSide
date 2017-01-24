@@ -34,7 +34,7 @@
     "fastclick": "latest",
     "validate.js" : "latest",
     "font-awesome" : "latest",
-    "d3" : "latest",
+    "d3" : "3.5.17",
     "buzz" : "latest"
   },
   "devDependencies": {

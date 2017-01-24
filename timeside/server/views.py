@@ -27,43 +27,21 @@ from django.http import Http404
 from django.views.generic.base import View, TemplateView
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, generics, renderers
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.reverse import reverse, reverse_lazy
+from rest_framework.decorators import detail_route
 
-from timeside.server.models import Experience, Item, Result, Processor, SubProcessor
-from timeside.server.models import Preset, Selection, Task, User
-from timeside.server.models import Analysis, AnalysisTrack
-from timeside.server.models import AnnotationTrack, Annotation
-from timeside.server.models import _DRAFT, _DONE, _RUNNING, _PENDING
-from timeside.server.serializers import ExperienceSerializer, ItemSerializer, ItemWaveformSerializer
-from timeside.server.serializers import PresetSerializer
-from timeside.server.serializers import ProcessorSerializer
-from timeside.server.serializers import SubProcessorSerializer
-from timeside.server.serializers import ResultSerializer, ResultVisualizationSerializer
-from timeside.server.serializers import SelectionSerializer
-from timeside.server.serializers import TaskSerializer
-from timeside.server.serializers import UserSerializer
-from timeside.server.serializers import AnalysisSerializer, AnalysisTrackSerializer, ItemAnalysisSerializer, ItemAnalysisResultSerializer
-from timeside.server.serializers import ItemAnnotationsSerializer
-from timeside.server.serializers import AnnotationTrackSerializer, AnnotationSerializer
+from . import models
+from . import serializers
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
 import os
-
-
-def stream_from_file(file):
-    chunk_size = 0x10000
-    f = open(file, 'r')
-    while True:
-        chunk = f.read(chunk_size)
-        if not len(chunk):
-            f.close()
-            break
-        yield chunk
 
 
 def stream_from_task(task):
@@ -80,37 +58,41 @@ class UUIDViewSetMixin(object):
 
 class SelectionViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Selection
-    queryset = Selection.objects.all()
-    serializer_class = SelectionSerializer
+    model = models.Selection
+    queryset = model.objects.all()
+    serializer_class = serializers.SelectionSerializer
 
 
 class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Item
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    model = models.Item
+    queryset = models.Item.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ItemListSerializer
+        return serializers.ItemSerializer
 
 
 class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = AnnotationTrack
-    queryset = AnnotationTrack.objects.all()
-    serializer_class = AnnotationTrackSerializer
+    model = models.AnnotationTrack
+    queryset = model.objects.all()
+    serializer_class = serializers.AnnotationTrackSerializer
 
 
 class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Annotation
-    queryset = Annotation.objects.all()
-    serializer_class = AnnotationSerializer
+    model = models.Annotation
+    queryset = model.objects.all()
+    serializer_class = serializers.AnnotationSerializer
 
 
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
 
-    model = Item
-    queryset = Item.objects.all()
-    serializer_class = ItemWaveformSerializer
+    model = models.Item
+    queryset = model.objects.all()
+    serializer_class = serializers.ItemWaveformSerializer
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -130,34 +112,49 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
 
 class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Experience
-    queryset = Experience.objects.all()
-    serializer_class = ExperienceSerializer
+    model = models.Experience
+    queryset = model.objects.all()
+    serializer_class = serializers.ExperienceSerializer
 
 
 class ProcessorViewSet(viewsets.ModelViewSet):
 
-    model = Processor
-    queryset = Processor.objects.all()
-    serializer_class = ProcessorSerializer
+    model = models.Processor
+    queryset = model.objects.all()
+    serializer_class = serializers.ProcessorSerializer
     lookup_field = 'pid'
     lookup_value_regex = '[0-9a-z_]+'
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ProcessorListSerializer
+        return serializers.ProcessorSerializer
+
+    @detail_route(methods=['get'])
+    def parameters_schema(self, request, pid=None):
+        serializer = serializers.ParametersSchemaSerializer(self.get_object())
+        return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def parameters_default(self, request, pid=None):
+        serializer = serializers.ParametersDefaultSerializer(self.get_object())
+        return Response(serializer.data)
 
 
 class SubProcessorViewSet(viewsets.ModelViewSet):
 
-    model = SubProcessor
-    queryset = SubProcessor.objects.all()
-    serializer_class = SubProcessorSerializer
+    model = models.SubProcessor
+    queryset = model.objects.all()
+    serializer_class = serializers.SubProcessorSerializer
     lookup_field = 'sub_processor_id'
     lookup_value_regex = '[0-9a-z_.]+'
 
 
 class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Result
-    queryset = Result.objects.all()
-    serializer_class = ResultSerializer
+    model = models.Result
+    queryset = model.objects.all()
+    serializer_class = serializers.ResultSerializer
 
 
 class PNGRenderer(renderers.BaseRenderer):
@@ -172,68 +169,122 @@ class PNGRenderer(renderers.BaseRenderer):
 
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
 
-    model = Result
-    queryset = Result.objects.all()
-    serializer_class = ResultVisualizationSerializer
+    model = models.Result
+    queryset = model.objects.all()
+    serializer_class = serializers.ResultVisualizationSerializer
 
     renderer_classes = (PNGRenderer,)  # renderers.JSONRenderer,
 
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Preset
-    queryset = Preset.objects.all()
-    serializer_class = PresetSerializer
+    model = models.Preset
+    queryset = model.objects.all()
+    serializer_class = serializers.PresetSerializer
 
 
 class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Task
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
+    model = models.Task
+    queryset = model.objects.all()
+    serializer_class = serializers.TaskSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
 
-    model = User
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    model = models.User
+    queryset = model.objects.all()
+    serializer_class = serializers.UserSerializer
     lookup_field = 'username'
 
 
 class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = Analysis
-    queryset = Analysis.objects.all()
-    serializer_class = AnalysisSerializer
+    model = models.Analysis
+    queryset = model.objects.all()
+    serializer_class = serializers.AnalysisSerializer
 
 
 class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
-    model = AnalysisTrack
-    queryset = AnalysisTrack.objects.all()
-    serializer_class = AnalysisTrackSerializer
+    model = models.AnalysisTrack
+    serializer_class = serializers.AnalysisTrackSerializer
 
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases analysis track to 
+        a given analysis and/or a given item,
+        by filtering against `analysis` and `item` query parameters in the URL.
+        The query parameters values should be the uuid of the analysis or of the item
+        """
+        queryset = self.model.objects.all()
+        analysis_uuid = self.request.query_params.get('analysis', None)
+        item_uuid = self.request.query_params.get('item', None)
+        if analysis_uuid is not None:
+            queryset = queryset.filter(analysis__uuid__startswith=analysis_uuid)
+        if item_uuid is not None:
+            queryset = queryset.filter(item__uuid__startswith=item_uuid)
 
-class IndexView(ListView):
+        return queryset
 
-    model = Item
-    template_name = 'timeside/index.html'
+    @detail_route(methods=['post'])
+    def set_parameters(self, request, uuid=None):
+        # Get current Analysis track Preset
+        track = self.get_object()
+        context = {'request': request}
+        preset_data = serializers.PresetSerializer(track.analysis.preset,
+                                                   context=context).data
+        # Create a new Preset from parameters post in request data
+        preset_data['parameters'] = json.dumps(request.data)
+        preset_serializer = serializers.PresetSerializer(data=preset_data,
+                                                         context=context)
+        if preset_serializer.is_valid():
+            preset = preset_serializer.save()
+        else:
+            return Response(data=preset_serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Create a new Analysis with this Preset
+        analysis_data = serializers.AnalysisSerializer(track.analysis,
+                                                       context=context).data
+        # Update preset field
+        analysis_data['preset'] = preset_serializer.data['url']
 
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        return context
+        analysis_serializer = serializers.AnalysisSerializer(data=analysis_data,
+                                                             context=context)
+        if analysis_serializer.is_valid():
+            analysis = analysis_serializer.save()
+        else:
+            return Response(data=analysis_serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
-    def dispatch(self, *args, **kwargs):
-        return super(IndexView, self).dispatch(*args, **kwargs)
+        # Update Analysis track with partial data
+        new_analysis = {'analysis': analysis_serializer.data['url']}
+        serializer_track = self.serializer_class(track,
+                                                 data=new_analysis,
+                                                 context=context,
+                                                 partial=True)
+
+        # Return Analysis Track data as response to POST request
+        if serializer_track.is_valid():
+            serializer_track.save()
+            return Response(data=serializer_track.data,
+                            status=status.HTTP_200_OK)
+        else:
+            return Response(data=serializer_track.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['get'])
+    def parameters_default(self, request, uuid=None):
+        serializer = serializers.ParametersDefaultSerializer(self.get_object())
+        return Response(serializer.data)
 
 
 class ResultAnalyzerView(View):
 
-    model = Result
+    model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(pk=kwargs['pk'])
         container = AnalyzerResultContainer()
         container.from_hdf5(result.hdf5.path)
         return HttpResponse(container.to_json(),
@@ -242,10 +293,10 @@ class ResultAnalyzerView(View):
 
 class ResultAnalyzerToElanView(View):
 
-    model = Result
+    model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(pk=kwargs['pk'])
         res_id = kwargs['res_id']
         container = AnalyzerResultContainer()
         container.from_hdf5(result.hdf5.path)
@@ -275,10 +326,10 @@ class ResultAnalyzerToElanView(View):
 
 class ResultAnalyzerToSVView(View):
 
-    model = Result
+    model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(pk=kwargs['pk'])
         res_id = kwargs['res_id']
         container = AnalyzerResultContainer()
         container.from_hdf5(result.hdf5.path)
@@ -309,27 +360,27 @@ class ResultAnalyzerToSVView(View):
 
 class ResultGrapherView(View):
 
-    model = Result
+    model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = Result.objects.get(pk=kwargs['pk'])
-        return HttpResponse(stream_from_file(result.file.path),
+        result = models.Result.objects.get(pk=kwargs['pk'])
+        return FileResponse(open(result.file.path, 'rb'),
                             content_type='image/png')
 
 
 class ResultEncoderView(View):
 
-    model = Result
+    model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = Result.objects.get(pk=kwargs['pk'])
-        return StreamingHttpResponse(stream_from_file(result.file.path),
-                                     content_type=result.mime_type)
+        result = models.Result.objects.get(pk=kwargs['pk'])
+        return FileResponse(open(result.file.path, 'rb'),
+                            content_type=result.mime_type)
 
 
 class ItemDetailExport(DetailView):
 
-    model = Item
+    model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
     def get_context_data(self, **kwargs):
@@ -370,41 +421,26 @@ class ItemDetailExport(DetailView):
         return context
 
 
-class ItemDetailAngular(DetailView):
+class ItemList(ListView):
 
-    model = Item
-    template_name = 'timeside/item_detail_angular.html'
+    model = models.Item
+    template_name = 'timeside/item_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ItemDetailAngular, self).get_context_data(**kwargs)
-
-        context['Result'] = 'Result'
-        Results = {}
-
-        for result in self.get_object().results.all():
-            if result.hdf5:
-                container = AnalyzerResultContainer()
-                container.from_hdf5(result.hdf5.path)
-            else:
-                container = {}
-
-            for name, res in container.items():
-                if res.time_mode == 'segment':
-                    if res.data_mode == 'label':
-
-                        Results[result.id] = name
-            context['Results'] = Results
-
+        context = super(ItemList, self).get_context_data(**kwargs)
         return context
+
+    def dispatch(self, *args, **kwargs):
+        return super(ItemList, self).dispatch(*args, **kwargs)
 
 
 class ItemDetail(DetailView):
 
-    model = Item
+    model = models.Item
     template_name = 'timeside/item_detail.html'
 
     def get_object(self):
-        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
+        return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
@@ -416,10 +452,21 @@ class ItemDetail(DetailView):
 
 
 class ItemTranscode(DetailView):
-    model = Item
+    model = models.Item
 
     def get_object(self):
-        return get_object_or_404(Item, uuid=self.kwargs.get("uuid"))
+        return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))
+
+    def transcode_segment(self, uri, start, duration, encoder_pid, mime_type):
+        decoder = timeside.core.get_processor('file_decoder')(uri, start=start, duration=duration)
+        import tempfile
+        with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
+            encoder = timeside.core.get_processor(encoder_pid)(tmp_file.name, overwrite=True)
+            pipe = (decoder | encoder)
+            pipe.run()
+
+            return FileResponse(open(tmp_file.name, 'rb'),
+                                content_type=mime_type)
 
     def get(self, request, uuid, extension):
         from . utils import TS_ENCODERS_EXT
@@ -438,26 +485,35 @@ class ItemTranscode(DetailView):
 
         encoder = TS_ENCODERS_EXT[extension]
         mime_type = timeside.core.get_processor(encoder).mime_type()
+
+        if (start, duration) != (0, None):
+            uri = self.get_object().get_uri()
+            return self.transcode_segment(uri=uri,
+                                          start=start,
+                                          duration=duration,
+                                          encoder_pid=encoder,
+                                          mime_type=mime_type)
         # Get or Create Processor = encoder
-        processor, created = Processor.objects.get_or_create(pid=encoder)
+        processor, created = models.Processor.objects.get_or_create(pid=encoder)
         # Get or Create Preset with processor
-        preset, created = Preset.objects.get_or_create(processor=processor)
+        preset, created = models.Preset.objects.get_or_create(processor=processor)
         # Get Result with preset and item
         item = self.get_object()
         try:
-            result = Result.objects.get(item=item, preset=preset)
+            result = models.Result.objects.get(item=item, preset=preset)
             if not os.path.exists(result.file.path):
                 # Result exists but not file (may have been deleted)
                 result.delete()
                 return self.get(request, uuid, extension)
             # Result and file exist --> OK
-            return StreamingHttpResponse(stream_from_file(result.file.path),
-                                         content_type=result.mime_type)
-        except Result.DoesNotExist:
+            return FileResponse(open(result.file.path, 'rb'),
+                                content_type=result.mime_type)
+        except models.Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
-            task, created = Task.objects.get_or_create(experience=preset.get_single_experience(),
-                                                       selection=item.get_single_selection())
+            task, created = models.Task.objects.get_or_create(
+                experience=preset.get_single_experience(),
+                selection=item.get_single_selection())
             task.run(wait=True)
             return self.get(request, uuid, extension)
             # response = StreamingHttpResponse(streaming_content=stream_from_task(task),

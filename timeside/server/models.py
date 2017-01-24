@@ -32,6 +32,7 @@ import time
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
+from timeside.core.tools.parameters import DEFAULT_SCHEMA
 
 from django.db import models
 from django.utils.functional import lazy
@@ -39,8 +40,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
-
-from celery.result import GroupResult
+import jsonfield
+import json
 
 app = 'timeside'
 
@@ -86,23 +87,16 @@ STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_DONE, _('done')))
 
 
-results_root = 'results'
-results_path = os.path.join(settings.MEDIA_ROOT, results_root)
-if not os.path.exists(results_path):
-    os.makedirs(results_path)
+RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
+if not os.path.exists(RESULTS_ROOT):
+    os.makedirs(RESULTS_ROOT)
 
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
 
 
-def get_processor(pid):
-    for proc in processors:
-        if proc.id() == pid:
-            return proc
-    raise ValueError('Processor %s does not exists' % pid)
-
-
+# --- Abstract classes -----
 class Dated(models.Model):
 
     date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
@@ -146,6 +140,8 @@ class Shareable(models.Model):
         abstract = True
 
 
+# ----- Timeside server models ------
+
 class Selection(Titled, UUID, Dated, Shareable):
 
     items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
@@ -185,25 +181,30 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_source(self):
-        source = None
-        source_type = None
+    def get_uri(self):
+        """Return the Item source"""
         if self.source_file and os.path.exists(self.source_file.path):
-            source = self.source_file.path
-            source_type = 'file'
+            return self.source_file.path
         elif self.source_url:
-            source = self.source_url
-            source_type = 'url'
-        return source, source_type
+            return self.source_url
+        return None
 
     def get_audio_duration(self):
-        import timeside.core as ts_core
-        decoder = ts_core.get_processor(
-            'file_decoder')(uri=self.get_source()[0])
+        """
+        Return item audio duration
+        """
+        decoder = timeside.core.get_processor('file_decoder')(
+            uri=self.get_uri())
         return decoder.uri_total_duration
 
     def get_results_path(self):
-        return os.path.join(results_path, self.uuid)
+        """
+        Return Item result path
+        """
+        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        if not os.path.exists(result_path):
+            os.makedirs(result_path)
+        return result_path
 
     def get_single_selection(self):
         # TODO : have singleton selection has a foreign key of Item ???
@@ -221,19 +222,14 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def run(self, experience):
         result_path = self.get_results_path()
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
+        uri = self.get_uri()
 
-        if self.source_file:
-            uri = self.source_file.path
-        elif self.source_url:
-            uri = self.source_url
-
-        pipe = timeside.plugins.decoder.file.FileDecoder(uri=uri,
-                                                         sha1=self.sha1)
+        decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
+                                                            sha1=self.sha1)
         presets = {}
+        pipe = decoder
         for preset in experience.presets.all():
-            proc = get_processor(preset.processor.pid)
+            proc = preset.processor.get_processor()
             if proc.type == 'encoder':
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
@@ -244,10 +240,11 @@ class Item(Titled, UUID, Dated, Shareable):
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
             elif proc.type in ['analyzer', 'grapher']:
-                proc = proc(**ast.literal_eval(preset.parameters))
+                print json.loads(preset.parameters)
+                proc = proc(**json.loads(preset.parameters))
 
             presets[preset] = proc
-            pipe = pipe | proc
+            pipe |= proc
 
         # item.lock_setter(True)
 
@@ -264,12 +261,12 @@ class Item(Titled, UUID, Dated, Shareable):
             if preset is None:
                 processor, c = Processor.objects.get_or_create(pid=proc.id())
                 presets = Preset.objects.filter(processor=processor,
-                                                parameters=unicode(parameters))
+                                                parameters=json.dumps(parameters))
                 if presets:
                     preset = presets[0]
                 else:
                     preset = Preset(processor=processor,
-                                    parameters=unicode(parameters))
+                                    parameters=json.dumps(parameters))
                     preset.save()
             else:
                 processor = preset.processor
@@ -291,7 +288,6 @@ class Item(Titled, UUID, Dated, Shareable):
                 set_results_from_processor(proc, preset)
 
             elif proc.type == 'grapher':
-                parameters = {}
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
                 image_file = str(result.uuid) + '.png'
@@ -315,7 +311,6 @@ class Item(Titled, UUID, Dated, Shareable):
 
         del pipe
         # item.lock_setter(False)
-lazy
 
 
 class Experience(Titled, UUID, Dated, Shareable):
@@ -336,7 +331,7 @@ class Processor(models.Model):
 
     def __init__(self, *args, **kwargs):
         super(Processor, self).__init__(*args, **kwargs)
-        self._meta.get_field_by_name('pid')[0]._choices = lazy(get_processor_pids, list)()
+        self._meta.get_field('pid')._choices = lazy(get_processor_pids, list)()
 
     class Meta:
         db_table = app + '_processors'
@@ -350,10 +345,19 @@ class Processor(models.Model):
             self.version = timeside.core.__version__
         if not self.name:
             try:
-                self.name = timeside.core.get_processor(self.pid).name()
+                self.name = self.get_processor().name()
             except AttributeError:
                 pass
         super(Processor, self).save(**kwargs)
+
+    def get_processor(self):
+        return timeside.core.get_processor(self.pid)
+
+    def get_parameters_schema(self):
+        return self.get_processor().get_parameters_schema()
+
+    def get_parameters_default(self):
+        return self.get_processor().get_parameters_default()
 
 
 class SubProcessor(models.Model):
@@ -376,7 +380,9 @@ class Preset(UUID, Dated, Shareable):
 
     processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
-
+    # TODO : turn this filed into a JSON Field
+    # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration
+    
     class Meta:
         db_table = app + '_presets'
         verbose_name = _('Preset')
@@ -387,8 +393,8 @@ class Preset(UUID, Dated, Shareable):
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
-        exp_description = exp_title + "\n" + \
-            "Automatically generated by the TimeSide application."
+        exp_description = "\n".join([exp_title,
+                                     "Automatically generated by the TimeSide application."])
         experience, created = Experience.objects.get_or_create(title=exp_title,
                                                                description=exp_description)
         if created:
@@ -458,7 +464,7 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        task_run.delay(self.id)
+        task_run.delay(task_id=self.id)
 
         if wait:
             status = Task.objects.get(id=self.id).status
@@ -518,10 +524,12 @@ post_save.connect(run, sender=Task)
 class Analysis(Titled, UUID, Dated, Shareable):
     sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False)
     preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False)
+    parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:
         db_table = app + '_analysis'
         verbose_name = _('Analysis')
+        verbose_name_plural = _('Analyses')
 
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):

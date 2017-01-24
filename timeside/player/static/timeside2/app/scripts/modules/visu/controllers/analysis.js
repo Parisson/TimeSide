@@ -54,7 +54,9 @@ function (A,d3) {
         analysis : this.analysis.url,
         item : this.item.url
       }, self=this;
-      var url = $.post('http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/',data,function(a,b,c) {
+      var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
+          A.getApiUrl()+'/analysis_tracks/'
+        ,data,function(a,b,c) {
         console.log('Ok donc on fait quoi ?');
 
         if (a.result_url && a.result_url.indexOf('http://')===0) {
@@ -103,7 +105,9 @@ function (A,d3) {
     //Delete
     deleteAnalysisTrack:function(model,callback) {
       return $.ajax({
-          url : 'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'+model.get('uuid'),
+          url : /*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
+          A.getApiUrl()+'/analysis_tracks/'
+            +model.get('uuid'),
           type : 'DELETE'/*,
           data : data*/,
           success : function(res) {

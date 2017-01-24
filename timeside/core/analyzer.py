@@ -317,8 +317,8 @@ class LabelMetadata(MetadataObject):
     '''
 
     # Define default values
-    _default_value = OrderedDict([('label', {}),
-                                  ('description', {}),
+    _default_value = OrderedDict([('label', None),
+                                  ('description', None),
                                   ('label_type', 'mono')])
 
     def to_hdf5(self, h5group):
@@ -335,6 +335,8 @@ class LabelMetadata(MetadataObject):
             hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
 
     def from_hdf5(self, h5group):
+        self.label = {}
+        self.description = {}
         self['label_type'] = h5group.attrs['label_type']
         for subgroup_name, h5subgroup in h5group.items():
             hdf5.dict_from_hdf5(self[subgroup_name], h5subgroup)
@@ -954,12 +956,12 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         ax_color = {}
         legend_patches = []
         for key, label in self.label_metadata.label.items():
-            ax_color[key] = colors.next()
+            ax_color[int(key)] = colors.next()
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
-            legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
+            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=unicode(label)))
 
         for time, duration, key in zip(self.time, self.duration, self.data):
-            ax.axvspan(time, time + duration, color=ax_color[key], alpha=0.3)
+            ax.axvspan(time, time + duration, color=ax_color[int(key)], alpha=0.3)
 
         # Create legend from custom artist/label lists
         ax.legend(handles=legend_patches)  # , self.label_metadata.label.values())
@@ -1311,7 +1313,7 @@ class Analyzer(Processor):
         result.audio_metadata.is_segment = self.mediainfo()['is_segment']
         result.audio_metadata.channels = self.channels()
 
-        result.parameters = Parameters(json.loads(self.get_parameters()))
+        result.parameters = Parameters(self.get_parameters())
 
         if time_mode == 'framewise':
             result.data_object.frame_metadata.samplerate = self.result_samplerate
