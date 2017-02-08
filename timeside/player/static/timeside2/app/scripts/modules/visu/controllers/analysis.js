@@ -40,14 +40,46 @@ function (A,d3) {
     this.launch = function() {
 
 
-      this.interval = setInterval(_.bind(this.testIfFinished,this),4000);
+      //this.interval = setInterval(_.bind(this.testIfFinished,this),4000);
 
       //so view knows we're launching something
       this.uniqueIdAnalysis = UNIQUE_ID_ANALYSIS++;
       A._v.trigCfg('analysis.asked','',this.uniqueIdAnalysis);
-      this.testIfFinished();
+      this.testIfExists();
     };
 
+    //1 : test if exists
+    this.testIfExists = function() {
+      var urlTest = A.getApiUrl()+'/analysis_tracks/';
+      var data = {
+        analysis : this.analysis.uuid,
+        item : this.item.uuid
+      };
+      var self=this;
+      $.get(urlTest,data,function(a,b,c) {
+        if (b!="success")
+          return console.error('error on get analysis_tracks : '+b);
+
+        if (a.length>1)
+          console.error('Warning : more than one result on '+urlTest+' & '+JSON.stringify(data));
+
+        if (a.length==0) {
+          //we need to create one
+          console.log('We need to create a new analysis_track');
+          self.interval = setInterval(_.bind(self.testIfFinished,self),4000);
+          return (_.bind(self.testIfFinished,self)) ();
+        }
+
+
+          console.log('We have a new analysis_track, lets use it');
+        var result = a[0];
+        return self.onFinished(result);
+
+      });
+      //this.testIfFinished();
+    };
+
+    //2 : created : wait if finished
     this.testIfFinished = function() {
       console.log('testing if finished my analysis : '+JSON.stringify(this.analysis));
       var data = {

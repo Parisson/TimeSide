@@ -52,6 +52,9 @@ function (Marionette,A,BaseQeopaView,BitmapDataProvider,behaviors,ParamSimpleVie
 
       this.resultAnalysis = o.resultAnalysis;
 
+      if (this.parametersView && this.parametersView.setResultAnalysis)
+        this.parametersView.setResultAnalysis(this.resultAnalysis);
+
       this.dataProvider = new BitmapDataProvider();
       this.dataProvider.define(o.type,this,this.resultAnalysis);
     },
