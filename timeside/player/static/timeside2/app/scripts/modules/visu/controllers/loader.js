@@ -29,7 +29,7 @@ function (A,d3) {
     /////////////////////////////////////////////////////////////////////////////
     //Gestion de la map de demande
     getDataFunction:function(type,resultAnalysis) {
-      var idFunction = type+"__"+resultAnalysis.get('uuid');
+      var idFunction = resultAnalysis && resultAnalysis.get('uuid') ? type+"__"+resultAnalysis.get('uuid') : type;
       if (! this.mapFuncByType[idFunction]) {
         this.mapFuncByType[idFunction] = _.debounce(this.askDataFunc,200);
       }
