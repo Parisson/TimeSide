@@ -45,7 +45,14 @@ function (A) {
       A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.items.getOne),{id : id},null,
         function(item) {
           A._i.setOnCfg('currentItem',item);
-          return self.getAllAnalysisTracks(item,function(resultAnalysis) {
+
+          //NEW 02/17 : we dont call the analysis track objects
+          return self.getAllAnotationsTracks(item,function(result) {
+              item.set('annotationTracksObjects',result);
+              return A._v.trigCfg('navigate.page','',viewid);
+            });
+
+          /*return self.getAllAnalysisTracks(item,function(resultAnalysis) {
             item.set('analysisTracksObjects',resultAnalysis);
              //new : get all annotations on item
             return self.getAllAnotationsTracks(item,function(result) {
@@ -53,27 +60,11 @@ function (A) {
               return A._v.trigCfg('navigate.page','',viewid);
             });
 
-          })
+          })*/
         }, function(error) {
           alert("Non1");
       });
       return;
-
-
-
-      console.error("Temp : get one item does not work direct from list");
-
-      var item = _.find(A._i.getOnCfg('allItems'),function(it) {return it.get('uuid')===id});
-      if (!item)
-        return console.error('no item found on '+id);
-
-     
-      
-
-      
-
-        
-
       
     },
 
