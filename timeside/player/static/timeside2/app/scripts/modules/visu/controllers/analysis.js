@@ -104,6 +104,10 @@ function (A,d3) {
     //////////////////////////////////////////////////////////////////////////////////////////////
     //Delete
     deleteAnalysisTrack:function(model,callback) {
+
+      //note : we don't delete anything anymore, asked by TF 08/02/17
+      return callback();
+
       return $.ajax({
           url : /*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/analysis_tracks/'

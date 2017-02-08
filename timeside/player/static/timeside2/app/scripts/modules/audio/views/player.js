@@ -57,7 +57,7 @@ function (Marionette,A,BaseQeopaView) {
     onAudioTime:function(percent,valueSec) {
       
       var value = A.telem.formatTimeMs(valueSec*1000);
-      console.log('time : '+valueSec+" : "+value);
+      //console.log('time : '+valueSec+" : "+value);
         this.ui.timeLabel.empty().append(value);
     },
    

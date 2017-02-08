@@ -111,6 +111,8 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       var x = evt.pageX - this.clickContainer.offset().left;
       var relativeX = x / this.width;
+     //console.log('???? : '+evt.pageX+","+this.clickContainer.offset().left+" ==> "+x+" : "+relativeX);
+
       A._v.trigCfg('audio.setCurrentTime','',relativeX);
       console.log('CLICK!!!'+relativeX);
     },
