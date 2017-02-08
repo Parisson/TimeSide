@@ -19,6 +19,8 @@ define([
 function (A,d3,BaseDataProvider) {
   'use strict';
 
+  var debug_id=1;
+
   return BaseDataProvider.extend({
     initialize: function (options)	 {
       this.base_init();
@@ -34,7 +36,9 @@ function (A,d3,BaseDataProvider) {
       this.CONST_LENGTH_SPECIFICDATA_MIN_CACHE = 1; 
 
       //Nombre de fois que l'on peut avoir AU MAXIMUM le specific data avant et après la fenêtre en cours
-      this.CONST_LENGTH_SPECIFICDATA_MAX_CACHE = 2;       
+      this.CONST_LENGTH_SPECIFICDATA_MAX_CACHE = 2;    
+
+      this.debugId = debug_id++;   
     },
 
     onDestroy : function() {
@@ -118,6 +122,8 @@ function (A,d3,BaseDataProvider) {
       var timeEnd = neededSegment.end;
       var duration = timeEnd-timeStart;
 
+      console.log('loadSpecificData on '+this.debugId);
+
       //inquiry
       /**
           Ici, on va demander de la nouvelle data sur un segment supérieur à ce qui est sélectionné
@@ -132,6 +138,7 @@ function (A,d3,BaseDataProvider) {
       var self=this;
       A._i.getOnCfg('dataLoader').askNewData(this.typeData,timeStart,timeEnd,-1,this.resultAnalysis,
         function(data) {
+          console.log(' specific data got on : '+self.debugId);
           self.specificData=data; //is an img
 
           //test ED bug fix
