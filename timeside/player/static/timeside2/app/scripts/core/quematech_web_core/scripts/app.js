@@ -30,8 +30,7 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
 
   //A déplacer!!!!
   api.setInterceptEndCallFunction(function(res) {
-    //note : we don't have a csrf token on Telemeta. This is useless.
-    /*
+    
     try {
 
       // Get CSRF Token value from Cookie using jQuery
@@ -65,7 +64,7 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
     }
     catch (e) {
       console.error("error while catching end call XHR : "+(e ? JSON.stringify(e) : "NULL?"));
-    }*/
+    }
   });
 
 
