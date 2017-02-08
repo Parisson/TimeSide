@@ -34,7 +34,6 @@ function (Marionette,A,TrackWaveformView,d3) {
 
       window.debval = debug;
 
-
       this.d3area = d3.svg.area()
         .x(function(d) { 
           return self.xScale(d.time); 
