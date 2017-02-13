@@ -1,73 +1,71 @@
 name: app
-channels:
-- yaafe
-- piem
-- defaults
 dependencies:
-- _nb_ext_conf=0.3.0=py27_0
-- anaconda-client=1.6.0=py27_0
+- argtable2=2.13=0
 - aubio=0.4.2=np110py27_1
 - backports=1.0=py27_0
 - backports_abc=0.5=py27_0
-- cairo=1.14.6=0
-- clyent=1.2.2=py27_0
+- cairo=1.14.8=0
 - configparser=3.5.0=py27_0
 - cycler=0.10.0=py27_0
-- decorator=4.0.10=py27_1
+- decorator=4.0.11=py27_0
+- eigen=3.2.8=2
 - entrypoints=0.2.2=py27_0
 - enum34=1.1.6=py27_0
-- fontconfig=2.12.1=0
-- freetype=2.5.5=1
+- fftw=3.3.4=0
+- fontconfig=2.12.1=3
+- freetype=2.5.5=2
 - functools32=3.2.3.2=py27_0
 - get_terminal_size=1.0.0=py27_0
-- glib=2.50.2=0
+- glib=2.50.2=1
 - h5py=2.6.0=np110py27_1
-- harfbuzz=0.9.39=1
+- harfbuzz=0.9.39=2
 - hdf5=1.8.16=0
 - ipykernel=4.5.2=py27_0
 - ipython=5.1.0=py27_0
 - ipython_genutils=0.1.0=py27_0
-- ipywidgets=5.2.2=py27_0
+- ipywidgets=5.2.2=py27_1
 - jbig=2.1=0
-- jinja2=2.8=py27_1
-- jpeg=8d=2
+- jinja2=2.9.4=py27_0
+- jpeg=9b=0
 - jsonschema=2.5.1=py27_0
 - jupyter=1.0.0=py27_3
 - jupyter_client=4.4.0=py27_0
 - jupyter_console=5.0.0=py27_0
 - jupyter_core=4.2.1=py27_0
+- lapack=3.5.0=0
 - libffi=3.2.1=1
+- libflac=1.3.1=0
 - libgcc=5.2.0=0
 - libgfortran=3.0.0=1
 - libiconv=1.14=0
-- libpng=1.6.22=0
+- libmpg123=1.23.1=0
+- libogg=1.3.2=0
+- libpng=1.6.27=0
+- libsndfile=1.0.26=0
 - libsodium=1.0.10=0
-- libtiff=4.0.6=2
+- libtiff=4.0.6=3
+- libvorbis=1.3.5=0
 - libxml2=2.9.4=0
 - markupsafe=0.23=py27_2
 - matplotlib=1.5.1=np110py27_0
 - mistune=0.7.3=py27_0
 - mkl=11.3.3=0
 - mysql-python=1.2.5=py27_0
-- nb_anacondacloud=1.2.0=py27_0
-- nb_conda=2.0.0=py27_0
-- nb_conda_kernels=2.0.0=py27_0
 - nbconvert=4.2.0=py27_0
 - nbformat=4.2.0=py27_0
-- nbpresent=3.0.2=py27_0
 - networkx=1.11=py27_0
-- notebook=4.3.0=py27_0
+- notebook=4.3.1=py27_0
 - numexpr=2.5.2=np110py27_1
 - numpy=1.10.4=py27_2
-- openssl=1.0.2j=0
+- openssl=1.0.2k=0
 - pandas=0.18.1=np110py27_0
-- pango=1.40.3=0
-- path.py=8.2.1=py27_0
-- pathlib2=2.1.0=py27_0
+- pango=1.40.3=1
+- path.py=10.0=py27_0
+- pathlib2=2.2.0=py27_0
 - pcre=8.39=1
-- pexpect=4.0.1=py27_0
+- pexpect=4.2.1=py27_0
 - pickleshare=0.7.4=py27_0
-- pillow=3.4.2=py27_0
+- pillow=4.0.0=py27_0
 - pip=9.0.1=py27_1
 - pixman=0.34.0=0
 - prompt_toolkit=1.0.9=py27_0
@@ -77,7 +75,7 @@ dependencies:
 - pyparsing=2.1.4=py27_0
 - pyqt=4.11.4=py27_4
 - pytables=3.2.2=np110py27_3
-- python=2.7.12=1
+- python=2.7.13=0
 - python-dateutil=2.6.0=py27_0
 - pytz=2016.10=py27_0
 - pyyaml=3.12=py27_0
@@ -86,7 +84,7 @@ dependencies:
 - qtconsole=4.2.1=py27_0
 - readline=6.2=2
 - redis=3.2.0=0
-- requests=2.12.4=py27_0
+- scandir=1.4=py27_0
 - scipy=0.17.1=np110py27_1
 - setuptools=27.2.0=py27_0
 - simplegeneric=0.8.1=py27_1
@@ -102,19 +100,10 @@ dependencies:
 - traitlets=4.3.1=py27_0
 - traits=4.6.0=py27_0
 - wcwidth=0.1.7=py27_0
-- werkzeug=0.11.11=py27_1
+- werkzeug=0.11.15=py27_0
 - wheel=0.29.0=py27_0
 - widgetsnbextension=1.2.6=py27_0
-- xz=5.2.2=0
-- argtable2=2.13=0
-- eigen=3.2.7=0
-- fftw=3.3.4=0
-- lapack=3.5.0=0
-- libflac=1.3.1=0
-- libmpg123=1.23.1=0
-- libogg=1.3.2=0
-- libsndfile=1.0.26=0
-- libvorbis=1.3.5=0
+- xz=5.2.2=1
 - yaafe=0.70=py27_0
 - yaml=0.1.6=0
 - zeromq=4.1.5=0
@@ -130,24 +119,21 @@ dependencies:
   - celery==3.1.25
   - django==1.9.12
   - django-bootstrap-pagination==1.6.2
-  - django-bootstrap3==7.1.0
+  - django-bootstrap3==8.1.0
   - django-bower==5.2.0
-  - django-celery==3.1.17
-  - django-cors-headers==1.3.1
+  - django-celery==3.2.1
+  - django-cors-headers==2.0.2
   - django-debug-toolbar==1.6
   - django-environ==0.4.1
-  - django-extensions==1.7.5
-  - djangorestframework==3.5.3
+  - django-extensions==1.7.6
+  - djangorestframework==3.5.4
   - ipython-genutils==0.1.0
   - jsonfield==1.0.3
   - jupyter-client==4.4.0
   - jupyter-console==5.0.0
   - jupyter-core==4.2.1
   - kombu==3.0.37
-  - mutagen==1.35.1
-  - nb-anacondacloud==1.2.0
-  - nb-conda==2.0.0
-  - nb-conda-kernels==2.0.0
+  - mutagen==1.36.2
   - pathtools==0.1.2
   - prompt-toolkit==1.0.9
   - py-sonicvisualiser==0.2-9-gebe83bd
@@ -157,4 +143,3 @@ dependencies:
   - tables==3.2.2
   - uwsgi==2.0.14
   - watchdog==0.8.3
-prefix: /opt/miniconda/envs/app
