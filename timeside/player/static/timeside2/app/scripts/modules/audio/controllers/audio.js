@@ -102,6 +102,7 @@ function (A,buzz) {
     //Audio play/pause
 
     playAudio:function() {
+
       if (this.updateInterval) {
         clearInterval(this.updateInterval);
         this.updateInterval=undefined;
@@ -141,6 +142,8 @@ function (A,buzz) {
         clearInterval(this.updateInterval);
         this.updateInterval=undefined;
       }
+
+      this.testTimeUpdate();
     },
   
     pauseAudio:function() {

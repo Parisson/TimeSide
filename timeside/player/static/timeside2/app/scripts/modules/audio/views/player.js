@@ -43,6 +43,12 @@ function (Marionette,A,BaseQeopaView) {
     },
 
     play:function() {
+      if (this.isPlaying) {
+        this.isPlaying=false;
+        this.$el.find('[data-action="play"]').removeClass("active");
+        return A.vent.trigger('audio:pause');
+      }
+      this.isPlaying=true;
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
       this.$el.find('[data-action="play"]').addClass("active");
     },
