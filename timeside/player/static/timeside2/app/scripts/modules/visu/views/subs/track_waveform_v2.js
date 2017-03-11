@@ -97,7 +97,31 @@ function (Marionette,A,TrackWaveformView,d3) {
       var axisHeight = this.size.axisHeight;
 
       this.yScale.range([barHeight, -barHeight]);
-      this.d3AreaSuite = this.d3chart.selectAll('path').datum(this.lastReceivedData).attr("class","area").attr('d',this.d3area );
+
+      var self=this;
+      var testScaleFunc = function(yValue) {
+        return barHeight - self.yScale(yValue)/2 - barHeight/2 + 2;
+        //return barHeight - Math.abs(self.yScale(yValue)/2) - barHeight/2 + 2;
+      };
+
+
+      this.d3area.y0(function(d) {
+          if ( (! debug.min) || debug.min > d.min)
+            debug.min = d.min;
+          return testScaleFunc(d.min/*d.min*/);
+          return self.yScale(d.min); 
+        })
+        .y1(
+          function(d) { 
+          if ( (! debug.max) || debug.max < d.max)
+            debug.max = d.max;
+          return testScaleFunc(d.max);
+        return self.yScale(d.max); 
+        });
+
+      this.d3AreaSuite = this.d3chart.selectAll('path').datum(this.lastReceivedData)
+        .attr("class","area")
+        .attr('d',this.d3area );
       
     },
 
