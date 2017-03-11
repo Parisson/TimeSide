@@ -105,6 +105,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         });
       }
 
+      this.onAddTrackWaveformV2(); //new : asked by blair
+
 
       if (item && item.get('analysisTracksObjects')) {
         var self = this;
