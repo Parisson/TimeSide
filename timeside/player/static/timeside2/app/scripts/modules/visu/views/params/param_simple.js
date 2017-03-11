@@ -26,6 +26,26 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     onUpdateParams:function() {
       alert('@Todo : get params, call https://taiga.ircam.fr/project/yomguy-diadems/task/32 && reload track');
+
+
+      //1 - set this parameter as waiting for change
+      this.$el.css('opacity','0.5');
+
+      //2 - lets find the set-parameters
+      var params = _.map(this.$el.find('[data-layout="edit_param"]'),function(input) {
+        switch (input.dataset.element) {
+          case 'input' : 
+            return {name : input.dataset.name, value : $(input).val()}
+          default : 
+            break;
+        }
+      });
+
+      
+
+      A._i.getOnCfg('analysisController').updateParametersOnAnalysisTrack(params,this.resultAnalysis.get('uuid'),function(ok) {
+        alert('in final callback piahz');
+      });
     },
 
     setDaddy : function(view) {

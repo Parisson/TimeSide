@@ -152,6 +152,19 @@ function (A,d3) {
         });
     },
 
+     //////////////////////////////////////////////////////////////////////////////////////////////
+    //Update parameters of analysis
+    updateParametersOnAnalysisTrack:function(parameters,uuid,callback) {
+
+      var url = $.post(
+          A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/'
+        ,parameters,function(a,b,c) {
+        
+        alert('here i am');
+      });
+
+    },
+
     //////////////////////////////////////////////////////////////////////////////////////////////
     //
     onAskAnalysis:function(analysis) {
