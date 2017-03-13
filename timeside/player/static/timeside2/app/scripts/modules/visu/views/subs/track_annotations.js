@@ -382,6 +382,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("class","chart")
         .attr("width", width)
         .attr("height", height);
+      this.d3Node = node;
 
       var chart = node.attr("width", width).attr("height", height);
       this.d3chart = chart;  
@@ -542,6 +543,17 @@ function (Marionette,A,BaseQeopaView,d3) {
               return d.computed_height/2;
             })
     },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Resize
+    changeHeight:function(newHeight) {
+      this.height = newHeight;
+      this.d3Node.attr("height", newHeight);this.d3chart.attr('height',newHeight);
+      this.yScale = d3.scale.linear().domain([0,this.dataProvider.data.length]).range([0, newHeight]);
+
+      this.onNavigatorNewWindow();
+    },
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
