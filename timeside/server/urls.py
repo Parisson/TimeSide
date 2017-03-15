@@ -33,11 +33,11 @@ urlpatterns = [
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
-        url(r'^waveform/', views.ItemWaveView.as_view()),
+        url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
         # Get transcoded audio
         # Ex: /api/item/--<uuid>--/download/ogg
         url(r'^download/(?P<extension>' + EXPORT_EXT + ')$',
-            views.ItemTranscode.as_view(), name="item-transcode"),
+            views.ItemTranscode.as_view(), name="item-transcode-api"),
     ]),
     ),
     # ----- Timeside ------
