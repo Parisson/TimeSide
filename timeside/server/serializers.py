@@ -89,11 +89,11 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
     def get_audio_url(self, obj):
         request = self.context['request']
         extensions = ['mp3', 'ogg']
-        return {
-            reverse('item-transcode-api',
-                    kwargs={'uuid': obj.uuid, 'extension': ext},
-                    request=request)
-            for ext in extensions}
+        return {ext:
+                reverse('item-transcode-api',
+                        kwargs={'uuid': obj.uuid, 'extension': ext},
+                        request=request)
+                for ext in extensions}
 
 
 class ItemWaveformSerializer(ItemSerializer):
