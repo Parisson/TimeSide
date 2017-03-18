@@ -25,7 +25,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     onUpdateParams:function() {
-      alert('@Todo : get params, call https://taiga.ircam.fr/project/yomguy-diadems/task/32 && reload track');
+      
 
 
       //1 - set this parameter as waiting for change
@@ -41,9 +41,14 @@ function (Marionette,A,BaseQeopaView,d3) {
         }
       });
 
+      var paramsOk = {};
+      _.each(params,function(param) {
+        paramsOk[param.name] = param.value;
+      })
+
       
 
-      A._i.getOnCfg('analysisController').updateParametersOnAnalysisTrack(params,this.resultAnalysis.get('uuid'),function(ok) {
+      A._i.getOnCfg('analysisController').updateParametersOnAnalysisTrack(paramsOk,this.resultAnalysis.get('uuid'),function(ok) {
         alert('in final callback piahz');
       });
     },
