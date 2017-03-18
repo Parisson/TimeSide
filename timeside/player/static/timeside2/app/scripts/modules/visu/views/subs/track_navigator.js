@@ -105,7 +105,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         this.callbackLoaded();
     },
 
-    //////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // Click & cursor methods
     onClick:function(evt) {
 
@@ -123,7 +123,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         this.cursorView/*.transition()*/.attr('x',pixel);
     },
 
-    //////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // Render methods
 
     //1
@@ -259,14 +259,41 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Zoom management
+    //factor can be <1 (more zoom) or >1 (less zoom)
+    onZoomCommand:function(factor) {
+
+      var deltaTimeMsec = factor<1 ? 50 : -50;
+
+      var time1 = (this.viewport.extent()[0]).getTime();
+      var time2 = (this.viewport.extent()[1]).getTime();
+
+
+
+      time1 = Math.max(time1 -deltaTimeMsec, 0);
+      time2 = time2+deltaTimeMsec;
+
+      if (time1>=time2)
+        time2 = time1+100;
+
+      this.viewport.extent([new Date(time1), new Date(time2)]);
+      this.viewport(d3.select('.viewport'));
+      this.viewport.event(d3.select('.viewport'));
+    },
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('audio.newAudioTime','',this.onNewTime,this);
       A._v.onCfg('ui_project.segmentLoopUpdate','',this.onNewSegmentLoop,this);
+      A._v.onCfg('ui_project.zoom','',this.onZoomCommand,this);      
       //on initialize specify the sizes
       this.updateSize();
+
+      window.debtn = this;
     },
 
     onRender:function() {
