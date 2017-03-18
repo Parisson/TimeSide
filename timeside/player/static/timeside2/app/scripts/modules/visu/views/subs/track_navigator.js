@@ -204,7 +204,10 @@ function (Marionette,A,BaseQeopaView,d3) {
       var xAxis = d3.svg.axis()
           .scale(xScale)
           .orient('bottom')
-          .ticks(5);
+          .ticks(5)
+          .tickFormat(function(arg) {
+            return A.telem.formatTimeMs(arg.getTime());
+          });
           
       chart.append('g')
           .attr('class', 'x axis')

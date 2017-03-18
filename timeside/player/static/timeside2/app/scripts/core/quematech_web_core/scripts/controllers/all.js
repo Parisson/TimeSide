@@ -78,7 +78,7 @@ function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,
     formatTimeMs:function(t) {
       var mom = Moment(new Date(t));
 
-      if (t<1000*60*60)
+      if (t<1000*60)
         return mom.format('ss.SSS');
       var result = mom.format('mm:ss.SSS');
       return result;
