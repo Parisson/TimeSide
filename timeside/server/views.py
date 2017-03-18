@@ -461,9 +461,18 @@ def serve_media_nginx(filename, mime_type):
     response['X-Accel-Redirect'] = file_url
     
     return response
-    
+
+class AudioRenderer(renderers.BaseRenderer):
+    media_type = 'audio/*'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
 class ItemTranscode(DetailView):
     model = models.Item
+    renderer_classes = (AudioRenderer,)
 
     def get_object(self):
         return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))

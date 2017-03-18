@@ -48,7 +48,6 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
     audio_url = serializers.SerializerMethodField()
-    audio_duration = serializers.SerializerMethodField()
     annotation_tracks = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -77,22 +76,24 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'}
         }
 
-        read_only_fields = ('url', 'uuid',)
+        read_only_fields = ('url', 'uuid', 'audio_duration')
 
     def get_url(self, obj):
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
 
     def get_waveform_url(self, obj):
-        return (self.get_url(obj) + 'waveform/')
+        request = self.context['request']
+        return reverse('item-waveform', kwargs={'uuid': obj.uuid}, request=request)
 
     def get_audio_url(self, obj):
-        obj_url = self.get_url(obj)
-        return {'mp3': obj_url + 'download/mp3',
-                'ogg': obj_url + 'download/ogg'}
-
-    def get_audio_duration(self, obj):
-        return obj.get_audio_duration()
+        request = self.context['request']
+        extensions = ['mp3', 'ogg']
+        return {ext:
+                reverse('item-transcode-api',
+                        kwargs={'uuid': obj.uuid, 'extension': ext},
+                        request=request)
+                for ext in extensions}
 
 
 class ItemWaveformSerializer(ItemSerializer):
