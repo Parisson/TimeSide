@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2013 Paul Brossier <piem@piem.org>
+# Copyright (c) 2013-2017 Thomas Fillon <thomas@parisson.com>
 
 # This file is part of TimeSide.
 
@@ -18,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Author: Paul Brossier <piem@piem.org>
+# Author: Thomas Fillon <thomas@parisson.com>
 
 import numpy as np
 
