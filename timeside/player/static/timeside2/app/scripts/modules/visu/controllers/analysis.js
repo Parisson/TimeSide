@@ -89,7 +89,7 @@ function (A,d3) {
       var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/analysis_tracks/'
         ,data,function(a,b,c) {
-        console.log('Ok donc on fait quoi ?');
+        //console.log('Ok donc on fait quoi ?');
 
         if (a.result_url && a.result_url.indexOf('http://')===0) {
           //alert('success');
@@ -109,14 +109,6 @@ function (A,d3) {
       resultModel.set('uniqueIDForView',this.uniqueIdAnalysis),
 
       A._v.trigCfg('analysis.result','',resultModel);
-      //@TODO
-      //@TODO
-
-      // créer un model de result_analysis
-      // côté vue : 
-      // quand le controleur lance un loading, ikl doit lancer un event analysis_started avec un token unique 
-      // comme ça un segment se met en place visuellement en mode waiting
-      // quand ok, il doit mettre sur le currentItem l'analyse et ensuite remplacer le analysis started par le bon resultat
     };
 
 
@@ -154,14 +146,38 @@ function (A,d3) {
 
      //////////////////////////////////////////////////////////////////////////////////////////////
     //Update parameters of analysis
+
+    //1 -- Post on analysis
     updateParametersOnAnalysisTrack:function(parameters,uuid,callback) {
 
-      var url = $.post(
-          A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/'
-        ,parameters,function(a,b,c) {
-        
-        alert('here i am');
+
+
+
+      var dataJsonCall = "{";
+      _.each(_.keys(parameters),function(_key,i) {
+        dataJsonCall+='"'+_key+'" : '+parameters[_key]+(i==_.keys(parameters).length-1 ? "" : ",");
       });
+      dataJsonCall+="}";
+
+      var self=this;
+      var _intervalSetParameters = setInterval(function() {
+        $.ajax({
+          url:A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/',
+          type:"POST",
+          data:dataJsonCall,
+          contentType:"application/json; charset=utf-8",
+          dataType:"json",
+          success: function(res){
+            if (res.result_url && res.result_url.indexOf('http')>=0) {
+              alert('something happened!');
+            }
+            console.log('receiving : '+JSON.stringify(res));
+          }
+        });
+      },1000);
+
+
+      
 
     },
 
