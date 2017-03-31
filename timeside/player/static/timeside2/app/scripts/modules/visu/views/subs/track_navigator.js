@@ -267,16 +267,23 @@ function (Marionette,A,BaseQeopaView,d3) {
     //factor can be <1 (more zoom) or >1 (less zoom)
     onZoomCommand:function(factor) {
 
-      var deltaTimeMsec = factor<1 ? 50 : -50;
+      //var deltaTimeMsec = factor<1 ? 50 : -50;
 
       var time1 = (this.viewport.extent()[0]).getTime();
       var time2 = (this.viewport.extent()[1]).getTime();
+      var center = time1 + (time2-time1)/2,
+        distanceFromCenter = (time2-time1)/2;
+      var newDistanceFromCenter = distanceFromCenter*factor;
+
+      time1 = Math.max(center - newDistanceFromCenter,0);
+      time2 = center+newDistanceFromCenter;
 
 
 
+/*
       time1 = Math.max(time1 -deltaTimeMsec, 0);
       time2 = time2+deltaTimeMsec;
-
+*/
       if (time1>=time2)
         time2 = time1+100;
 
