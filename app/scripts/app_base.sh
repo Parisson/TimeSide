@@ -17,9 +17,6 @@ uid='www-data'
 gid='www-data'
 
 # staging apps
-#pip install django-bootstrap3 elasticsearch django-angular django-bower django-bootstrap-pagination Werkzeug
-
-chown $uid:$gid $media
 
 # wait for other services
 bash $app/scripts/wait.sh

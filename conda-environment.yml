@@ -1,14 +1,16 @@
 name: timeside
 channels:
-  - piem
+  - conda-forge
+  - yaafe
 dependencies:
-  - aubio  # in piem channel (optionnal)
+  - aubio  # in conda-forge channel (optionnal)
   - h5py
   - jupyter
   - matplotlib
   - mysql-python
   - networkx
   - numpy
+  - pandas
   - pillow
   - python=2.7
   - pyyaml
@@ -17,13 +19,16 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
+  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
   - pip:
       - django-angular
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
+      - celery==3.*
       - django-celery
+      - django-debug-toolbar
       - django-environ
       - django-extensions
       - django==1.6.*

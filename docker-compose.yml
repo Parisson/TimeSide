@@ -34,6 +34,7 @@ db:
   image: mysql
   volumes:
     - ./scripts/:/srv/scripts
+    - ./data/mysql/:/var/lib/mysql
   volumes_from:
     - data
   env_file:
@@ -54,7 +55,7 @@ app:
   links:
     - broker
     - db
-  command: /bin/bash scripts/app.sh
+  command: /bin/bash /srv/app/scripts/app.sh
 
 worker:
   image: parisson/timeside:latest
@@ -68,7 +69,7 @@ worker:
   links:
     - broker
     - db
-  command: /bin/bash scripts/worker.sh
+  command: /bin/bash /srv/app/scripts/worker.sh
 
 nginx:
   image: nginx

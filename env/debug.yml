@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2015-2016 Parisson SARL
+# Copyright (c) 2015-2017 Parisson SARL
 
 # This file is part of Telemeta.
 
@@ -21,11 +21,18 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-
 app:
   env_file:
     - env/debug.env
+  volumes:
+    - ./lib:/srv/src/plugins
+    - ./:/srv/src/timeside/
+  command: /bin/bash scripts/app.sh --runserver
 
 worker:
   env_file:
     - env/debug.env
+  volumes:
+    - ./lib:/srv/src/plugins
+    - ./:/srv/src/timeside/
+
