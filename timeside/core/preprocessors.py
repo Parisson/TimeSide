@@ -168,8 +168,15 @@ def frames_adapter(process_func):
     def wrapper(analyzer, frames, eod):
         # Pre-processing
         if not hasattr(analyzer, 'frames_buffer'):
-            analyzer.frames_buffer = framesBuffer(analyzer.input_blocksize,
-                                                  analyzer.input_stepsize)
+            if analyzer.id() == 'aubio_pitch':
+                # Aubio pitch is waiting for stepsize length block
+                # and reconstructs blocksize length frames itself
+                # thus frames_adapter has to provide Aubio Pitch blocksize=stepsize length frames
+                analyzer.frames_buffer = framesBuffer(analyzer.input_stepsize,
+                                                      analyzer.input_stepsize)
+            else:
+                analyzer.frames_buffer = framesBuffer(analyzer.input_blocksize,
+                                                      analyzer.input_stepsize)
 
         # Processing
         for adapted_frames, adapted_eod in analyzer.frames_buffer.frames(frames, eod):

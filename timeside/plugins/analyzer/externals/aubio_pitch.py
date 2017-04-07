@@ -24,7 +24,7 @@ from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
-from aubio import pitch
+from aubio import pitch as aubio_pitch
 import numpy as np
 from timeside.plugins.analyzer.utils import nextpow2
 
@@ -48,6 +48,11 @@ class AubioPitch(Analyzer):
         self._blocksize_s = blocksize_s
         self._stepsize_s = stepsize_s
 
+        self.aubio_pitch = None
+        self.block_read = 0
+        self.pitches = []
+        self.pitch_confidences = []
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
@@ -70,13 +75,10 @@ class AubioPitch(Analyzer):
 
 
         # Aubio Pitch set-up
-        self.aubio_pitch = pitch(
-            "default", self.input_blocksize, self.input_stepsize,
-            samplerate)
+        self.aubio_pitch = aubio_pitch("default", self.input_blocksize,
+                                       self.input_stepsize, samplerate)
         self.aubio_pitch.set_unit("freq")
-        self.block_read = 0
-        self.pitches = []
-        self.pitch_confidences = []
+
 
     @staticmethod
     @interfacedoc
@@ -99,7 +101,15 @@ class AubioPitch(Analyzer):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
+
         #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
+
+        # WARNING : Aubio Pitch function manages frames reconstruction itself
+        #           from small stepsize input blocksize
+        #           i.e. Aubio Pitch should receive non overlapping input blocksize
+        #           of length stepsize.
+        #           This is achieve through  @frames_adapter that handles AubioPitch specifically (blocksize=stepsize).
+
         self.pitches += [self.aubio_pitch(frames)[0]]
         self.pitch_confidences += [self.aubio_pitch.get_confidence()]
         self.block_read += 1
