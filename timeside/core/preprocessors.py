@@ -164,12 +164,14 @@ def frames_adapter(process_func):
             for index, eod in zip(xrange(0, nb_frames * self.stepsize, self.stepsize), eod_list):
                 yield (stack[index:index + self.blocksize], eod)
 
+    aubio_analyzers = ['aubio_melenergy', 'aubio_mfcc', 'aubio_pitch', 'aubio_specdesc', 'aubio_temporal']
+    
     @functools.wraps(process_func)
     def wrapper(analyzer, frames, eod):
         # Pre-processing
         if not hasattr(analyzer, 'frames_buffer'):
-            if analyzer.id() == 'aubio_pitch':
-                # Aubio pitch is waiting for stepsize length block
+            if analyzer.id() in aubio_analyzers:
+                # Aubio analyzers are waiting for stepsize length block
                 # and reconstructs blocksize length frames itself
                 # thus frames_adapter has to provide Aubio Pitch blocksize=stepsize length frames
                 analyzer.frames_buffer = framesBuffer(analyzer.input_stepsize,
