@@ -17,7 +17,7 @@ dependencies:
   - redis
   - scipy
   - simplejson
-  - pytables<3.3  # named tables in Pypi ...
+  - pytables  # named tables in Pypi ...
   - traits
   - yaafe # in yaafe channel (optionnal)
   - Werkzeug

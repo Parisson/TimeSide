@@ -1,11 +1,10 @@
 name: app
-channels: 
+channels:
 - defaults
-- yaafe
 - conda-forge
 dependencies:
 - conda-forge::argtable2=2.13=0
-- conda-forge::aubio=0.4.4=np111py27_7
+- conda-forge::aubio=0.4.4=np112py27_7
 - conda-forge::backports.shutil_get_terminal_size=1.0.0=py27_1
 - conda-forge::backports_abc=0.5=py27_0
 - conda-forge::blas=1.1=openblas
@@ -30,7 +29,7 @@ dependencies:
 - conda-forge::gmp=6.1.2=0
 - conda-forge::gst-plugins-base=1.8.0=0
 - conda-forge::gstreamer=1.8.0=1
-- conda-forge::h5py=2.7.0=np111py27_0
+- conda-forge::h5py=2.7.0=np112py27_0
 - conda-forge::hdf5=1.8.17=10
 - conda-forge::html5lib=0.999=py27_0
 - conda-forge::icu=58.1=1
@@ -58,19 +57,20 @@ dependencies:
 - conda-forge::libxcb=1.12=1
 - conda-forge::libxml2=2.9.4=4
 - conda-forge::markupsafe=0.23=py27_1
-- conda-forge::matplotlib=2.0.0=np111py27_3
+- conda-forge::matplotlib=2.0.0=np112py27_3
 - conda-forge::mistune=0.7.4=py27_0
+- conda-forge::mpg123=1.24.0=0
 - conda-forge::nbconvert=5.1.1=py27_1
 - conda-forge::nbformat=4.2.0=py27_0
 - conda-forge::ncurses=5.9=10
 - conda-forge::networkx=1.11=py27_0
 - conda-forge::notebook=5.0.0=py27_0
-- conda-forge::numexpr=2.6.2=np111py27_0
-- conda-forge::numpy=1.11.3=py27_blas_openblas_200
+- conda-forge::numexpr=2.6.2=np112py27_0
+- conda-forge::numpy=1.12.1=py27_blas_openblas_200
 - conda-forge::olefile=0.44=py27_0
 - conda-forge::openblas=0.2.19=1
 - conda-forge::openssl=1.0.2h=3
-- conda-forge::pandas=0.19.2=np111py27_1
+- conda-forge::pandas=0.19.2=np112py27_1
 - conda-forge::pandoc=1.19.2=0
 - conda-forge::pandocfilters=1.4.1=py27_0
 - conda-forge::pathlib2=2.2.1=py27_0
@@ -84,7 +84,7 @@ dependencies:
 - conda-forge::pygments=2.2.0=py27_0
 - conda-forge::pyparsing=2.2.0=py27_0
 - conda-forge::pyqt=5.6.0=py27_0
-- conda-forge::pytables=3.2.3.1=np111py27_0
+- conda-forge::pytables=3.3.0=np112py27_0
 - conda-forge::python=2.7.13=0
 - conda-forge::python-dateutil=2.6.0=py27_0
 - conda-forge::pytz=2016.10=py27_0
@@ -94,7 +94,7 @@ dependencies:
 - conda-forge::qtconsole=4.3.0=py27_0
 - conda-forge::readline=6.2=0
 - conda-forge::scandir=1.5=py27_1
-- conda-forge::scipy=0.19.0=np111py27_blas_openblas_200
+- conda-forge::scipy=0.19.0=np112py27_blas_openblas_200
 - conda-forge::setuptools=33.1.1=py27_0
 - conda-forge::simplegeneric=0.8.1=py27_0
 - conda-forge::singledispatch=3.4.0.3=py27_0
@@ -106,7 +106,7 @@ dependencies:
 - conda-forge::terminado=0.6=py27_0
 - conda-forge::testpath=0.3=py27_0
 - conda-forge::tk=8.5.19=1
-- conda-forge::tornado=4.4.2=py27_0
+- conda-forge::tornado=4.4.3=py27_0
 - conda-forge::traitlets=4.3.2=py27_0
 - conda-forge::traits=4.6.0=py27_1
 - conda-forge::wcwidth=0.1.7=py27_0
@@ -118,6 +118,7 @@ dependencies:
 - conda-forge::xorg-libxau=1.0.8=3
 - conda-forge::xorg-libxdmcp=1.1.2=3
 - conda-forge::xz=5.2.2=0
+- conda-forge::yaafe=0.70=py27_0
 - conda-forge::yaml=0.1.6=0
 - conda-forge::zeromq=4.2.1=1
 - conda-forge::zlib=1.2.11=0
@@ -126,8 +127,6 @@ dependencies:
 - mysql-python=1.2.5=py27_0
 - redis=3.2.0=0
 - simplejson=3.10.0=py27_0
-- yaafe::libmpg123=1.23.1=0
-- yaafe::yaafe=0.70=py27_0
 - pip:
   - amqp==1.4.9
   - anyjson==0.3.3
@@ -159,7 +158,6 @@ dependencies:
   - pympi-ling==1.69
   - south==1.0.2
   - sqlparse==0.2.3
-  - tables==3.2.3.1
+  - tables==3.3.0
   - uwsgi==2.0.15
   - watchdog==0.8.3
-prefix: /home/thomas/miniconda/envs/app
