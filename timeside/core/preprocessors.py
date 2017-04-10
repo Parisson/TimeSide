@@ -87,15 +87,14 @@ def frames_adapter(process_func):
     ... def process(analyzer,frames,eod):
     ...     analyzer.frames.append(frames)
     ...     return frames, eod
-    ... @staticmethod
-    ... def id():
-    ...    return 'fake_analyzer'
     >>> class Fake_Analyzer(object):
     ...     def __init__(self):
     ...         self.input_blocksize = 4
     ...         self.input_stepsize = 3
     ...         self.frames = [] # Container for the frame as viewed by process
-    ...     def id():  
+    ...     @staticmethod
+    ...     def id():
+    ...         return 'fake_analyzer'
     >>> import numpy as np
     >>> analyzer = Fake_Analyzer()
     >>> frames = np.asarray(range(0,12))
