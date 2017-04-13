@@ -20,9 +20,13 @@ pip-log.txt
 .tox
 *.mo
 .mr.developer.cfg
-node_modules
-bower_components
+*node_modules*
+*bower_components*
 .sass-cache
 .tmp
 ./data/
+.sass-cache
+.tmp
 tests/samples
+/timeside/player/static/timeside2/brain/CR Rv 21-06-2016
+/timeside/player/static/timeside2/brain/brain.txt

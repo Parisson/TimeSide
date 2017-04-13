@@ -1,0 +1,248 @@
+<div class="panel-group" id="accordion">
+    <div class="dropdown panel desktop-hidden">
+          <a href="#" id="connected_user_lbl" class="panel-title dropdown-toggle panel-heading" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-th-large"></span>
+            Connected user <span class="caret"></span>
+          </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+
+     <div class="panel " data-role="ALL" data-category="home">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="/#"><span class="glyphicon glyphicon-th-large">
+                </span>Home</a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="panel" data-role="ADMIN_SI" data-category="user">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="/#users/list"><span class="glyphicon glyphicon-th-large">
+                </span>Users</a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="panel " data-rolearray="DISPATCHER,AGENT_DEPOT" data-category="message">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="#messages">
+                  <span class="glyphicon glyphicon-envelope text-primary"></span>
+                  Messages&nbsp;<span class="badge">0</span>
+                </a>
+            </h4>
+        </div>
+    </div>
+
+     <div class="panel " data-role="ADMIN_SI" data-category="message">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="#typemessages/list">
+                  <span class="glyphicon glyphicon-envelope text-primary"></span>
+                  Message types
+                </a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="panel" data-role="ADMIN_SI" data-category="dataref">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span class="glyphicon glyphicon-folder-close">
+                </span>Global data</a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" >
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-pencil text-primary"></span><a href="/#dataref/typeclient/list">Client types</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-user text-primary"></span><a href="/#dataref/localite/list">Cities</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-usd text-info"></span><a href="/#dataref/devise/list">Currencies</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-filter text-info"></span><a href="/#dataref/uniteproduit/list">Product units</a>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel" data-rolearray="DISPATCHER,AGENT_DEPOT" data-category="livraison">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseLivraisons"><span class="glyphicon glyphicon-th">
+                </span>Deliveries</a>
+            </h4>
+        </div>
+        <div id="collapseLivraisons" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-user text-info"></span><a href="/#livraison/list">Deliveries list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-upload text-danger"></span><a href="/#livraison/import">Import</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel " data-rolearray="DISPATCHER,AGENT_DEPOT" >
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="/#notificationslenez"><span class="glyphicon glyphicon-flag">
+                </span>Notifications</a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="panel " data-role="DISPATCHER" data-category="client">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" class="collapsed" data-parent="#accordion" href="#collapseTwo"><span class="glyphicon glyphicon-th">
+                </span>Clients</a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-user text-info"></span><a href="/#zones_commerciales/list">Commercial areas</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-user text-info"></span><a href="/#clients/list">Client list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-upload text-danger"></span><a href="/#clients/import">Import</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="panel " data-role="DISPATCHER" data-category="camion">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseNew1"><span class="glyphicon glyphicon-globe">
+                </span>Transporters</a>
+            </h4>
+        </div>
+        <div id="collapseNew1" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-globe text-info"></span><a href="/#transporteurs/list">Transporter list</a>
+                        </td>
+                    </tr>
+
+                     <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-globe text-info"></span><a href="/#camions/list">Truck list</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-upload text-danger"></span><a href="/#transporteurs/import">Import</a>
+                        </td>
+                    </tr>
+
+                     <tr>
+                        <td>
+                            <span class="glyphicon glyphicon-globe text-info"></span><a href="/#camions/debug_active">Debug - Active trucks</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel " data-role="DISPATCHER" data-category="depot">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="/#depots/list"><span class="glyphicon glyphicon-home">
+                </span>Depots</a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="panel " data-rolearray="DISPATCHER,ADMIN_SI" data-category="produit">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseNew2"><span class="glyphicon glyphicon-oil">
+                </span>Products</a>
+            </h4>
+        </div>
+        <div id="collapseNew2" class="panel-collapse collapse">
+            <div class="panel-body">
+                <table class="table">
+                    <tr data-role="ADMIN_SI">
+                        <td>
+                            <span class="glyphicon glyphicon-list-alt text-info"></span><a href="/#dataref/familleproduit/list">Families</a>
+                        </td>
+                    </tr>
+                    <tr data-role="DISPATCHER">
+                        <td>
+                            <span class="glyphicon glyphicon-oil text-info"></span><a href="/#produits/list">Items</a>
+                        </td>
+                    </tr>
+                    <tr data-role="DISPATCHER">
+                        <td>
+                            <span class="glyphicon glyphicon-upload text-danger"></span><a href="/#produits/import">Import</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel " data-role="DISPATCHER" >
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="/#messages/list"><span class="glyphicon glyphicon-star">
+                </span>Feedbacks</a>
+            </h4>
+        </div>
+    </div>
+
+    <div class="panel " data-role="ADMIN_SI" data-category="webservice">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="/#acces_ws/edit"><span class="glyphicon glyphicon-cog text-danger">
+                </span>WS credentials</a>
+            </h4>
+        </div>
+    </div>
+
+
+</div>

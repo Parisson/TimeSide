@@ -123,8 +123,7 @@ TEMPLATES = [
     },
 ]
 MIDDLEWARE_CLASSES = (
-    # Manage Django URLs for AngularJS with django-angular
-    'djng.middleware.AngularUrlMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -141,11 +140,6 @@ ROOT_URLCONF = 'urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -154,10 +148,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
     'django_extensions',
     'timeside.server',
     'timeside.player',
@@ -165,12 +156,12 @@ INSTALLED_APPS = (
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
-    'djng',
     'djangobower',
+    'corsheaders',
     'debug_toolbar',
 )
 
-# A sample logging configuration. The only tangible logging
+# dj A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
@@ -224,6 +215,14 @@ BOWER_INSTALLED_APPS = (
     'raphael#2.2.0',
     'soundmanager#V2.97a.20150601',
 )
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = (
+#     'localhost:9000'
+# )
+
+
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {

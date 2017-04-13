@@ -72,5 +72,5 @@ after_script:
 
 after_failure:
   - if [[ $TEST_TARGET == 'server' ]]; then
-           docker-compose logs;
+           docker-compose logs app;
     fi

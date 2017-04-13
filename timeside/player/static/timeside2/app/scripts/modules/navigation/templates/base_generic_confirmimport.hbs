@@ -1,0 +1,36 @@
+
+<div class="page-header">
+  <h1>W.I.T. Admin <small>{{mainTitle}}</small></h1>
+</div>
+
+<h2>Global reporting</h2>
+<label class="lbl-errors">{{val errorMessage}}</label>
+
+{{#if hasError}}
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				
+					<th>Row number</th>	
+					<th>Column number</th>	
+					<th>Message</th>	
+				
+			</thead>
+			<tbody>
+			  {{#each errors}}
+			  	<tr>
+			  		
+			  			<td>{{val row}}</td>
+			  			<td>{{val column}}</td>
+			  			<td>{{val message}}</td>
+			  	</tr>
+			  {{/each}}
+		  	</tbody>
+		</table>
+	</div>
+{{/if}}
+
+<h2>Result</h2>
+<div class="generic_array_container"></div>
+
+<button type="button" class="btn btn-confirm-import"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Validate import</button>

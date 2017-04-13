@@ -9,6 +9,7 @@ dependencies:
 - conda-forge::backports_abc=0.5=py27_0
 - conda-forge::blas=1.1=openblas
 - conda-forge::bleach=1.5.0=py27_0
+- conda-forge::bzip2=1.0.6=1
 - conda-forge::ca-certificates=2017.1.23=0
 - conda-forge::certifi=2017.1.23=py27_0
 - conda-forge::configparser=3.5.0=py27_0
@@ -84,7 +85,7 @@ dependencies:
 - conda-forge::pygments=2.2.0=py27_0
 - conda-forge::pyparsing=2.2.0=py27_0
 - conda-forge::pyqt=5.6.0=py27_0
-- conda-forge::pytables=3.3.0=np112py27_0
+- conda-forge::pytables=3.4.1=np112py27_0
 - conda-forge::python=2.7.13=0
 - conda-forge::python-dateutil=2.6.0=py27_0
 - conda-forge::pytz=2017.2=py27_0
@@ -124,6 +125,7 @@ dependencies:
 - conda-forge::zlib=1.2.11=0
 - libgcc=5.2.0=0
 - libgfortran=3.0.0=1
+- lzo=2.06=0
 - mysql-python=1.2.5=py27_0
 - redis=3.2.0=0
 - simplejson=3.10.0=py27_0
@@ -137,16 +139,17 @@ dependencies:
   - billiard==3.3.0.23
   - celery==3.1.25
   - django==1.8.18
-  - django-angular==0.8.4
   - django-bootstrap-pagination==1.6.2
   - django-bootstrap3==8.2.2
   - django-bower==5.2.0
   - django-celery==3.2.1
+  - django-cors-headers==2.0.2
   - django-debug-toolbar==1.7
   - django-environ==0.4.1
   - django-extensions==1.7.8
   - djangorestframework==3.6.2
   - ipython-genutils==0.2.0
+  - jsonfield==2.0.1
   - jupyter-client==5.0.1
   - jupyter-console==5.1.0
   - jupyter-core==4.3.0
@@ -157,7 +160,6 @@ dependencies:
   - py-sonicvisualiser==0.2-9-gebe83bd
   - pympi-ling==1.69
   - sqlparse==0.2.3
-  - tables==3.3.0
+  - tables==3.4.1
   - uwsgi==2.0.15
   - watchdog==0.8.3
-prefix: /home/thomas/miniconda/envs/app

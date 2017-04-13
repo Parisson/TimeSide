@@ -1,10 +1,10 @@
 name: timeside
 channels:
   - conda-forge
-  - yaafe
 dependencies:
   - aubio  # in conda-forge channel (optionnal)
   - h5py
+  - jsonschema
   - jupyter
   - matplotlib
   - mysql-python
@@ -21,18 +21,21 @@ dependencies:
   - traits
   - yaafe # in yaafe channel (optionnal)
   - Werkzeug
+  - yaafe  # in yaafe channel (optionnal)
   - pip:
-      - django-angular
+      - celery==3.*
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
       - celery==3.*
       - django-celery
+      - django-cors-headers
       - django-debug-toolbar
       - django-environ
       - django-extensions
       - django==1.8.*
       - djangorestframework==3.*
+      - jsonfield
       - mutagen
       - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling

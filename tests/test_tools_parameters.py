@@ -4,113 +4,109 @@
 from unit_timeside import unittest, TestRunner
 from timeside.core.tools.parameters import HasParam, HasTraits
 from timeside.core.tools.parameters import Unicode, Int, Float, Range
+from timeside.core.tools.parameters import store_parameters
+from timeside.core.tools.parameters import DEFAULT_SCHEMA
 
 import simplejson as json
+from jsonschema import ValidationError
 
 
 class TestHasParam(unittest.TestCase):
 
     def setUp(self):
+        self.schema = DEFAULT_SCHEMA()
+        self.schema['properties'].update(
+            {"param1": {"type": "string", "default": "default"},
+             "param2": {"type": "integer", "default": 3},
+             "param3": {"type": "number", "default": 5.9},
+             "param4": {"type": "integer", "default": 33,
+                        "minimum": 0,
+                        "maximum": 100, },
+             "param5": {"type": "boolean", "default": True}}
+        )
+
+        self.param_default = {"param1": "default",
+                              "param2": 3,
+                              "param3": 5.9,
+                              "param4": 33,
+                              "param5": True}
+
         class ParamClass(HasParam):
-            class _Param(HasTraits):
-                param1 = Unicode(desc='first or personal name',
-                                 label='First Name')
-                param2 = Int()
-                param3 = Float()
-                param4 = Range(low=0, high=10, value=3)
+            _schema = self.schema
+
+            @store_parameters
+            def __init__(self,
+                         param1=self.param_default["param1"],
+                         param2=self.param_default["param2"],
+                         param3=self.param_default["param3"],
+                         param4=self.param_default["param4"],
+                         param5=self.param_default["param5"]):
+                super(ParamClass, self).__init__()
 
         self.param_dict = {"param1": "", "param2": 0, "param3": 0.0,
-                           "param4": 3}
-        self.has_param_cls = ParamClass()
+                           "param4": 3, "param5": False}
+        self.has_param_cls = ParamClass
 
     def test_get_parameters(self):
         "get_parameters method"
-        param_json = self.has_param_cls.get_parameters()
-        self.assertEqual(json.loads(param_json),
+        cls_instance = self.has_param_cls(**self.param_dict)
+        param_dict = cls_instance.get_parameters()
+        self.assertEqual(param_dict,
                          self.param_dict)
 
-    def test_set_parameters(self):
-        "set_parameters method"
-        new_param_dict = {"param1": "plop", "param2": 7,
-                          "param3": 0.5, "param4": 8}
-        new_param_json = json.dumps(new_param_dict)
-        # Set from dict
-        self.has_param_cls.set_parameters(new_param_dict)
-        param_json = self.has_param_cls.get_parameters()
-        param_dict = json.loads(param_json)
-        self.assertEqual(param_dict, new_param_dict)
-        for name, value in new_param_dict.items():
-            self.assertEqual(self.has_param_cls.__getattribute__(name), value)
-        # set from JSON
-        self.has_param_cls.set_parameters(new_param_json)
-        param_json = self.has_param_cls.get_parameters()
-        param_dict = json.loads(param_json)
-        self.assertEqual(param_dict, new_param_dict)
-        for name, value in new_param_dict.items():
-            self.assertEqual(self.has_param_cls.__getattribute__(name), value)
+    def test_get_parameters_default(self):
+        "get_parameters method with default values"
+        cls_instance = self.has_param_cls()
+        param_dict = cls_instance.get_parameters()
+        self.assertDictEqual(param_dict,
+                             self.param_default)
+        self.assertDictEqual(self.param_default,
+                             cls_instance.get_parameters_default())
 
-    def test_param_view(self):
-        "param_view method"
-        view = self.has_param_cls.param_view()
-        self.assertIsInstance(view, str)
-        self.assertEqual(view,
-                         ('{"param4": {"default": 3, "type": "range"}, '
-                          '"param3": {"default": 0.0, "type": "float"}, '
-                          '"param2": {"default": 0, "type": "int"}, '
-                          '"param1": {"default": "", "type": "str"}}'))
+    def test_get_parameters_schema(self):
+        "get_parameters schema"
 
-    def test_setattr_on_traits(self):
-        "Set a trait attribute"
-        name = 'param1'
-        value = 'a_trait'
+        self.assertEqual(self.schema,
+                         self.has_param_cls.get_parameters_schema())
 
-        self.has_param_cls.__setattr__(name, value)
+        incomplete_schema = self.schema
+        del incomplete_schema['properties']['param1']['default']
+        del incomplete_schema['properties']['param2']['default']
+        del incomplete_schema['properties']['param3']
+        del incomplete_schema['properties']['param5']
 
-        # check that 'has_param'  regular attribute has been set
-        set_value = self.has_param_cls.__getattribute__(name)
-        self.assertEqual(set_value, value)
-        # check that 'has_param' traits has been set
-        _parameters = self.has_param_cls.__getattribute__('_parameters')
-        set_parameters_value = _parameters.__getattribute__(name)
-        self.assertEqual(set_parameters_value, value)
-
-    def test_setattr_on_non_traits(self):
-        "Set a regular attribute (non traits)"
-        name = 'param5'
-        value = 'not_a_trait'
-        self.has_param_cls.__setattr__(name, value)
-
-        # check that 'has_param'  regular attribute has been set
-        set_value = self.has_param_cls.__getattribute__(name)
-        self.assertEqual(set_value, value)
-
-        # check that no such traits has been set
-        _parameters = self.has_param_cls.__getattribute__('_parameters')
-        self.assertRaises(AttributeError, _parameters.__getattribute__, name)
-        self.assertNotIn(name, _parameters.trait_names())
+        has_param_cls = self.has_param_cls()
+        has_param_cls._schema = incomplete_schema
+        self.assertEqual(self.schema,
+                         has_param_cls.get_parameters_schema())
 
     def test_validate_True(self):
         "Validate parameters with good format"
         # Validate from dict
-        self.assertEqual(self.param_dict,
-                         self.has_param_cls.validate_parameters(
-                             self.param_dict))
-        # Validate from JSON
-        param_json = json.dumps(self.param_dict)
-        self.assertEqual(self.param_dict,
-                         self.has_param_cls.validate_parameters(param_json))
+        cls_instance = self.has_param_cls()
+        cls_instance.validate_parameters(self.param_dict)
 
     def test_validate_False(self):
         "Validate parameters with bad format"
-        bad_param = {"param1": "", "param2": 0, "param3": 0.0,
-                     "param4": 3.3}  # Param4 is a Float (it should be a int)
+        bad_param = {"param1": "good", "param2": 0, "param3": 0.0,
+                     "param4": 102}  # Param4 should an integer in range 0-100
+        cls_instance = self.has_param_cls()
         # Validate from dict
-        self.assertRaises(ValueError, self.has_param_cls.validate_parameters,
+        self.assertRaises(ValidationError, cls_instance.validate_parameters,
                           bad_param)
-        # Validate from JSON
-        bad_param_json = json.dumps(bad_param)
-        self.assertRaises(ValueError, self.has_param_cls.validate_parameters,
-                          bad_param_json)
+
+    def test_schema_from_argspec(self):
+        """
+        Get schema from class __init__ arguments
+        """
+        schema = self.schema.copy()
+        for param in schema['properties']:
+            keys_to_delete = [key for key in schema['properties'][param]
+                              if not key in ['type', 'default']]
+            for key in keys_to_delete:
+                del schema['properties'][param][key]
+        self.assertDictEqual(self.has_param_cls.schema_from_argspec(),
+                             schema)
 
 
 if __name__ == '__main__':

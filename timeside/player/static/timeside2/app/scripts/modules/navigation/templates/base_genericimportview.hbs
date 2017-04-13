@@ -1,0 +1,32 @@
+<div class="page-header">
+  <h1>W.I.T. <small>{{mainTitle}}</small></h1>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-title"></div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="form-group col-md-6">
+				<label>Choose file</label>
+				<label class="control-label"> </label>
+			    <input class="input_file upload_data_file" class="form-control" type="file" name="files[]" accept=".xls, .xlsx">
+	    	</div>
+
+	    	<div class="col-md-6">
+	    		<a>
+					<button type="button" class="btn btn-download-sample" >
+						<span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+					 	Download a sample file
+					 </button>
+				</a>
+	    	</div>
+		</div>
+	</div>
+</div>
+
+<div class="text-center form-group">
+	 <button type="button" class="btn btn-primary has-spinner btn-lg disabled btn-upload-file" id="btnGo">
+	 	<i class="fa fa-spinner fa-spin"></i>
+	 	Upload file
+	 </button>
+</div>

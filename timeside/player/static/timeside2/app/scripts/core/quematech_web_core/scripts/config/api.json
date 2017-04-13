@@ -1,0 +1,37 @@
+{
+  "api": {
+   
+    "services": {
+
+      "loginForHeader" : {
+        "path": "/login",
+        "_headers" : {
+          "X-CSRF-Token" : "Fetch"
+        }
+      },
+      "me": {
+        "path": "/users/me"
+      },
+      "login": {
+        "path": "/login",
+        "method": "post",
+        "type": "form"
+      },
+      "logout": {
+        "path": "/logout",
+        "method": "post"
+      },
+       "askReset" : {
+        "path": "/users/startResetPassword",
+        "method" : "post"
+      },
+      "changePassword" : {
+        "path": "/users/confirmReset",
+        "method" : "post"
+      }
+
+      
+    },
+    "withCredentials": true
+  }
+}

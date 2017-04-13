@@ -1,0 +1,46 @@
+{
+  "name": "telemeta_webapp",
+  "version": "1",
+  "dependencies": {
+    "jquery": "^2.1.0",
+    "jquery-ui": "1.11",
+    "underscore": "^1.6.0",
+    "backbone": "^1.1.0",
+    "requirejs": "^2.1.5",
+    "requirejs-text": "^2.0.10",
+    "handlebars": "3.0.3",
+    "backbone.babysitter": "^0.1.0",
+    "backbone.wreqr": "^1.0.0",
+    "backbone.marionette": "2.1.0",
+    "superagent": "^0.16.0",
+    "requirejs-plugins": "^1.0.2",
+    "backbone.syphon": "~0.4.1",
+    "require.replace": "^0.3.0",
+    "wreqr.injector": "~0.3.0",
+    "commandojs": "0.5.4",
+    "FileAPI": "~2.0.3",
+    "superapi": "^0.6.0",
+    "localforage": "1.2.10",
+    "backbone-associations": "~0.6.2",
+    "svg4everybody": "*",
+    "velocity": "1.2.1",
+    "swiper": "latest",
+    "bootstrap": "*",
+    "bootstrap-sass":"latest",
+    "mjolnic-bootstrap-colorpicker" : "latest",
+    "modernizr": "2.8.3",
+    "moment": "2.10.6",
+    "hammerjs": "2.0.4",
+    "fastclick": "latest",
+    "validate.js" : "latest",
+    "font-awesome" : "latest",
+    "d3" : "3.5.17",
+    "buzz" : "latest"
+  },
+  "devDependencies": {
+    "almond": "~0.2.9"
+  },
+  "resolutions": {
+    "underscore": ">=1.7.0"
+  }
+}
