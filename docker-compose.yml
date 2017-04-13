@@ -48,6 +48,7 @@ app:
   volumes:
     - ./app/:/srv/app
     - ./timeside/:/srv/src/timeside/timeside
+    - ./lib:/srv/src/plugins
   volumes_from:
     - data
   env_file:
@@ -61,6 +62,7 @@ worker:
   image: parisson/timeside:latest
   volumes:
     - ./timeside/:/srv/src/timeside/timeside
+    - ./lib:/srv/src/plugins
   volumes_from:
     - data
     - app
