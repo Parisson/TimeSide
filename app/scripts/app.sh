@@ -5,7 +5,7 @@ source "$SCRIPT_DIR/app_base.sh"
 
 # django init
 python $manage wait-for-db
-python $manage syncdb --migrate --noinput
+python $manage migrate --noinput
 python $manage bower_install -- --allow-root
 
 # timeside setup
