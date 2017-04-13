@@ -22,6 +22,7 @@ before_install:
 install:
   - docker-compose -f docker-compose.yml -f env/build.yml pull
   - docker-compose -f docker-compose.yml -f env/build.yml build
+  - docker-compose -f docker-compose.yml -f env/build.yml run plugins_src
 
 
 # command to run tests
