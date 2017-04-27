@@ -27,3 +27,4 @@ app:
 
 worker:
   image: parisson/timeside:latest-dev
+
