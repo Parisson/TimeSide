@@ -33,7 +33,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
     onClickZoom:function(ev) {
         var zoomIsMore = ev.currentTarget.dataset.zoom =="more";
-        A._v.trigCfg('ui_project.zoom','',zoomIsMore ? 1.5 : 0.66);
+        A._v.trigCfg('ui_project.zoom','',zoomIsMore ? 0.666 : 1.5 );
     },
 
     onClickReset:function(ev) {
