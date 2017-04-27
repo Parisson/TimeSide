@@ -14,11 +14,7 @@ python $manage timeside-create-boilerplate
 
 # fix media access rights
 chown www-data:www-data $media
-for dir in $(ls $media); do
-    if [ ! $(stat -c %U $media/$dir) = 'www-data' ]; then
-        chown www-data:www-data $media/$dir
-    fi
-done
+find $media -type d -exec chown www-data:www-data {} \;
 
 if [ $DEBUG = "False" ]; then
     python $manage update_index --workers $processes &

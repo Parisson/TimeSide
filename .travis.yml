@@ -22,19 +22,7 @@ before_install:
 install:
   - docker-compose -f docker-compose.yml -f env/build.yml pull
   - docker-compose -f docker-compose.yml -f env/build.yml build
-
-
-# command to run tests
-#before_script:
-#  # -------------DEFAULT--------------------
-#  - if [[ $TEST_TARGET == 'default' ]]; then
-#       pip install coverage;
-#    fi
-#  # -------------DOC------------------------
-#  - if [[ $TEST_TARGET == 'doc' ]]; then
-#       pip install sphinx numpydoc;
-#    fi
-
+  - docker-compose -f docker-compose.yml -f env/build.yml -f env/js_build run js_build
 
 script:
 # -------------DEFAULT--------------------
@@ -68,4 +56,9 @@ after_success:
 after_script:
   - if [[ $TEST_TARGET == 'server' ]]; then
            docker-compose stop;
+    fi
+
+after_failure:
+  - if [[ $TEST_TARGET == 'server' ]]; then
+           docker-compose logs;
     fi

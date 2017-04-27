@@ -17,7 +17,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Authors:
+#  Paul Brossier <piem@piem.org>
+#  Thomas Fillon <thomas@parisson.com>
+
 from __future__ import absolute_import
 
 from timeside.core import implements, interfacedoc
@@ -37,18 +40,21 @@ class AubioMelEnergy(Analyzer):
         self.input_blocksize = 1024
         self.input_stepsize = self.input_blocksize / 4
 
-    @interfacedoc
-    def setup(self, channels=None, samplerate=None,
-              blocksize=None, totalframes=None):
-        super(AubioMelEnergy, self).setup(
-            channels, samplerate, blocksize, totalframes)
+        # Aubio Melenergy Initialisation
         self.n_filters = 40
         self.n_coeffs = 13
         self.pvoc = pvoc(self.input_blocksize, self.input_stepsize)
         self.melenergy = filterbank(self.n_filters, self.input_blocksize)
-        self.melenergy.set_mel_coeffs_slaney(samplerate)
         self.block_read = 0
         self.melenergy_results = []
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
+        super(AubioMelEnergy, self).setup(channels, samplerate,
+                                          blocksize, totalframes)
+
+        self.melenergy.set_mel_coeffs_slaney(samplerate)
 
     @staticmethod
     @interfacedoc
@@ -68,6 +74,12 @@ class AubioMelEnergy(Analyzer):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
+
+        # WARNING : All Aubio analyzer process functions manages frames reconstruction by themself
+        #           from small stepsize input blocksize
+        #           i.e. Aubio process functions should receive non overlapping input blocksize
+        #           of length stepsize.
+        #           This is achieve through  @frames_adapter that handles Aubio Analyzer specifically (blocksize=stepsize).
 
         fftgrain = self.pvoc(frames)
         self.melenergy_results.append(self.melenergy(fftgrain))

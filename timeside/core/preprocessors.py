@@ -87,12 +87,14 @@ def frames_adapter(process_func):
     ... def process(analyzer,frames,eod):
     ...     analyzer.frames.append(frames)
     ...     return frames, eod
-    ...
     >>> class Fake_Analyzer(object):
     ...     def __init__(self):
     ...         self.input_blocksize = 4
     ...         self.input_stepsize = 3
     ...         self.frames = [] # Container for the frame as viewed by process
+    ...     @staticmethod
+    ...     def id():
+    ...         return 'fake_analyzer'
     >>> import numpy as np
     >>> analyzer = Fake_Analyzer()
     >>> frames = np.asarray(range(0,12))
@@ -164,12 +166,21 @@ def frames_adapter(process_func):
             for index, eod in zip(xrange(0, nb_frames * self.stepsize, self.stepsize), eod_list):
                 yield (stack[index:index + self.blocksize], eod)
 
+    aubio_analyzers = ['aubio_melenergy', 'aubio_mfcc', 'aubio_pitch', 'aubio_specdesc', 'aubio_temporal']
+    
     @functools.wraps(process_func)
     def wrapper(analyzer, frames, eod):
         # Pre-processing
         if not hasattr(analyzer, 'frames_buffer'):
-            analyzer.frames_buffer = framesBuffer(analyzer.input_blocksize,
-                                                  analyzer.input_stepsize)
+            if analyzer.id() in aubio_analyzers:
+                # Aubio analyzers are waiting for stepsize length block
+                # and reconstructs blocksize length frames itself
+                # thus frames_adapter has to provide Aubio Pitch blocksize=stepsize length frames
+                analyzer.frames_buffer = framesBuffer(analyzer.input_stepsize,
+                                                      analyzer.input_stepsize)
+            else:
+                analyzer.frames_buffer = framesBuffer(analyzer.input_blocksize,
+                                                      analyzer.input_stepsize)
 
         # Processing
         for adapted_frames, adapted_eod in analyzer.frames_buffer.frames(frames, eod):

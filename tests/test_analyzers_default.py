@@ -10,6 +10,7 @@ from timeside.core.tools.test_samples import samples
 from jsonschema import Draft4Validator
 
 
+
 class TestAnalyzers_parameters(unittest.TestCase):
     """Test analyzer parameters and schema specification"""
 

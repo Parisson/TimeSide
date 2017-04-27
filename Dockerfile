@@ -1,5 +1,5 @@
 # Copyright 2013 Thatcher Peskens
-# Copyright 2015, 2016 Guillaume Pellerin, Thomas Fillon
+# Copyright 2015, 2017 Guillaume Pellerin, Thomas Fillon
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM parisson/docker:v0.3
+FROM parisson/docker:v0.4
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
@@ -32,7 +32,7 @@ RUN apt-get update && \
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
 RUN conda update conda &&\
-    conda config --add channels piem --add channels yaafe &&\
+    conda config --append channels conda-forge &&\
     conda env update --name root --file environment-pinned.yml &&\
     conda clean --all --yes
 

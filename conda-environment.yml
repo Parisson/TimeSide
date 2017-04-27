@@ -1,9 +1,8 @@
 name: timeside
 channels:
-  - piem
-  - yaafe
+  - conda-forge
 dependencies:
-  - aubio  # in piem channel (optionnal)
+  - aubio  # in conda-forge channel (optionnal)
   - h5py
   - jsonschema
   - jupyter
@@ -20,6 +19,7 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
+  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
   - yaafe  # in yaafe channel (optionnal)
   - pip:
@@ -38,6 +38,5 @@ dependencies:
       - mutagen
       - py_sonicvisualiser==0.2-9-gebe83bd
       - pympi-ling
-      - south
       - uwsgi
       - watchdog
