@@ -127,6 +127,7 @@ def check_vamp():
 
     return _WITH_VAMP
 
+
 def add_gstreamer_packages():
     import os
     import sys
@@ -147,9 +148,10 @@ def add_gstreamer_packages():
     for package in packages:
         for pack_dir in global_sitepackages:
             src = os.path.join(pack_dir, package)
-            dest = os.path.join(dest_dir, package)
-            if not os.path.exists(dest) and os.path.exists(src):
-                os.symlink(src, dest)
+            sys.path.append(src)
+            # dest = os.path.join(dest_dir, package)
+            # if not os.path.exists(dest) and os.path.exists(src):
+            #     os.symlink(src, dest)
 
 
 def check_gstreamer():
@@ -157,4 +159,3 @@ def check_gstreamer():
         import gobject, pygst
     except ImportError:
         add_gstreamer_packages()
-
