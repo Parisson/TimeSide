@@ -140,7 +140,7 @@ dependencies:
   - mutagen==1.36.1
   - pathtools==0.1.2
   - prompt-toolkit==1.0.9
-  - py-sonicvisualiser==0.2-9-gebe83bd
+  - py-sonicvisualiser==0.3
   - pympi-ling==1.69
   - sqlparse==0.2.2
   - tables==3.2.2
