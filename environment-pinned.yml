@@ -154,7 +154,7 @@ dependencies:
   - mutagen==1.37
   - pathtools==0.1.2
   - prompt-toolkit==1.0.14
-  - py-sonicvisualiser==0.2-9-gebe83bd
+  - py-sonicvisualiser==0.3
   - pympi-ling==1.69
   - south==1.0.2
   - sqlparse==0.2.3
