@@ -271,6 +271,15 @@ function (Marionette,A,BaseQeopaView,d3) {
 
       var time1 = (this.viewport.extent()[0]).getTime();
       var time2 = (this.viewport.extent()[1]).getTime();
+
+      //console.log('before zoom, we have : '+(time2-time1)+" and factor is : "+factor);
+      if ((time2 - time1)>0 && (time2-time1)<500 && factor<1)
+        return;
+
+      var audioDuration = A._i.getOnCfg('currentItem').get('audio_duration')*1000;
+      if ( (time2-time1) >= audioDuration && factor>1)
+        return;
+
       var center = time1 + (time2-time1)/2,
         distanceFromCenter = (time2-time1)/2;
       var newDistanceFromCenter = distanceFromCenter*factor;
