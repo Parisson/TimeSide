@@ -1,9 +1,7 @@
 name: app
-channels: !!python/tuple
-- !!python/unicode
-  'defaults'
-- !!python/unicode
-  'conda-forge'
+channels:
+- defaults
+- conda-forge
 dependencies:
 - conda-forge::argtable2=2.13=1
 - conda-forge::aubio=0.4.5=np112py27_2
@@ -166,3 +164,4 @@ dependencies:
   - uwsgi==2.0.15
   - vamp==1.1.0
   - watchdog==0.8.3
+

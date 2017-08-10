@@ -43,7 +43,7 @@ class TestAnalyzers_withDC(TestAnalyzers_with_zeros):
     def setUp(self):
         samplerate = 16000  # LimsiSad require Fs = 16000 Hz
         duration = 10
-        samples = -1000*np.ones((duration * samplerate, 1))
+        samples = -1000 * np.ones((duration * samplerate, 1))
         decoder_cls = timeside.core.get_processor('array_decoder')
         self.decoder = decoder_cls(samples, samplerate=samplerate)
 
@@ -69,6 +69,7 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 # Define test to skip and corresponding reasons
 skip_reasons = {'VampSimpleHost': ('VampSimpleHost bypasses the decoder '
                                    'and requires a file input'),
+
                 'IRITDiverg': 'IRIT_Diverg fails the stress test',
                 'IRITSinging': 'IRITSingings has to be fixed',
                 'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',

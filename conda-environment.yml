@@ -19,6 +19,7 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
+  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
   - yaafe  # in conda-forge channel (optionnal)
   - pip:

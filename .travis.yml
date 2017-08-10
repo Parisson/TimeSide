@@ -69,3 +69,8 @@ after_script:
   - if [[ $TEST_TARGET == 'server' ]]; then
            docker-compose stop;
     fi
+
+after_failure:
+  - if [[ $TEST_TARGET == 'server' ]]; then
+           docker-compose logs;
+    fi

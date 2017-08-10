@@ -15,10 +15,10 @@ class TestEncoding(unittest.TestCase):
     "Test encoding features"
 
     def generate_source(self):
-        self.expected_total_frames = self.source_duration * self.samplerate
+        self.expected_total_frames = np.ceil(self.source_duration * self.samplerate).astype(np.int)
 
         f0 = 440.
-        f = f0 * np.logspace(0, 4/12*(self.channels-1), self.channels, base=2)
+        f = f0 * np.logspace(0, 4 / 12 * (self.channels - 1), self.channels, base=2)
         omega = 2. * pi * f / self.samplerate
         samples = np.empty((self.expected_total_frames, self.channels))
         for n in xrange(self.channels):
@@ -72,14 +72,14 @@ class TestEncoding(unittest.TestCase):
         from timeside.plugins.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
-                                    # does not return a valid duration
+        # does not return a valid duration
 
     def testWebMVideo(self):
         "Test webm encoding, video"
         from timeside.plugins.encoder.webm import WebMEncoder
         self.encoder_function = WebMEncoder
         self.test_duration = False  # webmmux encoder with streamable=true
-                                    # does not return a valid duration
+        # does not return a valid duration
         if not hasattr(self, 'sink'):
             file_extension = '.' + self.encoder_function.file_extension()
             self.sink = tmp_file_sink(prefix=self.__class__.__name__,
@@ -140,7 +140,7 @@ class TestEncoding(unittest.TestCase):
         self.assertEqual(self.channels, self.encoder.channels())
         self.assertEqual(self.samplerate, self.encoder.samplerate())
         self.assertEqual(self.source_duration,
-                         self.encoder.num_samples/self.encoder.samplerate())
+                         self.encoder.num_samples / self.encoder.samplerate())
 
 
 class TestEncodingLongBlock(TestEncoding):
