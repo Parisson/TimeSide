@@ -164,4 +164,5 @@ dependencies:
   - sqlparse==0.2.3
   - tables==3.4.2
   - uwsgi==2.0.15
+  - vamp==1.1.0
   - watchdog==0.8.3

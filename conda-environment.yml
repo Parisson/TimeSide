@@ -38,4 +38,5 @@ dependencies:
       - py_sonicvisualiser==0.3
       - pympi-ling
       - uwsgi
+      - vamp
       - watchdog
