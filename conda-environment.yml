@@ -1,6 +1,7 @@
 name: timeside
 channels:
   - conda-forge
+  - thomasfillon
 dependencies:
   - aubio  # in conda-forge channel (optionnal)
   - h5py
@@ -22,6 +23,7 @@ dependencies:
   - yaafe # in yaafe channel (optionnal)
   - Werkzeug
   - yaafe  # in conda-forge channel (optionnal)
+  - essentia
   - pip:
       - celery==3.*
       - django-bootstrap-pagination
