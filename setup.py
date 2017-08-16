@@ -29,7 +29,8 @@ def get_dependencies(env_yml_file):
     conda_dependencies = []
     package_map = {
         'pytables': 'tables',  # insert 'tables' instead of 'pytables'
-        'yaafe': ''
+        'yaafe': '',
+        'essentia': ''
     }
     for dep in environment['dependencies']:
         if isinstance(dep, str) and not(dep.startswith('python')):
