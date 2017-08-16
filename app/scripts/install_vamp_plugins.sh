@@ -1,5 +1,19 @@
 VAMP_DIR=/usr/lib/vamp
 
+# Install Vampy
+#wget https://code.soundsoftware.ac.uk/hg/vampy/archive/e2bb3cf7adf1.tar.bz2
+#tar -xf e2bb3cf7adf1.tar.bz2
+#cd vampy-e2bb3cf7adf1
+#LDFLAGS="-L/opt/miniconda/lib" make -f Makefile.linux CXXFLAGS='-DHAVE_NUMPY -O2 -Wall -Werror -fno-strict-aliasing -fPIC -I/opt/miniconda/include/python2.7 -I/opt/miniconda/lib/python2.7/site-packages/numpy/core/include/'
+#make install
+# Todo: install dir is /usr/local/lib/vamp and is different from $VAMP_DIR
+#cd ..
+#rm e2bb3cf7adf1.tar.bz2
+#rm -r vampy-e2bb3cf7adf1
+
+# Link Python vamp plugins from Timeside
+#ln -s /srv/src/timeside/timeside/plugins/analyzer/externals/vampy/* $VAMP_DIR/
+
 # QM Vamp Plugins
 wget https://code.soundsoftware.ac.uk/attachments/download/1602/qm-vamp-plugins-linux64-v1.7.1.tar.bz2
 tar -xf qm-vamp-plugins-linux64-v1.7.1.tar.bz2
