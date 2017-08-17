@@ -32,7 +32,7 @@ import vamp
 import vampyhost
 
 
-class VampDissonace(Analyzer):
+class VampDissonance(Analyzer):
 
     """Dissonance from Essentia through vamp plugins"""
 
@@ -47,12 +47,12 @@ class VampDissonace(Analyzer):
 
     @store_parameters
     def __init__(self):
-        super(VampTuning, self).__init__()
+        super(VampDissonance, self).__init__()
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(VampTuning, self).setup(
+        super(VampDissonance, self).setup(
             channels, samplerate, blocksize, totalframes)
 
         self.plugin_key = 'libvamp_essentia:Dissonance_12'
