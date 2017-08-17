@@ -22,52 +22,58 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
-from timeside.core.tools.parameters import HasTraits, List
+from timeside.core.tools.parameters import HasTraits, Int
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 
 import numpy as np
 from timeside.core.tools.parameters import store_parameters
 
-import vamp
-import vampyhost
+import essentia
+import essentia.streaming
+from essentia.streaming import Spectrum
+from essentia.streaming import SpectralPeaks
+from essentia.streaming import Dissonance
+from essentia.standard import Windowing
 
 
 class VampDissonance(Analyzer):
 
-    """Dissonance from Essentia through vamp plugins"""
+    """Dissonance from Essentia"""
 
     implements(IAnalyzer)
 
     class _Param(HasTraits):
-        plugin_list = List
+        input_blocksize = Int()
 
     _schema = {'$schema': 'http://json-schema.org/schema#',
-               'properties': {},
+               'properties': {
+                   "input_blocksize": {"type": "integer"},
+               },
                'type': 'object'}
 
     @store_parameters
-    def __init__(self):
+    def __init__(self, input_blocksize=4096):
         super(VampDissonance, self).__init__()
+
+        self.input_blocksize = input_blocksize
+        self.windower = Windowing(type='blackmanharris62')
+        self.spec_alg = None
+        self.spec_peaks_alg = None
+        self.dissonance_alg = Dissonance()
+
+        self.dissonance = []
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
         super(VampDissonance, self).setup(
             channels, samplerate, blocksize, totalframes)
-
-        self.plugin_key = 'libvamp_essentia:Dissonance_12'
-        self.plugin_output = 'Dissonance_13'
-        
-        self.plugin = vampyhost.load_plugin(self.plugin_key, float(self.input_samplerate),
-                                   vampyhost.ADAPT_INPUT_DOMAIN +
-                                   vampyhost.ADAPT_BUFFER_SIZE +
-                                   vampyhost.ADAPT_CHANNEL_COUNT)
-
-        self.frame_index = 0
-        self.out_index = self.plugin.get_output(self.plugin_output)["output_index"]
-
-        if not self.plugin.initialise(self.input_channels, self.input_stepsize, self.input_blocksize):
-            raise "Failed to initialise plugin"
+        self.spec_alg = Spectrum(size=self.input_blocksize)
+        self.spec_peaks_alg = SpectralPeaks(
+            sampleRate=self.input_samplerate,
+            maxFrequency=self.input_samplerate / 2,
+            minFrequency=0,
+            orderBy='frequency')
 
     @staticmethod
     @interfacedoc
@@ -77,38 +83,32 @@ class VampDissonance(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Dissonace from Essentia through Vamp plugin"
+        return "Dissonace from Essentia"
 
     @staticmethod
     @interfacedoc
     def unit():
         return ""
 
+    @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
-        timestamp = vampyhost.frame_to_realtime(self.frame_index, self.input_samplerate)
-        
-        self.plugin.process_block(frames.T, timestamp)
-        # results is a dict mapping output number -> list of feature dicts
-        #if out_index in results:
-        #    for r in results[out_index]:
-                
-        self.frame_index += self.input_stepsize
+        w_frame = self.windower(essentia.array(frames.squeeze()))
+        spectrum = self.spec_alg(w_frame)
+        spec, mags = self.spec_peaks_alg(spectrum)
+        self.dissonance.append(self.dissonance_alg(spec, mags))
         return frames, eod
 
     def post_process(self):
-        results = self.plugin.get_remaining_features()[self.out_index]#[0]
-        self.plugin.unload()
-        print results
-        dissonance = self.new_result(data_mode='value', time_mode='global')
-        dissonance.data_object.value = results['values'][0]
+
+        dissonance = self.new_result(data_mode='value', time_mode='framewise')
+        dissonance.data_object.value = self.dissonance
         self.add_result(dissonance)
 
-        
         #    (time, duration, value) = self.vamp_plugin(plugin, wavfile)
         # if value is None:
         #     return
-        
+
         # if duration is not None:
         #     plugin_res = self.new_result(
         #         data_mode='value', time_mode='segment')
@@ -116,7 +116,6 @@ class VampDissonance(Analyzer):
         # else:
         #     plugin_res = self.new_result(
         #         data_mode='value', time_mode='event')
-            
+
         # plugin_res.data_object.time = time
         #     plugin_res.data_object.value = value
-            
