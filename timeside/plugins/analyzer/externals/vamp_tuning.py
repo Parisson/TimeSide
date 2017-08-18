@@ -77,7 +77,7 @@ class VampTuning(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Tuning from NNLS Chroma Vamp plugin"
+        return "Vamp Tuning from NNLS Chroma Vamp plugin"
 
     @staticmethod
     @interfacedoc
