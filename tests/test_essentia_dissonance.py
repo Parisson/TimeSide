@@ -7,10 +7,10 @@ from timeside.core import get_processor
 from timeside.core.tools.test_samples import samples
 
 
-class TestVampDissonance(unittest.TestCase):
+class TestEssentiaDissonance(unittest.TestCase):
 
     def setUp(self):
-        self.analyzer = get_processor('vamp_dissonance')()
+        self.analyzer = get_processor('essentia_dissonance')()
 
     def testOnC4Scale(self):
         "runs on C4 scale"
@@ -19,8 +19,8 @@ class TestVampDissonance(unittest.TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        self.assertAlmostEqual( self.analyzer.results['vamp_dissonance'].data_object.value, 440.0, places=1)
-        
+        self.assertAlmostEqual(self.analyzer.results['essentia_dissonance'].data_object.value.mean(), 0.18, places=2)
+
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

@@ -130,7 +130,7 @@ dependencies:
 - mysql-python=1.2.5=py27_0
 - redis=3.2.0=0
 - simplejson=3.10.0=py27_0
-- thomasfillon::essentia=2.1_beta4
+- thomasfillon::essentia=2.1_beta4=py27hf6fdc9d_2
 - pip:
   - amqp==1.4.9
   - anyjson==0.3.3

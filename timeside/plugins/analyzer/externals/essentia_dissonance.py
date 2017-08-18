@@ -29,14 +29,14 @@ import numpy as np
 from timeside.core.tools.parameters import store_parameters
 
 import essentia
-import essentia.streaming
-from essentia.streaming import Spectrum
-from essentia.streaming import SpectralPeaks
-from essentia.streaming import Dissonance
+import essentia.standard
+from essentia.standard import Spectrum
+from essentia.standard import SpectralPeaks
+from essentia.standard import Dissonance
 from essentia.standard import Windowing
 
 
-class VampDissonance(Analyzer):
+class Essentia_Dissonance(Analyzer):
 
     """Dissonance from Essentia"""
 
@@ -53,7 +53,7 @@ class VampDissonance(Analyzer):
 
     @store_parameters
     def __init__(self, input_blocksize=4096):
-        super(VampDissonance, self).__init__()
+        super(Essentia_Dissonance, self).__init__()
 
         self.input_blocksize = input_blocksize
         self.windower = Windowing(type='blackmanharris62')
@@ -66,7 +66,7 @@ class VampDissonance(Analyzer):
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(VampDissonance, self).setup(
+        super(Essentia_Dissonance, self).setup(
             channels, samplerate, blocksize, totalframes)
         self.spec_alg = Spectrum(size=self.input_blocksize)
         self.spec_peaks_alg = SpectralPeaks(
@@ -78,7 +78,7 @@ class VampDissonance(Analyzer):
     @staticmethod
     @interfacedoc
     def id():
-        return "vamp_dissonance"
+        return "essentia_dissonance"
 
     @staticmethod
     @interfacedoc
@@ -93,10 +93,11 @@ class VampDissonance(Analyzer):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
-        w_frame = self.windower(essentia.array(frames.squeeze()))
-        spectrum = self.spec_alg(w_frame)
-        spec, mags = self.spec_peaks_alg(spectrum)
-        self.dissonance.append(self.dissonance_alg(spec, mags))
+        if not eod:
+            w_frame = self.windower(essentia.array(frames.squeeze()))
+            spectrum = self.spec_alg(w_frame)
+            spec, mags = self.spec_peaks_alg(spectrum)
+            self.dissonance.append(self.dissonance_alg(spec, mags))
         return frames, eod
 
     def post_process(self):
@@ -105,17 +106,12 @@ class VampDissonance(Analyzer):
         dissonance.data_object.value = self.dissonance
         self.add_result(dissonance)
 
-        #    (time, duration, value) = self.vamp_plugin(plugin, wavfile)
-        # if value is None:
-        #     return
+# Generate Grapher for Essentia dissonance
+from timeside.core.grapher import DisplayAnalyzer
 
-        # if duration is not None:
-        #     plugin_res = self.new_result(
-        #         data_mode='value', time_mode='segment')
-        #     plugin_res.data_object.duration = duration
-        # else:
-        #     plugin_res = self.new_result(
-        #         data_mode='value', time_mode='event')
-
-        # plugin_res.data_object.time = time
-        #     plugin_res.data_object.value = value
+DisplayDissonance = DisplayAnalyzer.create(
+    analyzer=Essentia_Dissonance,
+    result_id='essentia_dissonance',
+    grapher_id='grapher_dissonance',
+    grapher_name='Dissonance',
+    staging=False)
