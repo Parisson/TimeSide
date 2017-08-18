@@ -1,6 +1,7 @@
 name: timeside
 channels:
   - conda-forge
+  - thomasfillon
 dependencies:
   - aubio  # in conda-forge channel (optionnal)
   - h5py
@@ -21,7 +22,8 @@ dependencies:
   - traits
   - yaafe # in yaafe channel (optionnal)
   - Werkzeug
-  - yaafe  # in yaafe channel (optionnal)
+  - yaafe  # in conda-forge channel (optionnal)
+  - essentia
   - pip:
       - celery==3.*
       - django-bootstrap-pagination
@@ -36,7 +38,8 @@ dependencies:
       - djangorestframework==3.*
       - jsonfield
       - mutagen
-      - py_sonicvisualiser==0.2-9-gebe83bd
+      - py_sonicvisualiser==0.3
       - pympi-ling
       - uwsgi
+      - vamp
       - watchdog

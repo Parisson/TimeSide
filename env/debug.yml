@@ -29,7 +29,6 @@ app:
     - ./:/srv/src/timeside/
   command: /bin/bash scripts/app.sh --runserver
 
-
 worker:
   env_file:
     - env/debug.env

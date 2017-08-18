@@ -2,6 +2,7 @@ name: app
 channels:
 - defaults
 - conda-forge
+- thomasfillon
 dependencies:
 - conda-forge::argtable2=2.13=1
 - conda-forge::aubio=0.4.5=np112py27_2
@@ -10,7 +11,7 @@ dependencies:
 - conda-forge::blas=1.1=openblas
 - conda-forge::bleach=1.5.0=py27_0
 - conda-forge::bzip2=1.0.6=1
-- conda-forge::ca-certificates=2017.1.23=1
+- conda-forge::ca-certificates=2017.4.17=0
 - conda-forge::certifi=2017.4.17=py27_0
 - conda-forge::configparser=3.5.0=py27_0
 - conda-forge::cycler=0.10.0=py27_0
@@ -29,13 +30,13 @@ dependencies:
 - conda-forge::glib=2.51.4=0
 - conda-forge::gmp=6.1.2=0
 - conda-forge::gst-plugins-base=1.8.0=0
-- conda-forge::gstreamer=1.8.0=1
-- conda-forge::h5py=2.7.0=np112py27_0
-- conda-forge::hdf5=1.8.17=10
+- conda-forge::gstreamer=1.8.0=2
+- conda-forge::h5py=2.7.0=np112py27_1
+- conda-forge::hdf5=1.8.18=0
 - conda-forge::html5lib=0.999=py27_0
 - conda-forge::icu=58.1=1
 - conda-forge::ipykernel=4.6.1=py27_0
-- conda-forge::ipython=5.3.0=py27_0
+- conda-forge::ipython=5.4.1=py27_0
 - conda-forge::ipython_genutils=0.2.0=py27_0
 - conda-forge::ipywidgets=6.0.0=py27_0
 - conda-forge::jinja2=2.9.5=py27_0
@@ -57,11 +58,11 @@ dependencies:
 - conda-forge::libvorbis=1.3.5=0
 - conda-forge::libxcb=1.12=1
 - conda-forge::libxml2=2.9.4=4
-- conda-forge::markupsafe=0.23=py27_1
-- conda-forge::matplotlib=2.0.0=np112py27_3
+- conda-forge::markupsafe=1.0=py27_0
+- conda-forge::matplotlib=2.0.2=np112py27_0
 - conda-forge::mistune=0.7.4=py27_0
 - conda-forge::mpg123=1.24.0=1
-- conda-forge::nbconvert=5.1.1=py27_1
+- conda-forge::nbconvert=5.2.1=py27_1
 - conda-forge::nbformat=4.3.0=py27_0
 - conda-forge::ncurses=5.9=10
 - conda-forge::networkx=1.11=py27_0
@@ -71,26 +72,26 @@ dependencies:
 - conda-forge::olefile=0.44=py27_0
 - conda-forge::openblas=0.2.19=2
 - conda-forge::openssl=1.0.2k=0
-- conda-forge::pandas=0.19.2=np112py27_1
+- conda-forge::pandas=0.20.1=np112py27_0
 - conda-forge::pandoc=1.19.2=0
 - conda-forge::pandocfilters=1.4.1=py27_0
 - conda-forge::pathlib2=2.2.1=py27_0
 - conda-forge::pcre=8.39=0
 - conda-forge::pexpect=4.2.1=py27_0
 - conda-forge::pickleshare=0.7.3=py27_0
-- conda-forge::pillow=4.1.0=py27_0
+- conda-forge::pillow=4.1.1=py27_0
 - conda-forge::pip=9.0.1=py27_0
 - conda-forge::prompt_toolkit=1.0.14=py27_0
 - conda-forge::ptyprocess=0.5.1=py27_0
 - conda-forge::pygments=2.2.0=py27_0
 - conda-forge::pyparsing=2.2.0=py27_0
-- conda-forge::pyqt=5.6.0=py27_2
-- conda-forge::pytables=3.4.2=np112py27_0
-- conda-forge::python=2.7.13=0
+- conda-forge::pyqt=5.6.0=py27_3
+- conda-forge::pytables=3.4.2=np112py27_1
+- conda-forge::python=2.7.13=1
 - conda-forge::python-dateutil=2.6.0=py27_0
 - conda-forge::pytz=2017.2=py27_0
 - conda-forge::pyyaml=3.12=py27_1
-- conda-forge::pyzmq=16.0.2=py27_1
+- conda-forge::pyzmq=16.0.2=py27_2
 - conda-forge::qt=5.6.2=2
 - conda-forge::qtconsole=4.3.0=py27_0
 - conda-forge::readline=6.2=0
@@ -129,6 +130,7 @@ dependencies:
 - mysql-python=1.2.5=py27_0
 - redis=3.2.0=0
 - simplejson=3.10.0=py27_0
+- thomasfillon::essentia=2.1_beta4=py27hf6fdc9d_2
 - pip:
   - amqp==1.4.9
   - anyjson==0.3.3
@@ -140,26 +142,27 @@ dependencies:
   - celery==3.1.25
   - django==1.9.13
   - django-bootstrap-pagination==1.6.2
-  - django-bootstrap3==8.2.2
+  - django-bootstrap3==8.2.3
   - django-bower==5.2.0
   - django-celery==3.2.1
-  - django-cors-headers==2.0.2
-  - django-debug-toolbar==1.7
+  - django-cors-headers==2.1.0
+  - django-debug-toolbar==1.8
   - django-environ==0.4.3
-  - django-extensions==1.7.8
-  - djangorestframework==3.6.2
+  - django-extensions==1.7.9
+  - djangorestframework==3.6.3
   - ipython-genutils==0.2.0
   - jsonfield==2.0.1
   - jupyter-client==5.0.1
   - jupyter-console==5.1.0
   - jupyter-core==4.3.0
   - kombu==3.0.37
-  - mutagen==1.37
+  - mutagen==1.38
   - pathtools==0.1.2
   - prompt-toolkit==1.0.14
-  - py-sonicvisualiser==0.2-9-gebe83bd
+  - py-sonicvisualiser==0.3
   - pympi-ling==1.69
   - sqlparse==0.2.3
   - tables==3.4.2
   - uwsgi==2.0.15
+  - vamp==1.1.0
   - watchdog==0.8.3

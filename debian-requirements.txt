@@ -8,8 +8,7 @@ gstreamer0.10-alsa
 
 # Optionnal Audio Analysis library
 vamp-examples
-# from http://debian.parisson.com/debian/
-#python-yaafe
+vamp-plugin-sdk
 
 # Misc. 
 git
