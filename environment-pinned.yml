@@ -120,7 +120,7 @@ dependencies:
 - conda-forge::xorg-libxau=1.0.8=3
 - conda-forge::xorg-libxdmcp=1.1.2=3
 - conda-forge::xz=5.2.2=0
-- conda-forge::yaafe=0.70=py27_1
+- conda-forge::yaafe=0.70=py27_2
 - conda-forge::yaml=0.1.6=0
 - conda-forge::zeromq=4.2.1=1
 - conda-forge::zlib=1.2.11=0
