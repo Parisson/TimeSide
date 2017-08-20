@@ -9,6 +9,7 @@ from timeside.plugins.decoder.file import FileDecoder
 from timeside.core.tools.test_samples import samples
 from jsonschema import Draft4Validator
 
+import tempfile
 
 class TestAnalyzers_parameters(unittest.TestCase):
     """Test analyzer parameters and schema specification"""
@@ -41,7 +42,9 @@ class TestAnalyzers_with_default(unittest.TestCase):
                 # Test for Inf
                 self.assertFalse(np.any(np.isinf(result.data)),
                                  'Inf in %s data value' % result.name)
-
+        # Try to serialize as hdf5
+        h5_file = tempfile.NamedTemporaryFile(suffix='.h5', delete=True)
+        analyzer.results.to_hdf5(h5_file.name)
 
 def _tests_factory(test_class, test_doc, list_analyzers, sources, skip_reasons={}):
     """Define a test for each analyzer provided in the list"""
