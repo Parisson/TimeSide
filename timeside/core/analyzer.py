@@ -332,7 +332,8 @@ class LabelMetadata(MetadataObject):
 
         for name in ['label', 'description']:
             subgroup = h5group.create_group(name)
-            hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
+            if self.__getattribute__(name):
+                hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
 
     def from_hdf5(self, h5group):
         self.label = {}
