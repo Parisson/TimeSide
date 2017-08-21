@@ -40,7 +40,7 @@ class VampAnalyzer(Analyzer):
     abstract()
 
     class _Param(HasTraits):
-        plugin_list = List
+        pass
 
     _schema = {'$schema': 'http://json-schema.org/schema#',
                'properties': {},
