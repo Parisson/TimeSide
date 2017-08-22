@@ -74,8 +74,7 @@ class VampTuning(VampAnalyzer):
         return ""
 
     def post_process(self):
-        results = self.plugin.get_remaining_features()[self.out_index][0]
-        self.plugin.unload()
+        super(VampTuning, self).post_process()
         tuning = self.new_result(data_mode='value', time_mode='global')
-        tuning.data_object.value = results['values'][0]
+        tuning.data_object.value = self.vamp_results['list'][0]['values']
         self.add_result(tuning)
