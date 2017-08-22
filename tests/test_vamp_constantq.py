@@ -19,7 +19,7 @@ class TestVampConstantQ(unittest.TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        self.assertEqual(self.analyzer.results['vamp_constantq'].data_object.value.shape[0], 48)
+        self.assertEqual(self.analyzer.results['vamp_constantq'].data_object.value.shape[1], 48)
 
 
 if __name__ == '__main__':

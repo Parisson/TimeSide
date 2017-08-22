@@ -28,6 +28,7 @@ from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 from timeside.core.tools.parameters import store_parameters
 
 import vamp
+from vamp.collect import deduce_shape, reshape
 import vampyhost
 
 
@@ -56,10 +57,11 @@ class VampAnalyzer(Analyzer):
         # to get the outputs of the corresponding plugin
         self.plugin_key = None
         self.plugin_output = None
+        self.output_desc = None
         # Attributes initialize later during setup
         self.plugin = None
         self.out_index = None  # TODO: manage several outputs
-
+        self.vamp_results = []
         # Process Attribute
         self.frame_index = 0
 
@@ -75,12 +77,19 @@ class VampAnalyzer(Analyzer):
                                             vampyhost.ADAPT_BUFFER_SIZE +
                                             vampyhost.ADAPT_CHANNEL_COUNT)
 
-        self.out_index = self.plugin.get_output(self.plugin_output)["output_index"]
-
         if not self.plugin.initialise(self.input_channels,
                                       self.input_stepsize,
                                       self.input_blocksize):
             raise RuntimeError("Vampy-Host failed to initialise plugin %d" % self.plugin_key)
+
+        self.out_index = self.plugin.get_output(
+            self.plugin_output)["output_index"]
+
+        if not self.plugin_output:
+            self.output_desc = self.plugin.get_output(0)
+            self.plugin_output = self.output_desc["identifier"]
+        else:
+            self.output_desc = self.plugin.get_output(self.plugin_output)
 
     @staticmethod
     @interfacedoc
@@ -103,9 +112,26 @@ class VampAnalyzer(Analyzer):
         timestamp = vampyhost.frame_to_realtime(self.frame_index,
                                                 self.input_samplerate)
 
-        self.plugin.process_block(frames.T, timestamp)
+        results = self.plugin.process_block(frames.T, timestamp)
+        if self.out_index in results:
+            for res in results[self.out_index]:
+                self.vamp_results.append({self.plugin_output: res})
         self.frame_index += self.input_stepsize
         return frames, eod
 
     def post_process(self):
-        pass
+        results = self.plugin.get_remaining_features()
+        if self.out_index in results:
+            for res in results[self.out_index]:
+                self.vamp_results.append({self.plugin_output: res})
+
+        shape = deduce_shape(self.output_desc)
+
+        res_vamp = reshape(self.vamp_results,
+                           self.input_samplerate,
+                           self.input_stepsize,
+                           self.output_desc,
+                           shape)
+
+        self.plugin.unload()
+        self.vamp_results = {shape: res_vamp}

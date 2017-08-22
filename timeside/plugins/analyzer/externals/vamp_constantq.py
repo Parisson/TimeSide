@@ -66,6 +66,11 @@ class VampConstantQ(VampAnalyzer):
         super(VampConstantQ, self).setup(
             channels, samplerate, blocksize, totalframes)
 
+        self.minpitch = self.plugin.get_parameter_value('minpitch')
+        self.maxpitch = self.plugin.get_parameter_value('maxpitch')
+        self.bpo = self.plugin.get_parameter_value('bpo')
+        self.tuning = self.plugin.get_parameter_value('tuning')
+
     @staticmethod
     @interfacedoc
     def id():
@@ -82,20 +87,15 @@ class VampConstantQ(VampAnalyzer):
         return ""
 
     def post_process(self):
-        results = self.plugin.get_remaining_features()[self.out_index][0]
+        super(VampConstantQ, self).post_process()  # get remaining results
 
-        minpitch = self.plugin.get_parameter_value('minpitch')
-        maxpitch = self.plugin.get_parameter_value('maxpitch')
-        bpo = self.plugin.get_parameter_value('bpo')
-        tuning = self.plugin.get_parameter_value('tuning')
-
-        self.plugin.unload()
         constant_q = self.new_result(data_mode='value', time_mode='framewise')
-        constant_q.data_object.value = results['values']
 
-        midi_pitches = np.arange(minpitch, maxpitch, 12.0 / bpo)
-        constant_q.data_object.y_value = [midi2freq(midi_number=p, tuningA4=tuning)
+        midi_pitches = np.arange(self.minpitch, self.maxpitch, 12.0 / self.bpo)
+        constant_q.data_object.y_value = [midi2freq(midi_number=p, tuningA4=self.tuning)
                                           for p in midi_pitches]
+
+        constant_q.data_object.value = self.vamp_results['matrix'][1]
         self.add_result(constant_q)
 
 
