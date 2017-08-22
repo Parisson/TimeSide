@@ -71,10 +71,13 @@ private_extra_types = {
     '.trs': 'text/xml',  # Trancriber Annotation Format
     '.svl': 'text/xml',  # Sonic Visualiser layer file
     '.TextGrid': 'text/praat-textgrid',  # Praat TextGrid annotation file
+    '.h5': 'application/x-hdf5',    # HDF5
+    '.hdf5': 'application/x-hdf5',  # HDF5
 }
 
 for ext, mime_type in public_extra_types.items():
-    mimetypes.add_type(mime_type, ext)
+    if not mimetypes.guess_extension(mime_type) == ext:
+        mimetypes.add_type(mime_type, ext)
 
 for ext, mime_type in private_extra_types.items():
     mimetypes.add_type(mime_type, ext)
@@ -164,6 +167,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
     source_file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
     source_url = models.URLField(_('URL'), blank=True, max_length=1024)
+    audio_duration = models.FloatField(_('duration'), blank=True, null=True)
     sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
@@ -189,14 +193,6 @@ class Item(Titled, UUID, Dated, Shareable):
             return self.source_url
         return None
 
-    def get_audio_duration(self):
-        """
-        Return item audio duration
-        """
-        decoder = timeside.core.get_processor('file_decoder')(
-            uri=self.get_uri())
-        return decoder.uri_total_duration
-
     def get_results_path(self):
         """
         Return Item result path
@@ -205,6 +201,38 @@ class Item(Titled, UUID, Dated, Shareable):
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         return result_path
+
+    def get_audio_duration(self, force=False):
+        """
+        Return item audio duration
+        """
+        if force or not self.audio_duration:
+            decoder = timeside.core.get_processor('file_decoder')(
+                uri=self.get_uri())
+            self.audio_duration = decoder.uri_total_duration
+            super(Item, self).save()
+
+    def get_hash(self, force=False):
+        "Set SHA1 hash from file binary content"
+        if force or (self.sha1 is None):
+            if self.source_file:
+                sha1 = sha1sum_file(self.source_file.path)
+            elif self.source_url:
+                sha1 = sha1sum_url(self.source_url)
+            else:
+                return
+            self.sha1 = sha1
+            super(Item, self).save()
+
+    def get_mimetype(self, force=False):
+        if force or (self.mime_type is None):
+            if self.source_url:
+                path = self.source_url
+            elif self.source_file:
+                path = self.source_file.path
+            mime_type = get_mime_type(path)
+            self.mime_type_setter(mime_type=mime_type)
+            super(Item, self).save()
 
     def get_single_selection(self):
         # TODO : have singleton selection has a foreign key of Item ???
@@ -382,7 +410,7 @@ class Preset(UUID, Dated, Shareable):
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
     # TODO : turn this filed into a JSON Field
     # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration
-    
+
     class Meta:
         db_table = app + '_presets'
         verbose_name = _('Preset')
@@ -435,6 +463,11 @@ class Result(UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
+    def get_mimetype(self, force=False):
+        if force or (self.mime_type is None):
+            mime_type = get_mime_type(self.file.path)
+            self.mime_type_setter(mime_type=mime_type)
+
     def __unicode__(self):
         return '_'.join([self.item.title, unicode(self.preset.processor)])
 
@@ -473,38 +506,11 @@ class Task(UUID, Dated, Shareable):
                 status = Task.objects.get(id=self.id).status
 
 
-def set_mimetype(sender, **kwargs):
+def item_post_save(sender, **kwargs):
     instance = kwargs['instance']
-    if (sender == Result) and instance.file:
-        path = instance.file.path
-    elif (sender == Item):
-        if instance.source_url:
-            path = instance.source_url
-        elif instance.source_file:
-            path = instance.source_file.path
-    else:
-        return
-    mime_type = get_mime_type(path)
-    if instance.mime_type == mime_type:
-        return
-    else:
-        instance.mime_type = get_mime_type(path)
-        super(sender, instance).save()
-
-
-def set_hash(sender, **kwargs):
-    instance = kwargs['instance']
-    if instance.source_file:
-        sha1 = sha1sum_file(instance.source_file.path)
-    elif instance.source_url:
-        sha1 = sha1sum_url(instance.source_url)
-    else:
-        return
-    if instance.sha1 == sha1:
-        return
-    else:
-        instance.sha1 = sha1
-        super(sender, instance).save()
+    instance.get_hash()
+    instance.get_mimetype()
+    instance.get_audio_duration()
 
 
 def run(sender, **kwargs):
@@ -513,9 +519,8 @@ def run(sender, **kwargs):
         task.run()
 
 
-post_save.connect(set_mimetype, sender=Item)
-post_save.connect(set_hash, sender=Item)
-post_save.connect(set_mimetype, sender=Result)
+post_save.connect(item_post_save, sender=Item)
+# TODO post_save.connect(set_mimetype, sender=Result)
 post_save.connect(run, sender=Task)
 
 

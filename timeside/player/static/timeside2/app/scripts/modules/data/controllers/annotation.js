@@ -47,6 +47,11 @@ function (A) {
           title : "Annotation Title",
           description : text
         };*/
+
+        //note : we don't delete anything anymore, asked by TF 08/02/17
+      return callback();
+
+        
         return $.ajax({
           url : /*'http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/'*/
             A.getApiUrl()+'/annotation_tracks/'

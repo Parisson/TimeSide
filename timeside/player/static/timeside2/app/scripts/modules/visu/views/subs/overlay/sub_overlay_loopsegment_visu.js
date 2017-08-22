@@ -26,8 +26,14 @@ function (Marionette,A,BaseQeopaView,d3) {
     ui: {
     },
     events: {
-      'click [data-layout="click_catcher"]' : 'onClickCatcher',
-      'click [data-layout="reset"]' : 'onClickReset'
+      'click [data-layout="click_catcher"]'    : 'onClickCatcher',
+      'click [data-layout="reset"]'            : 'onClickReset',
+      'click [data-layout="zoom"]'             : 'onClickZoom'
+    },
+
+    onClickZoom:function(ev) {
+        var zoomIsMore = ev.currentTarget.dataset.zoom =="more";
+        A._v.trigCfg('ui_project.zoom','',zoomIsMore ? 0.666 : 1.5 );
     },
 
     onClickReset:function(ev) {

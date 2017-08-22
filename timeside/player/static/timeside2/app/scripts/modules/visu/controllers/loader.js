@@ -28,17 +28,18 @@ function (A,d3) {
 
     /////////////////////////////////////////////////////////////////////////////
     //Gestion de la map de demande
-    getDataFunction:function(type) {
-      if (! this.mapFuncByType[type]) {
-        this.mapFuncByType[type] = _.debounce(this.askDataFunc,200);
+    getDataFunction:function(type,resultAnalysis) {
+      var idFunction = resultAnalysis && resultAnalysis.get('uuid') ? type+"__"+resultAnalysis.get('uuid') : type;
+      if (! this.mapFuncByType[idFunction]) {
+        this.mapFuncByType[idFunction] = _.debounce(this.askDataFunc,200);
       }
-      return this.mapFuncByType[type]
+      return this.mapFuncByType[idFunction]
     },
 
     /////////////////////////////////////////////////////////////////////////////
     //Demande de la part d'un provider
     askNewData:function(type,timeStart,timeEnd,nbItem,resultAnalysis,callback) {
-      ( this.getDataFunction(type) )(type,timeStart,timeEnd,nbItem,resultAnalysis,callback);
+      ( this.getDataFunction(type,resultAnalysis) )(type,timeStart,timeEnd,nbItem,resultAnalysis,callback);
     },
 
     //ok

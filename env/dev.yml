@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2015-2016 Parisson SARL
+# Copyright (c) 2015-2017 Parisson SARL
 
 # This file is part of Telemeta.
 
@@ -27,3 +27,4 @@ app:
 
 worker:
   image: parisson/timeside:latest-dev
+

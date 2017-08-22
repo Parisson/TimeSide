@@ -143,6 +143,10 @@ function (Marionette, templates, injector,$,vent,Hammer,
       or can be obj {type : success|warning|info|danger, text : string,title : string, actions : [{label,callback,type}]}
     **/
     showNotification:function(msg) {
+
+      //no notification planned in this project, for now, deactivate
+      return alert(JSON.stringify(msg));
+
       var _hasActions = msg.actions && msg.actions.length>0;
       this.ui.notificationFooter.find('button.btn').off('click');
 

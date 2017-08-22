@@ -72,7 +72,7 @@ class ArrayDecoder(Decoder):
         self.input_channels = self.samples.shape[1]
 
         self.uri = '_'.join(['raw_audio_array',
-                            'x'.join([str(dim) for dim in samples.shape]),
+                             'x'.join([str(dim) for dim in samples.shape]),
                              samples.dtype.type.__name__])
         from .utils import sha1sum_numpy
         self._sha1 = sha1sum_numpy(self.samples)
@@ -93,9 +93,10 @@ class ArrayDecoder(Decoder):
                                  - self.uri_start)
 
         if self.is_segment:
-            start_index = self.uri_start * self.input_samplerate
-            stop_index = start_index + int(np.ceil(self.uri_duration
-                                           * self.input_samplerate))
+            start_index = np.floor(self.uri_start * self.input_samplerate).astype(np.int)
+            stop_index = start_index
+            stop_index += np.ceil(self.uri_duration
+                                  * self.input_samplerate).astype(np.int)
             stop_index = min(stop_index, len(self.samples))
             self.samples = self.samples[start_index:stop_index]
 

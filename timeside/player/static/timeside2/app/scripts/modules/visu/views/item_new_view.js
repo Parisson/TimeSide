@@ -97,8 +97,6 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
         this.rulerView.create(this.size.width, this.size.rulerHeight);
       }
 
-      //@Todo instanciate needed tracks
-
       var item = A._i.getOnCfg('currentItem');
       if (item && item.get('annotationTracksObjects')) {
         var self=this;
@@ -106,6 +104,8 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           self.addTrack(new TrackAnnotationsView(),"annotation",annotationTrack);
         });
       }
+
+      this.onAddTrackWaveformV2(); //new : asked by blair
 
 
       if (item && item.get('analysisTracksObjects')) {

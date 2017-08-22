@@ -17,14 +17,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Author: Paul Brossier <piem@piem.org>
+# Authors:
+#  Paul Brossier <piem@piem.org>
+#  Thomas Fillon <thomas@parisson.com>
+
+
 from __future__ import absolute_import
 
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
-from aubio import pitch
+from aubio import pitch as aubio_pitch
 import numpy as np
 from timeside.plugins.analyzer.utils import nextpow2
 
@@ -56,6 +60,12 @@ class AubioPitch(Analyzer):
         self._blocksize_s = blocksize_s
         self._stepsize_s = stepsize_s
 
+        # Aubio Pitch Initialisation
+        self.aubio_pitch = None
+        self.block_read = 0
+        self.pitches = []
+        self.pitch_confidences = []
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
@@ -77,13 +87,9 @@ class AubioPitch(Analyzer):
                                       totalframes)
 
         # Aubio Pitch set-up
-        self.aubio_pitch = pitch(
-            "default", self.input_blocksize, self.input_stepsize,
-            samplerate)
+        self.aubio_pitch = aubio_pitch("default", self.input_blocksize,
+                                       self.input_stepsize, samplerate)
         self.aubio_pitch.set_unit("freq")
-        self.block_read = 0
-        self.pitches = []
-        self.pitch_confidences = []
 
     @staticmethod
     @interfacedoc
@@ -106,7 +112,15 @@ class AubioPitch(Analyzer):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
+
         #time = self.block_read * self.input_stepsize * 1. / self.samplerate()
+
+        # WARNING : All Aubio analyzer process functions manages frames reconstruction by themself
+        #           from small stepsize input blocksize
+        #           i.e. Aubio process functions should receive non overlapping input blocksize
+        #           of length stepsize.
+        #           This is achieve through  @frames_adapter that handles Aubio Analyzer specifically (blocksize=stepsize).
+
         self.pitches += [self.aubio_pitch(frames)[0]]
         self.pitch_confidences += [self.aubio_pitch.get_confidence()]
         self.block_read += 1

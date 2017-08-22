@@ -78,7 +78,18 @@ function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,
     formatTimeMs:function(t) {
       var mom = Moment(new Date(t));
 
-      if (t<1000*60*60)
+      var time0 =  injector.get('trackInfoController').currentStartTime;
+      var time1 =  injector.get('trackInfoController').currentEndTime;
+
+      //if small duration, show milliseconds, if not, dont
+      var format = (time1-time0) < 1000 ? 'ss.SSS' : 'ss.S';
+      var prefix = (t<1000*60 ? '' : 'mm:');
+      var result = mom.format(prefix+format);
+      if (result[0]== "0" && result[1]!=",")
+        result = result.substr(1);
+      return result;
+
+      if (t<1000*60)
         return mom.format('ss.SSS');
       var result = mom.format('mm:ss.SSS');
       return result;

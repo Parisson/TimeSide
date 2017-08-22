@@ -105,12 +105,14 @@ function (Marionette,A,BaseQeopaView,d3) {
         this.callbackLoaded();
     },
 
-    //////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // Click & cursor methods
     onClick:function(evt) {
 
       var x = evt.pageX - this.clickContainer.offset().left;
       var relativeX = x / this.width;
+     //console.log('???? : '+evt.pageX+","+this.clickContainer.offset().left+" ==> "+x+" : "+relativeX);
+
       A._v.trigCfg('audio.setCurrentTime','',relativeX);
       console.log('CLICK!!!'+relativeX);
     },
@@ -121,7 +123,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         this.cursorView/*.transition()*/.attr('x',pixel);
     },
 
-    //////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // Render methods
 
     //1
@@ -202,7 +204,10 @@ function (Marionette,A,BaseQeopaView,d3) {
       var xAxis = d3.svg.axis()
           .scale(xScale)
           .orient('bottom')
-          .ticks(5);
+          .ticks(5)
+          .tickFormat(function(arg) {
+            return A.telem.formatTimeMs(arg.getTime());
+          });
           
       chart.append('g')
           .attr('class', 'x axis')
@@ -257,14 +262,57 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
 
+    ////////////////////////////////////////////////////////////////////////////////////
+    //Zoom management
+    //factor can be <1 (more zoom) or >1 (less zoom)
+    onZoomCommand:function(factor) {
+
+      //var deltaTimeMsec = factor<1 ? 50 : -50;
+
+      var time1 = (this.viewport.extent()[0]).getTime();
+      var time2 = (this.viewport.extent()[1]).getTime();
+
+      //console.log('before zoom, we have : '+(time2-time1)+" and factor is : "+factor);
+      if ((time2 - time1)>0 && (time2-time1)<500 && factor<1)
+        return;
+
+      var audioDuration = A._i.getOnCfg('currentItem').get('audio_duration')*1000;
+      if ( (time2-time1) >= audioDuration && factor>1)
+        return;
+
+      var center = time1 + (time2-time1)/2,
+        distanceFromCenter = (time2-time1)/2;
+      var newDistanceFromCenter = distanceFromCenter*factor;
+
+      time1 = Math.max(center - newDistanceFromCenter,0);
+      time2 = center+newDistanceFromCenter;
+
+
+
+/*
+      time1 = Math.max(time1 -deltaTimeMsec, 0);
+      time2 = time2+deltaTimeMsec;
+*/
+      if (time1>=time2)
+        time2 = time1+100;
+
+      this.viewport.extent([new Date(time1), new Date(time2)]);
+      this.viewport(d3.select('.viewport'));
+      this.viewport.event(d3.select('.viewport'));
+    },
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('audio.newAudioTime','',this.onNewTime,this);
       A._v.onCfg('ui_project.segmentLoopUpdate','',this.onNewSegmentLoop,this);
+      A._v.onCfg('ui_project.zoom','',this.onZoomCommand,this);      
       //on initialize specify the sizes
       this.updateSize();
+
+      window.debtn = this;
     },
 
     onRender:function() {

@@ -29,6 +29,7 @@ from django.views.generic import DetailView, ListView
 from django.http import HttpResponse, StreamingHttpResponse
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from rest_framework import viewsets, generics, renderers
 from rest_framework import status
@@ -450,9 +451,28 @@ class ItemDetail(DetailView):
         context['ts_item'] = json.dumps(ts_item)
         return context
 
+def serve_media_nginx(filename, mime_type):
+    # Serve file using X-Accel-Redirect
+    response = HttpResponse()
+    file_url = settings.MEDIA_URL + os.path.relpath(filename, settings.MEDIA_ROOT)
+    response['Content-Disposition'] = "attachment; filename=%s" % (file_url)
+    response['Content-Type'] = mime_type
+
+    response['X-Accel-Redirect'] = file_url
+    
+    return response
+
+class AudioRenderer(renderers.BaseRenderer):
+    media_type = 'audio/*'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
 
 class ItemTranscode(DetailView):
     model = models.Item
+    renderer_classes = (AudioRenderer,)
 
     def get_object(self):
         return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))
@@ -506,8 +526,11 @@ class ItemTranscode(DetailView):
                 result.delete()
                 return self.get(request, uuid, extension)
             # Result and file exist --> OK
-            return FileResponse(open(result.file.path, 'rb'),
-                                content_type=result.mime_type)
+
+            # Serve file using X-Accel-Redirect
+            return serve_media_nginx(filename=result.file.path, mime_type=result.mime_type)
+
+            
         except models.Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run

@@ -9,15 +9,21 @@ import numpy as np
 BLOCKSIZE = 1024
 STEPSIZE = 256
 
+
 class FakeAnalyzer(object):
+
     def __init__(self, blocksize=BLOCKSIZE, stepsize=STEPSIZE):
         self.frames = []  # Container for the frame as viewed by process
         self.input_blocksize = blocksize
-        self.input_stepsize= stepsize
+        self.input_stepsize = stepsize
 
     def process(self, frames, eod):
         self.frames.append(frames)
         return frames, eod
+
+    @staticmethod
+    def id():
+        return 'fake_analyzer'
 
 
 class TestAnalyzerPreProcessors(unittest.TestCase):
@@ -85,6 +91,7 @@ class TestDownmixToMono(TestAnalyzerPreProcessors):
         self.input_eod[-1] = True
         self.process_frames = self.input_frames.mean(axis=-1)
 
+
 class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
 
     def setUp(self):
@@ -115,12 +122,13 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
                                           np.arange(1536, 3584).reshape(-1, 2),
                                           np.arange(2048, 4096).reshape(-1, 2),
                                           np.arange(2560, 4608).reshape(-1, 2)])
+
     def test_on_mono_eod_true(self):
         "Run on mono, last eod = True"
         self.input_frames = np.arange(0, 2500).reshape(5, -1)
         self.input_eod = [False, False, False, False, True]
         last_frames = range(1536, 2500)
-        last_frames.extend([0]*60)
+        last_frames.extend([0] * 60)
         self.process_frames = np.asarray([range(0, 1024),
                                           range(256, 1280),
                                           range(512, 1536),
