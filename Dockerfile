@@ -32,7 +32,7 @@ RUN apt-get update && \
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
 RUN conda update conda &&\
-    conda config --append channels conda-forge &&\
+    conda config --append channels conda-forge --append channels thomasfillon &&\
     conda env update --name root --file environment-pinned.yml &&\
     conda clean --all --yes
 
