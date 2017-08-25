@@ -22,7 +22,7 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
-from timeside.core.tools.parameters import HasTraits, List
+#from timeside.core.tools.parameters import HasTraits
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 
 #from timeside.core.tools.parameters import store_parameters
@@ -37,9 +37,6 @@ class VampTuning(VampAnalyzer):
     """Tuning from NNLS Chroma vamp plugins"""
 
     implements(IAnalyzer)
-
-    class _Param(HasTraits):
-        plugin_list = List
 
     _schema = {'$schema': 'http://json-schema.org/schema#',
                'properties': {},
