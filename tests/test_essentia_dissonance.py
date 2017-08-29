@@ -19,7 +19,7 @@ class TestEssentiaDissonance(unittest.TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        self.assertAlmostEqual(self.analyzer.results['essentia_dissonance'].data_object.value.mean(), 0.18, places=2)
+        self.assertAlmostEqual(self.analyzer.results['essentia_dissonance'].data_object.value.mean(), 0.16, places=2)
 
 
 if __name__ == '__main__':
