@@ -59,7 +59,8 @@ skip_reasons = {
     'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',
     'IRITHarmoCluster': 'IRIT_HarmoCluster fails the stress test',
     'LABRIInstru': 'LABRIInstru has to be fixed',
-    'LABRIMultipitch': 'LABRIMultipitch has to be fixed'
+    'LABRIMultipitch': 'LABRIMultipitch has to be fixed',
+    'VampSimpleHost': 'Vamp Simple Host become obsolete in favor of Vampy Host'
 }
 
 # For each analyzer in TimeSide, test with constant input
