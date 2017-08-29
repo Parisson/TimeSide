@@ -120,7 +120,7 @@ class Processor(Component, HasParam):
         if not self.input_blocksize:
             self.input_blocksize = self.source_blocksize
         if not self.input_stepsize:
-            self.input_stepsize = self.source_blocksize
+            self.input_stepsize = self.input_blocksize
 
         # Check samplerate specification if any
         if self.force_samplerate:
