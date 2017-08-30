@@ -63,12 +63,12 @@ class VampTuning(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Vamp Tuning from NNLS Chroma Vamp plugin"
+        return "Tuning"
 
     @staticmethod
     @interfacedoc
     def unit():
-        return ""
+        return "Hz"
 
     def post_process(self):
         super(VampTuning, self).post_process()
