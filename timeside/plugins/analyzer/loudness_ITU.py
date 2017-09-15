@@ -32,6 +32,7 @@ from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 import numpy as np
 import numpy as np
 from scipy.signal import lfilter as lfilter
+import warnings
 #from timeside.core.tools.parameters import store_parameters
 
 
@@ -95,7 +96,7 @@ class LoudnessITU(Analyzer):
             self.B2 = np.array([1.0, -2.0, 1.0])
             self.A2 = np.array([1.0, -1.99004745483398, 0.99007225036621])
         else:
-            print "WARNING: sample frequency is neither 44100Hz nor 48000Hz, using filter coeficients optimised for 48000Hz"
+            warnings.warn("Sample frequency is neither 44100Hz nor 48000Hz, using filter coeficients optimised for 48000Hz")
             self.B1 = np.array([1.53512485958697, -2.69169618940638, 1.19839281085285])
             self.A1 = np.array([1.0, -1.69065929318241, 0.73248077421585])
             self.B2 = np.array([1.0, -2.0, 1.0])
@@ -124,11 +125,11 @@ class LoudnessITU(Analyzer):
             y = lfilter(self.B2, self.A2,
                         lfilter(self.B1, self.A1, frames[n]))
             zj = sum(y**2) / self.input_blocksize   # Mean square
-            zj = max(zj, 1e-10)  # dummy value to avoid division by zero in log10
-
+            
             self.z[n].append(zj)
             SumTerm += self.weights[n] * zj
 
+        SumTerm = max(SumTerm, 1e-10)  # dummy value to avoid division by zero in log10
         lj = -0.691 + 10 * np.log10(SumTerm)
         self.l.append(lj)
 
@@ -148,8 +149,10 @@ class LoudnessITU(Analyzer):
             zi = np.array(self.z[n])
             zi_Jg = zi * Jg  # These two lines could be compressed in one : zi_Jg = zi[Jg]
             zi_Jg = zi_Jg[zi_Jg > 0]
-            SumTerm += self.weights[n] * sum(zi_Jg) / len(zi_Jg)
-            Gamma_r = -0.691 + 10 * np.log10(SumTerm) + self.relativeThreshold
+            if len(zi_Jg):
+                SumTerm += self.weights[n] * sum(zi_Jg) / len(zi_Jg)
+        SumTerm = max(SumTerm, 1e-10)  # avoid division by zero in log10
+        Gamma_r = -0.691 + 10 * np.log10(SumTerm) + self.relativeThreshold
 
         # Relative Gating
         Jg = np.greater(self.l, Gamma_r)
@@ -158,8 +161,10 @@ class LoudnessITU(Analyzer):
             zi = np.array(self.z[n])
             zi_Jg = zi * Jg
             zi_Jg = zi_Jg[zi_Jg > 0]
-            SumTerm = SumTerm + self.weights[n] * sum(zi_Jg) / len(zi_Jg)
+            if len(zi_Jg):
+                SumTerm += self.weights[n] * sum(zi_Jg) / len(zi_Jg)
 
+        SumTerm = max (SumTerm, 1e-10)  # avoid division by zero in log10
         GatedLoudness = -0.691 + 10 * np.log10(SumTerm)
 
         # Output result
