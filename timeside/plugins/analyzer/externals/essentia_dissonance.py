@@ -86,7 +86,7 @@ class Essentia_Dissonance(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Dissonace from Essentia"
+        return "Dissonance from Essentia"
 
     @staticmethod
     @interfacedoc
