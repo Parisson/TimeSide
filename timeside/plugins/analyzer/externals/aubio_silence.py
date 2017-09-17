@@ -92,3 +92,13 @@ class AubioSilence(Analyzer):
         silence.data_object.merge_segment()
 
         self.add_result(silence)
+
+# Generate Grapher
+from timeside.core.grapher import DisplayAnalyzer
+
+DisplayAubioSilence = DisplayAnalyzer.create(
+    analyzer=AubioSilence,
+    result_id='aubio_silence',
+    grapher_id='grapher_aubio_silence',
+    grapher_name='Aubio Silence',
+    staging=False)
