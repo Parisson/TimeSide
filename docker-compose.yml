@@ -21,22 +21,22 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-data:
+var:
   image: debian:jessie
   volumes:
-     - ./data/media/:/srv/media
-     - ./data/backup/:/srv/backup
-     - /srv/static
+     - ./bin:/srv/bin
+     - ./var/media:/srv/media
+     - ./var/backup:/srv/backup
+     - ./var/static:/srv/static
      - /srv/bower
   command: "true"
 
 db:
   image: mysql
   volumes:
-    - ./scripts/:/srv/scripts
-    - ./data/mysql/:/var/lib/mysql
+    - ./var/lib/mysql:/var/lib/mysql
   volumes_from:
-    - data
+    - var
   env_file:
     - env/prod.env
 
@@ -46,30 +46,28 @@ broker:
 app:
   build: .
   volumes:
-    - ./app/:/srv/app
+    - ./app:/srv/app
     - .:/srv/src/timeside
   volumes_from:
-    - data
+    - var
   env_file:
     - env/prod.env
   links:
     - broker
     - db
-  command: /bin/bash /srv/app/scripts/app.sh
+  command: /bin/bash /srv/app/bin/app.sh
 
 worker:
   build: .
-  volumes:
-    - .:/srv/src/timeside
   volumes_from:
-    - data
+    - var
     - app
   env_file:
     - env/prod.env
   links:
     - broker
     - db
-  command: /bin/bash /srv/app/scripts/worker.sh
+  command: /bin/bash /srv/app/bin/worker.sh
 
 nginx:
   image: nginx
@@ -79,6 +77,6 @@ nginx:
     - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
   volumes_from:
     - app
-    - data
+    - var
   links:
     - app

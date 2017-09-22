@@ -12,14 +12,6 @@ python $manage bower_install -- --allow-root
 python $manage timeside-create-admin-user
 python $manage timeside-create-boilerplate
 
-# fix media access rights
-chown www-data:www-data $media
-for dir in $(ls $media); do
-    if [ ! $(stat -c %U $media/$dir) = 'www-data' ]; then
-        chown www-data:www-data $media/$dir
-    fi
-done
-
 if [ $DEBUG = "False" ]; then
     python $manage update_index --workers $processes &
 fi
@@ -31,6 +23,9 @@ then
 else
     # static files auto update
     python $manage collectstatic --noinput -i *node_modules*
+
+    # fix media access rights
+    find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user www-data -exec chown www-data:www-data {} \;
 
     # watchmedo shell-command --patterns="*.js;*.css" --recursive \
     #     --command='python '$manage' collectstatic --noinput' $src &
