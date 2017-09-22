@@ -44,10 +44,10 @@ broker:
   image: redis
 
 app:
-  image: parisson/timeside:latest
+  build: .
   volumes:
     - ./app/:/srv/app
-    - ./timeside/:/srv/src/timeside/timeside
+    - .:/srv/src/timeside
   volumes_from:
     - data
   env_file:
@@ -58,9 +58,9 @@ app:
   command: /bin/bash /srv/app/scripts/app.sh
 
 worker:
-  image: parisson/timeside:latest
+  build: .
   volumes:
-    - ./timeside/:/srv/src/timeside/timeside
+    - .:/srv/src/timeside
   volumes_from:
     - data
     - app
