@@ -1,58 +1,184 @@
 name: app
-channels: !!python/tuple
-- !!python/unicode
-  'defaults'
-- !!python/unicode
-  'conda-forge'
-- !!python/unicode
-  'yaafe'
+channels:
+- defaults
+- conda-forge
+- thomasfillon
 dependencies:
-- conda-forge::argtable2=2.13=1
-- conda-forge::audioread=2.1.4=py27_2
-- conda-forge::blas=1.1=openblas
-- conda-forge::bzip2=1.0.6=1
-- conda-forge::ca-certificates=2017.7.27.1=0
-- conda-forge::eigen=3.3.3=0
-- conda-forge::ffmpeg=2.8.6=5
-- conda-forge::fftw=3.3.6=3
-- conda-forge::freetype=2.7=1
-- conda-forge::gettext=0.19.7=1
-- conda-forge::glib=2.51.4=0
-- conda-forge::gmp=6.1.2=0
-- conda-forge::graphite2=1.3.9=0
-- conda-forge::hdf5=1.8.18=1
-- conda-forge::icu=58.1=1
-- conda-forge::jpeg=9b=0
-- conda-forge::lapack=3.6.1=1
-- conda-forge::libffi=3.2.1=3
-- conda-forge::libflac=1.3.1=0
-- conda-forge::libiconv=1.14=4
-- conda-forge::libogg=1.3.2=0
-- conda-forge::libpng=1.6.28=1
-- conda-forge::libsndfile=1.0.27=1
-- conda-forge::libsodium=1.0.10=0
-- conda-forge::libtiff=4.0.6=7
-- conda-forge::libvorbis=1.3.5=0
-- conda-forge::libxml2=2.9.5=0
-- conda-forge::mpg123=1.24.0=1
-- conda-forge::ncurses=5.9=10
-- conda-forge::openblas=0.2.19=2
-- conda-forge::openssl=1.0.2l=0
-- conda-forge::pandoc=1.19.2=0
-- conda-forge::pcre=8.39=0
-- conda-forge::pixman=0.34.0=0
-- conda-forge::python=2.7.13=1
-- conda-forge::readline=6.2=0
-- conda-forge::sqlite=3.13.0=1
-- conda-forge::tk=8.5.19=2
-- conda-forge::x264=20131217=3
-- conda-forge::xz=5.2.3=0
-- conda-forge::yaml=0.1.6=0
-- conda-forge::zeromq=4.2.1=1
-- conda-forge::zlib=1.2.8=3
+- argtable2=2.13=1
+- aubio=0.4.5=np112py27_2
+- audioread=2.1.4=py27_2
+- backports.shutil_get_terminal_size=1.0.0=py_2
+- backports.weakref=1.0rc1=py27_0
+- backports_abc=0.5=py27_0
+- blas=1.1=openblas
+- bleach=1.5.0=py27_0
+- bzip2=1.0.6=1
+- ca-certificates=2017.7.27.1=0
+- certifi=2017.7.27.1=py27_0
+- configparser=3.5.0=py27_0
+- cycler=0.10.0=py27_0
+- dbus=1.10.22=0
+- decorator=4.1.2=py27_0
+- eigen=3.3.3=0
+- entrypoints=0.2.3=py27_1
+- enum34=1.1.6=py27_1
+- expat=2.2.1=0
+- ffmpeg=2.8.6=5
+- fftw=3.3.6=3
+- fontconfig=2.12.1=4
+- freetype=2.7=1
+- funcsigs=1.0.2=py_2
+- functools32=3.2.3.2=py27_1
+- gettext=0.19.7=1
+- glib=2.53.5=0
+- gmp=6.1.2=0
+- gst-plugins-base=1.8.0=0
+- gstreamer=1.8.0=1
+- h5py=2.7.1=py27_1
+- hdf5=1.8.18=1
+- html5lib=0.9999999=py27_0
+- icu=58.1=1
+- ipykernel=4.6.1=py27_0
+- ipython=5.5.0=py27_0
+- ipython_genutils=0.2.0=py27_0
+- ipywidgets=7.0.1=py_2
+- jinja2=2.9.6=py27_0
+- joblib=0.11=py27_0
+- jpeg=9b=0
+- jsonschema=2.6.0=py27_0
+- jupyter=1.0.0=py27_0
+- jupyter_client=5.1.0=py27_0
+- jupyter_console=5.1.0=py27_0
+- jupyter_core=4.3.0=py27_0
+- lapack=3.6.1=1
+- libffi=3.2.1=3
+- libflac=1.3.1=0
+- libiconv=1.14=4
+- libogg=1.3.2=0
+- libpng=1.6.28=1
+- librosa=0.5.1=py27_1
+- libsndfile=1.0.27=1
+- libsodium=1.0.10=0
+- libtiff=4.0.6=7
+- libvorbis=1.3.5=0
+- libxcb=1.12=1
+- libxml2=2.9.5=0
+- markupsafe=1.0=py27_0
+- matplotlib=2.0.2=py27_2
+- mistune=0.7.4=py27_0
+- mock=2.0.0=py27_0
+- mpg123=1.24.0=1
+- nbconvert=5.3.1=py_1
+- nbformat=4.4.0=py27_0
+- ncurses=5.9=10
+- networkx=2.0=py27_0
+- notebook=5.1.0=py27_0
+- numexpr=2.6.4=py27_0
+- numpy=1.12.1=py27_blas_openblas_200
+- olefile=0.44=py27_0
+- openblas=0.2.19=2
+- openssl=1.0.2l=0
+- pandas=0.20.3=py27_1
+- pandoc=1.19.2=0
+- pandocfilters=1.4.1=py27_0
+- pathlib2=2.3.0=py27_0
+- pbr=3.1.1=py27_0
+- pcre=8.39=0
+- pexpect=4.2.1=py27_0
+- pickleshare=0.7.4=py27_0
+- pillow=4.2.1=py27_1
+- pip=9.0.1=py27_0
+- prompt_toolkit=1.0.15=py27_0
+- protobuf=3.4.0=py27_0
+- ptyprocess=0.5.2=py27_0
+- pygments=2.2.0=py27_0
+- pyparsing=2.2.0=py27_0
+- pyqt=5.6.0=py27_4
+- pytables=3.4.2=np112py27_1
+- python=2.7.13=1
+- python-dateutil=2.6.1=py27_0
+- pytz=2017.2=py27_0
+- pyyaml=3.12=py27_1
+- pyzmq=16.0.2=py27_2
+- qt=5.6.2=3
+- qtconsole=4.3.1=py27_0
+- readline=6.2=0
+- resampy=0.2.0=py27_0
+- scandir=1.5=py27_1
+- scikit-learn=0.19.0=py27_blas_openblas_201
+- scipy=0.19.1=py27_blas_openblas_202
+- setuptools=36.3.0=py27_0
+- simplegeneric=0.8.1=py27_0
+- simplejson=3.11.1=py27_0
+- singledispatch=3.4.0.3=py27_0
+- sip=4.18=py27_1
+- six=1.11.0=py27_1
+- sqlite=3.13.0=1
+- ssl_match_hostname=3.5.0.1=py27_1
+- subprocess32=3.2.7=py27_0
+- tensorflow=1.3.0=py27_0
+- terminado=0.6=py27_0
+- testpath=0.3.1=py27_0
+- tk=8.5.19=2
+- tornado=4.5.2=py27_0
+- traitlets=4.3.2=py27_0
+- traits=4.6.0=py27_1
+- wcwidth=0.1.7=py27_0
+- webencodings=0.5=py27_0
+- werkzeug=0.12.2=py_1
+- wheel=0.30.0=py_1
+- widgetsnbextension=3.0.3=py27_0
+- x264=20131217=3
+- xorg-libxau=1.0.8=3
+- xorg-libxdmcp=1.1.2=3
+- xz=5.2.3=0
+- yaafe=0.70=py27_2
+- yaml=0.1.6=0
+- zeromq=4.2.1=1
+- zlib=1.2.8=3
 - gdbm=1.12=0
 - libgcc=5.2.0=0
 - libgfortran=3.0.0=1
+- llvmlite=0.20.0=py27_0
 - lzo=2.06=0
+- markdown=2.6.9=py27_0
+- mysql-python=1.2.5=py27_0
+- numba=0.35.0=np112py27_0
 - redis=3.2.0=0
+- essentia=2.1_beta4=py27hf6fdc9d_2
+- pip:
+  - amqp==1.4.9
+  - anyjson==0.3.3
+  - argh==0.26.2
+  - backports-abc==0.5
+  - backports.shutil-get-terminal-size==1.0.0
+  - backports.ssl-match-hostname==3.5.0.1
+  - billiard==3.3.0.23
+  - celery==3.1.25
+  - django==1.9.13
+  - django-bootstrap-pagination==1.6.2
+  - django-bootstrap3==9.0.0
+  - django-bower==5.2.0
+  - django-celery==3.2.1
+  - django-cors-headers==2.1.0
+  - django-debug-toolbar==1.8
+  - django-environ==0.4.4
+  - django-extensions==1.9.1
+  - djangorestframework==3.6.4
+  - ipython-genutils==0.2.0
+  - jsonfield==2.0.2
+  - jupyter-client==5.1.0
+  - jupyter-console==5.1.0
+  - jupyter-core==4.3.0
+  - kombu==3.0.37
+  - mutagen==1.38
+  - pathtools==0.1.2
+  - prompt-toolkit==1.0.15
+  - py-sonicvisualiser==0.3
+  - pympi-ling==1.69
+  - sqlparse==0.2.3
+  - tables==3.4.2
+  - uwsgi==2.0.15
+  - vamp==1.1.0
+  - watchdog==0.8.3
 prefix: /opt/miniconda/envs/app

@@ -94,7 +94,7 @@ setup(
     packages=['timeside'],
     include_package_data=True,
     zip_safe=False,
-    scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
+    scripts=['bin/timeside-waveforms', 'bin/timeside-launch'],
     tests_require=['pytest>=3', 'pytest-django'],
     cmdclass={'test': PyTest},
 )

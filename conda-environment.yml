@@ -25,6 +25,7 @@ dependencies:
   - yaafe  # in conda-forge channel (optionnal)
   - essentia
   - librosa
+  - tensorflow
   - pip:
       - celery==3.*
       - django-bootstrap-pagination
