@@ -45,7 +45,7 @@ dependencies:
 - jinja2=2.9.6=py27_0
 - joblib=0.11=py27_0
 - jpeg=9b=0
-- jsonschema=2.6.0=py27_0
+- jsonschema=2.5.1=py27_0
 - jupyter=1.0.0=py27_0
 - jupyter_client=5.1.0=py27_0
 - jupyter_console=5.1.0=py27_0

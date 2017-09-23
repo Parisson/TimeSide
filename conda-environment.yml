@@ -5,7 +5,7 @@ channels:
 dependencies:
   - aubio  # in conda-forge channel (optionnal)
   - h5py
-  - jsonschema
+  - jsonschema < 2.6
   - jupyter
   - matplotlib
   - mysql-python
