@@ -11,9 +11,9 @@ echo ' timeside-launch '
 echo '-----------------------------------------------------'
 
 timeside-launch -h
-timeside-launch -C scripts/presets/draw_waveform_contour_white.ts $WAVFILE -o $TEMPDIR -R 'json','yaml','xml','hdf5' -v
-timeside-launch -C scripts/presets/transcode_media.ts $WAVFILE -o $TEMPDIR -R 'json','yaml','xml','hdf5' -v
-timeside-launch -C scripts/presets/extract_aubio_bpm.ts $WAVFILE -o $TEMPDIR -R 'json','yaml','xml','hdf5' -v
+timeside-launch -C bin/presets/draw_waveform_contour_white.ts $WAVFILE -o $TEMPDIR -R 'json','yaml','xml','hdf5' -v
+timeside-launch -C bin/presets/transcode_media.ts $WAVFILE -o $TEMPDIR -R 'json','yaml','xml','hdf5' -v
+timeside-launch -C bin/presets/extract_aubio_bpm.ts $WAVFILE -o $TEMPDIR -R 'json','yaml','xml','hdf5' -v
 
 echo '-----------------------------------------------------'
 echo ' timeside-waveforms ' 
