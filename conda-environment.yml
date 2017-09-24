@@ -9,7 +9,7 @@ dependencies:
   - jupyter
   - matplotlib
   - mysql-python
-  - networkx
+  - networkx<2.0
   - numpy
   - pandas
   - pillow
