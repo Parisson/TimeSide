@@ -34,6 +34,7 @@ COPY environment-pinned.yml /srv/src/timeside/
 RUN conda update conda &&\
     conda config --append channels conda-forge --append channels thomasfillon &&\
     conda env update --name root --file environment-pinned.yml &&\
+    pip install -U --force-reinstall functools32 &&\              
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
