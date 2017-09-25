@@ -4,5 +4,5 @@ pip install -e git+git://github.com/michaeljones/sphinx-to-github.git#egg=sphinx
 
 make install_deps
 make html
-make publish
+make gh-pages
 make readme
