@@ -4,9 +4,12 @@ channels:
 - conda-forge
 - thomasfillon
 dependencies:
+- alabaster=0.7.10=py27_1
 - argtable2=2.13=1
+- asn1crypto=0.22.0=py27_0
 - aubio=0.4.5=np112py27_2
 - audioread=2.1.4=py27_2
+- babel=2.4.0=py27_0
 - backports.shutil_get_terminal_size=1.0.0=py_2
 - backports.weakref=1.0rc1=py27_0
 - backports_abc=0.5=py27_0
@@ -15,10 +18,14 @@ dependencies:
 - bzip2=1.0.6=1
 - ca-certificates=2017.7.27.1=0
 - certifi=2017.7.27.1=py27_0
+- cffi=1.10.0=py27_0
+- chardet=3.0.4=py27_0
 - configparser=3.5.0=py27_0
+- cryptography=2.0.3=py27_0
 - cycler=0.10.0=py27_0
 - dbus=1.10.22=0
 - decorator=4.1.2=py27_0
+- docutils=0.14=py27_0
 - eigen=3.3.3=0
 - entrypoints=0.2.3=py27_1
 - enum34=1.1.6=py27_1
@@ -38,6 +45,9 @@ dependencies:
 - hdf5=1.8.18=1
 - html5lib=0.9999999=py27_0
 - icu=58.1=1
+- idna=2.5=py27_0
+- imagesize=0.7.1=py27_0
+- ipaddress=1.0.18=py27_0
 - ipykernel=4.6.1=py27_0
 - ipython=5.5.0=py27_0
 - ipython_genutils=0.2.0=py27_0
@@ -91,9 +101,12 @@ dependencies:
 - prompt_toolkit=1.0.15=py27_0
 - protobuf=3.4.0=py27_0
 - ptyprocess=0.5.2=py27_0
+- pycparser=2.18=py27_0
 - pygments=2.2.0=py27_0
+- pyopenssl=17.2.0=py27_0
 - pyparsing=2.2.0=py27_0
 - pyqt=5.6.0=py27_4
+- pysocks=1.6.7=py27_0
 - pytables=3.4.2=np112py27_1
 - python=2.7.13=1
 - python-dateutil=2.6.1=py27_0
@@ -103,6 +116,7 @@ dependencies:
 - qt=5.6.2=3
 - qtconsole=4.3.1=py27_0
 - readline=6.2=0
+- requests=2.18.4=py27_1
 - resampy=0.2.0=py27_0
 - scandir=1.5=py27_1
 - scikit-learn=0.19.0=py27_blas_openblas_201
@@ -113,6 +127,9 @@ dependencies:
 - singledispatch=3.4.0.3=py27_0
 - sip=4.18=py27_1
 - six=1.11.0=py27_1
+- snowballstemmer=1.2.1=py27_0
+- sphinx=1.6.3=py27_0
+- sphinxcontrib-websupport=1.0.1=py27_0
 - sqlite=3.13.0=1
 - ssl_match_hostname=3.5.0.1=py27_1
 - subprocess32=3.2.7=py27_0
@@ -123,6 +140,8 @@ dependencies:
 - tornado=4.5.2=py27_0
 - traitlets=4.3.2=py27_0
 - traits=4.6.0=py27_1
+- typing=3.6.2=py27_0
+- urllib3=1.22=py27_0
 - wcwidth=0.1.7=py27_0
 - webencodings=0.5=py27_0
 - werkzeug=0.12.2=py_1
@@ -166,6 +185,7 @@ dependencies:
   - django-environ==0.4.4
   - django-extensions==1.9.1
   - djangorestframework==3.6.4
+  - ghp-import==0.5.5
   - ipython-genutils==0.2.0
   - jsonfield==2.0.2
   - jupyter-client==5.1.0
@@ -177,6 +197,7 @@ dependencies:
   - prompt-toolkit==1.0.15
   - py-sonicvisualiser==0.3
   - pympi-ling==1.69
+  - sphinx-rtd-theme==0.2.4
   - sqlparse==0.2.3
   - tables==3.4.2
   - uwsgi==2.0.15

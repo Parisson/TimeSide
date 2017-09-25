@@ -18,5 +18,5 @@ recursive-exclude dist *
 recursive-exclude build *
 recursive-exclude tests/samples *
 recursive-exclude tests/results *
-recursive-exclude doc/build *
+recursive-exclude docs/build *
 global-exclude *.pyc

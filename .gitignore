@@ -5,7 +5,7 @@
 *.swp
 *.egg-info
 *.log
-build
+*.log
 dist
 sdist
 .tags/
