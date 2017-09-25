@@ -13,11 +13,10 @@ from jsonschema import Draft4Validator
 class TestAnalyzers_parameters(unittest.TestCase):
     """Test analyzer parameters and schema specification"""
 
-    def _perform_test(self, analyzer_cls):
+    def _perform_test(self, analyzer_cls, source_file):
         """Internal function that test analyzer schema and default parameters"""
 
         analyzer = analyzer_cls()
-
         self.assertEqual(analyzer.get_parameters(),
                          analyzer.get_parameters_default_from_argspec())
 
@@ -71,6 +70,7 @@ skip_reasons = {}
 _tests_factory(test_class=TestAnalyzers_parameters,
                test_doc="Test analyzer %s schema and default parameters",
                list_analyzers=timeside.core.processor.processors(timeside.core.api.IAnalyzer),
+               sources={'mono': samples["C4_scale.wav"]},
                skip_reasons=skip_reasons)
 
 
