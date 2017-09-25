@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeside.plugins.encoder.m4a &mdash; TimeSide 0.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../../../copyright.html"/>
+    <link rel="top" title="TimeSide 0.8 documentation" href="../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../index.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../processors.html">Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>timeside.plugins.encoder.m4a</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for timeside.plugins.encoder.m4a</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2010 Paul Brossier &lt;piem@piem.org&gt;</span>
+<span class="c1"># Copyright (c) 2010 Guillaume Pellerin &lt;yomguy@parisson.com&gt;</span>
+
+<span class="c1"># This file is part of TimeSide.</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">implements</span><span class="p">,</span> <span class="n">interfacedoc</span>
+<span class="kn">from</span> <span class="nn">timeside.core.encoder</span> <span class="k">import</span> <span class="n">GstEncoder</span>
+<span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IEncoder</span>
+
+
+<div class="viewcode-block" id="AacEncoder"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder">[docs]</a><span class="k">class</span> <span class="nc">AacEncoder</span><span class="p">(</span><span class="n">GstEncoder</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;AAC encoder based on Gstreamer&quot;&quot;&quot;</span>
+
+    <span class="n">implements</span><span class="p">(</span><span class="n">IEncoder</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AacEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">streaming</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Streaming not supported&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AacEncoder.setup"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder.setup">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">totalframes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AacEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+            <span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">blocksize</span><span class="p">,</span> <span class="n">totalframes</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39; appsrc name=src</span>
+<span class="s1">            ! audioconvert</span>
+<span class="s1">            ! voaacenc</span>
+<span class="s1">            ! mp4mux</span>
+<span class="s1">            &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;&#39;&#39; ! tee name=t</span>
+<span class="s1">            ! queue ! filesink location=</span><span class="si">%s</span><span class="s1"></span>
+<span class="s1">            t. ! queue ! appsink name=app sync=False</span>
+<span class="s1">            &#39;&#39;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;! filesink location=</span><span class="si">%s</span><span class="s1"> async=False sync=False &#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;! queue ! appsink name=app sync=False &#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_pipeline</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AacEncoder.id"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;aac_encoder&quot;</span></div>
+
+<div class="viewcode-block" id="AacEncoder.format"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder.format">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;AAC&quot;</span></div>
+
+<div class="viewcode-block" id="AacEncoder.file_extension"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder.file_extension">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">file_extension</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;m4a&quot;</span></div>
+
+<div class="viewcode-block" id="AacEncoder.mime_type"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder.mime_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">mime_type</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;audio/x-m4a&quot;</span></div>
+
+<div class="viewcode-block" id="AacEncoder.set_metadata"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.m4a.AacEncoder.set_metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">set_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'0.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeside.plugins.analyzer.externals.aubio_pitch &mdash; TimeSide 0.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../../../../copyright.html"/>
+    <link rel="top" title="TimeSide 0.8 documentation" href="../../../../../index.html"/>
+        <link rel="up" title="Module code" href="../../../../index.html"/> 
+
+  
+  <script src="../../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../processors.html">Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>timeside.plugins.analyzer.externals.aubio_pitch</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for timeside.plugins.analyzer.externals.aubio_pitch</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2013 Paul Brossier &lt;piem@piem.org&gt;</span>
+
+<span class="c1"># This file is part of TimeSide.</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Authors:</span>
+<span class="c1">#  Paul Brossier &lt;piem@piem.org&gt;</span>
+<span class="c1">#  Thomas Fillon &lt;thomas@parisson.com&gt;</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">implements</span><span class="p">,</span> <span class="n">interfacedoc</span>
+<span class="kn">from</span> <span class="nn">timeside.core.analyzer</span> <span class="k">import</span> <span class="n">Analyzer</span>
+<span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IAnalyzer</span>
+<span class="kn">from</span> <span class="nn">timeside.core.preprocessors</span> <span class="k">import</span> <span class="n">downmix_to_mono</span><span class="p">,</span> <span class="n">frames_adapter</span>
+<span class="kn">from</span> <span class="nn">aubio</span> <span class="k">import</span> <span class="n">pitch</span> <span class="k">as</span> <span class="n">aubio_pitch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">timeside.plugins.analyzer.utils</span> <span class="k">import</span> <span class="n">nextpow2</span>
+
+<span class="kn">from</span> <span class="nn">timeside.core.tools.parameters</span> <span class="k">import</span> <span class="n">store_parameters</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span>
+
+
+<div class="viewcode-block" id="AubioPitch"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch">[docs]</a><span class="k">class</span> <span class="nc">AubioPitch</span><span class="p">(</span><span class="n">Analyzer</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Aubio Pitch estimation analyzer&quot;&quot;&quot;</span>
+    <span class="n">implements</span><span class="p">(</span><span class="n">IAnalyzer</span><span class="p">)</span>  <span class="c1"># TODO check if needed with inheritance</span>
+
+    <span class="c1"># Define Parameters</span>
+    <span class="k">class</span> <span class="nc">_Param</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+        <span class="n">blocksize_s</span> <span class="o">=</span> <span class="n">Float</span>
+        <span class="n">stepsize_s</span> <span class="o">=</span> <span class="n">Float</span>
+
+    <span class="n">_schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;$schema&#39;</span><span class="p">:</span> <span class="s1">&#39;http://json-schema.org/schema#&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;blocksize_s&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">2048</span> <span class="o">/</span> <span class="mf">44100.</span><span class="p">,</span>
+                                              <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
+                              <span class="s1">&#39;stepsize_s&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mf">44100.</span><span class="p">,</span>
+                                             <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">}},</span>
+               <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">}</span>
+
+    <span class="nd">@store_parameters</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocksize_s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stepsize_s</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">AubioPitch</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_blocksize_s</span> <span class="o">=</span> <span class="n">blocksize_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stepsize_s</span> <span class="o">=</span> <span class="n">stepsize_s</span>
+
+        <span class="c1"># Aubio Pitch Initialisation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aubio_pitch</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_read</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pitches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_confidences</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="AubioPitch.setup"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.setup">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">totalframes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Frame parameters setup</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_blocksize_s</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_blocksize</span> <span class="o">=</span> <span class="n">nextpow2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_blocksize_s</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_blocksize</span> <span class="o">=</span> <span class="mi">2048</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stepsize_s</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_stepsize</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stepsize_s</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_stepsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_blocksize</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="c1"># Now that frames size metadata are properly set, we can do the set-up</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AubioPitch</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span>
+                                      <span class="n">samplerate</span><span class="p">,</span>
+                                      <span class="n">blocksize</span><span class="p">,</span>
+                                      <span class="n">totalframes</span><span class="p">)</span>
+
+        <span class="c1"># Aubio Pitch set-up</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aubio_pitch</span> <span class="o">=</span> <span class="n">aubio_pitch</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_blocksize</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">input_stepsize</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aubio_pitch</span><span class="o">.</span><span class="n">set_unit</span><span class="p">(</span><span class="s2">&quot;freq&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AubioPitch.id"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;aubio_pitch&quot;</span></div>
+
+<div class="viewcode-block" id="AubioPitch.name"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.name">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;f0 (aubio)&quot;</span></div>
+
+<div class="viewcode-block" id="AubioPitch.unit"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.unit">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">unit</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;Hz&quot;</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;pitch values&quot;</span>
+
+<div class="viewcode-block" id="AubioPitch.process"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.process">[docs]</a>    <span class="nd">@downmix_to_mono</span>
+    <span class="nd">@frames_adapter</span>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="c1">#time = self.block_read * self.input_stepsize * 1. / self.samplerate()</span>
+
+        <span class="c1"># WARNING : All Aubio analyzer process functions manages frames reconstruction by themself</span>
+        <span class="c1">#           from small stepsize input blocksize</span>
+        <span class="c1">#           i.e. Aubio process functions should receive non overlapping input blocksize</span>
+        <span class="c1">#           of length stepsize.</span>
+        <span class="c1">#           This is achieve through  @frames_adapter that handles Aubio Analyzer specifically (blocksize=stepsize).</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pitches</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">aubio_pitch</span><span class="p">(</span><span class="n">frames</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pitch_confidences</span> <span class="o">+=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">aubio_pitch</span><span class="o">.</span><span class="n">get_confidence</span><span class="p">()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_read</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span></div>
+
+<div class="viewcode-block" id="AubioPitch.post_process"><a class="viewcode-back" href="../../../../../api/analyzer/ext_analyzers.html#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pitch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_result</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;framewise&#39;</span><span class="p">)</span>
+
+        <span class="c1"># parameters : None # TODO check with Piem &quot;default&quot; and &quot;freq&quot; in</span>
+        <span class="c1"># setup</span>
+
+        <span class="n">pitch</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">id</span> <span class="o">+=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="s2">&quot;pitch&quot;</span>
+        <span class="n">pitch</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s2">&quot;pitch&quot;</span>
+        <span class="n">pitch</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="s2">&quot;Hz&quot;</span>
+        <span class="n">pitch</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitches</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_result</span><span class="p">(</span><span class="n">pitch</span><span class="p">)</span>
+
+        <span class="n">pitch_confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_result</span><span class="p">(</span>
+            <span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;framewise&#39;</span><span class="p">)</span>
+        <span class="n">pitch_confidence</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">id</span> <span class="o">+=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="s2">&quot;pitch_confidence&quot;</span>
+        <span class="n">pitch_confidence</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s2">&quot;pitch confidence&quot;</span>
+        <span class="n">pitch_confidence</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">pitch_confidence</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch_confidences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_result</span><span class="p">(</span><span class="n">pitch_confidence</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># Generate Grapher for Aubio Pitch analyzer</span>
+<span class="kn">from</span> <span class="nn">timeside.core.grapher</span> <span class="k">import</span> <span class="n">DisplayAnalyzer</span>
+<span class="n">DisplayAubioPitch</span> <span class="o">=</span> <span class="n">DisplayAnalyzer</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">analyzer</span><span class="o">=</span><span class="n">AubioPitch</span><span class="p">,</span>
+    <span class="n">result_id</span><span class="o">=</span><span class="s1">&#39;aubio_pitch.pitch&#39;</span><span class="p">,</span>
+    <span class="n">grapher_id</span><span class="o">=</span><span class="s1">&#39;grapher_aubio_pitch&#39;</span><span class="p">,</span>
+    <span class="n">grapher_name</span><span class="o">=</span><span class="s1">&#39;Pitch&#39;</span><span class="p">,</span>
+    <span class="n">background</span><span class="o">=</span><span class="s1">&#39;spectrogram&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../../',
+            VERSION:'0.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

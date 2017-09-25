@@ -1,0 +1,1566 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeside.core.analyzer &mdash; TimeSide 0.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../../copyright.html"/>
+    <link rel="top" title="TimeSide 0.8 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../processors.html">Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>timeside.core.analyzer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for timeside.core.analyzer</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2007-2013 Parisson SARL</span>
+
+<span class="c1"># This file is part of TimeSide.</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Authors:</span>
+<span class="c1">#   Guillaume Pellerin &lt;yomguy at parisson.com&gt;</span>
+<span class="c1">#   Paul Brossier &lt;piem@piem.org&gt;</span>
+<span class="c1">#   Thomas Fillon &lt;thomas  at parisson.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">from</span> <span class="nn">.processor</span> <span class="k">import</span> <span class="n">Processor</span>
+<span class="kn">from</span> <span class="nn">.tools</span> <span class="k">import</span> <span class="n">hdf5</span>
+
+<span class="kn">import</span> <span class="nn">timeside</span>  <span class="c1"># import __version__</span>
+<span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">implements</span><span class="p">,</span> <span class="n">abstract</span>
+<span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IAnalyzer</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">simplejson</span> <span class="k">as</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">if</span> <span class="s1">&#39;DISPLAY&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="k">import</span> <span class="n">FigureCanvasAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">from</span> <span class="nn">py_sonicvisualiser</span> <span class="k">import</span> <span class="n">SVEnv</span>
+
+<span class="n">numpy_data_types</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1">#&#39;float128&#39;,</span>
+    <span class="s1">&#39;float64&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;float32&#39;</span><span class="p">,</span>
+    <span class="c1">#&#39;float16&#39;, Not supported by h5py for version &lt; 2.2</span>
+    <span class="s1">&#39;int64&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;int16&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;int32&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;int8&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;uint64&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;uint32&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;uint16&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;uint8&#39;</span><span class="p">,</span>
+    <span class="c1">#&#39;unicode_&#39;, Strings should be handled through label_metadata</span>
+    <span class="c1">#&#39;string_&#39;,</span>
+    <span class="s1">&#39;object_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;longlong&#39;</span><span class="p">,</span>
+    <span class="c1">#&#39;timedelta64&#39;,</span>
+    <span class="c1">#&#39;datetime64&#39;,</span>
+    <span class="c1">#&#39;complex128&#39;,</span>
+    <span class="c1">#&#39;complex64&#39;,</span>
+<span class="p">]</span>
+<span class="n">numpy_data_types</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">numpy_data_types</span><span class="p">)</span>
+<span class="c1"># numpy_data_types += [np.ndarray]</span>
+
+
+<span class="k">class</span> <span class="nc">Parameters</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">to_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Metadata&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_string</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="kn">import</span> <span class="nn">ast</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">xml_string</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+        <span class="n">hdf5</span><span class="o">.</span><span class="n">dict_to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+        <span class="n">hdf5</span><span class="o">.</span><span class="n">dict_from_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dict_obj</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dict_obj</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+
+<span class="k">class</span> <span class="nc">MetadataObject</span><span class="p">(</span><span class="n">Parameters</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object that contains a metadata structure</span>
+<span class="sd">    stucture inspired by [1]</span>
+<span class="sd">    [1] : http://www.saltycrane.com/blog/2012/08/python-data-object-motivated-desire-mutable-namedtuple-default-values/</span>
+
+<span class="sd">    Metadata</span>
+<span class="sd">    ----------</span>
+
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    as_dict()</span>
+<span class="sd">        Return a dictionnary representation of the MetadataObject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Define default values as an OrderDict</span>
+    <span class="c1"># in order to keep the order of the keys for display</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Construct an Metadata object</span>
+<span class="sd">        Abstract Class _default_value must be specified by</span>
+
+<span class="sd">        Metadata()</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Metadata</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Set Default values</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Set metadata passed in as arguments</span>
+        <span class="c1"># for k, v in zip(self._default_value.keys(), args):</span>
+        <span class="c1">#    setattr(self, k, v)</span>
+        <span class="c1">#    print &#39;args&#39;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a valid attribute in </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                                 <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span>
+
+    <span class="k">def</span> <span class="nf">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">new_default_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">new_default_value</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="s1">&#39;_default_value&#39;</span><span class="p">,</span>
+                                                    <span class="n">new_default_value</span><span class="p">)</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__delattr__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">att</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">att</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_value</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">attr</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">attr</span><span class="p">])</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">att</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">att</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">other</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+                   <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+
+
+<span class="k">class</span> <span class="nc">IdMetadata</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Metadata object to handle ID related Metadata</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id : str</span>
+<span class="sd">        name : str</span>
+<span class="sd">        unit : str</span>
+<span class="sd">        description : str</span>
+<span class="sd">        date : str</span>
+<span class="sd">            date and time in ISO  8601 format YYYY-MM-DDTHH:MM:SS</span>
+<span class="sd">        version : str</span>
+<span class="sd">        author : str</span>
+<span class="sd">        proc_uuid : str</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;proc_uuid&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">IdMetadata</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">AudioMetadata</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Metadata object to handle Identification Metadata</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        uri : str</span>
+<span class="sd">        start : float</span>
+<span class="sd">            Start time of the segment in seconds</span>
+<span class="sd">        duration : float</span>
+<span class="sd">            Duration of the segment in seconds</span>
+<span class="sd">        is_segment : boolean</span>
+<span class="sd">            Is the media a segment of an audio source</span>
+<span class="sd">        sha1 : str</span>
+<span class="sd">            Sha1 hexadecimal digest of the audio source</span>
+<span class="sd">        channels : int</span>
+<span class="sd">            Number of channels</span>
+<span class="sd">        channelsManagement : str</span>
+<span class="sd">            A string that indicates how the channels are manage</span>
+<span class="sd">            Examples :</span>
+<span class="sd">                channelsManagement = &#39;(L+R)/2&#39;</span>
+<span class="sd">                channelsManagement = &#39;R&#39; keep only right channel</span>
+<span class="sd">                channelsManagement = &#39;L&#39; keep only left channel</span>
+<span class="sd">                channelsManagement = &#39;stereo&#39; keep both stereo channels</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;is_segment&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;channels&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;channelsManagement&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)])</span>
+
+
+<span class="k">class</span> <span class="nc">LabelMetadata</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Metadata object to handle Label Metadata</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : dict</span>
+<span class="sd">            A dictionnary that contains :</span>
+<span class="sd">                - label id has keys and</span>
+<span class="sd">                - label names has values</span>
+
+<span class="sd">        description : dict</span>
+<span class="sd">            A dictionnary that contains :</span>
+<span class="sd">                - label id has keys and</span>
+<span class="sd">                - label descriptions has values</span>
+
+<span class="sd">        label_type : str</span>
+<span class="sd">            = &#39;mono&#39; or &#39;multi&#39;</span>
+<span class="sd">            &#39;mono&#39; or &#39;multi&#39; enable to specify the label mode :</span>
+<span class="sd">            - &#39;mono&#39;  : mono-label (only 1 label at a time)</span>
+<span class="sd">            - &#39;multi&#39; : multi-label (several labels can be observe</span>
+<span class="sd">                        at the same time)</span>
+
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;label_type&#39;</span><span class="p">,</span> <span class="s1">&#39;mono&#39;</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save a dictionnary-like object inside a h5 file group</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Write attributes</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;label_type&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">h5group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">]:</span>
+            <span class="n">subgroup</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">hdf5</span><span class="o">.</span><span class="n">dict_to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">subgroup</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;label_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;label_type&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">subgroup_name</span><span class="p">,</span> <span class="n">h5subgroup</span> <span class="ow">in</span> <span class="n">h5group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">hdf5</span><span class="o">.</span><span class="n">dict_from_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">subgroup_name</span><span class="p">],</span> <span class="n">h5subgroup</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FrameMetadata</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Metadata object to handle Frame related Metadata</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        samplerate : int (or float?)</span>
+<span class="sd">        blocksize : int</span>
+<span class="sd">        stepsize : int</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># TODO : check is samplerate can support float</span>
+
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;samplerate&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;blocksize&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;stepsize&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+
+<span class="k">class</span> <span class="nc">DataObject</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Metadata object to handle data related Metadata</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : numpy array</span>
+<span class="sd">        label : numpy array of int</span>
+<span class="sd">        time : numpy array of float</span>
+<span class="sd">        duration : numpy array of float</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Set Data with the proper type</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">numpy_data_types</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Result Data can not accept type </span><span class="si">%s</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">():</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>
+
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Result Data can not accept type </span><span class="si">%s</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="s1">&#39;y_value&#39;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s1">&#39;Result Data can not accept type </span><span class="si">%s</span><span class="s1"> for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                    <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;dataType&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">DataObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># TODO fix this</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="nb">all</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="nb">all</span><span class="p">([</span><span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="o">.</span><span class="n">reduce</span><span class="p">((</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">other</span><span class="p">[</span><span class="n">key</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
+                         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">or</span>
+                   <span class="nb">any</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">other</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">as_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DataObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;frame_metadata&#39;</span><span class="p">,</span> <span class="s1">&#39;label_metadata&#39;</span><span class="p">]:</span>
+            <span class="c1">#  TODO : check if its needed now</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">as_dict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">as_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">MetadataObject</span><span class="p">):</span>
+                <span class="n">as_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">as_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">as_dict</span>
+
+    <span class="k">def</span> <span class="nf">to_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;Metadata&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;to_xml&#39;</span><span class="p">):</span>
+                <span class="n">child</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">to_xml</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">[]]:</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;dtype&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_string</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="kn">import</span> <span class="nn">ast</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">xml_string</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">text</span><span class="p">),</span>
+                                       <span class="n">dtype</span><span class="o">=</span><span class="n">child</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dtype&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+        <span class="c1"># Write Datasets</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;to_hdf5&#39;</span><span class="p">):</span>
+                <span class="n">subgroup</span> <span class="o">=</span> <span class="n">h5group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_hdf5</span><span class="p">(</span><span class="n">subgroup</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
+                <span class="c1"># Handle numpy type = object as vlen string</span>
+                <span class="n">h5group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="n">key</span><span class="p">,</span>
+                                       <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span>
+                                           <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span>
+                                       <span class="n">dtype</span><span class="o">=</span><span class="n">h5py</span><span class="o">.</span><span class="n">special_dtype</span><span class="p">(</span><span class="n">vlen</span><span class="o">=</span><span class="nb">str</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+                    <span class="n">maxshape</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">maxshape</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,)</span>
+                <span class="n">h5group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+                    <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">maxshape</span><span class="o">=</span><span class="n">maxshape</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">from_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5group</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">h5group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">h5py</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_hdf5</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="c1"># Load value from the hdf5 dataset and store in data</span>
+            <span class="c1"># FIXME : the following conditional statement is to prevent</span>
+            <span class="c1"># reading an empty dataset.</span>
+            <span class="c1"># see : https://github.com/h5py/h5py/issues/281</span>
+            <span class="c1"># It should be fixed by the next h5py version</span>
+            <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,):</span>
+                <span class="k">if</span> <span class="n">h5py</span><span class="o">.</span><span class="n">check_dtype</span><span class="p">(</span><span class="n">vlen</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
+                    <span class="c1"># to deal with VLEN data used for list of</span>
+                    <span class="c1"># list</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">eval</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">dataset</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span>
+
+
+<span class="k">def</span> <span class="nf">data_objet_class</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;framewise&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Factory function for Analyzer result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">classes_table</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span> <span class="n">GlobalValueObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;event&#39;</span><span class="p">):</span> <span class="n">EventValueObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;segment&#39;</span><span class="p">):</span> <span class="n">SegmentValueObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;framewise&#39;</span><span class="p">):</span> <span class="n">FrameValueObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">):</span> <span class="n">GlobalLabelObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;event&#39;</span><span class="p">):</span> <span class="n">EventLabelObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;segment&#39;</span><span class="p">):</span> <span class="n">SegmentLabelObject</span><span class="p">,</span>
+                     <span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;framewise&#39;</span><span class="p">):</span> <span class="n">FrameLabelObject</span><span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">classes_table</span><span class="p">[(</span><span class="n">data_mode</span><span class="p">,</span> <span class="n">time_mode</span><span class="p">)]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Wrong arguments&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AnalyzerResult"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult">[docs]</a><span class="k">class</span> <span class="nc">AnalyzerResult</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object that contains the metadata and parameters of an analyzer process</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_mode : str</span>
+<span class="sd">        data_mode describes the type of data :</span>
+<span class="sd">            - &#39;value&#39; for values</span>
+<span class="sd">            - &#39;label&#39; for label data see LabelMetadata</span>
+<span class="sd">    time_mode : str</span>
+<span class="sd">        time_mode describes the correspondance between data values and time</span>
+<span class="sd">            - &#39;framewise&#39;</span>
+<span class="sd">            - &#39;global&#39;</span>
+<span class="sd">            - &#39;segment&#39;</span>
+<span class="sd">            - &#39;event&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A new MetadataObject with the following attributes :</span>
+<span class="sd">        - data_object : :class:`DataObject`</span>
+<span class="sd">        - id_metadata : :class:`IdMetadata`</span>
+<span class="sd">        - audio_metadata : :class:`AudioMetadata`</span>
+<span class="sd">        - frame_metadata : :class:`FrameMetadata`</span>
+<span class="sd">        - label_metadata : :class:`LabelMetadata`</span>
+<span class="sd">        - parameters : :class:`Parameters` Object</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;id_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;data_object&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;audio_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                                  <span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;framewise&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AnalyzerResult</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_mode</span> <span class="o">=</span> <span class="n">data_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_mode</span> <span class="o">=</span> <span class="n">time_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_metadata</span> <span class="o">=</span> <span class="n">IdMetadata</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio_metadata</span> <span class="o">=</span> <span class="n">AudioMetadata</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_object</span> <span class="o">=</span> <span class="n">data_objet_class</span><span class="p">(</span><span class="n">data_mode</span><span class="p">,</span> <span class="n">time_mode</span><span class="p">)()</span>
+
+<span class="c1">#        self.label_metadata = LabelMetadata()</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;_data_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;_time_mode&#39;</span><span class="p">]:</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MetadataObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">sub_name</span><span class="p">,</span> <span class="n">sub_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">sub_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub_value</span>
+                <span class="k">return</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">AnalyzerResult</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_mode</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AnalyzerResult.as_dict"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
+                     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span> <span class="o">+</span>  <span class="c1"># if hasattr(self[key], &#39;as_dict&#39;)] +</span>
+                    <span class="p">[(</span><span class="s1">&#39;data_mode&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_mode</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;time_mode&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_mode</span><span class="p">)])</span></div>
+        <span class="c1"># TODO : check if it can be simplified now</span>
+
+<div class="viewcode-block" id="AnalyzerResult.to_xml"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.to_xml">[docs]</a>    <span class="k">def</span> <span class="nf">to_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">)</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                         <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;time_mode&#39;</span><span class="p">]:</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">SubElement</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">to_xml</span><span class="p">())</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResult.from_xml"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.from_xml">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="n">xml_string</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">xml_string</span><span class="p">)</span>
+
+        <span class="n">data_mode_child</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;data_mode&#39;</span><span class="p">)</span>
+        <span class="n">time_mode_child</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;time_mode&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="n">data_mode_child</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                                <span class="n">time_mode</span><span class="o">=</span><span class="n">time_mode_child</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;time_mode&#39;</span><span class="p">]:</span>
+                <span class="n">child_string</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">child_string</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="AnalyzerResult.to_hdf5"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.to_hdf5">[docs]</a>    <span class="k">def</span> <span class="nf">to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5_file</span><span class="p">):</span>
+        <span class="c1"># Save results in HDF5 Dataset</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">h5_file</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;data_mode&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;time_mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="s1">&#39;time_mode&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;time_mode&#39;</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">subgroup</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_hdf5</span><span class="p">(</span><span class="n">subgroup</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResult.from_hdf5"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.from_hdf5">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_hdf5</span><span class="p">(</span><span class="n">h5group</span><span class="p">):</span>
+        <span class="c1"># Read Sub-Group</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="n">h5group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">],</span>
+                                <span class="n">time_mode</span><span class="o">=</span><span class="n">h5group</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;time_mode&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">subgroup_name</span><span class="p">,</span> <span class="n">h5subgroup</span> <span class="ow">in</span> <span class="n">h5group</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">subgroup_name</span><span class="p">]</span><span class="o">.</span><span class="n">from_hdf5</span><span class="p">(</span><span class="n">h5subgroup</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="AnalyzerResult.to_json"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(),</span>
+                              <span class="n">default</span><span class="o">=</span><span class="n">JSON_NumpyArrayEncoder</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json_str</span></div>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+<div class="viewcode-block" id="AnalyzerResult.render"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Render a matplotlib figure from the analyzer result</span>
+
+<span class="sd">           Return the figure, use fig.show() to display if neeeded</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">_render_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fig</span></div>
+
+    <span class="k">def</span> <span class="nf">_render_PIL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.grapher</span> <span class="k">import</span> <span class="n">Image</span>
+        <span class="n">image_width</span><span class="p">,</span> <span class="n">image_height</span> <span class="o">=</span> <span class="n">size</span>
+
+        <span class="n">xSize</span> <span class="o">=</span> <span class="n">image_width</span> <span class="o">/</span> <span class="n">dpi</span>
+        <span class="n">ySize</span> <span class="o">=</span> <span class="n">image_height</span> <span class="o">/</span> <span class="n">dpi</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">xSize</span><span class="p">,</span> <span class="n">ySize</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">frame_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">_render_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">autoscale</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Export to PIL image</span>
+        <span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
+        <span class="n">imgdata</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">print_png</span><span class="p">(</span><span class="n">imgdata</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="n">imgdata</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># rewind the data</span>
+
+        <span class="k">return</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">imgdata</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_mode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_mode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_mode</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">start</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">time</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_mode</span> <span class="o">==</span> <span class="s1">&#39;global&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">duration</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">duration</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">unit</span></div>
+
+
+<span class="k">class</span> <span class="nc">ValueObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                    <span class="n">std</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">median</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                    <span class="nb">max</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                    <span class="nb">min</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                    <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">LabelObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LabelObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_metadata</span> <span class="o">=</span> <span class="n">LabelMetadata</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+
+
+<span class="k">class</span> <span class="nc">GlobalObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># self.audio_metadata.start</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># self.audio_metadata.duration</span>
+
+
+<span class="k">class</span> <span class="nc">FramewiseObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FramewiseObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_metadata</span> <span class="o">=</span> <span class="n">FrameMetadata</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">stepsize</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">stepsize</span><span class="p">)</span> <span class="o">/</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">samplerate</span>
+                <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)))</span>
+
+
+<span class="k">class</span> <span class="nc">EventObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">duration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SegmentObject</span><span class="p">(</span><span class="n">DataObject</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">GlobalValueObject</span><span class="p">(</span><span class="n">ValueObject</span><span class="p">,</span> <span class="n">GlobalObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;y_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+
+<span class="k">class</span> <span class="nc">GlobalLabelObject</span><span class="p">(</span><span class="n">LabelObject</span><span class="p">,</span> <span class="n">GlobalObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;label_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="c1"># import itertools</span>
+        <span class="c1"># colors = itertools.cycle([&#39;b&#39;, &#39;g&#39;, &#39;r&#39;, &#39;c&#39;, &#39;m&#39;, &#39;y&#39;, &#39;k&#39;])</span>
+        <span class="c1"># ax_color = {}</span>
+        <span class="c1"># artist = {}</span>
+        <span class="c1"># for key, label in self.label_metadata.label.items():</span>
+        <span class="c1">#    ax_color[key] = colors.next()</span>
+        <span class="c1">#    artist[key] = plt.axvspan(0, 0, color=&#39;b&#39;, alpha=0.3)</span>
+        <span class="c1"># for time, duration, label in zip(self.time, self.duration, self.data):</span>
+        <span class="c1">#    ax.axvspan(time, time + duration, color=&#39;b&#39;, alpha=0.3)</span>
+
+        <span class="c1"># Create legend</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_metadata</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)])</span>
+
+
+<span class="k">class</span> <span class="nc">FrameValueObject</span><span class="p">(</span><span class="n">ValueObject</span><span class="p">,</span> <span class="n">FramewiseObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;y_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;frame_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_value</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="c1"># This was crashing if the data array is too large</span>
+            <span class="c1"># workaround consists in downsampling the data</span>
+            <span class="c1">#  and plot center, min, max values</span>
+            <span class="c1"># see http://stackoverflow.com/a/8881973</span>
+            <span class="c1">#  TODO: mean may not be appropriate for waveform ... (mean~=0)</span>
+            <span class="n">nb_frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">width</span> <span class="o">=</span> <span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">nb_frames</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">width</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chunksize</span> <span class="o">=</span> <span class="n">nb_frames</span> <span class="o">//</span> <span class="n">width</span>
+                <span class="n">numchunks</span> <span class="o">=</span> <span class="n">nb_frames</span> <span class="o">//</span> <span class="n">chunksize</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ychunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="n">chunksize</span> <span class="o">*</span> <span class="n">numchunks</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                                                                     <span class="n">chunksize</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Take only first channel</span>
+                <span class="n">ychunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="n">chunksize</span> <span class="o">*</span> <span class="n">numchunks</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">))</span>
+
+            <span class="n">xchunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">[:</span><span class="n">chunksize</span> <span class="o">*</span> <span class="n">numchunks</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">))</span>
+
+            <span class="c1"># Calculate the max, min, and means of chunksize-element chunks...</span>
+            <span class="n">max_env</span> <span class="o">=</span> <span class="n">ychunks</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">min_env</span> <span class="o">=</span> <span class="n">ychunks</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ycenters</span> <span class="o">=</span> <span class="n">ychunks</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">xcenters</span> <span class="o">=</span> <span class="n">xchunks</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Now plot the bounds and the mean...</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xcenters</span><span class="p">,</span> <span class="n">min_env</span><span class="p">,</span> <span class="n">max_env</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+                            <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># ax.plot(xcenters, ycenters, color=&#39;gray&#39;, alpha=0.5)</span>
+
+            <span class="c1"># ax.plot(self.time, self.data)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="mi">20</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">T</span><span class="p">),</span>
+                      <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+                      <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">y_value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
+                      <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_sonic_visualiser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">svenv_file</span><span class="p">,</span> <span class="n">audio_file</span><span class="p">):</span>
+        <span class="c1"># audio_file = os.path.basename(audio_file)</span>
+        <span class="c1"># init a sonic visualiser environment file corresponding</span>
+        <span class="c1"># to the analysis of media wavfname</span>
+        <span class="n">sve</span> <span class="o">=</span> <span class="n">SVEnv</span><span class="o">.</span><span class="n">init_from_wave_file</span><span class="p">(</span><span class="n">audio_file</span><span class="p">)</span>
+
+        <span class="c1"># append a spectrogram view</span>
+        <span class="n">specview</span> <span class="o">=</span> <span class="n">sve</span><span class="o">.</span><span class="n">add_spectrogram</span><span class="p">()</span>
+
+        <span class="n">sve</span><span class="o">.</span><span class="n">add_continuous_annotations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="n">specview</span><span class="p">)</span>
+
+        <span class="c1"># save the environment to a sonic visualiser environment file</span>
+        <span class="n">sve</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">svenv_file</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FrameLabelObject</span><span class="p">(</span><span class="n">LabelObject</span><span class="p">,</span> <span class="n">FramewiseObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;label_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;frame_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">EventValueObject</span><span class="p">(</span><span class="n">ValueObject</span><span class="p">,</span> <span class="n">EventObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;y_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+
+<span class="k">class</span> <span class="nc">EventLabelObject</span><span class="p">(</span><span class="n">LabelObject</span><span class="p">,</span> <span class="n">EventObject</span><span class="p">,</span> <span class="n">DataObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;label_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+
+<span class="k">class</span> <span class="nc">SegmentValueObject</span><span class="p">(</span><span class="n">ValueObject</span><span class="p">,</span> <span class="n">SegmentObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;y_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">ymin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="c1"># TODO : check value shape !!!</span>
+
+
+<span class="k">class</span> <span class="nc">SegmentLabelObject</span><span class="p">(</span><span class="n">LabelObject</span><span class="p">,</span> <span class="n">SegmentObject</span><span class="p">):</span>
+    <span class="c1"># Define default values</span>
+    <span class="n">_default_value</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;label_metadata&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                                  <span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">_render_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+        <span class="kn">import</span> <span class="nn">itertools</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">([</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">])</span>
+        <span class="n">ax_color</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">legend_patches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_metadata</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">ax_color</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+            <span class="c1"># Creating artists specifically for adding to the legend (aka. Proxy artists)</span>
+            <span class="n">legend_patches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">ax_color</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)],</span> <span class="n">label</span><span class="o">=</span><span class="n">unicode</span><span class="p">(</span><span class="n">label</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">time</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">ax_color</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+        <span class="c1"># Create legend from custom artist/label lists</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">legend_patches</span><span class="p">)</span>  <span class="c1"># , self.label_metadata.label.values())</span>
+
+    <span class="k">def</span> <span class="nf">merge_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Merge adjacent segments if they share the same label</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)):</span>
+            <span class="c1"># Nothing to merge</span>
+            <span class="k">return</span>
+        <span class="c1"># Merge adjacent segments</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">label</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">==</span> <span class="n">label</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="k">del</span> <span class="n">label</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">time</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">duration</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">+=</span> <span class="n">duration</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">duration</span><span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="c1"># Copy back data to data_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
+
+    <span class="k">def</span> <span class="nf">to_elan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elan_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">media_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label_per_tier</span><span class="o">=</span><span class="s1">&#39;ALL&#39;</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">pympi</span>
+        <span class="n">elan</span> <span class="o">=</span> <span class="n">pympi</span><span class="o">.</span><span class="n">Elan</span><span class="o">.</span><span class="n">Eaf</span><span class="p">(</span><span class="n">author</span><span class="o">=</span><span class="s1">&#39;TimeSide&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">media_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">elan</span><span class="o">.</span><span class="n">add_linked_file</span><span class="p">(</span><span class="n">media_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">label_per_tier</span> <span class="o">==</span> <span class="s1">&#39;ONE&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_metadata</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">tier_id</span> <span class="o">=</span> <span class="n">unicode</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                <span class="n">elan</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">tier_id</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">label_per_tier</span> <span class="o">==</span> <span class="s1">&#39;ALL&#39;</span><span class="p">:</span>
+            <span class="n">tier_id</span> <span class="o">=</span> <span class="s1">&#39;Analysis&#39;</span>
+            <span class="n">elan</span><span class="o">.</span><span class="n">add_tier</span><span class="p">(</span><span class="n">tier_id</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)):</span>
+            <span class="n">label_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_metadata</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">unicode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span>
+            <span class="k">if</span> <span class="n">label_per_tier</span> <span class="o">==</span> <span class="s1">&#39;ONE&#39;</span><span class="p">:</span>
+                <span class="n">tier_id</span> <span class="o">=</span> <span class="n">label_id</span>
+            <span class="c1"># tier_id = self.label_metadata.label[unicode(label_id)]</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># TODO: check why start could be negative</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="c1"># Time has to be converted in millisecond integer values</span>
+            <span class="n">elan</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="n">id_tier</span><span class="o">=</span><span class="n">tier_id</span><span class="p">,</span>
+                                <span class="n">start</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">start</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span>
+                                <span class="n">end</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">end</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span>
+                                <span class="n">value</span><span class="o">=</span><span class="n">label_id</span><span class="p">)</span>
+
+        <span class="n">elan</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">elan_file</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_sonic_visualiser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">svenv_file</span><span class="p">,</span> <span class="n">audio_file</span><span class="p">):</span>
+        <span class="c1"># audio_file = os.path.basename(audio_file)</span>
+        <span class="c1"># init a sonic visualiser environment file corresponding</span>
+        <span class="c1"># to the analysis of media wavfname</span>
+        <span class="n">sve</span> <span class="o">=</span> <span class="n">SVEnv</span><span class="o">.</span><span class="n">init_from_wave_file</span><span class="p">(</span><span class="n">audio_file</span><span class="p">)</span>
+
+        <span class="c1"># append a spectrogram view</span>
+        <span class="n">specview</span> <span class="o">=</span> <span class="n">sve</span><span class="o">.</span><span class="n">add_spectrogram</span><span class="p">()</span>
+
+        <span class="c1"># append a labelled interval annotation layer on a new view</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">label_metadata</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">unicode</span><span class="p">(</span><span class="n">label_id</span><span class="p">)]</span> <span class="k">for</span> <span class="n">label_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
+
+        <span class="n">sve</span><span class="o">.</span><span class="n">add_interval_annotations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="c1"># save the environment to a sonic visualiser environment file</span>
+        <span class="n">sve</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">svenv_file</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">JSON_NumpyArrayEncoder</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Define Specialize JSON encoder for numpy array&#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;numpyArray&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()}</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asscalar</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; is not JSON serializable&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AnalyzerResultContainer"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer">[docs]</a><span class="k">class</span> <span class="nc">AnalyzerResultContainer</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    &gt;&gt;&gt; import timeside</span>
+<span class="sd">    &gt;&gt;&gt; from timeside.core.analyzer import Analyzer</span>
+<span class="sd">    &gt;&gt;&gt; from timeside.core.tools.test_samples import samples</span>
+<span class="sd">    &gt;&gt;&gt; wav_file = samples[&#39;sweep.mp3&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; d = timeside.core.get_processor(&#39;file_decoder&#39;)(wav_file)</span>
+<span class="sd">    &gt;&gt;&gt; a = Analyzer()</span>
+<span class="sd">    &gt;&gt;&gt; (d|a).run()</span>
+<span class="sd">    &gt;&gt;&gt; a.new_result() #doctest: +ELLIPSIS</span>
+<span class="sd">    AnalyzerResult(id_metadata=IdMetadata(id=&#39;analyzer&#39;, name=&#39;Generic analyzer&#39;, unit=&#39;&#39;, description=&#39;...&#39;, date=&#39;...&#39;, version=&#39;...&#39;, author=&#39;TimeSide&#39;, proc_uuid=&#39;...&#39;), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri=&#39;.../sweep.mp3&#39;, start=0.0, duration=8.0..., is_segment=False, sha1=&#39;...&#39;, channels=2, channelsManagement=&#39;&#39;), parameters={})</span>
+<span class="sd">    &gt;&gt;&gt; resContainer = timeside.core.analyzer.AnalyzerResultContainer()</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analyzer_results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AnalyzerResultContainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">analyzer_results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">analyzer_results</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.add"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analyzer_result</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">analyzer_result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">analyzer_result</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="c1"># Check result</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">analyzer_result</span><span class="p">,</span> <span class="n">AnalyzerResult</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only AnalyzerResult can be added&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">analyzer_result</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">)</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">analyzer_result</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">analyzer_result</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s1">&#39;Duplicated id in AnalyzerResultContainer: </span><span class="si">%s</span><span class="s1"> &#39;</span>
+                              <span class="s1">&#39;Please supply a unique id&#39;</span><span class="p">)</span>
+                             <span class="o">%</span> <span class="n">analyzer_result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.get_result_by_id"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.get_result_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_result_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_id</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">result_id</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Result id shared by several procesors in the pipe. Get result from the processor instead&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">result_id</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">res</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;No such result id: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">result_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.list_id"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.list_id">[docs]</a>    <span class="k">def</span> <span class="nf">list_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">res</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.to_xml"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.to_xml">[docs]</a>    <span class="k">def</span> <span class="nf">to_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+        <span class="c1"># TODO : cf. telemeta util</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="s1">&#39;timeside&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">root</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">to_xml</span><span class="p">()))</span>
+
+        <span class="n">xml_str</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xml_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">xml_str</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.from_xml"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xml_string</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+
+        <span class="c1"># TODO : from file</span>
+        <span class="c1"># tree = ET.parse(xml_file)</span>
+        <span class="c1"># root = tree.getroot()</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">xml_string</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">AnalyzerResult</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">child</span><span class="p">)),</span>
+                     <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.to_json"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.to_json">[docs]</a>    <span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">([</span><span class="n">res</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
+                              <span class="n">default</span><span class="o">=</span><span class="n">JSON_NumpyArrayEncoder</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json_str</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.from_json"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.from_json">[docs]</a>    <span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_str</span><span class="p">):</span>
+
+        <span class="c1"># Define Specialize JSON decoder for numpy array</span>
+        <span class="k">def</span> <span class="nf">NumpyArrayDecoder</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;numpyArray&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
+                <span class="n">numpy_obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;numpyArray&#39;</span><span class="p">],</span>
+                                       <span class="n">dtype</span><span class="o">=</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;dtype&#39;</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">numpy_obj</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">obj</span>
+
+        <span class="n">results_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">NumpyArrayDecoder</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">res_json</span> <span class="ow">in</span> <span class="n">results_json</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="n">res_json</span><span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">],</span>
+                                 <span class="n">time_mode</span><span class="o">=</span><span class="n">res_json</span><span class="p">[</span><span class="s1">&#39;time_mode&#39;</span><span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">res_json</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;time_mode&#39;</span><span class="p">]:</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">res_json</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.to_yaml"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.to_yaml">[docs]</a>    <span class="k">def</span> <span class="nf">to_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># if data_list == None: data_list = self.results</span>
+        <span class="kn">import</span> <span class="nn">yaml</span>
+
+        <span class="c1"># Define Specialize Yaml encoder for numpy array</span>
+        <span class="k">def</span> <span class="nf">numpyArray_representer</span><span class="p">(</span><span class="n">dumper</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_mapping</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;!numpyArray&#39;</span><span class="p">,</span>
+                                            <span class="p">{</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(),</span>
+                                             <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+
+        <span class="n">yaml</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">numpyArray_representer</span><span class="p">)</span>
+
+        <span class="n">yaml_str</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">([</span><span class="n">res</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+        <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">yaml_str</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.from_yaml"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.from_yaml">[docs]</a>    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_str</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">yaml</span>
+
+        <span class="c1"># Define Specialize Yaml encoder for numpy array</span>
+        <span class="k">def</span> <span class="nf">numpyArray_constructor</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+            <span class="n">mapping</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_mapping</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mapping</span><span class="p">[</span><span class="s1">&#39;dtype&#39;</span><span class="p">])</span>
+
+        <span class="n">yaml</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;!numpyArray&#39;</span><span class="p">,</span> <span class="n">numpyArray_constructor</span><span class="p">)</span>
+
+        <span class="n">results_yaml</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yaml_str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">res_yaml</span> <span class="ow">in</span> <span class="n">results_yaml</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="n">res_yaml</span><span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">],</span>
+                                 <span class="n">time_mode</span><span class="o">=</span><span class="n">res_yaml</span><span class="p">[</span><span class="s1">&#39;time_mode&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">res_yaml</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;data_mode&#39;</span><span class="p">,</span> <span class="s1">&#39;time_mode&#39;</span><span class="p">]:</span>
+                    <span class="n">res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">res_yaml</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.to_numpy"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.to_numpy">[docs]</a>    <span class="k">def</span> <span class="nf">to_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.from_numpy"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.from_numpy">[docs]</a>    <span class="k">def</span> <span class="nf">from_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.to_hdf5"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.to_hdf5">[docs]</a>    <span class="k">def</span> <span class="nf">to_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
+        <span class="c1"># Open HDF5 file and save dataset (overwrite any existing file)</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5_file</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">to_hdf5</span><span class="p">(</span><span class="n">h5_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyzerResultContainer.from_hdf5"><a class="viewcode-back" href="../../../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResultContainer.from_hdf5">[docs]</a>    <span class="k">def</span> <span class="nf">from_hdf5</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">h5py</span>
+        <span class="c1"># TODO : enable import for yaafe hdf5 format</span>
+
+        <span class="c1"># Open HDF5 file for reading and get results</span>
+        <span class="n">h5_file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">h5_file</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="o">.</span><span class="n">from_hdf5</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;TypeError for HDF5 serialization&#39;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">h5_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># Close the HDF5 file</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">Analyzer</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generic class for the analyzers</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;analyzer&#39;</span>
+    <span class="n">implements</span><span class="p">(</span><span class="n">IAnalyzer</span><span class="p">)</span>
+    <span class="n">abstract</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Analyzer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">totalframes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Analyzer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span>
+                                    <span class="n">blocksize</span><span class="p">,</span> <span class="n">totalframes</span><span class="p">)</span>
+
+        <span class="c1"># Set default values for result_* attributes</span>
+        <span class="c1"># may be overwritten by the analyzer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_samplerate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_samplerate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_blocksize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_blocksize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_stepsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_stepsize</span>
+
+    <span class="k">def</span> <span class="nf">add_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_pipe</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_pipe</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">()]</span> <span class="o">=</span> <span class="n">AnalyzerResultContainer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_pipe</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">()]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_pipe</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">()]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;analyzer&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;Generic analyzer&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">unit</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">new_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;framewise&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Create a new result</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data_object : MetadataObject</span>
+<span class="sd">        id_metadata : MetadataObject</span>
+<span class="sd">        audio_metadata : MetadataObject</span>
+<span class="sd">        frame_metadata : MetadataObject</span>
+<span class="sd">        label_metadata : MetadataObject</span>
+<span class="sd">        parameters : dict</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="n">data_mode</span><span class="p">,</span>
+                                <span class="n">time_mode</span><span class="o">=</span><span class="n">time_mode</span><span class="p">)</span>
+
+        <span class="c1"># Automatically write known metadata</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">__version__</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="s1">&#39;TimeSide&#39;</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="p">()</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">id_metadata</span><span class="o">.</span><span class="n">proc_uuid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">()</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediainfo</span><span class="p">()[</span><span class="s1">&#39;uri&#39;</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">sha1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediainfo</span><span class="p">()[</span><span class="s1">&#39;sha1&#39;</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediainfo</span><span class="p">()[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediainfo</span><span class="p">()[</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">is_segment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mediainfo</span><span class="p">()[</span><span class="s1">&#39;is_segment&#39;</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">audio_metadata</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">()</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">time_mode</span> <span class="o">==</span> <span class="s1">&#39;framewise&#39;</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_samplerate</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_blocksize</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">frame_metadata</span><span class="o">.</span><span class="n">stepsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_stepsize</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">extraglobs</span><span class="o">=</span><span class="n">DOCTEST_ALIAS</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

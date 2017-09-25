@@ -1,0 +1,670 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeside.core.grapher &mdash; TimeSide 0.8 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+        <link rel="copyright" title="Copyright" href="../../../copyright.html"/>
+    <link rel="top" title="TimeSide 0.8 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../processors.html">Processors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>timeside.core.grapher</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for timeside.core.grapher</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># Copyright (C) 2008 MUSIC TECHNOLOGY GROUP (MTG)</span>
+<span class="c1">#                    UNIVERSITAT POMPEU FABRA</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as</span>
+<span class="c1"># published by the Free Software Foundation, either version 3 of the</span>
+<span class="c1"># License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># Authors:</span>
+<span class="c1">#   Bram de Jong &lt;bram.dejong at domain.com where domain in gmail&gt;</span>
+<span class="c1">#   Guillaume Pellerin &lt;yomguy@parisson.com&gt;</span>
+
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">Image</span>
+    <span class="kn">import</span> <span class="nn">ImageDraw</span>
+
+<span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">Processor</span><span class="p">,</span> <span class="n">implements</span><span class="p">,</span> <span class="n">interfacedoc</span><span class="p">,</span> <span class="n">abstract</span>
+<span class="kn">from</span> <span class="nn">timeside.core.processor</span> <span class="k">import</span> <span class="n">FixedSizeInputAdapter</span>
+<span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IGrapher</span>
+<span class="kn">from</span> <span class="nn">timeside.plugins.grapher.utils</span> <span class="k">import</span> <span class="n">smooth</span><span class="p">,</span> <span class="n">im_watermark</span><span class="p">,</span> <span class="n">normalize</span>
+
+<span class="kn">import</span> <span class="nn">timeside.plugins.analyzer</span>
+
+
+<div class="viewcode-block" id="Spectrum"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Spectrum">[docs]</a><span class="k">class</span> <span class="nc">Spectrum</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; FFT based frequency analysis of audio frames.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fft_size</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">blocksize</span><span class="p">,</span>
+                 <span class="n">totalframes</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">higher</span><span class="p">,</span> <span class="n">window_function</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span> <span class="o">=</span> <span class="n">fft_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">window_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span> <span class="o">=</span> <span class="n">window_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spectrum_range</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">=</span> <span class="n">lower</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">higher</span> <span class="o">=</span> <span class="n">higher</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="n">blocksize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_log</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">higher_log</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">higher</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clip</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">val</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">high</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">totalframes</span> <span class="o">=</span> <span class="n">totalframes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">=</span> <span class="n">samplerate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span> <span class="o">=</span> <span class="n">window_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">)</span>
+        <span class="c1"># Hanning window by default</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hanning</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Spectrum.process"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Spectrum.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="p">,</span> <span class="n">spec_range</span><span class="o">=</span><span class="mf">120.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a tuple containing the spectral centroid and</span>
+<span class="sd">        the spectrum (dB scales) of the input audio frames.</span>
+<span class="sd">        FFT window sizes are adatable to the input frame size.&quot;&quot;&quot;</span>
+
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">nsamples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">nsamples</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_function</span><span class="p">(</span><span class="n">nsamples</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span>
+
+        <span class="k">while</span> <span class="n">nsamples</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span>
+
+        <span class="n">zeros_p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">nsamples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">nsamples</span> <span class="o">%</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">zeros_n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">nsamples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zeros_n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">nsamples</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">zeros_p</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">zeros_n</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">fft</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="c1"># normalized abs(FFT) between 0 and 1</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft</span><span class="p">[:</span><span class="n">fft</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">nsamples</span><span class="p">)</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">spectrum</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># scale the db spectrum from [- spec_range db ... 0 db] &gt; [0..1]</span>
+        <span class="n">db_spectrum</span> <span class="o">=</span> <span class="p">((</span><span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">spectrum</span> <span class="o">+</span> <span class="mf">1e-30</span><span class="p">)))</span>
+                       <span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="o">-</span><span class="n">spec_range</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">spec_range</span><span class="p">)</span> <span class="o">/</span> <span class="n">spec_range</span>
+        <span class="n">energy</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">spectral_centroid</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">energy</span> <span class="o">&gt;</span> <span class="mf">1e-20</span><span class="p">:</span>
+            <span class="c1"># calculate the spectral centroid</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spectrum_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+            <span class="n">spectral_centroid</span> <span class="o">=</span> <span class="p">(</span><span class="n">spectrum</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">spectrum_range</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> \
+                <span class="p">(</span><span class="n">energy</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="c1"># clip &gt; log10 &gt; scale between 0 and 1</span>
+            <span class="n">spectral_centroid</span> <span class="o">=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">spectral_centroid</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">higher</span><span class="p">))</span> <span class="o">-</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">lower_log</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">higher_log</span> <span class="o">-</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">lower_log</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">spectral_centroid</span><span class="p">,</span> <span class="n">db_spectrum</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Grapher"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Grapher">[docs]</a><span class="k">class</span> <span class="nc">Grapher</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generic abstract class for the graphers</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="s1">&#39;grapher&#39;</span>
+
+    <span class="n">fft_size</span> <span class="o">=</span> <span class="mh">0x1000</span>
+    <span class="n">frame_cursor</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">pixel_cursor</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">lower_freq</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="n">implements</span><span class="p">(</span><span class="n">IGrapher</span><span class="p">)</span>
+    <span class="n">abstract</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_scheme</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Grapher</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_color</span> <span class="o">=</span> <span class="n">bg_color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color_scheme</span> <span class="o">=</span> <span class="n">color_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_color</span> <span class="o">=</span> <span class="n">bg_color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color_scheme</span> <span class="o">=</span> <span class="n">color_scheme</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;generic_grapher&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;Generic grapher&quot;</span>
+
+    <span class="k">def</span> <span class="nf">set_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">,</span> <span class="n">color_scheme</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_color</span> <span class="o">=</span> <span class="n">bg_color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color_color_scheme</span> <span class="o">=</span> <span class="n">color_scheme</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">totalframes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Grapher</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+            <span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">blocksize</span><span class="p">,</span> <span class="n">totalframes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="n">samplerate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">higher_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">block_size</span> <span class="o">=</span> <span class="n">blocksize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_frames</span> <span class="o">=</span> <span class="n">totalframes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+            <span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samples_per_pixel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_frames</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples_per_pixel</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixels_adapter</span> <span class="o">=</span> <span class="n">FixedSizeInputAdapter</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixels_adapter_totalframes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixels_adapter</span><span class="o">.</span><span class="n">blocksize</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_frames</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fft_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_frames</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lower_freq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">higher_freq</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hanning</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Grapher.render"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Grapher.render">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s2">&quot;Pixel </span><span class="si">%s</span><span class="s2"> x </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">341</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span></div>
+
+    <span class="k">def</span> <span class="nf">watermark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">opacity</span><span class="o">=.</span><span class="mi">6</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">im_watermark</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="n">margin</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Grapher.draw_peaks"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Grapher.draw_peaks">[docs]</a>    <span class="k">def</span> <span class="nf">draw_peaks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">peaks</span><span class="p">,</span> <span class="n">line_color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw 2 peaks at x&quot;&quot;&quot;</span>
+
+        <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">peaks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">peaks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="n">line_color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="n">line_color</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_anti_aliased_pixels</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">line_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y2</span></div>
+
+<div class="viewcode-block" id="Grapher.draw_peaks_inverted"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Grapher.draw_peaks_inverted">[docs]</a>    <span class="k">def</span> <span class="nf">draw_peaks_inverted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">peaks</span><span class="p">,</span> <span class="n">line_color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Draw 2 inverted peaks at x&quot;&quot;&quot;</span>
+
+        <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">peaks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">peaks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y1</span> <span class="o">&lt;</span> <span class="n">y2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_anti_aliased_pixels</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">line_color</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span></div>
+
+<div class="viewcode-block" id="Grapher.draw_anti_aliased_pixels"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.Grapher.draw_anti_aliased_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">draw_anti_aliased_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; vertical anti-aliasing at y1 and y2 &quot;&quot;&quot;</span>
+
+        <span class="n">y_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+        <span class="n">y_max_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_max</span><span class="p">)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">y_max</span> <span class="o">-</span> <span class="n">y_max_int</span>
+
+        <span class="k">if</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">y_max_int</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">:</span>
+            <span class="n">current_pix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">y_max_int</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">current_pix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">current_pix</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">current_pix</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_max_int</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+        <span class="n">y_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+        <span class="n">y_min_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y_min</span><span class="p">)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="n">y_min</span> <span class="o">-</span> <span class="n">y_min_int</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">y_min_int</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">current_pix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_min_int</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">current_pix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">current_pix</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">current_pix</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pixel</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y_min_int</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">draw_peaks_contour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">contour</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">contour</span> <span class="o">=</span> <span class="n">smooth</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">window_len</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="n">contour</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">contour</span><span class="p">)</span>
+
+        <span class="c1"># Scaling</span>
+        <span class="c1">#ratio = numpy.mean(contour)/numpy.sqrt(2)</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">contour</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">expm1</span><span class="p">(</span><span class="n">contour</span> <span class="o">/</span> <span class="n">ratio</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+
+        <span class="c1"># Spline</span>
+        <span class="c1">#contour = cspline1d(contour)</span>
+        <span class="c1">#contour = cspline1d_eval(contour, self.x, dx=self.dx1, x0=self.x[0])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">symetry</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span>
+
+        <span class="c1"># Multicurve rotating</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndiv</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+            <span class="n">bright_color</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndiv</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="n">bright_color</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">bright_color</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_offset</span>
+            <span class="c1">#line_color = self.color_lookup[int(self.centroids[j]*255.0)]</span>
+            <span class="n">line_color</span> <span class="o">=</span> <span class="p">(</span><span class="n">bright_color</span><span class="p">,</span> <span class="n">bright_color</span><span class="p">,</span> <span class="n">bright_color</span><span class="p">)</span>
+
+            <span class="c1"># Linear</span>
+            <span class="c1">#contour = contour*(1.0-float(i)/self.ndiv)</span>
+            <span class="c1">#contour = contour*(1-float(i)/self.ndiv)</span>
+
+            <span class="c1"># Cosinus</span>
+            <span class="n">contour</span> <span class="o">=</span> <span class="n">contour</span> <span class="o">*</span> \
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndiv</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span>
+            <span class="c1">#contour = self.contour*(1-float(i)*numpy.arccos(float(i)/self.ndiv)*2/numpy.pi/self.ndiv)</span>
+            <span class="c1">#contour = contour + ((1-contour)*2/numpy.pi*numpy.arcsin(float(i)/self.ndiv))</span>
+
+            <span class="n">curve</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">contour</span>
+            <span class="c1">#curve = contour*(height-2)/2+height/2</span>
+
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">curve</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">symetry</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">line_color</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw_anti_aliased_pixels</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">line_color</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">],</span> <span class="n">line_color</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw_anti_aliased_pixels</span><span class="p">(</span>
+                            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">line_color</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+                            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">],</span> <span class="n">line_color</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw_anti_aliased_pixels</span><span class="p">(</span>
+                            <span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">line_color</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">symetry</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">point</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">point</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">),</span> <span class="n">line_color</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">previous_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_y</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+<div class="viewcode-block" id="DisplayAnalyzer"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.DisplayAnalyzer">[docs]</a><span class="k">class</span> <span class="nc">DisplayAnalyzer</span><span class="p">(</span><span class="n">Grapher</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    image from analyzer result</span>
+<span class="sd">    This is an Abstract base class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dpi</span> <span class="o">=</span> <span class="mi">72</span>  <span class="c1"># Web default value for Telemeta</span>
+
+    <span class="n">implements</span><span class="p">(</span><span class="n">IGrapher</span><span class="p">)</span>
+    <span class="n">abstract</span><span class="p">()</span>
+
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                 <span class="n">color_scheme</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DisplayAnalyzer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">,</span>
+                                              <span class="n">color_scheme</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="bp">NotImplemented</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="bp">NotImplemented</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_background</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bg_id</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="DisplayAnalyzer.process"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.DisplayAnalyzer.process">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span></div>
+
+<div class="viewcode-block" id="DisplayAnalyzer.post_process"><a class="viewcode-back" href="../../../api/grapher/index.html#timeside.core.grapher.DisplayAnalyzer.post_process">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pipe_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_pipe</span><span class="o">.</span><span class="n">results</span>
+        <span class="n">analyzer_uuid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="s1">&#39;analyzer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">uuid</span><span class="p">()</span>
+        <span class="n">analyzer_result</span> <span class="o">=</span> <span class="n">pipe_result</span><span class="p">[</span><span class="n">analyzer_uuid</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_id</span><span class="p">]</span>
+
+        <span class="n">fg_image</span> <span class="o">=</span> <span class="n">analyzer_result</span><span class="o">.</span><span class="n">_render_PIL</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_background</span><span class="p">:</span>
+            <span class="n">bg_uuid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="s1">&#39;bg_analyzer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">uuid</span><span class="p">()</span>
+            <span class="n">bg_result</span> <span class="o">=</span> <span class="n">pipe_result</span><span class="p">[</span><span class="n">bg_uuid</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_bg_id</span><span class="p">]</span>
+            <span class="n">bg_image</span> <span class="o">=</span> <span class="n">bg_result</span><span class="o">.</span><span class="n">_render_PIL</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span><span class="p">)</span>
+            <span class="c1"># convert image to grayscale</span>
+            <span class="n">bg_image</span> <span class="o">=</span> <span class="n">bg_image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;LA&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Merge background and foreground images</span>
+            <span class="kn">from</span> <span class="nn">PIL.Image</span> <span class="k">import</span> <span class="n">blend</span>
+            <span class="n">fg_image</span> <span class="o">=</span> <span class="n">blend</span><span class="p">(</span><span class="n">fg_image</span><span class="p">,</span> <span class="n">bg_image</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">fg_image</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">analyzer</span><span class="p">,</span> <span class="n">analyzer_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">result_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">grapher_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grapher_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">background</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">staging</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">analyzer_parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">analyzer_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">class</span> <span class="nc">NewGrapher</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+
+            <span class="n">_id</span> <span class="o">=</span> <span class="n">grapher_id</span>
+            <span class="n">_staging</span> <span class="o">=</span> <span class="n">staging</span>
+            <span class="n">_from_analyzer</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">_analyzer</span> <span class="o">=</span> <span class="n">analyzer</span>
+            <span class="n">_analyzer_parameters</span> <span class="o">=</span> <span class="n">analyzer_parameters</span>
+            <span class="n">_result_id</span> <span class="o">=</span> <span class="n">result_id</span>
+            <span class="n">_grapher_name</span> <span class="o">=</span> <span class="n">grapher_name</span>
+            
+            <span class="n">implements</span><span class="p">(</span><span class="n">IGrapher</span><span class="p">)</span>
+
+            <span class="nd">@interfacedoc</span>
+            <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bg_color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                         <span class="n">color_scheme</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">NewGrapher</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">,</span>
+                                                 <span class="n">color_scheme</span><span class="p">)</span>
+
+                <span class="c1"># Add a parent waveform analyzer</span>
+                <span class="k">if</span> <span class="n">background</span> <span class="o">==</span> <span class="s1">&#39;waveform&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_background</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">bg_analyzer</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">analyzer</span><span class="o">.</span><span class="n">waveform</span><span class="o">.</span><span class="n">Waveform</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_bg_id</span> <span class="o">=</span> <span class="n">bg_analyzer</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="s1">&#39;bg_analyzer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bg_analyzer</span>
+                <span class="k">elif</span> <span class="n">background</span> <span class="o">==</span> <span class="s1">&#39;spectrogram&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_background</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">bg_analyzer</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">analyzer</span><span class="o">.</span><span class="n">spectrogram</span><span class="o">.</span><span class="n">Spectrogram</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_bg_id</span> <span class="o">=</span> <span class="n">bg_analyzer</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="s1">&#39;bg_analyzer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bg_analyzer</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_background</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="n">parent_analyzer</span> <span class="o">=</span> <span class="n">analyzer</span><span class="p">(</span><span class="o">**</span><span class="n">analyzer_parameters</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="s1">&#39;analyzer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent_analyzer</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_result_id</span> <span class="o">=</span> <span class="n">result_id</span>
+
+            <span class="nd">@staticmethod</span>
+            <span class="nd">@interfacedoc</span>
+            <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">grapher_id</span>
+
+            <span class="nd">@staticmethod</span>
+            <span class="nd">@interfacedoc</span>
+            <span class="k">def</span> <span class="nf">name</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">grapher_name</span>
+
+            <span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Image representing &quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">grapher_name</span>
+
+        <span class="n">NewGrapher</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">grapher_name</span>
+
+        <span class="k">return</span> <span class="n">NewGrapher</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.8',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
