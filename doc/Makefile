@@ -14,6 +14,7 @@ PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) source
+GH_PAGES_SOURCES = source Makefile
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
 
@@ -169,3 +170,14 @@ install_deps:
 	pip install $(DEPENDENCIES)
 	@echo
 	@echo "All dependencies installed."
+
+gh-pages:
+    git checkout gh-pages
+    rm -rf build _sources _static
+    git checkout master $(GH_PAGES_SOURCES)
+    git reset HEAD
+    make html
+    mv -fv build/html/* ./
+    rm -rf $(GH_PAGES_SOURCES) build
+    git add -A
+    git ci -m "Generated gh-pages for `git log master -1 --pretty=short --abb
