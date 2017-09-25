@@ -19,7 +19,6 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../../'))
 
-sys.path.insert(0, os.path.abspath('../../app/sandbox/'))
 from django.conf import settings
 settings.configure()
 
@@ -37,7 +36,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.doctest', 'numpydoc',
               'matplotlib.sphinxext.mathmpl',
               'matplotlib.sphinxext.plot_directive',
-              'sphinxtogithub']
+              ]
 
 doctest_path = os.path.abspath('../../')
 
@@ -61,7 +60,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'TimeSide'
-copyright = u'2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+copyright = u'2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -276,7 +275,7 @@ texinfo_documents = [
 epub_title = u'TimeSide'
 epub_author = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 epub_publisher = u'Guillaume Pellerin, Paul Brossier, Thomas Fillon'
-epub_copyright = u'2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon'
+epub_copyright = u'2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

@@ -26,6 +26,7 @@ dependencies:
   - essentia
   - librosa
   - tensorflow
+  - sphinx
   - pip:
       - celery==3.*
       - django-bootstrap-pagination
@@ -45,3 +46,5 @@ dependencies:
       - uwsgi
       - vamp
       - watchdog
+      - sphinx_rtd_theme
+      - travis-sphinx
