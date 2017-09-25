@@ -53,7 +53,7 @@ class Essentia_Dissonance(Analyzer):
                },
                'type': 'object'}
 
-    #@store_parameters
+    @store_parameters
     def __init__(self, input_blocksize=1024, input_stepsize=512):
         super(Essentia_Dissonance, self).__init__()
 
