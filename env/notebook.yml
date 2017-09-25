@@ -28,4 +28,4 @@ notebook:
     - "8888:8888"
   volumes_from:
     - app
-  command: sh -c "cd /srv/src/timeside/doc/ipynb; jupyter notebook --no-browser --ip=0.0.0.0"
+  command: sh -c "cd /srv/src/timeside/docs/ipynb; jupyter notebook --no-browser --ip=0.0.0.0"
