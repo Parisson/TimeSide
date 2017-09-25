@@ -176,8 +176,10 @@ gh-pages:
 	rm -rf build _sources _static
 	git checkout dev $(GH_PAGES_SOURCES)
 	git reset HEAD
+	cd doc
 	make html
-	mv -fv build/html/* ./
+	mv -fv build/html/* ../
+	cd ..
 	rm -rf $(GH_PAGES_SOURCES) build
 	git add -A
 	git ci -m "Generated gh-pages for `git log master -1 --pretty=short --abb
