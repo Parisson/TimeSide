@@ -44,18 +44,21 @@ class Essentia_Dissonance(Analyzer):
 
     class _Param(HasTraits):
         input_blocksize = Int()
+        input_stepsize = Int()
 
     _schema = {'$schema': 'http://json-schema.org/schema#',
                'properties': {
                    "input_blocksize": {"type": "integer"},
+                   "input_stepsize": {"type": "integer"},
                },
                'type': 'object'}
 
-    @store_parameters
-    def __init__(self, input_blocksize=4096):
+    #@store_parameters
+    def __init__(self, input_blocksize=1024, input_stepsize=512):
         super(Essentia_Dissonance, self).__init__()
 
         self.input_blocksize = input_blocksize
+        self.input_stepsize = min(input_stepsize, self.input_blocksize)
         self.windower = Windowing(type='blackmanharris62')
         self.spec_alg = None
         self.spec_peaks_alg = None
@@ -83,7 +86,7 @@ class Essentia_Dissonance(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Dissonace from Essentia"
+        return "Dissonance from Essentia"
 
     @staticmethod
     @interfacedoc
