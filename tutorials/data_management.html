@@ -1,0 +1,260 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Data management &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Using the ‘stack’ (previously decoded frames)" href="frames_stack.html" />
+    <link rel="prev" title="Quick start" href="quick_start.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="frames_stack.html" title="Using the ‘stack’ (previously decoded frames)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quick_start.html" title="Quick start"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">TimeSide : Tutorials</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-management">
+<h1>Data management<a class="headerlink" href="#data-management" title="Permalink to this headline">¶</a></h1>
+<p>TimeSide offers various ways to access to audio data or metadata. <cite>AnalyzerResult</cite> is the python data structure where TimeSide embeds all the data resulting from a given analyzer processors after a run. It is thus the base object to access the analysis results and all the corresponding metadata. Bellow are some examples of use of the AnalyzerResult object and some of its methods.</p>
+<p>Usage : AnalyzerResult(data_mode=None, time_mode=None)</p>
+<p>Four different <em>time_mode</em> can be specified :</p>
+<ul class="simple">
+<li>‘framewise’ : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)</li>
+<li>‘global’ : a global data value is return for the entire audio item</li>
+<li>‘segment’ : data are returned on a segmnet basis (i.e. with specified start time and duration)</li>
+<li>‘event’ :  data are returned on a segment basis (i.e. with specified start time)</li>
+</ul>
+<p>Two different <em>data_mode</em> can be specified :</p>
+<ul class="simple">
+<li>‘value’ : data are returned as numpy Array of arbitrary type</li>
+<li>‘label’ : data are returned as label indexes (specified by the label_metadata key)</li>
+</ul>
+<p>Default values are <em>time_mode = ‘framewise’</em> and <em>data_mode = ‘value’</em></p>
+<p>See : <a class="reference internal" href="../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult" title="timeside.core.analyzer.AnalyzerResult"><code class="xref py py-func docutils literal"><span class="pre">timeside.core.analyzer.AnalyzerResult()</span></code></a>, <a class="reference internal" href="../api/analyzer/core.html#timeside.core.analyzer.AnalyzerResult" title="timeside.core.analyzer.AnalyzerResult"><code class="xref py py-class docutils literal"><span class="pre">timeside.core.analyzer.AnalyzerResult</span></code></a></p>
+<div class="section" id="default">
+<h2>Default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h2>
+<p>Create a new analyzer result without default arguments</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.analyzer</span> <span class="k">import</span> <span class="n">AnalyzerResult</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;id_metadata&#39;, &#39;data_object&#39;, &#39;audio_metadata&#39;, &#39;parameters&#39;]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> : </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">id_metadata : {&#39;description&#39;: &#39;&#39;, &#39;author&#39;: &#39;&#39;, &#39;version&#39;: &#39;&#39;, &#39;date&#39;: &#39;&#39;, &#39;proc_uuid&#39;: &#39;&#39;, &#39;id&#39;: &#39;&#39;, &#39;unit&#39;: &#39;&#39;, &#39;name&#39;: &#39;&#39;}</span>
+<span class="go">data_object : {&#39;y_value&#39;: array([], dtype=float64), &#39;value&#39;: array([], dtype=float64), &#39;frame_metadata&#39;: {&#39;blocksize&#39;: None, &#39;samplerate&#39;: None, &#39;stepsize&#39;: None}}</span>
+<span class="go">audio_metadata : {&#39;sha1&#39;: &#39;&#39;, &#39;is_segment&#39;: None, &#39;uri&#39;: &#39;&#39;, &#39;channels&#39;: None, &#39;start&#39;: 0, &#39;channelsManagement&#39;: &#39;&#39;, &#39;duration&#39;: None}</span>
+<span class="go">parameters : {}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="specification-of-time-mode">
+<h2>Specification of time_mode<a class="headerlink" href="#specification-of-time-mode" title="Permalink to this headline">¶</a></h2>
+<p>Four different time_mode can be specified :</p>
+<ul class="simple">
+<li>‘framewise’ : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)</li>
+<li>‘global’ : a global data value is return for the entire audio item</li>
+<li>‘segment’ : data are returned on a segmnet basis (i.e. with specified start time and duration)</li>
+<li>‘event’ :  data are returned on a segment basis (i.e. with specified start time)</li>
+</ul>
+<div class="section" id="framewise">
+<h3>Framewise<a class="headerlink" href="#framewise" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;framewise&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;value&#39;, &#39;y_value&#39;, &#39;frame_metadata&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="global">
+<h3>Global<a class="headerlink" href="#global" title="Permalink to this headline">¶</a></h3>
+<p>No frame metadata information is needed for these modes.
+The ‘frame_metadata’ key/attribute is deleted.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;global&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;value&#39;, &#39;y_value&#39;]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span>
+<span class="go">GlobalValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="segment">
+<h3>Segment<a class="headerlink" href="#segment" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;segment&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;id_metadata&#39;, &#39;data_object&#39;, &#39;audio_metadata&#39;, &#39;parameters&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span>
+<span class="go">SegmentValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), time=array([], dtype=float64), duration=array([], dtype=float64))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="event">
+<h3>Event<a class="headerlink" href="#event" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">time_mode</span><span class="o">=</span><span class="s1">&#39;event&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;id_metadata&#39;, &#39;data_object&#39;, &#39;audio_metadata&#39;, &#39;parameters&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span>
+<span class="go">EventValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), time=array([], dtype=float64))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="specification-of-data-mode">
+<h2>Specification of data_mode<a class="headerlink" href="#specification-of-data-mode" title="Permalink to this headline">¶</a></h2>
+<p>Two different data_mode can be specified :</p>
+<ul class="simple">
+<li>‘value’ : data are returned as numpy Array of arbitrary type</li>
+<li>‘label’ : data are returned as label indexes (specified by the label_metadata key)</li>
+</ul>
+<div class="section" id="value">
+<h3>Value<a class="headerlink" href="#value" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;value&#39;, &#39;y_value&#39;, &#39;frame_metadata&#39;]</span>
+</pre></div>
+</div>
+<p>In the dataObject key, the ‘value’ key is kept and the ‘label’ key is deleted.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span>
+<span class="go">FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="label">
+<h3>Label<a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h3>
+<p>A <em>label_metadata</em> key is added.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">AnalyzerResult</span><span class="p">(</span><span class="n">data_mode</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">[&#39;label&#39;, &#39;label_metadata&#39;, &#39;frame_metadata&#39;]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">data_object</span>
+<span class="go">FrameLabelObject(label=array([], dtype=int64), label_metadata=LabelMetadata(label=None, description=None, label_type=&#39;mono&#39;), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data management</a><ul>
+<li><a class="reference internal" href="#default">Default</a></li>
+<li><a class="reference internal" href="#specification-of-time-mode">Specification of time_mode</a><ul>
+<li><a class="reference internal" href="#framewise">Framewise</a></li>
+<li><a class="reference internal" href="#global">Global</a></li>
+<li><a class="reference internal" href="#segment">Segment</a></li>
+<li><a class="reference internal" href="#event">Event</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#specification-of-data-mode">Specification of data_mode</a><ul>
+<li><a class="reference internal" href="#value">Value</a></li>
+<li><a class="reference internal" href="#label">Label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quick_start.html"
+                        title="previous chapter">Quick start</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="frames_stack.html"
+                        title="next chapter">Using the ‘stack’ (previously decoded frames)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/tutorials/data_management.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="frames_stack.html" title="Using the ‘stack’ (previously decoded frames)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quick_start.html" title="Quick start"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >TimeSide : Tutorials</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="../copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

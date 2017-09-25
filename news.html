@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>News &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="TimeSide : audio processing framework for the web" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="architecture.html" title="Architecture"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="TimeSide : audio processing framework for the web"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="news">
+<h1>News<a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>0.8<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Add <em>Docker</em> support for instant installation. This allows to run TimeSide now on <em>any</em> OS platform!</li>
+<li>Add <a class="reference external" href="http://jupyter.org/">Jupyter Notebook</a> support for easy prototyping, experimenting and sharing (see the examples in the doc).</li>
+<li>Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).</li>
+<li>Start the development of a new player interface thanks to Angular and WavesJS.</li>
+<li>Huge cleanup of JS files. Please now use bower to get all JS dependencies as <a class="reference external" href="https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199">listed in settings</a>.</li>
+<li>Add metadata export to Elan annotation files.</li>
+<li>Fix and improve some data structures in analyzer result containers.</li>
+<li>Many various bugfixes.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.7.1<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>fix django version to 1.6.10 (sync with Telemeta 1.5)</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>0.7<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Code refactoring:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Create a new module <cite>timeside.plugins</cite> and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx</li>
+<li>WARNING: to properly manage the namespace packages structure, the TimeSide main module is now <cite>timeside.core</cite> and code should now be initialized with <cite>import timeside.core</cite></li>
+<li><cite>timeside.plugins</cite> is now a <a class="reference external" href="https://pythonhosted.org/setuptools/setuptools.html#namespace-packages">namespace package</a> enabling external plugins to be <strong>automatically</strong> plugged into TimeSide (see for example <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems">timeside-diadems</a>). This now makes TimeSide a <strong>real</strong> plugin host, yeah!</li>
+<li>A dummy timeside plugin will soon be provided for easy development start.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Move all analyzers developped by the partners of the Diadems project to a new repository: <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems">timeside-diadems</a></p>
+</li>
+<li><p class="first">Many fixes for a better processing by <a class="reference external" href="https://travis-ci.org/Parisson/TimeSide">Travis-CI</a></p>
+</li>
+<li><p class="first">Add a dox file to test the docker building continously on <a class="reference external" href="https://github.com/Parisson/Docker">various distributions</a></p>
+</li>
+</ul>
+<p>For older news, please visit: <a class="reference external" href="https://github.com/Parisson/TimeSide/blob/master/NEWS.rst">https://github.com/Parisson/TimeSide/blob/master/NEWS.rst</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">News</a><ul>
+<li><a class="reference internal" href="#id1">0.8</a></li>
+<li><a class="reference internal" href="#id2">0.7.1</a></li>
+<li><a class="reference internal" href="#id3">0.7</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">TimeSide : audio processing framework for the web</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="architecture.html"
+                        title="next chapter">Architecture</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/news.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="architecture.html" title="Architecture"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="TimeSide : audio processing framework for the web"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

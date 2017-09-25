@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Processors &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Dive in" href="divein.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="divein.html" title="Dive in"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="architecture.html" title="Architecture"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="processors">
+<h1>Processors<a class="headerlink" href="#processors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="iencoder">
+<h2>IEncoder<a class="headerlink" href="#iencoder" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>live_encoder</strong> : Gstreamer-based Audio Sink</li>
+<li><strong>flac_encoder</strong> : FLAC encoder based on Gstreamer</li>
+<li><strong>aac_encoder</strong> : AAC encoder based on Gstreamer</li>
+<li><strong>mp3_encoder</strong> : MP3 encoder based on Gstreamer</li>
+<li><strong>vorbis_encoder</strong> : OGG Vorbis encoder based on Gstreamer</li>
+<li><strong>opus_encoder</strong> : Opus encoder based on Gstreamer</li>
+<li><strong>wav_encoder</strong> : WAV encoder based on Gstreamer</li>
+<li><strong>webm_encoder</strong> : WebM encoder based on Gstreamer</li>
+</ul>
+</div>
+<div class="section" id="idecoder">
+<h2>IDecoder<a class="headerlink" href="#idecoder" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>array_decoder</strong> : Decoder taking Numpy array as input</li>
+<li><strong>file_decoder</strong> : File Decoder based on Gstreamer</li>
+<li><strong>live_decoder</strong> : Live source Decoder based on Gstreamer</li>
+</ul>
+</div>
+<div class="section" id="igrapher">
+<h2>IGrapher<a class="headerlink" href="#igrapher" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>grapher_aubio_pitch</strong> : Image representing Aubio Pitch</li>
+<li><strong>grapher_onset_detection_function</strong> : Image representing Onset detection function</li>
+<li><strong>grapher_waveform</strong> : Image representing Waveform from Analyzer</li>
+<li><strong>spectrogram_log</strong> : Logarithmic scaled spectrogram (level vs. frequency vs. time).</li>
+<li><strong>spectrogram_lin</strong> : Linear scaled spectrogram (level vs. frequency vs. time).</li>
+<li><strong>waveform_simple</strong> : Simple monochrome waveform image.</li>
+<li><strong>waveform_centroid</strong> : Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.</li>
+<li><strong>waveform_contour_black</strong> : Black amplitude contour waveform.</li>
+<li><strong>waveform_contour_white</strong> : an white amplitude contour wavform.</li>
+<li><strong>waveform_transparent</strong> : Transparent waveform.</li>
+</ul>
+</div>
+<div class="section" id="ianalyzer">
+<h2>IAnalyzer<a class="headerlink" href="#ianalyzer" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>mean_dc_shift</strong> : Mean DC shift analyzer</li>
+<li><strong>level</strong> : Audio level analyzer</li>
+<li><strong>aubio_melenergy</strong> : Aubio Mel Energy analyzer</li>
+<li><strong>aubio_mfcc</strong> : Aubio MFCC analyzer</li>
+<li><strong>aubio_pitch</strong> : Aubio Pitch estimation analyzer</li>
+<li><strong>aubio_specdesc</strong> : Aubio Spectral Descriptors collection analyzer</li>
+<li><strong>aubio_temporal</strong> : Aubio Temporal analyzer</li>
+<li><strong>yaafe</strong> : Yaafe feature extraction library interface analyzer</li>
+<li><strong>spectrogram_analyzer</strong> : Spectrogram image builder with an extensible buffer based on tables</li>
+<li><strong>onset_detection_function</strong> : Onset Detection Function analyzer</li>
+<li><strong>spectrogram_analyzer_buffer</strong> : Spectrogram image builder with an extensible buffer based on tables</li>
+<li><strong>waveform_analyzer</strong> : Waveform analyzer</li>
+</ul>
+</div>
+<div class="section" id="ieffect">
+<h2>IEffect<a class="headerlink" href="#ieffect" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>fx_gain</strong> : Gain effect processor</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Processors</a><ul>
+<li><a class="reference internal" href="#iencoder">IEncoder</a></li>
+<li><a class="reference internal" href="#idecoder">IDecoder</a></li>
+<li><a class="reference internal" href="#igrapher">IGrapher</a></li>
+<li><a class="reference internal" href="#ianalyzer">IAnalyzer</a></li>
+<li><a class="reference internal" href="#ieffect">IEffect</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="architecture.html"
+                        title="previous chapter">Architecture</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="divein.html"
+                        title="next chapter">Dive in</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/processors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="divein.html" title="Dive in"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="architecture.html" title="Architecture"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

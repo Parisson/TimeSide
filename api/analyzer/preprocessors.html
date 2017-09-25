@@ -1,0 +1,234 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Preprocessors &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="../../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Encoder package" href="../encoder/index.html" />
+    <link rel="prev" title="Analyzer from External librairies" href="ext_analyzers.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../encoder/index.html" title="Encoder package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ext_analyzers.html" title="Analyzer from External librairies"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >TimeSide API</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Analyzer package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="preprocessors">
+<h1>Preprocessors<a class="headerlink" href="#preprocessors" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-timeside.core.preprocessors"></span><p>Collections of preprocessors to use as decorators for the analyzers process</p>
+<p>Preprocessors process the (frame, eod) arguments in order to handle various
+preprocessing such as :</p>
+<blockquote>
+<div><ul class="simple">
+<li>Downmixing to mono</li>
+<li><dl class="first docutils">
+<dt>Adapt the frames to match the input_blocksize and input_stepsize</dt>
+<dd>of the analyzer</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<div class="section" id="downmix-to-mono">
+<h2>downmix_to_mono<a class="headerlink" href="#downmix-to-mono" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="function">
+<dt id="timeside.core.preprocessors.downmix_to_mono">
+<code class="descclassname">timeside.core.preprocessors.</code><code class="descname">downmix_to_mono</code><span class="sig-paren">(</span><em>process_func</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/preprocessors.html#downmix_to_mono"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.preprocessors.downmix_to_mono" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-processing decorator that downmixes frames from multi-channel to mono</p>
+<p>Downmix is achieved by averaging all channels</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.preprocessors</span> <span class="k">import</span> <span class="n">downmix_to_mono</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@downmix_to_mono</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span><span class="n">frames</span><span class="p">,</span><span class="n">eod</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span> <span class="s1">&#39;Frames, eod inside process :&#39;</span>
+<span class="gp">... </span>    <span class="nb">print</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eod</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frames_</span><span class="p">,</span> <span class="n">eod_</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="nb">object</span><span class="p">(),</span><span class="n">frames</span><span class="p">,</span><span class="n">eod</span><span class="p">)</span>
+<span class="go">Frames, eod inside process :</span>
+<span class="go">[ 1.5  3.5  5.5  7.5  9.5] False</span>
+</pre></div>
+</div>
+<p>Outside Process frames and eod are preserved :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frames_</span>
+<span class="go">array([[ 1,  2],</span>
+<span class="go">       [ 3,  4],</span>
+<span class="go">       [ 5,  6],</span>
+<span class="go">       [ 7,  8],</span>
+<span class="go">       [ 9, 10]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eod_</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="frames-adapter">
+<h2>frames_adapter<a class="headerlink" href="#frames-adapter" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><dl class="function">
+<dt id="timeside.core.preprocessors.frames_adapter">
+<code class="descclassname">timeside.core.preprocessors.</code><code class="descname">frames_adapter</code><span class="sig-paren">(</span><em>process_func</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/preprocessors.html#frames_adapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.preprocessors.frames_adapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-processing decorator that adapt frames to match input_blocksize and
+input_stepsize of the decorated analyzer</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.preprocessors</span> <span class="k">import</span> <span class="n">frames_adapter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@frames_adapter</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span><span class="n">frames</span><span class="p">,</span><span class="n">eod</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">analyzer</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Fake_Analyzer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">input_blocksize</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">input_stepsize</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Container for the frame as viewed by process</span>
+<span class="gp">... </span>    <span class="nd">@staticmethod</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s1">&#39;fake_analyzer&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">analyzer</span> <span class="o">=</span> <span class="n">Fake_Analyzer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eod</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frames_</span><span class="p">,</span> <span class="n">eod_</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span><span class="n">frames</span><span class="p">,</span><span class="n">eod</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Inside the process the frames have been adapted to match input_blocksize
+and input_stepsize</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">analyzer</span><span class="o">.</span><span class="n">frames</span>
+<span class="go">[array([0, 1, 2, 3]), array([3, 4, 5, 6]), array([6, 7, 8, 9])]</span>
+</pre></div>
+</div>
+<p>Outside the process, the original frames and eod are preserved:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frames_</span>
+<span class="go">array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eod_</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>Releasing the process with eod=True will zeropad the last frame if necessary</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frames</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">14</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eod</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frames_</span><span class="p">,</span> <span class="n">eod_</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span><span class="n">frames</span><span class="p">,</span><span class="n">eod</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">analyzer</span><span class="o">.</span><span class="n">frames</span>
+<span class="go">[array([0, 1, 2, 3]), array([3, 4, 5, 6]), array([6, 7, 8, 9]), array([ 9, 10, 11, 12]), array([12, 13,  0,  0])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Preprocessors</a><ul>
+<li><a class="reference internal" href="#downmix-to-mono">downmix_to_mono</a></li>
+<li><a class="reference internal" href="#frames-adapter">frames_adapter</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ext_analyzers.html"
+                        title="previous chapter">Analyzer from External librairies</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../encoder/index.html"
+                        title="next chapter">Encoder package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../sources/api/analyzer/preprocessors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../encoder/index.html" title="Encoder package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ext_analyzers.html" title="Analyzer from External librairies"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >TimeSide API</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Analyzer package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="../../copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

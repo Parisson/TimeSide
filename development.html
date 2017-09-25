@@ -1,0 +1,156 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Development &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Production" href="production.html" />
+    <link rel="prev" title="Server package" href="api/server/index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="production.html" title="Production"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api/server/index.html" title="Server package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://travis-ci.org/Parisson/TimeSide/"><img alt="travis_dev" src="https://travis-ci.org/Parisson/TimeSide.svg?branch=dev" /></a> <a class="reference external" href="https://coveralls.io/r/Parisson/TimeSide?branch=dev"><img alt="coveralls_dev" src="https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=dev" /></a></p>
+<div class="section" id="developing-within-timeside">
+<h2>Developing within TimeSide<a class="headerlink" href="#developing-within-timeside" title="Permalink to this headline">¶</a></h2>
+<p>If the TimeSide library gives you everything you need to develop you own plugin, it is advised to start with one existing. For example, starting from the DC analyzer:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Parisson</span><span class="o">/</span><span class="n">TimeSide</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">TimeSide</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="n">dev</span>
+<span class="n">cp</span> <span class="n">timeside</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="n">analyzer</span><span class="o">/</span><span class="n">dc</span><span class="o">.</span><span class="n">py</span> <span class="n">timeside</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="n">analyzer</span><span class="o">/</span><span class="n">my_analyzer</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Before coding, start docker with mounting the local directory as a volume:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">-</span><span class="n">v</span> <span class="o">.</span><span class="p">:</span><span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">timeside</span> <span class="n">parisson</span><span class="o">/</span><span class="n">timeside</span><span class="p">:</span><span class="n">latest</span> <span class="n">ipython</span>
+</pre></div>
+</div>
+<p>or use the development composition to start a notebook or the webserver:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">f</span> <span class="n">conf</span><span class="o">/</span><span class="n">dev</span><span class="o">.</span><span class="n">yml</span> <span class="n">up</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="developing-your-own-external-plugins">
+<h2>Developing your own external plugins<a class="headerlink" href="#developing-your-own-external-plugins" title="Permalink to this headline">¶</a></h2>
+<p>If the (already huge) python module bundle provided by TimeSide is to short for you, it is possible to make your own plugin bundle outside the core module thanks to the TimeSide namespace. An extensive example of what you can do is available in the <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems/">DIADEMS project repository</a>. You can also start with the dummy plugin:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Parisson</span><span class="o">/</span><span class="n">TimeSide</span><span class="o">-</span><span class="n">Dummy</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">TimeSide</span><span class="o">-</span><span class="n">Dummy</span>
+<span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">-</span><span class="n">v</span> <span class="o">./</span><span class="n">timeside</span><span class="o">/</span><span class="n">plugins</span><span class="o">/</span><span class="p">:</span><span class="o">/</span><span class="n">srv</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">timeside</span><span class="o">/</span><span class="n">timeside</span><span class="o">/</span><span class="n">plugins</span> <span class="n">parisson</span><span class="o">/</span><span class="n">timeside</span><span class="p">:</span><span class="n">latest</span> <span class="n">ipython</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">f</span> <span class="n">conf</span><span class="o">/</span><span class="n">dummy</span><span class="o">.</span><span class="n">yml</span> <span class="n">up</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Development</a><ul>
+<li><a class="reference internal" href="#developing-within-timeside">Developing within TimeSide</a></li>
+<li><a class="reference internal" href="#developing-your-own-external-plugins">Developing your own external plugins</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api/server/index.html"
+                        title="previous chapter">Server package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="production.html"
+                        title="next chapter">Production</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/development.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="production.html" title="Production"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api/server/index.html" title="Server package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

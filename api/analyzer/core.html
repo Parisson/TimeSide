@@ -1,0 +1,346 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Core &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="../../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Analyzers" href="analyzers.html" />
+    <link rel="prev" title="Analyzer package" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="analyzers.html" title="Analyzers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Analyzer package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >TimeSide API</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Analyzer package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-timeside.core.analyzer">
+<span id="core"></span><h1>Core<a class="headerlink" href="#module-timeside.core.analyzer" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="analyzerresult">
+<h2>AnalyzerResult<a class="headerlink" href="#analyzerresult" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.core.analyzer.AnalyzerResult">
+<em class="property">class </em><code class="descclassname">timeside.core.analyzer.</code><code class="descname">AnalyzerResult</code><span class="sig-paren">(</span><em>data_mode='value'</em>, <em>time_mode='framewise'</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">timeside.core.analyzer.MetadataObject</span></code></p>
+<p>Object that contains the metadata and parameters of an analyzer process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data_mode</strong> : str</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>data_mode describes the type of data :</dt>
+<dd><ul class="first last simple">
+<li>‘value’ for values</li>
+<li>‘label’ for label data see LabelMetadata</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>time_mode</strong> : str</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>time_mode describes the correspondance between data values and time</dt>
+<dd><ul class="first last simple">
+<li>‘framewise’</li>
+<li>‘global’</li>
+<li>‘segment’</li>
+<li>‘event’</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new MetadataObject with the following attributes :</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>data_object : <code class="xref py py-class docutils literal"><span class="pre">DataObject</span></code></li>
+<li>id_metadata : <code class="xref py py-class docutils literal"><span class="pre">IdMetadata</span></code></li>
+<li>audio_metadata : <code class="xref py py-class docutils literal"><span class="pre">AudioMetadata</span></code></li>
+<li>frame_metadata : <code class="xref py py-class docutils literal"><span class="pre">FrameMetadata</span></code></li>
+<li>label_metadata : <code class="xref py py-class docutils literal"><span class="pre">LabelMetadata</span></code></li>
+<li>parameters : <code class="xref py py-class docutils literal"><span class="pre">Parameters</span></code> Object</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResult.as_dict">
+<code class="descname">as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.data">
+<code class="descname">data</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.data_mode">
+<code class="descname">data_mode</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.data_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.duration">
+<code class="descname">duration</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="timeside.core.analyzer.AnalyzerResult.from_hdf5">
+<em class="property">static </em><code class="descname">from_hdf5</code><span class="sig-paren">(</span><em>h5group</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.from_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.from_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="timeside.core.analyzer.AnalyzerResult.from_xml">
+<em class="property">static </em><code class="descname">from_xml</code><span class="sig-paren">(</span><em>xml_string</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.from_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.from_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.id">
+<code class="descname">id</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.name">
+<code class="descname">name</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResult.render">
+<code class="descname">render</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render a matplotlib figure from the analyzer result</p>
+<p>Return the figure, use fig.show() to display if neeeded</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.time">
+<code class="descname">time</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.time_mode">
+<code class="descname">time_mode</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.time_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResult.to_hdf5">
+<code class="descname">to_hdf5</code><span class="sig-paren">(</span><em>h5_file</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.to_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.to_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResult.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResult.to_xml">
+<code class="descname">to_xml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResult.to_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.to_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.analyzer.AnalyzerResult.unit">
+<code class="descname">unit</code><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResult.unit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="analyzerresultcontainer">
+<h2>AnalyzerResultContainer<a class="headerlink" href="#analyzerresultcontainer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer">
+<em class="property">class </em><code class="descclassname">timeside.core.analyzer.</code><code class="descname">AnalyzerResultContainer</code><span class="sig-paren">(</span><em>analyzer_results=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">dict</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.analyzer</span> <span class="k">import</span> <span class="n">Analyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.tools.test_samples</span> <span class="k">import</span> <span class="n">samples</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wav_file</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="s1">&#39;sweep.mp3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;file_decoder&#39;</span><span class="p">)(</span><span class="n">wav_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Analyzer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">d</span><span class="o">|</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">new_result</span><span class="p">()</span> 
+<span class="go">AnalyzerResult(id_metadata=IdMetadata(id=&#39;analyzer&#39;, name=&#39;Generic analyzer&#39;, unit=&#39;&#39;, description=&#39;...&#39;, date=&#39;...&#39;, version=&#39;...&#39;, author=&#39;TimeSide&#39;, proc_uuid=&#39;...&#39;), data_object=FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=44100, blocksize=8192, stepsize=8192)), audio_metadata=AudioMetadata(uri=&#39;.../sweep.mp3&#39;, start=0.0, duration=8.0..., is_segment=False, sha1=&#39;...&#39;, channels=2, channelsManagement=&#39;&#39;), parameters={})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resContainer</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">analyzer</span><span class="o">.</span><span class="n">AnalyzerResultContainer</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>analyzer_result</em>, <em>overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.from_hdf5">
+<code class="descname">from_hdf5</code><span class="sig-paren">(</span><em>input_file</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.from_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.from_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.from_json">
+<code class="descname">from_json</code><span class="sig-paren">(</span><em>json_str</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.from_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.from_numpy">
+<code class="descname">from_numpy</code><span class="sig-paren">(</span><em>input_file</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.from_numpy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.from_numpy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.from_xml">
+<code class="descname">from_xml</code><span class="sig-paren">(</span><em>xml_string</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.from_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.from_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.from_yaml">
+<code class="descname">from_yaml</code><span class="sig-paren">(</span><em>yaml_str</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.from_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.from_yaml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.get_result_by_id">
+<code class="descname">get_result_by_id</code><span class="sig-paren">(</span><em>result_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.get_result_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.get_result_by_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.list_id">
+<code class="descname">list_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.list_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.list_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.to_hdf5">
+<code class="descname">to_hdf5</code><span class="sig-paren">(</span><em>output_file</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.to_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.to_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.to_numpy">
+<code class="descname">to_numpy</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.to_numpy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.to_numpy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.to_xml">
+<code class="descname">to_xml</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.to_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.to_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.analyzer.AnalyzerResultContainer.to_yaml">
+<code class="descname">to_yaml</code><span class="sig-paren">(</span><em>output_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../modules/timeside/core/analyzer.html#AnalyzerResultContainer.to_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.analyzer.AnalyzerResultContainer.to_yaml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Core</a><ul>
+<li><a class="reference internal" href="#analyzerresult">AnalyzerResult</a></li>
+<li><a class="reference internal" href="#analyzerresultcontainer">AnalyzerResultContainer</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Analyzer package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="analyzers.html"
+                        title="next chapter">Analyzers</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../sources/api/analyzer/core.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="analyzers.html" title="Analyzers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Analyzer package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >TimeSide API</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Analyzer package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="../../copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

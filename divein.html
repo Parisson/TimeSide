@@ -1,0 +1,149 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dive in &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Install" href="install.html" />
+    <link rel="prev" title="Processors" href="processors.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Install"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="processors.html" title="Processors"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="dive-in">
+<h1>Dive in<a class="headerlink" href="#dive-in" title="Permalink to this headline">¶</a></h1>
+<p>Let’s produce a really simple audio analysis of an audio file.
+First, list all available plugins:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside.core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timeside</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">list_processors</span><span class="p">()</span>  
+<span class="go">IProcessor</span>
+<span class="go">==========</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>Define some processors:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">get_processor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.tools.test_samples</span> <span class="k">import</span> <span class="n">samples</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wavfile</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="s1">&#39;sweep.wav&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span>  <span class="o">=</span>  <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;file_decoder&#39;</span><span class="p">)(</span><span class="n">wavfile</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grapher</span>  <span class="o">=</span>  <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;waveform_simple&#39;</span><span class="p">)()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">analyzer</span> <span class="o">=</span>  <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">)()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encoder</span>  <span class="o">=</span>  <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;vorbis_encoder&#39;</span><span class="p">)(</span><span class="s1">&#39;sweep.ogg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then run the <em>magic</em> pipeline:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">decoder</span> <span class="o">|</span> <span class="n">grapher</span> <span class="o">|</span> <span class="n">analyzer</span> <span class="o">|</span> <span class="n">encoder</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Render the grapher results:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">grapher</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s1">&#39;waveform.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Show the analyzer results:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="s1">&#39;Level:&#39;</span><span class="p">,</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">results</span>  
+<span class="go">Level: {&#39;level.max&#39;: AnalyzerResult(...), &#39;level.rms&#39;: AnalyzerResult(...)}</span>
+</pre></div>
+</div>
+<p>So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.</p>
+<p>For more extensive examples, please see the <a class="reference external" href="http://files.parisson.com/timeside/doc/">full documentation</a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="processors.html"
+                        title="previous chapter">Processors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="next chapter">Install</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/divein.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Install"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="processors.html" title="Processors"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

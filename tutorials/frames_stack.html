@@ -1,0 +1,157 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Using the ‘stack’ (previously decoded frames) &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Streaming out encoded audio" href="streaming.html" />
+    <link rel="prev" title="Data management" href="data_management.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="streaming.html" title="Streaming out encoded audio"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data_management.html" title="Data management"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">TimeSide : Tutorials</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-the-stack-previously-decoded-frames">
+<h1>Using the ‘stack’ (previously decoded frames)<a class="headerlink" href="#using-the-stack-previously-decoded-frames" title="Permalink to this headline">¶</a></h1>
+<p>This is an example of using the <cite>stack</cite> argument in <a class="reference internal" href="../api/decoder/index.html#timeside.plugins.decoder.file.FileDecoder" title="timeside.plugins.decoder.file.FileDecoder"><code class="xref py py-class docutils literal"><span class="pre">timeside.plugins.decoder.file.FileDecoder</span></code></a> to run a pipe with previously decoded frames stacked in memory on a second pass.</p>
+<p>First, let’s import everything and define the audio file source :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside.core</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">get_processor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.tools.test_samples</span> <span class="k">import</span> <span class="n">samples</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">audio_file</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="s1">&#39;sweep.mp3&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Then let’s setup a <a class="reference internal" href="../api/decoder/index.html#timeside.plugins.decoder.file.FileDecoder" title="timeside.plugins.decoder.file.FileDecoder"><code class="xref py py-class docutils literal"><span class="pre">FileDecoder</span></code></a> with argument <cite>stack=True</cite> (default argument is <cite>stack=False</cite>) :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">FileDecoder</span><span class="p">(</span><span class="n">audio_file</span><span class="p">,</span> <span class="n">stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Setup an arbitrary analyzer to check that decoding process from file and from stack are equivalent:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">level</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">)()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="p">(</span><span class="n">decoder</span> <span class="o">|</span> <span class="n">level</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">processors</span> 
+<span class="go">[file_decoder-{}, level-{}]</span>
+</pre></div>
+</div>
+<p>Run the pipe:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The processed frames are stored in the pipe attribute <cite>frames_stack</cite> as a list of frames :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">)</span>
+<span class="go">&lt;type &#39;list&#39;&gt;</span>
+</pre></div>
+</div>
+<p>First frame :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+<span class="go">(array([[...]], dtype=float32), False)</span>
+</pre></div>
+</div>
+<p>Last frame :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+<span class="go">(array([[...]], dtype=float32), True)</span>
+</pre></div>
+</div>
+<p>If the pipe is used for a second run, the processed frames stored in the stack are passed to the other processors without decoding the audio source again.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data_management.html"
+                        title="previous chapter">Data management</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="streaming.html"
+                        title="next chapter">Streaming out encoded audio</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/tutorials/frames_stack.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="streaming.html" title="Streaming out encoded audio"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data_management.html" title="Data management"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >TimeSide : Tutorials</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="../copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

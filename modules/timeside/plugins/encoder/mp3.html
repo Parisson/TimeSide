@@ -1,0 +1,198 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>timeside.plugins.encoder.mp3 &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="../../../../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../../copyright.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for timeside.plugins.encoder.mp3</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2007-2014 Parisson SARL</span>
+<span class="c1"># Copyright (c) 2006-2014 Guillaume Pellerin &lt;pellerin@parisson.com&gt;</span>
+<span class="c1"># Copyright (c) 2010-2014 Paul Brossier &lt;piem@piem.org&gt;</span>
+<span class="c1"># Copyright (c) 2009-2010 Olivier Guilyardi &lt;olivier@samalyse.com&gt;</span>
+<span class="c1"># Copyright (c) 2013-2014 Thomas Fillon &lt;thomas@parisson.com&gt;</span>
+
+<span class="c1"># This file is part of TimeSide.</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Authors: Guillaume Pellerin &lt;yomguy@parisson.com&gt;</span>
+<span class="c1">#          Paul Brossier &lt;piem@piem.org&gt;</span>
+<span class="c1">#          Thomas Fillon &lt;thomas@parisson.com&gt;</span>
+
+<span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">implements</span><span class="p">,</span> <span class="n">interfacedoc</span>
+<span class="kn">from</span> <span class="nn">timeside.core.encoder</span> <span class="k">import</span> <span class="n">GstEncoder</span>
+<span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IEncoder</span>
+
+
+<div class="viewcode-block" id="Mp3Encoder"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder">[docs]</a><span class="k">class</span> <span class="nc">Mp3Encoder</span><span class="p">(</span><span class="n">GstEncoder</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;MP3 encoder based on Gstreamer&quot;&quot;&quot;</span>
+
+    <span class="n">implements</span><span class="p">(</span><span class="n">IEncoder</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">,</span> <span class="n">target_value</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cbr</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Mp3Encoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="n">streaming</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="o">=</span> <span class="n">target_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cbr</span> <span class="o">=</span> <span class="n">cbr</span>
+
+<div class="viewcode-block" id="Mp3Encoder.setup"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder.setup">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">totalframes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Mp3Encoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">blocksize</span><span class="p">,</span>
+                                      <span class="n">totalframes</span><span class="p">)</span>
+
+        <span class="c1"># http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-plugins-ugly-plugins/html/gst-plugins-ugly-plugins-lamemp3enc.html#GstLameMP3Enc--cbr</span>
+        <span class="c1"># cbr only makes sense when target is equal to `bitrate`</span>
+        <span class="n">str_cbr</span> <span class="o">=</span> <span class="s1">&#39; cbr=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbr</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">==</span> <span class="s1">&#39;bitrate&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;appsrc name=src</span>
+<span class="s1">                  ! audioconvert ! audioresample</span>
+<span class="s1">                  ! lamemp3enc target=</span><span class="si">%(target)s</span><span class="s1"> </span><span class="si">%(target)s</span><span class="s1">=</span><span class="si">%(target_value)d%(str_cbr)s</span><span class="s1"> encoding-engine-quality=standard</span>
+<span class="s1">                  ! xingmux</span>
+<span class="s1">                  ! id3v2mux</span>
+<span class="s1">                  &#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="s1">&#39;target_value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span> <span class="s1">&#39;str_cbr&#39;</span><span class="p">:</span> <span class="n">str_cbr</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;&#39;&#39; ! tee name=t</span>
+<span class="s1">            ! queue ! filesink location=</span><span class="si">%s</span><span class="s1"></span>
+<span class="s1">            t. ! queue! appsink name=app sync=False</span>
+<span class="s1">            &#39;&#39;&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;! filesink location=</span><span class="si">%s</span><span class="s1"> async=False sync=False &#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;! queue ! appsink name=app sync=False&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_pipeline</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Mp3Encoder.id"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;mp3_encoder&quot;</span></div>
+
+<div class="viewcode-block" id="Mp3Encoder.format"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder.format">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">format</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;MP3&quot;</span></div>
+
+<div class="viewcode-block" id="Mp3Encoder.file_extension"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder.file_extension">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">file_extension</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;mp3&quot;</span></div>
+
+<div class="viewcode-block" id="Mp3Encoder.mime_type"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder.mime_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">mime_type</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;audio/mpeg&quot;</span></div>
+
+<div class="viewcode-block" id="Mp3Encoder.write_metadata"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.mp3.Mp3Encoder.write_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">write_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Write all ID3v2.4 tags to file from self.metadata&quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">mutagen</span>
+        <span class="kn">from</span> <span class="nn">mutagen</span> <span class="k">import</span> <span class="n">id3</span>
+
+        <span class="n">id3</span> <span class="o">=</span> <span class="n">id3</span><span class="o">.</span><span class="n">ID3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span>
+            <span class="n">frame</span> <span class="o">=</span> <span class="n">mutagen</span><span class="o">.</span><span class="n">id3</span><span class="o">.</span><span class="n">Frames</span><span class="p">[</span><span class="n">tag</span><span class="p">](</span><span class="mi">3</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">id3</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;EncoderError: cannot tag &quot;&#39;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">id3</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;EncoderError: cannot write tags&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="../../../../copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

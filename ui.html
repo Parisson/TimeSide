@@ -1,0 +1,263 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>User Interfaces &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Documentation" href="doc.html" />
+    <link rel="prev" title="Install" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="doc.html" title="Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Install"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="user-interfaces">
+<h1>User Interfaces<a class="headerlink" href="#user-interfaces" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="linux">
+<h2>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h2>
+<p>To run the python shell, just do it through the docker composition:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">ipython</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="macos-or-windows">
+<h2>MacOS or Windows<a class="headerlink" href="#macos-or-windows" title="Permalink to this headline">¶</a></h2>
+<p>Same as in Linux, but you need to create a docker machine first:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">machine</span> <span class="n">create</span> <span class="o">--</span><span class="n">driver</span> <span class="n">virtualbox</span> <span class="o">--</span><span class="n">virtualbox</span><span class="o">-</span><span class="n">memory</span> <span class="mi">8096</span> <span class="n">timeside</span>
+<span class="nb">eval</span> <span class="s2">&quot;$(docker-machine env timeside)&quot;</span>
+<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">ipython</span>
+</pre></div>
+</div>
+<p>More infos about the TimeSide docker image: <a class="reference external" href="https://registry.hub.docker.com/u/parisson/timeside/">https://registry.hub.docker.com/u/parisson/timeside/</a></p>
+</div>
+<div class="section" id="notebook">
+<h2>Notebook<a class="headerlink" href="#notebook" title="Permalink to this headline">¶</a></h2>
+<p>You can also run your code in the wonderful <a class="reference external" href="http://jupyter.org/">Jupyter Notebook</a> which gives you a web interface to run your own code and share the results with your collaborators:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">f</span> <span class="n">conf</span><span class="o">/</span><span class="n">dev</span><span class="o">.</span><span class="n">yml</span> <span class="n">run</span> <span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">ports</span> <span class="n">notebook</span>
+</pre></div>
+</div>
+<p>and then browse  <a class="reference external" href="http://localhost:8888">http://localhost:8888</a> to acces the Jupyter notebook interface.</p>
+<p>On MacOS or Windows, you will need to ask the IP of the virtual machine to docker-machine:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">machine</span> <span class="n">ip</span> <span class="n">timeside</span>
+</pre></div>
+</div>
+<p>If it gives you for example 192.168.59.103, you should be able to browse the notebook at <a class="reference external" href="http://192.168.59.103:8888/">http://192.168.59.103:8888/</a></p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Running a Jupyter notebook server with this setup in a non-secured network is not safe. See <a class="reference external" href="http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/">Running a notebook server</a> for a documented solution to this security problem.</p>
+</div>
+</div>
+<div class="section" id="use-you-own-data">
+<h2>Use you own data<a class="headerlink" href="#use-you-own-data" title="Permalink to this headline">¶</a></h2>
+<p>The var/media directory is mounted in /srv/media in the container so you can use it to exchange data between the host and the app container.</p>
+</div>
+<div class="section" id="web-server-experimental">
+<h2>Web Server (experimental)<a class="headerlink" href="#web-server-experimental" title="Permalink to this headline">¶</a></h2>
+<p>TimeSide now includes an experimental web service with a REST API:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Parisson</span><span class="o">/</span><span class="n">TimeSide</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">TimeSide</span>
+<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="n">db</span>
+</pre></div>
+</div>
+<p>This will pull all needed images for running the server and then initialize the database. Leave the session with CTRL+C and then finally do:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span>
+</pre></div>
+</div>
+<p>This will initialize everything and create a bunch a test sample boilerplate. You can browse the TimeSide API at:</p>
+<blockquote>
+<div><a class="reference external" href="http://localhost:8000/timeside/api/">http://localhost:8000/timeside/api/</a></div></blockquote>
+<p>and the admin interface (login: admin, password: admin) at:</p>
+<blockquote>
+<div><a class="reference external" href="http://localhost:8000/timeside/admin">http://localhost:8000/timeside/admin</a></div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A documentation about using the objects and processors from the webserver will be written soon. We need help on this!</p>
+</div>
+<p>All (raw, still experimental) results are accessible at :</p>
+<blockquote>
+<div><a class="reference external" href="http://localhost:8000/timeside/">http://localhost:8000/timeside/</a></div></blockquote>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">On MacOS or Windows, replace “localhost” by the virtual machine IP given by <cite>docker-machine ip timeside</cite></p>
+</div>
+<p>To process some data by hand in the web environment context, just start a django shell session:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
+</pre></div>
+</div>
+<p>To run the webserver in background as a daemon, just add the <cite>-d</cite> option:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="o">-</span><span class="n">d</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="batch">
+<h2>Batch<a class="headerlink" href="#batch" title="Permalink to this headline">¶</a></h2>
+<p>A shell script is provided to enable preset based and recursive processing through your command line interface:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="o">-</span><span class="n">h</span>
+<span class="n">Usage</span><span class="p">:</span> <span class="nb">bin</span><span class="o">/</span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">file</span><span class="o">.</span><span class="n">conf</span> <span class="n">file1</span><span class="o">.</span><span class="n">wav</span> <span class="p">[</span><span class="n">file2</span><span class="o">.</span><span class="n">wav</span> <span class="o">...</span><span class="p">]</span>
+ <span class="n">help</span><span class="p">:</span> <span class="nb">bin</span><span class="o">/</span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="o">-</span><span class="n">h</span>
+
+<span class="n">Options</span><span class="p">:</span>
+ <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+ <span class="o">-</span><span class="n">v</span><span class="p">,</span> <span class="o">--</span><span class="n">verbose</span>         <span class="n">be</span> <span class="n">verbose</span>
+ <span class="o">-</span><span class="n">q</span><span class="p">,</span> <span class="o">--</span><span class="n">quiet</span>           <span class="n">be</span> <span class="n">quiet</span>
+ <span class="o">-</span><span class="n">C</span> <span class="o">&lt;</span><span class="n">config_file</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">conf</span><span class="o">=&lt;</span><span class="n">config_file</span><span class="o">&gt;</span>
+                       <span class="n">configuration</span> <span class="n">file</span>
+ <span class="o">-</span><span class="n">s</span> <span class="o">&lt;</span><span class="n">samplerate</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">samplerate</span><span class="o">=&lt;</span><span class="n">samplerate</span><span class="o">&gt;</span>
+                       <span class="n">samplerate</span> <span class="n">at</span> <span class="n">which</span> <span class="n">to</span> <span class="n">run</span> <span class="n">the</span> <span class="n">pipeline</span>
+ <span class="o">-</span><span class="n">c</span> <span class="o">&lt;</span><span class="n">channels</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">channels</span><span class="o">=&lt;</span><span class="n">channels</span><span class="o">&gt;</span>
+                       <span class="n">number</span> <span class="n">of</span> <span class="n">channels</span> <span class="n">to</span> <span class="n">run</span> <span class="n">the</span> <span class="n">pipeline</span> <span class="k">with</span>
+ <span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">blocksize</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">blocksize</span><span class="o">=&lt;</span><span class="n">blocksize</span><span class="o">&gt;</span>
+                       <span class="n">blocksize</span> <span class="n">at</span> <span class="n">which</span> <span class="n">to</span> <span class="n">run</span> <span class="n">the</span> <span class="n">pipeline</span>
+ <span class="o">-</span><span class="n">a</span> <span class="o">&lt;</span><span class="n">analyzers</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">analyzers</span><span class="o">=&lt;</span><span class="n">analyzers</span><span class="o">&gt;</span>
+                       <span class="n">analyzers</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">pipeline</span>
+ <span class="o">-</span><span class="n">g</span> <span class="o">&lt;</span><span class="n">graphers</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">graphers</span><span class="o">=&lt;</span><span class="n">graphers</span><span class="o">&gt;</span>
+                       <span class="n">graphers</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">pipeline</span>
+ <span class="o">-</span><span class="n">e</span> <span class="o">&lt;</span><span class="n">encoders</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">encoders</span><span class="o">=&lt;</span><span class="n">encoders</span><span class="o">&gt;</span>
+                       <span class="n">encoders</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">pipeline</span>
+ <span class="o">-</span><span class="n">R</span> <span class="o">&lt;</span><span class="n">formats</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">results</span><span class="o">-</span><span class="n">formats</span><span class="o">=&lt;</span><span class="n">formats</span><span class="o">&gt;</span>
+                       <span class="nb">list</span> <span class="n">of</span> <span class="n">results</span> <span class="n">output</span> <span class="n">formats</span> <span class="k">for</span> <span class="n">the</span> <span class="n">analyzers</span>
+                       <span class="n">results</span>
+ <span class="o">-</span><span class="n">I</span> <span class="o">&lt;</span><span class="n">formats</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">images</span><span class="o">-</span><span class="n">formats</span><span class="o">=&lt;</span><span class="n">formats</span><span class="o">&gt;</span>
+                       <span class="nb">list</span> <span class="n">of</span> <span class="n">graph</span> <span class="n">output</span> <span class="n">formats</span> <span class="k">for</span> <span class="n">the</span> <span class="n">analyzers</span> <span class="n">results</span>
+ <span class="o">-</span><span class="n">o</span> <span class="o">&lt;</span><span class="n">outputdir</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">--</span><span class="n">ouput</span><span class="o">-</span><span class="n">directory</span><span class="o">=&lt;</span><span class="n">outputdir</span><span class="o">&gt;</span>
+                       <span class="n">output</span> <span class="n">directory</span>
+</pre></div>
+</div>
+<p>Find some preset examples in examples/presets/</p>
+</div>
+<div class="section" id="web-player">
+<h2>Web player<a class="headerlink" href="#web-player" title="Permalink to this headline">¶</a></h2>
+<p>TimeSide comes with a smart and pure <strong>HTML5</strong> audio player.</p>
+<p>Features:</p>
+<ul class="simple">
+<li>embed it in any audio web application</li>
+<li>stream, playback and download various audio formats on the fly</li>
+<li>synchronize sound with text, bitmap and vectorial events</li>
+<li>seek through various semantic, analytic and time synced data</li>
+<li>fully skinnable with CSS style</li>
+</ul>
+<img alt="TimeSide player" src="https://raw.githubusercontent.com/Parisson/TimeSide/dev/doc/images/timeside_player_01.png" />
+<p>Examples of the player embeded in the Telemeta open web audio CMS:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://parisson.telemeta.org/archives/items/PRS_07_01_03/">http://parisson.telemeta.org/archives/items/PRS_07_01_03/</a></li>
+<li><a class="reference external" href="http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/">http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/</a></li>
+</ul>
+<p>Development documentation:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/Parisson/TimeSide/wiki/Ui-Guide">https://github.com/Parisson/TimeSide/wiki/Ui-Guide</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">User Interfaces</a><ul>
+<li><a class="reference internal" href="#linux">Linux</a></li>
+<li><a class="reference internal" href="#macos-or-windows">MacOS or Windows</a></li>
+<li><a class="reference internal" href="#notebook">Notebook</a></li>
+<li><a class="reference internal" href="#use-you-own-data">Use you own data</a></li>
+<li><a class="reference internal" href="#web-server-experimental">Web Server (experimental)</a></li>
+<li><a class="reference internal" href="#batch">Batch</a></li>
+<li><a class="reference internal" href="#web-player">Web player</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Install</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="doc.html"
+                        title="next chapter">Documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/ui.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="doc.html" title="Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Install"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">TimeSide 0.8 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

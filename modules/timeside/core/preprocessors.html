@@ -1,0 +1,283 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>timeside.core.preprocessors &#8212; TimeSide 0.8 documentation</title>
+    <link rel="stylesheet" href="../../../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../copyright.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for timeside.core.preprocessors</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2009-2013 Parisson SARL</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of TimeSide.</span>
+
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published by</span>
+<span class="c1"># the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># Author : Thomas fillon &lt;thomas@parisson.com&gt;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Collections of preprocessors to use as decorators for the analyzers process</span>
+
+<span class="sd">    Preprocessors process the (frame, eod) arguments in order to handle various</span>
+<span class="sd">    preprocessing such as :</span>
+<span class="sd">        - Downmixing to mono</span>
+<span class="sd">        - Adapt the frames to match the input_blocksize and input_stepsize</span>
+<span class="sd">            of the analyzer</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="downmix_to_mono"><a class="viewcode-back" href="../../../api/analyzer/preprocessors.html#timeside.core.preprocessors.downmix_to_mono">[docs]</a><span class="k">def</span> <span class="nf">downmix_to_mono</span><span class="p">(</span><span class="n">process_func</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Pre-processing decorator that downmixes frames from multi-channel to mono</span>
+
+<span class="sd">    Downmix is achieved by averaging all channels</span>
+
+<span class="sd">    &gt;&gt;&gt; from timeside.core.preprocessors import downmix_to_mono</span>
+<span class="sd">    &gt;&gt;&gt; @downmix_to_mono</span>
+<span class="sd">    ... def process(analyzer,frames,eod):</span>
+<span class="sd">    ...     print &#39;Frames, eod inside process :&#39;</span>
+<span class="sd">    ...     print frames, eod</span>
+<span class="sd">    ...     return frames, eod</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; frames = np.asarray([[1,2],[3,4],[5,6],[7,8],[9,10]])</span>
+<span class="sd">    &gt;&gt;&gt; eod = False</span>
+<span class="sd">    &gt;&gt;&gt; frames_, eod_ = process(object(),frames,eod)</span>
+<span class="sd">    Frames, eod inside process :</span>
+<span class="sd">    [ 1.5  3.5  5.5  7.5  9.5] False</span>
+
+<span class="sd">    Outside Process frames and eod are preserved :</span>
+
+<span class="sd">    &gt;&gt;&gt; frames_</span>
+<span class="sd">    array([[ 1,  2],</span>
+<span class="sd">           [ 3,  4],</span>
+<span class="sd">           [ 5,  6],</span>
+<span class="sd">           [ 7,  8],</span>
+<span class="sd">           [ 9, 10]])</span>
+<span class="sd">    &gt;&gt;&gt; eod_</span>
+<span class="sd">    False</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="kn">import</span> <span class="nn">functools</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">process_func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="p">):</span>
+        <span class="c1"># Pre-processing</span>
+        <span class="k">if</span> <span class="n">frames</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">downmix_frames</span> <span class="o">=</span> <span class="n">frames</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">downmix_frames</span> <span class="o">=</span> <span class="n">frames</span>
+        <span class="c1"># Processing</span>
+        <span class="n">process_func</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="n">downmix_frames</span><span class="p">,</span> <span class="n">eod</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<div class="viewcode-block" id="frames_adapter"><a class="viewcode-back" href="../../../api/analyzer/preprocessors.html#timeside.core.preprocessors.frames_adapter">[docs]</a><span class="k">def</span> <span class="nf">frames_adapter</span><span class="p">(</span><span class="n">process_func</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Pre-processing decorator that adapt frames to match input_blocksize and</span>
+<span class="sd">    input_stepsize of the decorated analyzer</span>
+
+<span class="sd">    &gt;&gt;&gt; from timeside.core.preprocessors import frames_adapter</span>
+<span class="sd">    &gt;&gt;&gt; @frames_adapter</span>
+<span class="sd">    ... def process(analyzer,frames,eod):</span>
+<span class="sd">    ...     analyzer.frames.append(frames)</span>
+<span class="sd">    ...     return frames, eod</span>
+<span class="sd">    &gt;&gt;&gt; class Fake_Analyzer(object):</span>
+<span class="sd">    ...     def __init__(self):</span>
+<span class="sd">    ...         self.input_blocksize = 4</span>
+<span class="sd">    ...         self.input_stepsize = 3</span>
+<span class="sd">    ...         self.frames = [] # Container for the frame as viewed by process</span>
+<span class="sd">    ...     @staticmethod</span>
+<span class="sd">    ...     def id():</span>
+<span class="sd">    ...         return &#39;fake_analyzer&#39;</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; analyzer = Fake_Analyzer()</span>
+<span class="sd">    &gt;&gt;&gt; frames = np.asarray(range(0,12))</span>
+<span class="sd">    &gt;&gt;&gt; eod = False</span>
+<span class="sd">    &gt;&gt;&gt; frames_, eod_ = process(analyzer,frames,eod)</span>
+
+<span class="sd">    Inside the process the frames have been adapted to match input_blocksize</span>
+<span class="sd">    and input_stepsize</span>
+
+<span class="sd">    &gt;&gt;&gt; analyzer.frames</span>
+<span class="sd">    [array([0, 1, 2, 3]), array([3, 4, 5, 6]), array([6, 7, 8, 9])]</span>
+
+<span class="sd">    Outside the process, the original frames and eod are preserved:</span>
+
+<span class="sd">    &gt;&gt;&gt; frames_</span>
+<span class="sd">    array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11])</span>
+<span class="sd">    &gt;&gt;&gt; eod_</span>
+<span class="sd">    False</span>
+
+<span class="sd">    Releasing the process with eod=True will zeropad the last frame if necessary</span>
+
+<span class="sd">    &gt;&gt;&gt; frames = np.asarray(range(12,14))</span>
+<span class="sd">    &gt;&gt;&gt; eod = True</span>
+<span class="sd">    &gt;&gt;&gt; frames_, eod_ = process(analyzer,frames,eod)</span>
+<span class="sd">    &gt;&gt;&gt; analyzer.frames</span>
+<span class="sd">    [array([0, 1, 2, 3]), array([3, 4, 5, 6]), array([6, 7, 8, 9]), array([ 9, 10, 11, 12]), array([12, 13,  0,  0])]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="kn">import</span> <span class="nn">functools</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="k">class</span> <span class="nc">framesBuffer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocksize</span><span class="p">,</span> <span class="n">stepsize</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">=</span> <span class="n">blocksize</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span> <span class="o">=</span> <span class="n">stepsize</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">def</span> <span class="nf">frames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">stack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">frames</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stack</span> <span class="o">=</span> <span class="n">frames</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="n">stack_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
+
+            <span class="n">nb_frames</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">stack_length</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span>
+            <span class="n">nb_frames</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nb_frames</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">frames_length</span> <span class="o">=</span> <span class="n">nb_frames</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span>
+            <span class="n">last_block_size</span> <span class="o">=</span> <span class="n">stack_length</span> <span class="o">-</span> <span class="n">frames_length</span>
+
+            <span class="k">if</span> <span class="n">eod</span><span class="p">:</span>
+                <span class="c1"># Final zeropadding</span>
+                <span class="n">pad_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span> <span class="o">-</span> <span class="n">last_block_size</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">x</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">frames</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+                <span class="n">stack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">stack</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">pad_shape</span><span class="p">,</span>
+                                                        <span class="n">dtype</span><span class="o">=</span><span class="n">frames</span><span class="o">.</span><span class="n">dtype</span><span class="p">)])</span>
+                <span class="n">nb_frames</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="n">nb_frames</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span><span class="p">:]</span>
+
+            <span class="n">eod_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">nb_frames</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">eod</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">eod_list</span><span class="p">):</span>
+                <span class="n">eod_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">eod</span>
+
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">eod</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_frames</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span><span class="p">),</span> <span class="n">eod_list</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">stack</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocksize</span><span class="p">],</span> <span class="n">eod</span><span class="p">)</span>
+
+    <span class="n">aubio_analyzers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;aubio_melenergy&#39;</span><span class="p">,</span> <span class="s1">&#39;aubio_mfcc&#39;</span><span class="p">,</span> <span class="s1">&#39;aubio_pitch&#39;</span><span class="p">,</span> <span class="s1">&#39;aubio_specdesc&#39;</span><span class="p">,</span> <span class="s1">&#39;aubio_temporal&#39;</span><span class="p">]</span>
+    
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">process_func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="p">):</span>
+        <span class="c1"># Pre-processing</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="s1">&#39;frames_buffer&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">id</span><span class="p">()</span> <span class="ow">in</span> <span class="n">aubio_analyzers</span><span class="p">:</span>
+                <span class="c1"># Aubio analyzers are waiting for stepsize length block</span>
+                <span class="c1"># and reconstructs blocksize length frames itself</span>
+                <span class="c1"># thus frames_adapter has to provide Aubio Pitch blocksize=stepsize length frames</span>
+                <span class="n">analyzer</span><span class="o">.</span><span class="n">frames_buffer</span> <span class="o">=</span> <span class="n">framesBuffer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">.</span><span class="n">input_stepsize</span><span class="p">,</span>
+                                                      <span class="n">analyzer</span><span class="o">.</span><span class="n">input_stepsize</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">analyzer</span><span class="o">.</span><span class="n">frames_buffer</span> <span class="o">=</span> <span class="n">framesBuffer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">.</span><span class="n">input_blocksize</span><span class="p">,</span>
+                                                      <span class="n">analyzer</span><span class="o">.</span><span class="n">input_stepsize</span><span class="p">)</span>
+
+        <span class="c1"># Processing</span>
+        <span class="k">for</span> <span class="n">adapted_frames</span><span class="p">,</span> <span class="n">adapted_eod</span> <span class="ow">in</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">frames_buffer</span><span class="o">.</span><span class="n">frames</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="p">):</span>
+            <span class="n">process_func</span><span class="p">(</span><span class="n">analyzer</span><span class="p">,</span> <span class="n">adapted_frames</span><span class="p">,</span> <span class="n">adapted_eod</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span>
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">TimeSide 0.8 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; <a href="../../../copyright.html">Copyright</a> 2014-2016 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>
