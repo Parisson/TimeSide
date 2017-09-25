@@ -47,4 +47,4 @@ dependencies:
       - vamp
       - watchdog
       - sphinx_rtd_theme
-      - travis-sphinx
+      - ghp-import
