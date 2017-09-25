@@ -31,7 +31,7 @@ script:
     fi
 # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
-       docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/src/timeside/doc; pip install sphinx numpydoc; make html; make doctest";
+       docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/src/timeside/docs; pip install sphinx numpydoc; make html; make doctest";
     fi
 #  # -------------CLI-------------------------
   - if [[ $TEST_TARGET == 'cli' ]]; then

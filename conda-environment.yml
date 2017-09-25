@@ -3,13 +3,12 @@ channels:
   - conda-forge
   - thomasfillon
 dependencies:
-  - aubio  # in conda-forge channel (optionnal)
   - h5py
   - jsonschema
   - jupyter
   - matplotlib
   - mysql-python
-  - networkx
+  - networkx<2.0
   - numpy
   - pandas
   - pillow
@@ -20,10 +19,13 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
-  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
+  - aubio # in conda-forge channel (optionnal)
   - yaafe  # in conda-forge channel (optionnal)
   - essentia
+  - librosa
+  - tensorflow
+  - sphinx
   - pip:
       - celery==3.*
       - django-bootstrap-pagination
@@ -43,3 +45,5 @@ dependencies:
       - uwsgi
       - vamp
       - watchdog
+      - sphinx_rtd_theme
+      - ghp-import
