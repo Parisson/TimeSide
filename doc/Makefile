@@ -172,6 +172,7 @@ install_deps:
 	@echo "All dependencies installed."
 
 gh-pages:
+	cd ..
 	git checkout gh-pages
 	rm -rf build _sources _static
 	git checkout dev $(GH_PAGES_SOURCES)
