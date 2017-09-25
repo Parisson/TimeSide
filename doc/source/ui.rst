@@ -5,7 +5,7 @@ User Interfaces
 Linux
 -----
 
-Just run the interactive python shell from the docker composition::
+To run the python shell, just do it through the docker composition::
 
     docker-compose run app ipython
 

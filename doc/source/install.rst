@@ -10,7 +10,7 @@ Then clone TimeSide::
 
     git clone --recursive https://github.com/Parisson/TimeSide.git
     cd TimeSide
-    docker-compose build
+    docker-compose pull
 
 That's it! Now please go to the documentation to see how to use it.
 
