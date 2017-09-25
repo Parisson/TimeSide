@@ -22,4 +22,4 @@ gid='www-data'
 # pip install jsonfield
 
 # wait for other services
-bash $app/scripts/wait.sh
+bash $app/bin/wait.sh
