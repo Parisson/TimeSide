@@ -22,55 +22,61 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IValueAnalyzer
+from timeside.core.tools.parameters import HasTraits, Int
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
+
+from .essentia_dissonance import Essentia_Dissonance
 from timeside.core.tools.parameters import store_parameters
 
-import vamp
-import vampyhost
-from .vampyhost_wrapper import VampAnalyzer
 
+class Essentia_Dissonance_Value(Analyzer):
 
-class VampTuning(VampAnalyzer):
-
-    """Tuning from NNLS Chroma vamp plugins"""
+    """Mean Dissonance Value from Essentia"""
 
     implements(IValueAnalyzer)
 
     _schema = {'$schema': 'http://json-schema.org/schema#',
-               'properties': {},
+               'properties': {
+               },
                'type': 'object'}
 
     @store_parameters
     def __init__(self):
-        super(VampTuning, self).__init__()
-        # Define Vamp plugin key and output
-        self.plugin_key = 'nnls-chroma:tuning'
-        self.plugin_output = 'tuning'
+        super(Essentia_Dissonance_Value, self).__init__()
+        self.parents['dissonance'] = Essentia_Dissonance()
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(VampTuning, self).setup(
+        super(Essentia_Dissonance_Value, self).setup(
             channels, samplerate, blocksize, totalframes)
 
     @staticmethod
     @interfacedoc
     def id():
-        return "vamp_tuning"
+        return "essentia_dissonance_value"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Tuning"
+        return "Dissonance mean value from Essentia"
 
     @staticmethod
     @interfacedoc
     def unit():
-        return "Hz"
+        return ""
 
+    @downmix_to_mono
+    @frames_adapter
+    def process(self, frames, eod=False):
+        return frames, eod
 
     def post_process(self):
-        super(VampTuning, self).post_process()
-        tuning = self.new_result(data_mode='value', time_mode='global')
-        tuning.data_object.value = self.vamp_results['list'][0]['values']
-        self.add_result(tuning)
+        dissonance = self.parents['dissonance'].results['essentia_dissonance'].data
+        if dissonance.any():
+            disson_mean = dissonance[dissonance > 0].mean()
+        else:
+            disson_mean = 0
+        dissonance_value = self.new_result(data_mode='value', time_mode='global')
+        dissonance_value.data_object.value = disson_mean
+        self.add_result(dissonance_value)

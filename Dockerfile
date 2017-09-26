@@ -1,5 +1,5 @@
 # Copyright 2013 Thatcher Peskens
-# Copyright 2015, 2016 Guillaume Pellerin, Thomas Fillon
+# Copyright 2015, 2017 Guillaume Pellerin, Thomas Fillon
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ RUN rm /opt/miniconda/lib/libgio* &&\
 COPY . /srv/src/timeside/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
-RUN mkdir -p $PYTHON_EGG_CACHE
-RUN chown www-data:www-data $PYTHON_EGG_CACHE
+RUN mkdir -p $PYTHON_EGG_CACHE && \
+    chown www-data:www-data $PYTHON_EGG_CACHE
 
 # Install TimeSide
 RUN pip install -e .

@@ -22,7 +22,9 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IValueAnalyzer
+#from timeside.core.tools.parameters import HasTraits
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
+
 from timeside.core.tools.parameters import store_parameters
 
 import vamp
@@ -30,9 +32,9 @@ import vampyhost
 from .vampyhost_wrapper import VampAnalyzer
 
 
-class VampTuning(VampAnalyzer):
+class VampTempo(VampAnalyzer):
 
-    """Tuning from NNLS Chroma vamp plugins"""
+    """Tempo from QMUL vamp plugins"""
 
     implements(IValueAnalyzer)
 
@@ -42,35 +44,34 @@ class VampTuning(VampAnalyzer):
 
     @store_parameters
     def __init__(self):
-        super(VampTuning, self).__init__()
+        super(VampTempo, self).__init__()
         # Define Vamp plugin key and output
-        self.plugin_key = 'nnls-chroma:tuning'
-        self.plugin_output = 'tuning'
+        self.plugin_key = 'qm-vamp-plugins:qm-tempotracker'
+        self.plugin_output = 'tempo'
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(VampTuning, self).setup(
+        super(VampTempo, self).setup(
             channels, samplerate, blocksize, totalframes)
 
     @staticmethod
     @interfacedoc
     def id():
-        return "vamp_tuning"
+        return "vamp_tempo"
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Tuning"
+        return "Tempo"
 
     @staticmethod
     @interfacedoc
     def unit():
-        return "Hz"
-
+        return "bpm"
 
     def post_process(self):
-        super(VampTuning, self).post_process()
-        tuning = self.new_result(data_mode='value', time_mode='global')
-        tuning.data_object.value = self.vamp_results['list'][0]['values']
-        self.add_result(tuning)
+        super(VampTempo, self).post_process()
+        tempo = self.new_result(data_mode='value', time_mode='global')
+        tempo.data_object.value = self.vamp_results['list'][0]['values']
+        self.add_result(tempo)

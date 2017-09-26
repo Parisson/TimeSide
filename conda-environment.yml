@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - thomasfillon
 dependencies:
-  - aubio  # in conda-forge channel (optionnal)
   - h5py
   - jsonschema
   - jupyter
@@ -20,8 +19,8 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
-  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
+  - aubio # in conda-forge channel (optionnal)
   - yaafe  # in conda-forge channel (optionnal)
   - essentia
   - librosa

@@ -31,6 +31,9 @@ def get_dependencies(env_yml_file):
         'pytables': 'tables',  # insert 'tables' instead of 'pytables'
         'yaafe': '',
         'essentia': ''
+        # Yaafe and essentia are not seen by pip during pip install -e .
+        # and not visible with pip list
+        # TODO: check if setuptools can help
     }
     for dep in environment['dependencies']:
         if isinstance(dep, str) and not(dep.startswith('python')):
