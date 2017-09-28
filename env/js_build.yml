@@ -30,4 +30,4 @@ js_build:
   ports:
     - "9001:9000"
     - "35729:35729"
-  command: sh -c "cd /srv/src/timeside/timeside/player/static/timeside2; npm install; bower install --allow-root; grunt build --force;"
+  command: sh -c "cd /srv/src/timeside/timeside/player/static/timeside2; npm install; bower install --allow-root; grunt build --force; npm prune --production;"
