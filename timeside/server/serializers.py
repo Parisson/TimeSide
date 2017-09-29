@@ -100,11 +100,22 @@ class ItemWaveformSerializer(ItemSerializer):
 
     item_url = serializers.SerializerMethodField('get_url')
     waveform = serializers.SerializerMethodField()
+    waveform_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = ts.models.Item
-        fields = ('item_url', 'title', 'waveform_url', 'waveform')
+        fields = ('item_url', 'title', 'waveform_url',
+                  'waveform', 'waveform_image_url')
 
+    def get_waveform_image_url(self, obj):
+        request = self.context['request']
+        from .utils import get_or_run_proc_result
+        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        return reverse('timeside-result-visualization',
+                       kwargs={'uuid': result.uuid},
+                       request=request)+'?id=waveform_analyzer'
+
+        
     def get_waveform(self, obj):
         request = self.context['request']
         start = float(request.GET.get('start', 0))
