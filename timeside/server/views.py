@@ -462,6 +462,7 @@ def serve_media(filename, content_type="", buffering=True):
     else:
         response = FileResponse(open(filename, 'rb'))
         response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+        response['Content-Type'] = content_type
         return response
 
 
