@@ -384,6 +384,9 @@ class ItemDetailExport(DetailView):
     model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
+    def get_object(self):
+        return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))
+
     def get_context_data(self, **kwargs):
         context = super(ItemDetailExport, self).get_context_data(**kwargs)
         context['Result'] = 'Result'
