@@ -454,16 +454,33 @@ class ItemDetail(DetailView):
         context['ts_item'] = json.dumps(ts_item)
         return context
 
-def serve_media_nginx(filename, mime_type):
-    # Serve file using X-Accel-Redirect
-    response = HttpResponse()
-    file_url = settings.MEDIA_URL + os.path.relpath(filename, settings.MEDIA_ROOT)
-    response['Content-Disposition'] = "attachment; filename=%s" % (file_url)
-    response['Content-Type'] = mime_type
+def serve_media(filename, content_type="", buffering=True):
+    if not settings.DEBUG:
+        return nginx_media_accel(filename,
+                                 content_type=content_type,
+                                 buffering=buffering)
+    else:
+        response = FileResponse(open(filename, 'rb'))
+        response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+        return response
 
-    response['X-Accel-Redirect'] = file_url
-    
+
+def nginx_media_accel(media_path, content_type="", buffering=True):
+    """Send a protected media file through nginx with X-Accel-Redirect"""
+
+    response = HttpResponse()
+    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
+    filename = os.path.basename(media_path)
+    response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    response['Content-Type'] = content_type
+    response['X-Accel-Redirect'] = url
+
+    if not buffering:
+        response['X-Accel-Buffering'] = 'no'
+        #response['X-Accel-Limit-Rate'] = 524288
+
     return response
+
 
 class AudioRenderer(renderers.BaseRenderer):
     media_type = 'audio/*'
@@ -530,10 +547,10 @@ class ItemTranscode(DetailView):
                 return self.get(request, uuid, extension)
             # Result and file exist --> OK
 
-            # Serve file using X-Accel-Redirect
-            return serve_media_nginx(filename=result.file.path, mime_type=result.mime_type)
+            # Serve file using X-Accel-Redirect Nginx if DEBUG=False
+            return serve_media(filename=result.file.path,
+                               content_type=result.mime_type)
 
-            
         except models.Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
