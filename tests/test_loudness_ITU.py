@@ -10,7 +10,8 @@ from timeside.core.tools.test_samples import samples
 class TestLoudnessITU(unittest.TestCase):
 
     def setUp(self):
-        self.analyzer = get_processor('loudness_itu')()
+        self.loudness = get_processor('loudness_itu')()
+        self.loudness_range = get_processor('loudness_itu_range')()
 
     def testOnC4Scale(self):
         "runs on C4 scale"
@@ -18,9 +19,11 @@ class TestLoudnessITU(unittest.TestCase):
 
     def tearDown(self):
         decoder = FileDecoder(self.source)
-        (decoder | self.analyzer).run()
-        self.assertEqual(self.analyzer.results['loudness_itu.block_loudness'].data_object.value.shape[0], 91)
-        self.assertAlmostEqual(self.analyzer.results['loudness_itu.block_loudness'].data_object.value.mean(), -64.06, places=1)
+        (decoder | self.loudness | self.loudness_range).run()
+        self.assertEqual(self.loudness.results['loudness_itu.block_loudness'].data_object.value.shape[0], 91)
+        self.assertAlmostEqual(self.loudness.results['loudness_itu.block_loudness'].data_object.value.mean(), -64.06, places=1)
+        self.assertAlmostEqual(self.loudness_range.results['loudness_itu_range'].data,
+                               61.17, places=1)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

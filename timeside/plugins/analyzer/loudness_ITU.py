@@ -77,9 +77,9 @@ class LoudnessITU(Analyzer):
     @interfacedoc
     def setup(self, channels=None, samplerate=None,
               blocksize=None, totalframes=None):
-        super(LoudnessITU, self).setup(
+        super(Analyzer, self).setup(
             channels, samplerate, blocksize, totalframes)
-
+        
         self.input_blocksize = int(round(0.4 * self.input_samplerate))  # return a 400ms block
         self.input_stepsize = int(round(0.1 * self.input_samplerate))  # 75% overlap <=> 25% step
         self.z = [[] for x in xrange(self.input_channels)]  # generate empty list of list which dimensionality matches the number of channels
@@ -101,6 +101,11 @@ class LoudnessITU(Analyzer):
             self.A1 = np.array([1.0, -1.69065929318241, 0.73248077421585])
             self.B2 = np.array([1.0, -2.0, 1.0])
             self.A2 = np.array([1.0, -1.99004745483398, 0.99007225036621])
+
+        # Setup again from parent class = Analyzer to get result_blocksize and result_step_size setup properly 
+        super(LoudnessITU, self).setup(
+            channels, samplerate, blocksize, totalframes)
+
 
     @staticmethod
     @interfacedoc
