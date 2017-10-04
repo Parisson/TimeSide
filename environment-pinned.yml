@@ -10,8 +10,10 @@ dependencies:
 - aubio=0.4.5=np112py27_2
 - audioread=2.1.4=py27_2
 - babel=2.4.0=py27_0
-- backports.shutil_get_terminal_size=1.0.0=py_2
-- backports.weakref=1.0rc1=py27_0
+- backports=1.0=py27_1
+- backports.functools_lru_cache=1.4=py27_1
+- backports.shutil_get_terminal_size=1.0.0=py_3
+- backports.weakref=1.0rc1=py27_1
 - backports_abc=0.5=py27_0
 - blas=1.1=openblas
 - bleach=1.5.0=py27_0
@@ -45,7 +47,7 @@ dependencies:
 - hdf5=1.8.18=1
 - html5lib=0.9999999=py27_0
 - icu=58.1=1
-- idna=2.5=py27_0
+- idna=2.6=py27_1
 - imagesize=0.7.1=py27_0
 - ipaddress=1.0.18=py27_0
 - ipykernel=4.6.1=py27_0
@@ -73,8 +75,9 @@ dependencies:
 - libvorbis=1.3.5=0
 - libxcb=1.12=1
 - libxml2=2.9.5=0
+- markdown=2.6.9=py27_0
 - markupsafe=1.0=py27_0
-- matplotlib=2.0.2=py27_2
+- matplotlib=2.1.0=py27_0
 - mistune=0.7.4=py27_0
 - mock=2.0.0=py27_0
 - mpg123=1.24.0=1
@@ -107,7 +110,7 @@ dependencies:
 - pyparsing=2.2.0=py27_0
 - pyqt=5.6.0=py27_4
 - pysocks=1.6.7=py27_0
-- pytables=3.4.2=np112py27_1
+- pytables=3.4.2=np112py27_3
 - python=2.7.13=1
 - python-dateutil=2.6.1=py27_0
 - pytz=2017.2=py27_0
@@ -118,7 +121,7 @@ dependencies:
 - readline=6.2=0
 - requests=2.18.4=py27_1
 - resampy=0.2.0=py27_0
-- scandir=1.5=py27_1
+- scandir=1.6=py27_0
 - scikit-learn=0.19.0=py27_blas_openblas_201
 - scipy=0.19.1=py27_blas_openblas_202
 - setuptools=36.3.0=py27_0
@@ -128,7 +131,7 @@ dependencies:
 - sip=4.18=py27_1
 - six=1.11.0=py27_1
 - snowballstemmer=1.2.1=py27_0
-- sphinx=1.6.3=py27_0
+- sphinx=1.6.4=py27_0
 - sphinxcontrib-websupport=1.0.1=py27_0
 - sqlite=3.13.0=1
 - ssl_match_hostname=3.5.0.1=py27_1
@@ -160,21 +163,22 @@ dependencies:
 - libgfortran=3.0.0=1
 - llvmlite=0.20.0=py27_0
 - lzo=2.06=0
-- markdown=2.6.9=py27_0
 - mysql-python=1.2.5=py27_0
 - numba=0.35.0=np112py27_0
 - redis=3.2.0=0
 - essentia=2.1_beta4=py27hf6fdc9d_2
-- simplejson=3.10.0=py27_0
 - pip:
   - amqp==1.4.9
   - anyjson==0.3.3
   - argh==0.26.2
   - backports-abc==0.5
+  - backports.functools-lru-cache==1.4
   - backports.shutil-get-terminal-size==1.0.0
   - backports.ssl-match-hostname==3.5.0.1
   - billiard==3.3.0.23
   - celery==3.1.25
+  - coreapi==2.3.1
+  - coreschema==0.0.4
   - django==1.9.13
   - django-bootstrap-pagination==1.6.2
   - django-bootstrap3==9.0.0
@@ -187,20 +191,23 @@ dependencies:
   - djangorestframework==3.6.4
   - ghp-import==0.5.5
   - ipython-genutils==0.2.0
+  - itypes==1.1.0
   - jsonfield==2.0.2
   - jupyter-client==5.1.0
   - jupyter-console==5.1.0
   - jupyter-core==4.3.0
   - kombu==3.0.37
   - mutagen==1.38
+  - numpydoc==0.7.0
   - pathtools==0.1.2
   - prompt-toolkit==1.0.15
   - py-sonicvisualiser==0.3
   - pympi-ling==1.69
   - sphinx-rtd-theme==0.2.4
-  - sqlparse==0.2.3
+  - sqlparse==0.2.4
   - tables==3.4.2
+  - uritemplate==3.0.0
   - uwsgi==2.0.15
   - vamp==1.1.0
   - watchdog==0.8.3
-prefix: /opt/miniconda/envs/app
+prefix: /srv/cache/miniconda/envs/app

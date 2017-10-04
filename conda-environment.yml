@@ -27,6 +27,7 @@ dependencies:
   - tensorflow
   - sphinx
   - pip:
+      - coreapi
       - celery==3.*
       - django-bootstrap-pagination
       - django-bootstrap3
@@ -39,7 +40,10 @@ dependencies:
       - django==1.9.*
       - djangorestframework==3.*
       - jsonfield
+      - markdown
       - mutagen
+      - numpydoc
+      - pygments
       - py_sonicvisualiser==0.3
       - pympi-ling
       - uwsgi
