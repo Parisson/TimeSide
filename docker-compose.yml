@@ -29,6 +29,7 @@ var:
      - ./var/backup:/srv/backup
      - ./var/static:/srv/static
      - /srv/bower
+     - ./var/cache:/srv/cache
   command: "true"
 
 db:
