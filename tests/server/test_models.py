@@ -1,3 +1,4 @@
+
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.reverse import reverse
@@ -24,10 +25,8 @@ class ItemTests(APITestCase):
 
         self.item_title = 'C4_scale.wav'
         self.item_uuid = Item.objects.get(title=self.item_title).uuid
-
-        # Make all requests in the context of a logged in session.
-        self.client.login(username='admin', password='admin')
-        
+        # Unauthenticate subsequent requests
+        self.client.force_authenticate(user=None)
 
     def test_list_items(self):
         """
