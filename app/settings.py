@@ -150,9 +150,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django_extensions',
+    'rest_framework',
+    'rest_framework.authtoken',
     'timeside.server',
     'timeside.player',
-    'rest_framework',
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
@@ -192,6 +193,13 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ), 
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
 
 BROKER_URL = env('BROKER_URL')
