@@ -25,15 +25,15 @@ class ItemTests(APITestCase):
         self.item_title = 'C4_scale.wav'
         self.item_uuid = Item.objects.get(title=self.item_title).uuid
 
+        # Make all requests in the context of a logged in session.
+        self.client.login(username='admin', password='admin')
+        
+
     def test_list_items(self):
         """
         Ensure we can get the list of items
         """
         item_list_url = reverse('item-list')
-        
-        # Make all requests in the context of a logged in session.
-        self.client.login(username='admin', password='admin')
-        
         response = self.client.get(item_list_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), len(self.samples))

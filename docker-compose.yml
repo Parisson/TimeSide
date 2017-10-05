@@ -49,6 +49,7 @@ app:
   volumes:
     - ./app:/srv/app
     - ./timeside:/srv/src/timeside/timeside
+    - ./tests:/srv/src/timeside/tests
   volumes_from:
     - var
   env_file:
