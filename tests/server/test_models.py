@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework.reverse import reverse
 
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from timeside.core.tools.test_samples import generateSamples
 from timeside.server.models import Item
@@ -25,9 +26,11 @@ class ItemTests(APITestCase):
 
         self.item_title = 'C4_scale.wav'
         self.item_uuid = Item.objects.get(title=self.item_title).uuid
-        # Unauthenticate subsequent requests
-        self.client.force_authenticate(user=None)
-
+        # Make all requests in the context of a logged in session.
+        user = User.objects.create_user(username='john',
+                                        password='banana')
+        self.client.login(username='john', password='banana')
+        
     def test_list_items(self):
         """
         Ensure we can get the list of items
