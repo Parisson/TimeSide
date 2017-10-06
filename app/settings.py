@@ -7,7 +7,6 @@ env = environ.Env(DEBUG=(bool, False),
 # Django settings for server project.
 DEBUG = env('DEBUG')  # False if not in os.environ
 
-DEBUG = True
 import os
 import sys
 sys.dont_write_bytecode = True
