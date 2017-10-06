@@ -7,7 +7,7 @@ env = environ.Env(DEBUG=(bool, False),
 # Django settings for server project.
 DEBUG = env('DEBUG')  # False if not in os.environ
 
-
+DEBUG = True
 import os
 import sys
 sys.dont_write_bytecode = True
@@ -240,3 +240,6 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x : True
     }
+
+
+LOGIN_REDIRECT_URL = '/'

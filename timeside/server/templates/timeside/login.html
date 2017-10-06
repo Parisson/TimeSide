@@ -1,0 +1,53 @@
+{% extends "timeside/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<script>
+$(document).ready(function() {
+    $(this).keydown(function(e) {
+        if (e.keyCode == '13') {
+            $("#_loginForm").submit();
+        }
+    });
+});
+</script>
+
+
+<div id="module-set-left" class="row">
+{{ block.super }}
+<div class="large-4 columns">&nbsp;</div>
+<div class="module large-4 columns">
+    <span class="module-title">
+    &nbsp;<h3>{% trans "User authentication" %}</h3></span>
+
+<div style="background-color: white; align: center; padding: 1em;">
+
+<form id="_loginForm" method="post" action="{% url "timeside-login" %}">{% csrf_token %}
+
+{% if form.errors %}
+<p class="login-error">{% trans "Your username and password didn't match. Please try again." %}</p>
+{% endif %}
+
+<table>
+<tr>
+    <td><label>{{ form.username.label_tag }}</label></td>
+	<td>{{ form.username }}</td>
+</tr>
+<tr>
+	<td><label>{{ form.password.label_tag }}</label></td>
+	<td>{{ form.password }}</td>
+</tr>
+</table>
+
+<p style="margin-top: 0.5em;">
+<a href="#" onclick="$('#_loginForm').submit();">
+  <button type="button" class="btn btn-default">
+    <span class="glyphicon glyphicon-log-in"></span> {% trans "Sign in" %}
+  </button>
+</a>
+
+</form>
+</div>
+</div>
+</div>
+{% endblock %}
