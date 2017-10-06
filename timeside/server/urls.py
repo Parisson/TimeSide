@@ -4,6 +4,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from rest_framework import routers
+from rest_framework.authtoken import views as authtoken_views
+
 from rest_framework.documentation import include_docs_urls
 
 from timeside.server import views
@@ -36,7 +38,9 @@ urlpatterns = [
     url(r'^api/', include(api_router.urls)),
     # Docs
     url(r'^api/docs/', include_docs_urls(title='Timeside Web API')),
-   # Items
+    # API endpoint for Generating Authentification token
+    url(r'^api/token-auth/', authtoken_views.obtain_auth_token),
+    # Items
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
         # Get transcoded audio
