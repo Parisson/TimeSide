@@ -29,7 +29,9 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
 
 
   //A déplacer!!!!
-  /*api.setInterceptEndCallFunction(function(res) {
+  
+
+  api.setInterceptEndCallFunction(function(res) {
     
     try {
 
@@ -50,13 +52,18 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
           return cookieValue;
       }
       var csrfToken = getCookie('csrftoken');
+
+      //test stupide
+      if (!csrfToken)
+        csrfToken = "7634de7f116fe36d4c152f66c57544abb765181c";
+
       //var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
       if (csrfToken) {
         //console.log("Ok CSRF : "+csrfToken);
         injector.set(injector.cfg.csrfToken,csrfToken);
         var apiController = injector.get(injector.cfg.apiController);
-        apiController.removeHeader("X-CSRF-TOKEN");
-        apiController.addHeader("X-CSRF-TOKEN",csrfToken);
+        apiController.removeHeader("X-CSRFToken");
+        apiController.addHeader("X-CSRFToken",csrfToken);
       }
       else {
         console.log('No CSRF Token?');
@@ -65,7 +72,7 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
     catch (e) {
       console.error("error while catching end call XHR : "+(e ? JSON.stringify(e) : "NULL?"));
     }
-  });*/
+  });
 
 
   //end déplacer
@@ -89,6 +96,10 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
     this.apiController = api;
     injector.set(injector.config.api, api.api);
     injector.set(injector.config.apiController, api);
+
+    var apiController = injector.get(injector.cfg.apiController);
+    apiController.removeHeader("X-CSRFToken");
+    apiController.addHeader("X-CSRFToken","7634de7f116fe36d4c152f66c57544abb765181c");
 
   });
 

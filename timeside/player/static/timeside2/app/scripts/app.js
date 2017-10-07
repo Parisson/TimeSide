@@ -30,6 +30,16 @@ function (Backbone,A ,NavController,InitDataController,Router, LayoutView,app) {
     });
     A.injector.set(A.injector.config['mainRouter'],this.router);
 
+    var originajax = $.ajax;
+    /*$.ajax = function(obj) {
+      if ( (! obj.headers) && A.injector.get('serverToken') )
+        obj.headers = {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+        };
+
+      return originajax(obj);
+    };*/
+
 
     this.layout = new LayoutView();
     app.main.show(this.layout);
