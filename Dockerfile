@@ -32,8 +32,9 @@ RUN apt-get update && \
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
 RUN conda update conda &&\
-    conda config --append channels conda-forge &&\
+    conda config --append channels conda-forge --append channels thomasfillon &&\
     conda env update --name root --file environment-pinned.yml &&\
+    pip install -U --force-reinstall functools32 &&\              
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
@@ -50,11 +51,13 @@ RUN mkdir -p $PYTHON_EGG_CACHE && \
 RUN pip install -e .
 
 # Install Timeside plugins from ./lib
-COPY ./app/scripts/setup_plugins.sh /srv/app/scripts/setup_plugins.sh
+COPY ./app/bin/setup_plugins.sh /srv/app/bin/setup_plugins.sh
 COPY ./lib/ /srv/src/plugins/
+RUN /bin/bash /srv/app/bin/setup_plugins.sh
 
-
-RUN /bin/bash /srv/app/scripts/setup_plugins.sh
+# Install Vamp plugins
+COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/install_vamp_plugins.sh
+RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 WORKDIR /srv/app
 EXPOSE 8000

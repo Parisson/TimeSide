@@ -169,3 +169,7 @@ install_deps:
 	pip install $(DEPENDENCIES)
 	@echo
 	@echo "All dependencies installed."
+
+gh-pages:
+	make html
+	ghp-import -n build/html

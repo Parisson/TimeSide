@@ -27,4 +27,4 @@ app:
     - anv/sqlite.env
   ports:
     - "8000:8000"
-  command: /bin/bash app/scripts/app.sh --runserver
+  command: /bin/bash app/bin/app.sh --runserver

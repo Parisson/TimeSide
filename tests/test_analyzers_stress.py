@@ -70,6 +70,7 @@ def _tests_factory(test_class, test_doc, list_analyzers, skip_reasons={}):
 skip_reasons = {'VampSimpleHost': ('VampSimpleHost bypasses the decoder '
                                    'and requires a file input'),
 
+                'VampTempo': ' VampTemo has no output for stress signal',
                 'IRITDiverg': 'IRIT_Diverg fails the stress test',
                 'IRITSinging': 'IRITSingings has to be fixed',
                 'IRITHarmoTracker': 'IRIT_HarmoTracker fails the stress test',

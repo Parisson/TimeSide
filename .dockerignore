@@ -2,7 +2,7 @@
 *.pyc
 *.egg-info
 !app/
-app/scripts/setup_plugins.sh
+app/bin/setup_plugins.sh
 build/
 dist/
 data/

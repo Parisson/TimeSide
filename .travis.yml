@@ -31,7 +31,7 @@ script:
     fi
 # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
-       docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/src/timeside/doc; pip install sphinx numpydoc; make html; make doctest";
+       docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/src/timeside/docs; pip install sphinx numpydoc; make html; make doctest";
     fi
 #  # -------------CLI-------------------------
   - if [[ $TEST_TARGET == 'cli' ]]; then
@@ -44,7 +44,7 @@ script:
        sleep 20;
        docker-compose -f docker-compose.yml -f env/build.yml up -d;
        sleep 20;
-       curl --fail --retry 10 --retry-delay 5  -v http://localhost:8000/timeside/api/items/;
+       curl --fail --retry 10 --retry-delay 5 -v -X GET "$(docker-compose port nginx 80)/timeside/api/items/" -H "Authorization":" Token Dummy_Token";
     fi
 #
 after_success:

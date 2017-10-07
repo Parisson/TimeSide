@@ -5,13 +5,12 @@
 *.swp
 *.egg-info
 *.log
-build
+*.log
 dist
 sdist
 .tags/
 eggs
 parts
-bin
 develop-eggs
 .installed.cfg
 *.directory
@@ -30,3 +29,4 @@ pip-log.txt
 tests/samples
 /timeside/player/static/timeside2/brain/CR Rv 21-06-2016
 /timeside/player/static/timeside2/brain/brain.txt
+var

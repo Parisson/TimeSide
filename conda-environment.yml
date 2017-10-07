@@ -1,14 +1,14 @@
 name: timeside
 channels:
   - conda-forge
+  - thomasfillon
 dependencies:
-  - aubio  # in conda-forge channel (optionnal)
   - h5py
   - jsonschema
   - jupyter
   - matplotlib
   - mysql-python
-  - networkx
+  - networkx<2.0
   - numpy
   - pandas
   - pillow
@@ -19,10 +19,15 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
-  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
-  - yaafe  # in yaafe channel (optionnal)
+  - aubio # in conda-forge channel (optionnal)
+  - yaafe  # in conda-forge channel (optionnal)
+  - essentia
+  - librosa
+  - tensorflow
+  - sphinx
   - pip:
+      - coreapi
       - celery==3.*
       - django-bootstrap-pagination
       - django-bootstrap3
@@ -35,8 +40,14 @@ dependencies:
       - django==1.9.*
       - djangorestframework==3.*
       - jsonfield
+      - markdown
       - mutagen
-      - py_sonicvisualiser==0.2-9-gebe83bd
+      - numpydoc
+      - pygments
+      - py_sonicvisualiser==0.3
       - pympi-ling
       - uwsgi
+      - vamp
       - watchdog
+      - sphinx_rtd_theme
+      - ghp-import
