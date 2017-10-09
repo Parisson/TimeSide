@@ -29,6 +29,14 @@ function (Backbone, Marionette, A,FakeData) {
       }, self=this;
 
 
+      return A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.analysis.get),null,null,
+            function(result) {
+              A._i.setOnCfg('allAnalysis',result);
+              return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+            }, function(error) {
+              alert("Non1");
+          });
+      
       var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/token-auth/'
         ,data,function(a,b,c) {
