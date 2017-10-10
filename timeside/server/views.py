@@ -402,18 +402,20 @@ class ItemDetailExport(DetailView):
                 Results[proc_id]['list'] = {}
 
                 for res_id, res in container.items():
-                if res.time_mode == 'segment':
-                    if res.data_mode == 'label':
-                        Results[proc_id]['list'][res_id] = {'elan': True,
-                                                            'sv': True,
-                                                            'Parameters': res.parameters,
-                                                            'name': res.name}
-                if res.time_mode == 'framewise':
-                    if res.data_mode == 'value':
-                        Results[proc_id]['list'][res_id] = {'elan': False,
-                                                            'sv': True,
-                                                            'Parameters': res.parameters,
-                                                            'name': res.name}
+                    if res.time_mode == 'segment':
+                        if res.data_mode == 'label':
+                            Results[proc_id]['list'][res_id] = {
+                                'elan': True,
+                                'sv': True,
+                                'Parameters': res.parameters,
+                                'name': res.name}
+                            if res.time_mode == 'framewise':
+                                if res.data_mode == 'value':
+                                    Results[proc_id]['list'][res_id] = {
+                                        'elan': False,
+                                        'sv': True,
+                                        'Parameters': res.parameters,
+                                        'name': res.name}
             elif result.mime_type:
                 Results[proc_id]['audio'] = ('audio' in result.mime_type) | (
                     'ogg' in result.mime_type)
