@@ -400,14 +400,8 @@ class ItemDetailExport(DetailView):
                 container.from_hdf5(result.hdf5.path)
                 Results[proc_id]['json'] = True
                 Results[proc_id]['list'] = {}
-            elif result.mime_type:
-                Results[proc_id]['audio'] = ('audio' in result.mime_type) | (
-                    'ogg' in result.mime_type)
-                Results[proc_id]['image'] = ('image' in result.mime_type)
-                Results[proc_id]['video'] = ('video' in result.mime_type)
-                container = {}
 
-            for res_id, res in container.items():
+                for res_id, res in container.items():
                 if res.time_mode == 'segment':
                     if res.data_mode == 'label':
                         Results[proc_id]['list'][res_id] = {'elan': True,
@@ -420,6 +414,12 @@ class ItemDetailExport(DetailView):
                                                             'sv': True,
                                                             'Parameters': res.parameters,
                                                             'name': res.name}
+            elif result.mime_type:
+                Results[proc_id]['audio'] = ('audio' in result.mime_type) | (
+                    'ogg' in result.mime_type)
+                Results[proc_id]['image'] = ('image' in result.mime_type)
+                Results[proc_id]['video'] = ('video' in result.mime_type)
+
         context['Results'] = Results
 
         return context
