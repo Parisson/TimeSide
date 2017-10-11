@@ -90,9 +90,9 @@ function (A) {
           $.ajax({
             type : "get",
             url : urlAnnotation,
-             headers : {
+            /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
-            },
+            },*/
             success : function(res) {
               result.push(res);
               indexAnalysis++;
@@ -129,9 +129,9 @@ function (A) {
           $.ajax({
             url : urlAnnotation,
             type : "get",
-            headers : {
+            /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
-            },
+            },*/
             success : function(res) {
               result.push(res);
               indexCurrentAnnotation++;

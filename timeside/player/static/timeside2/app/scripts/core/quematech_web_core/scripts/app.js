@@ -53,9 +53,7 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
       }
       var csrfToken = getCookie('csrftoken');
 
-      //test stupide
-      if (!csrfToken)
-        csrfToken = "7634de7f116fe36d4c152f66c57544abb765181c";
+      
 
       //var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
       if (csrfToken) {

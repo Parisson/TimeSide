@@ -59,9 +59,9 @@ function (A,d3) {
 
       $.ajax({url : urlTest,data : data,
         type : "get",
-        headers : {
+        /*headers : {
           "Authorization" : "Token "+A.injector.get('serverToken')
-        },
+        },*/
         error : function(error) {
           console.error('error on analysis : '+error);
         },
@@ -116,9 +116,9 @@ function (A,d3) {
 
       $.ajax({url :  A.getApiUrl()+'/analysis_tracks/',data : data,
         type : "post",
-        headers : {
+        /*headers : {
           "Authorization" : "Token "+A.injector.get('serverToken')
-        },
+        },*/
         error : function(error) {
           console.error('error on analysis tyrack : '+error);
         },
@@ -185,9 +185,9 @@ function (A,d3) {
           url : /*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/analysis_tracks/'
             +model.get('uuid'),
-          headers : {
+          /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
-            },
+            },*/
           type : 'DELETE'/*,
           data : data*/,
           success : function(res) {
@@ -217,9 +217,9 @@ function (A,d3) {
           url:A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/',
           type:"POST",
           data:dataJsonCall,
-           headers : {
+           /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
-            },
+            },*/
           contentType:"application/json; charset=utf-8",
           dataType:"json",
           success: function(res){

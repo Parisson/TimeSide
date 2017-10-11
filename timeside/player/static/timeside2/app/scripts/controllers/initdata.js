@@ -28,7 +28,7 @@ function (Backbone, Marionette, A,FakeData) {
         password : "quimitich"
       }, self=this;
 
-      A.injector.set(A.injector.cfg.serverToken,"7634de7f116fe36d4c152f66c57544abb765181c");
+      
 
 
       return A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.analysis.get),null,null,
@@ -39,7 +39,7 @@ function (Backbone, Marionette, A,FakeData) {
               alert("Non1");
           });
 
-      var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
+      /*var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'
           A.getApiUrl()+'/token-auth/'
         ,data,function(a,b,c) {
 
@@ -48,7 +48,7 @@ function (Backbone, Marionette, A,FakeData) {
           var apiController = A.injector.get(A.injector.cfg.apiController);
           apiController.removeHeader("X-CSRFToken");
           apiController.addHeader("X-CSRFToken",a.token);
-          apiController.addHeader("Authorization","Token "+a.token);
+          //apiController.addHeader("Authorization","Token "+a.token);
 
           A.injector.set(A.injector.cfg.serverToken,a.token);
 
@@ -61,7 +61,7 @@ function (Backbone, Marionette, A,FakeData) {
           });
 
         }
-      });
+      });*/
 
 
       return; // temp
