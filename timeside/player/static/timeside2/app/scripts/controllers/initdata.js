@@ -28,6 +28,8 @@ function (Backbone, Marionette, A,FakeData) {
         password : "quimitich"
       }, self=this;
 
+      A.injector.set(A.injector.cfg.serverToken,"7634de7f116fe36d4c152f66c57544abb765181c");
+
 
       return A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.analysis.get),null,null,
             function(result) {
@@ -36,7 +38,7 @@ function (Backbone, Marionette, A,FakeData) {
             }, function(error) {
               alert("Non1");
           });
-      
+
       var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/token-auth/'
         ,data,function(a,b,c) {

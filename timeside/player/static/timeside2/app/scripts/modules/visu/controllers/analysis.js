@@ -185,6 +185,9 @@ function (A,d3) {
           url : /*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/analysis_tracks/'
             +model.get('uuid'),
+          headers : {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+            },
           type : 'DELETE'/*,
           data : data*/,
           success : function(res) {
@@ -214,6 +217,9 @@ function (A,d3) {
           url:A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/',
           type:"POST",
           data:dataJsonCall,
+           headers : {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+            },
           contentType:"application/json; charset=utf-8",
           dataType:"json",
           success: function(res){
