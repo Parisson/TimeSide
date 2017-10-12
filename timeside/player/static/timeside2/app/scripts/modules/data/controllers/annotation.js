@@ -154,7 +154,7 @@ function (A) {
           A.getApiUrl()+'/annotations/'
             +itemUUID,
           type : 'PUT',
-          headers : {"X-CSRFToken" : injector.get(injector.cfg.csrfToken)},
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
           data : data,
           success : function(res) {
             console.log('post done');
