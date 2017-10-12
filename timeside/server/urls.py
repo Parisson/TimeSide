@@ -40,6 +40,8 @@ urlpatterns = [
     url(r'^api/docs/', include_docs_urls(title='Timeside Web API')),
     # API endpoint for Generating Authentification token
     url(r'^api/token-auth/', authtoken_views.obtain_auth_token),
+    # Temporary Endpoint to get CSRF Token
+    url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),

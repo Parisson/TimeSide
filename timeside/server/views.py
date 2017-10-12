@@ -30,6 +30,7 @@ from django.http import HttpResponse, StreamingHttpResponse
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.middleware.csrf import get_token as get_csrf_token
 
 from rest_framework import viewsets, generics, renderers
 from rest_framework import status
@@ -569,3 +570,7 @@ class ItemTranscode(DetailView):
 
 class PlayerView(TemplateView):
     template_name = "timeside/player.html"
+
+class Csrf_Token(viewsets.ViewSet):
+    def list(self, request):
+        return  Response({'csrftoken': get_csrf_token(request)})
