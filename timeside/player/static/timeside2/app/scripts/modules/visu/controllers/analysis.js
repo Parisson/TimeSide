@@ -59,6 +59,7 @@ function (A,d3) {
 
       $.ajax({url : urlTest,data : data,
         type : "get",
+        headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
         /*headers : {
           "Authorization" : "Token "+A.injector.get('serverToken')
         },*/
@@ -116,6 +117,7 @@ function (A,d3) {
 
       $.ajax({url :  A.getApiUrl()+'/analysis_tracks/',data : data,
         type : "post",
+        headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
         /*headers : {
           "Authorization" : "Token "+A.injector.get('serverToken')
         },*/
@@ -185,6 +187,7 @@ function (A,d3) {
           url : /*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/analysis_tracks/'
             +model.get('uuid'),
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
           /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
             },*/
@@ -217,6 +220,7 @@ function (A,d3) {
           url:A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/',
           type:"POST",
           data:dataJsonCall,
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
            /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
             },*/

@@ -34,40 +34,32 @@ function (Backbone, Marionette, A,FakeData) {
       return A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.analysis.get),null,null,
             function(result) {
               A._i.setOnCfg('allAnalysis',result);
-              return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+
+              //avons-nous récupéré un token CSRF ? Si oui, on est content, sinon, on fait l'appel dédié
+              if(A.injector.get(A.injector.cfg.csrfToken)) {
+                return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+              }
+              else {
+                $.ajax({url :  A.getApiUrl()+'/token-csrf/',
+                  error : function(error) {
+                    console.error('error on get token : '+error);
+                  },
+                  success : function(a) {
+                    if (a && a.csrftoken) {
+                      A.injector.set(A.injector.cfg.csrfToken,a.csrftoken);
+                      return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
+                    }
+
+                    console.log('error in success function get csrf token');
+                    console.dir(a);
+                  }
+                });
+              }
             }, function(error) {
               alert("Non1");
           });
-
-      /*var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'
-          A.getApiUrl()+'/token-auth/'
-        ,data,function(a,b,c) {
-
-        if (a.token) {
-
-          var apiController = A.injector.get(A.injector.cfg.apiController);
-          apiController.removeHeader("X-CSRFToken");
-          apiController.addHeader("X-CSRFToken",a.token);
-          //apiController.addHeader("Authorization","Token "+a.token);
-
-          A.injector.set(A.injector.cfg.serverToken,a.token);
-
-           A.ApiEventsHelper.listenOkErrorAndTrigger3(A.Cfg.eventApi(A.Cfg.events.data.analysis.get),null,null,
-            function(result) {
-              A._i.setOnCfg('allAnalysis',result);
-              return A.vent.trigger(A.Cfg.eventOk(A.Cfg.events.init.start));
-            }, function(error) {
-              alert("Non1");
-          });
-
-        }
-      });*/
-
 
       return; // temp
-      
-
-
 
     }
 

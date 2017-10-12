@@ -56,6 +56,7 @@ function (A) {
           url : /*'http://timeside-dev.telemeta.org/timeside/api/annotation_tracks/'*/
             A.getApiUrl()+'/annotation_tracks/'
               +trackModel.get('uuid'),
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
           type : 'DELETE'/*,
           data : data*/,
           success : function(res) {
@@ -70,6 +71,28 @@ function (A) {
     // get updated data for a track
     udpateTrackDataFromServer:function(oldTrackObject,callback) {
       var urlAnnotation = oldTrackObject.get('url');
+
+      $.ajax({
+        url : urlAnnotation,
+        headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+        success:function(res) {
+          var item = A._i.getOnCfg('currentItem');
+
+          //Replace in item
+          var oldTrack = item.get('annotationTracksObjects').find(function(annotationTrack) {
+            return annotationTrack.get('uuid')==oldTrackObject.get('uuid');
+          });
+
+          if (!oldTrack) {
+            return console.error('udpateTrackDataFromServer : old track not found on : '+oldTrackObject.get('uuid'));
+          }
+
+          oldTrack.set('annotations',res.annotations);
+          return callback(oldTrack); //du coup, on garde oldTrack comme objet dans le modèle
+        }
+      });
+      return;
+
       $.get(urlAnnotation,function(res) {
         var item = A._i.getOnCfg('currentItem');
 
@@ -99,12 +122,21 @@ function (A) {
           description : text
         };
 
+        return $.ajax({
+          url : A.getApiUrl()+'/annotations/',
+          data : data,
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+          success:function(res) {
+            console.log('post done');
+            return callback();
+          }
+        });
         
-        return $.post(/*'http://timeside-dev.telemeta.org/timeside/api/annotations/'*/
+        /*return $.post(
           A.getApiUrl()+'/annotations/',data,function(res) {
           console.log('post done');
           return callback();
-        });
+        });*/
 
     },
 
@@ -122,6 +154,7 @@ function (A) {
           A.getApiUrl()+'/annotations/'
             +itemUUID,
           type : 'PUT',
+          headers : {"X-CSRFToken" : injector.get(injector.cfg.csrfToken)},
           data : data,
           success : function(res) {
             console.log('post done');

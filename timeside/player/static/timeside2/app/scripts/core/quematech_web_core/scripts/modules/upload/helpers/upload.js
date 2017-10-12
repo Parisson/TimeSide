@@ -65,7 +65,7 @@ function (FileAPI, vent, injector, _,config, apiConfig) {
       var files = FileAPI.getFiles(event);
       this.lastUploadedFile = files[0];
       upload({
-        headers : {"X-CSRF-TOKEN" : injector.get(injector.cfg.csrfToken)},
+        headers : {"X-CSRFToken" : injector.get(injector.cfg.csrfToken)},
         url: uploadUrl(this.type),
         files: {
           file: files[0]
@@ -79,7 +79,7 @@ function (FileAPI, vent, injector, _,config, apiConfig) {
     uploadFile:function(file) {
       this.lastUploadedFile = file;
       upload({
-        headers : {"X-CSRF-TOKEN" : injector.get(injector.cfg.csrfToken)},
+        headers : {"X-CSRFToken" : injector.get(injector.cfg.csrfToken)},
         url: uploadUrl(this.type),
         files: {
           file: file

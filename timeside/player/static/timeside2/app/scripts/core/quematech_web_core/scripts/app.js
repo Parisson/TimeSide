@@ -52,7 +52,7 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
           return cookieValue;
       }
       var csrfToken = getCookie('csrftoken');
-
+      var csrfTokenSelonThomas = $.cookie('csrftoken');
       
 
       //var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
@@ -95,9 +95,10 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
     injector.set(injector.config.api, api.api);
     injector.set(injector.config.apiController, api);
 
-    var apiController = injector.get(injector.cfg.apiController);
+    /*var apiController = injector.get(injector.cfg.apiController);
     apiController.removeHeader("X-CSRFToken");
     apiController.addHeader("X-CSRFToken","7634de7f116fe36d4c152f66c57544abb765181c");
+    injector.set(injector.cfg.csrfToken,"7634de7f116fe36d4c152f66c57544abb765181c");*/
 
   });
 
