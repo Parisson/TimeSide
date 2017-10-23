@@ -1,5 +1,6 @@
 name: app
 channels:
+- soumith
 - defaults
 - conda-forge
 - thomasfillon
@@ -45,7 +46,7 @@ dependencies:
 - hdf5=1.8.18=1
 - html5lib=0.9999999=py27_0
 - icu=58.1=1
-- idna=2.5=py27_0
+- idna=2.6=py_0
 - imagesize=0.7.1=py27_0
 - ipaddress=1.0.18=py27_0
 - ipykernel=4.6.1=py27_0
@@ -73,6 +74,7 @@ dependencies:
 - libvorbis=1.3.5=0
 - libxcb=1.12=1
 - libxml2=2.9.5=0
+- markdown=2.6.9=py27_0
 - markupsafe=1.0=py27_0
 - matplotlib=2.0.2=py27_2
 - mistune=0.7.4=py27_0
@@ -128,7 +130,7 @@ dependencies:
 - sip=4.18=py27_1
 - six=1.11.0=py27_1
 - snowballstemmer=1.2.1=py27_0
-- sphinx=1.6.3=py27_0
+- sphinx=1.6.4=py27_0
 - sphinxcontrib-websupport=1.0.1=py27_0
 - sqlite=3.13.0=1
 - ssl_match_hostname=3.5.0.1=py27_1
@@ -160,12 +162,13 @@ dependencies:
 - libgfortran=3.0.0=1
 - llvmlite=0.20.0=py27_0
 - lzo=2.06=0
-- markdown=2.6.9=py27_0
+- mkl=2017.0.3=0
 - mysql-python=1.2.5=py27_0
 - numba=0.35.0=np112py27_0
 - redis=3.2.0=0
+- pytorch=0.2.0=py27ha262b23_4cu75
+- torchvision=0.1.9=py27hdb88a65_1
 - essentia=2.1_beta4=py27hf6fdc9d_2
-- simplejson=3.10.0=py27_0
 - pip:
   - amqp==1.4.9
   - anyjson==0.3.3
@@ -200,6 +203,7 @@ dependencies:
   - sphinx-rtd-theme==0.2.4
   - sqlparse==0.2.3
   - tables==3.4.2
+  - torch==0.2.0.post4
   - uwsgi==2.0.15
   - vamp==1.1.0
   - watchdog==0.8.3

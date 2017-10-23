@@ -2,7 +2,9 @@ name: timeside
 channels:
   - conda-forge
   - thomasfillon
+  - soumith
 dependencies:
+  - aubio  # in conda-forge channel (optionnal)
   - h5py
   - jsonschema
   - jupyter
@@ -19,13 +21,15 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
+  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
-  - aubio # in conda-forge channel (optionnal)
   - yaafe  # in conda-forge channel (optionnal)
   - essentia
   - librosa
   - tensorflow
   - sphinx
+  - pytorch
+  - torchvision
   - pip:
       - celery==3.*
       - django-bootstrap-pagination

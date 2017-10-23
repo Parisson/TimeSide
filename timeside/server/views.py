@@ -212,7 +212,7 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Optionally restricts the returned purchases analysis track to 
+        Optionally restricts the returned purchases analysis track to
         a given analysis and/or a given item,
         by filtering against `analysis` and `item` query parameters in the URL.
         The query parameters values should be the uuid of the analysis or of the item
@@ -429,6 +429,7 @@ class ItemList(ListView):
     def get_context_data(self, **kwargs):
         context = super(ItemList, self).get_context_data(**kwargs)
         return context
+
 
     def dispatch(self, *args, **kwargs):
         return super(ItemList, self).dispatch(*args, **kwargs)
