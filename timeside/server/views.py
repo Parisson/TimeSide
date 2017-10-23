@@ -242,6 +242,8 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
                                                          context=context)
         if preset_serializer.is_valid():
             preset = preset_serializer.save()
+            return Response(data='Preset is Valid but method not implemented yet', 
+                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
             return Response(data=preset_serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
