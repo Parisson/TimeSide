@@ -2,7 +2,8 @@ define([
   'marionette',
   '#qt_core/controllers/all',
   '#navigation_core/baseviews/base_qeopaview',
-  'd3'
+  'd3',
+  'moment'
 ],
 
 function (Marionette,A,BaseQeopaView,d3) {
@@ -29,8 +30,11 @@ function (Marionette,A,BaseQeopaView,d3) {
 
   var DataProvider = Marionette.Controller.extend({
       init : function(annotationTrackObject) {
-        if (!this.data)
-          this.data = [];
+        /*if (!this.data)
+          this.data = [];*/
+        this.data=[];
+
+
 
         /**
           D3.js objects lifecycle can be a pain in the ass (if we bluntly replace the data with another one, 
@@ -105,11 +109,13 @@ function (Marionette,A,BaseQeopaView,d3) {
       lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]',
       inputContentAnnotation : '[data-layout="annotation_content"]',
       lblEditAnnotationMode : '[data-layout="edit_annotation_mode"]',
+      btnDeleteAnnotation : '[data-layout="delete_annotation"]',
 
       container : '.container_track_annotations'
     },
     events: {
       'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
+      'click @ui.btnDeleteAnnotation' : 'onClickDeleteAnnotation',
       'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation',
       'mousemove .container_track_annotations' : 'onMouseMove',
        'mousedown .container_track_annotations' : 'onMouseDown',
@@ -201,6 +207,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     onClickShowParameters:function() {
       this.$el.toggleClass('parameters-visible');
     },
+
+    
     ////////////////////////////////////////////////////////////////////////////////////
     //Listen for mouse over - always on, but used only when we have a selected element
     //--- EDIT ANNOTATION DRAG && DROP left & right
@@ -219,7 +227,8 @@ function (Marionette,A,BaseQeopaView,d3) {
           this.selectedElement.end = newTime.getTime();
 
         console.log(' new time while selecting : '+newTime.getTime());
-        this.ui.lblConfirmAnnotationCreation.empty().append('From '+this.selectedElement.start+" to "+this.selectedElement.end);
+        this.ui.lblConfirmAnnotationCreation.empty().append('From '+
+          A.telem.formatTimeMs(this.selectedElement.start)+" to "+A.telem.formatTimeMs(this.selectedElement.end));
 
         this.onNavigatorNewWindow();
         return;
@@ -278,7 +287,8 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.ui.lblEditAnnotationMode.empty()
       this.ui.lblEditAnnotationMode.append('Edit '+element.uuid);
       this.ui.confirmAnnotationCreationForm.removeClass('hidden');
-      this.ui.lblConfirmAnnotationCreation.empty().append('From '+element.start+" to "+element.end);
+      this.ui.lblConfirmAnnotationCreation.empty().append('Edition from '+A.telem.formatTimeMs(element.start)
+            +" to "+A.telem.formatTimeMs(element.end));
       this.ui.inputContentAnnotation.val(element.label);
     },
 
@@ -308,6 +318,7 @@ function (Marionette,A,BaseQeopaView,d3) {
 
         this.$el.find('[data-layout="confirm_annotation_creation"] span').text('Create');
         this.$el.find('[data-layout="create_annotation_form"] h3').text('New annotation');
+        this.ui.btnDeleteAnnotation.addClass("hidden");
         //this.ui.confirmAnnotationCreationForm.removeClass('hidden');
       }
       else {
@@ -317,7 +328,8 @@ function (Marionette,A,BaseQeopaView,d3) {
         brush.attr('class','extent creation-mode');
         this.$el.find('.viewport').css('display','none');
         this.$el.find('[data-layout="confirm_annotation_creation"] span').text('Edit');
-        this.$el.find('[data-layout="create_annotation_form"] h3').text('Edit annotation');
+        this.$el.find('[data-layout="create_annotation_form"] h3').text('Update annotation');
+        this.ui.btnDeleteAnnotation.removeClass("hidden");
         //this.ui.confirmAnnotationCreationForm.addClass('hidden');
       }
       this.isModeCreation = newModeIsCreation;
@@ -366,6 +378,18 @@ function (Marionette,A,BaseQeopaView,d3) {
             });      
         }
 
+    },
+
+    /**
+        Annotation deletion
+    **/
+    onClickDeleteAnnotation:function() {
+      var self=this;
+        return A._i.getOnCfg('annotationControlller').deleteAnnotation(this.resultAnalysis,this.selectedElement.uuid,function() {
+              self.dataProvider.updateFromServer(self,self.resultAnalysis);
+              (_.bind(self.onClickCloseEditWindow,self))();
+              //(_.bind(self.updateViewOnNewModeCreation,self))();
+            });      
     },
     
 

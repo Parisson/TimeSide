@@ -175,6 +175,27 @@ function (A) {
         
         
 
+    },
+
+    deleteAnnotation:function(track,itemUUID,callback) {
+      var data = {
+        track : track.get('url'),
+        uuid : itemUUID
+      };
+
+
+      return $.ajax({
+          url : /*'http://timeside-dev.telemeta.org/timeside/api/annotations/'*/
+          A.getApiUrl()+'/annotations/'
+            +itemUUID,
+          type : 'DELETE',
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+          data : data,
+          success : function(res) {
+            console.log('delete done');
+            return callback();
+          }
+        });
     }
 
      /////////////////////////////////////////////////////////////////////

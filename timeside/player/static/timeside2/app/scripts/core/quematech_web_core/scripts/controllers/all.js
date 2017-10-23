@@ -76,13 +76,17 @@ function (injector,vent,$,underscore,log,Cfg,DataCommandHelper,ApiEventsHelper,
   // Specific Telemeta tools
   all.telem = {
     formatTimeMs:function(t) {
+
+      window.moment = Moment;
+      //console.log("asking time for : "+t);
       var mom = Moment(new Date(t));
 
       var time0 =  injector.get('trackInfoController').currentStartTime;
       var time1 =  injector.get('trackInfoController').currentEndTime;
 
       //if small duration, show milliseconds, if not, dont
-      var format = (time1-time0) < 1000 ? 'ss.SSS' : 'ss.S';
+      //aborted
+      var format = (time1-time0) < 1000 ? 'ss.SSS' : 'ss.SSS';
       var prefix = (t<1000*60 ? '' : 'mm:');
       var result = mom.format(prefix+format);
       if (result[0]== "0" && result[1]!=",")
