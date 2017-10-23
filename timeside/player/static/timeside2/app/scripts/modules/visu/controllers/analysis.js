@@ -56,7 +56,35 @@ function (A,d3) {
         item : this.item.uuid
       };
       var self=this;
-      $.get(urlTest,data,function(a,b,c) {
+
+      $.ajax({url : urlTest,data : data,
+        type : "get",
+        headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+        /*headers : {
+          "Authorization" : "Token "+A.injector.get('serverToken')
+        },*/
+        error : function(error) {
+          console.error('error on analysis : '+error);
+        },
+        success : function(a) {
+          if (a.length>1)
+            console.error('Warning : more than one result on '+urlTest+' & '+JSON.stringify(data));
+
+          if (a.length==0) {
+            //we need to create one
+            console.log('We need to create a new analysis_track');
+            self.interval = setInterval(_.bind(self.testIfFinished,self),4000);
+            return (_.bind(self.testIfFinished,self)) ();
+          }
+
+
+            console.log('We have a new analysis_track, lets use it');
+          var result = a[0];
+          return self.onFinished(result);
+        }
+      });
+
+      /*$.get(urlTest,data,function(a,b,c) {
         if (b!="success")
           return console.error('error on get analysis_tracks : '+b);
 
@@ -75,7 +103,7 @@ function (A,d3) {
         var result = a[0];
         return self.onFinished(result);
 
-      });
+      });*/
       //this.testIfFinished();
     };
 
@@ -86,7 +114,30 @@ function (A,d3) {
         analysis : this.analysis.url,
         item : this.item.url
       }, self=this;
-      var url = $.post(/*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
+
+      $.ajax({url :  A.getApiUrl()+'/analysis_tracks/',data : data,
+        type : "post",
+        headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+        /*headers : {
+          "Authorization" : "Token "+A.injector.get('serverToken')
+        },*/
+        error : function(error) {
+          console.error('error on analysis tyrack : '+error);
+        },
+        success : function(a) {
+          if (a.result_url && a.result_url.indexOf('http://')===0) {
+            //alert('success');
+            console.log('success');
+            self.onFinished(a);
+          }
+          else
+            console.log('Still not finished');
+        }
+      });
+
+
+
+      /*var url = $.post(
           A.getApiUrl()+'/analysis_tracks/'
         ,data,function(a,b,c) {
         //console.log('Ok donc on fait quoi ?');
@@ -98,7 +149,7 @@ function (A,d3) {
         }
         else
           console.log('Still not finished');
-      });
+      });*/
     };
 
 
@@ -136,6 +187,10 @@ function (A,d3) {
           url : /*'http://timeside-dev.telemeta.org/timeside/api/analysis_tracks/'*/
           A.getApiUrl()+'/analysis_tracks/'
             +model.get('uuid'),
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+          /*headers : {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+            },*/
           type : 'DELETE'/*,
           data : data*/,
           success : function(res) {
@@ -165,6 +220,10 @@ function (A,d3) {
           url:A.getApiUrl()+'/analysis_tracks/'+uuid+'/set_parameters/',
           type:"POST",
           data:dataJsonCall,
+          headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+           /*headers : {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+            },*/
           contentType:"application/json; charset=utf-8",
           dataType:"json",
           success: function(res){

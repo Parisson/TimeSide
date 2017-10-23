@@ -86,11 +86,26 @@ function (A) {
             return callback(result);
 
           var urlAnnotation = item.get('analysis_tracks')[indexAnalysis];
-          $.get(urlAnnotation,function(res) {
+
+          $.ajax({
+            type : "get",
+            url : urlAnnotation,
+            headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+            /*headers : {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+            },*/
+            success : function(res) {
               result.push(res);
               indexAnalysis++;
               return getNewAnalysis();
+            }
           });
+
+          /*$.get(urlAnnotation,function(res) {
+              result.push(res);
+              indexAnalysis++;
+              return getNewAnalysis();
+          });*/
         };
 
         return getNewAnalysis();  
@@ -110,11 +125,26 @@ function (A) {
             return callback(result);
 
           var urlAnnotation = item.get('annotation_tracks')[indexCurrentAnnotation];
-          $.get(urlAnnotation,function(res) {
+
+
+          $.ajax({
+            url : urlAnnotation,
+            type : "get",
+            headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
+            /*headers : {
+              "Authorization" : "Token "+A.injector.get('serverToken')
+            },*/
+            success : function(res) {
               result.push(res);
               indexCurrentAnnotation++;
               return getNewAnnotation();
+            }
           });
+          /*$.get(urlAnnotation,function(res) {
+              result.push(res);
+              indexCurrentAnnotation++;
+              return getNewAnnotation();
+          });*/ 
         };
 
         return getNewAnnotation();  

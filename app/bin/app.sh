@@ -28,6 +28,9 @@ else
     # static files auto update
     python $manage collectstatic --noinput -i *node_modules*
 
+    # fix media access rights
+    find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user www-data -exec chown www-data:www-data {} \;
+
     # watchmedo shell-command --patterns="*.js;*.css" --recursive \
     #     --command='python '$manage' collectstatic --noinput' $src &
 

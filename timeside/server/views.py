@@ -30,6 +30,7 @@ from django.http import HttpResponse, StreamingHttpResponse
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.middleware.csrf import get_token as get_csrf_token
 
 from rest_framework import viewsets, generics, renderers
 from rest_framework import status
@@ -241,6 +242,8 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
                                                          context=context)
         if preset_serializer.is_valid():
             preset = preset_serializer.save()
+            return Response(data='Preset is Valid but method not implemented yet', 
+                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
             return Response(data=preset_serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -384,6 +387,9 @@ class ItemDetailExport(DetailView):
     model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
+    def get_object(self):
+        return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))
+
     def get_context_data(self, **kwargs):
         context = super(ItemDetailExport, self).get_context_data(**kwargs)
         context['Result'] = 'Result'
@@ -397,26 +403,28 @@ class ItemDetailExport(DetailView):
                 container.from_hdf5(result.hdf5.path)
                 Results[proc_id]['json'] = True
                 Results[proc_id]['list'] = {}
+
+                for res_id, res in container.items():
+                    if res.time_mode == 'segment':
+                        if res.data_mode == 'label':
+                            Results[proc_id]['list'][res_id] = {
+                                'elan': True,
+                                'sv': True,
+                                'Parameters': res.parameters,
+                                'name': res.name}
+                            if res.time_mode == 'framewise':
+                                if res.data_mode == 'value':
+                                    Results[proc_id]['list'][res_id] = {
+                                        'elan': False,
+                                        'sv': True,
+                                        'Parameters': res.parameters,
+                                        'name': res.name}
             elif result.mime_type:
                 Results[proc_id]['audio'] = ('audio' in result.mime_type) | (
                     'ogg' in result.mime_type)
                 Results[proc_id]['image'] = ('image' in result.mime_type)
                 Results[proc_id]['video'] = ('video' in result.mime_type)
-                container = {}
 
-            for res_id, res in container.items():
-                if res.time_mode == 'segment':
-                    if res.data_mode == 'label':
-                        Results[proc_id]['list'][res_id] = {'elan': True,
-                                                            'sv': True,
-                                                            'Parameters': res.parameters,
-                                                            'name': res.name}
-                if res.time_mode == 'framewise':
-                    if res.data_mode == 'value':
-                        Results[proc_id]['list'][res_id] = {'elan': False,
-                                                            'sv': True,
-                                                            'Parameters': res.parameters,
-                                                            'name': res.name}
         context['Results'] = Results
 
         return context
@@ -451,16 +459,34 @@ class ItemDetail(DetailView):
         context['ts_item'] = json.dumps(ts_item)
         return context
 
-def serve_media_nginx(filename, mime_type):
-    # Serve file using X-Accel-Redirect
-    response = HttpResponse()
-    file_url = settings.MEDIA_URL + os.path.relpath(filename, settings.MEDIA_ROOT)
-    response['Content-Disposition'] = "attachment; filename=%s" % (file_url)
-    response['Content-Type'] = mime_type
+def serve_media(filename, content_type="", buffering=True):
+    if not settings.DEBUG:
+        return nginx_media_accel(filename,
+                                 content_type=content_type,
+                                 buffering=buffering)
+    else:
+        response = FileResponse(open(filename, 'rb'))
+        response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+        response['Content-Type'] = content_type
+        return response
 
-    response['X-Accel-Redirect'] = file_url
-    
+
+def nginx_media_accel(media_path, content_type="", buffering=True):
+    """Send a protected media file through nginx with X-Accel-Redirect"""
+
+    response = HttpResponse()
+    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
+    filename = os.path.basename(media_path)
+    response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    response['Content-Type'] = content_type
+    response['X-Accel-Redirect'] = url
+
+    if not buffering:
+        response['X-Accel-Buffering'] = 'no'
+        #response['X-Accel-Limit-Rate'] = 524288
+
     return response
+
 
 class AudioRenderer(renderers.BaseRenderer):
     media_type = 'audio/*'
@@ -527,10 +553,10 @@ class ItemTranscode(DetailView):
                 return self.get(request, uuid, extension)
             # Result and file exist --> OK
 
-            # Serve file using X-Accel-Redirect
-            return serve_media_nginx(filename=result.file.path, mime_type=result.mime_type)
+            # Serve file using X-Accel-Redirect Nginx if DEBUG=False
+            return serve_media(filename=result.file.path,
+                               content_type=result.mime_type)
 
-            
         except models.Result.DoesNotExist:
             # Result does not exist
             # the corresponding task has to be created and run
@@ -546,3 +572,7 @@ class ItemTranscode(DetailView):
 
 class PlayerView(TemplateView):
     template_name = "timeside/player.html"
+
+class Csrf_Token(viewsets.ViewSet):
+    def list(self, request):
+        return  Response({'csrftoken': get_csrf_token(request)})

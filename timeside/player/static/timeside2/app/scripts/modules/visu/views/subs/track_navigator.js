@@ -287,8 +287,8 @@ function (Marionette,A,BaseQeopaView,d3) {
       time1 = Math.max(center - newDistanceFromCenter,0);
       time2 = center+newDistanceFromCenter;
 
-
-
+      if (time2>audioDuration)
+        time2 = audioDuration;
 /*
       time1 = Math.max(time1 -deltaTimeMsec, 0);
       time2 = time2+deltaTimeMsec;

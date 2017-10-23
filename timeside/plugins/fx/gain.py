@@ -12,6 +12,7 @@ class Gain(Processor):
 
     @interfacedoc
     def __init__(self, gain=1.0):
+        super(Gain, self).__init__()
         self.gain = gain
 
     @staticmethod

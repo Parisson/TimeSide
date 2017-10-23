@@ -57,7 +57,6 @@ To fund the project and continue our fast development process, we need your expl
 
 Thanks for your help!
 
-
 News
 =====
 
@@ -97,26 +96,28 @@ For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/N
 Documentation
 ==============
 
-* General documentation : http://files.parisson.com/timeside/doc/
-* Tutorials : http://files.parisson.com/timeside/doc/tutorials/index.html
-* API : http://files.parisson.com/timeside/doc/api/index.html
+* General documentation : http://parisson.github.io/TimeSide/
+* Tutorials : http://parisson.github.io/TimeSide/tutorials/index.html
+* API : http://parisson.github.io/TimeSide/api/index.html
 * Publications : https://github.com/Parisson/Telemeta-doc
 * Some online notebooks : http://mybinder.org/repo/thomasfillon/Timeside-demos
-* Player / UI wiki : https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+* Player UI (v1) wiki : https://github.com/Parisson/TimeSide/wiki/Ui-Guide
 * A player example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
 =======
 
-Thanks to Docker, TimeSide is now fully available for every platform as a docker image ready to work. The image includes all the necessary applications, modules and volumes to start your project in a few seconds.
+Thanks to Docker, Telemeta is now fully available as a docker composition ready to work. The docker based composition bundles somThanks to Docker, Telemeta is now fully available as a docker composition ready to work. The docker based composition bundles some powerfull applications and modern frameworks out-of-the-box like: Python, Conda, Numpy, Jupyter, Gstreamer, Django, Celery, Haystack, ElasticSearch, MySQL, Redis, uWSGI, Nginx and many more.
 
-Just install, `Docker engine <https://docs.docker.com/installation/>`_ then pull the TimeSide image::
+First, install `Docker <https://store.docker.com/search?offering=community&q=&type=edition>`_ and `docker-compose <https://docs.docker.com/compose/>`_
 
-    docker pull parisson/timeside:latest
+Then clone TimeSide::
+
+    git clone --recursive https://github.com/Parisson/TimeSide.git
+    cd TimeSide
+    docker-compose pull
 
 That's it! Now please go to the documentation to see how to use it.
-
-For advanced usage (webserver, notebook, etc), you will also need `Git <http://git-scm.com/downloads>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_.
 
 .. note :: If you need to user TimeSide outside a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this usercase anymore (the dependency list is now huge). To get commercial support in more various usecases, please reach the Parisson dev team.
 

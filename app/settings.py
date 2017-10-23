@@ -7,7 +7,6 @@ env = environ.Env(DEBUG=(bool, False),
 # Django settings for server project.
 DEBUG = env('DEBUG')  # False if not in os.environ
 
-
 import os
 import sys
 sys.dont_write_bytecode = True
@@ -150,9 +149,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django_extensions',
+    'rest_framework',
+    'rest_framework.authtoken',
     'timeside.server',
     'timeside.player',
-    'rest_framework',
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
@@ -192,6 +192,13 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ), 
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
 
 BROKER_URL = env('BROKER_URL')
@@ -233,3 +240,6 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x : True
     }
+
+
+LOGIN_REDIRECT_URL = '/'
