@@ -46,15 +46,19 @@ function (Marionette,A,BaseQeopaView) {
       if (this.isPlaying) {
         this.isPlaying=false;
         this.$el.find('[data-action="play"]').removeClass("active");
+        console.log("this.isPlaying is false, launching pause");
         return A.vent.trigger('audio:pause');
       }
       this.isPlaying=true;
+      console.log("this.isPlaying is true, launching play");
       A.vent.trigger('audio:play',this.item.get('audio_url').mp3);
       this.$el.find('[data-action="play"]').addClass("active");
     },
 
     stop:function() {
       A.vent.trigger('audio:stop',this.item.get('audio_url').mp3);
+      this.isPlaying=false;
+      console.log("this.stop is true");
       this.$el.find('[data-action="play"]').removeClass("active");
     },
 
