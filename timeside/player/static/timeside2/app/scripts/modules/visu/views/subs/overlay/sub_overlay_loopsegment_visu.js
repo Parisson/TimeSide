@@ -89,6 +89,19 @@ function (Marionette,A,BaseQeopaView,d3) {
      
     },
 
+    /**
+        Programmatic update of selected segment
+    **/
+    setSegment:function(data) {
+        this.triangleLeftTime = data.start;
+        this.triangleRightTime = data.end;
+
+        A._i.setOnCfg('currentLoopSegment',[this.triangleLeftTime,this.triangleRightTime]);
+        A._v.trigCfg('ui_project.segmentLoopUpdate');
+
+        return this.onNavigatorNewWindow();
+    },
+
     redrawLoopSegment:function() {
 
     },
@@ -146,6 +159,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     initialize: function () {
       A._v.onCfg('navigator.newWindow','',this.onNavigatorNewWindow,this);
       A._v.onCfg('ui_project.tracksHeightChanged','',this.onResize,this);
+      A._v.onCfg('ui_project.setSegment','',this.setSegment,this);
     },
 
     onRender:function() {

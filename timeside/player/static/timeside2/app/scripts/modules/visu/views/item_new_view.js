@@ -114,8 +114,10 @@ function (Marionette,A,BaseQeopaView,d3,TrackNavigatorView,TrackWaveformView,Tra
           indexTrack = 0;
 
         var addNewTrack = function() {
-          if (indexTrack==tracksToCreate.length)
+          if (indexTrack==tracksToCreate.length) {
+            A._v.trigCfg('ui_project.setSegment','',{start : 0,end : A.injector.get('currentItem').get('audio_duration')*1000});
             return console.log('All tracks loaded!');
+          }
           var track = tracksToCreate[indexTrack];
           var uniqueId = "FROMSTART_"+indexTrack;
 

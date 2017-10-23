@@ -52,7 +52,9 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
           return cookieValue;
       }
       var csrfToken = getCookie('csrftoken');
+      //var csrfTokenSelonThomas = $.cookie('csrftoken');
       
+
       //var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
       if (csrfToken) {
         //console.log("Ok CSRF : "+csrfToken);
