@@ -90,7 +90,7 @@ function (A) {
           $.ajax({
             type : "get",
             url : urlAnnotation,
-            headers : {"X-CSRFToken" : injector.get(injector.cfg.csrfToken)},
+            headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
             /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
             },*/
@@ -130,7 +130,7 @@ function (A) {
           $.ajax({
             url : urlAnnotation,
             type : "get",
-            headers : {"X-CSRFToken" : injector.get(injector.cfg.csrfToken)},
+            headers : {"X-CSRFToken" : A.injector.get(A.injector.cfg.csrfToken)},
             /*headers : {
               "Authorization" : "Token "+A.injector.get('serverToken')
             },*/
