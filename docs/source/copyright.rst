@@ -2,9 +2,9 @@
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2016 Parisson Sarl
-* Copyright (c) 2006, 2016 Guillaume Pellerin
-* Copyright (c) 2013, 2016 Thomas Fillon
+* Copyright (c) 2006, 2017 Parisson Sarl
+* Copyright (c) 2006, 2017 Guillaume Pellerin
+* Copyright (c) 2013, 2017 Thomas Fillon
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
