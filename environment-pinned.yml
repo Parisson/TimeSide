@@ -7,9 +7,9 @@ dependencies:
 - alabaster=0.7.10=py27_1
 - argtable2=2.13=1
 - asn1crypto=0.22.0=py27_0
-- aubio=0.4.5=np112py27_2
+- aubio=0.4.6=py27_1
 - audioread=2.1.4=py27_2
-- babel=2.4.0=py27_0
+- babel=2.5.1=py27_0
 - backports=1.0=py27_1
 - backports.functools_lru_cache=1.4=py27_1
 - backports.shutil_get_terminal_size=1.0.0=py_3
@@ -33,76 +33,77 @@ dependencies:
 - enum34=1.1.6=py27_1
 - expat=2.2.1=0
 - ffmpeg=2.8.6=5
-- fftw=3.3.6=3
-- fontconfig=2.12.1=4
-- freetype=2.7=1
+- fftw=3.3.7=0
+- fontconfig=2.12.1=5
+- freetype=2.7=2
 - funcsigs=1.0.2=py_2
 - functools32=3.2.3.2=py27_1
 - gettext=0.19.7=1
-- glib=2.53.5=0
+- glib=2.53.5=1
 - gmp=6.1.2=0
 - gst-plugins-base=1.8.0=0
 - gstreamer=1.8.0=1
 - h5py=2.7.1=py27_1
-- hdf5=1.8.18=1
+- hdf5=1.8.18=2
 - html5lib=0.9999999=py27_0
-- icu=58.1=1
+- icu=58.2=0
 - idna=2.6=py27_1
 - imagesize=0.7.1=py27_0
 - ipaddress=1.0.18=py27_0
 - ipykernel=4.6.1=py27_0
 - ipython=5.5.0=py27_0
 - ipython_genutils=0.2.0=py27_0
-- ipywidgets=7.0.1=py_2
+- ipywidgets=7.0.3=py27_1
 - jinja2=2.9.6=py27_0
 - joblib=0.11=py27_0
-- jpeg=9b=1
+- jpeg=9b=2
 - jsonschema=2.6.0=py27_0
 - jupyter=1.0.0=py27_0
 - jupyter_client=5.1.0=py27_0
-- jupyter_console=5.1.0=py27_0
-- jupyter_core=4.3.0=py27_0
+- jupyter_console=5.2.0=py27_0
+- jupyter_core=4.4.0=py_0
 - lapack=3.6.1=1
 - libffi=3.2.1=3
 - libflac=1.3.1=0
 - libiconv=1.14=4
 - libogg=1.3.2=0
-- libpng=1.6.28=1
+- libpng=1.6.28=2
 - librosa=0.5.1=py27_1
 - libsndfile=1.0.27=1
 - libsodium=1.0.10=0
-- libtiff=4.0.7=0
+- libtiff=4.0.7=1
 - libvorbis=1.3.5=0
 - libxcb=1.12=1
-- libxml2=2.9.5=0
+- libxml2=2.9.5=1
+- lzo=2.10=0
 - markdown=2.6.9=py27_0
 - markupsafe=1.0=py27_0
-- matplotlib=2.1.0=py27_0
-- mistune=0.7.4=py27_0
+- matplotlib=2.1.0=py27_1
+- mistune=0.8=py27_0
 - mock=2.0.0=py27_0
 - mpg123=1.24.0=1
 - nbconvert=5.3.1=py_1
 - nbformat=4.4.0=py27_0
 - ncurses=5.9=10
 - networkx=1.11=py27_0
-- notebook=5.1.0=py27_0
+- notebook=5.2.1=py27_2
 - numexpr=2.6.4=py27_0
-- numpy=1.12.1=py27_blas_openblas_200
+- numpy=1.13.3=py27_blas_openblas_200
 - olefile=0.44=py27_0
 - openblas=0.2.19=2
 - openssl=1.0.2l=0
-- pandas=0.20.3=py27_1
-- pandoc=1.19.2=0
+- pandas=0.21.0=py27_0
+- pandoc=2.0.0.1=1
 - pandocfilters=1.4.1=py27_0
 - pathlib2=2.3.0=py27_0
 - pbr=3.1.1=py27_0
 - pcre=8.39=0
 - pexpect=4.2.1=py27_0
 - pickleshare=0.7.4=py27_0
-- pillow=4.2.1=py27_1
+- pillow=4.3.0=py27_1
 - pip=9.0.1=py27_0
 - prompt_toolkit=1.0.15=py27_0
-- protobuf=3.4.0=py27_0
+- protobuf=3.4.0=py27_1
 - ptyprocess=0.5.2=py27_0
 - pycparser=2.18=py27_0
 - pygments=2.2.0=py27_0
@@ -110,28 +111,28 @@ dependencies:
 - pyparsing=2.2.0=py27_0
 - pyqt=5.6.0=py27_4
 - pysocks=1.6.7=py27_0
-- pytables=3.4.2=np112py27_3
-- python=2.7.13=1
+- pytables=3.4.2=py27_6
+- python=2.7.14=1
 - python-dateutil=2.6.1=py27_0
-- pytz=2017.2=py27_0
+- pytz=2017.3=py_2
 - pyyaml=3.12=py27_1
 - pyzmq=16.0.2=py27_2
-- qt=5.6.2=3
+- qt=5.6.2=6
 - qtconsole=4.3.1=py27_0
 - readline=6.2=0
 - requests=2.18.4=py27_1
-- resampy=0.2.0=py27_0
+- resampy=0.2.0=py27_1
 - scandir=1.6=py27_0
-- scikit-learn=0.19.0=py27_blas_openblas_201
+- scikit-learn=0.19.1=py27_blas_openblas_200
 - scipy=0.19.1=py27_blas_openblas_202
-- setuptools=36.3.0=py27_0
+- setuptools=36.6.0=py27_1
 - simplegeneric=0.8.1=py27_0
 - simplejson=3.11.1=py27_0
 - singledispatch=3.4.0.3=py27_0
 - sip=4.18=py27_1
 - six=1.11.0=py27_1
 - snowballstemmer=1.2.1=py27_0
-- sphinx=1.6.4=py27_0
+- sphinx=1.6.5=py27_0
 - sphinxcontrib-websupport=1.0.1=py27_0
 - sqlite=3.13.0=1
 - ssl_match_hostname=3.5.0.1=py27_1
@@ -149,7 +150,7 @@ dependencies:
 - webencodings=0.5=py27_0
 - werkzeug=0.12.2=py_1
 - wheel=0.30.0=py_1
-- widgetsnbextension=3.0.3=py27_2
+- widgetsnbextension=3.0.6=py27_0
 - x264=20131217=3
 - xorg-libxau=1.0.8=3
 - xorg-libxdmcp=1.1.2=3
@@ -157,15 +158,21 @@ dependencies:
 - yaafe=0.70=py27_2
 - yaml=0.1.6=0
 - zeromq=4.2.1=1
-- zlib=1.2.8=3
+- zlib=1.2.11=0
 - gdbm=1.12=0
-- libgcc=5.2.0=0
+- intel-openmp=2018.0.0=h15fc484_7
+- libgcc=7.2.0=h69d50b8_2
+- libgcc-ng=7.2.0=h7cc24e2_2
 - libgfortran=3.0.0=1
+- libstdcxx-ng=7.2.0=h7a57d05_2
 - llvmlite=0.20.0=py27_0
 - lzo=2.06=0
+- mkl=2018.0.0=hb491cac_4
 - mysql-python=1.2.5=py27_0
-- numba=0.35.0=np112py27_0
-- redis=3.2.0=0
+- numba=0.35.0=np113py27_10
+- redis=4.0.2=h6805cf8_0
+- pytorch=0.2.0=py27ha262b23_4cu75
+- torchvision=0.1.9=py27hdb88a65_1
 - essentia=2.1_beta4=py27hf6fdc9d_2
 - pip:
   - amqp==1.4.9
@@ -179,27 +186,30 @@ dependencies:
   - celery==3.1.25
   - coreapi==2.3.1
   - coreschema==0.0.4
+  - deezer-python==0.6.1
   - django==1.9.13
-  - django-bootstrap-pagination==1.6.2
-  - django-bootstrap3==9.0.0
+  - django-bootstrap-pagination==1.6.3
+  - django-bootstrap3==9.1.0
   - django-bower==5.2.0
-  - django-celery==3.2.1
+  - django-celery==3.2.2
   - django-cors-headers==2.1.0
-  - django-debug-toolbar==1.8
+  - django-debug-toolbar==1.9
   - django-environ==0.4.4
-  - django-extensions==1.9.1
-  - djangorestframework==3.6.4
+  - django-extensions==1.9.7
+  - djangorestframework==3.7.3
   - ghp-import==0.5.5
   - ipython-genutils==0.2.0
   - itypes==1.1.0
   - jsonfield==2.0.2
   - jupyter-client==5.1.0
-  - jupyter-console==5.1.0
-  - jupyter-core==4.3.0
+  - jupyter-console==5.2.0
+  - jupyter-core==4.4.0
+  - jupyterthemes==0.18.2
   - kombu==3.0.37
-  - mutagen==1.38
   - numpydoc==0.7.0
+  - lesscpy==0.12.0
   - pathtools==0.1.2
+  - ply==3.10
   - prompt-toolkit==1.0.15
   - py-sonicvisualiser==0.3
   - pympi-ling==1.69
@@ -207,6 +217,7 @@ dependencies:
   - sqlparse==0.2.4
   - tables==3.4.2
   - uritemplate==3.0.0
+  - torch==0.2.0.post4
   - uwsgi==2.0.15
   - vamp==1.1.0
   - watchdog==0.8.3

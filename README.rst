@@ -2,7 +2,7 @@
 TimeSide : audio processing framework for the web
 ==================================================
 
-|version| |downloads| |travis_master| |coveralls_master|
+|version| |travis_master| |coveralls_master|
 
 .. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg
     :target: https://travis-ci.org/Parisson/TimeSide/
@@ -107,7 +107,7 @@ Documentation
 Install
 =======
 
-Thanks to Docker, Telemeta is now fully available as a docker composition ready to work. The docker based composition bundles somThanks to Docker, Telemeta is now fully available as a docker composition ready to work. The docker based composition bundles some powerfull applications and modern frameworks out-of-the-box like: Python, Conda, Numpy, Jupyter, Gstreamer, Django, Celery, Haystack, ElasticSearch, MySQL, Redis, uWSGI, Nginx and many more.
+Thanks to Docker, Timeside is now fully available as a docker composition ready to work. The docker based composition bundles some powerfull applications and modern frameworks out-of-the-box like: Python, Conda, Numpy, Jupyter, Gstreamer, Django, Celery, Haystack, ElasticSearch, MySQL, Redis, uWSGI, Nginx and many more.
 
 First, install `Docker <https://store.docker.com/search?offering=community&q=&type=edition>`_ and `docker-compose <https://docs.docker.com/compose/>`_
 
@@ -131,21 +131,25 @@ Sponsors and Partners
 * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
 * `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
 * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
-
+* `C4DM <http://c4dm.eecs.qmul.ac.uk/>`_ : Center for Digital Music, Queen Mary University (London, United Kingdom)
+* `NYU Steinhardt <http://steinhardt.nyu.edu/music/>`_ : Music and Performing Arts Professions, New York University (New York, USA)
 
 Related projects
 =================
 
-* `Telemeta <http://telemeta.org>`__ : open web audio platform
-* `Sound archives <http://archives.crem-cnrs.fr/>`_ of the CNRS, CREM and the "Musée de l'Homme" in Paris, France.
-* The `DIADEMS project <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
+* `Telemeta <http://telemeta.org>`__ : Open web audio platform
+* `Sound archives of the CNRS <http://archives.crem-cnrs.fr/>`_, CREM and the "Musée de l'Homme" in Paris, France.
+* `DIADEMS <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
+* `DaCaRyh <http://gtr.rcuk.ac.uk/projects?ref=AH/N504531/1>`_, Data science for the study of calypso-rhythm through history
+* `KAMoulox <https://anr-kamoulox.github.io/>`_ Online unmixing of large historical archives
+* NYU/CREM/Parisson : arabic music analysis
 
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2016 Parisson Sarl
-* Copyright (c) 2006, 2016 Guillaume Pellerin
-* Copyright (c) 2013, 2016 Thomas Fillon
+* Copyright (c) 2006, 2017 Parisson Sarl
+* Copyright (c) 2006, 2017 Guillaume Pellerin
+* Copyright (c) 2013, 2017 Thomas Fillon
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
