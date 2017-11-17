@@ -29,6 +29,8 @@ var:
      - ./var/backup:/srv/backup
      - ./var/static:/srv/static
      - /srv/bower
+     - ./data/log/nginx:/var/log/nginx
+     - ./data/log/uwsgi:/var/log/uwsgi
   command: "true"
 
 db:
