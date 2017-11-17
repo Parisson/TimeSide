@@ -12,9 +12,9 @@ python $manage bower_install -- --allow-root
 python $manage timeside-create-admin-user
 python $manage timeside-create-boilerplate
 
-if [ $DEBUG = "False" ]; then
-    python $manage update_index --workers $processes &
-fi
+# if [ $DEBUG = "False" ]; then
+#     python $manage update_index --workers $processes &
+# fi
 
 # app start
 if [ "$1" = "--runserver" ]
