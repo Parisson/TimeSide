@@ -32,6 +32,5 @@ else
 
     uwsgi --socket :$port --wsgi-file $wsgi --chdir $app --master \
         --processes $processes --threads $threads \
-        --uid $uid --gid $gid \
-        --py-autoreload $autoreload
+        --uid $uid --gid $gid --logto $log --touch-reload $wsgi
 fi
