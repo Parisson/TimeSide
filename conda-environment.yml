@@ -41,7 +41,7 @@ dependencies:
       - django-environ
       - django-extensions
       - django==1.9.*
-      - djangorestframework==3.*
+      - djangorestframework==3.6.4
       - jsonfield
       - mutagen
       - py_sonicvisualiser==0.3
