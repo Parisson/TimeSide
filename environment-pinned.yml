@@ -3,8 +3,9 @@ channels:
   - defaults
   - conda-forge
   - thomasfillon
+  - soumith
 dependencies:
-  - argtable2=2.13=1
+  - argtable2=2.13=h470a237_1
   - aubio=0.4.6=py27h7273d18_2
   - audioread=2.1.4=py27_1
   - lapack=3.6.1=1
@@ -15,12 +16,15 @@ dependencies:
   - libvorbis=1.3.5=0
   - mpg123=1.25.8=hfc679d8_0
   - resampy=0.2.1=py_1
-  - x264=20180712=h470a237_0
+  - x264=1!152.20180717=h470a237_0
   - xorg-libxau=1.0.8=h470a237_5
   - xorg-libxdmcp=1.1.2=h470a237_6
   - yaafe=0.70=py27h0bee7d0_1
   - alabaster=0.7.11=py27_0
+  - appdirs=1.4.3=py27h28b3542_0
   - asn1crypto=0.24.0=py27_0
+  - attrs=18.1.0=py27_0
+  - automat=0.7.0=py27_0
   - babel=2.6.0=py27_0
   - backports=1.0=py27_1
   - backports.functools_lru_cache=1.5=py27_1
@@ -38,7 +42,10 @@ dependencies:
   - conda=4.5.8=py27_0
   - conda-env=2.6.0=1
   - configparser=3.5.0=py27_0
+  - constantly=15.1.0=py27h28b3542_0
   - cryptography=2.2.2=py27h14c3975_0
+  - cudatoolkit=9.0=h13b8566_0
+  - cudnn=7.1.2=cuda9.0_0
   - cycler=0.10.0=py27_0
   - dbus=1.13.2=h714fa37_1
   - decorator=4.3.0=py27_0
@@ -63,9 +70,11 @@ dependencies:
   - h5py=2.8.0=py27h8d01980_0
   - hdf5=1.10.2=hba1933b_1
   - html5lib=1.0.1=py27_0
+  - hyperlink=18.0.0=py27_0
   - icu=58.2=h9c2bf20_1
   - idna=2.7=py27_0
   - imagesize=1.0.0=py27_0
+  - incremental=17.5.0=py27_0
   - intel-openmp=2018.0.3=0
   - ipaddress=1.0.22=py27_0
   - ipykernel=4.8.2=py27_0
@@ -111,9 +120,11 @@ dependencies:
   - mysql-python=1.2.5=py27_0
   - nbconvert=5.3.1=py27_0
   - nbformat=4.4.0=py27_0
+  - nccl=1.3.5=cuda9.0_0
   - ncurses=6.1=hf484d3e_0
   - networkx=2.1=py27_0
-  - notebook=5.5.0=py27_0
+  - ninja=1.8.2=py27h6bb024c_1
+  - notebook=5.6.0=py27_0
   - numba=0.39.0=py27h04863e7_0
   - numexpr=2.6.5=py27hedc7406_0
   - numpy=1.12.1=py27h9378851_1
@@ -122,7 +133,7 @@ dependencies:
   - openblas-devel=0.2.20=7
   - openssl=1.0.2o=h20670df_0
   - packaging=17.1=py27_0
-  - pandas=0.23.2=py27h04863e7_0
+  - pandas=0.23.3=py27h04863e7_0
   - pandoc=2.2.1=h629c226_0
   - pandocfilters=1.4.2=py27_1
   - path.py=11.0.1=py27_0
@@ -133,10 +144,12 @@ dependencies:
   - pickleshare=0.7.4=py27_0
   - pillow=5.1.0=py27heded4f4_0
   - pip=10.0.1=py27_0
+  - prometheus_client=0.2.0=py27_0
   - prompt_toolkit=1.0.15=py27_0
   - protobuf=3.5.2=py27hf484d3e_1
   - ptyprocess=0.6.0=py27_0
   - pyasn1=0.4.3=py27_0
+  - pyasn1-modules=0.2.2=py27_0
   - pycosat=0.6.3=py27h14c3975_0
   - pycparser=2.18=py27_1
   - pycrypto=2.6.1=py27h14c3975_9
@@ -148,6 +161,7 @@ dependencies:
   - pytables=3.4.4=py27ha205bf6_0
   - python=2.7.15=h1571d57_0
   - python-dateutil=2.7.3=py27_0
+  - pytorch=0.4.0=py27hdf912b8_0
   - pytz=2018.5=py27_0
   - pyyaml=3.12=py27h14c3975_1
   - pyzmq=17.0.0=py27h14c3975_3
@@ -161,6 +175,7 @@ dependencies:
   - scikit-learn=0.19.1=py27hedc7406_0
   - scipy=1.1.0=py27hc49cb51_0
   - send2trash=1.5.0=py27_0
+  - service_identity=17.0.0=py27h28b3542_0
   - setuptools=39.2.0=py27_0
   - simplegeneric=0.8.1=py27_2
   - simplejson=3.15.0=py27h14c3975_0
@@ -179,10 +194,12 @@ dependencies:
   - terminado=0.8.1=py27_1
   - testpath=0.3.1=py27_0
   - tk=8.6.7=hc745277_3
+  - torchvision=0.2.1=py27_0
   - tornado=5.0.2=py27h14c3975_0
   - traceback2=1.4.0=py27_0
   - traitlets=4.3.2=py27_0
   - traits=4.6.0=py27h14c3975_2
+  - twisted=18.4.0=py27h14c3975_0
   - typing=3.6.4=py27_0
   - unittest2=1.1.0=py27_0
   - urllib3=1.23=py27_0
@@ -195,6 +212,8 @@ dependencies:
   - yaml=0.1.7=had09818_2
   - zeromq=4.2.5=hf484d3e_0
   - zlib=1.2.11=ha838bed_2
+  - zope=1.0=py27_0
+  - zope.interface=4.5.0=py27h14c3975_0
   - essentia=2.1_beta4=py27hfa4858a_0
   - pip:
     - amqp==1.4.9
@@ -203,30 +222,35 @@ dependencies:
     - backports.ssl-match-hostname==3.5.0.1
     - billiard==3.3.0.23
     - celery==3.1.25
+    - deezer-python==0.6.1
     - django==1.9.13
     - django-angular==0.8.4
-    - django-bootstrap-pagination==1.6.2
-    - django-bootstrap3==9.0.0
+    - django-bootstrap-pagination==1.6.3
+    - django-bootstrap3==9.1.0
     - django-bower==5.2.0
-    - django-celery==3.2.1
+    - django-celery==3.2.2
     - django-cors-headers==2.1.0
-    - django-debug-toolbar==1.8
+    - django-debug-toolbar==1.9
     - django-environ==0.4.4
-    - django-extensions==1.9.1
+    - django-extensions==1.9.7
     - djangorestframework==3.6.4
     - ghp-import==0.5.5
     - jsonfield==2.0.2
+    - jupyterthemes==0.18.2
     - kombu==3.0.37
-    - mutagen==1.38
+    - lesscpy==0.12.0
+    - mutagen==1.39
     - pathtools==0.1.2
+    - ply==3.10
     - py-sonicvisualiser==0.3
     - pympi-ling==1.69
     - south==1.0.2
     - sphinx-rtd-theme==0.2.4
-    - sqlparse==0.2.3
+    - sqlparse==0.2.4
     - tables==3.4.4
-    - tensorflow-tensorboard==0.1.7
+    - tensorflow-tensorboard==0.1.8
     - timeside==0.8.1
+    - torch==0.4.0
     - uwsgi==2.0.15
     - vamp==1.1.0
     - watchdog==0.8.3
