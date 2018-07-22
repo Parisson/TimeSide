@@ -1,6 +1,6 @@
 #!/bin/bash
 
-plugins=/srv/src/plugins
+plugins=/srv/lib/plugins
 
 apt-get update
 

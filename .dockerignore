@@ -1,9 +1,12 @@
 .git
 *.pyc
 *.egg-info
-!app/
-app/bin/setup_plugins.sh
+app/
 build/
 dist/
 data/
+env/
+etc/
+lib/
 tmp/
+var/
