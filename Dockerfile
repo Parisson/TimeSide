@@ -44,12 +44,12 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -
 COPY environment-pinned.yml /srv/lib/
 RUN conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
     conda env update --name timeside --file environment-pinned.yml &&\
-    pip install -U --force-reinstall functools32 &&\
+    pip install -U --force-reinstall functools32  &&\
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
-RUN rm /opt/miniconda/lib/libgio* &&\
-    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
+#RUN rm /opt/miniconda/lib/libgio* &&\
+#    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
@@ -60,13 +60,15 @@ COPY . /srv/lib/timeside/
 WORKDIR /srv/lib/timeside
 
 # Install TimeSide
-RUN pip install -e .
+RUN pip install -U pyyaml && pip install -e .
 
 # Link python gstreamer
-COPY ./app/bin/link_gstreamer.py /srv/app/bin/  
+RUN mkdir -p /srv/app/bin
+COPY ./app/bin/link_gstreamer.py /srv/app/bin/
 RUN python /srv/app/bin/link_gstreamer.py
 
 # Install Timeside plugins from ./lib
+RUN mkdir -p /srv/lib/plugins
 COPY ./app/bin/setup_plugins.sh /srv/app/bin/
 COPY ./lib/ /srv/lib/plugins/
 RUN /bin/bash /srv/app/bin/setup_plugins.sh
