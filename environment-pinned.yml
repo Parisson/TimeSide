@@ -1,4 +1,4 @@
-name: base
+name: timeside
 channels:
   - defaults
   - conda-forge
@@ -238,7 +238,7 @@ dependencies:
     - jsonfield==2.0.2
     - jupyterthemes==0.18.2
     - kombu==3.0.37
-    - lesscpy==0.12.0
+    - lesscpy==0.13.0
     - mutagen==1.39
     - pathtools==0.1.2
     - ply==3.10
@@ -249,9 +249,8 @@ dependencies:
     - sqlparse==0.2.4
     - tables==3.4.4
     - tensorflow-tensorboard==0.1.8
-    - timeside==0.8.1
     - torch==0.4.0
     - uwsgi==2.0.15
     - vamp==1.1.0
     - watchdog==0.8.3
-prefix: /opt/miniconda
+prefix: /opt/miniconda/envs/timeside
