@@ -449,7 +449,7 @@ class DataObject(MetadataObject):
             value = getattr(self, key)
             if hasattr(value, 'to_xml'):
                 child = value.to_xml()
-            elif value not in [None, []]:
+            elif value:
                 child.text = repr(value.tolist())
                 child.set('dtype', value.dtype.__str__())
 
