@@ -47,7 +47,7 @@ def downmix_to_mono(process_func):
     >>> eod = False
     >>> frames_, eod_ = process(object(),frames,eod)
     Frames, eod inside process :
-    [ 1.5  3.5  5.5  7.5  9.5] False
+    [1.5 3.5 5.5 7.5 9.5] False
 
     Outside Process frames and eod are preserved :
 
