@@ -1,4 +1,4 @@
-name: timeside
+name: base
 channels:
   - defaults
   - conda-forge
@@ -54,7 +54,7 @@ dependencies:
   - entrypoints=0.2.3=py27_2
   - enum34=1.1.6=py27_1
   - expat=2.2.5=he0dffb1_0
-  - ffmpeg=4.0=hcdf2ecd_0
+  - ffmpeg=3.4.2=hf82bc7d_2
   - fftw=3.3.8=h14c3975_0
   - fontconfig=2.13.0=h9420a91_0
   - freetype=2.9.1=h8a8886c_0

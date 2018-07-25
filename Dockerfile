@@ -34,17 +34,17 @@ RUN apt-get update && \
 # Install conda in /opt/miniconda
 ENV PATH /opt/miniconda/bin:$PATH
 RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh && \
-    bash miniconda.sh -b -p /opt/miniconda && \
+    /bin/bash miniconda.sh -b -p /opt/miniconda && \
     rm miniconda.sh && \
     hash -r && \
-    conda config --set always_yes yes --set changeps1 yes && \
-    conda update -q conda
+    ln -s /opt/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate" >> ~/.bashrc && \
+    conda config --set always_yes yes --set changeps1 yes
 
-# Install binary dependencies with conda
 COPY environment-pinned.yml /srv/lib/
 RUN conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
-    conda env update --name timeside --file environment-pinned.yml &&\
-    pip install -U --force-reinstall functools32  &&\
+    conda env update --file environment-pinned.yml &&\
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
@@ -60,7 +60,7 @@ COPY . /srv/lib/timeside/
 WORKDIR /srv/lib/timeside
 
 # Install TimeSide
-RUN pip install -U pyyaml && pip install -e .
+RUN pip install -e .
 
 # Link python gstreamer
 RUN mkdir -p /srv/app/bin

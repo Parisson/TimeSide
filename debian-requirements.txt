@@ -8,9 +8,6 @@ gstreamer0.10-alsa
 gstreamer0.10-plugins-base-apps
 gstreamer0.10-tools
 
-# Libs
-libfftw3-3
-
 # Optionnal Audio Analysis library
 vamp-examples
 vamp-plugin-sdk
