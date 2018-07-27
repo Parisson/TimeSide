@@ -2,18 +2,6 @@
 TimeSide : audio processing framework for the web
 ==================================================
 
-|version| |travis_master| |coveralls_master|
-
-.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg
-    :target: https://travis-ci.org/Parisson/TimeSide/
-
-.. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
-  :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
-
-.. |version| image:: https://img.shields.io/pypi/v/timeside.svg
-   :target: https://pypi.python.org/pypi/TimeSide/
-   :alt: Version
-
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic web frontend.
 
 
@@ -54,6 +42,20 @@ Thanks for your help!
 
 News
 =====
+
+0.9
+---
+
+* Upgrade all python dependencies
+* Add Vamp, Essentia, Yaafe, librosa, PyTorch, Tensorflow libs and wrappers
+* Add a few analyzing plugins (Essentia Dissonance, Vamp Constant Q, Vamp Tempo, Vamp general wrapper, Yaafe general wrapper)
+* Add processor parameter management
+* Add processor inheritance
+* Improve HTML5 player with clever data streaming
+* Improve REST API and various serialzers
+* Improve unit testing
+* Various bug fixes
+
 
 0.8
 ---
@@ -142,9 +144,10 @@ Related projects
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2017 Parisson Sarl
-* Copyright (c) 2006, 2017 Guillaume Pellerin
+* Copyright (c) 2006, 2018 Parisson Sarl
+* Copyright (c) 2006, 2018 Guillaume Pellerin
 * Copyright (c) 2013, 2017 Thomas Fillon
+* Copyright (c) 2016, 2017 Eric Debeir
 * Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan

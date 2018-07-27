@@ -6,10 +6,11 @@ News
 ---
 
 * Upgrade all python dependencies
-* Add Vamp, Essentia, Yaafe, librosa, PyTorch, Tensorflow
+* Add Vamp, Essentia, Yaafe, librosa, PyTorch, Tensorflow libs and wrappers
 * Add a few analyzing plugins (Essentia Dissonance, Vamp Constant Q, Vamp Tempo, Vamp general wrapper, Yaafe general wrapper)
-* Add processor parameter management based on Traits
+* Add processor parameter management
 * Add processor inheritance
+* Improve HTML5 player with clever data streaming
 * Improve REST API and various serialzers
 * Improve unit testing
 * Various bug fixes
