@@ -28,9 +28,9 @@ var:
      - ./var/media:/srv/media
      - ./var/backup:/srv/backup
      - ./var/static:/srv/static
+     - ./var/log/nginx:/var/log/nginx
+     - ./var/log/uwsgi:/var/log/uwsgi
      - /srv/bower
-     - ./data/log/nginx:/var/log/nginx
-     - ./data/log/uwsgi:/var/log/uwsgi
   command: "true"
 
 db:

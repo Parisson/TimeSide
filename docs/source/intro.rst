@@ -2,18 +2,6 @@
 TimeSide : audio processing framework for the web
 ==================================================
 
-|version| |travis_master| |coveralls_master|
-
-.. |travis_master| image:: https://travis-ci.org/Parisson/TimeSide.svg
-    :target: https://travis-ci.org/Parisson/TimeSide/
-
-.. |coveralls_master| image:: https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master
-  :target: https://coveralls.io/r/Parisson/TimeSide?branch=master
-
-.. |version| image:: https://img.shields.io/pypi/v/timeside.svg
-   :target: https://pypi.python.org/pypi/TimeSide/
-   :alt: Version
-
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic web frontend.
 
 
