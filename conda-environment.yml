@@ -1,13 +1,13 @@
 name: base
 channels:
   - conda-forge
-    #- thomasfillon
   - soumith
 dependencies:
-  - aubio  # in conda-forge channel (optionnal)
+  - aubio
   - h5py
   - jsonschema
   - jupyter
+  - librosa
   - matplotlib
   - mysql-python
   - networkx<2.0
@@ -19,18 +19,17 @@ dependencies:
   - redis
   - scipy
   - simplejson
+  - sphinx
   - pytables  # named tables in Pypi ...
+  - pytorch
+  - tensorflow
+  - torchvision
   - traits
   - Werkzeug
-  - yaafe  # in conda-forge channel (optionnal)
-    #- essentia
-  - librosa
-  - tensorflow
-  - sphinx
-  - pytorch
-  - torchvision
+  - yaafe
   - pip:
       - celery==3.*
+      - deezer-python
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
@@ -41,15 +40,14 @@ dependencies:
       - django-extensions
       - django==1.9.*
       - djangorestframework==3.6.4
+      - essentia
+      - ghp-import
       - jsonfield
+      - jupyterthemes
       - mutagen
       - py_sonicvisualiser==0.3
       - pympi-ling
+      - sphinx_rtd_theme
       - uwsgi
       - vamp
       - watchdog
-      - sphinx_rtd_theme
-      - ghp-import
-      - jupyterthemes
-      - deezer-python
-      - essentia
