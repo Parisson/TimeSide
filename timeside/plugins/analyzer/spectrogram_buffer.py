@@ -59,7 +59,7 @@ class SpectrogramBuffer(Spectrogram):
     ['spectrogram_analyzer_buffer']
     >>> result = spectrogram.results['spectrogram_analyzer_buffer']
     >>> result.data.shape
-    (344, 1025)
+    (345, 1025)
 
      .. plot::
 

@@ -49,7 +49,7 @@ app:
   image: parisson/timeside:latest-dev
   volumes:
     - ./app:/srv/app
-    - ./timeside:/srv/src/timeside/timeside
+    - ./timeside:/srv/lib/timeside/timeside
   volumes_from:
     - var
   env_file:
