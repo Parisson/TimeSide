@@ -5,17 +5,35 @@ channels:
   - thomasfillon
   - soumith
 dependencies:
+  - absl-py=0.3.0=py_0
   - argtable2=2.13=h470a237_1
+  - astor=0.7.1=py_0
   - aubio=0.4.6=py27h7273d18_2
   - audioread=2.1.4=py27_1
+  - gast=0.2.0=py_0
+  - h5py=2.8.0=py27hb794570_1
+  - jsonschema=2.6.0=py27_1
+  - jupyter=1.0.0=py_1
   - lapack=3.6.1=1
   - libflac=1.3.1=0
   - libogg=1.3.2=0
   - librosa=0.6.1=py_1
   - libsndfile=1.0.28=hfc679d8_0
   - libvorbis=1.3.5=0
+  - mkl_fft=1.0.4=py27_0
+  - mkl_random=1.0.1=py27_0
   - mpg123=1.25.8=hfc679d8_0
+  - pandas=0.23.3=py27hf8a1672_1
+  - pip=18.0=py27_0
+  - pytables=3.4.4=py27h4f72b40_1
+  - pyyaml=3.12=py27_1
   - resampy=0.2.1=py_1
+  - simplejson=3.16.0=py27_0
+  - tensorboard=1.9.0=py27_0
+  - tensorflow=1.9.0=py27_0
+  - termcolor=1.1.0=py_2
+  - traits=4.6.0=py27h470a237_2
+  - werkzeug=0.14.1=py_0
   - x264=1!152.20180717=h470a237_0
   - xorg-libxau=1.0.8=h470a237_5
   - xorg-libxdmcp=1.1.2=h470a237_6
@@ -65,9 +83,9 @@ dependencies:
   - gettext=0.19.8.1=hd7bead4_3
   - glib=2.56.1=h000015b_0
   - gmp=6.1.2=h6c8ec71_1
+  - grpcio=1.12.1=py27hdbcaa40_0
   - gst-plugins-base=1.14.0=hbbd80ab_1
   - gstreamer=1.14.0=hb453b48_1
-  - h5py=2.8.0=py27h8d01980_0
   - hdf5=1.10.2=hba1933b_1
   - html5lib=1.0.1=py27_0
   - hyperlink=18.0.0=py27_0
@@ -84,8 +102,6 @@ dependencies:
   - jinja2=2.10=py27_0
   - joblib=0.12=py27_0
   - jpeg=9b=h024ee3a_2
-  - jsonschema=2.6.0=py27_0
-  - jupyter=1.0.0=py27_4
   - jupyter_client=5.2.3=py27_0
   - jupyter_console=5.2.0=py27_1
   - jupyter_core=4.4.0=py27_0
@@ -122,18 +138,18 @@ dependencies:
   - nbformat=4.4.0=py27_0
   - nccl=1.3.5=cuda9.0_0
   - ncurses=6.1=hf484d3e_0
-  - networkx=2.1=py27_0
+  - networkx=1.11=py27_0
   - ninja=1.8.2=py27h6bb024c_1
   - notebook=5.6.0=py27_0
   - numba=0.39.0=py27h04863e7_0
   - numexpr=2.6.5=py27hedc7406_0
-  - numpy=1.12.1=py27h9378851_1
+  - numpy=1.14.5=py27h1b885b7_4
+  - numpy-base=1.14.5=py27hdbf6ddf_4
   - olefile=0.45.1=py27_0
   - openblas=0.2.20=4
   - openblas-devel=0.2.20=7
   - openssl=1.0.2o=h20670df_0
   - packaging=17.1=py27_0
-  - pandas=0.23.3=py27h04863e7_0
   - pandoc=2.2.1=h629c226_0
   - pandocfilters=1.4.2=py27_1
   - path.py=11.0.1=py27_0
@@ -142,8 +158,7 @@ dependencies:
   - pcre=8.42=h439df22_0
   - pexpect=4.6.0=py27_0
   - pickleshare=0.7.4=py27_0
-  - pillow=5.1.0=py27heded4f4_0
-  - pip=10.0.1=py27_0
+  - pillow=5.2.0=py27heded4f4_0
   - prometheus_client=0.2.0=py27_0
   - prompt_toolkit=1.0.15=py27_0
   - protobuf=3.5.2=py27hf484d3e_1
@@ -158,12 +173,9 @@ dependencies:
   - pyparsing=2.2.0=py27_1
   - pyqt=5.9.2=py27h22d08a2_0
   - pysocks=1.6.8=py27_0
-  - pytables=3.4.4=py27ha205bf6_0
   - python=2.7.15=h1571d57_0
   - python-dateutil=2.7.3=py27_0
-  - pytorch=0.4.0=py27hdf912b8_0
   - pytz=2018.5=py27_0
-  - pyyaml=3.12=py27h14c3975_1
   - pyzmq=17.0.0=py27h14c3975_3
   - qt=5.9.6=h52aff34_0
   - qtconsole=4.3.1=py27_0
@@ -178,7 +190,6 @@ dependencies:
   - service_identity=17.0.0=py27h28b3542_0
   - setuptools=39.2.0=py27_0
   - simplegeneric=0.8.1=py27_2
-  - simplejson=3.15.0=py27h14c3975_0
   - singledispatch=3.4.0.3=py27_0
   - sip=4.19.8=py27hf484d3e_0
   - six=1.11.0=py27_1
@@ -190,7 +201,6 @@ dependencies:
   - sqlite=3.24.0=h84994c4_0
   - ssl_match_hostname=3.5.0.1=py27_2
   - subprocess32=3.5.2=py27h14c3975_0
-  - tensorflow=1.1.0=np112py27_0
   - terminado=0.8.1=py27_1
   - testpath=0.3.1=py27_0
   - tk=8.6.7=hc745277_3
@@ -198,14 +208,12 @@ dependencies:
   - tornado=5.0.2=py27h14c3975_0
   - traceback2=1.4.0=py27_0
   - traitlets=4.3.2=py27_0
-  - traits=4.6.0=py27h14c3975_2
   - twisted=18.4.0=py27h14c3975_0
   - typing=3.6.4=py27_0
   - unittest2=1.1.0=py27_0
   - urllib3=1.23=py27_0
   - wcwidth=0.1.7=py27_0
   - webencodings=0.5.1=py27_1
-  - werkzeug=0.14.1=py27_0
   - wheel=0.31.1=py27_0
   - widgetsnbextension=3.2.1=py27_0
   - xz=5.2.4=h14c3975_4
@@ -214,43 +222,6 @@ dependencies:
   - zlib=1.2.11=ha838bed_2
   - zope=1.0=py27_0
   - zope.interface=4.5.0=py27h14c3975_0
+  - pytorch=0.4.1=py27_cuda9.0.176_cudnn7.1.2_1
   - essentia=2.1_beta4=py27hfa4858a_0
-  - pip:
-    - amqp==1.4.9
-    - anyjson==0.3.3
-    - argh==0.26.2
-    - backports.ssl-match-hostname==3.5.0.1
-    - billiard==3.3.0.23
-    - celery==3.1.25
-    - deezer-python==0.6.1
-    - django==1.9.13
-    - django-angular==0.8.4
-    - django-bootstrap-pagination==1.6.3
-    - django-bootstrap3==9.1.0
-    - django-bower==5.2.0
-    - django-celery==3.2.2
-    - django-cors-headers==2.1.0
-    - django-debug-toolbar==1.9
-    - django-environ==0.4.4
-    - django-extensions==1.9.7
-    - djangorestframework==3.6.4
-    - ghp-import==0.5.5
-    - jsonfield==2.0.2
-    - jupyterthemes==0.18.2
-    - kombu==3.0.37
-    - lesscpy==0.13.0
-    - mutagen==1.39
-    - pathtools==0.1.2
-    - ply==3.10
-    - py-sonicvisualiser==0.3
-    - pympi-ling==1.69
-    - south==1.0.2
-    - sphinx-rtd-theme==0.2.4
-    - sqlparse==0.2.4
-    - tables==3.4.4
-    - tensorflow-tensorboard==0.1.8
-    - torch==0.4.0
-    - uwsgi==2.0.15
-    - vamp==1.1.0
-    - watchdog==0.8.3
-prefix: /opt/miniconda/envs/timeside
+prefix: /opt/miniconda

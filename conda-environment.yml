@@ -1,7 +1,7 @@
-name: timeside
+name: base
 channels:
   - conda-forge
-  - thomasfillon
+    #- thomasfillon
   - soumith
 dependencies:
   - aubio  # in conda-forge channel (optionnal)
@@ -21,10 +21,9 @@ dependencies:
   - simplejson
   - pytables  # named tables in Pypi ...
   - traits
-  - yaafe # in yaafe channel (optionnal)
   - Werkzeug
   - yaafe  # in conda-forge channel (optionnal)
-  - essentia
+    #- essentia
   - librosa
   - tensorflow
   - sphinx
@@ -53,3 +52,4 @@ dependencies:
       - ghp-import
       - jupyterthemes
       - deezer-python
+      - essentia
