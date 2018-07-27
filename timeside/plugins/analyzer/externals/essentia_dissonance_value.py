@@ -1,0 +1,82 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017 Thomas Fillon <thomas@parisson.com>
+
+# This file is part of TimeSide.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Author: Thomas Fillon <thomas@parisson.com>
+
+from timeside.core import implements, interfacedoc
+from timeside.core.analyzer import Analyzer
+from timeside.core.api import IValueAnalyzer
+from timeside.core.tools.parameters import HasTraits, Int
+from timeside.core.preprocessors import downmix_to_mono, frames_adapter
+
+from .essentia_dissonance import Essentia_Dissonance
+from timeside.core.tools.parameters import store_parameters
+
+
+class Essentia_Dissonance_Value(Analyzer):
+
+    """Mean Dissonance Value from Essentia"""
+
+    implements(IValueAnalyzer)
+
+    _schema = {'$schema': 'http://json-schema.org/schema#',
+               'properties': {
+               },
+               'type': 'object'}
+
+    @store_parameters
+    def __init__(self):
+        super(Essentia_Dissonance_Value, self).__init__()
+        self.parents['dissonance'] = Essentia_Dissonance()
+
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None,
+              blocksize=None, totalframes=None):
+        super(Essentia_Dissonance_Value, self).setup(
+            channels, samplerate, blocksize, totalframes)
+
+    @staticmethod
+    @interfacedoc
+    def id():
+        return "essentia_dissonance_value"
+
+    @staticmethod
+    @interfacedoc
+    def name():
+        return "Dissonance mean value from Essentia"
+
+    @staticmethod
+    @interfacedoc
+    def unit():
+        return ""
+
+    @downmix_to_mono
+    @frames_adapter
+    def process(self, frames, eod=False):
+        return frames, eod
+
+    def post_process(self):
+        dissonance = self.parents['dissonance'].results['essentia_dissonance'].data
+        if dissonance.any():
+            disson_mean = dissonance[dissonance > 0].mean()
+        else:
+            disson_mean = 0
+        dissonance_value = self.new_result(data_mode='value', time_mode='global')
+        dissonance_value.data_object.value = disson_mean
+        self.add_result(dissonance_value)

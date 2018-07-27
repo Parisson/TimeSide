@@ -1,0 +1,19 @@
+{
+
+
+  "comment1" : "below-notifications with type",
+
+  "auth" : {
+    "login" : {
+      "error" : {"type" : "danger","text" : "Could not complete login."}
+    }
+  },
+  "server_default_error" : {"type" : "danger","text" : "Server error"},
+  "no_data_for_page" : {"type" : "danger","text" : "No data for this page"},
+
+
+  "comment2" : "simple messages",
+
+
+  "messageid" : "message_content"
+}

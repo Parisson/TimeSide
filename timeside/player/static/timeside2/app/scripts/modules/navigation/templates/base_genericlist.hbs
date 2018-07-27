@@ -1,0 +1,22 @@
+
+<div class="page-header">
+  <h1>W.I.T. Admin <small>{{mainTitle}}</small></h1>
+</div>
+
+
+{{#if newBtnConfig}}
+<a href="{{newBtnConfig.url}}">
+	<button type="button" class="btn "> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> {{newBtnConfig.label}}</button>
+</a>
+{{/if}}
+
+{{#if showFilter}}
+<div class="filters">
+  <label for="filters"></label>
+	<input id="filters" placeholder="Filter" type="text" class="generic_list_filter" value="{{inputFilterText}}"/>
+</div>
+{{/if}}
+
+<div class="generic_array_container"></div>
+
+{{#paginate this.paginate}}{{/paginate}}

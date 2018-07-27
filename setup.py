@@ -29,7 +29,11 @@ def get_dependencies(env_yml_file):
     conda_dependencies = []
     package_map = {
         'pytables': 'tables',  # insert 'tables' instead of 'pytables'
-        'yaafe': ''
+        'yaafe': '',
+        'essentia': ''
+        # Yaafe and essentia are not seen by pip during pip install -e .
+        # and not visible with pip list
+        # TODO: check if setuptools can help
     }
     for dep in environment['dependencies']:
         if isinstance(dep, str) and not(dep.startswith('python')):
@@ -49,7 +53,7 @@ class PyTest(TestCommand):
 
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = ['tests', '--ignore', 'tests/sandbox', '--verbose']
+        self.test_args = ['tests', '--ignore', 'tests/sandbox', '--verbose', '--ds=app.test_settings']
         self.test_suite = True
 
     def run_tests(self):
@@ -93,7 +97,7 @@ setup(
     packages=['timeside'],
     include_package_data=True,
     zip_safe=False,
-    scripts=['scripts/timeside-waveforms', 'scripts/timeside-launch'],
-    tests_require=['pytest>=3'],
+    scripts=['bin/timeside-waveforms', 'bin/timeside-launch'],
+    tests_require=['pytest>=3', 'pytest-django'],
     cmdclass={'test': PyTest},
 )

@@ -1,0 +1,68 @@
+{
+	
+	"comments" : {
+		
+	},
+
+	"qeopa" : {
+		
+		"home" : {
+			"viewid" : "home",
+			"needEvents" : "0",
+			"layoutid" : "normal",
+			"category" : "home"
+		},
+
+		"list_items" : {
+			"viewid" : "list_items",
+			"needEvents" : "1",
+			"baseEvent" : "data:items:get",
+			"layoutid" : "full"
+		},
+
+		"item_detail" : {
+			"viewid" : "item_detail",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+
+
+		"login" : {
+			"viewid" : "login",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+
+		"item_view" : {
+			"viewid" : "item_view",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},		
+
+		"item_new_view" : {
+			"viewid" : "item_new_view",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},		
+
+		"visu_test1" : {
+			"viewid" : "visu_test1",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		},
+		"visu_test2" : {
+			"viewid" : "visu_test2",
+			"needEvents" : "0",
+			"layoutid" : "full"
+		}
+		
+
+
+
+	},
+
+	"popups" : {
+		"selectItem" : {"popupid" : "selectItem"}
+	}
+
+}

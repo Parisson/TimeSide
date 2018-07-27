@@ -1,0 +1,97 @@
+
+<div class="page-header">
+  <h1>W.I.T. Admin <small>{{title}}</small></h1>
+</div>
+
+<div class="edituser_form">
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-title">Credentials</div>	
+				<div class="panel-body">
+					
+					<div class="form-group">
+						<label>Email</label>
+						<label class="control-label"> </label>
+						<input type="text" data-validation="email" class="form-control" placeholder="Email" value="{{item.email}}">
+					</div>
+
+					<div class="form-group">
+						<label>Login</label>
+						<label class="control-label"> </label>
+						<input type="text" data-validation="username" class="form-control" placeholder="username" value="{{item.username}}">
+					</div>
+
+					<div class="form-group">
+						<label>Password</label>
+						<label class="control-label"> </label>
+						<input type="password" data-validation="password" class="form-control" placeholder="Password" value="">
+					</div>
+
+					<div class="form-group">
+						<label>Password confirmation</label>
+						<label class="control-label"> </label>
+						<input type="password" data-validation="confirm_password" class="form-control" placeholder="Password confirmation" value="">
+					</div>
+
+				</div>
+			</div> 
+		</div>
+
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-title">Identification</div>	
+				<div class="panel-body">
+					
+					<div class="form-group">
+						<label>Role</label>
+						<label class="control-label"> </label>
+						 <select class="select-role" class="form-control" data-validation="role">
+							{{#each roles}}
+								<option value="{{val id}}" {{#if selected}} selected="selected" {{/if}}>{{val display}}</option>
+							{{/each}}
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label>Phone number</label>
+						<label class="control-label"> </label>
+						<input type="text" data-validation="telephone" class="form-control" placeholder="Téléphone" value="{{item.telephone}}">
+					</div>
+
+					<div class="form-group" id="panel_zonecommerciale">
+						<label>Commercial area</label>
+						<label class="control-label"> </label>
+						<select class="form-control" data-validation="zoneCommerciale">
+							{{#each zonesCommerciales}}
+								<option value="{{val id}}" {{#if selected}} selected="selected" {{/if}}>{{val display}}</option>
+							{{/each}}
+						</select>
+					</div>
+
+					<div class="form-group" id="panel_depot">
+						<label>Depot</label>
+						<label class="control-label"> </label>
+						 <select class="form-control other_langs" data-validation="depot">
+							{{#each depots}}
+								<option value="{{val id}}" {{#if selected}} selected="selected" {{/if}}>{{val display}}</option>
+							{{/each}}
+						</select>
+					</div>
+
+				</div>
+			</div> 
+		</div>
+	</div>
+
+	
+
+  <div class="text-center form-group">
+	 <button type="button" class="btn btn-primary has-spinner btn-lg" id="btnGo">
+	 	<i class="fa fa-spinner fa-spin"></i>
+	 	Save
+	 </button>
+  </div>
+</div>
+

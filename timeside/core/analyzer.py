@@ -70,7 +70,7 @@ numpy_data_types = [
     #'complex64',
 ]
 numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
-#numpy_data_types += [np.ndarray]
+# numpy_data_types += [np.ndarray]
 
 
 class Parameters(dict):
@@ -88,7 +88,6 @@ class Parameters(dict):
 
         return ET.tostring(root, encoding="utf-8", method="xml")
 
-
     def from_xml(self, xml_string):
         import xml.etree.ElementTree as ET
         import ast
@@ -97,7 +96,6 @@ class Parameters(dict):
             key = child.tag
             if child.text:
                 self[key] = ast.literal_eval(child.text)
-
 
     def to_hdf5(self, h5group):
         hdf5.dict_to_hdf5(self, h5group)
@@ -319,8 +317,8 @@ class LabelMetadata(MetadataObject):
     '''
 
     # Define default values
-    _default_value = OrderedDict([('label', {}),
-                                  ('description', {}),
+    _default_value = OrderedDict([('label', None),
+                                  ('description', None),
                                   ('label_type', 'mono')])
 
     def to_hdf5(self, h5group):
@@ -334,10 +332,13 @@ class LabelMetadata(MetadataObject):
 
         for name in ['label', 'description']:
             subgroup = h5group.create_group(name)
-            hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
+            if self.__getattribute__(name):
+                hdf5.dict_to_hdf5(self.__getattribute__(name), subgroup)
 
     def from_hdf5(self, h5group):
-        self['label_type'] =  h5group.attrs['label_type']
+        self.label = {}
+        self.description = {}
+        self['label_type'] = h5group.attrs['label_type']
         for subgroup_name, h5subgroup in h5group.items():
             hdf5.dict_from_hdf5(self[subgroup_name], h5subgroup)
 
@@ -438,7 +439,6 @@ class DataObject(MetadataObject):
             if key in as_dict and isinstance(as_dict[key], MetadataObject):
                 as_dict[key] = as_dict[key].as_dict()
         return as_dict
-                
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
@@ -463,7 +463,7 @@ class DataObject(MetadataObject):
             key = child.tag
             if child.text:
                 self[key] = np.asarray(ast.literal_eval(child.text),
-                                          dtype=child.get('dtype'))
+                                       dtype=child.get('dtype'))
 
     def to_hdf5(self, h5group):
         # Write Datasets
@@ -506,8 +506,6 @@ class DataObject(MetadataObject):
                     self.__setattr__(key, dataset[...])
             else:
                 self.__setattr__(key, [])
-
-
 
 
 def data_objet_class(data_mode='value', time_mode='framewise'):
@@ -577,7 +575,6 @@ class AnalyzerResult(MetadataObject):
 
 #        self.label_metadata = LabelMetadata()
 
-
     def __setattr__(self, name, value):
         if name in ['_data_mode', '_time_mode']:
             super(MetadataObject, self).__setattr__(name, value)
@@ -599,9 +596,9 @@ class AnalyzerResult(MetadataObject):
 
     def as_dict(self):
         return dict([(key, self[key].as_dict())
-                     for key in self.keys() ]+ #if hasattr(self[key], 'as_dict')] +
+                     for key in self.keys()] +  # if hasattr(self[key], 'as_dict')] +
                     [('data_mode', self.data_mode), ('time_mode', self.time_mode)])
-                    # TODO : check if it can be simplified now
+        # TODO : check if it can be simplified now
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
@@ -659,7 +656,15 @@ class AnalyzerResult(MetadataObject):
             result[subgroup_name].from_hdf5(h5subgroup)
         return result
 
-    def _render_plot(self, ax, size=(1024,256)):
+    def to_json(self, output_file=None):
+        json_str = json.dumps(self.as_dict(),
+                              default=JSON_NumpyArrayEncoder)
+        if output_file:
+            open(output_file, 'w').write(json_str)
+        else:
+            return json_str
+
+    def _render_plot(self, ax, size=(1024, 256)):
         return NotImplemented
 
     def render(self):
@@ -672,7 +677,7 @@ class AnalyzerResult(MetadataObject):
         self.data_object._render_plot(ax)
         return fig
 
-    def _render_PIL(self, size=(1024, 256), dpi=80):
+    def _render_PIL(self, size=(1024, 256), dpi=80, xlim=None):
         from .grapher import Image
         image_width, image_height = size
 
@@ -684,8 +689,10 @@ class AnalyzerResult(MetadataObject):
         ax = fig.add_axes([0, 0, 1, 1], frame_on=False)
 
         self.data_object._render_plot(ax, size)
-
-        ax.autoscale(axis='x', tight=True)
+        if xlim is not None:
+            ax.set_xlim(xlim[0], xlim[1])
+        else:
+            ax.autoscale(axis='x', tight=True)
 
         # Export to PIL image
         from StringIO import StringIO
@@ -767,11 +774,11 @@ class GlobalObject(DataObject):
 
     @property
     def time(self):
-        return 0  #self.audio_metadata.start
+        return 0  # self.audio_metadata.start
 
     @property
     def duration(self):
-        return None  #self.audio_metadata.duration
+        return None  # self.audio_metadata.duration
 
 
 class FramewiseObject(DataObject):
@@ -782,8 +789,8 @@ class FramewiseObject(DataObject):
 
     @property
     def time(self):
-        return (np.arange(0, len(self.data)*self.frame_metadata.stepsize,
-                             self.frame_metadata.stepsize) /
+        return (np.arange(0, len(self.data) * self.frame_metadata.stepsize,
+                          self.frame_metadata.stepsize) /
                 self.frame_metadata.samplerate)
 
     @property
@@ -798,7 +805,7 @@ class EventObject(DataObject):
     def duration(self):
         return np.zeros(len(self.data))
 
-    def _render_plot(self, ax, size=(1024,256)):
+    def _render_plot(self, ax, size=(1024, 256)):
         ax.stem(self.time, self.data)
 
 
@@ -817,20 +824,19 @@ class GlobalLabelObject(LabelObject, GlobalObject):
     _default_value = OrderedDict([('label', None),
                                   ('label_metadata', None)])
 
-    def _render_plot(self, ax, size=(1024,256)):
-        #import itertools
-        #colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
-        #ax_color = {}
-        #artist = {}
-        #for key, label in self.label_metadata.label.items():
+    def _render_plot(self, ax, size=(1024, 256)):
+        # import itertools
+        # colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
+        # ax_color = {}
+        # artist = {}
+        # for key, label in self.label_metadata.label.items():
         #    ax_color[key] = colors.next()
         #    artist[key] = plt.axvspan(0, 0, color='b', alpha=0.3)
-        #for time, duration, label in zip(self.time, self.duration, self.data):
+        # for time, duration, label in zip(self.time, self.duration, self.data):
         #    ax.axvspan(time, time + duration, color='b', alpha=0.3)
 
-        #Create legend
+        # Create legend
         ax.legend(self.label_metadata.label[int(self.label)])
-
 
 
 class FrameValueObject(ValueObject, FramewiseObject):
@@ -850,7 +856,7 @@ class FrameValueObject(ValueObject, FramewiseObject):
 
             width = size[0]
 
-            if nb_frames < 10*width:
+            if nb_frames < 10 * width:
                 ax.plot(self.time, self.data)
                 return
             else:
@@ -858,13 +864,13 @@ class FrameValueObject(ValueObject, FramewiseObject):
                 numchunks = nb_frames // chunksize
 
             if self.data.ndim <= 1:
-                ychunks = self.data[:chunksize*numchunks].reshape((-1,
-                                                                   chunksize))
+                ychunks = self.data[:chunksize * numchunks].reshape((-1,
+                                                                     chunksize))
             else:
                 # Take only first channel
-                ychunks = self.data[:chunksize*numchunks, 0].reshape((-1, chunksize))
+                ychunks = self.data[:chunksize * numchunks, 0].reshape((-1, chunksize))
 
-            xchunks = self.time[:chunksize*numchunks].reshape((-1, chunksize))
+            xchunks = self.time[:chunksize * numchunks].reshape((-1, chunksize))
 
             # Calculate the max, min, and means of chunksize-element chunks...
             max_env = ychunks.max(axis=1)
@@ -875,9 +881,9 @@ class FrameValueObject(ValueObject, FramewiseObject):
             # Now plot the bounds and the mean...
             ax.fill_between(xcenters, min_env, max_env, color='blue',
                             edgecolor='black', alpha=1)
-            #ax.plot(xcenters, ycenters, color='gray', alpha=0.5)
+            # ax.plot(xcenters, ycenters, color='gray', alpha=0.5)
 
-            #ax.plot(self.time, self.data)
+            # ax.plot(self.time, self.data)
         else:
             ax.imshow(20 * np.log10(self.data.T),
                       origin='lower',
@@ -886,19 +892,19 @@ class FrameValueObject(ValueObject, FramewiseObject):
                       aspect='auto')
 
     def to_sonic_visualiser(self, svenv_file, audio_file):
-        #audio_file = os.path.basename(audio_file)
+        # audio_file = os.path.basename(audio_file)
         # init a sonic visualiser environment file corresponding
         # to the analysis of media wavfname
         sve = SVEnv.init_from_wave_file(audio_file)
 
         # append a spectrogram view
         specview = sve.add_spectrogram()
-        
+
         sve.add_continuous_annotations(self.time, self.data, view=specview)
-        
+
         # save the environment to a sonic visualiser environment file
         sve.save(svenv_file)
- 
+
 
 class FrameLabelObject(LabelObject, FramewiseObject):
     # Define default values
@@ -906,7 +912,7 @@ class FrameLabelObject(LabelObject, FramewiseObject):
                                   ('label_metadata', None),
                                   ('frame_metadata', None)])
 
-    def _render_plot(self, ax, size=(1024,256)):
+    def _render_plot(self, ax, size=(1024, 256)):
         pass
 
 
@@ -931,7 +937,7 @@ class SegmentValueObject(ValueObject, SegmentObject):
                                   ('time', None),
                                   ('duration', None)])
 
-    def _render_plot(self, ax, size=(1024,256)):
+    def _render_plot(self, ax, size=(1024, 256)):
         for time, value in (self.time, self.data):
             ax.axvline(time, ymin=0, ymax=value, color='r')
             # TODO : check value shape !!!
@@ -944,22 +950,22 @@ class SegmentLabelObject(LabelObject, SegmentObject):
                                   ('time', None),
                                   ('duration', None)])
 
-    def _render_plot(self, ax, size=(1024,256)):
+    def _render_plot(self, ax, size=(1024, 256)):
         import matplotlib.patches as mpatches
         import itertools
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
         legend_patches = []
         for key, label in self.label_metadata.label.items():
-            ax_color[key] = colors.next()
+            ax_color[int(key)] = colors.next()
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
-            legend_patches.append(mpatches.Patch(color=ax_color[key], label=label))
-            
-        for time, duration, label in zip(self.time, self.duration, self.data):
-            ax.axvspan(time, time + duration, color=ax_color[label], alpha=0.3)
+            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=unicode(label)))
+
+        for time, duration, key in zip(self.time, self.duration, self.data):
+            ax.axvspan(time, time + duration, color=ax_color[int(key)], alpha=0.3)
 
         # Create legend from custom artist/label lists
-        ax.legend(handles=legend_patches)#, self.label_metadata.label.values())
+        ax.legend(handles=legend_patches)  # , self.label_metadata.label.values())
 
     def merge_segment(self):
         # Merge adjacent segments if they share the same label
@@ -974,40 +980,39 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         start = 0
         while True:
             try:
-                if label[start]==label[start+1]:
-                    del label[start+1]
-                    del time[start+1]
-                    duration[start] += duration[start+1]
-                    del duration[start+1]
+                if label[start] == label[start + 1]:
+                    del label[start + 1]
+                    del time[start + 1]
+                    duration[start] += duration[start + 1]
+                    del duration[start + 1]
                 else:
                     start = start + 1
 
             except IndexError:
                 break
-        # Copy back data to data_object               
+        # Copy back data to data_object
         self.label = label
         self.time = time
         self.duration = duration
 
-    
-    def to_elan(self, elan_file=None, media_file=None, label_per_tier = 'ALL'):
+    def to_elan(self, elan_file=None, media_file=None, label_per_tier='ALL'):
         import pympi
         elan = pympi.Elan.Eaf(author='TimeSide')
         if media_file is not None:
             elan.add_linked_file(media_file)
-        if label_per_tier=='ONE':
+        if label_per_tier == 'ONE':
             for label in self.label_metadata.label.values():
                 tier_id = unicode(label)
                 elan.add_tier(tier_id)
         elif label_per_tier == 'ALL':
             tier_id = 'Analysis'
             elan.add_tier(tier_id)
-         
+
         for n in xrange(len(self.label)):
             label_id = self.label_metadata.label[unicode(self.label[n])]
-            if label_per_tier=='ONE':
+            if label_per_tier == 'ONE':
                 tier_id = label_id
-            #tier_id = self.label_metadata.label[unicode(label_id)]
+            # tier_id = self.label_metadata.label[unicode(label_id)]
             start = self.time[n]
             if start < 0:
                 # TODO: check why start could be negative
@@ -1015,30 +1020,41 @@ class SegmentLabelObject(LabelObject, SegmentObject):
             end = start + self.duration[n]
             # Time has to be converted in millisecond integer values
             elan.add_annotation(id_tier=tier_id,
-                                start=int(start*1000),
-                                end=int(end*1000),
+                                start=int(start * 1000),
+                                end=int(end * 1000),
                                 value=label_id)
-        
+
         elan.to_file(file_path=elan_file)
 
     def to_sonic_visualiser(self, svenv_file, audio_file):
-        #audio_file = os.path.basename(audio_file)
+        # audio_file = os.path.basename(audio_file)
         # init a sonic visualiser environment file corresponding
         # to the analysis of media wavfname
         sve = SVEnv.init_from_wave_file(audio_file)
 
         # append a spectrogram view
         specview = sve.add_spectrogram()
-        
-        
+
         # append a labelled interval annotation layer on a new view
         labels = [self.label_metadata.label[unicode(label_id)] for label_id in self.label]
 
-        sve.add_interval_annotations(self.time , self.duration, labels, self.label)
+        sve.add_interval_annotations(self.time, self.duration, labels, self.label)
 
         # save the environment to a sonic visualiser environment file
         sve.save(svenv_file)
-        
+
+
+def JSON_NumpyArrayEncoder(obj):
+    '''Define Specialize JSON encoder for numpy array'''
+    if isinstance(obj, np.ndarray):
+        return {'numpyArray': obj.tolist(),
+                'dtype': obj.dtype.__str__()}
+    elif isinstance(obj, np.generic):
+        return np.asscalar(obj)
+    else:
+        print type(obj)
+        raise TypeError(repr(obj) + " is not JSON serializable")
+
 
 class AnalyzerResultContainer(dict):
 
@@ -1075,9 +1091,7 @@ class AnalyzerResultContainer(dict):
         else:
             raise ValueError(('Duplicated id in AnalyzerResultContainer: %s '
                               'Please supply a unique id')
-                              % analyzer_result.id)
-
-
+                             % analyzer_result.id)
 
     def get_result_by_id(self, result_id):
         if self.list_id().count(result_id) > 1:
@@ -1110,41 +1124,29 @@ class AnalyzerResultContainer(dict):
         import xml.etree.ElementTree as ET
 
         # TODO : from file
-        #tree = ET.parse(xml_file)
-        #root = tree.getroot()
+        # tree = ET.parse(xml_file)
+        # root = tree.getroot()
         root = ET.fromstring(xml_string)
         for child in root.iter('result'):
             self.add(AnalyzerResult.from_xml(ET.tostring(child)),
                      overwrite=True)
 
     def to_json(self, output_file=None):
-        #if data_list == None: data_list = self.results
-        
-        # Define Specialize JSON encoder for numpy array
-        def NumpyArrayEncoder(obj):
-            if isinstance(obj, np.ndarray):
-                return {'numpyArray': obj.tolist(),
-                        'dtype': obj.dtype.__str__()}
-            elif isinstance(obj, np.generic):
-                return np.asscalar(obj)
-            else:
-                print type(obj)
-                raise TypeError(repr(obj) + " is not JSON serializable")
 
         json_str = json.dumps([res.as_dict() for res in self.values()],
-                              default=NumpyArrayEncoder)
+                              default=JSON_NumpyArrayEncoder)
         if output_file:
             open(output_file, 'w').write(json_str)
         else:
             return json_str
 
     def from_json(self, json_str):
-        
+
         # Define Specialize JSON decoder for numpy array
         def NumpyArrayDecoder(obj):
             if isinstance(obj, dict) and 'numpyArray' in obj:
                 numpy_obj = np.asarray(obj['numpyArray'],
-                                          dtype=obj['dtype'])
+                                       dtype=obj['dtype'])
                 return numpy_obj
             else:
                 return obj
@@ -1160,7 +1162,7 @@ class AnalyzerResultContainer(dict):
             self.add(res, overwrite=True)
 
     def to_yaml(self, output_file=None):
-        #if data_list == None: data_list = self.results
+        # if data_list == None: data_list = self.results
         import yaml
 
         # Define Specialize Yaml encoder for numpy array
@@ -1292,7 +1294,7 @@ class Analyzer(Processor):
         from datetime import datetime
 
         result = AnalyzerResult(data_mode=data_mode,
-                                        time_mode=time_mode)
+                                time_mode=time_mode)
 
         # Automatically write known metadata
         result.id_metadata.date = datetime.now().replace(
@@ -1312,7 +1314,7 @@ class Analyzer(Processor):
         result.audio_metadata.is_segment = self.mediainfo()['is_segment']
         result.audio_metadata.channels = self.channels()
 
-        result.parameters = Parameters(json.loads(self.get_parameters()))
+        result.parameters = Parameters(self.get_parameters())
 
         if time_mode == 'framewise':
             result.data_object.frame_metadata.samplerate = self.result_samplerate

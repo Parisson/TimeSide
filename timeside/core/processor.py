@@ -61,9 +61,10 @@ class MetaProcessor(MetaComponent):
                 elif new_path == id_path:
                     new_class = _processors[id]
                 else:
-                    raise ApiError("%s and %s have the same id: '%s'"
-                                   % (new_class.__name__,
-                                      _processors[id].__name__, id))
+                    raise ApiError("%s at %s and %s at %s have the same id: '%s'"
+                                   % (new_class.__name__, new_path,
+                                      _processors[id].__name__, id_path,
+                                      id))
             if not MetaProcessor.valid_id.match(id):
                 raise ApiError("%s has a malformed id: '%s'"
                                % (new_class.__name__, id))
@@ -94,9 +95,10 @@ class Processor(Component, HasParam):
         super(Processor, self).__init__()
 
         self.parents = {}
+        self._parameters = {}
         self.source_mediainfo = None
         self.process_pipe = None
-        self.UUID = uuid.uuid4()
+        self._uuid = uuid.uuid4()
 
         self.input_channels = 0
         self.input_samplerate = 0
@@ -167,7 +169,7 @@ class Processor(Component, HasParam):
 
     @interfacedoc
     def uuid(self):
-        return str(self.UUID)
+        return str(self._uuid)
 
     @interfacedoc
     @classmethod
@@ -194,7 +196,7 @@ class Processor(Component, HasParam):
                 self.get_parameters() == other.get_parameters())
 
     def __repr__(self):
-        return '-'.join([self.id(), self.get_parameters()])
+        return '-'.join([self.id(), self.get_parameters().__repr__()])
 
 
 class FixedSizeInputAdapter(object):
@@ -351,7 +353,7 @@ class ProcessPipe(object):
             for child in self._graph.neighbors_iter(source_proc.uuid()):
                 child_proc = self._graph.node[child]['processor']
                 if proc == child_proc:
-                    proc.UUID = child_proc.UUID
+                    proc._uuid = child_proc.uuid()
                     proc.process_pipe = self
                     break
         if not self._graph.has_node(proc.uuid()):
@@ -363,8 +365,8 @@ class ProcessPipe(object):
             proc.process_pipe = self
             # Add an edge between each parent and proc
             for parent in proc.parents.values():
-                    self._graph.add_edge(parent.uuid(), proc.uuid(),
-                                         type='data_source')
+                self._graph.add_edge(parent.uuid(), proc.uuid(),
+                                     type='data_source')
 
     def append_pipe(self, proc_pipe):
         "Append a sub-pipe to the pipe"

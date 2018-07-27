@@ -25,7 +25,7 @@ from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
-from timeside.core.tools.parameters import Int, HasTraits
+from timeside.core.tools.parameters import store_parameters, Int, HasTraits
 from timeside.core.tools.buffering import BufferTable
 from timeside.plugins.analyzer.spectrogram import Spectrogram
 
@@ -78,6 +78,7 @@ class SpectrogramBuffer(Spectrogram):
 
     implements(IAnalyzer)
 
+    @store_parameters
     def __init__(self, input_blocksize=2048, input_stepsize=None,
                  fft_size=None):
         super(SpectrogramBuffer, self).__init__()
@@ -96,9 +97,9 @@ class SpectrogramBuffer(Spectrogram):
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
-            stft = np.fft.rfft(frames, self.fft_size)
-            self.values.append('stft', stft)
-            return frames, eod
+        stft = np.fft.rfft(frames, self.fft_size)
+        self.values.append('stft', stft)
+        return frames, eod
 
     def post_process(self):
         spectrogram = self.new_result(data_mode='value', time_mode='framewise')
@@ -117,4 +118,3 @@ if __name__ == "__main__":
     import doctest
     import timeside
     doctest.testmod(timeside.plugins.analyzer.spectrogram_buffer, verbose=True)
-

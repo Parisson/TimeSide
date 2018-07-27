@@ -1,0 +1,10 @@
+{
+  "email": [{
+    "rule": "required",
+    "message": "syk.register.email_missing"
+  },
+  {
+    "rule": "email",
+    "message": "syk.register.email_invalid"
+  }]
+}

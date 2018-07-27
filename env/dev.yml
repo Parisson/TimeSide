@@ -24,7 +24,13 @@
 
 app:
   image: parisson/timeside:latest-dev
+  volumes:
+    - ./app:/srv/app
+    - ./:/srv/src/timeside
 
 worker:
   image: parisson/timeside:latest-dev
-
+  volumes:
+    - ./app:/srv/app
+    - ./:/srv/src/timeside
+    

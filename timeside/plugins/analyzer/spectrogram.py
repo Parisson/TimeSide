@@ -24,7 +24,7 @@ from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 from timeside.core.tools.buffering import BufferTable
-from timeside.core.tools.parameters import Int, HasTraits
+from timeside.core.tools.parameters import store_parameters, Int, HasTraits
 
 import numpy as np
 
@@ -76,12 +76,21 @@ class Spectrogram(Analyzer):
 
     implements(IAnalyzer)
 
+    _schema = {"type": "object",
+               "properties": {
+                   "fft_size": {"type": "integer"},
+                   "input_blocksize": {"type": "integer"},
+                   "input_stepsize": {"type": "integer"}
+               }
+               }
     # Define Parameters
+
     class _Param(HasTraits):
         fft_size = Int()
         input_blocksize = Int()
         input_stepsize = Int()
 
+    @store_parameters
     def __init__(self, input_blocksize=2048, input_stepsize=None,
                  fft_size=None):
         super(Spectrogram, self).__init__()
@@ -135,6 +144,17 @@ class Spectrogram(Analyzer):
         spectrogram.data_object.y_value = (np.arange(0, nb_freq) *
                                            self.samplerate() / self.fft_size)
         self.add_result(spectrogram)
+
+
+# Generate Grapher for Spectrogram analyzer
+from timeside.core.grapher import DisplayAnalyzer
+
+DisplayLinearSpectrogram = DisplayAnalyzer.create(
+    analyzer=Spectrogram,
+    result_id='spectrogram_analyzer',
+    grapher_id='spectrogram',
+    grapher_name='Linear Spectrogram',
+    staging=False)
 
 
 if __name__ == "__main__":

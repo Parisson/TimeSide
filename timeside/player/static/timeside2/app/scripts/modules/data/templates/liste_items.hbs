@@ -1,0 +1,17 @@
+<h1>Liste des items </h1>
+
+<ul>
+	{{#each items}}
+		<li data-id={{id}} >
+
+			{{title}}
+			<button data-uuid={{uuid}} data-viewid="item_detail">Details (404)</button>
+			<button data-uuid={{uuid}} data-viewid="item_view">View (old)</button>
+			<button data-uuid={{uuid}} data-viewid="item_new_view">View (new)</button>
+
+		</li>
+
+	{{/each}}
+
+
+</ul>

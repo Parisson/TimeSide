@@ -1,0 +1,48 @@
+{
+
+	"comment" : "Un event défini aura automatiquement suffixé :api pour l'appel api, et chacun (event && api correspondant)a :ok et :error en retour",
+
+	"init" : {
+		"start" : "initdata:start",
+		"loginForHeader" : "login:forheader",
+		"dataRef" : "initdata:data:ref"
+	},
+
+	"ui" : {
+		"waiting" : {
+			"stop" : "ui:waiting:stop"
+		},
+		"popup" : {
+			"show" : "popup:show",
+			"forceclose" : "popup:forceclose"
+		},
+		"notification" : {
+			"show" : "notification:show",
+			"hide" : "notification:hide"
+		}
+	},
+
+	"auth" : {
+		"login" : "auth:login",
+		"logout" : "auth:logout",
+		"ask_resetPassword" : "auth:ask_resetpassword",
+		"changePassword" : "auth:changePassword"
+	},
+	
+	"navigate" : {
+		"page" : "navigate:page"
+	},
+
+	"users"	 : {
+		"get" : "users:get",
+		"edit" : "users:edit",
+		"edit_mine" : "users:edit_mine",
+		"create" : "users:create",
+		"delete" : "users:delete",
+		"me" : "users:me"
+	}
+
+
+
+	
+}

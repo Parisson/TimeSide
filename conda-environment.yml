@@ -1,10 +1,12 @@
 name: timeside
 channels:
   - conda-forge
-  - yaafe
+  - thomasfillon
+  - soumith
 dependencies:
   - aubio  # in conda-forge channel (optionnal)
   - h5py
+  - jsonschema
   - jupyter
   - matplotlib
   - mysql-python
@@ -21,21 +23,31 @@ dependencies:
   - traits
   - yaafe # in yaafe channel (optionnal)
   - Werkzeug
+  - yaafe  # in conda-forge channel (optionnal)
+  - essentia
+  - librosa
+  - tensorflow
+  - sphinx
+  - pytorch
+  - torchvision
   - pip:
-      - django-angular
+      - celery==3.*
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
-      - celery==3.*
-      - django-celery==3.1.17
-      - django-debug-toolbar==1.3
+      - django-celery
+      - django-cors-headers
+      - django-debug-toolbar
       - django-environ
-      - django-extensions==1.6.7 #1.7 does not support django 1.6 
-      - django==1.6.*
-      - djangorestframework==2.*
+      - django-extensions
+      - django==1.9.*
+      - djangorestframework==3.*
+      - jsonfield
       - mutagen
-      - py_sonicvisualiser==0.2-9-gebe83bd
+      - py_sonicvisualiser==0.3
       - pympi-ling
-      - south
       - uwsgi
+      - vamp
       - watchdog
+      - sphinx_rtd_theme
+      - ghp-import

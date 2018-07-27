@@ -1,5 +1,5 @@
 # Copyright 2013 Thatcher Peskens
-# Copyright 2015, 2016 Guillaume Pellerin, Thomas Fillon
+# Copyright 2015, 2017 Guillaume Pellerin, Thomas Fillon
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,8 +32,9 @@ RUN apt-get update && \
 # Install binary dependencies with conda
 COPY environment-pinned.yml /srv/src/timeside/
 RUN conda update conda &&\
-    conda config --append channels conda-forge --append channels yaafe &&\
+    conda config --append channels conda-forge --append channels thomasfillon &&\
     conda env update --name root --file environment-pinned.yml &&\
+    pip install -U --force-reinstall functools32 &&\              
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
@@ -43,18 +44,20 @@ RUN rm /opt/miniconda/lib/libgio* &&\
 COPY . /srv/src/timeside/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
-RUN mkdir -p $PYTHON_EGG_CACHE
-RUN chown www-data:www-data $PYTHON_EGG_CACHE
+RUN mkdir -p $PYTHON_EGG_CACHE && \
+    chown www-data:www-data $PYTHON_EGG_CACHE
 
 # Install TimeSide
 RUN pip install -e .
 
 # Install Timeside plugins from ./lib
-COPY ./app/scripts/setup_plugins.sh /srv/app/scripts/setup_plugins.sh
+COPY ./app/bin/setup_plugins.sh /srv/app/bin/setup_plugins.sh
 COPY ./lib/ /srv/src/plugins/
+RUN /bin/bash /srv/app/bin/setup_plugins.sh
 
-
-RUN /bin/bash /srv/app/scripts/setup_plugins.sh
+# Install Vamp plugins
+COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/install_vamp_plugins.sh
+RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 WORKDIR /srv/app
 EXPOSE 8000

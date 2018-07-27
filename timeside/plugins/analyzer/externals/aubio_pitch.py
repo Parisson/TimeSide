@@ -32,7 +32,7 @@ from aubio import pitch as aubio_pitch
 import numpy as np
 from timeside.plugins.analyzer.utils import nextpow2
 
-from timeside.core.tools.parameters import Float, HasTraits
+from timeside.core.tools.parameters import store_parameters, Float, HasTraits
 
 
 class AubioPitch(Analyzer):
@@ -45,6 +45,14 @@ class AubioPitch(Analyzer):
         blocksize_s = Float
         stepsize_s = Float
 
+    _schema = {'$schema': 'http://json-schema.org/schema#',
+               'properties': {'blocksize_s': {'default': 2048 / 44100.,
+                                              'type': 'number'},
+                              'stepsize_s': {'default': 1024 / 44100.,
+                                             'type': 'number'}},
+               'type': 'object'}
+
+    @store_parameters
     def __init__(self, blocksize_s=None, stepsize_s=None):
 
         super(AubioPitch, self).__init__()
