@@ -55,13 +55,6 @@ ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
-COPY . /srv/lib/timeside/
-
-WORKDIR /srv/lib/timeside
-
-# Install TimeSide
-RUN pip install -e .
-
 # Link python gstreamer
 RUN mkdir -p /srv/app/bin
 COPY ./app/bin/link_gstreamer.py /srv/app/bin/
@@ -76,6 +69,11 @@ RUN /bin/bash /srv/app/bin/setup_plugins.sh
 # Install Vamp plugins
 COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
+
+WORKDIR /srv/lib/timeside
+
+COPY . /srv/lib/timeside/
+RUN pip install -e .
 
 WORKDIR /srv/app
 EXPOSE 8000
