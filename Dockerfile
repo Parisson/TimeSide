@@ -62,7 +62,7 @@ RUN python /srv/app/bin/link_gstreamer.py
 
 # Install Timeside plugins from ./lib
 RUN mkdir -p /srv/lib/plugins
-COPY ./lib/ /srv/lib/plugins/
+COPY ./lib/plugins/ /srv/lib/plugins/
 COPY ./app/bin/setup_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/setup_plugins.sh
 
