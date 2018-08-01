@@ -3,10 +3,16 @@
 SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/app_base.sh"
 
-# django init
+# waiting for other network services
+sh $app/bin/wait.sh
 python $manage wait-for-db
-python $manage migrate --noinput
-python $manage bower_install -- --allow-root
+
+# django init
+if [ ! -f .init ]; then
+    python $manage migrate --noinput
+    python $manage bower_install -- --allow-root
+    touch .init
+fi
 
 # timeside setup
 python $manage timeside-create-admin-user

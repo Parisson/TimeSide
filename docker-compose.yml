@@ -34,7 +34,7 @@ var:
   command: "true"
 
 db:
-  image: mysql
+  image: mysql:5
   volumes:
     - ./var/lib/mysql:/var/lib/mysql
   volumes_from:
