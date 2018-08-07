@@ -73,5 +73,6 @@ class VampTempo(VampAnalyzer):
     def post_process(self):
         super(VampTempo, self).post_process()
         tempo = self.new_result(data_mode='value', time_mode='global')
-        tempo.data_object.value = self.vamp_results['list'][0]['values']
+        if self.vamp_results['list']:
+            tempo.data_object.value = self.vamp_results['list'][0]['values']
         self.add_result(tempo)
