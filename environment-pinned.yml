@@ -1,4 +1,4 @@
-name: app
+name: base
 channels:
 - defaults
 - conda-forge
@@ -116,7 +116,7 @@ dependencies:
 - python-dateutil=2.6.1=py27_0
 - pytz=2017.3=py_2
 - pyyaml=3.12=py27_1
-- pyzmq=16.0.2=py27_2
+- pyzmq=16.0.2=py27h297844f_2
 - qt=5.6.2=6
 - qtconsole=4.3.1=py27_0
 - readline=6.2=0
@@ -149,7 +149,7 @@ dependencies:
 - wcwidth=0.1.7=py27_0
 - webencodings=0.5=py27_0
 - werkzeug=0.12.2=py_1
-- wheel=0.30.0=py_1
+- wheel=0.30.0=py27_2
 - widgetsnbextension=3.0.6=py27_0
 - x264=20131217=3
 - xorg-libxau=1.0.8=3
@@ -202,7 +202,7 @@ dependencies:
   - jupyter-core==4.4.0
   - jupyterthemes==0.18.2
   - kombu==3.0.37
-  - lesscpy==0.12.0
+  - lesscpy==0.11.2
   - mutagen==1.39
   - pathtools==0.1.2
   - ply==3.10

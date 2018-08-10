@@ -13,51 +13,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM parisson/docker:v0.4
+FROM debian:jessie
 
 MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
 
 RUN mkdir -p /srv/app
 RUN mkdir -p /srv/src
 RUN mkdir -p /srv/src/timeside
-WORKDIR /srv/src/timeside
+
+WORKDIR /srv/src
 
 # install confs, keys and deps
-COPY debian-requirements.txt /srv/src/timeside/
+RUN apt-get update && apt-get install -y apt-transport-https
+COPY debian-requirements.txt /srv/src/
 RUN apt-get update && \
     DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
 
-# Install binary dependencies with conda
-COPY environment-pinned.yml /srv/src/timeside/
-RUN conda update conda &&\
-    conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
-    conda env update --name root --file environment-pinned.yml &&\
-    pip install -U --force-reinstall functools32 &&\
+# Install conda in /opt/miniconda
+ENV PATH /opt/miniconda/bin:$PATH
+RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh && \
+    /bin/bash miniconda.sh -b -p /opt/miniconda && \
+    rm miniconda.sh && \
+    hash -r && \
+    ln -s /opt/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate" >> ~/.bashrc && \
+    conda config --set always_yes yes --set changeps1 yes
+
+COPY environment-pinned.yml /srv/src/
+RUN conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
+    conda env update --file environment-pinned.yml &&\
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
-RUN rm /opt/miniconda/lib/libgio* &&\
-    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
-
-COPY . /srv/src/timeside/
+#RUN rm /opt/miniconda/lib/libgio* &&\
+#    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
-# Install TimeSide
+RUN mkdir -p /srv/src/plugins
+COPY ./lib/plugins/ /srv/src/plugins/
+
+RUN mkdir -p /srv/app/bin
+COPY ./app/bin/ /srv/app/bin/
+RUN python /srv/app/bin/link_gstreamer.py
+#RUN /bin/bash /srv/app/bin/setup_plugins.sh
+RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
+
+# Install timeside
+WORKDIR /srv/src/timeside
+COPY . /srv/src/timeside/
 RUN pip install -e .
 
-# Install Timeside plugins from ./lib
-COPY ./app/bin/setup_plugins.sh /srv/app/bin/setup_plugins.sh
-COPY ./lib/ /srv/src/plugins/
-RUN /bin/bash /srv/app/bin/setup_plugins.sh
-
-# Install Vamp plugins
-COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/install_vamp_plugins.sh
-RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
+# Install bower
+RUN npm install -g bower
 
 WORKDIR /srv/app
 EXPOSE 8000
