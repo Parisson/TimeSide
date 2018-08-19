@@ -70,13 +70,13 @@ RUN /bin/bash /srv/app/bin/setup_plugins.sh
 COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
+# Install bower
+RUN npm install -g bower
+
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
 RUN pip install -e .
-
-# Install bower
-RUN npm install -g bower
 
 WORKDIR /srv/app
 EXPOSE 8000
