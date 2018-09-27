@@ -32,3 +32,5 @@ tests/samples
 var
 docs/build
 docs/src
+.ipynb_checkpoints
+.init
