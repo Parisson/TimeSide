@@ -47,6 +47,7 @@ broker:
 
 app:
   image: parisson/timeside:latest-dev
+  command: /bin/bash /srv/app/bin/app.sh
   volumes:
     - ./app:/srv/app
     - ./timeside:/srv/lib/timeside/timeside
@@ -58,10 +59,10 @@ app:
   links:
     - broker
     - db
-  command: /bin/bash /srv/app/bin/app.sh
 
 worker:
   image: parisson/timeside:latest-dev
+  command: /bin/bash /srv/app/bin/worker.sh
   volumes_from:
     - var
     - app
@@ -70,7 +71,7 @@ worker:
   links:
     - broker
     - db
-  command: /bin/bash /srv/app/bin/worker.sh
+  user: www-data
 
 nginx:
   image: nginx
