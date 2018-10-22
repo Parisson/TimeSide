@@ -9,28 +9,28 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0006_analysistrack'),
+        ('timeside_server', '0006_analysistrack'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='analysis',
             name='preset',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='server.Preset', verbose_name='preset'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='timeside_server.Preset', verbose_name='preset'),
         ),
         migrations.AlterField(
             model_name='analysis',
             name='sub_processor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='server.SubProcessor', verbose_name='sub_processor'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='timeside_server.SubProcessor', verbose_name='sub_processor'),
         ),
         migrations.AlterField(
             model_name='analysistrack',
             name='analysis',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tracks', to='server.Analysis', verbose_name='analysis'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tracks', to='timeside_server.Analysis', verbose_name='analysis'),
         ),
         migrations.AlterField(
             model_name='analysistrack',
             name='item',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='server.Item', verbose_name='item'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='timeside_server.Item', verbose_name='item'),
         ),
     ]

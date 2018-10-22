@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0003_auto_20160616_1244'),
+        ('timeside_server', '0003_auto_20160616_1244'),
     ]
 
     operations = [

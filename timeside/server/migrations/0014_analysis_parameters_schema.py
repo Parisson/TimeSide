@@ -9,7 +9,7 @@ import jsonfield.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0013_auto_20161024_2334'),
+        ('timeside_server', '0013_auto_20161024_2334'),
     ]
 
     operations = [

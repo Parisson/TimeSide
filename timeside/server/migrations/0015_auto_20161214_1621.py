@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0014_analysis_parameters_schema'),
+        ('timeside_server', '0014_analysis_parameters_schema'),
     ]
 
     operations = [

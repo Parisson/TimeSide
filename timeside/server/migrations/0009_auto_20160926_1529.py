@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('server', '0008_auto_20160913_1014'),
+        ('timeside_server', '0008_auto_20160913_1014'),
     ]
 
     operations = [
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('is_public', models.BooleanField(default=True)),
                 ('overlapping', models.BooleanField(default=False)),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='annotationtrack', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='annotation_tracks', to='server.Item', verbose_name='item')),
+                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='annotation_tracks', to='timeside_server.Item', verbose_name='item')),
             ],
             options={
                 'db_table': 'timeside_annotation_tracks',
@@ -53,6 +53,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='annotation',
             name='track',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='track', to='server.AnnotationTrack', verbose_name='track'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='track', to='timeside_server.AnnotationTrack', verbose_name='track'),
         ),
     ]
