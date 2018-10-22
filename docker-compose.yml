@@ -75,7 +75,7 @@ worker:
     - broker
     - db
   mac_address: 02:42:ac:11:00:07
-  user: www-data
+  # user: www-data
 
 nginx:
   image: nginx

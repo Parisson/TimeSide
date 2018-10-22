@@ -7,8 +7,7 @@ from django.core.exceptions import MultipleObjectsReturned
 
 import os
 import timeside.core
-from timeside.server.models import Selection, Item
-from timeside.server.models import Processor, Preset, Experience, Task, Analysis, SubProcessor
+from timeside.server.models import Selection, Item, Processor, Preset, Experience, Task, Analysis, SubProcessor
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
 import simplejson as json
@@ -18,8 +17,8 @@ class Command(BaseCommand):
     help = "Create and run the WASABI experience on a given directory or a selection"
     
     media_root = os.path.normpath(settings.MEDIA_ROOT)
-    # experience_processors = ['aubio_temporal', 'aubio_pitch', 'essentia_dissonance', ]
-    experience_processors = ['ircam_music_descriptor', ]
+    experience_processors = ['aubio_temporal', 'aubio_pitch', 'essentia_dissonance', ]
+    # experience_processors = ['ircam_music_descriptor', ]
     processor_blacklist = ['decoder', 'live', 'gain', 'vamp']
     
     option_list = BaseCommand.option_list + (
@@ -66,27 +65,28 @@ class Command(BaseCommand):
 
     def create_selection(self):
         self.selection, c = Selection.objects.get_or_create(title=self.selection_title)
+        items = self.selection.items.all()
 
-        if c or self.selection.items.count() == 0:
-            for root, dirs, files in os.walk(self.media_directory):
-                for filename in files:
-                    path = root + os.sep + filename
-                    filename_pre, ext = os.path.splitext(filename)
-                    item_title = filename_pre
-                    item, c = Item.objects.get_or_create(title=item_title, source_file=path)
-                        
-                    if not item in self.selection.items.all():
-                        self.selection.items.add(item)
+        for root, dirs, files in os.walk(self.media_directory):
+            for filename in files:
+                path = root + os.sep + filename
+                filename_pre, ext = os.path.splitext(filename)
+                item_title = filename_pre
+                item, c = Item.objects.get_or_create(title=item_title, source_file=path)
                     
-                    if self.cleanup:
-                        for result in item.results.all():
-                            result.delete()
+                if not item in items:
+                    self.selection.items.add(item)
+                
+                if self.cleanup:
+                    for result in item.results.all():
+                        result.delete()
 
     def create_experience(self):
         presets = []
         processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
         for proc in processors:
             trig = True
+            # print(proc.id())
             if proc.id() in self.experience_processors:
                 for processor in self.processor_blacklist:
                     if processor in proc.id():
@@ -115,7 +115,9 @@ class Command(BaseCommand):
         self.create_experience()
 
         task, c = Task.objects.get_or_create(experience=self.experience, selection=self.selection)
-        if c | task.status != _DONE:
+        if c or task.status != _DONE or self.force:
+            print(self.selection.items.all())
+            print(self.experience.presets.all())
             task.status = _PENDING
             task.save()
 

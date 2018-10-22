@@ -29,6 +29,8 @@ gid='www-data'
 # pip install -U django-cors-headers
 # pip install django-debug-toolbar
 # pip install jsonfield
+# Install (staging) libs
+/srv/bin/build/local/setup_lib.sh
 
 # wait for other services
 bash $app/bin/wait.sh
