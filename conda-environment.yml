@@ -38,7 +38,7 @@ dependencies:
       - django-debug-toolbar
       - django-environ
       - django-extensions
-      - django==1.9.*
+      - django==1.10.*
       - djangorestframework==3.6.4
       - essentia
       - ghp-import
