@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('server', '0004_auto_20160616_1624'),
+        ('timeside_server', '0004_auto_20160616_1624'),
     ]
 
     operations = [
@@ -26,8 +26,8 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, verbose_name='description')),
                 ('is_public', models.BooleanField(default=True)),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='analysis', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('preset', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='server.Preset', verbose_name='preset')),
-                ('sub_processor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='server.SubProcessor', verbose_name='sub_processor')),
+                ('preset', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='timeside_server.Preset', verbose_name='preset')),
+                ('sub_processor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis', to='timeside_server.SubProcessor', verbose_name='sub_processor')),
             ],
             options={
                 'db_table': 'timeside_analysis',

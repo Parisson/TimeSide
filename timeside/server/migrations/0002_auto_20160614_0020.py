@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('server', '0001_initial'),
+        ('timeside_server', '0001_initial'),
     ]
 
     operations = [
@@ -106,16 +106,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='subprocessor',
             name='processor',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sub_results', to='server.Processor', verbose_name='processor'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sub_results', to='timeside_server.Processor', verbose_name='processor'),
         ),
         migrations.AddField(
             model_name='analysistrack',
             name='preset',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='server.Preset', verbose_name='preset'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='timeside_server.Preset', verbose_name='preset'),
         ),
         migrations.AddField(
             model_name='analysistrack',
             name='sub_processor_id',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='server.SubProcessor', verbose_name='sub_processor'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='timeside_server.SubProcessor', verbose_name='sub_processor'),
         ),
     ]

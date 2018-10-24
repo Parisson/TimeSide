@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('server', '0010_auto_20160928_0014'),
+        ('timeside_server', '0010_auto_20160928_0014'),
     ]
 
     operations = [

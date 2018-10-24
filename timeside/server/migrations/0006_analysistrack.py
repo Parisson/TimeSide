@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('server', '0005_auto_20160701_1459'),
+        ('timeside_server', '0005_auto_20160701_1459'),
     ]
 
     operations = [
@@ -25,9 +25,9 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(blank=True, max_length=512, verbose_name='title')),
                 ('description', models.TextField(blank=True, verbose_name='description')),
                 ('is_public', models.BooleanField(default=True)),
-                ('analysis', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tracks', to='server.Analysis', verbose_name='analysis')),
+                ('analysis', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tracks', to='timeside_server.Analysis', verbose_name='analysis')),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='analysistrack', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='server.Item', verbose_name='item')),
+                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='analysis_tracks', to='timeside_server.Item', verbose_name='item')),
             ],
             options={
                 'db_table': 'timeside_analysis_tracks',

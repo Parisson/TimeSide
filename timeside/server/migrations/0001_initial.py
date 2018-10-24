@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True, verbose_name='description')),
                 ('is_public', models.BooleanField(default=False)),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='experiences', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('experiences', models.ManyToManyField(blank=True, related_name='other_experiences', to='server.Experience', verbose_name='other experiences')),
+                ('experiences', models.ManyToManyField(blank=True, related_name='other_experiences', to='timeside_server.Experience', verbose_name='other experiences')),
             ],
             options={
                 'db_table': 'timeside_experiences',
@@ -98,8 +98,8 @@ class Migration(migrations.Migration):
                 ('mime_type', models.CharField(blank=True, max_length=256, verbose_name='Output file MIME type')),
                 ('status', models.IntegerField(choices=[(0, 'failed'), (1, 'draft'), (2, 'pending'), (3, 'running'), (4, 'done')], default=1, verbose_name='status')),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='results', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='results', to='server.Item', verbose_name='item')),
-                ('preset', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='results', to='server.Preset', verbose_name='preset')),
+                ('item', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='results', to='timeside_server.Item', verbose_name='item')),
+                ('preset', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='results', to='timeside_server.Preset', verbose_name='preset')),
             ],
             options={
                 'db_table': 'timeside_results',
@@ -117,8 +117,8 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(blank=True, max_length=512, verbose_name='title')),
                 ('description', models.TextField(blank=True, verbose_name='description')),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='selections', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('items', models.ManyToManyField(blank=True, related_name='selections', to='server.Item', verbose_name='items')),
-                ('selections', models.ManyToManyField(blank=True, related_name='other_selections', to='server.Selection', verbose_name='other selections')),
+                ('items', models.ManyToManyField(blank=True, related_name='selections', to='timeside_server.Item', verbose_name='items')),
+                ('selections', models.ManyToManyField(blank=True, related_name='other_selections', to='timeside_server.Selection', verbose_name='other selections')),
             ],
             options={
                 'db_table': 'timeside_selections',
@@ -134,8 +134,8 @@ class Migration(migrations.Migration):
                 ('uuid', models.CharField(blank=True, max_length=255, unique=True, verbose_name='uuid')),
                 ('status', models.IntegerField(choices=[(0, 'failed'), (1, 'draft'), (2, 'pending'), (3, 'running'), (4, 'done')], default=1, verbose_name='status')),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='tasks', to=settings.AUTH_USER_MODEL, verbose_name='author')),
-                ('experience', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='task', to='server.Experience', verbose_name='experience')),
-                ('selection', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='task', to='server.Selection', verbose_name='selection')),
+                ('experience', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='task', to='timeside_server.Experience', verbose_name='experience')),
+                ('selection', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='task', to='timeside_server.Selection', verbose_name='selection')),
             ],
             options={
                 'db_table': 'timeside_tasks',
@@ -146,11 +146,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='preset',
             name='processor',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='presets', to='server.Processor', verbose_name='processor'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='presets', to='timeside_server.Processor', verbose_name='processor'),
         ),
         migrations.AddField(
             model_name='experience',
             name='presets',
-            field=models.ManyToManyField(blank=True, related_name='experiences', to='server.Preset', verbose_name='presets'),
+            field=models.ManyToManyField(blank=True, related_name='experiences', to='timeside_server.Preset', verbose_name='presets'),
         ),
     ]

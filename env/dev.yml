@@ -24,9 +24,12 @@
 
 app:
   image: parisson/timeside:latest-dev
+  command: /bin/bash /srv/app/bin/app.sh --runserver
   volumes:
     - ./app:/srv/app
     - ./:/srv/src/timeside
+  ports:
+    - '9000:8000'
 
 worker:
   image: parisson/timeside:latest-dev

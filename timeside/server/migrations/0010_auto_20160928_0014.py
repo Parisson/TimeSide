@@ -9,13 +9,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0009_auto_20160926_1529'),
+        ('timeside_server', '0009_auto_20160926_1529'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='annotation',
             name='track',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='annotations', to='server.AnnotationTrack', verbose_name='annotation'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='annotations', to='timeside_server.AnnotationTrack', verbose_name='annotation'),
         ),
     ]
