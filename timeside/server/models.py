@@ -168,7 +168,8 @@ class Item(Titled, UUID, Dated, Shareable):
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
-    # code = models.CharField(_('code'), blank=True, max_length=256)
+    code = models.CharField(_('code'), blank=True, max_length=256)
+    external_id = models.CharField(_('external_id'), blank=True, max_length=256)
 
     class Meta:
         db_table = app + '_items'

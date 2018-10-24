@@ -3,7 +3,7 @@
 plugins=/srv/lib/plugins
 
 for dir in $(ls $plugins); do
-
+    
     env=$plugins/$dir/conda-environment.yml
     if [ -f $env ]; then
         conda env update --name root --file $env
