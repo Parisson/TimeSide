@@ -14,6 +14,9 @@ if [ ! -f .init ]; then
     touch .init
 fi
 
+# run migrations
+python $manage migrate --noinput
+
 # timeside setup
 python $manage timeside-create-admin-user
 python $manage timeside-create-boilerplate
