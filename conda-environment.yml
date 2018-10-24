@@ -38,8 +38,8 @@ dependencies:
       - django-debug-toolbar
       - django-environ
       - django-extensions
-      - django==1.9.*
-      - djangorestframework==3.6.4
+      - django==1.10.*
+      - djangorestframework==3.8.2
       - essentia
       - ghp-import
       - jsonfield

@@ -11,16 +11,8 @@ log='/var/log/uwsgi/app.log'
 
 # uwsgi params
 port=8000
-processes=8
-threads=8
-autoreload=3
-uid='www-data'
-gid='www-data'
-
-# uwsgi params
-port=8000
-processes=8
-threads=8
+processes=4
+threads=4
 autoreload=3
 uid='www-data'
 gid='www-data'
@@ -29,8 +21,10 @@ gid='www-data'
 # pip install -U django-cors-headers
 # pip install django-debug-toolbar
 # pip install jsonfield
-# Install (staging) libs
-/srv/bin/build/local/setup_lib.sh
+pip install django==1.10.8 djangorestframework==3.8.2
+
+# Install plugins
+/srv/app/bin/setup_plugins.sh
 
 # wait for other services
 bash $app/bin/wait.sh

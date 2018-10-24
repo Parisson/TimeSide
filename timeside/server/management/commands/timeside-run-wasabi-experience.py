@@ -49,7 +49,7 @@ class Command(BaseCommand):
         if os.path.exists(media):
             if not item.file or self.force:
                 if not self.media_root in self.source_dir:
-                    print "file not in MEDIA_ROOT, copying..."
+                    print("file not in MEDIA_ROOT, copying...")
                     f = open(media, 'r')
                     if not self.dry_run:
                         file_content = ContentFile(f.read())
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                         item.save()
                     f.close()
                 else:
-                    print "file in MEDIA_ROOT, linking..."
+                    print("file in MEDIA_ROOT, linking...")
                     path = media[len(self.media_root)+1:]
                     if not self.dry_run:
                         item.source_file = path
@@ -97,7 +97,7 @@ class Command(BaseCommand):
                         preset, c = Preset.objects.get_or_create(processor=processor, parameters='{}')
                         presets.append(preset)
                     except Preset.MultipleObjectsReturned:
-                        print Preset.objects.filter(processor=processor, parameters='{}')
+                        print(Preset.objects.filter(processor=processor, parameters='{}'))
 
         self.experience, c = Experience.objects.get_or_create(title=self.experience_title)
         for preset in presets:
@@ -116,8 +116,6 @@ class Command(BaseCommand):
 
         task, c = Task.objects.get_or_create(experience=self.experience, selection=self.selection)
         if c or task.status != _DONE or self.force:
-            print(self.selection.items.all())
-            print(self.experience.presets.all())
             task.status = _PENDING
             task.save()
 
