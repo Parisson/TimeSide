@@ -62,6 +62,7 @@ app:
     - db
   mac_address: 02:42:ac:11:00:07
   
+
 worker:
   image: parisson/timeside:latest-dev
   command: /bin/bash /srv/app/bin/worker.sh

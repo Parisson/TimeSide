@@ -133,7 +133,7 @@ dependencies:
   - mistune=0.8.3=py27h14c3975_1
   - mkl=2018.0.3=1
   - mock=2.0.0=py27_0
-  - mysql-python=1.2.5=py27_0
+  - mysqlclient=1.3.13=py27h14c3975_0
   - nbconvert=5.3.1=py27_0
   - nbformat=4.4.0=py27_0
   - nccl=1.3.5=cuda9.0_0

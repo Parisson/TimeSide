@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(dirname "$0")"
-echo $SCRIPT_DIR
 source "$SCRIPT_DIR/app_base.sh"
 
 # Starting celery worker with the --autoreload option will enable the worker to watch for file system changes

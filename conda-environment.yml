@@ -9,7 +9,7 @@ dependencies:
   - jupyter
   - librosa
   - matplotlib
-  - mysql-python
+  - mysqlclient
   - networkx<2.0
   - numpy
   - pandas
