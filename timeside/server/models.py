@@ -174,6 +174,7 @@ class Item(Titled, UUID, Dated, Shareable):
     lock = models.BooleanField(default=False)
     code = models.CharField(_('code'), blank=True, max_length=256)
     external_id = models.CharField(_('external_id'), blank=True, max_length=256)
+    external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
 
     class Meta:
         db_table = app + '_items'
