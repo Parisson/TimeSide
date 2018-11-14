@@ -12,6 +12,7 @@ define([
 function (Marionette,A,TrackWaveformView,d3) {
   'use strict';
 
+  var debug = {};
   /**
     Ruler track
       Simple track for displaying a ruler following the navigator actions
@@ -22,13 +23,34 @@ function (Marionette,A,TrackWaveformView,d3) {
     createGraphicBase:function() {
       TrackWaveformView.prototype.createGraphicBase.call(this);
       var self=this;
+
+
+      //tests fix height delta
+      var barHeight = this.height-this.size.axisHeight;
+      var testScaleFunc = function(yValue) {
+        return barHeight - self.yScale(yValue)/2 - barHeight/2 + 2;
+        //return barHeight - Math.abs(self.yScale(yValue)/2) - barHeight/2 + 2;
+      };
+
+      window.debval = debug;
+
       this.d3area = d3.svg.area()
         .x(function(d) { 
-          
           return self.xScale(d.time); 
         })
-        .y0(function(d) {return self.yScale(d.min); })
-        .y1(function(d) { return self.yScale(d.max); });
+        .y0(function(d) {
+          if ( (! debug.min) || debug.min > d.min)
+            debug.min = d.min;
+          return testScaleFunc(d.min/*d.min*/);
+          return self.yScale(d.min); 
+        })
+        .y1(
+          function(d) { 
+          if ( (! debug.max) || debug.max < d.max)
+            debug.max = d.max;
+          return testScaleFunc(d.max);
+        return self.yScale(d.max); 
+        });
 
       this.d3AreaSuite = this.d3chart.append('path').datum([]).attr("class","area").attr('d',this.d3area );
     },
@@ -75,7 +97,31 @@ function (Marionette,A,TrackWaveformView,d3) {
       var axisHeight = this.size.axisHeight;
 
       this.yScale.range([barHeight, -barHeight]);
-      this.d3AreaSuite = this.d3chart.selectAll('path').datum(this.lastReceivedData).attr("class","area").attr('d',this.d3area );
+
+      var self=this;
+      var testScaleFunc = function(yValue) {
+        return barHeight - self.yScale(yValue)/2 - barHeight/2 + 2;
+        //return barHeight - Math.abs(self.yScale(yValue)/2) - barHeight/2 + 2;
+      };
+
+
+      this.d3area.y0(function(d) {
+          if ( (! debug.min) || debug.min > d.min)
+            debug.min = d.min;
+          return testScaleFunc(d.min/*d.min*/);
+          return self.yScale(d.min); 
+        })
+        .y1(
+          function(d) { 
+          if ( (! debug.max) || debug.max < d.max)
+            debug.max = d.max;
+          return testScaleFunc(d.max);
+        return self.yScale(d.max); 
+        });
+
+      this.d3AreaSuite = this.d3chart.selectAll('path').datum(this.lastReceivedData)
+        .attr("class","area")
+        .attr('d',this.d3area );
       
     },
 

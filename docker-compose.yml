@@ -31,6 +31,7 @@ var:
      - ./var/log/nginx:/var/log/nginx
      - ./var/log/uwsgi:/var/log/uwsgi
      - /srv/bower
+     - ./var/cache:/srv/cache
   command: "true"
 
 db:

@@ -1,7 +1,7 @@
 {
   "envs" : ["PROD","RECETTE","DEV","ERICRECETTE"],
-  "env" : "RECETTE",
-  "envAdmin" : "RECETTE",
+  "env" : "DEV",
+  "envAdmin" : "DEV",
   "remotes" : {
     "DEV" : "http://timeside-dev.telemeta.org/timeside",
     "RECETTE" : "/timeside",

@@ -226,7 +226,7 @@ function () {
       A.log.log('datacommand_helper','-> ERROR for scope : '+JSON.stringify(this.configCommand));
 
       A.vent.trigger(A.Cfg.events.ui.waiting.stop);
-      var _msg=A.Cfg.msg.server_default_error.text;
+      var _msg="Generic error server";
 
       if (res.text)
         _msg = _msg+" : "+res.text;

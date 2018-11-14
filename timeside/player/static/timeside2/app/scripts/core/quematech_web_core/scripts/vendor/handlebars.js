@@ -20,6 +20,21 @@ function (Handlebars, config, injector, _,$,CfgClient,
   arrowBottom,close, etc, loop, play, stop, volume,settings,add) {
   
   'use strict';
+
+
+  ///////////////////////////////////////////////////////////////////////////
+  //Creating input for free parameters
+  Handlebars.registerHelper('timeside_parameter', function hop(property, context) {
+    var toReturn='';
+    switch (property.type) {
+      case 'number' : 
+        toReturn = '<input data-layout="edit_param" data-element="input" data-type="'+property.type+'" data-name="'+property.name+'" value="'+property.default+'" />';
+        break;
+      default : 
+        break;
+    }
+    return toReturn;
+  });
   
   ///////////////////////////////////////////////////////////////////////////
   //SPRITE HERE TEMP

@@ -23,7 +23,9 @@
 		"tracksHeightChanged" 		: "ui:tracksHeightChanged",
 		"segmentLoopUpdate" 		: "ui:segmentLoopUpdate",
 		"deleteTrack"				: "ui:deleteTrack",
-		"deleteAnnotationTrack" 	: "ui:deleteAnnotationTrack"
+		"deleteAnnotationTrack" 	: "ui:deleteAnnotationTrack",
+		"zoom"						: "ui:zoom",
+		"setSegment"				: "ui:setSegment"
 	},
 
 	"audio" : {

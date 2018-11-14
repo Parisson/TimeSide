@@ -2,7 +2,8 @@ define([
   'marionette',
   '#qt_core/controllers/all',
   '#navigation_core/baseviews/base_qeopaview',
-  'd3'
+  'd3',
+  'moment'
 ],
 
 function (Marionette,A,BaseQeopaView,d3) {
@@ -29,8 +30,11 @@ function (Marionette,A,BaseQeopaView,d3) {
 
   var DataProvider = Marionette.Controller.extend({
       init : function(annotationTrackObject) {
-        if (!this.data)
-          this.data = [];
+        /*if (!this.data)
+          this.data = [];*/
+        this.data=[];
+
+
 
         /**
           D3.js objects lifecycle can be a pain in the ass (if we bluntly replace the data with another one, 
@@ -105,18 +109,21 @@ function (Marionette,A,BaseQeopaView,d3) {
       lblConfirmAnnotationCreation : '[data-layout="create_annotation_label"]',
       inputContentAnnotation : '[data-layout="annotation_content"]',
       lblEditAnnotationMode : '[data-layout="edit_annotation_mode"]',
+      btnDeleteAnnotation : '[data-layout="delete_annotation"]',
 
       container : '.container_track_annotations'
     },
     events: {
       'click @ui.btnCreateNewAnnotation' : 'onClickCreateNewAnnotation',
+      'click @ui.btnDeleteAnnotation' : 'onClickDeleteAnnotation',
       'click [data-layout="confirm_annotation_creation"]' : 'onClickConfirmCreateAnnotation',
       'mousemove .container_track_annotations' : 'onMouseMove',
        'mousedown .container_track_annotations' : 'onMouseDown',
       'mouseup .container_track_annotations' : 'onMouseUp',
       'click [data-layout="show_parameters"]' : 'onClickShowParameters',
 
-      'click [data-layout="delete_annotation_track"]' : 'onClickDeleteAnnotationTrack'
+      'click [data-layout="delete_annotation_track"]' : 'onClickDeleteAnnotationTrack',
+      'click [data-layout="close_edit"]'      : 'onClickCloseEditWindow'
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -155,12 +162,14 @@ function (Marionette,A,BaseQeopaView,d3) {
       A._v.trigCfg('ui_project.deleteAnnotationTrack','',this.resultAnalysis);
     },
 
+
+
      ////////////////////////////////////////////////////////////////////////////////////
     //Brush listener
 
     brushed:function(e1,e2,e3) {
       
-      //console.log('new times : '+time1+','+time2);
+      console.log('brushed ');
 
       //var a = this.xScale.
       if (!this.isModeCreation)
@@ -182,6 +191,11 @@ function (Marionette,A,BaseQeopaView,d3) {
     onClickElement:function(d,i) {
       console.log('click ELEMENT!');
 
+      if (this.selectedElement && this.selectedElement.uuid == d.uuid) {
+        console.log(' already selected');
+        return false;
+      }
+
       _.each(this.dataProvider.data,function(obj) {obj.clicked=false});
 
       d.clicked = true;//!d.clicked;
@@ -193,6 +207,8 @@ function (Marionette,A,BaseQeopaView,d3) {
     onClickShowParameters:function() {
       this.$el.toggleClass('parameters-visible');
     },
+
+    
     ////////////////////////////////////////////////////////////////////////////////////
     //Listen for mouse over - always on, but used only when we have a selected element
     //--- EDIT ANNOTATION DRAG && DROP left & right
@@ -211,7 +227,8 @@ function (Marionette,A,BaseQeopaView,d3) {
           this.selectedElement.end = newTime.getTime();
 
         console.log(' new time while selecting : '+newTime.getTime());
-        this.ui.lblConfirmAnnotationCreation.empty().append('From '+this.selectedElement.start+" to "+this.selectedElement.end);
+        this.ui.lblConfirmAnnotationCreation.empty().append('From '+
+          A.telem.formatTimeMs(this.selectedElement.start)+" to "+A.telem.formatTimeMs(this.selectedElement.end));
 
         this.onNavigatorNewWindow();
         return;
@@ -258,9 +275,11 @@ function (Marionette,A,BaseQeopaView,d3) {
     ////////////////////////////////////////////////////////////////////////////////////
     //Mode to edit an annotation
     updateViewEditAnnotation:function() {
-      if (this.isModeCreation) {
+      /*if (this.isModeCreation) {
         this.updateViewOnNewModeCreation(false);
-      }
+      }*/
+      var newModeIsCreation = false;//! this.isModeCreation;
+      this.updateViewOnNewModeCreation(newModeIsCreation);
       var element = this.selectedElement;
       if (!element) {
         return console.error('ERROR : no selected element on updateViewEditAnnotation')
@@ -268,7 +287,8 @@ function (Marionette,A,BaseQeopaView,d3) {
       this.ui.lblEditAnnotationMode.empty()
       this.ui.lblEditAnnotationMode.append('Edit '+element.uuid);
       this.ui.confirmAnnotationCreationForm.removeClass('hidden');
-      this.ui.lblConfirmAnnotationCreation.empty().append('From '+element.start+" to "+element.end);
+      this.ui.lblConfirmAnnotationCreation.empty().append('Edition from '+A.telem.formatTimeMs(element.start)
+            +" to "+A.telem.formatTimeMs(element.end));
       this.ui.inputContentAnnotation.val(element.label);
     },
 
@@ -283,7 +303,9 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     updateViewOnNewModeCreation:function(newModeIsCreation) {
-      this.selectedElement = null;
+      if (newModeIsCreation)
+        this.selectedElement = null;
+
       this.ui.lblEditAnnotationMode.empty().val('Creating new annotation....');
 
       var brush = this.$el.find('rect.extent');
@@ -292,18 +314,32 @@ function (Marionette,A,BaseQeopaView,d3) {
         //this.ui.btnCreateNewAnnotation.addClass('active');
         brush.attr('class','extent creation-mode');
         this.$el.find('.viewport').css('display','auto');
+
+
+        this.$el.find('[data-layout="confirm_annotation_creation"] span').text('Create');
+        this.$el.find('[data-layout="create_annotation_form"] h3').text('New annotation');
+        this.ui.btnDeleteAnnotation.addClass("hidden");
         //this.ui.confirmAnnotationCreationForm.removeClass('hidden');
       }
       else {
-        //this.ui.btnCreateNewAnnotation.removeClass('active'); 
-        this.$el.removeClass("creating-new-annotation");
-        brush.attr('class','extent');
+        
+        //this.$el.removeClass("creating-new-annotation");
+        this.$el.addClass("creating-new-annotation"); //even in edit mode
+        brush.attr('class','extent creation-mode');
         this.$el.find('.viewport').css('display','none');
+        this.$el.find('[data-layout="confirm_annotation_creation"] span').text('Edit');
+        this.$el.find('[data-layout="create_annotation_form"] h3').text('Update annotation');
+        this.ui.btnDeleteAnnotation.removeClass("hidden");
         //this.ui.confirmAnnotationCreationForm.addClass('hidden');
       }
       this.isModeCreation = newModeIsCreation;
     },
 
+    onClickCloseEditWindow:function() {
+      var brush = this.$el.find('rect.extent');
+      this.$el.removeClass("creating-new-annotation");
+      brush.attr('class','extent');
+    },
 
 
     ///USED FOR CREATION && EDITION DEPENDING OF CONTEXT
@@ -319,8 +355,8 @@ function (Marionette,A,BaseQeopaView,d3) {
           return A._i.getOnCfg('annotationControlller').updateAnnotation(this.resultAnalysis,timeStart,timeEnd,
             txt,this.selectedElement.uuid,function() {
               self.dataProvider.updateFromServer(self,self.resultAnalysis);
-
-              (_.bind(self.updateViewOnNewModeCreation,self))();
+              (_.bind(self.onClickCloseEditWindow,self))();
+              //(_.bind(self.updateViewOnNewModeCreation,self))();
             });      
         }
 
@@ -337,11 +373,23 @@ function (Marionette,A,BaseQeopaView,d3) {
           A._i.getOnCfg('annotationControlller').postAnnotation(this.resultAnalysis,timeStart,timeEnd,
             txt,function() {
               self.dataProvider.updateFromServer(self,self.resultAnalysis);
-
-              (_.bind(self.updateViewOnNewModeCreation,self))();
+              (_.bind(self.onClickCloseEditWindow,self))();
+              //(_.bind(self.updateViewOnNewModeCreation,self))();
             });      
         }
 
+    },
+
+    /**
+        Annotation deletion
+    **/
+    onClickDeleteAnnotation:function() {
+      var self=this;
+        return A._i.getOnCfg('annotationControlller').deleteAnnotation(this.resultAnalysis,this.selectedElement.uuid,function() {
+              self.dataProvider.updateFromServer(self,self.resultAnalysis);
+              (_.bind(self.onClickCloseEditWindow,self))();
+              //(_.bind(self.updateViewOnNewModeCreation,self))();
+            });      
     },
     
 
@@ -382,6 +430,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("class","chart")
         .attr("width", width)
         .attr("height", height);
+      this.d3Node = node;
 
       var chart = node.attr("width", width).attr("height", height);
       this.d3chart = chart;  
@@ -405,6 +454,7 @@ function (Marionette,A,BaseQeopaView,d3) {
     createBrush:function() {
       var height = this.height, width = this.width, chart = this.d3chart;
 
+      
 
       this.viewport = d3.svg.brush()
         .x(this.xScale)
@@ -417,6 +467,8 @@ function (Marionette,A,BaseQeopaView,d3) {
         .selectAll("rect")
         .attr("height", this.height-50)
         .attr('transform', 'translate(0,'+25+')');  
+
+      window.debviewport = this.viewport;
 
       //we do not start in creation mode
       this.$el.find('.viewport').css('display','none');
@@ -491,7 +543,7 @@ function (Marionette,A,BaseQeopaView,d3) {
         .attr("style", function(d) {
            return "clip-path: url(#"+("mettre-id-unique-ici"+d.start)+");";
         })
-        .on('click',_.bind(self.onClickElement,self));
+        .on('mousedown',_.bind(self.onClickElement,self));
       
       //Add the clip path on this annotation
       newG.append("defs").append("clipPath")
@@ -544,9 +596,21 @@ function (Marionette,A,BaseQeopaView,d3) {
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    //Resize
+    changeHeight:function(newHeight) {
+      this.height = newHeight;
+      this.d3Node.attr("height", newHeight);this.d3chart.attr('height',newHeight);
+      this.yScale = d3.scale.linear().domain([0,this.dataProvider.data.length]).range([0, newHeight]);
+
+      this.onNavigatorNewWindow();
+    },
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
       A._v.onCfg('navigator.newWindow','',this.onNavigatorNewWindow,this);
       this.item = A._i.getOnCfg('currentItem');
+      window.debt = this;
     },
 
     onRender:function() {

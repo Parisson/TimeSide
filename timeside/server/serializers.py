@@ -48,7 +48,6 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
     audio_url = serializers.SerializerMethodField()
-    audio_duration = serializers.SerializerMethodField()
     annotation_tracks = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -68,7 +67,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('uuid', 'url',
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
-                  'audio_url', 'audio_duration',
+                  'audio_url', 'audio_duration', 'code', 'external_id',
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
@@ -77,33 +76,46 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
             'url': {'lookup_field': 'uuid'}
         }
 
-        read_only_fields = ('url', 'uuid',)
+        read_only_fields = ('url', 'uuid', 'audio_duration')
 
     def get_url(self, obj):
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
 
     def get_waveform_url(self, obj):
-        return (self.get_url(obj) + 'waveform/')
+        request = self.context['request']
+        return reverse('item-waveform', kwargs={'uuid': obj.uuid}, request=request)
 
     def get_audio_url(self, obj):
-        obj_url = self.get_url(obj)
-        return {'mp3': obj_url + 'download/mp3',
-                'ogg': obj_url + 'download/ogg'}
-
-    def get_audio_duration(self, obj):
-        return obj.get_audio_duration()
+        request = self.context['request']
+        extensions = ['mp3', 'ogg']
+        return {ext:
+                reverse('item-transcode-api',
+                        kwargs={'uuid': obj.uuid, 'extension': ext},
+                        request=request)
+                for ext in extensions}
 
 
 class ItemWaveformSerializer(ItemSerializer):
 
     item_url = serializers.SerializerMethodField('get_url')
     waveform = serializers.SerializerMethodField()
+    waveform_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = ts.models.Item
-        fields = ('item_url', 'title', 'waveform_url', 'waveform')
+        fields = ('item_url', 'title', 'waveform_url',
+                  'waveform', 'waveform_image_url')
 
+    def get_waveform_image_url(self, obj):
+        request = self.context['request']
+        from .utils import get_or_run_proc_result
+        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        return reverse('timeside-result-visualization',
+                       kwargs={'uuid': result.uuid},
+                       request=request)+'?id=waveform_analyzer'
+
+        
     def get_waveform(self, obj):
         request = self.context['request']
         start = float(request.GET.get('start', 0))

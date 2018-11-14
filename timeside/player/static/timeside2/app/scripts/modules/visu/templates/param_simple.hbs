@@ -1,14 +1,27 @@
 <ul class="form">
+
+	{{debug this}}
 	<li>
-		<label>Valeur 1 : </label>
-		<input type="text" name="">
+		<p> {{#if parametrizable }} Can be edited. {{else}} Non editable{{/if}}</p>
+		<p>schema : {{parameters_schema}}</p>
+		<p>can be param : {{parameters_default}}</p>
 	</li>
 
+	{{#each propertiesOk}}
+		<li>
+			<label>name : {{name}}</label>
+			<label>type : {{type}} </label>
+			<label>default : {{default}}</label>
 
+			{{{timeside_parameter this}}}
+		</li>
+
+	{{/each}}
 	<li>
-		<label>Valeur 2 : </label>
-		<input type="text" name="">
-	</li>
+		<label>Update parameters</label>
+		<button class="button green" data-layout="update_params"><sprite class="content">
+      update  
+    </sprite></button>
 
 
 	<li>
