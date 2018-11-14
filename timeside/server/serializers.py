@@ -68,7 +68,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('uuid', 'url',
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
-                  'audio_url', 'audio_duration',
+                  'audio_url', 'audio_duration', 'code', 'external_id',
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
