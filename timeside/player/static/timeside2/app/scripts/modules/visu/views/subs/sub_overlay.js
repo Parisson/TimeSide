@@ -22,6 +22,9 @@ function (Marionette,A,BaseQeopaView,d3,LoopSegmentVizualizer) {
 
         a lower bigger zone (fill) which will contain the annotations
 
+      Handles a red line for play performance
+
+
   **/
   return BaseQeopaView.extend({
 
@@ -35,10 +38,29 @@ function (Marionette,A,BaseQeopaView,d3,LoopSegmentVizualizer) {
       
     },
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    getTimeFromX:function(x) {
+      var time0 =  A._i.getOnCfg('trackInfoController').currentStartTime;
+      var time1 =  A._i.getOnCfg('trackInfoController').currentEndTime;
+      var width = this.width;
+
+
+      return time0 + (x/width) * (time1 - time0)
+    },
+
+    getXFromTime:function(time) {
+      var time0 =  A._i.getOnCfg('trackInfoController').currentStartTime;
+      var time1 =  A._i.getOnCfg('trackInfoController').currentEndTime;
+      var width = this.width;
+
+      return width * (time-time0)/(time1-time0);
+    },
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     initialize: function () {
-
+      A._v.onCfg('audio.newAudioTime','',this.onNewTime,this);
     },
 
     onRender:function() {
@@ -50,7 +72,52 @@ function (Marionette,A,BaseQeopaView,d3,LoopSegmentVizualizer) {
 
     onDomRefresh:function() {
       this.loopSegmentView.onDomRefresh();
+
+      if (this.initDone)
+        return;
+
+      //creating play cursor
+
+      this.width = this.$el.width();
+      this.height = $(document).height();
+
+      var self=this;
+      this.node = d3.select(this.$el.find('[data-layout="playcursor_svg_container"]')[0]).append("svg")
+        .attr("class","chart")
+        .attr('fill','red')
+        .attr("width", self.width)
+        .attr("height", self.height);
+
+      this.playCursor = this.node.append('g').attr("class", "play-cursor");
+      this.playCursor.append('rect').attr('width',1).attr('height',this.height)
+        .attr('transform','translate(0,15)');
+      this.playCursorTime = this.getTimeFromX(0);
     },
+
+    onResize:function() {
+      this.width = this.$el.width();
+      this.height = $(document).height();
+
+      this.node.attr('height',this.height);
+      this.playCursor.selectAll('rect').attr('height',this.height);
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    onNewTime:function(fraction,valueSec) {
+
+      this.playCursorTime = valueSec*1000;
+      var X = this.getXFromTime(this.playCursorTime);
+
+      var visible = X >0 && X < this.width;
+      this.playCursor.attr('opacity',visible ? 1 : 0);
+      var trueX = visible ? X : 0;
+
+      this.playCursor.attr("transform", function() {return "translate("+trueX+",8)";});
+
+    },
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     onDestroy: function () {     
     },

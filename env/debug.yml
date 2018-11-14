@@ -27,7 +27,10 @@ app:
   volumes:
     - ./lib:/srv/src/plugins
     - ./:/srv/src/timeside/
-  
+  command: /bin/bash bin/app.sh --runserver
+  ports:
+    - 9000:8000
+
 worker:
   env_file:
     - env/debug.env

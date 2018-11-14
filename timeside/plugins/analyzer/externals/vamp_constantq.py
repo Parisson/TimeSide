@@ -65,6 +65,7 @@ class VampConstantQ(VampAnalyzer):
               blocksize=None, totalframes=None):
         super(VampConstantQ, self).setup(
             channels, samplerate, blocksize, totalframes)
+
         self.minpitch = self.plugin.get_parameter_value('minpitch')
         self.maxpitch = self.plugin.get_parameter_value('maxpitch')
         self.bpo = self.plugin.get_parameter_value('bpo')

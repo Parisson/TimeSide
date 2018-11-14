@@ -84,7 +84,7 @@ function (Marionette,A,BaseQeopaView,d3) {
       var xAxis = d3.svg.axis()
           .scale(xScale)
           .orient('top')
-          .ticks(10)
+          .ticks(6)
           .tickFormat(function(arg) {
             return A.telem.formatTimeMs(arg.getTime());
           });

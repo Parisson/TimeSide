@@ -40,7 +40,7 @@ function ($,Marionette, _, vent,behaviors) {
 
     //////////////////////////////////////////////////////////////////
     onRender:function() {
-      if (! ( this.parametersConfig) && (this.parametersConfig.getParameterView) )
+      if (! ( this.parametersConfig && this.parametersConfig.getParameterView) )
         return;
 
       if (!this.paramView) {
@@ -48,6 +48,7 @@ function ($,Marionette, _, vent,behaviors) {
         this.ui.parametersContainer.append(paramView.render().$el);
         this.paramView = paramView;
         this.paramView.setDaddy(this.view);
+        this.view.parametersView = this.paramView;
       }
     },
 
