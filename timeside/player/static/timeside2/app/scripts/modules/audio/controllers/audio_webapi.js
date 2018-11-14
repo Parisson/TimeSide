@@ -37,6 +37,10 @@ function (A,buzz) {
         var windowEnd = A._i.getOnCfg('currentLoopSegment')[1]; //ms
       this.timeStartInSound = windowStart;
       this.timeEndInSound = windowEnd;
+
+      var startSeconds = windowStart/1000;
+      var stopSeconds = windowEnd/1000;
+      url = url+"?start="+startSeconds+"&stop="+stopSeconds;
       
       this.soundRequest = new XMLHttpRequest();
       this.soundRequest.open('GET', url, true);
@@ -191,7 +195,7 @@ function (A,buzz) {
 
       var trackDuration = A._i.getOnCfg('trackInfoController').getDuration();
       var percent = timeInPlay / trackDuration;
-      console.log('playing web-audio : '+timeInPlay+" -> "+percent);
+      //console.log('playing web-audio : '+timeInPlay+" -> "+percent);
       A._v.trigCfg('audio.newAudioTime','',percent);
 
       if ((!isLooping) && timeInPlay>=this.timeEndInSound-50) {

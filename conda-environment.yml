@@ -28,6 +28,7 @@ dependencies:
   - Werkzeug
   - yaafe
   - pip:
+      - coreapi
       - celery==3.*
       - deezer-python
       - django-bootstrap-pagination
@@ -44,7 +45,10 @@ dependencies:
       - ghp-import
       - jsonfield
       - jupyterthemes
+      - markdown
       - mutagen
+      - numpydoc
+      - pygments
       - py_sonicvisualiser==0.3
       - pympi-ling
       - sphinx_rtd_theme

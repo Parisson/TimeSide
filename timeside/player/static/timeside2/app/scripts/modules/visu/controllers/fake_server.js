@@ -3,18 +3,26 @@ define([
   'd3'
 ],
 
+/**
+  Asked by TF : https://taiga.ircam.fr/project/yomguy-diadems/issue/77
+    -> Deactivating
+
+  You may want one day to use this fake data controller to make some basic tests, so its only commented in initialize
+
+**/
 function (A,d3) {
   'use strict';
 
   return Marionette.Controller.extend({
     initialize: function (options)	 {
-      /*A.vent.on(A.Cfg.events.livraison.transporteur.get,this.onGetTransporteurData,this);*/
-      var wave_uri = "./data/geiger.json";
+      return; 
+
+      /*var wave_uri = "./data/geiger.json";
       d3.json( wave_uri,_.bind(this.onJSONLoaded,this));   
 
       this.ready=false;
 
-      A._v.onCfg('fakeserver.getdata','',this.onGetData,this);
+      A._v.onCfg('fakeserver.getdata','',this.onGetData,this);*/
     },
 
     onDestroy : function() {

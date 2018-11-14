@@ -28,11 +28,11 @@ function (Marionette,A,BaseQeopaView,d3,WaveformDataProvider,behaviors,ParamSimp
       };
     },
 
-    parametersConfig : {
+    /*parametersConfig : {
       getParameterView:function() {
         return new ParamSimpleView();
       }
-    },
+    },*/
 
     template: templates['visu/sub_track_waveform'],
     className: 'track-waveform',

@@ -31,6 +31,9 @@
 
       "postAnnotation" :{
         "path" : "/annotations", "method" : "post"
+      },
+      "getCSRFToken" : {
+        "path" : "/token-csrf"
       }
 
 

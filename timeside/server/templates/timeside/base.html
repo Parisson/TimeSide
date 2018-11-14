@@ -34,7 +34,26 @@
 <body>
 {% block layout %}
 <div id="layout">
-
+  <div id="auth_info" class="well">
+    <span class="glyphicon glyphicon-user"></span>
+    {% if user.is_authenticated %}
+    
+    Welcome, 
+    <a>
+      {% if user.first_name or user.last_name %}
+      {{ user.first_name }} {{ user.last_name }}</a> |
+    {% else %}
+    {{ user.username }}
+    {% endif %}
+    <a href="{% url "timeside-logout" %}?next=/" type="button" class="btn btn-default">
+      Sign out <span class="glyphicon glyphicon-log-out"></span></a>
+    {% else %}
+    <a href="{% url "timeside-login" %}" type="button" class="btn btn-default">
+      Sign in <span class="glyphicon glyphicon-log-in"></span></a>
+    {% endif %}
+    
+  </div>
+                
 {% block content %}
 {% endblock content %}
 

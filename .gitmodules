@@ -1,0 +1,3 @@
+[submodule "lib/timeside-diadems"]
+	path = lib/timeside-diadems
+	url = https://github.com/ANR-DIADEMS/timeside-diadems.git

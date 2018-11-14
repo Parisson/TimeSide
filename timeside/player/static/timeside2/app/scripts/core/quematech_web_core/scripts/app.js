@@ -29,7 +29,10 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
 
 
   //A déplacer!!!!
+  
+
   api.setInterceptEndCallFunction(function(res) {
+    
     try {
 
       // Get CSRF Token value from Cookie using jQuery
@@ -49,13 +52,16 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
           return cookieValue;
       }
       var csrfToken = getCookie('csrftoken');
+      //var csrfTokenSelonThomas = $.cookie('csrftoken');
+      
+
       //var csrfToken = res.xhr.getResponseHeader("X-CSRF-TOKEN");
       if (csrfToken) {
         //console.log("Ok CSRF : "+csrfToken);
         injector.set(injector.cfg.csrfToken,csrfToken);
         var apiController = injector.get(injector.cfg.apiController);
-        apiController.removeHeader("X-CSRF-TOKEN");
-        apiController.addHeader("X-CSRF-TOKEN",csrfToken);
+        apiController.removeHeader("X-CSRFToken");
+        apiController.addHeader("X-CSRFToken",csrfToken);
       }
       else {
         console.log('No CSRF Token?');
@@ -88,6 +94,11 @@ function (logger, Backbone, injector,Marionette,vent,api,commandoPool,NavControl
     this.apiController = api;
     injector.set(injector.config.api, api.api);
     injector.set(injector.config.apiController, api);
+
+    /*var apiController = injector.get(injector.cfg.apiController);
+    apiController.removeHeader("X-CSRFToken");
+    apiController.addHeader("X-CSRFToken","7634de7f116fe36d4c152f66c57544abb765181c");
+    injector.set(injector.cfg.csrfToken,"7634de7f116fe36d4c152f66c57544abb765181c");*/
 
   });
 

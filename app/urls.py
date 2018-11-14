@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
+from django.contrib.auth import views as auth_views
 from django.views.generic import RedirectView
-
+import django.contrib.auth.urls
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -18,4 +19,10 @@ urlpatterns = [
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    # Default login page
+    url(r'^accounts/login/$', auth_views.login,
+        {'template_name': 'timeside/login.html'},
+        name='timeside-login'),
+    url(r'^accounts/logout/$', auth_views.logout, name='timeside-logout'),
+    #url('^', include('django.contrib.auth.urls'))
 ]

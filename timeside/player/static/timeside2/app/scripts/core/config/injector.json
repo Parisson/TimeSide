@@ -30,7 +30,13 @@
 	"allAnalysis"	: "allAnalysis",
 	"allItems" : "allItems",
 
-	"currentItem" : "currentItem"
+	"currentItem" : "currentItem",
+
+	"-------------------------------------------------------------------------------------------------" : "",
+	"Below --- Auth":"",
+
+	"serverToken" : "serverToken"
+
 
 
 

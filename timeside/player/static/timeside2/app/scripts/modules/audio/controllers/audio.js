@@ -36,12 +36,23 @@ function (A,buzz) {
      //////////////////////////////////////////////////////////////////////////////
     //Basic buzz functions
     createSound:function(url) {
+      /*console.error('TMP!!!!!!! replacing mp3 url');
+      url = "/data/mp3chelou.mp3";*/
+
       if (this.sound) {
         this.destroySound();
       }
       this.sound = new buzz.sound(url);
       this.sound.bind('ended',_.bind(this.onSoundEnded,this));
-      
+
+
+      this.sound.bind('canplay',function(err) {console.log('====Can Play')});
+      this.sound.bind('canplaythrough',function(err) {console.log('====Can Play Through')});
+      this.sound.bind('error',function(err) {console.error('error on audio : '+err);console.dir(err);});
+      this.sound.bind('sourceerror',function(err) {console.error('sourceerror on audio : '+err)});
+
+      window.debsound = this.sound;
+      this.sound.load();
       //this.sound.bind('timeupdate',_.bind(this.onTimeUpdate,this));
       return this.sound;  
 
@@ -54,6 +65,10 @@ function (A,buzz) {
         this.updateInterval=undefined;
       }
       this.sound.unbind('ended');
+      this.sound.unbind('error');
+      this.sound.unbind('sourceerror');
+      this.sound.unbind('canplay');
+      this.sound.unbind('canplaythrough');
       this.sound=undefined;
     },
 
@@ -87,6 +102,7 @@ function (A,buzz) {
     //Audio play/pause
 
     playAudio:function() {
+
       if (this.updateInterval) {
         clearInterval(this.updateInterval);
         this.updateInterval=undefined;
@@ -126,6 +142,8 @@ function (A,buzz) {
         clearInterval(this.updateInterval);
         this.updateInterval=undefined;
       }
+
+      this.testTimeUpdate();
     },
   
     pauseAudio:function() {
@@ -155,6 +173,7 @@ function (A,buzz) {
     //on percent of audio!!!
     setCurrentTime:function(fracTime) {
       var timePercent = fracTime*100;
+      //console.log('setPercent on : '+fracTime+"=>"+timePercent);
       if (this.sound)
         this.sound.setPercent(timePercent);
     },
@@ -163,6 +182,7 @@ function (A,buzz) {
     testTimeUpdate:function() {
       var timeSound = this.sound.getTime() ;
       var percent =timeSound / this.sound.getDuration();
+
       A._v.trigCfg('audio.newAudioTime','',percent,timeSound);
     },
 
