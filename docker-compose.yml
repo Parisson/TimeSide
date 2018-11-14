@@ -34,7 +34,7 @@ var:
   command: "true"
 
 db:
-  image: mysql:5
+  image: mariadb:10
   volumes:
     - ./var/lib/mysql:/var/lib/mysql
   volumes_from:
@@ -43,7 +43,7 @@ db:
     - env/prod.env
 
 broker:
-  image: redis
+  image: redis:5
 
 app:
   image: parisson/timeside:latest-dev
@@ -52,7 +52,6 @@ app:
     - ./app:/srv/app
     - ./timeside:/srv/lib/timeside/timeside
     - ./lib/plugins:/srv/lib/plugins
-    - ./etc/._ifpk_2:/etc/._ifpk_2
   volumes_from:
     - var
   env_file:
@@ -60,12 +59,16 @@ app:
   links:
     - broker
     - db
-  mac_address: 02:42:ac:11:00:07
+  expose:
+    - "8000"
+  # mac_address: 02:42:ac:11:00:07
   
 
 worker:
   image: parisson/timeside:latest-dev
   command: /bin/bash /srv/app/bin/worker.sh
+  volumes:
+    - ./etc/._ifpk_2:/etc/._ifpk_2
   volumes_from:
     - var
     - app

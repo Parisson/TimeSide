@@ -21,11 +21,11 @@ gid='www-data'
 # pip install -U django-cors-headers
 # pip install django-debug-toolbar
 # pip install jsonfield
-pip uninstall -y mysql-python
-pip install django==1.10.8 djangorestframework==3.8.2 mysqlclient
+# pip uninstall -y mysql-python
+# pip install -U mysql-python django==1.10.8 djangorestframework==3.8.2 mysqlclient
 
 # Install plugins
-/srv/app/bin/setup_plugins.sh
+bash /srv/app/bin/setup_plugins.sh
 
 # wait for other services
 bash $app/bin/wait.sh

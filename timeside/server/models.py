@@ -275,13 +275,23 @@ class Item(Titled, UUID, Dated, Shareable):
 
             result, c = Result.objects.get_or_create(preset=preset,
                                                      item=self)
-            hdf5_file = str(result.uuid) + '.hdf5'
-            result.hdf5 = os.path.join(result_path, hdf5_file)
-            # while result.lock:
-            #     time.sleep(3)
-            # result.lock_setter(True)
-            proc.results.to_hdf5(result.hdf5.path)
-            # result.lock_setter(False)
+            if not hasattr(proc, 'external'):
+                print('no')
+                hdf5_file = str(result.uuid) + '.hdf5'
+                result.hdf5 = os.path.join(result_path, hdf5_file)
+                # while result.lock:
+                #     time.sleep(3)
+                # result.lock_setter(True)
+                proc.results.to_hdf5(result.hdf5.path)
+                # result.lock_setter(False)
+            else:
+                print('yes')
+                if proc.external:
+                    print('external')
+                    filename = proc.result_temp_file.split(os.sep)[-1]
+                    result_file = os.sep.join([result_path, filename])
+                    os.rename(proc.result_temp_file, result_file)
+                    result.file = result_file
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():

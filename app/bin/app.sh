@@ -3,8 +3,7 @@
 SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/app_base.sh"
 
-# waiting for other network services
-sh $app/bin/wait.sh
+# waiting for db
 python $manage wait-for-db
 
 # django init

@@ -79,4 +79,3 @@ COPY . /srv/lib/timeside/
 RUN pip install -e .
 
 WORKDIR /srv/app
-EXPOSE 8000
