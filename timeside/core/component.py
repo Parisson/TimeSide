@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (C) 2003-2018 Edgewall Software
+# Copyright (C) 2003-2004 Jonas Borgström <jonas@edgewall.com>
+# Copyright (C) 2004-2005 Christopher Lenz <cmlenz@gmx.de>
 # Copyright (c) 2009 Olivier Guilyardi <olivier@samalyse.com>
-#
+
+# All rights reserved.
 # This file is part of TimeSide.
 
 # This program is free software: you can redistribute it and/or modify
