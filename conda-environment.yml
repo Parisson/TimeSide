@@ -15,6 +15,7 @@ dependencies:
   - pandas
   - pillow
   - python=2.7
+  - python-coreapi
   - pyyaml
   - redis
   - scipy
