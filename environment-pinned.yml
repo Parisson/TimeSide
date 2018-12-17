@@ -146,8 +146,6 @@ dependencies:
   - numpy=1.14.5=py27h1b885b7_4
   - numpy-base=1.14.5=py27hdbf6ddf_4
   - olefile=0.45.1=py27_0
-  - openblas=0.2.20=4
-  - openblas-devel=0.2.20=7
   - openssl=1.0.2o=h20670df_0
   - packaging=17.1=py27_0
   - pandoc=2.2.1=h629c226_0
