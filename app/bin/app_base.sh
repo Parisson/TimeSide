@@ -23,7 +23,7 @@ gid='www-data'
 # pip install jsonfield
 # pip uninstall -y mysql-python
 # pip install -U mysql-python django==1.10.8 djangorestframework==3.8.2 mysqlclient
-pip install coreapi
+#pip install coreapi
 
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
