@@ -426,13 +426,6 @@ class ItemList(ListView):
     model = models.Item
     template_name = 'timeside/item_list.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ItemList, self).get_context_data(**kwargs)
-        return context
-
-
-    def dispatch(self, *args, **kwargs):
-        return super(ItemList, self).dispatch(*args, **kwargs)
 
 
 class ItemDetail(DetailView):

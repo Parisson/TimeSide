@@ -124,7 +124,7 @@ class Titled(models.Model):
     title = models.CharField(_('title'), blank=True, max_length=512)
     description = models.TextField(_('description'), blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     class Meta:

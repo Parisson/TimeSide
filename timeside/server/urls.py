@@ -28,8 +28,6 @@ api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
 
 urlpatterns = [
-    # ----- ADMIN -------
-    url(r'^admin/', include(admin.site.urls)),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
@@ -46,6 +44,7 @@ urlpatterns = [
     # ex: /item/5/
     url(r'^items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^$', views.ItemDetail.as_view(), name="timeside-item-detail"),
+
         url(r'^export/$', views.ItemDetailExport.as_view(),
             name='timeside-item-export'),
         url(r'^download/(?P<extension>' + EXPORT_EXT + ')$',
