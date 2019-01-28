@@ -153,6 +153,7 @@ INSTALLED_APPS = (
     'timeside.server',
     'timeside.player',
     'rest_framework',
+    'rest_framework.authtoken',
     'djcelery',
     'bootstrap3',
     'bootstrap_pagination',

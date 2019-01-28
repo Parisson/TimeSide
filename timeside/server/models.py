@@ -40,6 +40,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 import jsonfield
 import json
 
@@ -95,6 +97,11 @@ if not os.path.exists(RESULTS_ROOT):
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
 
+#make every user having an automatically generated Token catching the User's post_save signal
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
 
 # --- Abstract classes -----
 class Dated(models.Model):
