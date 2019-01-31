@@ -6,10 +6,14 @@ from django.conf import settings
 from rest_framework import routers
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.schemas import get_schema_view
 
 EXPORT_EXT = "|".join(TS_ENCODERS_EXT.keys())
 
 admin.autodiscover()
+
+schema_view = get_schema_view(title="TimeSide API")
 
 api_router = routers.DefaultRouter()
 api_router.register(r'selections', views.SelectionViewSet)
@@ -32,6 +36,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
+    url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),   
+    url('^api/schema/$', schema_view),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view()),
         # Get transcoded audio
