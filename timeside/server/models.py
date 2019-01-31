@@ -483,9 +483,10 @@ class Task(UUID, Dated, Shareable):
 
 def set_mimetype(sender, **kwargs):
     instance = kwargs['instance']
+    path = ''
     if (sender == Result) and instance.file:
         path = instance.file.path
-    elif (sender == Item):
+    elif (sender == Item) and (instance.source_file or instance.source_url):
         if instance.source_url:
             path = instance.source_url
         elif instance.source_file:
