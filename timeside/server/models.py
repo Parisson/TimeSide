@@ -240,8 +240,8 @@ class Item(Titled, UUID, Dated, Shareable):
                 path = self.source_url
             elif self.source_file:
                 path = self.source_file.path
-            mime_type = get_mime_type(path)
-            self.mime_type_setter(mime_type=mime_type)
+            if os.path.exists(path):
+                self.mime_type = get_mime_type(path)
             super(Item, self).save()
 
     def get_single_selection(self):
