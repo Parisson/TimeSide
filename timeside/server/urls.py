@@ -10,10 +10,14 @@ from rest_framework.documentation import include_docs_urls
 
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.schemas import get_schema_view
 
 EXPORT_EXT = "|".join(TS_ENCODERS_EXT.keys())
 
 admin.autodiscover()
+
+schema_view = get_schema_view(title="TimeSide API")
 
 api_router = routers.DefaultRouter()
 api_router.register(r'selections', views.SelectionViewSet)
@@ -32,8 +36,6 @@ api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
 
 urlpatterns = [
-    # ----- ADMIN -------
-    url(r'^admin/', include(admin.site.urls)),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     # Docs
@@ -43,6 +45,8 @@ urlpatterns = [
     # Temporary Endpoint to get CSRF Token
     url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items
+    url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    url('^api/schema/$', schema_view),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
         # Get transcoded audio
@@ -57,6 +61,7 @@ urlpatterns = [
     # ex: /item/5/
     url(r'^items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^$', views.ItemDetail.as_view(), name="timeside-item-detail"),
+
         url(r'^export/$', views.ItemDetailExport.as_view(),
             name='timeside-item-export'),
         url(r'^download/(?P<extension>' + EXPORT_EXT + ')$',

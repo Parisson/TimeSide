@@ -30,6 +30,14 @@ app:
     - ./:/srv/src/timeside
   ports:
     - '9000:8000'
+  env_file:
+    - env/debug.env
 
 worker:
   image: parisson/timeside:latest-dev
+  volumes:
+    - ./app:/srv/app
+    - ./:/srv/src/timeside
+  env_file:
+    - env/debug.env
+
