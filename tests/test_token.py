@@ -18,6 +18,10 @@ client = Client(auth=auth)
 #testing several request to the TimeSide core API
 schema = client.get('http://localhost:9000/timeside/api/schema/')
 
+keys = ['api', 'items', 'create']
+params = {'title':'fooTest'}
+client.action(schema,keys,params)
+
 keys = ['api', 'items', 'list']
 data = client.action(schema,keys)
 for item in data:
