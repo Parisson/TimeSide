@@ -20,29 +20,33 @@ class Command(BaseCommand):
     # experience_processors = ['aubio_temporal', 'aubio_pitch', 'essentia_dissonance', ]
     experience_processors = ['ircam_music_descriptor', ]
     processor_blacklist = ['decoder', 'live', 'gain', 'vamp']
-    
-    option_list = BaseCommand.option_list + (
-            make_option('-s', '--selection_title',
-                dest='selection_title',
-                help='define the title of the selection'),
-            make_option('-e', '--experience_title',
-                dest='experience_title',
-                help='define the title of the experience'),
-            make_option('-m', '--media_directory',
-                dest='media_directory',
-                help='define the media directory'),
-            make_option('-l', '--log',
-                dest='log',
-                help='define log file'),
-            make_option('-f', '--force',
-                action='store_true',
-                dest='force',
-                help='Force overwrite data'),
-            make_option('-c', '--cleanup',
-                action='store_true',
-                dest='cleanup',
-                help='Cleanup result data'),  
-        )
+
+    def add_arguments(self, parser):
+        parser.add_argument('-s', '--selection_title',
+            dest='selection_title',
+            help='define the title of the selection')
+
+        parser.add_argument('-e', '--experience_title',
+            dest='experience_title',
+            help='define the title of the experience')
+
+        parser.add_argument('-m', '--media_directory',
+            dest='media_directory',
+            help='define the media directory')
+
+        parser.add_argument('-l', '--log',
+            dest='log',
+            help='define log file')
+
+        parser.add_argument('-f', '--force',
+            action='store_true',
+            dest='force',
+            help='Force overwrite data')
+
+        parser.add_argument('-c', '--cleanup',
+            action='store_true',
+            dest='cleanup',
+            help='Cleanup result data')
 
     def write_file(self, item, media):
         filename = media.split(os.sep)[-1]
