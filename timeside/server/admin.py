@@ -6,7 +6,7 @@ from timeside.server.models import *
 class PresetAdmin(admin.ModelAdmin):
     model = Preset
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'processor', 'parameters', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'processor', 'parameters', 'date_added', 'date_modified']
     list_filter = ['date_modified', 'processor']
     search_fields = ['uuid']
 
@@ -14,7 +14,7 @@ class PresetAdmin(admin.ModelAdmin):
 class SelectionAdmin(admin.ModelAdmin):
     model = Selection
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     filter_horizontal = ['items', 'selections']
     search_fields = ['uuid']
@@ -23,16 +23,16 @@ class SelectionAdmin(admin.ModelAdmin):
 class ExperienceAdmin(admin.ModelAdmin):
     model = Experience
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
-    list_filter = ['date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
+    list_filter = ['date_modified', 'title']
     filter_horizontal = ['presets', 'experiences']
-    search_fields = ['uuid']
+    search_fields = ['uuid', 'title']
 
 
 class TaskAdmin(admin.ModelAdmin):
     model = Task
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified', 'status']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
     search_fields = ['uuid']
 
@@ -40,7 +40,7 @@ class TaskAdmin(admin.ModelAdmin):
 class ResultAdmin(admin.ModelAdmin):
     modele = Result
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified', 'status']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
     search_fields = ['uuid']
 
@@ -48,14 +48,14 @@ class ResultAdmin(admin.ModelAdmin):
 class AnalysisAdmin(admin.ModelAdmin):
     modele = Analysis
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified', ]
 
 
 class AnalysisTrackAdmin(admin.ModelAdmin):
     modele = AnalysisTrack
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     search_fields = ['uuid', 'title']
 
