@@ -424,7 +424,7 @@ class Processor(models.Model):
         db_table = app + '_processors'
         verbose_name = _('processor')
 
-    def __unicode__(self):
+    def __str__(self):
         return '_'.join([self.pid, str(self.id)])
 
     def save(self, **kwargs):
@@ -459,7 +459,7 @@ class SubProcessor(models.Model):
         db_table = app + '_subprocessors'
         verbose_name = _('Subprocessor')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.sub_processor_id
 
 
@@ -475,7 +475,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
 
-    def __unicode__(self):
+    def __str__(self):
         return '_'.join([unicode(self.processor), str(self.id)])
 
     def get_single_experience(self):
@@ -527,7 +527,7 @@ class Result(UUID, Dated, Shareable):
             mime_type = get_mime_type(self.file.path)
             self.mime_type_setter(mime_type=mime_type)
 
-    def __unicode__(self):
+    def __str__(self):
         return '_'.join([self.item.title, unicode(self.preset.processor)])
 
 
@@ -542,7 +542,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
 
-    def __unicode__(self):
+    def __str__(self):
         return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
 
     def status_setter(self, status):

@@ -307,7 +307,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Experience
-        fields = ('uuid', 'url', 'presets', 'is_public', 'author')
+        fields = ('title', 'uuid', 'url', 'presets', 'is_public', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'presets': {'lookup_field': 'uuid'},

@@ -57,3 +57,4 @@ dependencies:
       - uwsgi
       - vamp
       - watchdog
+      - youtube_dl
