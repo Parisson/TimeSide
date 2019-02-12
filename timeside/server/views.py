@@ -242,7 +242,7 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
                                                          context=context)
         if preset_serializer.is_valid():
             preset = preset_serializer.save()
-            return Response(data='Preset is Valid but method not implemented yet', 
+            return Response(data='Preset is Valid but method not implemented yet',
                             status=status.HTTP_405_METHOD_NOT_ALLOWED)
         else:
             return Response(data=preset_serializer.errors,
@@ -567,6 +567,14 @@ class ItemTranscode(DetailView):
 class PlayerView(TemplateView):
     template_name = "timeside/player.html"
 
+
 class Csrf_Token(viewsets.ViewSet):
     def list(self, request):
         return  Response({'csrftoken': get_csrf_token(request)})
+
+
+class ProviderViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+
+    model = models.Provider
+    queryset = model.objects.all()
+    serializer_class = serializers.ProviderSerializer

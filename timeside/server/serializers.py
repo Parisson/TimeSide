@@ -67,7 +67,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('uuid', 'url',
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
-                  'audio_url', 'audio_duration', 'code', 
+                  'audio_url', 'audio_duration', 'code',
                   'external_id', 'external_uri',
                   'waveform_url',
                   'annotation_tracks',
@@ -116,7 +116,7 @@ class ItemWaveformSerializer(ItemSerializer):
                        kwargs={'uuid': result.uuid},
                        request=request)+'?id=waveform_analyzer'
 
-        
+
     def get_waveform(self, obj):
         request = self.context['request']
         start = float(request.GET.get('start', 0))
@@ -638,4 +638,13 @@ class AnnotationTrackSerializer(serializers.HyperlinkedModelSerializer):
             'author': {'lookup_field': 'username'},
             'annotations': {'lookup_field': 'uuid'},
         }
+        read_only_fields = ('uuid',)
+
+
+class ProviderSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = ts.models.Provider
+        fields = ('url', 'uuid', 'name', 'description',
+                  )
         read_only_fields = ('uuid',)

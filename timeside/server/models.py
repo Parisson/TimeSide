@@ -141,6 +141,18 @@ class Titled(models.Model):
         abstract = True
 
 
+class Named(models.Model):
+
+    name = models.CharField(_('name'), blank=True, max_length=512)
+    description = models.TextField(_('description'), blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        abstract = True
+
+
 class Shareable(models.Model):
 
     author = models.ForeignKey(User, related_name="%(class)s", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
@@ -149,6 +161,27 @@ class Shareable(models.Model):
     class Meta:
         abstract = True
 
+
+class Provider(Named, UUID):
+
+    url = models.URLField(_('URL'), blank=True, max_length=1024)
+
+    def get_source_url(self, uri):
+        if 'youtube' in self.name:
+            url = '' #TODO include real youtube-dl method
+            return url
+
+    def __unicode__(self):
+        return self.name
+
+
+class ProviderIdentifier(UUID):
+
+    provider = models.ForeignKey('Provider', related_name="provider_identifiers", verbose_name=_('provider'), blank=True, null=True)
+    identifier = models.CharField(_('identifier'), blank=True, max_length=256)
+
+    def __unicode__(self):
+        return self.provider.name + ' - ' + self.identifier
 
 # ----- Timeside server models ------
 
@@ -179,9 +212,10 @@ class Item(Titled, UUID, Dated, Shareable):
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
-    code = models.CharField(_('code'), blank=True, max_length=256)
-    external_id = models.CharField(_('external_id'), blank=True, max_length=256)
+    code = models.CharField(_('code'), blank=True, max_length=256) # TODO delete
+    external_id = models.CharField(_('external_id'), blank=True, max_length=256) # TODO delete
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
+    provider_identifier = models.OneToOneField('ProviderIdentifier', verbose_name=_('provider_identifier'), blank=True, null=True)
 
     class Meta:
         db_table = app + '_items'
@@ -194,6 +228,11 @@ class Item(Titled, UUID, Dated, Shareable):
     def lock_setter(self, lock):
         self.lock = lock
         self.save()
+
+    def get_source_url(self):
+        if self.external_uri and not self.source_url:
+            self.source_url = self.provider_identifier.get_source_url(self.external_uri)
+            super(Item, self).save()
 
     def get_uri(self):
         """Return the Item source"""
@@ -528,6 +567,7 @@ class Task(UUID, Dated, Shareable):
 
 def item_post_save(sender, **kwargs):
     instance = kwargs['instance']
+    instance.get_source_url()
     instance.get_hash()
     instance.get_mimetype()
     instance.get_audio_duration()

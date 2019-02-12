@@ -34,6 +34,8 @@ api_router.register(r'analysis_tracks', views.AnalysisTrackViewSet,
                     base_name='analysistrack')
 api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
+api_router.register(r'providers', views.ProviderViewSet)
+
 
 urlpatterns = [
     # ----- API ---------

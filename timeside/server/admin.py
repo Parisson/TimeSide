@@ -38,7 +38,7 @@ class TaskAdmin(admin.ModelAdmin):
 
 
 class ResultAdmin(admin.ModelAdmin):
-    modele = Result
+    model = Result
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
@@ -46,18 +46,26 @@ class ResultAdmin(admin.ModelAdmin):
 
 
 class AnalysisAdmin(admin.ModelAdmin):
-    modele = Analysis
+    model = Analysis
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified', ]
 
 
 class AnalysisTrackAdmin(admin.ModelAdmin):
-    modele = AnalysisTrack
+    model = AnalysisTrack
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     search_fields = ['uuid', 'title']
+
+
+class ProviderAdmin(admin.ModelAdmin):
+    model = Provider
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid']
+    search_fields = ['uuid', 'name']
+
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item)
@@ -72,3 +80,5 @@ admin.site.register(Analysis, AnalysisAdmin)
 admin.site.register(AnalysisTrack, AnalysisTrackAdmin)
 admin.site.register(Annotation)
 admin.site.register(AnnotationTrack)
+
+admin.site.register(Provider, ProviderAdmin)
