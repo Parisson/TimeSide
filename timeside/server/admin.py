@@ -17,7 +17,7 @@ class SelectionAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     filter_horizontal = ['items', 'selections']
-    search_fields = ['uuid']
+    search_fields = ['title']
 
 
 class ExperienceAdmin(admin.ModelAdmin):

@@ -293,7 +293,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Selection
-        fields = ('uuid', 'url', 'items', 'selections', 'author')
+        fields = ('title','uuid', 'url', 'items', 'selections', 'author')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'selections': {'lookup_field': 'uuid'},
