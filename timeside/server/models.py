@@ -44,6 +44,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 import jsonfield
 import json
+import youtube_dl
 
 app = 'timeside'
 
@@ -166,22 +167,44 @@ class Provider(Named, UUID):
 
     url = models.URLField(_('URL'), blank=True, max_length=1024)
 
-    def get_source_url(self, uri):
+    def get_source(self, uri, download=False):
         if 'youtube' in self.name:
-            url = '' #TODO include real youtube-dl method
-            return url
+
+            ydl_opts = {
+                'format': 'bestaudio',
+                'outtmpl': unicode('/srv/media/%(title)s-%(id)s.%(ext)s'),
+                'postprocessors': [{'key':'FFmpegExtractAudio'}],
+                'restrictfilenames':True,
+            } 
+
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(uri, download=download)
+                file_path = ydl.prepare_filename(info)[:-4] + info['formats'][0]['acodec'] # get the path with the right name
+            url = info['formats'][0]['url']
+
+            if download:
+                return file_path
+            else:
+                return url
 
     def __unicode__(self):
         return self.name
 
 
-class ProviderIdentifier(UUID):
+# class ProviderIdentifier(UUID):
 
-    provider = models.ForeignKey('Provider', related_name="provider_identifiers", verbose_name=_('provider'), blank=True, null=True)
-    identifier = models.CharField(_('identifier'), blank=True, max_length=256)
+#     #url = models.URLField(_('URL'), blank=True, max_length=1024)
 
-    def __unicode__(self):
-        return self.provider.name + ' - ' + self.identifier
+#     provider = models.ForeignKey('Provider', related_name="provider_identifiers", verbose_name=_('provider'), blank=True, null=True)
+#     identifier = models.CharField(_('identifier'), blank=True, max_length=256)
+#     #TODO domain =
+
+#     def get_source_url(self, uri):
+#         return self.provider.get_source_url(uri)
+
+#     def __unicode__(self):
+        return self.provider.name + '-' + self.identifier
+        #return  self.identifier
 
 # ----- Timeside server models ------
 
@@ -215,12 +238,16 @@ class Item(Titled, UUID, Dated, Shareable):
     code = models.CharField(_('code'), blank=True, max_length=256) # TODO delete
     external_id = models.CharField(_('external_id'), blank=True, max_length=256) # TODO delete
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
-    provider_identifier = models.OneToOneField('ProviderIdentifier', verbose_name=_('provider_identifier'), blank=True, null=True)
+    # provider_identifier = models.OneToOneField('ProviderIdentifier', verbose_name=_('provider_identifier'), blank=True, null=True)
+    provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True)
 
     class Meta:
         db_table = app + '_items'
         ordering = ['title']
         verbose_name = _('item')
+
+    def __unicode__(self):
+        return self.title
 
     def results(self):
         return [result for result in self.results.all()]
@@ -229,9 +256,12 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_source_url(self):
+    def get_source(self, download=False):
         if self.external_uri and not self.source_url:
-            self.source_url = self.provider_identifier.get_source_url(self.external_uri)
+            if download:
+                self.source_url = self.provider.get_source(self.external_uri,download)
+            else:
+                self.source_file = self.provider.get_source(self.external_uri,download)
             super(Item, self).save()
 
     def get_uri(self):
@@ -528,13 +558,17 @@ class Result(UUID, Dated, Shareable):
             self.mime_type_setter(mime_type=mime_type)
 
     def __str__(self):
-        return '_'.join([self.item.title, unicode(self.preset.processor)])
+        if self.item:
+            return '_'.join([self.item.title, unicode(self.preset.processor)])
+        else:
+            return unicode(self.preset.processor)
 
 
 class Task(UUID, Dated, Shareable):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
     selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
+    item =  models.ForeignKey('Item', related_name="task", verbose_name=_('item'), blank=True, null=True)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
 
     class Meta:
@@ -567,7 +601,7 @@ class Task(UUID, Dated, Shareable):
 
 def item_post_save(sender, **kwargs):
     instance = kwargs['instance']
-    instance.get_source_url()
+    instance.get_source(download=True)
     instance.get_hash()
     instance.get_mimetype()
     instance.get_audio_duration()

@@ -16,9 +16,13 @@ from celery.task import chord
 def task_run(task_id):
     task = Task.objects.get(id=task_id)
     results = []
-    for item in task.selection.get_all_items():
-        results.append(experience_run.delay(task.experience.id, item.id))
-    results_id = [res.id for res in results]
+    if task.selection:
+        for item in task.selection.get_all_items():
+            results.append(experience_run.delay(task.experience.id, item.id))
+        results_id = [res.id for res in results]
+    elif task.item:
+        results.append(experience_run.delay(task.experience.id, task.item.id))
+        results_id = [res.id for res in results]
     task_monitor.delay(task_id, results_id)
 
 

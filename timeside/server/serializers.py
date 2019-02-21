@@ -72,9 +72,11 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
+                  'provider'
                   )
         extra_kwargs = {
-            'url': {'lookup_field': 'uuid'}
+            'url': {'lookup_field': 'uuid'},
+            'provider': {'lookup_field': 'uuid'}
         }
 
         read_only_fields = ('url', 'uuid', 'audio_duration')
@@ -288,7 +290,6 @@ class ItemAnalysisResultSerializer(serializers.HyperlinkedModelSerializer):
         return {'analysis': analysis.uuid,
                 'item': item.uuid}
 
-
 class SelectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -477,12 +478,14 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Task
-        fields = ('url', 'uuid', 'experience', 'selection', 'status', 'author')
+        fields = ('url', 'uuid', 'experience', 'selection', 'status', 'author', 'item')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
             'selection': {'lookup_field': 'uuid'},
-            'author': {'lookup_field': 'username'}}
+            'author': {'lookup_field': 'username'},
+            'item': {'lookup_field': 'uuid'}
+            }
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -647,4 +650,18 @@ class ProviderSerializer(serializers.HyperlinkedModelSerializer):
         model = ts.models.Provider
         fields = ('url', 'uuid', 'name', 'description',
                   )
+        # extra_kwargs = {
+        #     'url': {'lookup_field': 'uuid'}
+        # }
         read_only_fields = ('uuid',)
+
+# class ProviderIdentifierSerializer(serializers.HyperlinkedModelSerializer):
+
+#     class Meta:
+#         model = ts.models.ProviderIdentifier
+#         fields = ('url','provider', 'uuid', 'identifier',
+#                   )
+#         # extra_kwargs = {
+#         #     'url': {'lookup_field': 'uuid'}
+#         # }
+#         read_only_fields = ('uuid',)

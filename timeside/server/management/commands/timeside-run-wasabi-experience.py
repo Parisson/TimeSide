@@ -17,8 +17,8 @@ class Command(BaseCommand):
     help = "Create and run the WASABI experience on a given directory or a selection"
     
     media_root = os.path.normpath(settings.MEDIA_ROOT)
-    # experience_processors = ['aubio_temporal', 'aubio_pitch', 'essentia_dissonance', ]
-    experience_processors = ['ircam_music_descriptor', ]
+    experience_processors = ['aubio_temporal', 'aubio_pitch', 'essentia_dissonance', ]
+    #experience_processors = ['ircam_music_descriptor', ]
     processor_blacklist = ['decoder', 'live', 'gain', 'vamp']
 
     def add_arguments(self, parser):

@@ -8,7 +8,7 @@ class PresetAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'processor', 'parameters', 'date_added', 'date_modified']
     list_filter = ['date_modified', 'processor']
-    search_fields = ['uuid']
+    search_fields = ['uuid', 'processor__name']
 
 
 class SelectionAdmin(admin.ModelAdmin):
@@ -66,6 +66,11 @@ class ProviderAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'uuid']
     search_fields = ['uuid', 'name']
 
+# class ProviderIdentifierAdmin(admin.ModelAdmin):
+#     model = ProviderIdentifier
+#     readonly_fields = ('uuid',)
+#     list_display = ['__unicode__', 'uuid']
+#     search_fields = ['uuid']
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item)
@@ -82,3 +87,4 @@ admin.site.register(Annotation)
 admin.site.register(AnnotationTrack)
 
 admin.site.register(Provider, ProviderAdmin)
+# admin.site.register(ProviderIdentifier, ProviderIdentifierAdmin)

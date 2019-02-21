@@ -578,3 +578,9 @@ class ProviderViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     model = models.Provider
     queryset = model.objects.all()
     serializer_class = serializers.ProviderSerializer
+
+# class ProviderIdentifierViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+
+#     model = models.ProviderIdentifier
+#     queryset = model.objects.all()
+#     serializer_class = serializers.ProviderIdentifierSerializer
