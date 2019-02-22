@@ -42,6 +42,7 @@ from django.db.models.signals import post_save, pre_save
 from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from django.core.files import File
 import jsonfield
 import json
 import youtube_dl
@@ -172,7 +173,7 @@ class Provider(Named, UUID):
 
             ydl_opts = {
                 'format': 'bestaudio',
-                'outtmpl': unicode('/srv/media/%(title)s-%(id)s.%(ext)s'),
+                'outtmpl': unicode('/srv/media/items/download/%(title)s-%(id)s.%(ext)s'),
                 'postprocessors': [{'key':'FFmpegExtractAudio'}],
                 'restrictfilenames':True,
             } 
@@ -183,6 +184,7 @@ class Provider(Named, UUID):
             url = info['formats'][0]['url']
 
             if download:
+                print(file_path)
                 return file_path
             else:
                 return url
@@ -257,12 +259,13 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        if self.external_uri and not self.source_url:
+        if self.external_uri and not (self.source_url or self.source_file):
             if download:
-                self.source_url = self.provider.get_source(self.external_uri,download)
+                self.source_file = self.provider.get_source(self.external_uri,download).replace(settings.MEDIA_ROOT, '') # source_file ?
             else:
-                self.source_file = self.provider.get_source(self.external_uri,download)
+                self.source_url = self.provider.get_source(self.external_uri,download)
             super(Item, self).save()
+
 
     def get_uri(self):
         """Return the Item source"""

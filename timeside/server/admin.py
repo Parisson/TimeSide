@@ -65,6 +65,12 @@ class ProviderAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid',)
     list_display = ['__unicode__', 'uuid']
     search_fields = ['uuid', 'name']
+    
+class ItemAdmin(admin.ModelAdmin):
+    model = Item
+    readonly_fields = ('uuid',)
+    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    search_fields = ['uuid', 'name']
 
 # class ProviderIdentifierAdmin(admin.ModelAdmin):
 #     model = ProviderIdentifier
@@ -73,7 +79,7 @@ class ProviderAdmin(admin.ModelAdmin):
 #     search_fields = ['uuid']
 
 admin.site.register(Selection, SelectionAdmin)
-admin.site.register(Item)
+admin.site.register(Item, ItemAdmin)
 admin.site.register(Experience, ExperienceAdmin)
 admin.site.register(Processor)
 admin.site.register(SubProcessor)
