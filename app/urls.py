@@ -4,6 +4,11 @@ from django.views.generic import RedirectView
 import django.contrib.auth.urls
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 admin.autodiscover()
 
 urlpatterns = [
@@ -25,4 +30,4 @@ urlpatterns = [
         name='timeside-login'),
     url(r'^accounts/logout/$', auth_views.logout, name='timeside-logout'),
     #url('^', include('django.contrib.auth.urls'))
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
