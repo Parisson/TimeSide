@@ -25,3 +25,5 @@ npm
 mysql-client
 libmysqlclient-dev
 nodejs-legacy
+
+glib-networking
