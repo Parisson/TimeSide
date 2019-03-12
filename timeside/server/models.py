@@ -279,9 +279,11 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return Item result path
         """
-        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        print('RESULTS_ROOT : ' + RESULTS_ROOT)
+        result_path = os.path.join(RESULTS_ROOT, self.uuid).replace(settings.MEDIA_ROOT, '')
         if not os.path.exists(result_path):
             os.makedirs(result_path)
+        print('PRINT result_path : ' + result_path)
         return result_path
 
     def get_audio_duration(self, force=False):
@@ -360,7 +362,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
         if not self.hdf5:
             hdf5_file = str(experience.uuid) + '.hdf5'
-            self.hdf5 = os.path.join(result_path, hdf5_file)
+            self.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, 'media/')
             self.save()
 
         pipe.run()
@@ -385,6 +387,7 @@ class Item(Titled, UUID, Dated, Shareable):
                                                      item=self)
             if not hasattr(proc, 'external'):
                 print('no')
+                # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
                 result.hdf5 = os.path.join(result_path, hdf5_file)
                 # while result.lock:
@@ -561,10 +564,13 @@ class Result(UUID, Dated, Shareable):
             self.mime_type_setter(mime_type=mime_type)
 
     def __str__(self):
-        if self.item:
-            return '_'.join([self.item.title, unicode(self.preset.processor)])
+        if self.preset:
+            if self.item:
+                return '_'.join([self.item.title, unicode(self.preset.processor)])
+            else:
+                return unicode(self.preset.processor)
         else:
-            return unicode(self.preset.processor)
+            return 'Unamed_result'
 
 
 class Task(UUID, Dated, Shareable):
@@ -603,6 +609,7 @@ class Task(UUID, Dated, Shareable):
 
 
 def item_post_save(sender, **kwargs):
+    #print('RESULTS_ROOT : ' + RESULTS_ROOT)
     instance = kwargs['instance']
     instance.get_source(download=True)
     instance.get_hash()

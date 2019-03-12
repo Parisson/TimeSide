@@ -301,7 +301,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid',)
+        read_only_fields = ('url', 'uuid', 'title')
 
 
 class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
