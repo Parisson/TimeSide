@@ -1,3 +1,4 @@
+import time
 import requests
 from coreapi import Client
 from coreapi.auth import TokenAuthentication
@@ -20,8 +21,13 @@ schema = client.get('http://localhost:9000/timeside/api/schema/')
 
 #Item
 keys = ['api', 'items', 'create']
-params = {'title':'Beat It','description':'Music from Michael Jackson','external_uri':'https://www.youtube.com/watch?v=oRdxUFDoQe0','provider': '/timeside/api/providers/042d0121-456a-4b7d-a993-f8b040f6fc9c/'}
+params = {'title':'Beat It2','description':'Music from Michael Jackson','external_uri':'https://www.youtube.com/watch?v=oRdxUFDoQe0','provider': '/timeside/api/providers/042d0121-456a-4b7d-a993-f8b040f6fc9c/'}
 item = client.action(schema,keys,params)
+
+#Ajout dans la selection WASABI
+keys = ['api', 'selections', 'partial_update']
+params = {'uuid':'3c58f084-a16d-470a-afc3-4a2341c46e40','items':['/timeside/api/items/' + item['uuid'] + '/']}
+selec = client.action(schema,keys,params)
 
 #Experience
 keys = ['api', 'experiences', 'create']
@@ -29,8 +35,22 @@ params = {'title':'spectrogramme_test', 'presets':['/timeside/api/presets/eaccfb
 exp = client.action(schema,keys,params)
 exp_uuid = exp['uuid']
 
+#Selec
+keys = ['api', 'selections', 'create']
+params = {'items' : ['/timeside/api/items/' + item['uuid'] + '/']}
+selec = client.action(schema,keys,params)
+
 #Task
 keys = ['api', 'tasks', 'create']
-params = {'item' : '/timeside/api/items/' + item['uuid'] + '/', 'experience': '/timeside/api/experiences/' + exp['uuid'] + '/','status':2} # 2  --> pending ???
+params = {'selection' : '/timeside/api/selections/' + selec['uuid'] + '/', 'experience': '/timeside/api/experiences/' + exp['uuid'] + '/','status':2} # 2  --> pending ???
 
 task = client.action(schema,keys,params)
+
+time.sleep(10)
+
+#Results
+keys = ['api', 'results', 'list']
+params = {'search' : item['uuid']}
+
+results = client.action(schema,keys,params)
+print(results)
