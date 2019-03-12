@@ -37,6 +37,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import detail_route
+from rest_framework import filters
+# from django_filters.rest_framework import DjangoFilterBackend TODO
+
 
 from . import models
 from . import serializers
@@ -158,6 +161,13 @@ class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     queryset = model.objects.all()
     serializer_class = serializers.ResultSerializer
 
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('item__uuid',)
+
+    # def get_queryset(self): TODO
+    #     return self.queryset \
+    #         .filter(item__uuid=self.kwargs.get('project_id')) \
+    #         .filter(author=self.request.user)
 
 class PNGRenderer(renderers.BaseRenderer):
     media_type = 'image/png'
