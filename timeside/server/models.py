@@ -280,7 +280,7 @@ class Item(Titled, UUID, Dated, Shareable):
         Return Item result path
         """
         print('RESULTS_ROOT : ' + RESULTS_ROOT)
-        result_path = os.path.join(RESULTS_ROOT, self.uuid).replace(settings.MEDIA_ROOT, '')
+        result_path = os.path.join(RESULTS_ROOT, self.uuid)
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         print('PRINT result_path : ' + result_path)
@@ -347,7 +347,7 @@ class Item(Titled, UUID, Dated, Shareable):
                                                          item=self)
                 media_file = '.'.join([str(result.uuid),
                                        proc.file_extension()])
-                result.file = os.path.join(result_path, media_file)
+                result.file = os.path.join(result_path, media_file).replace(settings.MEDIA_ROOT, '')
                 result.save()
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
@@ -362,7 +362,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
         if not self.hdf5:
             hdf5_file = str(experience.uuid) + '.hdf5'
-            self.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, 'media/')
+            self.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
             self.save()
 
         pipe.run()
@@ -389,7 +389,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 print('no')
                 # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
-                result.hdf5 = os.path.join(result_path, hdf5_file)
+                result.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
                 # while result.lock:
                 #     time.sleep(3)
                 # result.lock_setter(True)
@@ -402,7 +402,7 @@ class Item(Titled, UUID, Dated, Shareable):
                     filename = proc.result_temp_file.split(os.sep)[-1]
                     result_file = os.sep.join([result_path, filename])
                     os.rename(proc.result_temp_file, result_file)
-                    result.file = result_file
+                    result.file = result_file.replace(settings.MEDIA_ROOT, '')
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
