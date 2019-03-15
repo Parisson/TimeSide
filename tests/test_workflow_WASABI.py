@@ -52,6 +52,6 @@ params = {'search' : item['uuid']}
 
 result = client.action(schema,keys,params)
 
-result_uuid = result[0]['uuid'] 
+result_json_url = 'http://localhost:9000/timeside/results/' + result[0]['uuid'] + '/json/'
 
-print('http://localhost:9000/timeside/results/' + result_uuid + '/json/')
+result_json = requests.get(result_json_url, headers={'Authorization': token})
