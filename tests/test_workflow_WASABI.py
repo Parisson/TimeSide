@@ -54,4 +54,6 @@ result = client.action(schema,keys,params)
 
 result_json_url = 'http://localhost:9000/timeside/results/' + result[0]['uuid'] + '/json/'
 
-result_json = requests.get(result_json_url, headers={'Authorization': token})
+result_json = requests.get(result_json_url, headers={'Authorization': token}).json()
+
+mean(result_json[4]['data_object']['value']['numpyArray'][1500:])
