@@ -184,7 +184,6 @@ class Provider(Named, UUID):
             url = info['formats'][0]['url']
 
             if download:
-                print(file_path)
                 return file_path
             else:
                 return url
@@ -279,11 +278,9 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return Item result path
         """
-        print('RESULTS_ROOT : ' + RESULTS_ROOT)
         result_path = os.path.join(RESULTS_ROOT, self.uuid)
         if not os.path.exists(result_path):
             os.makedirs(result_path)
-        print('PRINT result_path : ' + result_path)
         return result_path
 
     def get_audio_duration(self, force=False):
@@ -609,7 +606,6 @@ class Task(UUID, Dated, Shareable):
 
 
 def item_post_save(sender, **kwargs):
-    #print('RESULTS_ROOT : ' + RESULTS_ROOT)
     instance = kwargs['instance']
     instance.get_source(download=True)
     instance.get_hash()
