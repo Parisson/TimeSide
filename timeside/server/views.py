@@ -35,6 +35,7 @@ from django.middleware.csrf import get_token as get_csrf_token
 from rest_framework import viewsets, generics, renderers
 from rest_framework import status
 from rest_framework.response import Response
+#from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import detail_route
 from rest_framework import filters
@@ -298,7 +299,7 @@ class ResultAnalyzerView(View):
     model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = models.Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(uuid=kwargs['uuid'])
         container = AnalyzerResultContainer()
         container.from_hdf5(result.hdf5.path)
         return HttpResponse(container.to_json(),

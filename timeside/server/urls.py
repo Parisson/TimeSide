@@ -3,6 +3,7 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
+#from django.core.urlresolvers import reverse
 from rest_framework import routers
 from rest_framework.authtoken import views as authtoken_views
 
@@ -75,7 +76,7 @@ urlpatterns = [
     # Results
     url(r'^api/results/(?P<uuid>[0-9a-z-]+)/visual/',
         views.ResultVisualizationViewSet.as_view(), name="timeside-result-visualization"),
-    url(r'^results/(?P<pk>.*)/json/$',
+    url(r'^results/(?P<uuid>[0-9a-z-]+)/json/$',
         views.ResultAnalyzerView.as_view(), name="timeside-result-json"),
     url(r'^results/(?P<pk>.*)/png/$',
         views.ResultGrapherView.as_view(), name="timeside-result-png"),
