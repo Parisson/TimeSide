@@ -173,23 +173,33 @@ class Provider(Named, UUID):
 
             ydl_opts = {
                 'format': 'bestaudio',
-                'outtmpl': unicode('/srv/media/items/download/%(title)s-%(id)s.%(ext)s'),
+                'outtmpl': unicode(settings.MEDIA_ROOT + 'items/download/%(title)s-%(id)s.%(ext)s'),
                 'postprocessors': [{'key':'FFmpegExtractAudio'}],
                 'restrictfilenames':True,
-            } 
+            }
 
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(uri, download=download)
-                file_path = ydl.prepare_filename(info)[:-4] + info['formats'][0]['acodec'] # get the path with the right name
+                file_path = ydl.prepare_filename(info)
+                #removing file extension
+                file_path = os.path.splitext(file_path)[0]
             url = info['formats'][0]['url']
 
+            #searching for file with same name and replacing extension
+            DOWNLOAD_ROOT = settings.MEDIA_ROOT + 'items/download/'
+            file_name = os.path.relpath(file_path,DOWNLOAD_ROOT)            
+            
+            for file in os.listdir(DOWNLOAD_ROOT):
+                if file_name == os.path.splitext(file)[0]:
+                    file_path += os.path.splitext(file)[1]
+            
             if download:
                 return file_path
             else:
                 return url
 
     def __unicode__(self):
-        return self.name
+        return unicode(self.name)
 
 
 # class ProviderIdentifier(UUID):
@@ -204,7 +214,7 @@ class Provider(Named, UUID):
 #         return self.provider.get_source_url(uri)
 
 #     def __unicode__(self):
-        return self.provider.name + '-' + self.identifier
+        #return self.provider.name + '-' + self.identifier
         #return  self.identifier
 
 # ----- Timeside server models ------
@@ -248,7 +258,7 @@ class Item(Titled, UUID, Dated, Shareable):
         verbose_name = _('item')
 
     def __unicode__(self):
-        return self.title
+        return unicode(self.title)
 
     def results(self):
         return [result for result in self.results.all()]
