@@ -173,6 +173,7 @@ class Provider(Named, UUID):
 
             ydl_opts = {
                 'format': 'bestaudio',
+                'cachedir': False,
                 'outtmpl': unicode(settings.MEDIA_ROOT + 'items/download/%(title)s-%(id)s.%(ext)s'),
                 'postprocessors': [{'key':'FFmpegExtractAudio'}],
                 'restrictfilenames':True,
