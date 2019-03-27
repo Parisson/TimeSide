@@ -46,6 +46,7 @@ from django.core.files import File
 import jsonfield
 import json
 import youtube_dl
+from requests import get 
 
 app = 'timeside'
 
@@ -173,6 +174,7 @@ class Provider(Named, UUID):
 
             ydl_opts = {
                 'format': 'bestaudio',
+                'cachedir': False,                
                 'outtmpl': unicode(settings.MEDIA_ROOT + 'items/download/%(title)s-%(id)s.%(ext)s'),
                 'postprocessors': [{'key':'FFmpegExtractAudio'}],
                 'restrictfilenames':True,
@@ -197,6 +199,24 @@ class Provider(Named, UUID):
                 return file_path
             else:
                 return url
+
+        if 'deezer' in self.name:
+            deezer_track_id = uri.split("/")[-1:]
+            request_uri = 'https://api.deezer.com/track/' + deezer_track_id[0]
+            r = get(request_uri)
+            if download:
+                import requests, re
+                file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0] + '.mp3'
+                file_name = file_name.replace(" ", "_")
+                file_path = settings.MEDIA_ROOT + 'items/download/' + file_name
+                source_uri = r.json()['preview']                
+                r = requests.get(source_uri)
+                with open(file_path,'wb') as f:
+                    f.write(r.content)
+                return file_path
+            else:
+                return r.json()['preview']
+
 
     def __unicode__(self):
         return unicode(self.name)
