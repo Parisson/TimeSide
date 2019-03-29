@@ -205,10 +205,10 @@ class Provider(Named, UUID):
             request_uri = 'https://api.deezer.com/track/' + deezer_track_id[0]
             r = get(request_uri)
             if download:
-                import requests, re
+                import requests
                 file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0] + '.mp3'
                 file_name = file_name.replace(" ", "_")
-                file_path = settings.MEDIA_ROOT + 'items/download/' + file_name
+                file_path = os.path.join(settings.MEDIA_ROOT,'items','download',file_name) 
                 source_uri = r.json()['preview']                
                 r = requests.get(source_uri)
                 with open(file_path,'wb') as f:
@@ -427,9 +427,9 @@ class Item(Titled, UUID, Dated, Shareable):
                 if proc.external:
                     print('external')
                     filename = proc.result_temp_file.split(os.sep)[-1]
-                    result_file = os.sep.join([result_path, filename])
+                    result_file = os.path.join(result_path, filename).replace(settings.MEDIA_ROOT, '')
                     os.rename(proc.result_temp_file, result_file)
-                    result.file = result_file.replace(settings.MEDIA_ROOT, '')
+                    result.file = result_file
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
@@ -441,7 +441,8 @@ class Item(Titled, UUID, Dated, Shareable):
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
                 image_file = str(result.uuid) + '.png'
-                result.file = os.path.join(result_path, image_file)
+                result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
+                
                 # TODO : set as an option
                 proc.watermark('timeside', opacity=.6, margin=(5, 5))
                 proc.render(output=result.file.path)
