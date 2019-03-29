@@ -36,6 +36,7 @@ from timeside.core.tools.parameters import DEFAULT_SCHEMA
 
 from django.db import models
 from django.utils.functional import lazy
+from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
@@ -206,8 +207,8 @@ class Provider(Named, UUID):
             r = get(request_uri)
             if download:
                 import requests
-                file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0] + '.mp3'
-                file_name = file_name.replace(" ", "_")
+                file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0]
+                file_name = slugify(file_name)  + '.mp3'
                 file_path = os.path.join(settings.MEDIA_ROOT,'items','download',file_name) 
                 source_uri = r.json()['preview']                
                 r = requests.get(source_uri)
