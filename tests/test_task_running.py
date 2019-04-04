@@ -21,7 +21,7 @@ schema = client.get('http://localhost:9000/timeside/api/schema/')
 
 #Item
 keys = ['api', 'items', 'create']
-params = {'title':'Beat It2','description':'Music from Michael Jackson','external_uri':'https://www.youtube.com/watch?v=oRdxUFDoQe0','provider': '/timeside/api/providers/042d0121-456a-4b7d-a993-f8b040f6fc9c/'}
+params = {'title':'Billie Jean','description':'Music from Michael Jackson','external_uri':'http://www.youtube.com/watch?v=Zi_XLOBDo_Y','provider': '/timeside/api/providers/042d0121-456a-4b7d-a993-f8b040f6fc9c/'}
 item = client.action(schema,keys,params)
 
 #Ajout dans la selection WASABI

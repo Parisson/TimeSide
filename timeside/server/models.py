@@ -37,6 +37,7 @@ from timeside.core.tools.parameters import DEFAULT_SCHEMA
 
 from django.db import models
 from django.utils.functional import lazy
+from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
@@ -48,6 +49,7 @@ from django.core.files import File
 import jsonfield
 import json
 import youtube_dl
+from requests import get
 
 app = 'timeside'
 
@@ -200,6 +202,24 @@ class Provider(Named, UUID):
                 return file_path
             else:
                 return url
+
+        if 'deezer' in self.name:
+            deezer_track_id = uri.split("/")[-1:]
+            request_uri = 'https://api.deezer.com/track/' + deezer_track_id[0]
+            r = get(request_uri)
+            if download:
+                import requests
+                file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0]
+                file_name = slugify(file_name)  + '.mp3'
+                file_path = os.path.join(settings.MEDIA_ROOT,'items','download',file_name)
+                source_uri = r.json()['preview']
+                r = requests.get(source_uri)
+                with open(file_path,'wb') as f:
+                    f.write(r.content)
+                return file_path
+            else:
+                return r.json()['preview']
+
 
     def __unicode__(self):
         return unicode(self.name)
@@ -409,9 +429,9 @@ class Item(Titled, UUID, Dated, Shareable):
                     filename = proc.result_temp_file.split(os.sep)[-1]
                     name, ext = filename.split('.')
                     filename = str(result.uuid) + '.' + ext
-                    result_file = os.sep.join([result_path, filename])
+                    result_file = os.path.join(result_path, filename).replace(settings.MEDIA_ROOT, '')
                     copyfile(proc.result_temp_file, result_file)
-                    result.file = result_file.replace(settings.MEDIA_ROOT, '')
+                    result.file = result_file
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
@@ -423,7 +443,8 @@ class Item(Titled, UUID, Dated, Shareable):
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
                 image_file = str(result.uuid) + '.png'
-                result.file = os.path.join(result_path, image_file)
+                result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
+
                 # TODO : set as an option
                 proc.watermark('timeside', opacity=.6, margin=(5, 5))
                 proc.render(output=result.file.path)

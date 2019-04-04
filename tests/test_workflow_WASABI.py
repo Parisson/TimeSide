@@ -2,6 +2,7 @@ import time
 import requests
 from coreapi import Client
 from coreapi.auth import TokenAuthentication
+from numpy import mean
 
 # """ http post http://localhost:9000/timeside/api-token-auth/ username=admin password=admin """
 url = 'http://localhost:9000/timeside/api-token-auth/'
