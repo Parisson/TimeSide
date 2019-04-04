@@ -71,8 +71,8 @@ app:
 worker:
   image: parisson/timeside:latest-dev
   command: /bin/bash /srv/app/bin/worker.sh
-  volumes:
-    - ./etc/._ifpk_2:/etc/._ifpk_2
+  # volumes:
+  #   - ./etc/._ifpk_2:/etc/._ifpk_2
   volumes_from:
     - var
     - app
@@ -83,15 +83,3 @@ worker:
     - db
   #mac_address: 02:42:ac:11:00:07
   # user: www-data
-
-nginx:
-  image: nginx
-  ports:
-    - "8030:80"
-  volumes:
-    - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
-  volumes_from:
-    - app
-    - var
-  links:
-    - app
