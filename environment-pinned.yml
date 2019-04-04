@@ -257,4 +257,5 @@ dependencies:
     - uwsgi==2.0.17.1
     - vamp==1.1.0
     - watchdog==0.8.3
+    - xmljson==0.2.0
 prefix: /opt/miniconda
