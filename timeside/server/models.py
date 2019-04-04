@@ -29,6 +29,7 @@ import uuid
 import mimetypes
 import ast
 import time
+from shutil import copyfile
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
@@ -43,6 +44,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.core.files import File
+
 import jsonfield
 import json
 import youtube_dl
@@ -188,12 +190,12 @@ class Provider(Named, UUID):
 
             #searching for file with same name and replacing extension
             DOWNLOAD_ROOT = settings.MEDIA_ROOT + 'items/download/'
-            file_name = os.path.relpath(file_path,DOWNLOAD_ROOT)            
-            
+            file_name = os.path.relpath(file_path,DOWNLOAD_ROOT)
+
             for file in os.listdir(DOWNLOAD_ROOT):
                 if file_name == os.path.splitext(file)[0]:
                     file_path += os.path.splitext(file)[1]
-            
+
             if download:
                 return file_path
             else:
@@ -394,7 +396,6 @@ class Item(Titled, UUID, Dated, Shareable):
             result, c = Result.objects.get_or_create(preset=preset,
                                                      item=self)
             if not hasattr(proc, 'external'):
-                print('no')
                 # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
                 result.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
@@ -404,12 +405,12 @@ class Item(Titled, UUID, Dated, Shareable):
                 proc.results.to_hdf5(result.hdf5.path)
                 # result.lock_setter(False)
             else:
-                print('yes')
                 if proc.external:
-                    print('external')
                     filename = proc.result_temp_file.split(os.sep)[-1]
+                    name, ext = filename.split('.')
+                    filename = str(result.uuid) + '.' + ext
                     result_file = os.sep.join([result_path, filename])
-                    os.rename(proc.result_temp_file, result_file)
+                    copyfile(proc.result_temp_file, result_file)
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
             result.status_setter(_DONE)
 
