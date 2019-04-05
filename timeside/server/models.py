@@ -429,9 +429,9 @@ class Item(Titled, UUID, Dated, Shareable):
                     filename = proc.result_temp_file.split(os.sep)[-1]
                     name, ext = filename.split('.')
                     filename = str(result.uuid) + '.' + ext
-                    result_file = os.path.join(result_path, filename).replace(settings.MEDIA_ROOT, '')
+                    result_file = os.path.join(result_path, filename)
                     copyfile(proc.result_temp_file, result_file)
-                    result.file = result_file
+                    result.file = result_file.replace(settings.MEDIA_ROOT, '')
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
