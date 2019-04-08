@@ -34,7 +34,7 @@ from shutil import copyfile
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 from timeside.core.tools.parameters import DEFAULT_SCHEMA
-
+from timeside.core.provider import *
 from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
@@ -54,6 +54,13 @@ from requests import get
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
+providers = timeside.core.provider.providers(timeside.core.api.IProvider)
+# def get_provider_pids():
+#     return [(name, [(processor.id(), processor.id())
+#                     for processor
+#                     in timeside.core.processor.processors(proc_type)])
+#             for name, proc_type in _processor_types.items()]
+
 
 _processor_types = {'Analyzers': timeside.core.api.IAnalyzer,
                     'Encoders': timeside.core.api.IEncoder,
@@ -170,60 +177,65 @@ class Shareable(models.Model):
 
 class Provider(Named, UUID):
 
-    url = models.URLField(_('URL'), blank=True, max_length=1024)
-
-    def get_source(self, uri, download=False):
-        if 'youtube' in self.name:
-
-            ydl_opts = {
-                'format': 'bestaudio',
-                'cachedir': False,
-                'outtmpl': unicode(settings.MEDIA_ROOT + 'items/download/%(title)s-%(id)s.%(ext)s'),
-                'postprocessors': [{'key':'FFmpegExtractAudio'}],
-                'restrictfilenames':True,
-            }
-
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                info = ydl.extract_info(uri, download=download)
-                file_path = ydl.prepare_filename(info)
-                #removing file extension
-                file_path = os.path.splitext(file_path)[0]
-            url = info['formats'][0]['url']
-
-            #searching for file with same name and replacing extension
-            DOWNLOAD_ROOT = settings.MEDIA_ROOT + 'items/download/'
-            file_name = os.path.relpath(file_path,DOWNLOAD_ROOT)
-
-            for file in os.listdir(DOWNLOAD_ROOT):
-                if file_name == os.path.splitext(file)[0]:
-                    file_path += os.path.splitext(file)[1]
-
-            if download:
-                return file_path
-            else:
-                return url
-
-        if 'deezer' in self.name:
-            deezer_track_id = uri.split("/")[-1:]
-            request_uri = 'https://api.deezer.com/track/' + deezer_track_id[0]
-            r = get(request_uri)
-            if download:
-                import requests
-                file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0]
-                file_name = slugify(file_name)  + '.mp3'
-                file_path = os.path.join(settings.MEDIA_ROOT,'items','download',file_name)
-                source_uri = r.json()['preview']
-                r = requests.get(source_uri)
-                with open(file_path,'wb') as f:
-                    f.write(r.content)
-                return file_path
-            else:
-                return r.json()['preview']
-
+    pid = models.CharField(_('pid'), blank=True, unique=True, max_length=128)
+    # url = models.URLField(_('URL'), blank=True, max_length=1024)
 
     def __unicode__(self):
-        return unicode(self.name)
+        return unicode(self.pid)
 
+    def get_provider(self):
+        return timeside.core.get_provider(self.pid)
+
+    def get_source(self, url, download=False):
+        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download')
+        return self.get_provider().get_source(url, DOWNLOAD_ROOT, download)
+
+        # if 'youtube' in self.name:
+
+        #     ydl_opts = {
+        #         'format': 'bestaudio',
+        #         'cachedir': False,
+        #         'outtmpl': unicode(settings.MEDIA_ROOT + 'items/download/%(title)s-%(id)s.%(ext)s'),
+        #         'postprocessors': [{'key':'FFmpegExtractAudio'}],
+        #         'restrictfilenames':True,
+        #     }
+
+        #     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        #         info = ydl.extract_info(uri, download=download)
+        #         file_path = ydl.prepare_filename(info)
+        #         #removing file extension
+        #         file_path = os.path.splitext(file_path)[0]
+        #     url = info['formats'][0]['url']
+
+        #     #searching for file with same name and replacing extension
+        #     DOWNLOAD_ROOT = settings.MEDIA_ROOT + 'items/download/'
+        #     file_name = os.path.relpath(file_path,DOWNLOAD_ROOT)
+
+        #     for file in os.listdir(DOWNLOAD_ROOT):
+        #         if file_name == os.path.splitext(file)[0]:
+        #             file_path += os.path.splitext(file)[1]
+
+        #     if download:
+        #         return file_path
+        #     else:
+        #         return url
+
+        # if 'deezer' in self.name:
+        #     deezer_track_id = uri.split("/")[-1:]
+        #     request_uri = 'https://api.deezer.com/track/' + deezer_track_id[0]
+        #     r = get(request_uri)
+        #     if download:
+        #         import requests
+        #         file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0]
+        #         file_name = slugify(file_name)  + '.mp3'
+        #         file_path = os.path.join(settings.MEDIA_ROOT,'items','download',file_name)
+        #         source_uri = r.json()['preview']
+        #         r = requests.get(source_uri)
+        #         with open(file_path,'wb') as f:
+        #             f.write(r.content)
+        #         return file_path
+        #     else:
+        #         return r.json()['preview']
 
 # class ProviderIdentifier(UUID):
 

@@ -316,12 +316,11 @@ def list_processors_rst(interface=IProcessor, prefix=""):
 class ProcessPipe(object):
 
     """Handle a pipe of processors
-
     Attributes:
         processor: List of all processors in the Process pipe
         results : Dictionnary of Results Container from all the analyzers
                   in the Pipe process
-"""
+    """
 
     def __init__(self, *others):
         self.processors = []

@@ -663,7 +663,7 @@ class ProviderSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Provider
-        fields = ('url', 'uuid', 'name', 'description',
+        fields = ( 'pid', 'uuid',
                   )
         # extra_kwargs = {
         #     'url': {'lookup_field': 'uuid'}

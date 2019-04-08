@@ -264,3 +264,22 @@ class IEffect(IProcessor):
     @staticmethod
     def name():
         """Return the effect name"""
+
+
+class IProvider(Interface):
+
+    @staticmethod
+    def id():
+        """Short alphanumeric, lower-case string which uniquely identify this
+        provider, suitable for use as an HTTP/GET argument value, in filenames,
+        etc..."""
+
+    @staticmethod
+    def name():
+        """name of the provider"""
+
+    def get_source(self, url, path, download=False):
+        """Get source's uri or even download an audio track
+        from the url of the provider's ressource of the provider
+        (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
+

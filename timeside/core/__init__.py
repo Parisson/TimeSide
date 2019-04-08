@@ -24,8 +24,10 @@ from __future__ import absolute_import
 
 from . import api
 from . import processor
+from . import provider
 
 from .processor import Processor, get_processor, list_processors
+from .provider import get_provider, list_providers
 from .component import implements, interfacedoc, abstract
 
 __version__ = '0.9'

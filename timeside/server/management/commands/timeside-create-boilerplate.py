@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 import os
 import timeside.core
 from timeside.server.models import Selection, Item
-from timeside.server.models import Processor, Preset, Experience, Task, Analysis, SubProcessor
+from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
 import simplejson as json
@@ -30,6 +30,7 @@ class Command(BaseCommand):
         media_dir = os.path.join('items', 'tests')
         samples_dir = os.path.join(settings.MEDIA_ROOT, media_dir)
 
+        Selection.objects.get_or_create(title='WASABI')
         selection, c = Selection.objects.get_or_create(title='Tests')
         if c | (selection.items.count() == 0):
             print "---------------------------"
@@ -66,6 +67,11 @@ class Command(BaseCommand):
                     presets.append(preset)
                 except Preset.MultipleObjectsReturned:
                     print Preset.objects.filter(processor=processor, parameters='{}')
+
+        providers = timeside.core.provider.providers(timeside.core.api.IProvider)
+
+        for prov in providers:
+            provider, c = Provider.objects.get_or_create(pid=prov.id())
 
         experience, c = Experience.objects.get_or_create(title='All')
         for preset in presets:
