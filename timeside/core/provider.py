@@ -4,9 +4,90 @@ from .api import IProvider
 from .exceptions import Error, PIDError, ApiError
 from .tools.parameters import HasParam
 
+import re
 import youtube_dl
 from requests import get
 import os
+
+_providers = {}
+
+class MetaProvider(MetaComponent):
+    """Metaclass of the Provider class, used mainly for ensuring
+    that provider id's are wellformed and unique"""
+
+    valid_id = re.compile("^[a-z][_a-z0-9]*$")
+
+    def __new__(cls, name, bases, d):
+        new_class = super(MetaProvider, cls).__new__(cls, name, bases, d)
+        if new_class in implementations(IProvider):
+            id = str(new_class.id())
+            if id in _providers:
+                # Doctest test can duplicate a provider
+                # This can be identify by the conditon "module == '__main__'"
+                new_path = os.path.realpath(inspect.getfile(new_class))
+                id_path = os.path.realpath(inspect.getfile(_provider[id]))
+                if new_class.__module__ == '__main__':
+                    new_class = _provider[id]
+                elif _provider[id].__module__ == '__main__':
+                    pass
+                elif new_path == id_path:
+                    new_class = _provider[id]
+                else:
+                    raise ApiError("%s at %s and %s at %s have the same id: '%s'"
+                                   % (new_class.__name__, new_path,
+                                      _provider[id].__name__, id_path,
+                                      id))
+            if not MetaProvider.valid_id.match(id):
+                raise ApiError("%s has a malformed id: '%s'"
+                               % (new_class.__name__, id))
+
+            _providers[id] = new_class
+
+        return new_class
+
+
+class Provider(Component):
+
+    """Base component class of all providers"""
+    __metaclass__ = MetaProvider
+
+    abstract()
+    implements(IProvider)
+
+    def __init__(self):
+        super(Provider, self).__init__()
+
+    # @interfacedoc
+    # def release(self):
+    #     pass
+
+    # @interfacedoc
+    # def mediainfo(self):
+    #     return self.source_mediainfo
+
+    # @interfacedoc
+    # def uuid(self):
+    #     return str(self._uuid)
+
+    # @interfacedoc
+    # @classmethod
+    # def description(self):
+    #     try:
+    #         descr = self.__doc__.lstrip().split('\n')[0]
+    #     except AttributeError:
+    #         return '*** NO DESCRIPTION FOR THIS PROCESSOR ***'
+
+    #     return descr
+
+    # def __del__(self):
+    #     self.release()
+
+    # def __eq__(self, other):
+    #     return (self.id() == other.id() and
+    #             self.get_parameters() == other.get_parameters())
+
+    # def __repr__(self):
+    #     return '-'.join([self.id(), self.get_parameters().__repr__()])
 
 
 def providers(interface=IProvider, recurse=True):
@@ -19,8 +100,15 @@ def get_provider(provider_id):
     if not provider_id in _providers:
         raise PIDError("No provider registered with id: '%s'"
                        % provider_id)
-
     return _providers[provider_id]
+
+    # """Return a provider by its pid"""
+    # _providers = providers(IProvider, True)
+    # for prov in _providers:
+    #     if prov.id() == provider_id:
+    #         return prov
+    # raise PIDError("No provider registered with id: '%s'"
+    #                    % provider_id)
 
 def list_providers(interface=IProvider, prefix=""):
     print prefix + interface.__name__
@@ -34,6 +122,7 @@ def list_providers(interface=IProvider, prefix=""):
     for p in procs:
         print prefix + "  * %s :" % p.id()
         print prefix + "    \t\t%s" % p.name()
+    print '_providers : ' + str(_providers)
 
 
 def list_providers_rst(interface=IProvider, prefix=""):
@@ -58,11 +147,7 @@ def list_providers_rst(interface=IProvider, prefix=""):
 #     def get_source(self, external_uri, download=False):
 #         """ bla bla """
 
-_providers = providers()
-# _providers = ('youtube','deezer') ????
-
-
-class YouTube(Component):
+class YouTube(Provider):
     """YouTube Provider"""
     implements(IProvider)
     
@@ -102,14 +187,14 @@ class YouTube(Component):
         else:
             return source_uri
 
-class Deezer(Component):
+class Deezer(Provider):
     """Deezer Provider"""
     implements(IProvider)
     
     @staticmethod
     @interfacedoc
     def id():
-        return "deezer"
+        return 'deezer'
 
     @staticmethod
     @interfacedoc
