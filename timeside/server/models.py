@@ -178,7 +178,6 @@ class Shareable(models.Model):
 class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, unique=True, max_length=128)
-    # url = models.URLField(_('URL'), blank=True, max_length=1024)
 
     def __unicode__(self):
         return unicode(self.pid)
@@ -189,70 +188,6 @@ class Provider(Named, UUID):
     def get_source(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download')
         return self.get_provider().get_source(url, DOWNLOAD_ROOT, download)
-
-        # if 'youtube' in self.name:
-
-        #     ydl_opts = {
-        #         'format': 'bestaudio',
-        #         'cachedir': False,
-        #         'outtmpl': unicode(settings.MEDIA_ROOT + 'items/download/%(title)s-%(id)s.%(ext)s'),
-        #         'postprocessors': [{'key':'FFmpegExtractAudio'}],
-        #         'restrictfilenames':True,
-        #     }
-
-        #     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        #         info = ydl.extract_info(uri, download=download)
-        #         file_path = ydl.prepare_filename(info)
-        #         #removing file extension
-        #         file_path = os.path.splitext(file_path)[0]
-        #     url = info['formats'][0]['url']
-
-        #     #searching for file with same name and replacing extension
-        #     DOWNLOAD_ROOT = settings.MEDIA_ROOT + 'items/download/'
-        #     file_name = os.path.relpath(file_path,DOWNLOAD_ROOT)
-
-        #     for file in os.listdir(DOWNLOAD_ROOT):
-        #         if file_name == os.path.splitext(file)[0]:
-        #             file_path += os.path.splitext(file)[1]
-
-        #     if download:
-        #         return file_path
-        #     else:
-        #         return url
-
-        # if 'deezer' in self.name:
-        #     deezer_track_id = uri.split("/")[-1:]
-        #     request_uri = 'https://api.deezer.com/track/' + deezer_track_id[0]
-        #     r = get(request_uri)
-        #     if download:
-        #         import requests
-        #         file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0]
-        #         file_name = slugify(file_name)  + '.mp3'
-        #         file_path = os.path.join(settings.MEDIA_ROOT,'items','download',file_name)
-        #         source_uri = r.json()['preview']
-        #         r = requests.get(source_uri)
-        #         with open(file_path,'wb') as f:
-        #             f.write(r.content)
-        #         return file_path
-        #     else:
-        #         return r.json()['preview']
-
-# class ProviderIdentifier(UUID):
-
-#     #url = models.URLField(_('URL'), blank=True, max_length=1024)
-
-#     provider = models.ForeignKey('Provider', related_name="provider_identifiers", verbose_name=_('provider'), blank=True, null=True)
-#     identifier = models.CharField(_('identifier'), blank=True, max_length=256)
-#     #TODO domain =
-
-#     def get_source_url(self, uri):
-#         return self.provider.get_source_url(uri)
-
-#     def __unicode__(self):
-        #return self.provider.name + '-' + self.identifier
-        #return  self.identifier
-
-# ----- Timeside server models ------
 
 class Selection(Titled, UUID, Dated, Shareable):
 
@@ -281,10 +216,7 @@ class Item(Titled, UUID, Dated, Shareable):
     mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
-    code = models.CharField(_('code'), blank=True, max_length=256) # TODO delete
-    external_id = models.CharField(_('external_id'), blank=True, max_length=256) # TODO delete
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
-    # provider_identifier = models.OneToOneField('ProviderIdentifier', verbose_name=_('provider_identifier'), blank=True, null=True)
     provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True)
 
     class Meta:

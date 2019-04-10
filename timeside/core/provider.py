@@ -57,39 +57,6 @@ class Provider(Component):
     def __init__(self):
         super(Provider, self).__init__()
 
-    # @interfacedoc
-    # def release(self):
-    #     pass
-
-    # @interfacedoc
-    # def mediainfo(self):
-    #     return self.source_mediainfo
-
-    # @interfacedoc
-    # def uuid(self):
-    #     return str(self._uuid)
-
-    # @interfacedoc
-    # @classmethod
-    # def description(self):
-    #     try:
-    #         descr = self.__doc__.lstrip().split('\n')[0]
-    #     except AttributeError:
-    #         return '*** NO DESCRIPTION FOR THIS PROCESSOR ***'
-
-    #     return descr
-
-    # def __del__(self):
-    #     self.release()
-
-    # def __eq__(self, other):
-    #     return (self.id() == other.id() and
-    #             self.get_parameters() == other.get_parameters())
-
-    # def __repr__(self):
-    #     return '-'.join([self.id(), self.get_parameters().__repr__()])
-
-
 def providers(interface=IProvider, recurse=True):
     """Returns the providers implementing a given interface and, if recurse,
     any of the descendants of this interface."""
@@ -100,15 +67,7 @@ def get_provider(provider_id):
     if not provider_id in _providers:
         raise PIDError("No provider registered with id: '%s'"
                        % provider_id)
-    return _providers[provider_id]
-
-    # """Return a provider by its pid"""
-    # _providers = providers(IProvider, True)
-    # for prov in _providers:
-    #     if prov.id() == provider_id:
-    #         return prov
-    # raise PIDError("No provider registered with id: '%s'"
-    #                    % provider_id)
+    return _providers[provider_id]()
 
 def list_providers(interface=IProvider, prefix=""):
     print prefix + interface.__name__
@@ -138,14 +97,6 @@ def list_providers_rst(interface=IProvider, prefix=""):
     procs = providers(interface, False)
     for p in procs:
         print prefix + "  * **%s** : %s" % (p.id(), p.name())
-
-# class Provider(Component):
-#     """Base component class of all providers"""
-#     abstract()
-#     implements(IProcessor)
-
-#     def get_source(self, external_uri, download=False):
-#         """ bla bla """
 
 class YouTube(Provider):
     """YouTube Provider"""
@@ -204,13 +155,13 @@ class Deezer(Provider):
     def get_source(self, url, path, download=False):
         deezer_track_id = url.split("/")[-1:]
         request_url = 'https://api.deezer.com/track/' + deezer_track_id[0]
-        source_uri = get(request_uri).json()['preview']
+        request_json = get(request_url).json()
+        source_uri = request_json['preview']
         if download:
-            import requests
-            file_name = r.json()['artist']['name'] + '-' + r.json()['title_short'] + '-' + deezer_track_id[0]
-            file_name = file_name.replace('','_')  + '.mp3'
+            file_name = request_json['artist']['name'] + '-' + request_json['title_short'] + '-' + deezer_track_id[0]
+            file_name = file_name.replace(' ','_')  + '.mp3'
             file_path = os.path.join(path,file_name)
-            r = requests.get(source_uri)
+            r = get(source_uri)
             with open(file_path,'wb') as f:
                 f.write(r.content)
             return file_path
