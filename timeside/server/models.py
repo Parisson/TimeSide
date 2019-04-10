@@ -54,6 +54,8 @@ from requests import get
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
+#providers = timeside.core.provider.providers(timeside.core.api.IProvider)
+
 
 _processor_types = {'Analyzers': timeside.core.api.IAnalyzer,
                     'Encoders': timeside.core.api.IEncoder,
@@ -176,11 +178,11 @@ class Provider(Named, UUID):
         return unicode(self.pid)
 
     def get_provider(self):
-        return timeside.core.get_provider(self.pid)()
+        return timeside.core.get_provider(self.pid)
 
     def get_source(self, url, download=False):
-        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download')
-        return self.get_provider().get_source(url, DOWNLOAD_ROOT, download)
+        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
+        return self.get_provider()().get_source(url, DOWNLOAD_ROOT, download)
 
 class Selection(Titled, UUID, Dated, Shareable):
 
