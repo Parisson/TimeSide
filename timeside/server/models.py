@@ -54,13 +54,6 @@ from requests import get
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
-providers = timeside.core.provider.providers(timeside.core.api.IProvider)
-# def get_provider_pids():
-#     return [(name, [(processor.id(), processor.id())
-#                     for processor
-#                     in timeside.core.processor.processors(proc_type)])
-#             for name, proc_type in _processor_types.items()]
-
 
 _processor_types = {'Analyzers': timeside.core.api.IAnalyzer,
                     'Encoders': timeside.core.api.IEncoder,
@@ -183,7 +176,7 @@ class Provider(Named, UUID):
         return unicode(self.pid)
 
     def get_provider(self):
-        return timeside.core.get_provider(self.pid)
+        return timeside.core.get_provider(self.pid)()
 
     def get_source(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download')

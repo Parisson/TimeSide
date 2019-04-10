@@ -67,7 +67,7 @@ def get_provider(provider_id):
     if not provider_id in _providers:
         raise PIDError("No provider registered with id: '%s'"
                        % provider_id)
-    return _providers[provider_id]()
+    return _providers[provider_id]
 
 def list_providers(interface=IProvider, prefix=""):
     print prefix + interface.__name__
