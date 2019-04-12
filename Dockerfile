@@ -76,6 +76,7 @@ RUN npm install -g bower
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
+RUN pip install -U pip
 RUN pip install -e .
 
 WORKDIR /srv/app
