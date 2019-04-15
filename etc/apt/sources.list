@@ -1,4 +1,4 @@
 deb http://deb.debian.org/debian jessie main
-#deb http://security.debian.org/debian-security jessie/updates main
+deb http://security.debian.org/debian-security jessie/updates main
 
 deb http://deb.nodesource.com/node_10.x jessie main
