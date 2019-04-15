@@ -17,7 +17,7 @@ vamp-plugin-sdk
 git
 wget
 bzip2
-#build-essential
+build-essential
 netcat
 apt-transport-https
 
