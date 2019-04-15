@@ -52,7 +52,6 @@ app:
     - ./app:/srv/app
     - ./timeside:/srv/lib/timeside/timeside
     - ./lib/plugins:/srv/lib/plugins
-    - ./etc/._ifpk_2:/etc/._ifpk_2
   volumes_from:
     - var
   env_file:
@@ -60,7 +59,6 @@ app:
   links:
     - broker
     - db
-  mac_address: 02:42:ac:11:00:07
 
 worker:
   image: parisson/timeside:latest-dev
@@ -73,8 +71,6 @@ worker:
   links:
     - broker
     - db
-  mac_address: 02:42:ac:11:00:07
-  # user: www-data
 
 nginx:
   image: nginx
