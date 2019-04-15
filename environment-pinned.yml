@@ -244,6 +244,7 @@ dependencies:
     - django-debug-toolbar==1.9.1
     - django-environ==0.4.5
     - django-extensions==2.1.0
+    - django-filter==1.1.0
     - djangorestframework==3.6.4
     - essentia==2.1b5.dev416
     - ghp-import==0.5.5
