@@ -7,6 +7,8 @@ dependencies:
   - h5py
   - jsonschema
   - jupyter
+  - jupyterhub
+  - jupyterlab
   - librosa
   - matplotlib
   - mysqlclient
