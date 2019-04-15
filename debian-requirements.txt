@@ -22,9 +22,8 @@ netcat
 apt-transport-https
 
 # DB & Server
-#npm
-mysql-client-5.5
+mysql-client
 libmysqlclient-dev
-#nodejs-legacy
+nodejs
 
 glib-networking
