@@ -7,7 +7,7 @@ dependencies:
   - h5py
   - jsonschema
   - jupyter
-  - jupyterhub
+    #- jupyterhub
   - jupyterlab
   - librosa
   - matplotlib
@@ -36,7 +36,7 @@ dependencies:
       - django-bower
       - django-celery
       - django-cors-headers
-      - django-filters==1.1.0
+      - django-filter==1.1.0
       - django-debug-toolbar
       - django-environ
       - django-extensions
