@@ -24,9 +24,6 @@ dependencies:
   - simplejson
   - sphinx
   - pytables  # named tables in Pypi ...
-  - pytorch
-  - tensorflow
-  - torchvision
   - traits
   - Werkzeug
   - yaafe
