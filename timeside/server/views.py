@@ -163,7 +163,7 @@ class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ResultSerializer
 
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('item__uuid',)
+    search_fields = ('item__uuid','preset__uuid')
 
     # def get_queryset(self): TODO
     #     return self.queryset \
