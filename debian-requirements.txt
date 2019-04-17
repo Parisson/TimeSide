@@ -1,4 +1,5 @@
 # TimeSide Core need Gstreamer
+libofa0
 python-gst0.10 
 gstreamer0.10-plugins-good 
 gstreamer0.10-gnonlin 
@@ -21,9 +22,8 @@ netcat
 apt-transport-https
 
 # DB & Server
-npm
 mysql-client
 libmysqlclient-dev
-nodejs-legacy
+nodejs
 
 glib-networking

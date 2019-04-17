@@ -24,6 +24,7 @@ RUN mkdir -p /srv/lib/timeside
 WORKDIR /srv/lib
 
 # install confs, keys and deps
+COPY ./etc/apt/sources.list /etc/apt/
 RUN apt-get update && apt-get install -y apt-transport-https
 COPY debian-requirements.txt /srv/lib/
 RUN apt-get update && \
@@ -76,6 +77,7 @@ RUN npm install -g bower
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
+RUN pip install -U pip
 RUN pip install -e .
 
 WORKDIR /srv/app
