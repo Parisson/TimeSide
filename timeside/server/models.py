@@ -434,7 +434,10 @@ class Processor(models.Model):
 
     def save(self, **kwargs):
         if not self.version:
-            self.version = self.get_processor().version()
+            try:
+                self.version = self.get_processor().version()
+            except AttributeError:
+                pass
         if not self.name:
             try:
                 self.name = self.get_processor().name()

@@ -98,7 +98,6 @@ class Processor(Component, HasParam):
         self._parameters = {}
         self.source_mediainfo = None
         self.process_pipe = None
-        #self.version = 0
         self._uuid = uuid.uuid4()
 
         self.input_channels = 0
@@ -171,10 +170,6 @@ class Processor(Component, HasParam):
     @interfacedoc
     def uuid(self):
         return str(self._uuid)
-
-    @interfacedoc
-    def version(self):
-        return str(self.version)
 
     @interfacedoc
     @classmethod

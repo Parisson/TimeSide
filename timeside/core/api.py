@@ -57,11 +57,11 @@ class IProcessor(Interface):
         """Samplerate of the data returned by process(). May be different from
         the samplerate passed to setup()"""
 
-    def blocksize():
+    def blocksize(self):
         """The total number of frames that this processor can output for each step
         in the pipeline, or None if the number is unknown."""
 
-    def totalframes():
+    def totalframes(self):
         """The total number of frames that this processor will output, or None if
         the number is unknown."""
 
@@ -99,15 +99,15 @@ class IProcessor(Interface):
         """
 
     @staticmethod
-    def uuid():
+    def uuid(self):
         """Return the UUID of the processor"""
 
     @staticmethod
-    def version():
+    def version(self):
         """Return the version of the processor"""
 
     @staticmethod
-    def description():
+    def description(self):
         """Return a string describing what this processor is meant for.
         The description should provide enough information to help the end user.
         """
@@ -131,24 +131,24 @@ class IEncoder(IProcessor):
         # be optionnal
 
     @staticmethod
-    def format():
+    def format(self):
         """Return the encode/encoding format as a short string
         Example: "MP3", "OGG", "AVI", ...
         """
 
     @staticmethod
-    def description():
+    def description(self):
         """Return a string describing what this encode format provides, is good
         for, etc... The description is meant to help the end user decide what
         format is good for him/her
         """
 
     @staticmethod
-    def file_extension():
+    def file_extension(self):
         """Return the filename extension corresponding to this encode format"""
 
     @staticmethod
-    def mime_type():
+    def mime_type(self):
         """Return the mime type corresponding to this encode format"""
 
     def set_metadata(self, metadata):

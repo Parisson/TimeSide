@@ -64,6 +64,11 @@ class FlacEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1"
+
+    @staticmethod
+    @interfacedoc
     def file_extension():
         return "flac"
 
