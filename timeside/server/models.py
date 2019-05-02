@@ -434,7 +434,7 @@ class Processor(models.Model):
 
     def save(self, **kwargs):
         if not self.version:
-            self.version = timeside.core.__version__
+            self.version = self.get_processor().version()
         if not self.name:
             try:
                 self.name = self.get_processor().name()
