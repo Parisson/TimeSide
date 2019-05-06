@@ -366,7 +366,7 @@ class DisplayAnalyzer(Grapher):
 
     @classmethod
     def create(cls, analyzer, analyzer_parameters=None, result_id=None,
-               grapher_id=None, grapher_name=None,
+               grapher_id=None, grapher_name=None, grapher_version=None,
                background=None, staging=False):
 
         if analyzer_parameters is None:
@@ -414,6 +414,11 @@ class DisplayAnalyzer(Grapher):
             @interfacedoc
             def id():
                 return grapher_id
+                
+            @staticmethod
+            @interfacedoc
+            def version():
+                return grapher_version
 
             @staticmethod
             @interfacedoc

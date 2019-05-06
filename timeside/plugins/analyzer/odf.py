@@ -137,4 +137,5 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=OnsetDetectionFunction,
     result_id='onset_detection_function',
     grapher_id='grapher_onset_detection_function',
+    grapher_version='1.0',
     grapher_name='Onset detection')
