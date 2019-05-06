@@ -112,4 +112,5 @@ DisplayCQT = DisplayAnalyzer.create(
     result_id='vamp_constantq',
     grapher_id='grapher_vamp_cqt',
     grapher_name='Constant Q Transform',
+    grapher_version='1.0',
     staging=False)

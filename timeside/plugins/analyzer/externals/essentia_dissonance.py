@@ -122,4 +122,5 @@ DisplayDissonance = DisplayAnalyzer.create(
     result_id='essentia_dissonance',
     grapher_id='grapher_dissonance',
     grapher_name='Dissonance',
+    grapher_version='1.0',
     staging=False)

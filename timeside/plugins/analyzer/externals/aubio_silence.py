@@ -108,4 +108,5 @@ DisplayAubioSilence = DisplayAnalyzer.create(
     result_id='aubio_silence',
     grapher_id='grapher_aubio_silence',
     grapher_name='Aubio Silence',
+    grapher_version='1.0',
     staging=False)
