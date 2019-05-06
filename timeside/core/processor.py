@@ -296,6 +296,7 @@ def list_processors(interface=IProcessor, prefix=""):
     for p in procs:
         print prefix + "  * %s :" % p.id()
         print prefix + "    \t\t%s" % p.description()
+        print prefix + "    \t\tversion: %s" % p.version() 
 
 
 def list_processors_rst(interface=IProcessor, prefix=""):
@@ -310,7 +311,7 @@ def list_processors_rst(interface=IProcessor, prefix=""):
         list_processors_rst(interface=i, prefix=prefix + " ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * **%s** : %s" % (p.id(), p.description())
+        print prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description())
 
 
 class ProcessPipe(object):
