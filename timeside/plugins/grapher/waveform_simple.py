@@ -47,6 +47,11 @@ class Waveform(Grapher):
     def name():
         return "Waveform simple"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(Waveform, self).setup(

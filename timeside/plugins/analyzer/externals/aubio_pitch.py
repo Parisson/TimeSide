@@ -103,6 +103,11 @@ class AubioPitch(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "0.4.6"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return "Hz"
 
@@ -154,4 +159,5 @@ DisplayAubioPitch = DisplayAnalyzer.create(
     result_id='aubio_pitch.pitch',
     grapher_id='grapher_aubio_pitch',
     grapher_name='Pitch',
+    grapher_version='1.0',
     background='spectrogram')

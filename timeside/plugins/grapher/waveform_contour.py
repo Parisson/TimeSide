@@ -54,6 +54,11 @@ class WaveformContourBlack(Waveform):
     def name():
         return "Contour black"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(WaveformContourBlack, self).setup(

@@ -49,6 +49,11 @@ class WaveformTransparent(Waveform):
     def name():
         return "Waveform transparent"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):

@@ -63,6 +63,11 @@ class Essentia_Dissonance_Value(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "2.1b5.dev416"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 

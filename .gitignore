@@ -34,3 +34,4 @@ docs/build
 docs/src
 .ipynb_checkpoints
 .init
+.vscode/*

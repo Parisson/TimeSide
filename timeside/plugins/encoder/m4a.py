@@ -72,6 +72,11 @@ class AacEncoder(GstEncoder):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.0"
+
+    @staticmethod
+    @interfacedoc
     def file_extension():
         return "m4a"
 

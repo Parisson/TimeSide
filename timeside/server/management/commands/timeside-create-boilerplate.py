@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 if black in proc.id():
                     trig = False
             if trig:
-                processor, c = Processor.objects.get_or_create(pid=proc.id())
+                processor, c = Processor.objects.get_or_create(pid=proc.id())#,version=proc.version())
                 try:
                     preset, c = Preset.objects.get_or_create(processor=processor, parameters='{}')
                     presets.append(preset)

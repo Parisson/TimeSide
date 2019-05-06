@@ -51,6 +51,11 @@ class WaveformCentroid(Waveform):
     def name():
         return "Waveform spectral"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None, totalframes=None):
         super(WaveformCentroid, self).setup(

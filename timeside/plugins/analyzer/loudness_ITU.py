@@ -114,6 +114,11 @@ class LoudnessITU(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.0"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 
@@ -196,4 +201,5 @@ DisplayLoudnessITU = DisplayAnalyzer.create(
     result_id='loudness_itu.block_loudness',
     grapher_id='grapher_loudness_itu',
     grapher_name='Loudness ITU',
+    grapher_version='1.0',
     staging=False)

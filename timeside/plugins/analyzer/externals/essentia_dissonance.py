@@ -90,6 +90,11 @@ class Essentia_Dissonance(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "2.1b5.dev416"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 
@@ -117,4 +122,5 @@ DisplayDissonance = DisplayAnalyzer.create(
     result_id='essentia_dissonance',
     grapher_id='grapher_dissonance',
     grapher_name='Dissonance',
+    grapher_version='1.0',
     staging=False)

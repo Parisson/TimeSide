@@ -143,6 +143,11 @@ class Yaafe(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "0.70"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ''
 

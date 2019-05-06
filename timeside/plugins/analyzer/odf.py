@@ -78,6 +78,11 @@ class OnsetDetectionFunction(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.0"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 
@@ -132,4 +137,5 @@ DisplayOnsetDetectionFunction = DisplayAnalyzer.create(
     analyzer=OnsetDetectionFunction,
     result_id='onset_detection_function',
     grapher_id='grapher_onset_detection_function',
+    grapher_version='1.0',
     grapher_name='Onset detection')
