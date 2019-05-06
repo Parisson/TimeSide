@@ -92,6 +92,11 @@ class LiveDecoder(FileDecoder):
     def id():
         return "live_decoder"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     def __init__(self, num_buffers=-1, input_src='alsasrc'):
 
         super(Decoder, self).__init__()

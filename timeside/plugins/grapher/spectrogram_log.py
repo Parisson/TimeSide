@@ -56,6 +56,11 @@ class SpectrogramLog(Grapher):
     def name():
         return "Spectrogram Log"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
               totalframes=None):

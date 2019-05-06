@@ -135,6 +135,11 @@ class ArrayDecoder(Decoder):
         base_type = re.search('^[a-z]*', self.samples.dtype.name).group(0)
         return 'audio/x-raw-' + base_type
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def metadata(self):
         return None

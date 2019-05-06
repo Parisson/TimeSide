@@ -94,6 +94,11 @@ class SpectrogramBuffer(Spectrogram):
     def name():
         return "Spectrogram Analyzer with extensible buffer"
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @downmix_to_mono
     @frames_adapter
     def process(self, frames, eod=False):
