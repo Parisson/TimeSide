@@ -34,7 +34,6 @@ from shutil import copyfile
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 from timeside.core.tools.parameters import DEFAULT_SCHEMA
-from timeside.core.provider import *
 from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
