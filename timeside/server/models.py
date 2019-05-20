@@ -211,6 +211,7 @@ class Item(Titled, UUID, Dated, Shareable):
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
+    external_id = models.CharField(_('external_id'), blank=True, max_length=256)
     provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True)
 
     class Meta:
