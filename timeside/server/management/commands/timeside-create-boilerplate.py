@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
     def experience_cleanup(self):
         for experience in Experience.objects.all():
-            result.delete()
+            experience.delete()
 
     def preset_cleanup(self):
         for preset in Preset.objects.all():
