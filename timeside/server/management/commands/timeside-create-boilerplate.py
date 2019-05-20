@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 import os
 import timeside.core
 from timeside.server.models import Selection, Item
-from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor
+from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor, Result
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
 import simplejson as json
@@ -25,6 +25,22 @@ class Command(BaseCommand):
     def result_cleanup(self):
         for result in Result.objects.all():
             result.delete()
+
+    def experience_cleanup(self):
+        for experience in Experience.objects.all():
+            result.delete()
+
+    def preset_cleanup(self):
+        for preset in Preset.objects.all():
+            preset.delete()
+
+    def task_cleanup(self):
+        for task in Task.objects.all():
+            task.delete()
+    
+    def analysis_cleanup(self):
+        for analysis in Analysis.objects.all():
+            analysis.delete()
 
     def handle(self, *args, **options):
         media_dir = os.path.join('items', 'tests')
