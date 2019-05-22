@@ -49,12 +49,9 @@ selec = client.action(schema,keys,params)
 #Creating an Experience
 keys = ['api', 'experiences', 'create']
 
-#aubio_mfcc = '/timeside/api/presets/5b6887c8-b0f7-4798-838d-2771851bff66/'
-aubio_pitch = '/timeside/api/presets/445d6bfd-093f-4527-9ce7-8a1afc2e74c3/'
-spectrogram = '/timeside/api/presets/35aef627-74e9-46b0-a478-22c7ed603fb4/'
-mean_dc_shift =  '/timeside/api/presets/8fc11b9f-5f3f-4bcd-bfc5-19fbf26c92fe/'
+spectrogram = '/timeside/api/presets/a1a9cd99-8168-4853-b096-00187ac05ca4/'
 
-params = {'title':'experience_WASABI', 'presets':[mean_dc_shift, aubio_pitch, spectrogram]}
+params = {'title':'experience_WASABI', 'presets':[spectrogram]}
 exp = client.action(schema,keys,params)
 exp_uuid = exp['uuid']
 
