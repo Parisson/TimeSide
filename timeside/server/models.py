@@ -29,6 +29,7 @@ import uuid
 import mimetypes
 import ast
 import time
+import gc
 from shutil import copyfile
 
 import timeside.core
@@ -190,7 +191,6 @@ class Selection(Titled, UUID, Dated, Shareable):
     selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True)
 
     class Meta:
-        db_table = app + '_selections'
         verbose_name = _('selection')
 
     def get_all_items(self):
@@ -212,10 +212,10 @@ class Item(Titled, UUID, Dated, Shareable):
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
+    external_id = models.CharField(_('external_id'), blank=True, max_length=256)
     provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True)
 
     class Meta:
-        db_table = app + '_items'
         ordering = ['title']
         verbose_name = _('item')
 
@@ -399,9 +399,23 @@ class Item(Titled, UUID, Dated, Shareable):
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
 
+            if hasattr(proc, 'values'):
+                proc.values = None
+                del proc.values
+            if hasattr(proc, 'result'):
+                proc.result = None
+                del proc.result
+            if hasattr(proc, 'results'):
+                try:
+                    proc.results = None
+                    del proc.results
+                except:
+                    continue
             del proc
 
         del pipe
+        gc.collect()
+        
         # item.lock_setter(False)
 
 
@@ -411,7 +425,6 @@ class Experience(Titled, UUID, Dated, Shareable):
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True)
 
     class Meta:
-        db_table = app + '_experiences'
         verbose_name = _('Experience')
 
 
@@ -426,7 +439,6 @@ class Processor(models.Model):
         self._meta.get_field('pid')._choices = lazy(get_processor_pids, list)()
 
     class Meta:
-        db_table = app + '_processors'
         verbose_name = _('processor')
 
     def __str__(self):
@@ -464,7 +476,6 @@ class SubProcessor(models.Model):
     processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
 
     class Meta:
-        db_table = app + '_subprocessors'
         verbose_name = _('Subprocessor')
 
     def __str__(self):
@@ -479,7 +490,6 @@ class Preset(UUID, Dated, Shareable):
     # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration
 
     class Meta:
-        db_table = app + '_presets'
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
 
@@ -514,7 +524,6 @@ class Result(UUID, Dated, Shareable):
     # lock = models.BooleanField(default=False)
 
     class Meta:
-        db_table = app + '_results'
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
 
@@ -553,7 +562,6 @@ class Task(UUID, Dated, Shareable):
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
 
     class Meta:
-        db_table = app + '_tasks'
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
 
@@ -607,7 +615,6 @@ class Analysis(Titled, UUID, Dated, Shareable):
     parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:
-        db_table = app + '_analysis'
         verbose_name = _('Analysis')
         verbose_name_plural = _('Analyses')
 
@@ -618,7 +625,6 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
     item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False)
 
     class Meta:
-        db_table = app + '_analysis_tracks'
         verbose_name = _('Analysis Track')
 
 
@@ -628,7 +634,6 @@ class AnnotationTrack(Titled, UUID, Dated, Shareable):
     overlapping = models.BooleanField(default=False)
 
     class Meta:
-        db_table = app + '_annotation_tracks'
         verbose_name = _('Annotation Track')
 
 
