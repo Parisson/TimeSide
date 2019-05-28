@@ -30,15 +30,15 @@ selection_uuid = WASABI_selection['uuid']
 
 keys = ['api', 'providers', 'list']
 for prv in client.action(schema,keys):
-    if prv['pid'] == 'youtube':
-        youtube_provider = prv
+    if prv['pid'] == 'deezer':
+        deezer_provider = prv
 
-provider_uri = '/timeside/api/providers/' + youtube_provider['uuid'] + '/'
+provider_uri = '/timeside/api/providers/' + deezer_provider['uuid'] + '/'
 
-#creation of an Item for Michael Jackson's Thriller track using YouTube's URL
+#creation of an Item for Michael Jackson's Thriller track using Deezer's URL
 keys = ['api', 'items', 'create']
-external_youtube_uri = 'https://www.youtube.com/watch?v=sOnqjkJTMaA'
-params = {'title':'Thriller','description':'Music from Michael Jackson','external_uri': external_youtube_uri,'provider': provider_uri}
+external_deezer_uri = 'https://www.deezer.com/track/4315684'
+params = {'title':'take me out','description':'Music from franz ferdinand','external_uri': external_deezer_uri,'provider': provider_uri}
 item = client.action(schema,keys,params)
 
 #adding this track to the WASABI selection
@@ -49,12 +49,9 @@ selec = client.action(schema,keys,params)
 #Creating an Experience
 keys = ['api', 'experiences', 'create']
 
-#aubio_mfcc = '/timeside/api/presets/5b6887c8-b0f7-4798-838d-2771851bff66/'
-level = '/timeside/api/presets/40f9ab3c-78d3-4654-aa5c-f3a510a35363/'
-spectrogram = '/timeside/api/presets/35aef627-74e9-46b0-a478-22c7ed603fb4/'
-# mfcc =  '/timeside/api/presets/5b6887c8-b0f7-4798-838d-2771851bff66/'
+spectrogram = '/timeside/api/presets/a1a9cd99-8168-4853-b096-00187ac05ca4/'
 
-params = {'title':'experience_WASABI', 'presets':[ level, spectrogram]}
+params = {'title':'experience_WASABI', 'presets':[spectrogram]}
 exp = client.action(schema,keys,params)
 exp_uuid = exp['uuid']
 

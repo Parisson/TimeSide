@@ -51,6 +51,7 @@ dependencies:
       - ghp-import
       - jsonfield
       - jupyterthemes
+      - kymatio
       - markdown
       - mutagen
       - numpydoc
