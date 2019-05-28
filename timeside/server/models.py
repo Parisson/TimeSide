@@ -35,7 +35,6 @@ from shutil import copyfile
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 from timeside.core.tools.parameters import DEFAULT_SCHEMA
-from timeside.core.provider import *
 from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
@@ -51,6 +50,10 @@ import jsonfield
 import json
 import youtube_dl
 from requests import get
+
+#XMLtoJSON
+from xml.etree.ElementTree import fromstring
+from xmljson import abdera as ab
 
 app = 'timeside'
 
@@ -370,6 +373,16 @@ class Item(Titled, UUID, Dated, Shareable):
                     filename = str(result.uuid) + '.' + ext
                     result_file = os.path.join(result_path, filename)
                     copyfile(proc.result_temp_file, result_file)
+                    if ext == 'xml':
+                        #XML to JSON conversion
+                        filename_json = str(result.uuid) + '.' + 'json'
+                        result_file = os.path.join(result_path, filename_json)
+                        f_xml = open(proc.result_temp_file,'r')
+                        xml = f_xml.read()
+                        f = open(result_file,'w+')
+                        f.write(json.dumps(ab.data(fromstring(xml)) , indent=4))
+                        f.close()
+                        f_xml.close()
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
             result.status_setter(_DONE)
 

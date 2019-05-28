@@ -4,7 +4,7 @@ from coreapi import Client
 from coreapi.auth import TokenAuthentication
 from numpy import mean
 
-token='1fb373f927ffa9e6f99880922810e1eeb0fc926b'
+token='1da6798f2700556e81d9ab32db77e4ea9aa4ca52'
 
 #coreapi client with the right token
 auth = TokenAuthentication(
@@ -26,7 +26,7 @@ selection_uuid = WASABI_selection['uuid']
 
 keys = ['api', 'providers', 'list']
 for prv in client.action(schema,keys):
-    if prv['name'] == 'youtube':
+    if prv['pid'] == 'youtube':
         youtube_provider = prv
 
 provider_uri = '/timeside/api/providers/' + youtube_provider['uuid'] + '/'
@@ -45,12 +45,10 @@ selec = client.action(schema,keys,params)
 #Creating an Experience
 keys = ['api', 'experiences', 'create']
 
-aubio_mfcc = '/timeside/api/presets/fe7087c2-69eb-456f-839a-4b62ab34e9e1/'
-aubio_pitch = '/timeside/api/presets/d6a9a974-4299-4871-8717-784c96023d18/'
-spectrogram = '/timeside/api/presets/ca1e45ff-4688-44fa-8522-8338596d5833/'
-mean_dc_shift =  '/timeside/api/presets/e11fd333-6e5d-4c6d-a5ef-8dcce548daca/'
+spectrogram = '/timeside/api/presets/3d67b9b3-6f27-4fb9-af97-23e67dbd4a6e/'
+mean_dc_shift =  '/timeside/api/presets/72465383-4bcb-453b-9d0c-dd07eaa3da5e/'
 
-params = {'title':'experience_WASABI', 'presets':[mean_dc_shift, aubio_pitch, spectrogram, aubio_mfcc]}
+params = {'title':'experience_WASABI', 'presets':[mean_dc_shift, spectrogram]}
 exp = client.action(schema,keys,params)
 exp_uuid = exp['uuid']
 
