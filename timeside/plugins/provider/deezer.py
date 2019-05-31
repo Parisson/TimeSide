@@ -31,6 +31,7 @@ class Deezer(Provider):
             r = get(source_uri)
             with open(file_path,'wb') as f:
                 f.write(r.content)
+                f.close()
             return file_path
         else:
             return source_uri
