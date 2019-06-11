@@ -107,6 +107,13 @@ RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
 
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
+
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
@@ -129,16 +136,10 @@ class Dated(models.Model):
 
 class UUID(models.Model):
 
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
-
+    uuid = models.UUIDField(_('uuid'), default=uuid.uuid4, primary_key=True, blank=False, max_length=255, editable=False)
+    #uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
     class Meta:
         abstract = True
-
-    def save(self, **kwargs):
-        if not self.uuid:
-            self.uuid = uuid.uuid4()
-        super(UUID, self).save(**kwargs)
-
 
 class Titled(models.Model):
 
@@ -252,7 +253,7 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return Item result path
         """
-        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        result_path = os.path.join(RESULTS_ROOT, str(self.uuid))
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         return result_path
@@ -426,7 +427,7 @@ class Experience(Titled, UUID, Dated, Shareable):
         verbose_name = _('Experience')
 
 
-class Processor(models.Model):
+class Processor(UUID):
 
     pid = models.CharField(_('pid'), unique=True, max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
@@ -440,7 +441,7 @@ class Processor(models.Model):
         verbose_name = _('processor')
 
     def __str__(self):
-        return '_'.join([self.pid, str(self.id)])
+        return '_'.join([self.pid, str(self.uuid)])
 
     def save(self, **kwargs):
         if not self.version:
@@ -465,7 +466,7 @@ class Processor(models.Model):
         return self.get_processor().get_parameters_default()
 
 
-class SubProcessor(models.Model):
+class SubProcessor(UUID):
     """SubProcessor object are intended to store the different results id associated with a given Processor
     """
     sub_processor_id = models.CharField(_('sub_processor_id'), unique=True, max_length=128)
@@ -492,7 +493,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.id)])
+        return '_'.join([unicode(self.processor), str(self.uuid)])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
@@ -564,7 +565,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)])
 
     def status_setter(self, status):
         self.status = status
@@ -577,13 +578,13 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        task_run.delay(task_id=self.id)
+        task_run.delay(task_id=str(self.uuid))
 
         if wait:
-            status = Task.objects.get(id=self.id).status
+            status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
-                status = Task.objects.get(id=self.id).status
+                status = Task.objects.get(uuid=str(self.uuid)).status
 
 
 def item_post_save(sender, **kwargs):
