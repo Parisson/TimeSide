@@ -3,7 +3,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Timeside player</title>
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,14 +11,14 @@
         <meta name="mobile-web-app-capable" content="yes">
         {% block stylesheets %}
         {% load static %}
-        <link rel="stylesheet" type="text/css" href="{% static 'timeside2/dist/styles/main.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}timeside2/dist/styles/main.css" />
         {% endblock stylesheets %}
     </head>
-    <body>   
+    <body>
       {% block player %}
       <div class="ts-content full"></div>
-      
-      <script data-main="{% static "timeside2/dist/scripts/main.js" %}" src="{% static "timeside2/dist/scripts/require.js" %}"></script>
+
+      <script data-main="{{ STATIC_URL }}timeside2/dist/scripts/main.js" src="{{ STATIC_URL }}timeside2/dist/scripts/require.js"></script>
       {% endblock player %}
     </body>
 </html>

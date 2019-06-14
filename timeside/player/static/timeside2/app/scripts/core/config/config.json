@@ -3,25 +3,25 @@
   "env" : "DEV",
   "envAdmin" : "DEV",
   "remotes" : {
-    "DEV" : "http://timeside-dev.telemeta.org/timeside",
+    "DEV" : "http://wasabi.telemeta.org/timeside",
     "RECETTE" : "/timeside",
     "PROD" : "http://client-eu.syk.com",
     "ERICRECETTE" : "http://192.168.1.3:8080"
   },
   "remotesWrite" : {
-    "DEV" : "http://timeside-dev.telemeta.org/timeside",
+    "DEV" : "http://wasabi.telemeta.org/timeside",
     "RECETTE" : "/timeside",
     "PROD" : "http://admin1.syk.com",
     "ERICRECETTE" : "http://192.168.1.3:8080"
   },
-  
+
   "remotesFiles" : {
     "DEV" : "",
     "RECETTE" : "https://qeopa.quematech.fr/media/img/",
     "PROD" : "",
     "ERICRECETTE" : ""
   },
-  
+
   "images": {
     "basepath": "/media/images/",
     "basepathes" : {
