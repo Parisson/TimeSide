@@ -58,5 +58,5 @@ class Command(BaseCommand):
         os.system('npm install -g grunt')
         os.system('npm cache clean -f; npm install -g n; n stable')
         if not os.path.exists('node_modules') or self.force_npm:
-            os.system('npm ci')
+            os.system('npm install')
         os.system('grunt build --force')
