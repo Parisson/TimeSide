@@ -36,3 +36,4 @@ docs/src
 .ipynb_checkpoints
 .init
 .vscode/*
+.DS_Store

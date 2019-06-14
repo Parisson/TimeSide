@@ -27,8 +27,8 @@ app:
   build: .
   command: /bin/bash /srv/app/bin/app.sh --runserver
   volumes:
-    - ./app:/srv/app
-    - ./:/srv/src/timeside
+    - ./app:/srv/app:cached
+    - ./:/srv/src/timeside:cached
   ports:
     - '9000:8000'
   env_file:
