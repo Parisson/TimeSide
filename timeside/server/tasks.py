@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import time
+import gc
 
 from celery import shared_task
 from celery.result import AsyncResult
@@ -31,7 +32,7 @@ def experience_run(exp_id, item_id):
     item = Item.objects.get(uuid=item_id)
     experience = Experience.objects.get(uuid=exp_id)
     item.run(experience)
-
+    gc.collect()
 
 @shared_task
 def task_monitor(task_id, results_id):

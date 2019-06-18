@@ -29,6 +29,7 @@ import uuid
 import mimetypes
 import ast
 import time
+import gc
 from shutil import copyfile
 
 import timeside.core
@@ -412,9 +413,23 @@ class Item(Titled, UUID, Dated, Shareable):
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
 
+            if hasattr(proc, 'values'):
+                proc.values = None
+                del proc.values
+            if hasattr(proc, 'result'):
+                proc.result = None
+                del proc.result
+            if hasattr(proc, 'results'):
+                try:
+                    proc.results = None
+                    del proc.results
+                except:
+                    continue
             del proc
 
         del pipe
+        gc.collect()
+        
         # item.lock_setter(False)
 
 
