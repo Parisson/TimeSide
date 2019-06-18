@@ -103,7 +103,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_player_url(self, obj):
         current_site = Site.objects.get_current()
-        return current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
+        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
 
 
 class ItemWaveformSerializer(ItemSerializer):
