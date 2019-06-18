@@ -19,10 +19,10 @@ def task_run(task_id):
     if task.selection:
         for item in task.selection.get_all_items():
             results.append(experience_run.delay(str(task.experience.uuid), str(item.uuid)))
-        results_id = [res.uuid for res in results]
+        results_id = [res.id for res in results]
     elif task.item:
         results.append(experience_run.delay(str(task.experience.uuid), str(task.item.uuid)))
-        results_id = [res.uuid for res in results]
+        results_id = [res.id for res in results]
     task_monitor.delay(task_id, results_id)
 
 
