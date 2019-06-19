@@ -188,9 +188,9 @@ class Provider(Named, UUID):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
         return self.get_provider()().get_source_url(url, DOWNLOAD_ROOT, download)
 
-    def get_source_id(self, id, download=False):
+    def get_source_id(self, external_id, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source_id(id, DOWNLOAD_ROOT, download)
+        return self.get_provider()().get_source_id(external_id, DOWNLOAD_ROOT, download)
 
 class Selection(Titled, UUID, Dated, Shareable):
 
@@ -237,11 +237,17 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        if not (self.source_url or self.source_file):
-            if self.external_uri:
-                self.source_file = self.provider.get_source_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
-            elif self.external_id:
-                self.source_url = self.provider.get_source_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
+        if not (self.source_url or self.source_file) and self.provider:
+            if download:
+                if self.external_uri:
+                    self.source_file = self.provider.get_source_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
+                elif self.external_id:
+                    self.source_file = self.provider.get_source_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
+            else:
+                if self.external_uri:
+                    self.source_url = self.provider.get_source_url(self.external_uri,download)
+                elif self.external_id:
+                    self.source_url = self.provider.get_source_id(self.external_id,download)
             super(Item, self).save()
 
 

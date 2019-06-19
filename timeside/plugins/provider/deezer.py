@@ -36,5 +36,5 @@ class Deezer(Provider):
             return source_uri
     
     def get_source_url(self, url, path, download=False):
-        deezer_track_id = url.split("/")[-1:]
+        deezer_track_id = url.split("/")[-1:][0]
         return self.get_source_id(deezer_track_id, path, download)
