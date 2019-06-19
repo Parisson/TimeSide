@@ -19,6 +19,12 @@ class YouTube(Provider):
     def name():
         return "YouTube Plugin"
 
+    def get_source_url(self, url, path, download=False):
+        return self.get_source(url, path, download)
+
+    def get_source_id(self, external_id, path, download=False):
+        return self.get_source(external_id, path, download)
+
     def get_source(self, url, path, download=False):
         ydl_opts = {
                     'format': 'bestaudio',

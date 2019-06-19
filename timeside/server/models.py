@@ -184,9 +184,13 @@ class Provider(Named, UUID):
     def get_provider(self):
         return timeside.core.get_provider(self.pid)
 
-    def get_source(self, url, download=False):
+    def get_source_url(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source(url, DOWNLOAD_ROOT, download)
+        return self.get_provider()().get_source_url(url, DOWNLOAD_ROOT, download)
+
+    def get_source_id(self, id, download=False):
+        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
+        return self.get_provider()().get_source_id(id, DOWNLOAD_ROOT, download)
 
 class Selection(Titled, UUID, Dated, Shareable):
 
@@ -233,11 +237,11 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        if self.external_uri and not (self.source_url or self.source_file):
-            if download:
-                self.source_file = self.provider.get_source(self.external_uri,download).replace(settings.MEDIA_ROOT, '') # source_file ?
-            else:
-                self.source_url = self.provider.get_source(self.external_uri,download)
+        if not (self.source_url or self.source_file):
+            if self.external_uri:
+                self.source_file = self.provider.get_source_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
+            elif self.external_id:
+                self.source_url = self.provider.get_source_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
             super(Item, self).save()
 
 
