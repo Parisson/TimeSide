@@ -184,13 +184,16 @@ class Provider(Named, UUID):
     def get_provider(self):
         return timeside.core.get_provider(self.pid)
 
-    def get_source_url(self, url, download=False):
+    def get_source_from_url(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source_url(url, DOWNLOAD_ROOT, download)
+        return self.get_provider()().get_source_from_url(url, DOWNLOAD_ROOT, download)
 
-    def get_source_id(self, external_id, download=False):
+    def get_source_from_id(self, external_id, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source_id(external_id, DOWNLOAD_ROOT, download)
+        return self.get_provider()().get_source_from_id(external_id, DOWNLOAD_ROOT, download)
+
+    def get_id_from_url(self, url):
+        return self.get_provider()().get_id_from_url(url)
 
 class Selection(Titled, UUID, Dated, Shareable):
 
@@ -240,16 +243,20 @@ class Item(Titled, UUID, Dated, Shareable):
         if not (self.source_url or self.source_file) and self.provider:
             if download:
                 if self.external_uri:
-                    self.source_file = self.provider.get_source_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
+                    self.source_file = self.provider.get_source_from_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
                 elif self.external_id:
-                    self.source_file = self.provider.get_source_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
+                    self.source_file = self.provider.get_source_from_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
             else:
                 if self.external_uri:
-                    self.source_url = self.provider.get_source_url(self.external_uri,download)
+                    self.source_url = self.provider.get_source_from_url(self.external_uri,download)
                 elif self.external_id:
-                    self.source_url = self.provider.get_source_id(self.external_id,download)
+                    self.source_url = self.provider.get_source_from_id(self.external_id,download)
             super(Item, self).save()
 
+    def get_external_id(self):
+        if not (self.source_url or self.external_id) and self.external_uri:
+            self.external_id = self.provider.get_id_from_url(self.external_uri)
+            super(Item, self).save()
 
     def get_uri(self):
         """Return the Item source"""
@@ -600,6 +607,7 @@ class Task(UUID, Dated, Shareable):
 def item_post_save(sender, **kwargs):
     instance = kwargs['instance']
     instance.get_source(download=True)
+    instance.get_external_id()
     instance.get_hash()
     instance.get_mimetype()
     instance.get_audio_duration()
