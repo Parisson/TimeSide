@@ -33,9 +33,11 @@ import json
 
 class ItemListSerializer(serializers.HyperlinkedModelSerializer):
 
+    player_url = serializers.SerializerMethodField()
+    
     class Meta:
         model = ts.models.Item
-        fields = ('uuid', 'url', 'title', 'description',
+        fields = ('uuid', 'url', 'title', 'description', 'player_url',
                   'source_file', 'source_url', 'mime_type')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'}
@@ -44,6 +46,10 @@ class ItemListSerializer(serializers.HyperlinkedModelSerializer):
     def get_url(self, obj):
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
+    
+    def get_player_url(self, obj):
+        current_site = Site.objects.get_current()
+        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
 
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
