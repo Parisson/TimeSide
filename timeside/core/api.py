@@ -282,14 +282,15 @@ class IProvider(Interface):
     def name():
         """name of the provider"""
 
-    def get_source_url(self, url, path, download=False):
+    def get_source_from_url(self, url, path, download=False):
         """Get source's uri or even download an audio track
         from the url of the provider's ressource of the provider
         (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
 
-    def get_source_id(self, id, path, download=False):
+    def get_source_from_id(self, id, path, download=False):
         """Get source's uri or even download an audio track
         from the id of the provider's ressource of the provider
         (Youtube video id, Deezer 30 sec preview from track's id, etc.)"""
 
-
+    def get_id_from_url(self, url):
+        """Get provider's id for a ressource from its url"""
