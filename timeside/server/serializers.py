@@ -22,6 +22,8 @@ import numpy as np
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from django.contrib.sites.models import Site
+
 import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
@@ -31,9 +33,11 @@ import json
 
 class ItemListSerializer(serializers.HyperlinkedModelSerializer):
 
+    player_url = serializers.SerializerMethodField()
+    
     class Meta:
         model = ts.models.Item
-        fields = ('uuid', 'url', 'title', 'description',
+        fields = ('uuid', 'url', 'title', 'description', 'player_url',
                   'source_file', 'source_url', 'mime_type')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'}
@@ -42,12 +46,18 @@ class ItemListSerializer(serializers.HyperlinkedModelSerializer):
     def get_url(self, obj):
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
+    
+    def get_player_url(self, obj):
+        current_site = Site.objects.get_current()
+        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
 
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     waveform_url = serializers.SerializerMethodField()
+    player_url = serializers.SerializerMethodField()
     audio_url = serializers.SerializerMethodField()
+
     annotation_tracks = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -64,21 +74,21 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Item
-        fields = ('uuid', 'url',
+        fields = ('uuid', 'url', 'player_url',
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
                   'audio_url', 'audio_duration','external_uri',
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
-                  'provider'
+                  'provider',
                   )
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'provider': {'lookup_field': 'uuid'}
         }
 
-        read_only_fields = ('url', 'uuid', 'audio_duration')
+        read_only_fields = ('url', 'uuid', 'audio_duration', 'player_url',)
 
     def get_url(self, obj):
         request = self.context['request']
@@ -96,6 +106,10 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
                         kwargs={'uuid': obj.uuid, 'extension': ext},
                         request=request)
                 for ext in extensions}
+
+    def get_player_url(self, obj):
+        current_site = Site.objects.get_current()
+        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
 
 
 class ItemWaveformSerializer(ItemSerializer):

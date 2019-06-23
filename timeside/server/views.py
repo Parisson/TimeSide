@@ -74,6 +74,9 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     model = models.Item
     queryset = models.Item.objects.all()
 
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('provider__pid','external_id')
+
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.ItemListSerializer
