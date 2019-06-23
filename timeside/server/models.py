@@ -177,7 +177,7 @@ class Shareable(models.Model):
 
 class Provider(Named, UUID):
 
-    pid = models.CharField(_('pid'), blank=True, unique=True, max_length=128)
+    pid = models.CharField(_('pid'), blank=True, max_length=128)
 
     def __unicode__(self):
         return unicode(self.pid)
@@ -433,7 +433,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
         del pipe
         gc.collect()
-        
+
         # item.lock_setter(False)
 
 
@@ -448,7 +448,7 @@ class Experience(Titled, UUID, Dated, Shareable):
 
 class Processor(UUID):
 
-    pid = models.CharField(_('pid'), unique=True, max_length=128)
+    pid = models.CharField(_('pid'), max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
@@ -488,7 +488,7 @@ class Processor(UUID):
 class SubProcessor(UUID):
     """SubProcessor object are intended to store the different results id associated with a given Processor
     """
-    sub_processor_id = models.CharField(_('sub_processor_id'), unique=True, max_length=128)
+    sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
     processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
