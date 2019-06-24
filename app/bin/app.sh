@@ -9,7 +9,7 @@ python $manage wait-for-db
 # django init
 if [ ! -f .init ]; then
     python $manage migrate --noinput
-    python $manage bower_install -- --allow-root
+    python $manage bower_install --allow-root
     touch .init
 fi
 

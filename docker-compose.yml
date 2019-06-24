@@ -35,9 +35,9 @@ var:
   command: "true"
 
 db:
-  image: mariadb:10
+  image: postgres:11
   volumes:
-    - ./var/lib/mysql:/var/lib/mysql
+    - ./var/lib/postgresql/data:/var/lib/postgresql/data
   volumes_from:
     - var
   env_file:
