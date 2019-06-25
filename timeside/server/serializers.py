@@ -30,11 +30,19 @@ from timeside.server.models import _RUNNING, _PENDING
 from jsonschema import ValidationError
 import json
 
+class ItemPlayableSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ts.models.Item
+        fields = ('player_url')
 
-class ItemListSerializer(serializers.HyperlinkedModelSerializer):
+    def get_player_url(self, obj):
+        current_site = Site.objects.get_current()
+        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
+
+class ItemListSerializer(ItemPlayableSerializer):
 
     player_url = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = ts.models.Item
         fields = ('uuid', 'url', 'title', 'description', 'player_url',
@@ -46,13 +54,9 @@ class ItemListSerializer(serializers.HyperlinkedModelSerializer):
     def get_url(self, obj):
         request = self.context['request']
         return reverse('item-detail', kwargs={'uuid': obj.uuid}, request=request)
-    
-    def get_player_url(self, obj):
-        current_site = Site.objects.get_current()
-        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
 
 
-class ItemSerializer(serializers.HyperlinkedModelSerializer):
+class ItemSerializer(ItemPlayableSerializer):
 
     waveform_url = serializers.SerializerMethodField()
     player_url = serializers.SerializerMethodField()
@@ -106,10 +110,6 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
                         kwargs={'uuid': obj.uuid, 'extension': ext},
                         request=request)
                 for ext in extensions}
-
-    def get_player_url(self, obj):
-        current_site = Site.objects.get_current()
-        return '//' + current_site.domain + reverse('timeside-player') + '#item/' + str(obj.uuid) + '/'
 
 
 class ItemWaveformSerializer(ItemSerializer):
