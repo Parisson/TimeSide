@@ -35,9 +35,9 @@ var:
   command: "true"
 
 db:
-  image: mariadb:10
+  image: postgres:11
   volumes:
-    - ./var/lib/mysql:/var/lib/mysql
+    - ./var/lib/postgresql/data:/var/lib/postgresql/data
   volumes_from:
     - var
   env_file:
@@ -52,7 +52,9 @@ app:
   volumes:
     - ./app:/srv/app
     - ./timeside:/srv/lib/timeside/timeside
+    - ./timeside:/srv/src/timeside/timeside
     - ./lib/plugins:/srv/lib/plugins
+    - ./etc/apt/sources.list:/etc/apt/sources.list
   volumes_from:
     - var
   env_file:
