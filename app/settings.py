@@ -217,7 +217,7 @@ CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks w
 
 from worker import app
 
-BOWER_COMPONENTS_ROOT = '/srv/bower/'
+BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
 BOWER_INSTALLED_APPS = (
     'jquery#2.2.4',

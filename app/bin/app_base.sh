@@ -26,6 +26,7 @@ gid='www-data'
 # pip install coreapi
 pip install youtube-dl xmljson coreapi psycopg2-binary
 pip install django-filter==1.1.0 djangorestframework==3.8 django==1.10 librosa==0.6.3
+npm install -g bower
 
 # pip install django-inspect
 
