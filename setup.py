@@ -88,7 +88,7 @@ setup(
     long_description=open_here('README.rst').read(),
     author="Guillaume Pellerin, Paul Brossier, Thomas Fillon, Riccardo Zaccarelli, Olivier Guilyardi",
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
-    version='0.9.1',
+    version='0.9.2',
     setup_requires=['pyyaml'],
     install_requires=[get_dependencies('conda-environment.yml')],
     platforms=['OS Independent'],
