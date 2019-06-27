@@ -248,7 +248,6 @@ dependencies:
     - ghp-import==0.5.5
     - jsonfield==2.0.2
     - jupyterthemes==0.19.6
-    - kymatio==0.1.0b0
     - kombu==3.0.37
     - lesscpy==0.13.0
     - mutagen==1.41.1
