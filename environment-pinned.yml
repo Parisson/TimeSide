@@ -26,10 +26,10 @@ dependencies:
   - blosc=1.14.3=hdbcaa40_0
   - bzip2=1.0.6=h14c3975_5
   - ca-certificates=2019.1.23=0
-  - certifi=2019.3.9=py27_0
+  - certifi=2018.11.29=py27_0
   - cffi=1.11.5=py27h9745a5d_0
   - chardet=3.0.4=py27_1
-  - conda=4.6.12=py27_1
+  - conda=4.6.3=py27_0
   - conda-env=2.6.0=1
   - configparser=3.5.0=py27_0
   - constantly=15.1.0=py27h28b3542_0
@@ -75,15 +75,13 @@ dependencies:
   - ipywidgets=7.2.1=py27_0
   - itypes=1.1.0=py_0
   - jinja2=2.10=py27_0
-  - joblib=0.13.2=py27_0
+  - joblib=0.12=py27_0
   - jpeg=9b=h024ee3a_2
   - jsonschema=2.6.0=py27_1
   - jupyter=1.0.0=py_1
   - jupyter_client=5.2.3=py27_0
   - jupyter_console=5.2.0=py27_1
   - jupyter_core=4.4.0=py27_0
-  - jupyterlab=0.33.11=py27_0
-  - jupyterlab_launcher=0.11.2=py27h28b3542_0
   - kiwisolver=1.0.1=py27hf484d3e_0
   - lapack=3.6.1=1
   - libedit=3.1.20170329=h6b74fdf_2
@@ -99,7 +97,7 @@ dependencies:
   - libopus=1.2.1=hb9ed12e_0
   - libpng=1.6.34=hb9fc6fc_0
   - libprotobuf=3.5.2=h6f1eeef_0
-  - librosa=0.6.3=py_0
+  - librosa=0.6.1=py_1
   - libsndfile=1.0.28=hfc679d8_0
   - libsodium=1.0.16=h1bed415_0
   - libstdcxx-ng=7.2.0=hdf63c60_3
@@ -135,7 +133,7 @@ dependencies:
   - numpy=1.14.2=py27hdbf6ddf_1
   - olefile=0.45.1=py27_0
   - openblas=0.2.20=4
-  - openssl=1.0.2r=h7b6447c_0
+  - openssl=1.0.2p=h14c3975_0
   - packaging=17.1=py27_0
   - pandas=0.23.3=py27hf8a1672_1
   - pandoc=2.2.1=h629c226_0
@@ -164,6 +162,8 @@ dependencies:
   - pysocks=1.6.8=py27_0
   - pytables=3.4.4=py27h4f72b40_1
   - python=2.7.15=h1571d57_0
+  - python-coreapi=2.3.3=py_0
+  - python-coreschema=0.0.4=py_0
   - python-dateutil=2.7.3=py27_0
   - pytorch=0.4.1=py27_cuda9.0.176_cudnn7.1.2_1
   - pytz=2018.5=py27_0
@@ -233,7 +233,7 @@ dependencies:
     - billiard==3.3.0.23
     - celery==3.1.26.post2
     - deezer-python==0.6.1
-    - django==1.10
+    - django==1.9.13
     - django-bootstrap-pagination==1.6.4
     - django-bootstrap3==10.0.1
     - django-bower==5.2.0
@@ -242,8 +242,7 @@ dependencies:
     - django-debug-toolbar==1.9.1
     - django-environ==0.4.5
     - django-extensions==2.1.0
-    - django-filter==1.1.0
-    - djangorestframework==3.7.0
+    - djangorestframework==3.6.4
     - essentia==2.1b5.dev416
     - ghp-import==0.5.5
     - jsonfield==2.0.2
@@ -251,6 +250,7 @@ dependencies:
     - kombu==3.0.37
     - lesscpy==0.13.0
     - mutagen==1.41.1
+    - mysql-python==1.2.5
     - pathtools==0.1.2
     - ply==3.11
     - py-sonicvisualiser==0.3
@@ -261,5 +261,4 @@ dependencies:
     - uwsgi==2.0.17.1
     - vamp==1.1.0
     - watchdog==0.8.3
-    - xmljson==0.2.0
 prefix: /opt/miniconda

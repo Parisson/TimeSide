@@ -34,7 +34,7 @@ RUN apt-get update && \
 
 # Install conda in /opt/miniconda
 ENV PATH /opt/miniconda/bin:$PATH
-RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh && \
+RUN wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh && \
     /bin/bash miniconda.sh -b -p /opt/miniconda && \
     rm miniconda.sh && \
     hash -r && \
@@ -43,9 +43,11 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -
     echo "conda activate" >> ~/.bashrc && \
     conda config --set always_yes yes --set changeps1 yes
 
-COPY environment-pinned.yml /srv/lib/
+#COPY environment-pinned.yml /srv/lib/
+COPY environment-explicit.yml /srv/lib/
 RUN conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
-    conda env update --file environment-pinned.yml &&\
+     #conda env update --file environment-pinned.yml &&\
+     conda install -n base --file environment-explicit.yml &&\
     conda clean --all --yes
 
 # Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
