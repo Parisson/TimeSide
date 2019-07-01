@@ -45,7 +45,7 @@ def get_dependencies(env_yml_file):
         elif isinstance(dep, dict) and 'pip' in dep:
             pip_dependencies = dep['pip']
 
-    return conda_dependencies + pip_dependencies
+    return pip_dependencies
 
 # Pytest
 
@@ -90,7 +90,7 @@ setup(
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
     version='0.9.2',
     setup_requires=['pyyaml'],
-    install_requires=[get_dependencies('conda-environment.yml')],
+    install_requires=[get_dependencies('environment-pinned.yml')],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
     classifiers=CLASSIFIERS,
