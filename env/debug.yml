@@ -25,8 +25,8 @@ app:
   env_file:
     - env/debug.env
   volumes:
-    - ./lib:/srv/src/plugins
-    - ./:/srv/src/timeside/
+    - ./lib:/srv/src/plugins:cached
+    - ./:/srv/src/timeside/:cached
   command: /bin/bash bin/app.sh --runserver
   ports:
     - 9000:8000

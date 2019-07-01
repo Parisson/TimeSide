@@ -108,6 +108,13 @@ RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
 
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
+
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
@@ -130,16 +137,10 @@ class Dated(models.Model):
 
 class UUID(models.Model):
 
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
-
+    uuid = models.UUIDField(_('uuid'), default=uuid.uuid4, primary_key=True, blank=False, max_length=255, editable=False)
+    #uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
     class Meta:
         abstract = True
-
-    def save(self, **kwargs):
-        if not self.uuid:
-            self.uuid = uuid.uuid4()
-        super(UUID, self).save(**kwargs)
-
 
 class Titled(models.Model):
 
@@ -176,7 +177,7 @@ class Shareable(models.Model):
 
 class Provider(Named, UUID):
 
-    pid = models.CharField(_('pid'), blank=True, unique=True, max_length=128)
+    pid = models.CharField(_('pid'), blank=True, max_length=128)
 
     def __unicode__(self):
         return unicode(self.pid)
@@ -184,9 +185,16 @@ class Provider(Named, UUID):
     def get_provider(self):
         return timeside.core.get_provider(self.pid)
 
-    def get_source(self, url, download=False):
+    def get_source_from_url(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source(url, DOWNLOAD_ROOT, download)
+        return self.get_provider()().get_source_from_url(url, DOWNLOAD_ROOT, download)
+
+    def get_source_from_id(self, external_id, download=False):
+        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
+        return self.get_provider()().get_source_from_id(external_id, DOWNLOAD_ROOT, download)
+
+    def get_id_from_url(self, url):
+        return self.get_provider()().get_id_from_url(url)
 
 class Selection(Titled, UUID, Dated, Shareable):
 
@@ -233,13 +241,23 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        if self.external_uri and not (self.source_url or self.source_file):
+        if not (self.source_url or self.source_file) and self.provider:
             if download:
-                self.source_file = self.provider.get_source(self.external_uri,download).replace(settings.MEDIA_ROOT, '') # source_file ?
+                if self.external_uri:
+                    self.source_file = self.provider.get_source_from_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
+                elif self.external_id:
+                    self.source_file = self.provider.get_source_from_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
             else:
-                self.source_url = self.provider.get_source(self.external_uri,download)
+                if self.external_uri:
+                    self.source_url = self.provider.get_source_from_url(self.external_uri,download)
+                elif self.external_id:
+                    self.source_url = self.provider.get_source_from_id(self.external_id,download)
             super(Item, self).save()
 
+    def get_external_id(self):
+        if not (self.source_url or self.external_id) and self.external_uri:
+            self.external_id = self.provider.get_id_from_url(self.external_uri)
+            super(Item, self).save()
 
     def get_uri(self):
         """Return the Item source"""
@@ -253,7 +271,7 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return Item result path
         """
-        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        result_path = os.path.join(RESULTS_ROOT, str(self.uuid))
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         return result_path
@@ -428,7 +446,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
         del pipe
         gc.collect()
-        
+
         # item.lock_setter(False)
 
 
@@ -441,9 +459,9 @@ class Experience(Titled, UUID, Dated, Shareable):
         verbose_name = _('Experience')
 
 
-class Processor(models.Model):
+class Processor(UUID):
 
-    pid = models.CharField(_('pid'), unique=True, max_length=128)
+    pid = models.CharField(_('pid'), max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
@@ -455,7 +473,7 @@ class Processor(models.Model):
         verbose_name = _('processor')
 
     def __str__(self):
-        return '_'.join([self.pid, str(self.id)])
+        return '_'.join([self.pid, str(self.uuid)])
 
     def save(self, **kwargs):
         if not self.version:
@@ -480,10 +498,10 @@ class Processor(models.Model):
         return self.get_processor().get_parameters_default()
 
 
-class SubProcessor(models.Model):
+class SubProcessor(UUID):
     """SubProcessor object are intended to store the different results id associated with a given Processor
     """
-    sub_processor_id = models.CharField(_('sub_processor_id'), unique=True, max_length=128)
+    sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
     processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
@@ -507,7 +525,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.id)])
+        return '_'.join([unicode(self.processor), str(self.uuid)])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
@@ -579,7 +597,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)])
 
     def status_setter(self, status):
         self.status = status
@@ -592,18 +610,19 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        task_run.delay(task_id=self.id)
+        task_run.delay(task_id=str(self.uuid))
 
         if wait:
-            status = Task.objects.get(id=self.id).status
+            status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
-                status = Task.objects.get(id=self.id).status
+                status = Task.objects.get(uuid=str(self.uuid)).status
 
 
 def item_post_save(sender, **kwargs):
     instance = kwargs['instance']
     instance.get_source(download=True)
+    instance.get_external_id()
     instance.get_hash()
     instance.get_mimetype()
     instance.get_audio_duration()

@@ -23,12 +23,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': env('ENGINE'),  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'USER': env('MYSQL_USER'),      # Not used with sqlite3.
-        'PASSWORD': env('MYSQL_PASSWORD'),  # Not used with sqlite3.
-        'NAME': env('MYSQL_DATABASE'),
+        'ENGINE': env('DB_ENGINE'),  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'USER': env('DB_USER'),      # Not used with sqlite3.
+        'PASSWORD': env('DB_PASSWORD'),  # Not used with sqlite3.
+        'NAME': env('DB_NAME'),
         'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',      # Set to empty string for default. Not used with sqlite3.
+        'PORT': env('DB_PORT'),      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -217,7 +217,7 @@ CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks w
 
 from worker import app
 
-BOWER_COMPONENTS_ROOT = '/srv/bower/'
+BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
 BOWER_INSTALLED_APPS = (
     'jquery#2.2.4',

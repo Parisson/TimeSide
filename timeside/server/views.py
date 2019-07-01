@@ -74,6 +74,9 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     model = models.Item
     queryset = models.Item.objects.all()
 
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('provider__pid','external_id')
+
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.ItemListSerializer
@@ -459,7 +462,7 @@ class ItemDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
         ts_item = {'ts_api_root': str(reverse_lazy('api-root', request=self.request)),
-                   'ts_item_uuid': self.get_object().uuid
+                   'ts_item_uuid': str(self.get_object().uuid)
                    }
         context['ts_item'] = json.dumps(ts_item)
         return context
