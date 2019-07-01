@@ -23,12 +23,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': env('DB_ENGINE'),  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'USER': env('DB_USER'),      # Not used with sqlite3.
-        'PASSWORD': env('DB_PASSWORD'),  # Not used with sqlite3.
-        'NAME': env('DB_NAME'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'USER': 'postgres',      # Not used with sqlite3.
+        'PASSWORD': env('POSTGRES_PASSWORD'),  # Not used with sqlite3.
+        'NAME': 'postgres',
         'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': env('DB_PORT'),      # Set to empty string for default. Not used with sqlite3.
+        'PORT': 5432,      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
