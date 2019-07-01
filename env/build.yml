@@ -1,0 +1,8 @@
+# -*- coding: utf-8 -*-
+
+app:
+  build: .
+
+worker:
+  build: .
+

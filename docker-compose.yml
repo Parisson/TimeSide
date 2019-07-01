@@ -35,7 +35,7 @@ var:
   command: "true"
 
 db:
-  image: postgres:11
+  image: postgres:9
   volumes:
     - ./var/lib/postgresql/data:/var/lib/postgresql/data:cached
   volumes_from:
