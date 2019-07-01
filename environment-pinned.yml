@@ -97,7 +97,7 @@ dependencies:
   - libopus=1.2.1=hb9ed12e_0
   - libpng=1.6.34=hb9fc6fc_0
   - libprotobuf=3.5.2=h6f1eeef_0
-  - librosa=0.6.1=py_1
+  - librosa=0.6.3=py_0
   - libsndfile=1.0.28=hfc679d8_0
   - libsodium=1.0.16=h1bed415_0
   - libstdcxx-ng=7.2.0=hdf63c60_3
@@ -232,8 +232,9 @@ dependencies:
     - argh==0.26.2
     - billiard==3.3.0.23
     - celery==3.1.26.post2
+    - coreapi
     - deezer-python==0.6.1
-    - django==1.9.13
+    - django==1.10
     - django-bootstrap-pagination==1.6.4
     - django-bootstrap3==10.0.1
     - django-bower==5.2.0
@@ -242,7 +243,8 @@ dependencies:
     - django-debug-toolbar==1.9.1
     - django-environ==0.4.5
     - django-extensions==2.1.0
-    - djangorestframework==3.6.4
+    - django-filter==1.1.0
+    - djangorestframework==3.8
     - essentia==2.1b5.dev416
     - ghp-import==0.5.5
     - jsonfield==2.0.2
@@ -253,6 +255,7 @@ dependencies:
     - mysql-python==1.2.5
     - pathtools==0.1.2
     - ply==3.11
+    - psycopg2-binary
     - py-sonicvisualiser==0.3
     - pympi-ling==1.69
     - redis==2.10.6
@@ -261,4 +264,5 @@ dependencies:
     - uwsgi==2.0.17.1
     - vamp==1.1.0
     - watchdog==0.8.3
+    - xmljson
 prefix: /opt/miniconda
