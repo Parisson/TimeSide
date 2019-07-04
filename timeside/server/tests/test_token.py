@@ -2,28 +2,43 @@ import requests
 from coreapi import Client
 from coreapi.auth import TokenAuthentication
 
-# """ http post http://localhost:9000/timeside/api-token-auth/ username=admin password=admin """
-url = 'http://localhost:9000/timeside/api-token-auth/'
-auth={'username':'admin', 'password':'admin'}
-r = requests.post(url, data=auth)
-token=r.json()['token']
 
-#coreapi client with the right token
-auth = TokenAuthentication(
-    scheme='Token',
-    token=token
-)
-client = Client(auth=auth)
+from rest_framework import status
+from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
+from rest_framework.test import CoreAPIClient
+from rest_framework.test import RequestsClient
+from rest_framework.reverse import reverse
+from rest_framework.authtoken.models import Token
 
-#testing several request to the TimeSide core API
-schema = client.get('http://localhost:9000/timeside/api/schema/')
+from django.contrib.auth.models import User
+from django.conf import settings
 
-keys = ['api', 'items', 'create']
-params = {'title':'fooTest'}
-client.action(schema,keys,params)
+class TokenTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='john',
+                                        password='banana')
+        self.token = Token.objects.get(user=self.user)
 
-keys = ['api', 'items', 'list']
-data = client.action(schema,keys)
-for item in data:
-    print(item['title'] + '   ' + item['uuid'])
+    def test_get_token(self):
 
+        url = '/timeside/api-token-auth/'
+        client = APIClient()
+        auth = {'username':'john', 'password':'banana'}
+        token_request = client.post(url, data=auth)
+        self.assertEqual(token_request.status_code,200)
+        self.assertEqual(token_request.json()['token'],self.token.key)
+
+
+    def test_token_auth(self):
+        client = APIClient()
+        users_request = client.get('/timeside/api/users/',format='json')
+        self.assertEqual(users_request.status_code,401)
+        client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        users_request_auth = client.get('/timeside/api/users/',format='json')
+        self.assertEqual(users_request_auth.status_code,200)
+        data = users_request_auth.json()
+        usernames = []
+        for user in data:
+            usernames.append(user['username'])
+        self.assertIn(self.user.username, usernames)
