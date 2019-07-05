@@ -6,8 +6,6 @@ from coreapi.auth import TokenAuthentication
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.test import APIClient
-from rest_framework.test import CoreAPIClient
-from rest_framework.test import RequestsClient
 from rest_framework.reverse import reverse
 from rest_framework.authtoken.models import Token
 
