@@ -25,6 +25,9 @@
 app:
   image: parisson/timeside:latest-dev
   #build: .
+  volumes:
+    - ./app:/srv/app:cached
+    - .:/srv/lib/timeside:cached
   command: /bin/bash /srv/app/bin/app.sh --runserver
   ports:
     - '9000:8000'

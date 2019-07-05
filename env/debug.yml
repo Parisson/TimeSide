@@ -26,7 +26,7 @@ app:
     - env/debug.env
   volumes:
     - ./app:/srv/app:cached
-    - ./timeside:/srv/lib/timeside/timeside:cached
+    - .:/srv/lib/timeside:cached
     - ./timeside:/srv/src/timeside/timeside:cached
     - ./lib/plugins:/srv/lib/plugins:cached
     - ./etc/apt/sources.list:/etc/apt/sources.list:cached
