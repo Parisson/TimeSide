@@ -24,6 +24,11 @@ class TestForceSampleRate(unittest.TestCase):
         def id():
             return 'dummy_proc'
 
+        @staticmethod
+        @interfacedoc
+        def version():
+            return '1.0'
+
     class Dummy_Processor_withSampleRate(Dummy_Processor):
         implements(IProcessor)
 
