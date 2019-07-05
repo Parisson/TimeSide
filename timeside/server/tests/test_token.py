@@ -1,16 +1,8 @@
-import requests
-from coreapi import Client
-from coreapi.auth import TokenAuthentication
-
-
-from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.test import APIClient
-from rest_framework.reverse import reverse
 from rest_framework.authtoken.models import Token
 
 from django.contrib.auth.models import User
-from django.conf import settings
 
 class TokenTests(APITestCase):
     def setUp(self):
@@ -23,17 +15,17 @@ class TokenTests(APITestCase):
         url = '/timeside/api-token-auth/'
         client = APIClient()
         auth = {'username':'john', 'password':'banana'}
-        token_request = client.post(url, data=auth)
+        token_request = client.post(url, data = auth, format='json')
         self.assertEqual(token_request.status_code,200)
-        self.assertEqual(token_request.json()['token'],self.token.key)
+        self.assertEqual(token_request.json()['token'], self.token.key)
 
 
     def test_token_auth(self):
         client = APIClient()
-        users_request = client.get('/timeside/api/users/',format='json')
-        self.assertEqual(users_request.status_code,401)
-        client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
-        users_request_auth = client.get('/timeside/api/users/',format='json')
+        users_request = client.get('/timeside/api/users/', format='json')
+        self.assertEqual(users_request.status_code, 401)
+        client.credentials(HTTP_AUTHORIZATION = 'Token ' + self.token.key)
+        users_request_auth = client.get('/timeside/api/users/', format = 'json')
         self.assertEqual(users_request_auth.status_code,200)
         data = users_request_auth.json()
         usernames = []
