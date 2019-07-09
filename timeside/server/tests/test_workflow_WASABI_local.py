@@ -3,6 +3,23 @@ import requests
 from coreapi import Client
 from coreapi.auth import TokenAuthentication
 from numpy import mean
+from rest_framework.test import APITestCase
+from timeside.server.models import *
+
+
+class WorkflowWASABITestCase(TestCase):
+    def setUp(self):
+        url = 'http://localhost:9000/timeside/api-token-auth/'
+        auth={'username':'admin', 'password':'admin'}
+        r = requests.post(url, data=auth)
+        token=r.json()['token']
+
+    def test_worflow(self):
+        pass
+
+    def tearDown(self):
+        pass
+
 
 # """ http post http://localhost:9000/timeside/api-token-auth/ username=admin password=admin """
 url = 'http://localhost:9000/timeside/api-token-auth/'
