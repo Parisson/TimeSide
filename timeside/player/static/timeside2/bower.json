@@ -22,25 +22,25 @@
     "superapi": "^0.6.0",
     "localforage": "1.2.10",
     "backbone-associations": "~0.6.2",
-    "svg4everybody": "*",
+    "svg4everybody": "2.1.9",
     "velocity": "1.2.1",
-    "swiper": "latest",
-    "bootstrap": "*",
-    "bootstrap-sass":"latest",
-    "mjolnic-bootstrap-colorpicker" : "latest",
+    "swiper": "4.0.1",
+    "bootstrap": "3.3.7",
+    "bootstrap-sass":"3.3.7",
+    "mjolnic-bootstrap-colorpicker" : "2.5.1",
     "modernizr": "2.8.3",
     "moment": "2.10.6",
     "hammerjs": "2.0.4",
-    "fastclick": "latest",
-    "validate.js" : "latest",
-    "font-awesome" : "latest",
+    "fastclick": "1.0.6",
+    "validate.js" : "0.12.0",
+    "font-awesome" : "4.7.0",
     "d3" : "3.5.17",
-    "buzz" : "latest"
+    "buzz" : "1.2.0"
   },
   "devDependencies": {
     "almond": "~0.2.9"
   },
   "resolutions": {
-    "underscore": ">=1.7.0"
+    "underscore": "1.8.3"
   }
 }

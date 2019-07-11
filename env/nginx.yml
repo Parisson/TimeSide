@@ -2,7 +2,7 @@
 nginx:
   image: nginx
   ports:
-    - "8000:80"
+    - "8080:80"
   volumes:
     - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
   volumes_from:

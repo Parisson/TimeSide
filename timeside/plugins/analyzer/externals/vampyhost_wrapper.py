@@ -103,6 +103,11 @@ class VampAnalyzer(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.1.0"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 

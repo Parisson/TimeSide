@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.conf import settings
 #from django.core.urlresolvers import reverse
 from rest_framework import routers
-from rest_framework.authtoken import views as authtoken_views
 
 from rest_framework.documentation import include_docs_urls
 
@@ -46,11 +45,10 @@ urlpatterns = [
     # Docs
     url(r'^api/docs/', include_docs_urls(title='Timeside Web API')),
     # API endpoint for Generating Authentification token
-    url(r'^api/token-auth/', authtoken_views.obtain_auth_token),
+    url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
     # Temporary Endpoint to get CSRF Token
     url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items
-    url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
     url('^api/schema/$', schema_view),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
@@ -78,13 +76,13 @@ urlpatterns = [
         views.ResultVisualizationViewSet.as_view(), name="timeside-result-visualization"),
     url(r'^results/(?P<uuid>[0-9a-z-]+)/json/$',
         views.ResultAnalyzerView.as_view(), name="timeside-result-json"),
-    url(r'^results/(?P<pk>.*)/png/$',
+    url(r'^results/(?P<uuid>.*)/png/$',
         views.ResultGrapherView.as_view(), name="timeside-result-png"),
-    url(r'^results/(?P<pk>.*)/audio/$',
+    url(r'^results/(?P<uuid>.*)/audio/$',
         views.ResultEncoderView.as_view(), name="timeside-result-audio"),
-    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/elan/$',
+    url(r'^results/(?P<uuid>.*)/(?P<res_id>.*)/elan/$',
         views.ResultAnalyzerToElanView.as_view(), name="timeside-result-elan"),
-    url(r'^results/(?P<pk>.*)/(?P<res_id>.*)/sonic/$',
+    url(r'^results/(?P<uuid>.*)/(?P<res_id>.*)/sonic/$',
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
     # Player
     url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),

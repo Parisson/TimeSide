@@ -57,11 +57,11 @@ class IProcessor(Interface):
         """Samplerate of the data returned by process(). May be different from
         the samplerate passed to setup()"""
 
-    def blocksize(self):
+    def blocksize():
         """The total number of frames that this processor can output for each step
         in the pipeline, or None if the number is unknown."""
 
-    def totalframes(self):
+    def totalframes():
         """The total number of frames that this processor will output, or None if
         the number is unknown."""
 
@@ -99,15 +99,15 @@ class IProcessor(Interface):
         """
 
     @staticmethod
-    def uuid(self):
+    def uuid():
         """Return the UUID of the processor"""
 
     @staticmethod
-    def version(self):
+    def version():
         """Return the version of the processor"""
 
     @staticmethod
-    def description(self):
+    def description():
         """Return a string describing what this processor is meant for.
         The description should provide enough information to help the end user.
         """
@@ -131,24 +131,24 @@ class IEncoder(IProcessor):
         # be optionnal
 
     @staticmethod
-    def format(self):
+    def format():
         """Return the encode/encoding format as a short string
         Example: "MP3", "OGG", "AVI", ...
         """
 
     @staticmethod
-    def description(self):
+    def description():
         """Return a string describing what this encode format provides, is good
         for, etc... The description is meant to help the end user decide what
         format is good for him/her
         """
 
     @staticmethod
-    def file_extension(self):
+    def file_extension():
         """Return the filename extension corresponding to this encode format"""
 
     @staticmethod
-    def mime_type(self):
+    def mime_type():
         """Return the mime type corresponding to this encode format"""
 
     def set_metadata(self, metadata):
@@ -282,8 +282,15 @@ class IProvider(Interface):
     def name():
         """name of the provider"""
 
-    def get_source(self, url, path, download=False):
+    def get_source_from_url(self, url, path, download=False):
         """Get source's uri or even download an audio track
         from the url of the provider's ressource of the provider
         (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
 
+    def get_source_from_id(self, id, path, download=False):
+        """Get source's uri or even download an audio track
+        from the id of the provider's ressource of the provider
+        (Youtube video id, Deezer 30 sec preview from track's id, etc.)"""
+
+    def get_id_from_url(self, url):
+        """Get provider's id for a ressource from its url"""

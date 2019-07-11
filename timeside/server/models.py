@@ -29,12 +29,12 @@ import uuid
 import mimetypes
 import ast
 import time
+import gc
 from shutil import copyfile
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 from timeside.core.tools.parameters import DEFAULT_SCHEMA
-from timeside.core.provider import *
 from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
@@ -50,6 +50,10 @@ import jsonfield
 import json
 import youtube_dl
 from requests import get
+
+#XMLtoJSON
+from xml.etree.ElementTree import fromstring
+from xmljson import abdera as ab
 
 app = 'timeside'
 
@@ -104,6 +108,13 @@ RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
 
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
+
 
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
@@ -126,16 +137,10 @@ class Dated(models.Model):
 
 class UUID(models.Model):
 
-    uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
-
+    uuid = models.UUIDField(_('uuid'), default=uuid.uuid4, primary_key=True, blank=False, max_length=255, editable=False)
+    #uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
     class Meta:
         abstract = True
-
-    def save(self, **kwargs):
-        if not self.uuid:
-            self.uuid = uuid.uuid4()
-        super(UUID, self).save(**kwargs)
-
 
 class Titled(models.Model):
 
@@ -172,7 +177,7 @@ class Shareable(models.Model):
 
 class Provider(Named, UUID):
 
-    pid = models.CharField(_('pid'), blank=True, unique=True, max_length=128)
+    pid = models.CharField(_('pid'), blank=True, max_length=128)
 
     def __unicode__(self):
         return unicode(self.pid)
@@ -180,9 +185,16 @@ class Provider(Named, UUID):
     def get_provider(self):
         return timeside.core.get_provider(self.pid)
 
-    def get_source(self, url, download=False):
+    def get_source_from_url(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source(url, DOWNLOAD_ROOT, download)
+        return self.get_provider()().get_source_from_url(url, DOWNLOAD_ROOT, download)
+
+    def get_source_from_id(self, external_id, download=False):
+        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
+        return self.get_provider()().get_source_from_id(external_id, DOWNLOAD_ROOT, download)
+
+    def get_id_from_url(self, url):
+        return self.get_provider()().get_id_from_url(url)
 
 class Selection(Titled, UUID, Dated, Shareable):
 
@@ -190,7 +202,6 @@ class Selection(Titled, UUID, Dated, Shareable):
     selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True)
 
     class Meta:
-        db_table = app + '_selections'
         verbose_name = _('selection')
 
     def get_all_items(self):
@@ -212,10 +223,10 @@ class Item(Titled, UUID, Dated, Shareable):
     hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     lock = models.BooleanField(default=False)
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
+    external_id = models.CharField(_('external_id'), blank=True, max_length=256)
     provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True)
 
     class Meta:
-        db_table = app + '_items'
         ordering = ['title']
         verbose_name = _('item')
 
@@ -230,13 +241,23 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        if self.external_uri and not (self.source_url or self.source_file):
+        if not (self.source_url or self.source_file) and self.provider:
             if download:
-                self.source_file = self.provider.get_source(self.external_uri,download).replace(settings.MEDIA_ROOT, '') # source_file ?
+                if self.external_uri:
+                    self.source_file = self.provider.get_source_from_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
+                elif self.external_id:
+                    self.source_file = self.provider.get_source_from_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
             else:
-                self.source_url = self.provider.get_source(self.external_uri,download)
+                if self.external_uri:
+                    self.source_url = self.provider.get_source_from_url(self.external_uri,download)
+                elif self.external_id:
+                    self.source_url = self.provider.get_source_from_id(self.external_id,download)
             super(Item, self).save()
 
+    def get_external_id(self):
+        if not (self.source_url or self.external_id) and self.external_uri:
+            self.external_id = self.provider.get_id_from_url(self.external_uri)
+            super(Item, self).save()
 
     def get_uri(self):
         """Return the Item source"""
@@ -250,7 +271,7 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return Item result path
         """
-        result_path = os.path.join(RESULTS_ROOT, self.uuid)
+        result_path = os.path.join(RESULTS_ROOT, str(self.uuid))
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         return result_path
@@ -289,10 +310,10 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def get_single_selection(self):
         # TODO : have singleton selection has a foreign key of Item ???
-        sel_title = "Singleton selection for item %d" % self.id
+        sel_title = "Singleton selection for item %d" % self.uuid
         sel_description = ("Singleton selection for item %d\n"
                            "Automatically generated by the TimeSide "
-                           "application.") % self.id
+                           "application.") % self.uuid
         selection, created = Selection.objects.get_or_create(
             title=sel_title,
             description=sel_description)
@@ -334,9 +355,13 @@ class Item(Titled, UUID, Dated, Shareable):
             self.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
             self.save()
 
+        start = time.time()
+
         pipe.run()
 
-        def set_results_from_processor(proc, preset=None):
+        run_time = time.time() - start
+
+        def set_results_from_processor_and_run_time(proc, run_time, preset=None):
             for result_id in proc.results.keys():
                 parameters = proc.results[result_id].parameters
             if preset is None:
@@ -353,7 +378,8 @@ class Item(Titled, UUID, Dated, Shareable):
                 processor = preset.processor
 
             result, c = Result.objects.get_or_create(preset=preset,
-                                                     item=self)
+                                                     item=self,
+                                                     run_time=run_time)
             if not hasattr(proc, 'external'):
                 # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
@@ -370,38 +396,68 @@ class Item(Titled, UUID, Dated, Shareable):
                     filename = str(result.uuid) + '.' + ext
                     result_file = os.path.join(result_path, filename)
                     copyfile(proc.result_temp_file, result_file)
+                    if ext == 'xml':
+                        #XML to JSON conversion
+                        filename_json = str(result.uuid) + '.' + 'json'
+                        result_file = os.path.join(result_path, filename_json)
+                        f_xml = open(proc.result_temp_file,'r')
+                        xml = f_xml.read()
+                        f = open(result_file,'w+')
+                        f.write(json.dumps(ab.data(fromstring(xml)) , indent=4))
+                        f.close()
+                        f_xml.close()
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
-                set_results_from_processor(proc, preset)
+                set_results_from_processor_and_run_time(proc, run_time, preset)
 
             elif proc.type == 'grapher':
                 result, c = Result.objects.get_or_create(preset=preset,
-                                                         item=self)
+                                                         item=self,
+                                                         run_time=run_time)
                 image_file = str(result.uuid) + '.png'
                 result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
 
                 # TODO : set as an option
                 proc.watermark('timeside', opacity=.6, margin=(5, 5))
+                start = time.time()
                 proc.render(output=result.file.path)
+                run_time = time.time() - start
+                result.run_time_setter(run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
+                
 
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
-                    set_results_from_processor(analyzer)
+                    set_results_from_processor_and_run_time(analyzer, run_time)
 
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=self)
+                result.run_time_setter(run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
-                result.status_setter(_DONE)
+                result.status_setter(_DONE)                
 
+            if hasattr(proc, 'values'):
+                proc.values = None
+                del proc.values
+            if hasattr(proc, 'result'):
+                proc.result = None
+                del proc.result
+            if hasattr(proc, 'results'):
+                try:
+                    proc.results = None
+                    del proc.results
+                except:
+                    continue
             del proc
 
         del pipe
+        gc.collect()
+
         # item.lock_setter(False)
 
 
@@ -411,13 +467,12 @@ class Experience(Titled, UUID, Dated, Shareable):
     experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True)
 
     class Meta:
-        db_table = app + '_experiences'
         verbose_name = _('Experience')
 
 
-class Processor(models.Model):
+class Processor(UUID):
 
-    pid = models.CharField(_('pid'), unique=True, max_length=128)
+    pid = models.CharField(_('pid'), max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
@@ -426,11 +481,10 @@ class Processor(models.Model):
         self._meta.get_field('pid')._choices = lazy(get_processor_pids, list)()
 
     class Meta:
-        db_table = app + '_processors'
         verbose_name = _('processor')
 
     def __str__(self):
-        return '_'.join([self.pid, str(self.id)])
+        return '_'.join([self.pid, str(self.uuid)])
 
     def save(self, **kwargs):
         if not self.version:
@@ -455,16 +509,15 @@ class Processor(models.Model):
         return self.get_processor().get_parameters_default()
 
 
-class SubProcessor(models.Model):
+class SubProcessor(UUID):
     """SubProcessor object are intended to store the different results id associated with a given Processor
     """
-    sub_processor_id = models.CharField(_('sub_processor_id'), unique=True, max_length=128)
+    sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
     processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
 
     class Meta:
-        db_table = app + '_subprocessors'
         verbose_name = _('Subprocessor')
 
     def __str__(self):
@@ -479,12 +532,11 @@ class Preset(UUID, Dated, Shareable):
     # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration
 
     class Meta:
-        db_table = app + '_presets'
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.id)])
+        return '_'.join([unicode(self.processor), str(self.uuid)])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
@@ -510,11 +562,10 @@ class Result(UUID, Dated, Shareable):
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-
+    run_time = models.FloatField(_('Run time'), blank=True, null=True, default=float('NaN'))
     # lock = models.BooleanField(default=False)
 
     class Meta:
-        db_table = app + '_results'
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
 
@@ -528,6 +579,10 @@ class Result(UUID, Dated, Shareable):
 
     def lock_setter(self, lock):
         self.lock = lock
+        self.save()
+
+    def run_time_setter(self, run_time):
+        self.run_time = run_time
         self.save()
 
     def get_mimetype(self, force=False):
@@ -553,12 +608,11 @@ class Task(UUID, Dated, Shareable):
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
 
     class Meta:
-        db_table = app + '_tasks'
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), unicode(self.id)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)])
 
     def status_setter(self, status):
         self.status = status
@@ -571,18 +625,19 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        task_run.delay(task_id=self.id)
+        task_run.delay(task_id=str(self.uuid))
 
         if wait:
-            status = Task.objects.get(id=self.id).status
+            status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
-                status = Task.objects.get(id=self.id).status
+                status = Task.objects.get(uuid=str(self.uuid)).status
 
 
 def item_post_save(sender, **kwargs):
     instance = kwargs['instance']
     instance.get_source(download=True)
+    instance.get_external_id()
     instance.get_hash()
     instance.get_mimetype()
     instance.get_audio_duration()
@@ -607,7 +662,6 @@ class Analysis(Titled, UUID, Dated, Shareable):
     parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:
-        db_table = app + '_analysis'
         verbose_name = _('Analysis')
         verbose_name_plural = _('Analyses')
 
@@ -618,7 +672,6 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
     item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False)
 
     class Meta:
-        db_table = app + '_analysis_tracks'
         verbose_name = _('Analysis Track')
 
 
@@ -628,7 +681,6 @@ class AnnotationTrack(Titled, UUID, Dated, Shareable):
     overlapping = models.BooleanField(default=False)
 
     class Meta:
-        db_table = app + '_annotation_tracks'
         verbose_name = _('Annotation Track')
 
 

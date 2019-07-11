@@ -65,7 +65,7 @@ class FlacEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def version():
-        return "1"
+        return "1.0"
 
     @staticmethod
     @interfacedoc

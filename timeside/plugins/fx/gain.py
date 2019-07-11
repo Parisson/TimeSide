@@ -22,6 +22,11 @@ class Gain(Processor):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.0"
+
+    @staticmethod
+    @interfacedoc
     def name():
         return "Gain effect"
 

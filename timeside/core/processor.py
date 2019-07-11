@@ -30,6 +30,8 @@ import uuid
 import networkx as nx
 import inspect
 import os
+import csv
+import sys
 
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
@@ -296,6 +298,7 @@ def list_processors(interface=IProcessor, prefix=""):
     for p in procs:
         print prefix + "  * %s :" % p.id()
         print prefix + "    \t\t%s" % p.description()
+        print prefix + "    \t\tversion: %s" % p.version() 
 
 
 def list_processors_rst(interface=IProcessor, prefix=""):
@@ -310,8 +313,50 @@ def list_processors_rst(interface=IProcessor, prefix=""):
         list_processors_rst(interface=i, prefix=prefix + " ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * **%s** : %s" % (p.id(), p.description())
+        print prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description())
 
+def list_processors_csv(interface=IProcessor):
+    f = open('list_processors.csv', 'wb')
+    writer = csv.writer(f,delimiter=';')
+    writer.writerow(['id','version','APInterface','ValueType','description','unit','repository'])
+    _list_processors_csv_rec(interface,f)
+    path = os.path.abspath(f.name)
+    f.close()
+    return path
+
+def _list_processors_csv_rec(interface, csv_file):
+    subinterfaces = interface.__subclasses__()
+    for i in subinterfaces:
+       _list_processors_csv_rec(i,csv_file)
+    procs = processors(interface, False)
+    writer = csv.writer(csv_file,delimiter=';')
+    for p in procs:
+        if interface.__name__ == 'IAnalyzer' or interface.__name__ == 'IValueAnalyzer':
+            unit = p.unit()
+        else:
+            unit = ""
+        proc_file_path = os.path.abspath(sys.modules[p.__module__].__file__)[:] #delete c of .pyc at end of file name
+        value_type = str(search_time_mode(open(proc_file_path,"r")))[1:-1]
+        writer.writerow([p.id(),p.version(),interface.__name__,value_type,p.description(),unit,proc_file_path])
+
+def search_time_mode(proc_file):
+    time_modes = []
+    for line in proc_file:
+        for i in range(len(line)-9):
+            if line[i:i+9] == 'time_mode':
+                line_rest = line[i+9:]
+                if 'framewise' in line_rest:
+                    time_modes.append('framewise')
+                elif 'global' in line_rest:
+                    time_modes.append('global')
+                elif 'event' in line_rest:
+                    time_modes.append('event')
+                elif 'segment' in line_rest:
+                    time_modes.append('segment')
+    proc_file.close()
+    return time_modes
+            
+    
 
 class ProcessPipe(object):
 
