@@ -82,6 +82,7 @@ class ItemSerializer(ItemPlayableSerializer):
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
                   'audio_url', 'audio_duration','external_uri',
+                  'external_id',
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
