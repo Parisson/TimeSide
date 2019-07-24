@@ -45,14 +45,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         media_dir = os.path.join('items', 'tests')
         samples_dir = os.path.join(settings.MEDIA_ROOT, media_dir)
+        verbosity = options.get('verbosity')
 
         Selection.objects.get_or_create(title='WASABI')
         selection, c = Selection.objects.get_or_create(title='Tests')
         if c | (selection.items.count() == 0):
-            print "---------------------------"
-            print "-- CREATE BOILERPLATE    --"
-            print "---------------------------"
-            print " -  generate samples"
+            if verbosity:
+                print "---------------------------"
+                print "-- CREATE BOILERPLATE    --"
+                print "---------------------------"
+                print " -  generate samples"
 
             samples = generateSamples(samples_dir=samples_dir)
 
