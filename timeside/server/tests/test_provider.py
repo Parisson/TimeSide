@@ -1,25 +1,14 @@
 #! /usr/bin/env python
 
-from rest_framework.test import APITestCase
-from rest_framework.test import APIClient
-
+from timeside.server.tests.timeside_test_server import TimeSideTestServer
 from rest_framework import status
-from rest_framework.authtoken.models import Token
-
-from django.contrib.auth.models import User
-from django.core.management import call_command
 
 
-class TestProvider(APITestCase):
+class TestProvider(TimeSideTestServer):
     """ test item creation with providers """
 
     def setUp(self):
-        user = User.objects.create_user(username='john',
-                                        password='banana')
-        token = Token.objects.get(user=user)
-        call_command('timeside-create-boilerplate')
-        self.client = APIClient()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+        TimeSideTestServer.setUp(self)
         request_providers = self.client.get('/timeside/api/providers/', format='json')
         for provider in request_providers.data:
             if provider['pid'] == 'youtube':
@@ -27,6 +16,7 @@ class TestProvider(APITestCase):
             if provider['pid'] == 'deezer':
                 self.deezer_uuid = provider['uuid']
         
+       
     def testProviderYoutubeFromURI(self):
         """ test item creation with youtube's MJ 'Beat It' track's URI """
 
