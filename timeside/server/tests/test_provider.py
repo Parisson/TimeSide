@@ -61,7 +61,7 @@ class TestProvider(TimeSideTestServer):
         response = self.client.post('/timeside/api/items/', params, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def tearDown(self)
+    def tearDown(self):
         pass
 
     
