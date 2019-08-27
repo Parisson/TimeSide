@@ -29,6 +29,7 @@ import uuid
 import mimetypes
 import ast
 import time
+import datetime
 import gc
 from shutil import copyfile
 
@@ -355,13 +356,9 @@ class Item(Titled, UUID, Dated, Shareable):
             self.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
             self.save()
 
-        start = time.time()
-
         pipe.run()
 
-        run_time = time.time() - start
-
-        def set_results_from_processor_and_run_time(proc, run_time, preset=None):
+        def set_results_from_processor(proc, preset=None):
             for result_id in proc.results.keys():
                 parameters = proc.results[result_id].parameters
             if preset is None:
@@ -379,7 +376,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
             result, c = Result.objects.get_or_create(preset=preset,
                                                      item=self,
-                                                     run_time=run_time)
+                                                     run_time=proc.run_time)
             if not hasattr(proc, 'external'):
                 # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
@@ -412,20 +409,20 @@ class Item(Titled, UUID, Dated, Shareable):
         for preset, proc in presets.iteritems():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
-                set_results_from_processor_and_run_time(proc, run_time, preset)
+                set_results_from_processor(proc, preset)
 
             elif proc.type == 'grapher':
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self,
-                                                         run_time=run_time)
+                                                         run_time=proc.run_time)
                 image_file = str(result.uuid) + '.png'
                 result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
 
                 # TODO : set as an option
                 proc.watermark('timeside', opacity=.6, margin=(5, 5))
-                start = time.time()
+                start = datetime.datetime.utcnow()
                 proc.render(output=result.file.path)
-                run_time = time.time() - start
+                run_time = datetime.datetime.utcnow() - start
                 result.run_time_setter(run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
@@ -433,11 +430,11 @@ class Item(Titled, UUID, Dated, Shareable):
 
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
-                    set_results_from_processor_and_run_time(analyzer, run_time)
+                    set_results_from_processor(analyzer)
 
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=self)
-                result.run_time_setter(run_time)
+                result.run_time_setter(proc.run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)                
 
@@ -562,7 +559,7 @@ class Result(UUID, Dated, Shareable):
     file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
     mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-    run_time = models.FloatField(_('Run time'), blank=True, null=True, default=float('NaN'))
+    run_time = models.DurationField(_('Run time'), blank=True, null=True) # max_value=None, min_value=None)
     # lock = models.BooleanField(default=False)
 
     class Meta:
