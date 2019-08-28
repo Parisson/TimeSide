@@ -3,6 +3,23 @@ import requests
 from coreapi import Client
 from coreapi.auth import TokenAuthentication
 from numpy import mean
+from rest_framework.test import APITestCase
+from timeside.server.models import *
+
+
+class WorkflowWASABITestCase(TestCase):
+    def setUp(self):
+        url = 'http://localhost:9000/timeside/api-token-auth/'
+        auth={'username':'admin', 'password':'admin'}
+        r = requests.post(url, data=auth)
+        token=r.json()['token']
+
+    def test_worflow(self):
+        pass
+
+    def tearDown(self):
+        pass
+
 
 # """ http post http://localhost:9000/timeside/api-token-auth/ username=admin password=admin """
 url = 'http://localhost:9000/timeside/api-token-auth/'
@@ -30,15 +47,15 @@ selection_uuid = WASABI_selection['uuid']
 
 keys = ['api', 'providers', 'list']
 for prv in client.action(schema,keys):
-    if prv['pid'] == 'deezer':
-        deezer_provider = prv
+    if prv['pid'] == 'youtube':
+        youtube_provider = prv
 
-provider_uri = '/timeside/api/providers/' + deezer_provider['uuid'] + '/'
+provider_uri = '/timeside/api/providers/' + youtube_provider['uuid'] + '/'
 
-#creation of an Item for Michael Jackson's Thriller track using Deezer's URL
+#creation of an Item for Michael Jackson's Thriller track using YouTube's URL
 keys = ['api', 'items', 'create']
-external_deezer_uri = 'https://www.deezer.com/track/4315684'
-params = {'title':'take me out','description':'Music from franz ferdinand','external_uri': external_deezer_uri,'provider': provider_uri}
+external_youtube_uri = 'https://www.youtube.com/watch?v=sOnqjkJTMaA'
+params = {'title':'Thriller','description':'Music from Michael Jackson','external_uri': external_youtube_uri,'provider': provider_uri}
 item = client.action(schema,keys,params)
 
 #adding this track to the WASABI selection

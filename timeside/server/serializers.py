@@ -82,6 +82,7 @@ class ItemSerializer(ItemPlayableSerializer):
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
                   'audio_url', 'audio_duration','external_uri',
+                  'external_id',
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
@@ -448,7 +449,7 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Result
-        fields = ('uuid', 'url', 'item', 'preset', 'status', 'hdf5', 'file')
+        fields = ('uuid', 'url', 'item', 'preset', 'status', 'hdf5', 'file', 'run_time')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},

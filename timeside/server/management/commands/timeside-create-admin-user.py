@@ -11,9 +11,9 @@ class Command(BaseCommand):
     username = 'admin'
     password = 'admin'
     email = 'root@example.com'
-    token = 'Dummy_Token'
-    
+
     def handle(self, *args, **options):
+        verbosity = options.get('verbosity')
         admin = User.objects.filter(username=self.username)
         if not admin:
             user = User.objects.create_user(username=self.username,
@@ -23,6 +23,7 @@ class Command(BaseCommand):
             user.is_superuser = True
             user.is_staff = True
             user.save()
-            print 'User "%s" created"' % self.username
-            Token.objects.create(user=user, key=self.token)
-            print 'Token created for User "%s"' % self.username
+            if verbosity:
+                print 'User "%s" created"' % self.username
+                if Token.objects.get(user=user):
+                    print 'Token created for User "%s"' % self.username
