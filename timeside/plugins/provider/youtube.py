@@ -29,7 +29,7 @@ class YouTube(Provider):
         ydl_opts = {
                     'format': 'bestaudio',
                     'verbose': True,
-                    'cachedir': False,
+                    'cachedir': '/srv/cache/',
                     'outtmpl': unicode(path + '%(title)s-%(id)s.%(ext)s'),
                     'postprocessors': [{'key':'FFmpegExtractAudio'}],
                     'restrictfilenames':True,
