@@ -28,7 +28,7 @@ class YouTube(Provider):
     def get_source(self, url, path, download=False):
         ydl_opts = {
                     'format': 'bestaudio',
-                    'verbose': True,
+                    'verbose': False,
                     'cachedir': False,
                     'outtmpl': unicode(path + '%(title)s-%(id)s.%(ext)s'),
                     'postprocessors': [{'key':'FFmpegExtractAudio'}],

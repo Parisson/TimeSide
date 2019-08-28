@@ -25,6 +25,7 @@ from .exceptions import Error, PIDError, ApiError
 from .tools.parameters import HasParam
 
 import re
+import datetime
 import numpy
 import uuid
 import networkx as nx
@@ -106,6 +107,7 @@ class Processor(Component, HasParam):
         self.input_samplerate = 0
         self.input_blocksize = 0
         self.input_stepsize = 0
+        self.run_time = None
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -531,9 +533,12 @@ class ProcessPipe(object):
                 source.stop()
 
             signal.signal(signal.SIGINT, signal_handler)
-
+        
+        for item in items:
+            item.start_time = datetime.datetime.utcnow()
+    
         while not eod:
-            frames, eod = source.process()
+            frames, eod = source.process()        
             for item in items:
                 frames, eod = item.process(frames, eod)
 
@@ -550,6 +555,8 @@ class ProcessPipe(object):
         # Release processors
         for item in items:
             item.release()
+            item.run_time = datetime.datetime.utcnow() - item.start_time
+
 
         self._is_running = False
 

@@ -2,6 +2,7 @@
 
 from unit_timeside import unittest, TestRunner
 import timeside
+import os
 verbose = 0
 
 class TestListCoreProcessors(unittest.TestCase):
@@ -26,6 +27,19 @@ class TestListCoreProcessors(unittest.TestCase):
         "has some graphers"
         procs = timeside.core.processor.processors(timeside.core.api.IGrapher)
         self.assertNotEquals(len(procs), 0)
+
+    def testListProcessorsCSV(self):
+        "list processors in .csv file"
+        fpath = timeside.core.processor.list_processors_csv()
+        path = os.getcwd() + '/list_processors.csv'
+        self.assertEqual(fpath, path)
+        self.assertTrue(os.path.isfile(fpath))
+        
+    def tearDown(self):
+        path = os.getcwd() + '/list_processors.csv'
+        if os.path.isfile(path):
+            os.remove(path)
+
 
 
 if __name__ == '__main__':
