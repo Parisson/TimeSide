@@ -413,8 +413,8 @@ class Item(Titled, UUID, Dated, Shareable):
 
             elif proc.type == 'grapher':
                 result, c = Result.objects.get_or_create(preset=preset,
-                                                         item=self,
-                                                         run_time=proc.run_time)
+                                                         item=self)
+                result.run_time = proc.run_time
                 image_file = str(result.uuid) + '.png'
                 result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
 

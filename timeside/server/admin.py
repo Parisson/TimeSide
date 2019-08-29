@@ -41,7 +41,7 @@ class ResultAdmin(admin.ModelAdmin):
     model = Result
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'status', 'run_time']
-    list_filter = ['date_modified', 'status', 'item']
+    list_filter = ['date_modified', 'status', 'item', 'preset']
     search_fields = ['uuid']
 
 
