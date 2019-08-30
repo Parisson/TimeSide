@@ -481,7 +481,7 @@ class Processor(UUID):
         verbose_name = _('processor')
 
     def __str__(self):
-        return '_'.join([self.pid, str(self.uuid)])
+        return '_'.join([self.pid, self.version])
 
     def save(self, **kwargs):
         if not self.version:
@@ -533,7 +533,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.uuid)])
+        return '_'.join([unicode(self.processor), str(self.uuid)[:4]])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
@@ -609,7 +609,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)[:4]])
 
     def status_setter(self, status):
         self.status = status
