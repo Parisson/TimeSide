@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 var:
   volumes:
      - ./bin:/srv/bin:cached
@@ -15,9 +17,6 @@ db:
   volumes_from:
     - var
 
-broker:
-  image: redis:5
-
 app:
   volumes:
     - ./app:/srv/app:cached
@@ -30,6 +29,7 @@ app:
 
 
 worker:
+  volumes:
     - /etc/._ifpk_2
   volumes_from:
     - var
