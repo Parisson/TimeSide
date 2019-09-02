@@ -24,20 +24,20 @@
 var:
   image: debian:jessie
   volumes:
-     - ./bin:/srv/bin:cached
-     - /Users/grandry/archive/WASABI/media:/srv/media:cached
-     - ./var/backup:/srv/backup:cached
-     - ./var/static:/srv/static:cached
-     - ./var/log/nginx:/var/log/nginx:cached
-     - ./var/log/uwsgi:/var/log/uwsgi:cached
+     - ./bin:/srv/bin
+     - /archive/WASABI/media:/srv/media
+     - ./var/backup:/srv/backup
+     - ./var/static:/srv/static
+     - ./var/log/nginx:/var/log/nginx
+     - ./var/log/uwsgi:/var/log/uwsgi
      - /srv/bower
-     - ./var/cache:/srv/cache:cached
+     - ./var/cache:/srv/cache
   command: "true"
 
 db:
   image: postgres:9
   volumes:
-    - ./var/lib/postgresql/data:/var/lib/postgresql/data:cached
+    - ./var/lib/postgresql/data:/var/lib/postgresql/data
   volumes_from:
     - var
   env_file:
@@ -50,11 +50,11 @@ app:
   image: parisson/timeside:latest-dev
   command: /bin/bash /srv/app/bin/app.sh
   volumes:
-    - ./app:/srv/app:cached
-    - ./timeside:/srv/lib/timeside/timeside:cached
-    - ./timeside:/srv/src/timeside/timeside:cached
-    - ./lib/plugins:/srv/lib/plugins:cached
-    - ./etc/apt/sources.list:/etc/apt/sources.list:cached
+    - ./app:/srv/app
+    - ./timeside:/srv/lib/timeside/timeside
+    - ./timeside:/srv/src/timeside/timeside
+    - ./lib/plugins:/srv/lib/plugins
+    - ./etc/apt/sources.list:/etc/apt/sources.list
   volumes_from:
     - var
   env_file:
