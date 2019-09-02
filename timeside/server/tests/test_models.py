@@ -9,8 +9,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from timeside.core.tools.test_samples import generateSamples
 from timeside.server.models import Item
 
-from django.core.files import File
-
 import tempfile
 import shutil
 
