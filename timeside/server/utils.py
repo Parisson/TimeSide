@@ -2,6 +2,7 @@
 import os
 
 import timeside.core
+import json
 from timeside.core.api import IEncoder
 from timeside.server.models import Processor, Preset, Result, Task
 
@@ -15,7 +16,16 @@ def get_or_run_proc_result(pid, item, parameters=None):
     # Get or Create Processor
     processor, created = Processor.objects.get_or_create(pid=pid)
     # Get or Create Preset with processor
-    preset, created = Preset.objects.get_or_create(processor=processor)
+    presets = Preset.objects.filter(processor=processor,
+                                    parameters=json.dumps(parameters))
+    if presets:
+        preset = presets[0]
+    else:
+        preset = Preset(processor=processor,
+                        parameters=json.dumps(parameters))
+        preset.save()
+                
+    # preset, created = Preset.objects.get_or_create(processor=processor, parameters=parameters)
     # Get Result with preset and item
     try:
         result = Result.objects.get(item=item, preset=preset)
