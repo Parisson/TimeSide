@@ -554,9 +554,8 @@ class ProcessPipe(object):
         source.release()
         # Release processors
         for item in items:
-            item.release()
             item.run_time = datetime.datetime.utcnow() - item.start_time
-
+            item.release()
 
         self._is_running = False
 

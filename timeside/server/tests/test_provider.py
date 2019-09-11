@@ -3,12 +3,16 @@
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
 from rest_framework import status
 
+from django.conf import settings
+
+import os
 
 class TestProvider(TimeSideTestServer):
     """ test item creation with providers """
 
     def setUp(self):
         TimeSideTestServer.setUp(self)
+        # self.items_url = reverse('')
         request_providers = self.client.get('/timeside/api/providers/', format='json')
         for provider in request_providers.data:
             if provider['pid'] == 'youtube':
@@ -27,6 +31,7 @@ class TestProvider(TimeSideTestServer):
                 }
         response = self.client.post('/timeside/api/items/', params, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.data = response.data
 
     def testProviderYoutubeFromID(self):
         """ test item creation with youtube's MJ 'Beat It' track's ID """
@@ -38,6 +43,7 @@ class TestProvider(TimeSideTestServer):
                 }
         response = self.client.post('/timeside/api/items/', params, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.data = response.data
 
     def testProviderDeezerFromURI(self):
         """ test item creation with Beatles' deezer's track's URI """
@@ -49,6 +55,7 @@ class TestProvider(TimeSideTestServer):
                 }
         response = self.client.post('/timeside/api/items/', params, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.data = response.data
 
     def testProviderDeezerFromID(self):
         """ test item creation with Beatles' deezer's track's ID """
@@ -60,9 +67,8 @@ class TestProvider(TimeSideTestServer):
                 }
         response = self.client.post('/timeside/api/items/', params, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.data = response.data
 
     def tearDown(self):
-        pass
-
-    
-
+        if self.data['source_file']:
+            os.remove(self.data['source_file'].replace('http://testserver/media/',settings.MEDIA_ROOT))

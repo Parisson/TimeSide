@@ -325,15 +325,20 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def run(self, experience):
         result_path = self.get_results_path()
+        # get audio source
         uri = self.get_uri()
 
+        # decode audio source
         decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
                                                             sha1=self.sha1)
         presets = {}
         pipe = decoder
+
+        
         for preset in experience.presets.all():
             proc = preset.processor.get_processor()
             if proc.type == 'encoder':
+                print '1 ENTERING RUN FOR :' + proc.id()
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
                 media_file = '.'.join([str(result.uuid),
@@ -343,7 +348,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
             elif proc.type in ['analyzer', 'grapher']:
-                print json.loads(preset.parameters)
+                print '1 ENTERING RUN FOR :' + proc.id() + ' WITH ' + str(json.loads(preset.parameters))
                 proc = proc(**json.loads(preset.parameters))
 
             presets[preset] = proc
@@ -375,8 +380,10 @@ class Item(Titled, UUID, Dated, Shareable):
                 processor = preset.processor
 
             result, c = Result.objects.get_or_create(preset=preset,
-                                                     item=self,
-                                                     run_time=proc.run_time)
+                                                     item=self)
+
+            result.run_time = proc.run_time
+
             if not hasattr(proc, 'external'):
                 # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
@@ -413,8 +420,8 @@ class Item(Titled, UUID, Dated, Shareable):
 
             elif proc.type == 'grapher':
                 result, c = Result.objects.get_or_create(preset=preset,
-                                                         item=self,
-                                                         run_time=proc.run_time)
+                                                         item=self)
+                result.run_time_setter(proc.run_time)
                 image_file = str(result.uuid) + '.png'
                 result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
 
@@ -434,7 +441,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=self)
-                result.run_time_setter(proc.run_time)
+                #result.run_time_setter(proc.run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)                
 
@@ -481,7 +488,7 @@ class Processor(UUID):
         verbose_name = _('processor')
 
     def __str__(self):
-        return '_'.join([self.pid, str(self.uuid)])
+        return '_'.join([self.pid, 'v' + self.version])
 
     def save(self, **kwargs):
         if not self.version:
@@ -533,7 +540,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.uuid)])
+        return '_'.join([unicode(self.processor), str(self.uuid)[:4]])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %d" % self.id
@@ -609,7 +616,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)])
+        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)[:4]])
 
     def status_setter(self, status):
         self.status = status

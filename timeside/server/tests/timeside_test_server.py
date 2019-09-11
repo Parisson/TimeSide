@@ -10,7 +10,7 @@ from django.core.management import call_command
 
 
 class TimeSideTestServer(APITestCase):
-    """ test """
+    """ Test class dealing with authentication and boilerplate """
 
     def setUp(self):
         call_command('timeside-create-admin-user', verbosity=0)
