@@ -381,7 +381,7 @@ class ResultGrapherView(View):
     model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = models.Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(uuid=kwargs['uuid'])
         return FileResponse(open(result.file.path, 'rb'),
                             content_type='image/png')
 
@@ -391,7 +391,7 @@ class ResultEncoderView(View):
     model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = models.Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(uuid=kwargs['uuid'])
         return FileResponse(open(result.file.path, 'rb'),
                             content_type=result.mime_type)
 
