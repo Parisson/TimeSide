@@ -169,7 +169,7 @@ class ItemWaveformSerializer(ItemSerializer):
 
         sample_values = np.round(time_values * samplerate).astype('int')
 
-        for i in xrange(nb_pixels):
+        for i in range(nb_pixels):
             values = wav_res['data_object']['value'][
                 sample_values[i]:sample_values[i + 1]]
             min_values[i] = np.min(values)
