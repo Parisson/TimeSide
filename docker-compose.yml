@@ -30,6 +30,7 @@ var:
      - ./var/static:/srv/static
      - ./var/log/nginx:/var/log/nginx
      - ./var/log/uwsgi:/var/log/uwsgi
+     - ./var/log/celery:/var/log/celery
      - /srv/bower
      - ./var/cache:/srv/cache
   command: "true"
