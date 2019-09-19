@@ -232,7 +232,7 @@ class Item(Titled, UUID, Dated, Shareable):
         verbose_name = _('item')
 
     def __unicode__(self):
-        return unicode(self.title)
+        return '_'.join([unicode(self.title), str(self.uuid)[:4]])
 
     def results(self):
         return [result for result in self.results.all()]
@@ -441,7 +441,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=self)
-                #result.run_time_setter(proc.run_time)
+                result.run_time_setter(proc.run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)                
 
