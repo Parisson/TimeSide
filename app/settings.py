@@ -184,12 +184,38 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'celery_logger': {
+            'level': 'DEBUG',
+            'filters': None,
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/celery/celery.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 2,
+        },
+        'celery_task_logger': {
+            'level': 'DEBUG',
+            'filters': None,
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/var/log/celery/celery_tasks.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 2,
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['celery_logger'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'timeside.server.tasks': {
+            'handlers': ['celery_task_logger'],
+            'level': 'DEBUG',
             'propagate': True,
         },
     }

@@ -11,7 +11,9 @@ from .models import Item, Selection, Preset, Experience, Task
 from .models import _DONE
 
 from celery.task import chord
+from celery.utils.log import get_task_logger
 
+logger = get_task_logger(__name__)
 
 @shared_task
 def task_run(task_id):
