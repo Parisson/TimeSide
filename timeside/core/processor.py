@@ -287,40 +287,40 @@ def get_processor(processor_id):
 
 
 def list_processors(interface=IProcessor, prefix=""):
-    print prefix + interface.__name__
+    print(prefix + interface.__name__)
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print prefix + underline_char * len(interface.__name__)
+    print(prefix + underline_char * len(interface.__name__))
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors(interface=i, prefix=prefix + "  ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * %s :" % p.id()
-        print prefix + "    \t\t%s" % p.description()
-        print prefix + "    \t\tversion: %s" % p.version() 
+        print(prefix + "  * %s :" % p.id())
+        print(prefix + "    \t\t%s" % p.description())
+        print(prefix + "    \t\tversion: %s" % p.version())
 
 
 def list_processors_rst(interface=IProcessor, prefix=""):
-    print '\n' + interface.__name__
+    print('\n' + interface.__name__)
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print underline_char * len(interface.__name__) + '\n'
+    print(underline_char * len(interface.__name__) + '\n')
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors_rst(interface=i, prefix=prefix + " ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description())
+        print(prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description()))
 
 def list_processors_csv(interface=IProcessor):
     f = open('list_processors.csv', 'wb')
     writer = csv.writer(f,delimiter=';')
-    writer.writerow(['id','version','APInterface','ValueType','description','unit','repository'])
+    writer.writerow(['id','version','APInterface','ValueType','description','unit','parent','repository'])
     _list_processors_csv_rec(interface,f)
     path = os.path.abspath(f.name)
     f.close()
@@ -337,9 +337,15 @@ def _list_processors_csv_rec(interface, csv_file):
             unit = p.unit()
         else:
             unit = ""
+        try:
+            print(p.parents)
+        except:
+            parents = ''
+
+        
         proc_file_path = os.path.abspath(sys.modules[p.__module__].__file__)[:] #delete c of .pyc at end of file name
         value_type = str(search_time_mode(open(proc_file_path,"r")))[1:-1]
-        writer.writerow([p.id(),p.version(),interface.__name__,value_type,p.description(),unit,proc_file_path])
+        writer.writerow([p.id(),p.version(),interface.__name__,value_type,p.description(),unit,parents,proc_file_path])
 
 def search_time_mode(proc_file):
     time_modes = []
@@ -554,8 +560,8 @@ class ProcessPipe(object):
         source.release()
         # Release processors
         for item in items:
-            item.run_time = datetime.datetime.utcnow() - item.start_time
             item.release()
+            item.run_time = datetime.datetime.utcnow() - item.start_time
 
         self._is_running = False
 
