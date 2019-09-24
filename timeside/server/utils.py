@@ -11,7 +11,7 @@ TS_ENCODERS_EXT = {encoder.file_extension(): encoder.id()
                    for encoder in TS_ENCODERS
                    if encoder.file_extension()}
 
-def get_or_run_proc_result(pid, item, parameters={}):
+def get_or_run_proc_result(pid, item, parameters='{}'):
 
     # Get or Create Processor
     processor, c = Processor.objects.get_or_create(pid=pid)
