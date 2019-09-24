@@ -538,6 +538,7 @@ class Preset(UUID, Dated, Shareable):
 
     processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
+    # parameters = models.TextField(_('Parameters'), blank=False, default='{}', null=False)
     # TODO : turn this filed into a JSON Field
     # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration
 
