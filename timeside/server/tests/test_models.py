@@ -79,7 +79,21 @@ class ItemTests(TimeSideTestServer):
 
 # class ExperienceTests(APITestCase):
 
-# class TaskTests(APITestCase):
+
+class TaskTests(TimeSideTestServer):
+
+    def setUp(self):
+        TimeSideTestServer.setUp(self)
+
+        # Add presets duplicated from those from create-boilerplate
+        proc_list_url = reverse('processor-list')
+        response = self.client.get(proc_list_url, format='json')
+        
+
+    def test_task(self):
+        pass
+
+
 
 # class ProviderTests(APITestCase):
 
