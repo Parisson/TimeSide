@@ -88,7 +88,7 @@ class Command(BaseCommand):
                         print(preset)
                     presets.append(preset)
                 except Preset.MultipleObjectsReturned:
-                    print Preset.objects.filter(processor=processor, parameters='{}')
+                    print(Preset.objects.filter(processor=processor, parameters='{}'))
 
         providers = timeside.core.provider.providers(timeside.core.api.IProvider)
 
