@@ -4,6 +4,7 @@ var:
   volumes:
      - ./bin:/srv/bin:cached
      - /Users/grandry/archive/WASABI/media:/srv/media:cached
+     - /Users/grandry/archive/WASABI/media/results_cpoy:/srv/media/results:cached
      - ./var/backup:/srv/backup:cached
      - ./var/static:/srv/static:cached
      - ./var/log/nginx:/var/log/nginx:cached
@@ -26,6 +27,8 @@ app:
     - ./etc/apt/sources.list:/etc/apt/sources.list:cached
   volumes_from:
     - var
+  ports:
+    - 9000:8000
 
 
 worker:
