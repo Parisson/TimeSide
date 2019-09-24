@@ -12,7 +12,8 @@ import sys
 sys.dont_write_bytecode = True
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
+    ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
 )
 
 MANAGERS = ADMINS
@@ -182,7 +183,7 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
     },
     'loggers': {
         'django.request': {
@@ -232,6 +233,9 @@ BOWER_INSTALLED_APPS = (
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+X_FRAME_OPTIONS = 'ALLOWALL'
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
 
 # CORS_ORIGIN_WHITELIST = (
 #     'localhost:9000'

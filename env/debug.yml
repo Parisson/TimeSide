@@ -32,7 +32,7 @@ app:
     - ./etc/apt/sources.list:/etc/apt/sources.list
   command: /bin/bash bin/app.sh --runserver
   ports:
-    - 9000:8000
+    - 9030:8000
 
 worker:
   env_file:
