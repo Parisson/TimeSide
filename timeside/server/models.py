@@ -247,7 +247,7 @@ class Item(Titled, UUID, Dated, Shareable):
         verbose_name = _('item')
 
     def __unicode__(self):
-        return unicode(self.title)
+        return '_'.join([unicode(self.title), str(self.uuid)[:4]])
 
     def results(self):
         return [result for result in self.results.all()]
