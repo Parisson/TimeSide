@@ -1,3 +1,3 @@
 [submodule "bin/install"]
 	path = bin/install
-	url = https:/github.com/yomguy/docker-composition-installer.git
+	url = https://github.com/yomguy/docker-composition-installer.git
