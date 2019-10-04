@@ -97,7 +97,7 @@ dependencies:
   - libopus=1.2.1=hb9ed12e_0
   - libpng=1.6.34=hb9fc6fc_0
   - libprotobuf=3.5.2=h6f1eeef_0
-  - librosa=0.6.3=py_0
+  - librosa=0.7.0=py_0
   - libsndfile=1.0.28=hfc679d8_0
   - libsodium=1.0.16=h1bed415_0
   - libstdcxx-ng=7.2.0=hdf63c60_3
