@@ -17,7 +17,6 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def task_run(task_id):
-    print(task_id)
     task = Task.objects.get(uuid=task_id)
     results = []
     if task.selection:
