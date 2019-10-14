@@ -348,7 +348,15 @@ class Item(Titled, UUID, Dated, Shareable):
                                                             sha1=self.sha1)
         presets = {}
         pipe = decoder
+        parent_analyzers = []
 
+        # search for parent analyzer presets not to add as duplicates in the pipe
+        for preset in experience.presets.all():
+            proc = preset.processor.get_processor()
+            if proc.type in ['analyzer', 'grapher']:
+                proc = proc(**json.loads(preset.parameters))
+                if 'analyzer' in proc.parents:
+                    parent_analyzers.append(proc.parents['analyzer'])
         
         for preset in experience.presets.all():
             # get core audio processor corresponding to preset.processor.pid
@@ -367,8 +375,9 @@ class Item(Titled, UUID, Dated, Shareable):
                 # instantiate a core processor of an analyzer of a grapher
                 proc = proc(**json.loads(preset.parameters))
 
-            presets[preset] = proc
-            pipe |= proc
+            if proc not in parent_analyzers:
+                presets[preset] = proc
+                pipe |= proc
 
         # item.lock_setter(True)
 
