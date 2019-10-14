@@ -8,6 +8,7 @@ wsgi=$app'/wsgi.py'
 static='/srv/static/'
 media='/srv/media/'
 log='/var/log/uwsgi/app.log'
+worker_log='/var/log/celery/worker.log'
 
 # uwsgi params
 port=8000
@@ -28,7 +29,7 @@ gid='www-data'
 #pip install youtube-dl xmljson coreapi psycopg2-binary
 #pip install django-filter==1.1.0 djangorestframework==3.8 django==1.10 librosa==0.6.3
 #npm install -g bower
-pip install librosa==0.6.3
+pip install librosa==0.7.0
 
 # pip install django-inspect
 

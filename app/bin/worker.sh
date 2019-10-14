@@ -8,5 +8,4 @@ source "$SCRIPT_DIR/app_base.sh"
 # see http://celery.readthedocs.org/en/latest/userguide/workers.html#autoreloading
 
 # python $manage celery worker -A worker --uid $uid --gid $gid
-python $manage celery worker -A worker --logfile=/var/log/celery/celery.log
-
+python $manage celery worker -A worker --logfile=$worker_log
