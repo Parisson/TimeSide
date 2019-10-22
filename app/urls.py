@@ -29,4 +29,4 @@ urlpatterns = [
         name='timeside-login'),
     url(r'^accounts/logout/$', auth_views.logout, name='timeside-logout'),
     #url('^', include('django.contrib.auth.urls'))
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

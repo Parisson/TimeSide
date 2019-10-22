@@ -25,11 +25,14 @@ from .exceptions import Error, PIDError, ApiError
 from .tools.parameters import HasParam
 
 import re
+import datetime
 import numpy
 import uuid
 import networkx as nx
 import inspect
 import os
+import csv
+import sys
 
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
@@ -104,6 +107,7 @@ class Processor(Component, HasParam):
         self.input_samplerate = 0
         self.input_blocksize = 0
         self.input_stepsize = 0
+        self.run_time = None
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
@@ -283,35 +287,84 @@ def get_processor(processor_id):
 
 
 def list_processors(interface=IProcessor, prefix=""):
-    print prefix + interface.__name__
+    print(prefix + interface.__name__)
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print prefix + underline_char * len(interface.__name__)
+    print(prefix + underline_char * len(interface.__name__))
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors(interface=i, prefix=prefix + "  ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * %s :" % p.id()
-        print prefix + "    \t\t%s" % p.description()
+        print(prefix + "  * %s :" % p.id())
+        print(prefix + "    \t\t%s" % p.description())
+        print(prefix + "    \t\tversion: %s" % p.version())
 
 
 def list_processors_rst(interface=IProcessor, prefix=""):
-    print '\n' + interface.__name__
+    print('\n' + interface.__name__)
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print underline_char * len(interface.__name__) + '\n'
+    print(underline_char * len(interface.__name__) + '\n')
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors_rst(interface=i, prefix=prefix + " ")
     procs = processors(interface, False)
     for p in procs:
-        print prefix + "  * **%s** : %s" % (p.id(), p.description())
+        print(prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description()))
 
+def list_processors_csv(interface=IProcessor):
+    f = open('list_processors.csv', 'wb')
+    writer = csv.writer(f,delimiter=';')
+    writer.writerow(['id','version','APInterface','ValueType','description','unit','parent','repository'])
+    _list_processors_csv_rec(interface,f)
+    path = os.path.abspath(f.name)
+    f.close()
+    return path
+
+def _list_processors_csv_rec(interface, csv_file):
+    subinterfaces = interface.__subclasses__()
+    for i in subinterfaces:
+       _list_processors_csv_rec(i,csv_file)
+    procs = processors(interface, False)
+    writer = csv.writer(csv_file,delimiter=';')
+    for p in procs:
+        if interface.__name__ == 'IAnalyzer' or interface.__name__ == 'IValueAnalyzer':
+            unit = p.unit()
+        else:
+            unit = ""
+        try:
+            print(p.parents)
+        except:
+            parents = ''
+
+        
+        proc_file_path = os.path.abspath(sys.modules[p.__module__].__file__)[:] #delete c of .pyc at end of file name
+        value_type = str(search_time_mode(open(proc_file_path,"r")))[1:-1]
+        writer.writerow([p.id(),p.version(),interface.__name__,value_type,p.description(),unit,parents,proc_file_path])
+
+def search_time_mode(proc_file):
+    time_modes = []
+    for line in proc_file:
+        for i in range(len(line)-9):
+            if line[i:i+9] == 'time_mode':
+                line_rest = line[i+9:]
+                if 'framewise' in line_rest:
+                    time_modes.append('framewise')
+                elif 'global' in line_rest:
+                    time_modes.append('global')
+                elif 'event' in line_rest:
+                    time_modes.append('event')
+                elif 'segment' in line_rest:
+                    time_modes.append('segment')
+    proc_file.close()
+    return time_modes
+            
+    
 
 class ProcessPipe(object):
 
@@ -486,9 +539,12 @@ class ProcessPipe(object):
                 source.stop()
 
             signal.signal(signal.SIGINT, signal_handler)
-
+        
+        for item in items:
+            item.start_time = datetime.datetime.utcnow()
+    
         while not eod:
-            frames, eod = source.process()
+            frames, eod = source.process()        
             for item in items:
                 frames, eod = item.process(frames, eod)
 
@@ -505,6 +561,7 @@ class ProcessPipe(object):
         # Release processors
         for item in items:
             item.release()
+            item.run_time = datetime.datetime.utcnow() - item.start_time
 
         self._is_running = False
 

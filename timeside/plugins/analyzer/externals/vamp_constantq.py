@@ -83,6 +83,11 @@ class VampConstantQ(VampAnalyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.1.0"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 
@@ -107,4 +112,5 @@ DisplayCQT = DisplayAnalyzer.create(
     result_id='vamp_constantq',
     grapher_id='grapher_vamp_cqt',
     grapher_name='Constant Q Transform',
+    grapher_version='1.0',
     staging=False)

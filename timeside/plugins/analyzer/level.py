@@ -73,6 +73,11 @@ class Level(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.0"    
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return "dBFS"
 

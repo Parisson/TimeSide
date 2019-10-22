@@ -8,7 +8,7 @@ from django.core.exceptions import MultipleObjectsReturned
 import os
 import timeside.core
 from timeside.server.models import Selection, Item
-from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor
+from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor, Result
 from timeside.server.models import _PENDING, _DONE
 from timeside.core.tools.test_samples import generateSamples
 import simplejson as json
@@ -26,17 +26,35 @@ class Command(BaseCommand):
         for result in Result.objects.all():
             result.delete()
 
+    def experience_cleanup(self):
+        for experience in Experience.objects.all():
+            experience.delete()
+
+    def preset_cleanup(self):
+        for preset in Preset.objects.all():
+            preset.delete()
+
+    def task_cleanup(self):
+        for task in Task.objects.all():
+            task.delete()
+    
+    def analysis_cleanup(self):
+        for analysis in Analysis.objects.all():
+            analysis.delete()
+
     def handle(self, *args, **options):
         media_dir = os.path.join('items', 'tests')
         samples_dir = os.path.join(settings.MEDIA_ROOT, media_dir)
+        verbosity = options.get('verbosity')
 
         Selection.objects.get_or_create(title='WASABI')
         selection, c = Selection.objects.get_or_create(title='Tests')
         if c | (selection.items.count() == 0):
-            print "---------------------------"
-            print "-- CREATE BOILERPLATE    --"
-            print "---------------------------"
-            print " -  generate samples"
+            if verbosity:
+                print "---------------------------"
+                print "-- CREATE BOILERPLATE    --"
+                print "---------------------------"
+                print " -  generate samples"
 
             samples = generateSamples(samples_dir=samples_dir)
 
@@ -54,16 +72,20 @@ class Command(BaseCommand):
         presets = []
         blacklist = ['decoder', 'live', 'gain', 'vamp']
         processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
-
+        
+        if verbosity:
+            print('created presets :')
         for proc in processors:
             trig = True
             for black in blacklist:
                 if black in proc.id():
                     trig = False
             if trig:
-                processor, c = Processor.objects.get_or_create(pid=proc.id())
+                processor, c = Processor.objects.get_or_create(pid=proc.id())#,version=proc.version())
                 try:
                     preset, c = Preset.objects.get_or_create(processor=processor, parameters='{}')
+                    if verbosity and c:
+                        print(preset)
                     presets.append(preset)
                 except Preset.MultipleObjectsReturned:
                     print Preset.objects.filter(processor=processor, parameters='{}')
@@ -79,11 +101,15 @@ class Command(BaseCommand):
                 experience.presets.add(preset)
 
         task, c = Task.objects.get_or_create(experience=experience, selection=selection)
+        if verbosity:
+            print(task)
         if c | task.status != _DONE:
             task.status = _PENDING
             task.save()
 
         # ---- Graphers -----
+        if verbosity:
+            print('created grapher presets :')
         for grapher in timeside.core.processor.processors(timeside.core.api.IGrapher):
             if hasattr(grapher, '_from_analyzer') and grapher._from_analyzer and not(grapher._staging):
 
@@ -91,9 +117,11 @@ class Command(BaseCommand):
                 try:
                     preset, c = Preset.objects.get_or_create(processor=processor,
                                                              parameters=json.dumps(grapher._analyzer_parameters))
+                    if verbosity and c:
+                        print(preset)
                 except MultipleObjectsReturned:
-                    print Preset.objects.get(processor=processor,
-                                             parameters=grapher._analyzer_parameters)
+                    print(Preset.objects.get(processor=processor,
+                                             parameters=json.dumps(grapher._analyzer_parameters)))
 
                 sub_processor, c = SubProcessor.objects.get_or_create(sub_processor_id=grapher._result_id,
                                                                       processor=processor)

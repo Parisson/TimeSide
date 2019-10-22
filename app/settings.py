@@ -12,7 +12,8 @@ import sys
 sys.dont_write_bytecode = True
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
+    ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
 )
 
 MANAGERS = ADMINS
@@ -23,12 +24,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': env('ENGINE'),  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'USER': env('MYSQL_USER'),      # Not used with sqlite3.
-        'PASSWORD': env('MYSQL_PASSWORD'),  # Not used with sqlite3.
-        'NAME': env('MYSQL_DATABASE'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'USER': 'postgres',      # Not used with sqlite3.
+        'PASSWORD': env('POSTGRES_PASSWORD'),  # Not used with sqlite3.
+        'NAME': 'postgres',
         'HOST': 'db',      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',      # Set to empty string for default. Not used with sqlite3.
+        'PORT': 5432,      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -182,7 +183,7 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
     },
     'loggers': {
         'django.request': {
@@ -233,6 +234,9 @@ BOWER_INSTALLED_APPS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
+X_FRAME_OPTIONS = 'ALLOWALL'
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
 # CORS_ORIGIN_WHITELIST = (
 #     'localhost:9000'
 # )
@@ -249,3 +253,6 @@ if DEBUG:
 
 
 LOGIN_REDIRECT_URL = '/'
+
+EMAIL_HOST = '134.158.33.163'
+

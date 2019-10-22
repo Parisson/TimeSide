@@ -73,6 +73,11 @@ class AubioMfcc(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "0.4.6"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 

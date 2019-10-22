@@ -57,6 +57,11 @@ class Waveform(Analyzer):
 
     @staticmethod
     @interfacedoc
+    def version():
+        return "1.0"
+
+    @staticmethod
+    @interfacedoc
     def unit():
         return ""
 
@@ -78,5 +83,6 @@ DisplayWaveform = DisplayAnalyzer.create(analyzer=Waveform,
                                          result_id='waveform_analyzer',
                                          grapher_id='grapher_waveform',
                                          grapher_name='Waveform from Analyzer',
+                                         grapher_version='1.0',
                                          staging=True)
 

@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+
+var:
+  volumes:
+     - ./bin:/srv/bin:cached
+     - /Users/grandry/archive/WASABI/media:/srv/media:cached
+     - ./var/backup:/srv/backup:cached
+     - ./var/static:/srv/static:cached
+     - ./var/log/nginx:/var/log/nginx:cached
+     - ./var/log/uwsgi:/var/log/uwsgi:cached
+     - /srv/bower
+     - ./var/cache:/srv/cache:cached
+
+db:
+  volumes:
+    - ./var/lib/postgresql/data:/var/lib/postgresql/data:cached
+  volumes_from:
+    - var
+
+app:
+  volumes:
+    - ./app:/srv/app:cached
+    - ./timeside:/srv/lib/timeside/timeside:cached
+    - ./timeside:/srv/src/timeside/timeside:cached
+    - ./lib/plugins:/srv/lib/plugins:cached
+    - ./etc/apt/sources.list:/etc/apt/sources.list:cached
+  volumes_from:
+    - var
+
+
+worker:
+  volumes:
+    - /etc/._ifpk_2
+  volumes_from:
+    - var
+    - app

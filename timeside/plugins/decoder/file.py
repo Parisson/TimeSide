@@ -347,6 +347,11 @@ class FileDecoder(Decoder):
     def format(self):
         return self.mime_type()
 
+    @staticmethod
+    @interfacedoc
+    def version():
+        return "1.0"
+
     @interfacedoc
     def mime_type(self):
         if self.mimetype == 'application/x-id3':

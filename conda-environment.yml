@@ -44,7 +44,7 @@ dependencies:
       - django-environ
       - django-extensions
       - django==1.10.*
-      - djangorestframework==3.7.*
+      - djangorestframework==3.8
       #- django-filter==1.1.0
       #- django-inspect
       - essentia

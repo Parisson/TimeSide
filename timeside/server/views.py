@@ -74,6 +74,9 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     model = models.Item
     queryset = models.Item.objects.all()
 
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('provider__pid','external_id')
+
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.ItemListSerializer
@@ -163,7 +166,7 @@ class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ResultSerializer
 
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('item__uuid',)
+    search_fields = ('item__uuid','preset__uuid')
 
     # def get_queryset(self): TODO
     #     return self.queryset \
@@ -378,7 +381,7 @@ class ResultGrapherView(View):
     model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = models.Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(uuid=kwargs['uuid'])
         return FileResponse(open(result.file.path, 'rb'),
                             content_type='image/png')
 
@@ -388,7 +391,7 @@ class ResultEncoderView(View):
     model = models.Result
 
     def get(self, request, *args, **kwargs):
-        result = models.Result.objects.get(pk=kwargs['pk'])
+        result = models.Result.objects.get(uuid=kwargs['uuid'])
         return FileResponse(open(result.file.path, 'rb'),
                             content_type=result.mime_type)
 
@@ -459,7 +462,7 @@ class ItemDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
         ts_item = {'ts_api_root': str(reverse_lazy('api-root', request=self.request)),
-                   'ts_item_uuid': self.get_object().uuid
+                   'ts_item_uuid': str(self.get_object().uuid)
                    }
         context['ts_item'] = json.dumps(ts_item)
         return context
@@ -588,10 +591,5 @@ class ProviderViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.Provider
     queryset = model.objects.all()
-    serializer_class = serializers.ProviderSerializer
-
-# class ProviderIdentifierViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-
-#     model = models.ProviderIdentifier
-#     queryset = model.objects.all()
-#     serializer_class = serializers.ProviderIdentifierSerializer
+    serializer_class = serializers.ProviderSerializer   
+    search_fields = ('pid')

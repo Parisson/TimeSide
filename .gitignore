@@ -6,6 +6,7 @@
 *.egg-info
 *.log
 *.log
+*.pyc
 dist
 sdist
 .tags/
@@ -34,3 +35,5 @@ docs/build
 docs/src
 .ipynb_checkpoints
 .init
+.vscode/*
+.DS_Store
