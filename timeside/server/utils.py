@@ -18,7 +18,7 @@ def get_or_run_proc_result(pid, item, parameters='{}'):
 
     # Get or Create Preset with processor
     preset, c = Preset.get_first_or_create(processor=processor,
-                                    parameters=json.dumps(parameters))
+                                    parameters=parameters)
 
     # Get or create Result with preset and item
     result, created = Result.get_first_or_create(preset=preset, 
