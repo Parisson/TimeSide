@@ -25,62 +25,13 @@ var:
   image: debian:jessie
   volumes:
      - ./bin:/srv/bin
-     - ./var/media:/srv/media
-     - ./var/media/results:/srv/media/results
+     - /archive/WASABI/media:/srv/media
+     - /home/wasabi/TimeSide-WASABI/var/media/results:/srv/media/results
      - ./var/backup:/srv/backup
      - ./var/static:/srv/static
      - ./var/log/nginx:/var/log/nginx
      - ./var/log/uwsgi:/var/log/uwsgi
      - ./var/log/celery:/var/log/celery
-     - ./var/cache:/srv/cache
      - /srv/bower
+     - ./var/cache:/srv/cache
   command: "true"
-
-db:
-  image: postgres:9
-  volumes:
-    - ./var/lib/postgresql/data:/var/lib/postgresql/data
-  volumes_from:
-    - var
-  env_file:
-    - env/prod.env
-
-broker:
-  image: redis:5
-
-app:
-  image: parisson/timeside:latest-dev
-  command: /bin/bash /srv/app/bin/app.sh
-  volumes:
-    - ./app:/srv/app
-    - ./timeside:/srv/lib/timeside/timeside
-    - ./timeside:/srv/src/timeside/timeside
-    - ./lib/plugins:/srv/lib/plugins
-    - ./etc/apt/sources.list:/etc/apt/sources.list
-  volumes_from:
-    - var
-  env_file:
-    - env/prod.env
-  links:
-    - broker
-    - db
-  expose:
-    - "8000"
-  ports:
-    - "9030:8000"
-  # mac_address: 02:42:ac:11:00:07
-
-
-worker:
-  image: parisson/timeside:latest-dev
-  command: /bin/bash /srv/app/bin/worker.sh
-  volumes:
-    - /etc/._ifpk_2
-  volumes_from:
-    - var
-    - app
-  env_file:
-    - env/prod.env
-  links:
-    - broker
-    - db
