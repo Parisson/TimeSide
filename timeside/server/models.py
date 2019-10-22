@@ -348,9 +348,18 @@ class Item(Titled, UUID, Dated, Shareable):
                                                             sha1=self.sha1)
         presets = {}
         pipe = decoder
+        parent_analyzers = []
 
+        # search for parent analyzer presets not to add as duplicates in the pipe
+        for preset in experience.presets.all():
+            proc = preset.processor.get_processor()
+            if proc.type in ['analyzer', 'grapher']:
+                proc = proc(**json.loads(preset.parameters))
+                if 'analyzer' in proc.parents:
+                    parent_analyzers.append(proc.parents['analyzer'])
         
         for preset in experience.presets.all():
+            # get core audio processor corresponding to preset.processor.pid
             proc = preset.processor.get_processor()
             if proc.type == 'encoder':
                 result, c = Result.objects.get_or_create(preset=preset,
@@ -359,13 +368,16 @@ class Item(Titled, UUID, Dated, Shareable):
                                        proc.file_extension()])
                 result.file = os.path.join(result_path, media_file).replace(settings.MEDIA_ROOT, '')
                 result.save()
+                # instantiate a core processor of a encoder
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
             elif proc.type in ['analyzer', 'grapher']:
+                # instantiate a core processor of an analyzer of a grapher
                 proc = proc(**json.loads(preset.parameters))
 
-            presets[preset] = proc
-            pipe |= proc
+            if proc not in parent_analyzers:
+                presets[preset] = proc
+                pipe |= proc
 
         # item.lock_setter(True)
 
@@ -377,21 +389,18 @@ class Item(Titled, UUID, Dated, Shareable):
         pipe.run()
 
         def set_results_from_processor(proc, preset=None):
-            for result_id in proc.results.keys():
-                parameters = proc.results[result_id].parameters
-            if preset is None:
+            if preset:
+                parameters = preset.parameters
+            elif preset is None:
                 processor, c = Processor.get_first_or_create(pid=proc.id())
-                preset, c = Preset.get_first_or_create(processor=processor,
-                                                parameters=json.dumps(parameters))
-            else:
-                processor = preset.processor
-
+                parameters = json.dumps(processor.get_parameters_default())
+                preset, c = Preset.get_first_or_create(processor=processor, 
+                                                    parameters=parameters)
             result, c = Result.objects.get_or_create(preset=preset,
-                                                     item=self)
-            result.run_time_setter(proc.run_time)
+                                                    item=self)
+
 
             if not hasattr(proc, 'external'):
-                # print('RESULTS_ROOT : ' + RESULTS_ROOT)
                 hdf5_file = str(result.uuid) + '.hdf5'
                 result.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
                 # while result.lock:
@@ -417,6 +426,9 @@ class Item(Titled, UUID, Dated, Shareable):
                         f.close()
                         f_xml.close()
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
+                        
+            result.run_time_setter(proc.run_time)
+            
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
@@ -427,13 +439,12 @@ class Item(Titled, UUID, Dated, Shareable):
             elif proc.type == 'grapher':
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
-                result.run_time_setter(proc.run_time)
                 image_file = str(result.uuid) + '.png'
+                start = datetime.datetime.utcnow()
                 result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
 
                 # TODO : set as an option
                 proc.watermark('timeside', opacity=.6, margin=(5, 5))
-                start = datetime.datetime.utcnow()
                 proc.render(output=result.file.path)
                 run_time = datetime.datetime.utcnow() - start
                 result.run_time_setter(run_time)
@@ -443,7 +454,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
-                    set_results_from_processor(analyzer)
+                    set_results_from_processor(analyzer, None)
 
             elif proc.type == 'encoder':
                 result = Result.objects.get(preset=preset, item=self)

@@ -10,6 +10,12 @@ class PresetAdmin(admin.ModelAdmin):
     list_filter = ['date_modified', 'processor']
     search_fields = ['uuid', 'processor__name']
 
+class ProcessorAdmin(admin.ModelAdmin):
+    model = Processor
+    readonly_fields = ('uuid',)
+    list_display = ['__str__', 'uuid', 'pid']
+    search_fields = ['uuid', 'name']
+
 
 class SelectionAdmin(admin.ModelAdmin):
     model = Selection
@@ -17,7 +23,7 @@ class SelectionAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     list_filter = ['date_modified']
     filter_horizontal = ['items', 'selections']
-    search_fields = ['title']
+    search_fields = ['title', 'uuid']
 
 
 class ExperienceAdmin(admin.ModelAdmin):
@@ -49,7 +55,7 @@ class AnalysisAdmin(admin.ModelAdmin):
     model = Analysis
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
-    list_filter = ['date_modified', ]
+    list_filter = ['date_modified', 'uuid']
 
 
 class AnalysisTrackAdmin(admin.ModelAdmin):
@@ -70,7 +76,7 @@ class ItemAdmin(admin.ModelAdmin):
     model = Item
     readonly_fields = ('uuid',)
     list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
-    search_fields = ['uuid', 'name']
+    search_fields = ['uuid', 'title']
 
 # class ProviderIdentifierAdmin(admin.ModelAdmin):
 #     model = ProviderIdentifier
@@ -81,7 +87,7 @@ class ItemAdmin(admin.ModelAdmin):
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Experience, ExperienceAdmin)
-admin.site.register(Processor)
+admin.site.register(Processor, ProcessorAdmin)
 admin.site.register(SubProcessor)
 
 admin.site.register(Preset, PresetAdmin)
