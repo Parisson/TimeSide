@@ -590,6 +590,7 @@ class Result(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
+        ordering = ['-date_added']
 
     def status_setter(self, status):
         self.status = status
@@ -653,6 +654,7 @@ class Task(UUID, Dated, Shareable):
             status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
+                print('WAITING')
                 status = Task.objects.get(uuid=str(self.uuid)).status
 
 

@@ -8,6 +8,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.core.management import call_command
 
+# from celery.contrib.testing.worker import start_worker
+
 
 class TimeSideTestServer(APITestCase):
     """ Test class dealing with authentication and boilerplate """
