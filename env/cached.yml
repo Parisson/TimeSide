@@ -4,7 +4,7 @@ var:
   volumes:
      - ./bin:/srv/bin:cached
      - /Users/grandry/archive/WASABI/media:/srv/media:cached
-     - /Users/grandry/archive/WASABI/media/results_copy:/srv/media/results:cached
+     - /Users/grandry/archive/WASABI/media/results_copy:/srv/media/results
      - ./var/backup:/srv/backup:cached
      - ./var/static:/srv/static:cached
      - ./var/log/nginx:/var/log/nginx:cached
