@@ -25,8 +25,7 @@ var:
   image: debian:jessie
   volumes:
      - ./bin:/srv/bin
-     - /archive/WASABI/media:/srv/media
-     - /home/wasabi/TimeSide-WASABI/var/media/results:/srv/media/results
+     - ./var/media:/srv/media
      - ./var/backup:/srv/backup
      - ./var/static:/srv/static
      - ./var/log/nginx:/var/log/nginx
