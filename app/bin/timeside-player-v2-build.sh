@@ -2,7 +2,7 @@
 
 npm install -g bower
 npm install -g grunt-cli
-apt install ruby-sass
+apt install -y ruby-sass
 
 cd /srv/lib/timeside/timeside/player/static/timeside2
 
