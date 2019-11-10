@@ -257,6 +257,7 @@ dependencies:
     - ply==3.11
     - psycopg2-binary
     - py-sonicvisualiser==0.3
+    - pytest==4.6.6
     - pympi-ling==1.69
     - redis==2.10.6
     - sphinx-rtd-theme==0.4.1
