@@ -58,8 +58,9 @@ class TestGetMediaInfo(unittest.TestCase):
         self.expected_samplerate = 44100
         self.expected_depth = 0  # ?
 
-    def testUriFromHTTP(self):
-        "Test URI decoding from HTTP"
+    @unittest.skip("HTTPS is not supported by GStreamer 0.10")
+    def testUriFromHTTPS(self):
+        "Test URI decoding from HTTPS"
         self.source = "https://raw.githubusercontent.com/yomguy/timeside-samples/master/samples/sweep.mp3"
         self.test_exact_duration = False
         self.expected_depth = 32
