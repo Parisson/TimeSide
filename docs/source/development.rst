@@ -22,7 +22,7 @@ If the TimeSide library gives you everything you need to develop you own plugin,
 
 Before coding, start docker with mounting the local directory as a volume::
 
-    docker run -it -v .:/srv/src/timeside parisson/timeside:latest ipython
+    docker run -it -v .:/srv/lib/timeside parisson/timeside:latest ipython
 
 or use the development composition to start a notebook or the webserver::
 
@@ -35,7 +35,7 @@ If the (already huge) python module bundle provided by TimeSide is to short for 
 
     git clone https://github.com/Parisson/TimeSide-Dummy.git
     cd TimeSide-Dummy
-    docker run -it -v ./timeside/plugins/:/srv/src/timeside/timeside/plugins parisson/timeside:latest ipython
+    docker run -it -v ./timeside/plugins/:/srv/lib/timeside/timeside/plugins parisson/timeside:latest ipython
 
 or::
 
