@@ -22,7 +22,7 @@ before_install:
 install:
   - docker-compose -f docker-compose.yml pull
   - docker-compose -f docker-compose.yml build
-  - docker-compose -f docker-compose.yml -f env/js_build.yml run js_build
+  - docker-compose -f docker-compose.yml -f env/front_build.yml run front_build
 
 script:
 # -------------DEFAULT--------------------

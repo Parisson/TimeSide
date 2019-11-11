@@ -23,7 +23,7 @@
 
 # Usage : docker-compose -f docker-compose.yml -f env/build.yml -f env/debug.yml -f env/dev.yml -f env/js_build.yml run --service-ports js_build
 
-js_build:
+front_build:
   image: andreptb/grunt
   volumes_from:
     - app
