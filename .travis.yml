@@ -44,7 +44,7 @@ script:
        sleep 20;
        docker-compose -f docker-compose.yml -f env/nginx.yml up -d;
        sleep 20;
-       curl --fail --retry 10 --retry-delay 5 -v -X GET "$(docker-compose -f docker-compose.yml -f env/nginx.yml port nginx 80)/timeside/api/items/" -H "Authorization":" Token Dummy_Token";
+       docker-compose exec app python manage.py test timeside.server.tests;
     fi
 #
 after_success:
