@@ -28,6 +28,8 @@ class Deezer(Provider):
             file_name = file_name.replace(' ','_')  + '.mp3'
             file_path = os.path.join(path,file_name)
             r = get(source_uri)
+            if not os.path.exists(path):
+                os.makedirs(path)
             with open(file_path,'wb') as f:
                 f.write(r.content)
                 f.close()
