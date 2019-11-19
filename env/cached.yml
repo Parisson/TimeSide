@@ -19,6 +19,8 @@ db:
     - var
 
 app:
+  env_file:
+    - env/cached.env
   volumes:
     - ./app:/srv/app:cached
     - ./timeside:/srv/lib/timeside/timeside:cached
