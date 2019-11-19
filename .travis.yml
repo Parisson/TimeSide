@@ -42,7 +42,7 @@ script:
   - if [[ $TEST_TARGET == 'server' ]]; then
        docker-compose -f docker-compose.yml up -d db;
        sleep 20;
-       docker-compose up -d;
+       docker-compose -f docker-compose.yml -f nginx.yml up -d;
        sleep 20;
        docker-compose exec app python manage.py test timeside.server.tests;
     fi
