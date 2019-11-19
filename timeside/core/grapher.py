@@ -181,7 +181,7 @@ class Grapher(Processor):
             try:
                 self.image.save(output)
             except AttributeError:
-                print "Pixel %s x %d" % (self.image_width, self.image_height)
+                print("Pixel %s x %d" % (self.image_width, self.image_height))
                 self.image.savefig(output, dpi=341)
             return
         return self.image
@@ -382,7 +382,7 @@ class DisplayAnalyzer(Grapher):
             _analyzer_parameters = analyzer_parameters
             _result_id = result_id
             _grapher_name = grapher_name
-            
+
             implements(IGrapher)
 
             @interfacedoc
@@ -414,7 +414,7 @@ class DisplayAnalyzer(Grapher):
             @interfacedoc
             def id():
                 return grapher_id
-                
+
             @staticmethod
             @interfacedoc
             def version():
