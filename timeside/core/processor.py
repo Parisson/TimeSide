@@ -342,7 +342,6 @@ def _list_processors_csv_rec(interface, csv_file):
         except:
             parents = ''
 
-        
         proc_file_path = os.path.abspath(sys.modules[p.__module__].__file__)[:] #delete c of .pyc at end of file name
         value_type = str(search_time_mode(open(proc_file_path,"r")))[1:-1]
         writer.writerow([p.id(),p.version(),interface.__name__,value_type,p.description(),unit,parents,proc_file_path])
@@ -363,8 +362,6 @@ def search_time_mode(proc_file):
                     time_modes.append('segment')
     proc_file.close()
     return time_modes
-            
-    
 
 class ProcessPipe(object):
 
@@ -539,12 +536,12 @@ class ProcessPipe(object):
                 source.stop()
 
             signal.signal(signal.SIGINT, signal_handler)
-        
+
         for item in items:
             item.start_time = datetime.datetime.utcnow()
-    
+
         while not eod:
-            frames, eod = source.process()        
+            frames, eod = source.process()
             for item in items:
                 frames, eod = item.process(frames, eod)
 
