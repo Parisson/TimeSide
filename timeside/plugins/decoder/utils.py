@@ -125,7 +125,7 @@ def get_media_uri_info(uri):
     from gst import SECOND as GST_SECOND
     from glib import GError
     #import gobject
-    GST_DISCOVER_TIMEOUT = 5000000000L
+    GST_DISCOVER_TIMEOUT = 5000000000
     uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
     try:
         uri_info = uri_discoverer.discover_uri(uri)
