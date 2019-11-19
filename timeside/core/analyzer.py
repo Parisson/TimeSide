@@ -151,9 +151,6 @@ class MetadataObject(Parameters):
             setattr(self, key, value)
 
         # Set metadata passed in as arguments
-        # for k, v in zip(self._default_value.keys(), args):
-        #    setattr(self, k, v)
-        #    print 'args'
         for key, value in kwargs.items():
             setattr(self, key, value)
 
