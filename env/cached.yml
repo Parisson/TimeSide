@@ -22,7 +22,6 @@ app:
   volumes:
     - ./app:/srv/app:cached
     - ./timeside:/srv/lib/timeside/timeside:cached
-    - ./timeside:/srv/src/timeside/timeside:cached
     - ./lib/plugins:/srv/lib/plugins:cached
     - ./etc/apt/sources.list:/etc/apt/sources.list:cached
   volumes_from:

@@ -27,7 +27,7 @@ app:
   volumes:
     - ./app:/srv/app
     - .:/srv/lib/timeside
-    - ./timeside:/srv/src/timeside/timeside
+    - ./timeside:/srv/lib/timeside/timeside
     - ./lib/plugins:/srv/lib/plugins
     - ./etc/apt/sources.list:/etc/apt/sources.list
   command: /bin/bash bin/app.sh --runserver
@@ -38,6 +38,6 @@ worker:
   env_file:
     - env/debug.env
   volumes:
-    - ./lib:/srv/src/plugins
-    - ./:/srv/src/timeside/
+    - ./lib:/srv/lib/plugins
+    - ./:/srv/lib/timeside/
 

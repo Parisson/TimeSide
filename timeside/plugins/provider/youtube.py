@@ -34,7 +34,8 @@ class YouTube(Provider):
                     'postprocessors': [{'key':'FFmpegExtractAudio'}],
                     'restrictfilenames':True,
                 }
-
+        if not os.path.exists(path):
+                os.makedirs(path)
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=download)
             file_path = ydl.prepare_filename(info)            

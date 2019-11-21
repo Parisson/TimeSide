@@ -30,6 +30,7 @@ gid='www-data'
 #pip install django-filter==1.1.0 djangorestframework==3.8 django==1.10 librosa==0.6.3
 #npm install -g bower
 pip install librosa==0.7.0
+pip install -U youtube-dl
 
 # pip install django-inspect
 

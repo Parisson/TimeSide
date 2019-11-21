@@ -53,7 +53,6 @@ app:
   volumes:
     - ./app:/srv/app
     - ./timeside:/srv/lib/timeside/timeside
-    - ./timeside:/srv/src/timeside/timeside
     - ./lib/plugins:/srv/lib/plugins
     - ./etc/apt/sources.list:/etc/apt/sources.list
   volumes_from:

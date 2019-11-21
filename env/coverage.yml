@@ -23,5 +23,5 @@
 
 app:
   volumes:
-    - .:/srv/src/timeside
+    - .:/srv/lib/timeside
 
