@@ -4,6 +4,24 @@ from timeside.core.api import IProvider
 
 import os
 from requests import get
+import unicodedata
+import re
+
+
+def slugify(value):
+    """
+    Made after django.utils.text slugify function.
+    Convert to ASCII. Convert spaces to hyphens.
+    Remove characters that aren't alphanumerics, underscores, or hyphens.
+    Convert to lowercase. Also strip leading and trailing whitespace. Convert spaces to hyphens.
+    Remove characters that aren't alphanumerics, underscores, or hyphens.
+    Convert to lowercase. Also strip leading and trailing whitespace.
+    """
+    value = unicode(value)
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^\w\s-]', '', value).strip().lower()
+    return re.sub(r'[-\s]+', '-', value)
+
 
 class Deezer(Provider):
     """Deezer Provider"""
@@ -25,7 +43,7 @@ class Deezer(Provider):
         source_uri = request_json['preview']
         if download:
             file_name = request_json['artist']['name'] + '-' + request_json['title_short'] + '-' + external_id
-            file_name = file_name.replace(' ','_')  + '.mp3'
+            file_name = slugify(file_name) + '.mp3'
             file_path = os.path.join(path,file_name).encode('utf-8')
             r = get(source_uri)
             if not os.path.exists(path):
