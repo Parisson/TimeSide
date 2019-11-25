@@ -3,13 +3,13 @@
   "env" : "DEV",
   "envAdmin" : "DEV",
   "remotes" : {
-    "DEV" : "https://wasabi.telemeta.org/timeside",
+    "DEV" : "http://localhost:9030/timeside",
     "RECETTE" : "/timeside",
     "PROD" : "http://client-eu.syk.com",
     "ERICRECETTE" : "http://192.168.1.3:8080"
   },
   "remotesWrite" : {
-    "DEV" : "https://wasabi.telemeta.org/timeside",
+    "DEV" : "http://localhost:9030/timeside",
     "RECETTE" : "/timeside",
     "PROD" : "http://admin1.syk.com",
     "ERICRECETTE" : "http://192.168.1.3:8080"

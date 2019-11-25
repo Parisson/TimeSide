@@ -23,19 +23,17 @@ def get_or_run_proc_result(pid, item, parameters='{}'):
     # Get or create Result with preset and item
     result, created = Result.get_first_or_create(preset=preset, 
                                    item=item)
-
-    while not created and (not result.hdf5 or not os.path.exists(result.hdf5.path)):
-        # Result exists but does not content any file or the path points a deleted File
-        result.delete()
-        result, created = Result.get_first_or_create(preset=preset, 
-                                   item=item)
-    
-    if created: 
+  
+    if created or not result.hdf5 or not os.path.exists(result.hdf5.path): 
         task, c = Task.get_first_or_create(experience=preset.get_single_experience(),
                                                         selection=item.get_single_selection())
         task.run(wait=True)
+        result, created = Result.get_first_or_create(preset=preset, 
+                                   item=item)
+        return result
 
-    return result
+    else:
+        return result
     
 # TODO def get_or_run_proc_item(pid, version, item, prarameters={}):
 # don't run the task if results exist for a proc with its version

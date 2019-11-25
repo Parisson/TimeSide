@@ -31,5 +31,5 @@
 
 app:
   volumes:
-    - ./lib:/srv/src/plugins
+    - ./lib:/srv/lib/plugins
   command: /bin/bash /srv/app/bin/setup_plugins.sh

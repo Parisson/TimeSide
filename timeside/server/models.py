@@ -194,6 +194,7 @@ class Shareable(models.Model):
 class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, max_length=128)
+    source_access =  models.BooleanField(default=False)
 
     def __unicode__(self):
         return unicode(self.pid)
@@ -357,7 +358,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 proc = proc(**json.loads(preset.parameters))
                 if 'analyzer' in proc.parents:
                     parent_analyzers.append(proc.parents['analyzer'])
-        
+
         for preset in experience.presets.all():
             # get core audio processor corresponding to preset.processor.pid
             proc = preset.processor.get_processor()
@@ -394,7 +395,7 @@ class Item(Titled, UUID, Dated, Shareable):
             elif preset is None:
                 processor, c = Processor.get_first_or_create(pid=proc.id())
                 parameters = json.dumps(processor.get_parameters_default())
-                preset, c = Preset.get_first_or_create(processor=processor, 
+                preset, c = Preset.get_first_or_create(processor=processor,
                                                     parameters=parameters)
             result, c = Result.objects.get_or_create(preset=preset,
                                                     item=self)
@@ -426,9 +427,9 @@ class Item(Titled, UUID, Dated, Shareable):
                         f.close()
                         f_xml.close()
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
-                        
+
             result.run_time_setter(proc.run_time)
-            
+
             result.status_setter(_DONE)
 
         for preset, proc in presets.iteritems():
@@ -450,7 +451,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 result.run_time_setter(run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
-                
+
 
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
@@ -460,7 +461,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 result = Result.objects.get(preset=preset, item=self)
                 result.run_time_setter(proc.run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
-                result.status_setter(_DONE)                
+                result.status_setter(_DONE)
 
             if hasattr(proc, 'values'):
                 proc.values = None
@@ -590,6 +591,7 @@ class Result(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
+        ordering = ['-date_added']
 
     def status_setter(self, status):
         self.status = status
@@ -653,6 +655,7 @@ class Task(UUID, Dated, Shareable):
             status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
+                print('WAITING')
                 status = Task.objects.get(uuid=str(self.uuid)).status
 
 

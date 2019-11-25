@@ -1,7 +1,7 @@
 language: python
 python:
   - "2.7"
-  
+
 sudo: required
 
 services:
@@ -22,35 +22,35 @@ before_install:
 install:
   - docker-compose -f docker-compose.yml pull
   - docker-compose -f docker-compose.yml build
-  - docker-compose -f docker-compose.yml -f env/js_build.yml run js_build
+  - docker-compose -f docker-compose.yml -f env/front_build.yml run front_build
 
 script:
 # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-      docker-compose -f docker-compose.yml -f env/coverage.yml run app  sh -c "cd /srv/src/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
+      docker-compose -f docker-compose.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
     fi
 # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
-       docker-compose -f docker-compose.yml run app  sh -c "cd /srv/src/timeside/docs; pip install sphinx numpydoc; make html; make doctest";
+       docker-compose -f docker-compose.yml run app  sh -c "cd /srv/lib/timeside/docs; pip install sphinx numpydoc; make html; make doctest";
     fi
 #  # -------------CLI-------------------------
   - if [[ $TEST_TARGET == 'cli' ]]; then
-       docker-compose -f docker-compose.yml run app  sh -c "cd /srv/src/timeside;  ./tests/test_scripts.sh";
+       docker-compose -f docker-compose.yml run app  sh -c "cd /srv/lib/timeside;  ./tests/test_scripts.sh";
     fi
 #  # -------------SERVER-------------------------
 #  #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
        docker-compose -f docker-compose.yml up -d db;
        sleep 20;
-       docker-compose -f docker-compose.yml up -d;
+       docker-compose -f docker-compose.yml -f nginx.yml up -d;
        sleep 20;
-       curl --fail --retry 10 --retry-delay 5 -v -X GET "$(docker-compose port nginx 80)/timeside/api/items/" -H "Authorization":" Token Dummy_Token";
+       docker-compose exec app python manage.py test timeside.server.tests;
     fi
 #
 after_success:
 #  -  # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-          docker-compose -f docker-compose.yml -f env/coverage.yml run app  sh -c "cd /srv/src/timeside; pip install coveralls; coveralls";
+          docker-compose -f docker-compose.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside; pip install coveralls; coveralls";
     fi
 
 after_script:

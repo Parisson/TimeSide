@@ -12,7 +12,7 @@ VAMP_DIR=/usr/lib/vamp
 #rm -r vampy-e2bb3cf7adf1
 
 # Link Python vamp plugins from Timeside
-#ln -s /srv/src/timeside/timeside/plugins/analyzer/externals/vampy/* $VAMP_DIR/
+#ln -s /srv/lib/timeside/timeside/plugins/analyzer/externals/vampy/* $VAMP_DIR/
 
 # QM Vamp Plugins
 wget https://code.soundsoftware.ac.uk/attachments/download/1602/qm-vamp-plugins-linux64-v1.7.1.tar.bz2

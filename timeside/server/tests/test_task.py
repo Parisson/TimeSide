@@ -15,10 +15,16 @@ import shutil
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
 
 
-# class SelectionTests(APITestCase):
+class TaskTests(TimeSideTestServer):
 
-# class ExperienceTests(APITestCase):
+    def setUp(self):
+        TimeSideTestServer.setUp(self)
 
-# class ProviderTests(APITestCase):
+        # Add presets duplicated from those from create-boilerplate
+        proc_list_url = reverse('processor-list')
+        response = self.client.get(proc_list_url, format='json')
+        
 
-# class ResultTests(APITestCase):
+    def test_task(self):
+        pass
+

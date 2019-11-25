@@ -24,7 +24,7 @@
 
 app:
   env_file:
-    - anv/sqlite.env
+    - env/sqlite.env
   ports:
     - "8000:8000"
-  command: /bin/bash app/bin/app.sh --runserver
+  command: /bin/bash /srv/app/bin/app.sh --runserver

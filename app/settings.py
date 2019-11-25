@@ -96,7 +96,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    'djangobower.finders.BowerFinder',
+    # 'djangobower.finders.BowerFinder',
 )
 
 TEMPLATES = [
@@ -215,6 +215,8 @@ CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
+
+# TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
 from worker import app
 
