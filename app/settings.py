@@ -216,7 +216,8 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
-# TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+TEST_RUNNER = env('TEST_RUNNER')
+BROKER_BACKEND = env('BROKER_BACKEND')
 
 from worker import app
 

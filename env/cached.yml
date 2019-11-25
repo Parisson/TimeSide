@@ -13,6 +13,8 @@ var:
      - ./var/cache:/srv/cache:cached
 
 db:
+  env_file:
+    - env/cached.env
   volumes:
     - ./var/lib/postgresql/data:/var/lib/postgresql/data:cached
   volumes_from:
@@ -33,6 +35,8 @@ app:
 
 
 worker:
+  env_file:
+    - env/cached.env
   volumes:
     - /etc/._ifpk_2
   volumes_from:
