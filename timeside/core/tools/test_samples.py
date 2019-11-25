@@ -23,29 +23,24 @@ import os.path
 
 class NumpySrc:
     def __init__(self, array, samplerate):
-        self.appsrc = gst.element_factory_make("appsrc")
+        self.appsrc = Gst.ElementFactory.make("appsrc")
         self.pos = 0
         self.samplerate = samplerate
         if array.ndim == 1:
             array.resize((array.shape[0], 1))
         self.length, self.channels = array.shape
         self.array = array.astype("float32")
-        self.per_sample = gst.SECOND // samplerate
+        self.per_sample = Gst.SECOND // samplerate
         self.fac = self.channels * array.dtype.itemsize
         #self.appsrc.set_property("size", (self.length * self.channels *
         #                                  array.dtype.itemsize))
-        self.appsrc.set_property("format", gst.FORMAT_TIME)
-        capstr = """audio/x-raw-float,
-                    width=%d,
-                    depth=%d,
+        self.appsrc.set_property("format", Gst.Format.TIME)
+        capstr = """audio/x-raw,format=F32LE,
+                    layout=interleaved,
                     rate=%d,
-                    channels=%d,
-                    endianness=(int)1234,
-                    signed=true""" % (self.array.dtype.itemsize*8,
-                                      self.array.dtype.itemsize*8,
-                                      self.samplerate,
+                    channels=%d""" % (self.samplerate,
                                       self.channels)
-        self.appsrc.set_property("caps", gst.caps_from_string(capstr))
+        self.appsrc.set_property("caps", Gst.caps_from_string(capstr))
         self.appsrc.set_property("stream-type", 0)  # Seekable
         self.appsrc.set_property('block', True)
 
@@ -62,7 +57,7 @@ class NumpySrc:
             if avalaible_sample < length:
                 length = avalaible_sample
             array = self.array[self.pos:self.pos+length]
-            buf = gst.Buffer(numpy.getbuffer(array.flatten()))
+            buf = Gst.Buffer.new_wrapped(array.flatten().tobytes())
 
             buf.timestamp = self.pos * self.per_sample
             buf.duration = int(length*self.per_sample)
@@ -178,20 +173,19 @@ class gst_BuildSample(object):
         self.gst_audio_encoder = gst_audio_encoder
 
     def run(self):
-        pipeline = gst.Pipeline("pipeline")
-        gobject.threads_init()
-        mainloop = gobject.MainLoop()
+        pipeline = Gst.Pipeline("pipeline")
+        mainloop = GLib.MainLoop()
 
         numpy_src = NumpySrc(array=self.sample_array.array,
                              samplerate=self.samplerate)
 
-        converter = gst.element_factory_make('audioconvert', 'converter')
+        converter = Gst.ElementFactory.make('audioconvert', 'converter')
 
         encoder_muxer = []
         for enc in self.gst_audio_encoder:
-            encoder_muxer.append(gst.element_factory_make(enc))
+            encoder_muxer.append(Gst.ElementFactory.make(enc))
 
-        filesink = gst.element_factory_make('filesink', 'sink')
+        filesink = Gst.ElementFactory.make('filesink', 'sink')
         filesink.set_property('location', self.output_file)
 
         pipe_elements = [numpy_src.appsrc, converter]
@@ -199,7 +193,10 @@ class gst_BuildSample(object):
         pipe_elements.append(filesink)
 
         pipeline.add(*pipe_elements)
-        gst.element_link_many(*pipe_elements)
+        #Gst.Element.link_many(*pipe_elements)
+        numpy_src.appsrc.link(converter)
+        converter.link(encoder_muxer[0])
+        encoder_muxer[0].link(filesink)
 
         def _on_new_pad(self, source, pad, target_pad):
             print ('on_new_pad')
@@ -209,7 +206,7 @@ class gst_BuildSample(object):
                 pad.link(target_pad)
 
         def on_eos(bus, msg):
-            pipeline.set_state(gst.STATE_NULL)
+            pipeline.set_state(Gst.State.NULL)
             mainloop.quit()
 
         def on_error(bus, msg):
@@ -219,7 +216,7 @@ class gst_BuildSample(object):
             print ("Debugging information: %s" % debug_info)
             mainloop.quit()
 
-        pipeline.set_state(gst.STATE_PLAYING)
+        pipeline.set_state(Gst.State.PLAYING)
         bus = pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::eos', on_eos)
