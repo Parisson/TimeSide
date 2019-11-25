@@ -1,4 +1,4 @@
-from numpy import getbuffer, frombuffer
+from numpy import frombuffer
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -11,12 +11,11 @@ import threading
 
 
 def numpy_array_to_gst_buffer(frames, chunk_size, num_samples, sample_rate):
-    from gst import Buffer
     """ gstreamer buffer to numpy array conversion """
-    buf = Buffer(getbuffer(frames.astype("float32")))
+    buf = Gst.Buffer(frames.astype("float32").tobytes())
     # Set its timestamp and duration
-    buf.timestamp = gst.util_uint64_scale(num_samples, gst.SECOND, sample_rate)
-    buf.duration = gst.util_uint64_scale(chunk_size, gst.SECOND, sample_rate)
+    buf.timestamp = Gst.util_uint64_scale(num_samples, Gst.SECOND, sample_rate)
+    buf.duration = Gst.util_uint64_scale(chunk_size, Gst.SECOND, sample_rate)
     return buf
 
 
