@@ -8,10 +8,12 @@ Created on Tue Oct  7 09:19:37 2014
 
 from __future__ import division
 
-import pygst
-pygst.require("0.10")
-import gobject
-import gst
+import gi
+gi.require_version('Gst', '1.0')
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib, Gst
+Gst.init(None)
+
 import numpy
 import scipy.signal.waveforms
 import os.path
