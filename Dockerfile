@@ -59,5 +59,6 @@ WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
 RUN pip3 install -U setuptools pip numpy
 RUN pip3 install -r requirements-pip.txt
+RUN pip3 install -e .
 
 WORKDIR /srv/app
