@@ -210,7 +210,7 @@ class FileDecoder(Decoder):
         self.bus.add_signal_watch()
         self.bus.connect('message', self._on_message_cb)
 
-        self.queue = Queue.Queue(QUEUE_SIZE)
+        self.queue = queue.Queue(QUEUE_SIZE)
 
         self.mainloop = gobject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
