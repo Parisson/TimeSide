@@ -41,7 +41,6 @@ try:
     import queue
 except:
     import Queue as queue
-import gst
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
