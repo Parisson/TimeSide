@@ -100,7 +100,7 @@ class FileDecoder(Decoder):
         self.from_stack = False
         self.stack = stack
 
-        self.uri = get_uri(uri).encode('utf8')
+        self.uri = get_uri(uri)
 
         if not sha1:
             self._sha1 = get_sha1(uri)
