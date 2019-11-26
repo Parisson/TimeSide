@@ -127,20 +127,24 @@ def get_uri(source):
 
 def get_media_uri_info(uri):
 
-    from gst.pbutils import Discoverer
-    from gst import SECOND as GST_SECOND
-    from glib import GError
-    #import gobject
+    import gi
+    gi.require_version('Gst', '1.0')
+    gi.require_version('GLib', '2.0')
+    from gi.repository import Gst, GLib
+    Gst.init(None)
+    gi.require_version('GstPbutils', '1.0')
+    from gi.repository.GstPbutils import Discoverer
+
     GST_DISCOVER_TIMEOUT = 5000000000
-    uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
+    uri_discoverer = Discoverer.new(GST_DISCOVER_TIMEOUT)
     try:
         uri_info = uri_discoverer.discover_uri(uri)
-    except GError as e:
+    except GLib.GError as e:
         raise IOError(e)
     info = dict()
 
     # Duration in seconds
-    info['duration'] = uri_info.get_duration() / GST_SECOND
+    info['duration'] = uri_info.get_duration() / Gst.SECOND
 
     audio_streams = uri_info.get_audio_streams()
     info['streams'] = []
