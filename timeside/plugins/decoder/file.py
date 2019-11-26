@@ -307,7 +307,7 @@ class FileDecoder(Decoder):
     def _on_new_buffer_cb(self, sink):
         buf = sink.emit('pull-sample').get_buffer()
         new_array = gst_buffer_to_numpy_array(buf, self.output_channels)
-        # print 'processing new buffer', new_array.shape
+        #print('processing new buffer', new_array.shape)
         if self.last_buffer is None:
             self.last_buffer = new_array
         else:
