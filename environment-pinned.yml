@@ -57,8 +57,6 @@ dependencies:
   - glib=2.56.1=h000015b_0
   - gmp=6.1.2=h6c8ec71_1
   - grpcio=1.12.1=py27hdbcaa40_0
-  - gst-plugins-base=1.14.0=hbbd80ab_1
-  - gstreamer=1.14.0=hb453b48_1
   - h5py=2.8.0=py27hb794570_1
   - hdf5=1.10.2=hba1933b_1
   - html5lib=1.0.1=py27_0
