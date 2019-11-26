@@ -399,7 +399,11 @@ class ProcessPipe(object):
 
         # TODO : check if the processor is already in the pipe
         if source_proc:
-            for child in self._graph.neighbors_iter(source_proc.uuid()):
+            if hasattr(self._graph, 'neighbors'):
+                neighbors = self._grap.neighbors
+            else: # py2 compat
+                neighbors = self._grap.neighbors_iter
+            for child in neighbors(source_proc.uuid()):
                 child_proc = self._graph.node[child]['processor']
                 if proc == child_proc:
                     proc._uuid = child_proc.uuid()
