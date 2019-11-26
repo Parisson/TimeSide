@@ -26,12 +26,11 @@ from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.core.api import IEncoder
 from .tools.gstutils import numpy_array_to_gst_buffer, MainloopThread
 
-import pygst
-pygst.require('0.10')
-import gst
-
-import gobject
-gobject.threads_init()
+import gi
+gi.require_version('Gst', '1.0')
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib, Gst
+Gst.init(None)
 
 import threading
 
