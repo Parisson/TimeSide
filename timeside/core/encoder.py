@@ -50,7 +50,7 @@ class GstEncoder(Processor):
 
         super(GstEncoder, self).__init__()
 
-        if isinstance(output, basestring):
+        if isinstance(output, str):
             import os.path
             if os.path.isdir(output):
                 raise IOError("Encoder output must be a file, not a directory")
