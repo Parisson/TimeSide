@@ -26,7 +26,6 @@ var:
   volumes:
      - ./bin:/srv/bin
      - ./var/media:/srv/media
-     - ./var/media/results:/srv/media/results
      - ./var/backup:/srv/backup
      - ./var/static:/srv/static
      - ./var/log/nginx:/var/log/nginx
