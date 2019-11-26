@@ -1,19 +1,19 @@
 # TimeSide Core need Gstreamer
 libofa0
-python-gst0.10 
-gstreamer0.10-plugins-good 
-gstreamer0.10-gnonlin 
-gstreamer0.10-plugins-ugly 
-gstreamer0.10-plugins-bad
-gstreamer0.10-alsa
-gstreamer0.10-plugins-base-apps
-gstreamer0.10-tools
+python-gst-1.0
+gstreamer1.0-plugins-good
+libges-1.0-0
+gstreamer1.0-plugins-ugly
+gstreamer1.0-plugins-bad
+gstreamer1.0-alsa
+gstreamer1.0-plugins-base-apps
+gstreamer1.0-tools
 
 # Optionnal Audio Analysis library
 vamp-examples
 vamp-plugin-sdk
 
-# Misc. 
+# Misc.
 git
 wget
 bzip2
