@@ -106,7 +106,9 @@ def get_uri(source):
     Check a media source as a valid file or uri and return the proper uri
     """
 
-    import gst
+    import gi
+    gi.require_version('Gst', '1.0')
+    from gi.repository import Gst
 
     src_info = source_info(source)
 
