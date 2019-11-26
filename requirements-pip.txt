@@ -46,7 +46,7 @@ mutagen
 numpydoc
 psycopg2-binary 
 pygments
-py_sonicvisualiser==0.3
+-e git+https://github.com/yomguy/py_sonicvisualiser@master#egg=py_sonicvisualiser
 pympi-ling
 sphinx_rtd_theme
 uwsgi
