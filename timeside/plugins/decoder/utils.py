@@ -75,10 +75,10 @@ def path2uri(path):
     >>> path2uri('C:\Windows\my_file.wav')
     'file:///C%3A%5CWindows%5Cmy_file.wav'
     """
-    import urlparse
-    import urllib
+    import urllib.parse
+    import urllib.request
 
-    return urlparse.urljoin('file:', urllib.pathname2url(path))
+    return urllib.parse.urljoin('file:', urllib.request.pathname2url(path))
 
 
 def source_info(source):
