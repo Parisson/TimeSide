@@ -4,7 +4,6 @@ python3-pip
 
 # TimeSide Core need Gstreamer
 libofa0
-python-gi
 python-gst-1.0
 gstreamer1.0-plugins-good
 #gstreamer1.0-gnonlin
