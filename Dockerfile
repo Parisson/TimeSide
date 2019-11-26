@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:jessie
+FROM debian:buster
 
-MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
+MAINTAINER Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 
 RUN mkdir -p /srv/app
 RUN mkdir -p /srv/lib
@@ -25,12 +25,12 @@ WORKDIR /srv/lib
 
 # install confs, keys and deps
 COPY ./etc/apt/sources.list /etc/apt/
-RUN apt-get update && apt-get install -y apt-transport-https
-COPY debian-requirements.txt /srv/lib/
-RUN apt-get update && \
-    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
-    apt-get install -y --force-yes $DEBIAN_PACKAGES && \
-    apt-get clean
+RUN apt update && apt install -y apt-transport-https
+COPY requirements.txt /srv/lib/
+RUN apt update && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" requirements.txt) && \
+    apt install -y --force-yes $DEBIAN_PACKAGES && \
+    apt clean
 
 # Install conda in /opt/miniconda
 ENV PATH /opt/miniconda/bin:$PATH
