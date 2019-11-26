@@ -31,7 +31,7 @@
 from __future__ import division
 
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
-from timeside.core.tools.gstutils import MainloopThread, gobject
+from timeside.core.tools.gstutils import MainloopThread, GObject, Gst
 from timeside.core.tools.gstutils import gst_buffer_to_numpy_array
 import threading
 
@@ -41,7 +41,6 @@ try:
     import queue
 except:
     import Queue as queue
-import gst
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
@@ -100,7 +99,7 @@ class FileDecoder(Decoder):
         self.from_stack = False
         self.stack = stack
 
-        self.uri = get_uri(uri).encode('utf8')
+        self.uri = get_uri(uri)
 
         if not sha1:
             self._sha1 = get_sha1(uri)
@@ -173,7 +172,7 @@ class FileDecoder(Decoder):
                            ! appsink name=sink sync=False async=True
                            '''.format(uri=self.uri)
 
-        self.pipeline = gst.parse_launch(self.pipe)
+        self.pipeline = Gst.parse_launch(self.pipe)
 
         if self.output_channels:
             caps_channels = int(self.output_channels)
@@ -183,10 +182,9 @@ class FileDecoder(Decoder):
             caps_samplerate = int(self.output_samplerate)
         else:
             caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 96000 }"
-        sink_caps = gst.Caps("""audio/x-raw-float,
-            endianness=(int)1234,
+        sink_caps = Gst.Caps("""audio/x-raw,
+            format=F32LE,
             channels=(int)%s,
-            width=(int)32,
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.src = self.pipeline.get_by_name('src')
@@ -197,14 +195,14 @@ class FileDecoder(Decoder):
             uridecodebin.connect("autoplug-continue", self._autoplug_cb)
 
         self.conv = self.pipeline.get_by_name('audioconvert')
-        self.conv.get_pad("sink").connect("notify::caps", self._notify_caps_cb)
+        self.conv.get_static_pad("sink").connect("notify::caps", self._notify_caps_cb)
 
         self.sink = self.pipeline.get_by_name('sink')
         self.sink.set_property("caps", sink_caps)
         self.sink.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
         self.sink.set_property("drop", False)
         self.sink.set_property('emit-signals', True)
-        self.sink.connect("new-buffer", self._on_new_buffer_cb)
+        self.sink.connect("new-sample", self._on_new_buffer_cb)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
@@ -212,14 +210,14 @@ class FileDecoder(Decoder):
 
         self.queue = queue.Queue(QUEUE_SIZE)
 
-        self.mainloop = gobject.MainLoop()
+        self.mainloop = GObject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
         #self.mainloopthread = get_loop_thread()
         ##self.mainloop = self.mainloopthread.mainloop
 
         # start pipeline
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(Gst.State.PLAYING)
 
         self.discovered_cond.acquire()
         while not self.discovered:
@@ -243,26 +241,26 @@ class FileDecoder(Decoder):
     def _notify_caps_cb(self, pad, args):
         self.discovered_cond.acquire()
 
-        caps = pad.get_negotiated_caps()
+        caps = pad.get_current_caps()
         if not caps:
-            pad.info("no negotiated caps available")
+            Gst.info("no negotiated caps available")
             self.discovered = True
             self.discovered_cond.notify()
             self.discovered_cond.release()
             return
         # the caps are fixed
         # We now get the total length of that stream
-        q = gst.query_new_duration(gst.FORMAT_TIME)
-        pad.info("sending duration query")
+        q = Gst.Query.new_duration(Gst.Format.TIME)
+        Gst.info("sending duration query")
         if pad.get_peer().query(q):
-            format, length = q.parse_duration()
-            if format == gst.FORMAT_TIME:
-                pad.info("got duration (time) : %s" % (gst.TIME_ARGS(length),))
+            parsed_format, length = q.parse_duration()
+            if parsed_format == Gst.Format.TIME:
+                Gst.info("got duration (time) : %s" % (Gst.TIME_ARGS(length),))
             else:
-                pad.info("got duration : %d [format:%d]" % (length, format))
+                Gst.info("got duration : %d [format:%d]" % (length, parsed_format))
         else:
             length = -1
-            gst.warning("duration query failed")
+            Gst.warning("duration query failed")
 
         # We store the caps and length in the proper location
         if "audio" in caps.to_string():
@@ -272,7 +270,7 @@ class FileDecoder(Decoder):
             self.input_channels = caps[0]["channels"]
             if not self.output_channels:
                 self.output_channels = self.input_channels
-            self.input_duration = length / gst.SECOND
+            self.input_duration = length / Gst.SECOND
 
             self.input_totalframes = int(
                 self.input_duration * self.input_samplerate)
@@ -287,12 +285,12 @@ class FileDecoder(Decoder):
 
     def _on_message_cb(self, bus, message):
         t = message.type
-        if t == gst.MESSAGE_EOS:
-            self.queue.put(gst.MESSAGE_EOS)
-            self.pipeline.set_state(gst.STATE_NULL)
+        if t == Gst.MessageType.EOS:
+            self.queue.put(Gst.MessageType.EOS)
+            self.pipeline.set_state(Gst.State.NULL)
             self.mainloop.quit()
-        elif t == gst.MESSAGE_ERROR:
-            self.pipeline.set_state(gst.STATE_NULL)
+        elif t == Gst.MessageType.ERROR:
+            self.pipeline.set_state(Gst.State.NULL)
             err, debug = message.parse_error()
             self.discovered_cond.acquire()
             self.discovered = True
@@ -300,15 +298,15 @@ class FileDecoder(Decoder):
             self.error_msg = "Error: %s" % err, debug
             self.discovered_cond.notify()
             self.discovered_cond.release()
-        elif t == gst.MESSAGE_TAG:
+        elif t == Gst.MessageType.TAG:
             # TODO
             # msg.parse_tags()
             pass
 
     def _on_new_buffer_cb(self, sink):
-        buf = sink.emit('pull-buffer')
+        buf = sink.emit('pull-sample').get_buffer()
         new_array = gst_buffer_to_numpy_array(buf, self.output_channels)
-        # print 'processing new buffer', new_array.shape
+        #print('processing new buffer', new_array.shape)
         if self.last_buffer is None:
             self.last_buffer = new_array
         else:
@@ -317,15 +315,16 @@ class FileDecoder(Decoder):
         while self.last_buffer.shape[0] >= self.output_blocksize:
             new_block = self.last_buffer[:self.output_blocksize]
             self.last_buffer = self.last_buffer[self.output_blocksize:]
-            # print 'queueing', new_block.shape, 'remaining',
-            # self.last_buffer.shape
+            #print('queueing', new_block.shape, 'remaining', self.last_buffer.shape)
             self.queue.put([new_block, False])
+
+        return Gst.FlowReturn.OK
 
     @interfacedoc
     @stack
     def process(self):
         buf = self.queue.get()
-        if buf == gst.MESSAGE_EOS:
+        if buf == Gst.MessageType.EOS:
             return self.last_buffer, True
         frames, eod = buf
         return frames, eod
@@ -377,7 +376,7 @@ class FileDecoder(Decoder):
         return self.tags
 
     def stop(self):
-        self.src.send_event(gst.event_new_eos())
+        self.src.send_event(Gst.Event.new_eos())
 
 if __name__ == "__main__":
     import doctest

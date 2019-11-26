@@ -26,12 +26,11 @@ from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.core.api import IEncoder
 from .tools.gstutils import numpy_array_to_gst_buffer, MainloopThread
 
-import pygst
-pygst.require('0.10')
-import gst
-
-import gobject
-gobject.threads_init()
+import gi
+gi.require_version('Gst', '1.0')
+gi.require_version('GLib', '2.0')
+from gi.repository import GLib, Gst
+Gst.init(None)
 
 import threading
 
@@ -86,7 +85,7 @@ class GstEncoder(Processor):
         self.release()
 
     def start_pipeline(self, channels, samplerate):
-        self.pipeline = gst.parse_launch(self.pipe)
+        self.pipeline = Gst.parse_launch(self.pipe)
         # store a pointer to appsrc in our encoder object
         self.src = self.pipeline.get_by_name('src')
 
@@ -104,10 +103,10 @@ class GstEncoder(Processor):
             self.app.connect("new-buffer", self._on_new_buffer_streaming)
             #self.app.connect('new-preroll', self._on_new_preroll_streaming)
 
-        srccaps = gst.Caps("""audio/x-raw-float,
-            endianness=(int)1234,
+        srccaps = Gst.caps_from_string("""audio/x-raw-float,
+            format=F32LE,
+            layout=interleaved,
             channels=(int)%s,
-            width=(int)32,
             rate=(int)%d""" % (int(channels), int(samplerate)))
         self.src.set_property("caps", srccaps)
         self.src.set_property('emit-signals', True)
@@ -119,29 +118,29 @@ class GstEncoder(Processor):
         self.bus.add_signal_watch()
         self.bus.connect("message", self._on_message_cb)
 
-        self.mainloop = gobject.MainLoop()
+        self.mainloop = GLib.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
 
         # start pipeline
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(Gst.State.PLAYING)
 
     def _on_message_cb(self, bus, message):
         t = message.type
-        if t == gst.MESSAGE_EOS:
+        if t == Gst.MessageType.EOS:
             self.end_cond.acquire()
             if self.streaming:
-                self._streaming_queue.put(gst.MESSAGE_EOS)
+                self._streaming_queue.put(Gst.MessageType.EOS)
 
-            self.pipeline.set_state(gst.STATE_NULL)
+            self.pipeline.set_state(Gst.State.NULL)
             self.mainloop.quit()
             self.end_reached = True
             self.end_cond.notify()
             self.end_cond.release()
 
-        elif t == gst.MESSAGE_ERROR:
+        elif t == Gst.MessageType.ERROR:
             self.end_cond.acquire()
-            self.pipeline.set_state(gst.STATE_NULL)
+            self.pipeline.set_state(Gst.State.NULL)
             self.mainloop.quit()
             self.end_reached = True
             err, debug = message.parse_error()
@@ -183,7 +182,7 @@ class GstEncoder(Processor):
     def get_stream_chunk(self):
         if self.streaming:
             chunk = self._streaming_queue.get(block=True)
-            if chunk == gst.MESSAGE_EOS:
+            if chunk == Gst.MessageType.EOS:
                 return None
             else:
                 self._streaming_queue.task_done()
