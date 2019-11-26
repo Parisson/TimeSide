@@ -6,7 +6,7 @@ jupyterhub
 jupyterlab
 librosa
 matplotlib
-mysqlclient
+#mysqlclient
 networkx
 numpy
 pandas

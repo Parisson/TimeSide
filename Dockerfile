@@ -25,12 +25,12 @@ WORKDIR /srv/lib
 
 # install confs, keys and deps
 COPY ./etc/apt/sources.list /etc/apt/
-RUN apt update && apt install -y apt-transport-https
+RUN apt-get update && apt-get install -y apt-transport-https
 COPY debian-requirements.txt /srv/lib/
-RUN apt update && \
+RUN apt-get update && \
     DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
-    apt install -y --force-yes $DEBIAN_PACKAGES && \
-    apt clean
+    apt-get install -y --force-yes $DEBIAN_PACKAGES && \
+    apt-get clean
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
@@ -52,12 +52,12 @@ COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 # Install bower
-RUN npm install -g bower
+#RUN npm install -g bower
 
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
-RUN pip install -U setuptools pip numpy
-RUN pip install -e .
+RUN pip3 install -U setuptools pip numpy
+RUN pip3 install -r requirements-pip.txt
 
 WORKDIR /srv/app
