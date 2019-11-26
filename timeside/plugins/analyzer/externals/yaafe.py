@@ -62,11 +62,11 @@ class Yaafe(Analyzer):
     ...                       input_samplerate=16000)
     >>> pipe = (decoder | yaafe)
     >>> pipe.run()
-    >>> print yaafe.results.keys()
+    >>> print(yaafe.results.keys())
     ['yaafe.mfccd1', 'yaafe.mfcc', 'yaafe.mfccd2', 'yaafe.zcr']
     >>> # Access to one of the result:
     >>> res_mfcc = yaafe.results['yaafe.mfcc']
-    >>> print type(res_mfcc.data_object)
+    >>> print(type(res_mfcc.data_object))
     <class 'timeside.core.analyzer.FrameValueObject'>
     >>> res_mfcc.data  # doctest: +ELLIPSIS
     array([[...]])

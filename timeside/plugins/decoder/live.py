@@ -31,7 +31,10 @@ from __future__ import division
 from timeside.core.decoder import Decoder, IDecoder, interfacedoc, implements
 from timeside.core.tools.gstutils import MainloopThread, gobject
 from timeside.plugins.decoder.file import FileDecoder
-import Queue
+try:
+    import queue
+except:
+    import Queue as queue
 import threading
 
 from gst import _gst as gst

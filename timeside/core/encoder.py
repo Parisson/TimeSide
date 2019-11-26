@@ -50,7 +50,7 @@ class GstEncoder(Processor):
 
         super(GstEncoder, self).__init__()
 
-        if isinstance(output, basestring):
+        if isinstance(output, str):
             import os.path
             if os.path.isdir(output):
                 raise IOError("Encoder output must be a file, not a directory")
@@ -91,8 +91,11 @@ class GstEncoder(Processor):
         self.src = self.pipeline.get_by_name('src')
 
         if self.streaming:
-            import Queue
-            self._streaming_queue = Queue.Queue(QUEUE_SIZE)
+            try: # py3
+                import queue
+            except: # py2
+                import Queue as queue
+            self._streaming_queue = queue.Queue(QUEUE_SIZE)
             # store a pointer to appsink in our encoder object
             self.app = self.pipeline.get_by_name('app')
             self.app.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
@@ -147,12 +150,12 @@ class GstEncoder(Processor):
             self.end_cond.release()
 
     def _on_new_buffer_streaming(self, appsink):
-        # print 'pull-buffer'
+        # print('pull-buffer')
         chunk = appsink.emit('pull-buffer')
         self._streaming_queue.put(chunk)
 
     def _on_new_preroll_streaming(self, appsink):
-        # print 'preroll'
+        # print('preroll')
         chunk = appsink.emit('pull-preroll')
         self._streaming_queue.put(chunk)
 

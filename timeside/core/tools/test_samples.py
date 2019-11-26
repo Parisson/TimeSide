@@ -68,12 +68,12 @@ class NumpySrc:
             self.pos += length
 
     def seek_data(self, element, npos):
-        print 'seek %d' % npos
+        print ('seek %d' % npos)
         self.pos = npos // self.per_sample
         return True
 
     def enough_data(self, element):
-        print "----------- enough data ---------------"
+        print ("----------- enough data ---------------")
 
 
 class SampleArray(object):
@@ -200,7 +200,7 @@ class gst_BuildSample(object):
         gst.element_link_many(*pipe_elements)
 
         def _on_new_pad(self, source, pad, target_pad):
-            print 'on_new_pad'
+            print ('on_new_pad')
             if not pad.is_linked():
                 if target_pad.is_linked():
                     target_pad.get_peer().unlink(target_pad)

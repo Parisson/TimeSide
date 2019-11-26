@@ -151,9 +151,6 @@ class MetadataObject(Parameters):
             setattr(self, key, value)
 
         # Set metadata passed in as arguments
-        # for k, v in zip(self._default_value.keys(), args):
-        #    setattr(self, k, v)
-        #    print 'args'
         for key, value in kwargs.items():
             setattr(self, key, value)
 
@@ -164,8 +161,7 @@ class MetadataObject(Parameters):
         try:
             super(MetadataObject, self).__setattr__(name, value)
         except AttributeError:
-            print name, value
-            raise AttributeError
+            raise
 
     def __delattr__(self, name):
         if name in self._default_value.keys():
@@ -1052,7 +1048,6 @@ def JSON_NumpyArrayEncoder(obj):
     elif isinstance(obj, np.generic):
         return np.asscalar(obj)
     else:
-        print type(obj)
         raise TypeError(repr(obj) + " is not JSON serializable")
 
 
@@ -1225,7 +1220,7 @@ class AnalyzerResultContainer(dict):
                 result = AnalyzerResult.from_hdf5(group)
                 self.add(result, overwrite=True)
         except TypeError:
-            print('TypeError for HDF5 serialization')
+            raise #('TypeError for HDF5 serialization')
         finally:
             h5_file.close()  # Close the HDF5 file
 
