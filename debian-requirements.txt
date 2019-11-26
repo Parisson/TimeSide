@@ -1,5 +1,6 @@
 # TimeSide Core need Gstreamer
 libofa0
+python-gi
 python-gst-1.0
 gstreamer1.0-plugins-good
 libges-1.0-0
