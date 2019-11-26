@@ -32,6 +32,9 @@ RUN apt-get update && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE

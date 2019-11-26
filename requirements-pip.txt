@@ -6,7 +6,6 @@ jupyterhub
 jupyterlab
 librosa
 matplotlib
-#mysqlclient
 networkx
 numpy
 pandas
@@ -45,6 +44,7 @@ jupyterthemes
 markdown
 mutagen
 numpydoc
+psycopg2-binary 
 pygments
 py_sonicvisualiser==0.3
 pympi-ling

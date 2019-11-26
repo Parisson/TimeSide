@@ -26,10 +26,5 @@ bzip2
 build-essential
 vim
 
-# DB
-#mysql-client
-#libmysqlclient-dev
-#postgresql-client
-
 # Frontend
 nodejs
