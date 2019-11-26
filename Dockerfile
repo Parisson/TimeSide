@@ -26,33 +26,11 @@ WORKDIR /srv/lib
 # install confs, keys and deps
 COPY ./etc/apt/sources.list /etc/apt/
 RUN apt update && apt install -y apt-transport-https
-COPY requirements.txt /srv/lib/
+COPY debian-requirements.txt /srv/lib/
 RUN apt update && \
-    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" requirements.txt) && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
     apt install -y --force-yes $DEBIAN_PACKAGES && \
     apt clean
-
-# Install conda in /opt/miniconda
-ENV PATH /opt/miniconda/bin:$PATH
-RUN wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh && \
-    /bin/bash miniconda.sh -b -p /opt/miniconda && \
-    rm miniconda.sh && \
-    hash -r && \
-    ln -s /opt/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate" >> ~/.bashrc && \
-    conda config --set always_yes yes --set changeps1 yes
-
-#COPY environment-pinned.yml /srv/lib/
-COPY environment-explicit.yml /srv/lib/
-RUN conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
-     #conda env update --file environment-pinned.yml &&\
-     conda install -n base --file environment-explicit.yml &&\
-    conda clean --all --yes
-
-# Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
-#RUN rm /opt/miniconda/lib/libgio* &&\
-#    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
@@ -79,7 +57,7 @@ RUN npm install -g bower
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
-RUN pip install -U pip
+RUN pip install -U setuptools pip numpy
 RUN pip install -e .
 
 WORKDIR /srv/app

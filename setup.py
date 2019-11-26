@@ -90,7 +90,7 @@ setup(
     author_email="yomguy@parisson.com, piem@piem.org, thomas@parisson.com, riccardo.zaccarelli@gmail.com, olivier@samalyse.com",
     version='0.9.2',
     setup_requires=['pyyaml'],
-    install_requires=[get_dependencies('environment-pinned.yml')],
+    # install_requires=[get_dependencies('environment-pinned.yml')],
     platforms=['OS Independent'],
     license='Gnu Public License V2',
     classifiers=CLASSIFIERS,
