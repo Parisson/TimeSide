@@ -134,7 +134,7 @@ class TestEncoding(unittest.TestCase):
 
         if 0:
             import commands
-            print commands.getoutput('sndfile-info ' + self.sink)
+            print(commands.getoutput('sndfile-info ' + self.sink))
 
         self.assertEqual(self.expected_total_frames, self.encoder.num_samples)
         self.assertEqual(self.channels, self.encoder.channels())
