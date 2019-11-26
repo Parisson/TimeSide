@@ -115,9 +115,9 @@ def get_uri(source):
     if src_info['is_file']:  # Is this a file?
         return get_uri(src_info['uri'])
 
-    elif gst.uri_is_valid(source):  # Is this a valid URI source for Gstreamer
-        uri_protocol = gst.uri_get_protocol(source)
-        if gst.uri_protocol_is_supported(gst.URI_SRC, uri_protocol):
+    elif Gst.Uri.is_valid(source):  # Is this a valid URI source for Gstreamer
+        uri_protocol = Gst.uri_get_protocol(source)
+        if Gst.Uri.protocol_is_supported(Gst.URIType.SRC, uri_protocol):
             return source
         else:
             raise IOError('Invalid URI source for Gstreamer')
