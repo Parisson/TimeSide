@@ -91,8 +91,11 @@ class GstEncoder(Processor):
         self.src = self.pipeline.get_by_name('src')
 
         if self.streaming:
-            import Queue
-            self._streaming_queue = Queue.Queue(QUEUE_SIZE)
+            try: # py3
+                import queue
+            except: # py2
+                import Queue as queue
+            self._streaming_queue = queue.Queue(QUEUE_SIZE)
             # store a pointer to appsink in our encoder object
             self.app = self.pipeline.get_by_name('app')
             self.app.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
