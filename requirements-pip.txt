@@ -50,7 +50,7 @@ py_sonicvisualiser==0.3
 pympi-ling
 sphinx_rtd_theme
 uwsgi
-#vamp
+vamp
 watchdog
 youtube_dl
 
