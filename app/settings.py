@@ -218,7 +218,7 @@ CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks w
 
 # TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
-from worker import app
+from .worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
