@@ -8,7 +8,6 @@ services:
 env:
   matrix:
     - TEST_TARGET=default  # Default unit test
-    - TEST_TARGET=cli      # Test for TimeSide command line interfaces
     - TEST_TARGET=doc      # Test documentation and included doctest
     - TEST_TARGET=server   # Test timeside.server
 
@@ -18,29 +17,28 @@ before_install:
 
 # Install TimeSide
 install:
-  - docker-compose -f docker-compose.yml pull
   - docker-compose -f docker-compose.yml -f env/build.yml build
   - docker-compose -f docker-compose.yml -f env/front_build.yml run front_build
 
 script:
 # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-      docker-compose -f docker-compose.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
+      docker-compose -f docker-compose.yml -f env/build.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
     fi
 # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
-       docker-compose -f docker-compose.yml run app  sh -c "cd /srv/lib/timeside/docs; pip install sphinx numpydoc; make html; make doctest";
+       docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/lib/timeside/docs; pip install sphinx numpydoc; make html; make doctest";
     fi
 #  # -------------CLI-------------------------
   - if [[ $TEST_TARGET == 'cli' ]]; then
-       docker-compose -f docker-compose.yml run app  sh -c "cd /srv/lib/timeside;  ./tests/test_scripts.sh";
+       docker-compose -f docker-compose.yml -f env/build.yml run app  sh -c "cd /srv/lib/timeside; ./tests/test_scripts.sh";
     fi
 #  # -------------SERVER-------------------------
 #  #  Get environment variables from .env file and run test
   - if [[ $TEST_TARGET == 'server' ]]; then
        docker-compose -f docker-compose.yml up -d db;
        sleep 20;
-       docker-compose -f docker-compose.yml -f env/nginx.yml up -d;
+       docker-compose -f docker-compose.yml -f env/build.yml -f env/nginx.yml up -d;
        sleep 20;
        docker-compose exec app python manage.py test timeside.server.tests;
     fi
@@ -48,7 +46,7 @@ script:
 after_success:
 #  -  # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-          docker-compose -f docker-compose.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside; pip install coveralls; coveralls";
+          docker-compose -f docker-compose.yml -f env/build.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside; pip install coveralls; coveralls";
     fi
 
 after_script:
