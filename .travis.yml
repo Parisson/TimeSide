@@ -1,6 +1,4 @@
 language: python
-python:
-  - "2.7"
 
 sudo: required
 
@@ -21,7 +19,7 @@ before_install:
 # Install TimeSide
 install:
   - docker-compose -f docker-compose.yml pull
-  - docker-compose -f docker-compose.yml build
+  - docker-compose -f docker-compose.yml -f env/build.yml build
   - docker-compose -f docker-compose.yml -f env/front_build.yml run front_build
 
 script:
