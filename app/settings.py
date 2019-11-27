@@ -122,7 +122,7 @@ TEMPLATES = [
         },
     },
 ]
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -217,9 +217,9 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
 #TEST_RUNNER = env('TEST_RUNNER')
-BROKER_BACKEND = env('BROKER_BACKEND')
+#BROKER_BACKEND = env('BROKER_BACKEND')
 
-from .worker import app
+from worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
