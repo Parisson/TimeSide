@@ -40,7 +40,7 @@ script:
        sleep 20;
        docker-compose -f docker-compose.yml -f env/build.yml -f env/nginx.yml up -d;
        sleep 20;
-       docker-compose exec app python manage.py test timeside.server.tests;
+       docker-compose exec app python3 manage.py test timeside.server.tests;
     fi
 #
 after_success:
