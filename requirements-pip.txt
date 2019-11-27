@@ -53,3 +53,4 @@ uwsgi
 vamp
 watchdog
 youtube_dl
+xmljson
