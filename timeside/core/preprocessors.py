@@ -38,8 +38,8 @@ def downmix_to_mono(process_func):
     >>> from timeside.core.preprocessors import downmix_to_mono
     >>> @downmix_to_mono
     ... def process(analyzer,frames,eod):
-    ...     print 'Frames, eod inside process :'
-    ...     print frames, eod
+    ...     print('Frames, eod inside process :')
+    ...     print(frames, eod)
     ...     return frames, eod
     ...
     >>> import numpy as np

@@ -75,10 +75,14 @@ def path2uri(path):
     >>> path2uri('C:\Windows\my_file.wav')
     'file:///C%3A%5CWindows%5Cmy_file.wav'
     """
-    import urlparse
-    import urllib
+    try: # py3 version
+        from urllib.parse import urljoin
+        from urllib.request import pathname2url
+    except: #py2 version
+        from urlparse import urljoin
+        from urllib import pathname2url
 
-    return urlparse.urljoin('file:', urllib.pathname2url(path))
+    return urljoin('file:', pathname2url(path))
 
 
 def source_info(source):
@@ -102,16 +106,18 @@ def get_uri(source):
     Check a media source as a valid file or uri and return the proper uri
     """
 
-    import gst
+    import gi
+    gi.require_version('Gst', '1.0')
+    from gi.repository import Gst
 
     src_info = source_info(source)
 
     if src_info['is_file']:  # Is this a file?
         return get_uri(src_info['uri'])
 
-    elif gst.uri_is_valid(source):  # Is this a valid URI source for Gstreamer
-        uri_protocol = gst.uri_get_protocol(source)
-        if gst.uri_protocol_is_supported(gst.URI_SRC, uri_protocol):
+    elif Gst.Uri.is_valid(source):  # Is this a valid URI source for Gstreamer
+        uri_protocol = Gst.uri_get_protocol(source)
+        if Gst.Uri.protocol_is_supported(Gst.URIType.SRC, uri_protocol):
             return source
         else:
             raise IOError('Invalid URI source for Gstreamer')
@@ -121,20 +127,24 @@ def get_uri(source):
 
 def get_media_uri_info(uri):
 
-    from gst.pbutils import Discoverer
-    from gst import SECOND as GST_SECOND
-    from glib import GError
-    #import gobject
-    GST_DISCOVER_TIMEOUT = 5000000000L
-    uri_discoverer = Discoverer(GST_DISCOVER_TIMEOUT)
+    import gi
+    gi.require_version('Gst', '1.0')
+    gi.require_version('GLib', '2.0')
+    from gi.repository import Gst, GLib
+    Gst.init(None)
+    gi.require_version('GstPbutils', '1.0')
+    from gi.repository.GstPbutils import Discoverer
+
+    GST_DISCOVER_TIMEOUT = 5000000000
+    uri_discoverer = Discoverer.new(GST_DISCOVER_TIMEOUT)
     try:
         uri_info = uri_discoverer.discover_uri(uri)
-    except GError as e:
+    except GLib.GError as e:
         raise IOError(e)
     info = dict()
 
     # Duration in seconds
-    info['duration'] = uri_info.get_duration() / GST_SECOND
+    info['duration'] = uri_info.get_duration() / Gst.SECOND
 
     audio_streams = uri_info.get_audio_streams()
     info['streams'] = []

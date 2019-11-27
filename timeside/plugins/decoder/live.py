@@ -31,7 +31,10 @@ from __future__ import division
 from timeside.core.decoder import Decoder, IDecoder, interfacedoc, implements
 from timeside.core.tools.gstutils import MainloopThread, gobject
 from timeside.plugins.decoder.file import FileDecoder
-import Queue
+try:
+    import queue
+except:
+    import Queue as queue
 import threading
 
 from gst import _gst as gst
@@ -163,7 +166,7 @@ class LiveDecoder(FileDecoder):
         self.bus.add_signal_watch()
         self.bus.connect('message', self._on_message_cb)
 
-        self.queue = Queue.Queue(QUEUE_SIZE)
+        self.queue = queue.Queue(QUEUE_SIZE)
 
         self.mainloop = gobject.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)

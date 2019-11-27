@@ -13,9 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:jessie
+FROM debian:buster
 
-MAINTAINER Guillaume Pellerin <yomguy@parisson.com>, Thomas fillon <thomas@parisson.com>
+MAINTAINER Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 
 RUN mkdir -p /srv/app
 RUN mkdir -p /srv/lib
@@ -32,27 +32,8 @@ RUN apt-get update && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
 
-# Install conda in /opt/miniconda
-ENV PATH /opt/miniconda/bin:$PATH
-RUN wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh && \
-    /bin/bash miniconda.sh -b -p /opt/miniconda && \
-    rm miniconda.sh && \
-    hash -r && \
-    ln -s /opt/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate" >> ~/.bashrc && \
-    conda config --set always_yes yes --set changeps1 yes
-
-#COPY environment-pinned.yml /srv/lib/
-COPY environment-explicit.yml /srv/lib/
-RUN conda config --append channels conda-forge --append channels thomasfillon --append channels soumith &&\
-     #conda env update --file environment-pinned.yml &&\
-     conda install -n base --file environment-explicit.yml &&\
-    conda clean --all --yes
-
-# Link glib-networking with Conda to fix missing TLS/SSL support in Conda Glib library
-#RUN rm /opt/miniconda/lib/libgio* &&\
-#    ln -s /usr/lib/x86_64-linux-gnu/libgio* /opt/miniconda/lib/
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
 
 ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
@@ -74,12 +55,13 @@ COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 # Install bower
-RUN npm install -g bower
+#RUN npm install -g bower
 
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY . /srv/lib/timeside/
-RUN pip install -U pip
-RUN pip install -e .
+RUN pip3 install -U setuptools pip numpy
+RUN pip3 install -r requirements-pip.txt
+RUN pip3 install -e .
 
 WORKDIR /srv/app

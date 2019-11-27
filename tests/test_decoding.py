@@ -84,12 +84,12 @@ class TestDecoding(unittest.TestCase):
 
         ratio = decoder.output_samplerate / decoder.input_samplerate
         if 0:
-            print "input / output_samplerate:", decoder.input_samplerate, '/', decoder.output_samplerate,
-            print "ratio:", ratio
-            print "input / output_channels:", decoder.input_channels, decoder.output_channels
-            print "input_duration:", decoder.input_duration
-            print "input_totalframes:", decoder.input_totalframes
-            print "mime_type", decoder.mime_type()
+            print("input / output_samplerate:", decoder.input_samplerate, '/', decoder.output_samplerate,)
+            print("ratio:", ratio)
+            print("input / output_channels:", decoder.input_channels, decoder.output_channels)
+            print("input_duration:", decoder.input_duration)
+            print("input_totalframes:", decoder.input_totalframes)
+            print("mime_type", decoder.mime_type())
 
         if self.channels:
             # when specified, check that the channels are the ones requested

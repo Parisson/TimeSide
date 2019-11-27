@@ -1,29 +1,32 @@
+# Python
+python3
+python3-pip
+
 # TimeSide Core need Gstreamer
 libofa0
-python-gst0.10 
-gstreamer0.10-plugins-good 
-gstreamer0.10-gnonlin 
-gstreamer0.10-plugins-ugly 
-gstreamer0.10-plugins-bad
-gstreamer0.10-alsa
-gstreamer0.10-plugins-base-apps
-gstreamer0.10-tools
+python-gst-1.0
+gstreamer1.0-plugins-good
+#gstreamer1.0-gnonlin
+gstreamer1.0-plugins-ugly
+gstreamer1.0-plugins-bad
+gstreamer1.0-alsa
+gstreamer1.0-plugins-base-apps
+gstreamer1.0-tools
+glib-networking
+libges-1.0-0
+libofa0
 
-# Optionnal Audio Analysis library
+# Optionnal Audio Analysis libraries
 vamp-examples
 vamp-plugin-sdk
 
-# Misc. 
+# Misc.
 git
 wget
 bzip2
 build-essential
-netcat
-apt-transport-https
+vim
+curl
 
-# DB & Server
-mysql-client
-libmysqlclient-dev
+# Frontend
 nodejs
-
-glib-networking

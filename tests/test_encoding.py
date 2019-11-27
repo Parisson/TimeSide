@@ -21,7 +21,7 @@ class TestEncoding(unittest.TestCase):
         f = f0 * np.logspace(0, 4 / 12 * (self.channels - 1), self.channels, base=2)
         omega = 2. * pi * f / self.samplerate
         samples = np.empty((self.expected_total_frames, self.channels))
-        for n in xrange(self.channels):
+        for n in range(self.channels):
             samples[:, n] = .75 * np.sin(omega[n] *
                                          np.arange(self.expected_total_frames))
         return samples
@@ -134,7 +134,7 @@ class TestEncoding(unittest.TestCase):
 
         if 0:
             import commands
-            print commands.getoutput('sndfile-info ' + self.sink)
+            print(commands.getoutput('sndfile-info ' + self.sink))
 
         self.assertEqual(self.expected_total_frames, self.encoder.num_samples)
         self.assertEqual(self.channels, self.encoder.channels())

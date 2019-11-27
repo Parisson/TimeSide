@@ -219,7 +219,7 @@ CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, a
 #TEST_RUNNER = env('TEST_RUNNER')
 BROKER_BACKEND = env('BROKER_BACKEND')
 
-from worker import app
+from .worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'

@@ -1,0 +1,5 @@
+app:
+  image: python:3.7-buster
+  volumes:
+    - ../requirements-pip.txt:/requirements-pip.txt
+  command: bash -c "pip install --upgrade setuptools pip numpy; pip install -r /requirements-pip.txt"
