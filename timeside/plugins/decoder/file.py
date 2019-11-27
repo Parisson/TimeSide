@@ -31,7 +31,7 @@
 from __future__ import division
 
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
-from timeside.core.tools.gstutils import MainloopThread, GObject, Gst
+from timeside.core.tools.gstutils import MainloopThread, GLib, Gst
 from timeside.core.tools.gstutils import gst_buffer_to_numpy_array
 import threading
 
@@ -210,7 +210,7 @@ class FileDecoder(Decoder):
 
         self.queue = queue.Queue(QUEUE_SIZE)
 
-        self.mainloop = GObject.MainLoop()
+        self.mainloop = GLib.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
         #self.mainloopthread = get_loop_thread()
