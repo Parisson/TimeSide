@@ -29,7 +29,7 @@
 from __future__ import division
 
 from timeside.core.decoder import Decoder, IDecoder, interfacedoc, implements
-from timeside.core.tools.gstutils import MainloopThread, gobject
+from timeside.core.tools.gstutils import MainloopThread, GLib, Gst
 from timeside.plugins.decoder.file import FileDecoder
 try:
     import queue
@@ -37,14 +37,12 @@ except:
     import Queue as queue
 import threading
 
-from gst import _gst as gst
-
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10
 
 #  TODO:
 # check if a soundcard device is available
-# alsasrc = gst.element_factory_make("alsasrc", "alsasrc")
+# alsasrc = Gst.ElementFactory.make("alsasrc", "alsasrc")
 # alsasrc.probe_get_values_name('device')
 # ['hw:0,0']
 
@@ -135,7 +133,7 @@ class LiveDecoder(FileDecoder):
                        ! appsink name=sink sync=False async=True
                        ''' % (self.input_src, self.num_buffers)
 
-        self.pipeline = gst.parse_launch(self.pipe)
+        self.pipeline = Gst.parse_launch(self.pipe)
 
         if self.output_channels:
             caps_channels = int(self.output_channels)
@@ -145,10 +143,9 @@ class LiveDecoder(FileDecoder):
             caps_samplerate = int(self.output_samplerate)
         else:
             caps_samplerate = "{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 96000 }"
-        sink_caps = gst.Caps("""audio/x-raw-float,
-            endianness=(int)1234,
+        sink_caps = Gst.Caps("""audio/x-raw,
+            format=F32LE,
             channels=(int)%s,
-            width=(int)32,
             rate=(int)%s""" % (caps_channels, caps_samplerate))
 
         self.src = self.pipeline.get_by_name('src')
@@ -168,14 +165,14 @@ class LiveDecoder(FileDecoder):
 
         self.queue = queue.Queue(QUEUE_SIZE)
 
-        self.mainloop = gobject.MainLoop()
+        self.mainloop = GLib.MainLoop()
         self.mainloopthread = MainloopThread(self.mainloop)
         self.mainloopthread.start()
         #self.mainloopthread = get_loop_thread()
         ##self.mainloop = self.mainloopthread.mainloop
 
         # start pipeline
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(Gst.State.PLAYING)
 
         self.discovered_cond.acquire()
         while not self.discovered:
@@ -192,7 +189,7 @@ class LiveDecoder(FileDecoder):
     @interfacedoc
     def process(self):
         buf = self.queue.get()
-        if buf == gst.MESSAGE_EOS:
+        if buf == Gst.MessageType.EOS:
             return self.last_buffer, True
 
         frames, eod = buf
