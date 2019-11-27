@@ -38,7 +38,7 @@ def simple_host_process(argslist):
     command.extend(argslist)
     # try ?
     stdout = subprocess.check_output(command,
-                                     stderr=subprocess.STDOUT).splitlines()
+                                     stderr=subprocess.STDOUT).decode('utf-8').splitlines()
 
     return stdout
 
