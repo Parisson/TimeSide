@@ -32,12 +32,12 @@ dependencies:
   - yaafe
   - pip:
       - coreapi
-      - celery==3.*
+      - celery
       - deezer-python
       - django-bootstrap-pagination
       - django-bootstrap3
       - django-bower
-      - django-celery
+      #- django-celery
       - django-cors-headers
       - django-filter==1.1.0
       - django-debug-toolbar

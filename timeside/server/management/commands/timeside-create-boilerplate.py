@@ -60,7 +60,7 @@ class Command(BaseCommand):
 
             samples = generateSamples(samples_dir=samples_dir)
 
-            for sample in samples.iteritems():
+            for sample in samples.items():
                 filename, path = sample
                 title = os.path.splitext(filename)[0]
                 path = os.path.join(media_dir, filename)

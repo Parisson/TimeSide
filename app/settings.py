@@ -2,7 +2,7 @@ import environ
 
 # set default values and casting
 env = environ.Env(DEBUG=(bool, False),
-                  CELERY_ALWAYS_EAGER=(bool, False),
+                  CELERY_TASK_ALWAYS_EAGER=(bool, False),
                   )
 # Django settings for server project.
 DEBUG = env('DEBUG')  # False if not in os.environ
@@ -122,7 +122,7 @@ TEMPLATES = [
         },
     },
 ]
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -156,7 +156,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'timeside.server',
     'timeside.player',
-    'djcelery',
+    #'djcelery',
     'bootstrap3',
     'bootstrap_pagination',
     'djangobower',
@@ -208,17 +208,18 @@ REST_FRAMEWORK = {
     #     'django_filters.rest_framework.DjangoFilterBackend',
     # ),
 
-BROKER_URL = env('BROKER_URL')
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_ALWAYS_EAGER = env('CELERY_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
+CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
-# TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+#TEST_RUNNER = env('TEST_RUNNER')
+#BROKER_BACKEND = env('BROKER_BACKEND')
 
-from .worker import app
+from worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
