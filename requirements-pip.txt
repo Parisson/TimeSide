@@ -44,9 +44,9 @@ jupyterthemes
 markdown
 mutagen
 numpydoc
-psycopg2-binary 
+psycopg2-binary
 pygments
--e git+https://github.com/yomguy/py_sonicvisualiser@master#egg=py_sonicvisualiser
+git+https://github.com/yomguy/py_sonicvisualiser@master#egg=py_sonicvisualiser
 pympi-ling
 sphinx_rtd_theme
 uwsgi
