@@ -69,7 +69,7 @@ numpy_data_types = [
     #'complex128',
     #'complex64',
 ]
-numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
+numpy_data_types = list(map(lambda x: getattr(np, x), numpy_data_types))
 # numpy_data_types += [np.ndarray]
 
 
