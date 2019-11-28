@@ -39,7 +39,7 @@ class TestYaafe(unittest.TestCase):
         decoder.output_samplerate = self.samplerate
         (decoder | self.analyzer).run()
         results = self.analyzer.results
-        self.assertEquals(self.result_length, len(results))
+        self.assertEqual(self.result_length, len(results))
         # print results
         # print results.to_yaml()
         # print results.to_json()
