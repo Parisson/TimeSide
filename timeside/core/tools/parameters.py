@@ -113,7 +113,7 @@ class HasParam(object):
         default_param = cls.get_parameters_default_from_argspec()
         schema = DEFAULT_SCHEMA()
         for key, value in default_param.items():
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 val_type = "string"
             elif isinstance(value, bool):
                 val_type = "boolean"  # warning : boolean is an int instance
