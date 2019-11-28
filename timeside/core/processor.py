@@ -77,7 +77,7 @@ class MetaProcessor(MetaComponent):
         return new_class
 
 
-class Processor(Component, HasParam):
+class Processor(Component, HasParam, metaclass=MetaProcessor):
 
     """Base component class of all processors
 
@@ -87,7 +87,6 @@ class Processor(Component, HasParam):
                          processed before the current Processor
               pipe :     The ProcessPipe in which the Processor will run
         """
-    __metaclass__ = MetaProcessor
 
     abstract()
     implements(IProcessor)

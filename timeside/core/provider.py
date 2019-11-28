@@ -46,10 +46,9 @@ class MetaProvider(MetaComponent):
         return new_class
 
 
-class Provider(Component):
+class Provider(Component, metaclass=MetaProvider):
 
     """Base component class of all providers"""
-    __metaclass__ = MetaProvider
 
     abstract()
     implements(IProvider)
