@@ -44,7 +44,7 @@ class Deezer(Provider):
         if download:
             file_name = request_json['artist']['name'] + '-' + request_json['title_short'] + '-' + external_id
             file_name = slugify(file_name) + '.mp3'
-            file_path = os.path.join(path,file_name).encode('utf-8')
+            file_path = os.path.join(path,file_name)
             r = get(source_uri)
             if not os.path.exists(path):
                 os.makedirs(path)
