@@ -48,4 +48,4 @@ ts_package.discover_modules('plugins', 'timeside')#__name__)
 
 # Clean-up
 del ts_package
-del absolute_import
+#del absolute_import
