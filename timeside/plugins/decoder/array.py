@@ -30,7 +30,6 @@ from timeside.core import implements, interfacedoc
 from timeside.core.decoder import Decoder, IDecoder
 import numpy as np
 
-
 class ArrayDecoder(Decoder):
 
     """ Decoder taking Numpy array as input"""
@@ -126,7 +125,7 @@ class ArrayDecoder(Decoder):
 
     @interfacedoc
     def process(self):
-        return self.frames.next()
+        return next(self.frames)
 
     # IDecoder methods
     @interfacedoc
