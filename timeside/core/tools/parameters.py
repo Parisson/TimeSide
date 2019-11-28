@@ -119,7 +119,7 @@ class HasParam(object):
                 val_type = "boolean"  # warning : boolean is an int instance
             elif isinstance(value, float):
                 val_type = "number"
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, int):
                 val_type = "integer"
             elif isinstance(value, list):
                 val_type = "array"
