@@ -12,33 +12,33 @@ class TestComponentArchitecture(unittest.TestCase):
 
     def testOneInterface(self):
         "Test a component implementing one interface"
-        self.assertItemsEqual(implementations(I1), [C1])
+        self.assertEqual(implementations(I1), [C1])
 
     def testTwoInterfaces(self):
         "Test a component implementing two interfaces"
-        self.assertItemsEqual(implementations(I2), [C2])
-        self.assertItemsEqual(implementations(I3), [C2])
+        self.assertEqual(implementations(I2), [C2])
+        self.assertEqual(implementations(I3), [C2])
 
     def testTwoImplementations(self):
         "Test an interface implemented by two components"
-        self.assertItemsEqual(implementations(I4), [C3, C4])
+        self.assertEqual(implementations(I4), [C3, C4])
 
     def testInterfaceInheritance(self):
         "Test whether a component implements an interface's parent"
-        self.assertItemsEqual(implementations(I5), [C5])
+        self.assertEqual(implementations(I5), [C5])
 
     def testImplementationInheritance(self):
         "Test that a component doesn't implement the interface implemented by its parent"
-        self.assertItemsEqual(implementations(I7), [C6])
+        self.assertEqual(implementations(I7), [C6])
 
     def testImplementationRedundancy(self):
         "Test implementation redundancy across inheritance"
-        self.assertItemsEqual(implementations(I8), [C8, C9])
+        self.assertEqual(implementations(I8), [C8, C9])
 
     def testAbstractImplementation(self):
         "Test abstract implementation"
-        self.assertItemsEqual(implementations(I11), [])
-        self.assertItemsEqual(implementations(I11, abstract=True), [C11])
+        self.assertEqual(implementations(I11), [])
+        self.assertEqual(implementations(I11, abstract=True), [C11])
 
     def testInterfaceDoc(self):
         "Test @interfacedoc decorator"
