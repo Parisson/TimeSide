@@ -26,7 +26,7 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-from __future__ import division
+
 
 from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.core.api import IDecoder

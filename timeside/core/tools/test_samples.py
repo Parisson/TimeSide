@@ -6,7 +6,7 @@ Created on Tue Oct  7 09:19:37 2014
 @author: thomas
 """
 
-from __future__ import division
+
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -65,7 +65,7 @@ class NumpySrc:
             self.pos += length
 
     def seek_data(self, element, npos):
-        print ('seek %d' % npos)
+        print(('seek %d' % npos))
         self.pos = npos // self.per_sample
         return True
 
@@ -211,9 +211,9 @@ class gst_BuildSample(object):
 
         def on_error(bus, msg):
             err, debug_info = msg.parse_error()
-            print ("Error received from element %s: %s" % (msg.src.get_name(),
-                                                           err))
-            print ("Debugging information: %s" % debug_info)
+            print(("Error received from element %s: %s" % (msg.src.get_name(),
+                                                           err)))
+            print(("Debugging information: %s" % debug_info))
             mainloop.quit()
 
         pipeline.set_state(Gst.State.PLAYING)

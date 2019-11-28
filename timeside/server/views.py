@@ -418,7 +418,7 @@ class ItemDetailExport(DetailView):
                 Results[proc_id]['json'] = True
                 Results[proc_id]['list'] = {}
 
-                for res_id, res in container.items():
+                for res_id, res in list(container.items()):
                     if res.time_mode == 'segment':
                         if res.data_mode == 'label':
                             Results[proc_id]['list'][res_id] = {

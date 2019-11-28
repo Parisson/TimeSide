@@ -88,4 +88,4 @@ params = {'search' : item['uuid']}
 result = client.action(schema,keys,params)
 
 for r in result:
-    print('http://localhost:9000/timeside/results/' + r['uuid'] + '/json/')
+    print(('http://localhost:9000/timeside/results/' + r['uuid'] + '/json/'))

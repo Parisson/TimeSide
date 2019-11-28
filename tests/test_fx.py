@@ -29,9 +29,9 @@ class TestFxGain(unittest.TestCase):
         decoder = FileDecoder(self.source)
         (decoder | self.fx | self.level).run()
         results = self.level.results
-        for result_id in self.expected.keys():
+        for result_id in list(self.expected.keys()):
             result = results[result_id]
-            self.assertAlmostEquals(result.data_object.value,
+            self.assertAlmostEqual(result.data_object.value,
                                     self.expected[result_id],
                                     places=2)
  

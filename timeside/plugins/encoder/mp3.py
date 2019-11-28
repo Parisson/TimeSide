@@ -102,7 +102,7 @@ class Mp3Encoder(GstEncoder):
         from mutagen import id3
 
         id3 = id3.ID3(self.filename)
-        for tag in self.metadata.keys():
+        for tag in list(self.metadata.keys()):
             value = self.metadata[tag]
             frame = mutagen.id3.Frames[tag](3, value)
             try:

@@ -25,11 +25,11 @@ class TestAnalyzers_with_zeros(unittest.TestCase):
         analyzer = analyzer_cls()
         pipe = (self.decoder | analyzer)
         pipe.run()
-        for key, result in analyzer.results.items():
-            if 'value' in result.data_object.keys():
+        for key, result in list(analyzer.results.items()):
+            if 'value' in list(result.data_object.keys()):
                 # Test for NaN
-                print result.data_mode
-                print result.data.dtype, result.data 
+                print(result.data_mode)
+                print(result.data.dtype, result.data) 
                 self.assertFalse(np.any(np.isnan(result.data)),
                                  'NaN in %s data value' % result.name)
                 # Test for Inf

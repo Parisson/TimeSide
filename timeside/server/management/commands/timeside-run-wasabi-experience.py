@@ -101,7 +101,7 @@ class Command(BaseCommand):
                         preset, c = Preset.objects.get_or_create(processor=processor, parameters='{}')
                         presets.append(preset)
                     except Preset.MultipleObjectsReturned:
-                        print(Preset.objects.filter(processor=processor, parameters='{}'))
+                        print((Preset.objects.filter(processor=processor, parameters='{}')))
 
         self.experience, c = Experience.objects.get_or_create(title=self.experience_title)
         for preset in presets:

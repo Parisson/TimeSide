@@ -21,7 +21,7 @@ class TestVampsimpleHost(unittest.TestCase):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
         results = self.analyzer.results
-        print results.keys()
+        print(list(results.keys()))
         #print results
         #print results.to_yaml()
         #print results.to_json()

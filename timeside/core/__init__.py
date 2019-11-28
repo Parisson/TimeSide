@@ -20,7 +20,7 @@
 # Authors:
 # Thomas Fillon <thomas@parisson.com>
 
-from __future__ import absolute_import
+
 
 from . import api
 from . import processor

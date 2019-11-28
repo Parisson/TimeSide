@@ -170,7 +170,7 @@ class Yaafe(Analyzer):
 
     def post_process(self):
         # Get feature extraction results from yaafe
-        featNames = self.yaafe_engine.getOutputs().keys()
+        featNames = list(self.yaafe_engine.getOutputs().keys())
         if len(featNames) == 0:
             raise KeyError('Yaafe engine did not return any feature')
         for featName in featNames:

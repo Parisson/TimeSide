@@ -24,7 +24,7 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-from __future__ import division
+
 
 import numpy as np
 
@@ -79,8 +79,8 @@ def path2uri(path):
         from urllib.parse import urljoin
         from urllib.request import pathname2url
     except: #py2 version
-        from urlparse import urljoin
-        from urllib import pathname2url
+        from urllib.parse import urljoin
+        from urllib.request import pathname2url
 
     return urljoin('file:', pathname2url(path))
 
@@ -173,7 +173,7 @@ def stack(process_func):
                 decoder.process_pipe.frames_stack.append((frames, eod))
             return frames, eod
         else:
-            return decoder._frames_iterator.next()
+            return next(decoder._frames_iterator)
 
     return wrapper
 
@@ -217,7 +217,7 @@ def sha1sum_url(url):
 
     '''
     import hashlib
-    import urllib
+    import urllib.request, urllib.parse, urllib.error
     from contextlib import closing
 
     sha1 = hashlib.sha1()
@@ -226,7 +226,7 @@ def sha1sum_url(url):
     max_file_size = 10 * 1024 * 1024  # 10Mo limit in case of very large file
 
     total_read = 0
-    with closing(urllib.urlopen(url)) as url_obj:
+    with closing(urllib.request.urlopen(url)) as url_obj:
         for chunk in iter(lambda: url_obj.read(chunk_size), b''):
             sha1.update(chunk)
             total_read += chunk_size

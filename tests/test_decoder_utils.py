@@ -2,7 +2,7 @@
 
 # author: Thomas Fillon <thomas@parisson.com>
 
-from __future__ import division
+
 
 from unit_timeside import unittest, TestRunner
 from timeside.plugins.decoder.utils import get_uri, get_media_uri_info, path2uri

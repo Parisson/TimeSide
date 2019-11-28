@@ -77,7 +77,7 @@ class MetaProcessor(MetaComponent):
         return new_class
 
 
-class Processor(Component, HasParam):
+class Processor(Component, HasParam, metaclass=MetaProcessor):
 
     """Base component class of all processors
 
@@ -87,7 +87,6 @@ class Processor(Component, HasParam):
                          processed before the current Processor
               pipe :     The ProcessPipe in which the Processor will run
         """
-    __metaclass__ = MetaProcessor
 
     abstract()
     implements(IProcessor)
@@ -287,35 +286,35 @@ def get_processor(processor_id):
 
 
 def list_processors(interface=IProcessor, prefix=""):
-    print(prefix + interface.__name__)
+    print((prefix + interface.__name__))
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print(prefix + underline_char * len(interface.__name__))
+    print((prefix + underline_char * len(interface.__name__)))
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors(interface=i, prefix=prefix + "  ")
     procs = processors(interface, False)
     for p in procs:
-        print(prefix + "  * %s :" % p.id())
-        print(prefix + "    \t\t%s" % p.description())
-        print(prefix + "    \t\tversion: %s" % p.version())
+        print((prefix + "  * %s :" % p.id()))
+        print((prefix + "    \t\t%s" % p.description()))
+        print((prefix + "    \t\tversion: %s" % p.version()))
 
 
 def list_processors_rst(interface=IProcessor, prefix=""):
-    print('\n' + interface.__name__)
+    print(('\n' + interface.__name__))
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print(underline_char * len(interface.__name__) + '\n')
+    print((underline_char * len(interface.__name__) + '\n'))
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_processors_rst(interface=i, prefix=prefix + " ")
     procs = processors(interface, False)
     for p in procs:
-        print(prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description()))
+        print((prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description())))
 
 def list_processors_csv(interface=IProcessor):
     f = open('list_processors.csv', 'wb')
@@ -338,7 +337,7 @@ def _list_processors_csv_rec(interface, csv_file):
         else:
             unit = ""
         try:
-            print(p.parents)
+            print((p.parents))
         except:
             parents = ''
 
@@ -417,7 +416,7 @@ class ProcessPipe(object):
                                      type='audio_source')
             proc.process_pipe = self
             # Add an edge between each parent and proc
-            for parent in proc.parents.values():
+            for parent in list(proc.parents.values()):
                 self._graph.add_edge(parent.uuid(), proc.uuid(),
                                      type='data_source')
 
@@ -461,7 +460,7 @@ class ProcessPipe(object):
 
     def __ior__(self, other):
         if isinstance(other, Processor):
-            for parent in other.parents.values():
+            for parent in list(other.parents.values()):
                 self |= parent
             self.append_processor(other)
 
@@ -498,12 +497,11 @@ class ProcessPipe(object):
                                 if item.force_samplerate])
         if force_samplerate:
             if len(force_samplerate) > 1:
-                raise(ValueError,
-                      "Some processors specify different samplerate")
+                raise ValueError
             force_samplerate = force_samplerate.pop()
 
             if samplerate and samplerate != force_samplerate:
-                raise(ValueError, "A processor try to force the samplerate")
+                raise ValueError
 
             samplerate = force_samplerate
 

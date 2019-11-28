@@ -22,7 +22,7 @@
 #   Paul Brossier <piem@piem.org>
 #   Thomas Fillon <thomas  at parisson.com>
 
-from __future__ import division
+
 
 from .processor import Processor
 from .tools import hdf5
@@ -69,7 +69,7 @@ numpy_data_types = [
     #'complex128',
     #'complex64',
 ]
-numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
+numpy_data_types = [getattr(np, x) for x in numpy_data_types]
 # numpy_data_types += [np.ndarray]
 
 
@@ -82,7 +82,7 @@ class Parameters(dict):
         import xml.etree.ElementTree as ET
         root = ET.Element('Metadata')
 
-        for key in self.keys():
+        for key in list(self.keys()):
             child = ET.SubElement(root, key)
             child.text = repr(self[key])
 
@@ -104,7 +104,7 @@ class Parameters(dict):
         hdf5.dict_from_hdf5(self, h5group)
 
     def from_dict(self, dict_obj):
-        for key, value in dict_obj.items():
+        for key, value in list(dict_obj.items()):
             try:
                 self[key].from_dict(value)
             except AttributeError:
@@ -147,15 +147,15 @@ class MetadataObject(Parameters):
         Metadata
         '''
         # Set Default values
-        for key, value in self._default_value.items():
+        for key, value in list(self._default_value.items()):
             setattr(self, key, value)
 
         # Set metadata passed in as arguments
-        for key, value in kwargs.items():
+        for key, value in list(kwargs.items()):
             setattr(self, key, value)
 
     def __setattr__(self, name, value):
-        if name not in self._default_value.keys():
+        if name not in list(self._default_value.keys()):
             raise AttributeError("%s is not a valid attribute in %s" %
                                  (name, self.__class__.__name__))
         try:
@@ -164,7 +164,7 @@ class MetadataObject(Parameters):
             raise
 
     def __delattr__(self, name):
-        if name in self._default_value.keys():
+        if name in list(self._default_value.keys()):
             new_default_value = self._default_value.copy()
             del new_default_value[name]
             super(MetadataObject, self).__setattr__('_default_value',
@@ -173,16 +173,16 @@ class MetadataObject(Parameters):
 
     def as_dict(self):
         return dict((att, getattr(self, att))
-                    for att in self.keys())
+                    for att in list(self.keys()))
 
     def keys(self):
-        return [attr for attr in self._default_value.keys()]
+        return [attr for attr in list(self._default_value.keys())]
 
     def values(self):
-        return [self[attr] for attr in self.keys()]
+        return [self[attr] for attr in list(self.keys())]
 
     def items(self):
-        return [(attr, self[attr]) for attr in self.keys()]
+        return [(attr, self[attr]) for attr in list(self.keys())]
 
     def __getitem__(self, key, default=None):
         try:
@@ -198,14 +198,14 @@ class MetadataObject(Parameters):
             self.__class__.__name__,
             ', '.join('{}={}'.format(
                 att, repr(getattr(self, att)))
-                for att in self.keys()))
+                for att in list(self.keys())))
 
     def __str__(self):
         return self.as_dict().__str__()
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
-                and all([self[key] == other[key] for key in self.keys()]))
+                and all([self[key] == other[key] for key in list(self.keys())]))
 
     def __ne__(self, other):
         return not(isinstance(other, self.__class__)
@@ -335,7 +335,7 @@ class LabelMetadata(MetadataObject):
         self.label = {}
         self.description = {}
         self['label_type'] = h5group.attrs['label_type']
-        for subgroup_name, h5subgroup in h5group.items():
+        for subgroup_name, h5subgroup in list(h5group.items()):
             hdf5.dict_from_hdf5(self[subgroup_name], h5subgroup)
 
 
@@ -416,16 +416,16 @@ class DataObject(MetadataObject):
         try:
             return (isinstance(other, self.__class__) and
                     all([np.array_equal(self[key], other[key])
-                         for key in self.keys()]))
+                         for key in list(self.keys())]))
         except AttributeError:
             return (isinstance(other, self.__class__) and
                     all([bool(np.logical_and.reduce((self[key] == other[key]).ravel()))
-                         for key in self.keys()]))
+                         for key in list(self.keys())]))
 
     def __ne__(self, other):
         return not(isinstance(other, self.__class__) or
                    any([np.array_equal(self[key], other[key])
-                        for key in self.keys()]))
+                        for key in list(self.keys())]))
 
     def as_dict(self):
         as_dict = super(DataObject, self).as_dict()
@@ -440,7 +440,7 @@ class DataObject(MetadataObject):
         import xml.etree.ElementTree as ET
         root = ET.Element('Metadata')
 
-        for key in self.keys():
+        for key in list(self.keys()):
             child = ET.SubElement(root, key)
             value = getattr(self, key)
             if hasattr(value, 'to_xml'):
@@ -463,7 +463,7 @@ class DataObject(MetadataObject):
 
     def to_hdf5(self, h5group):
         # Write Datasets
-        for key in self.keys():
+        for key in list(self.keys()):
             if self.__getattribute__(key) is None:
                 continue
             if hasattr(self.__getattribute__(key), 'to_hdf5'):
@@ -484,7 +484,7 @@ class DataObject(MetadataObject):
                     key, data=self.__getattribute__(key), maxshape=maxshape)
 
     def from_hdf5(self, h5group):
-        for key, dataset in h5group.items():
+        for key, dataset in list(h5group.items()):
             if isinstance(dataset, h5py.Group):
                 self[key].from_hdf5(dataset)
                 continue
@@ -576,9 +576,9 @@ class AnalyzerResult(MetadataObject):
             super(MetadataObject, self).__setattr__(name, value)
             return
 
-        elif name in self.keys():
+        elif name in list(self.keys()):
             if isinstance(value, dict) and value:
-                for (sub_name, sub_value) in value.items():
+                for (sub_name, sub_value) in list(value.items()):
                     self[name][sub_name] = sub_value
                 return
 
@@ -592,7 +592,7 @@ class AnalyzerResult(MetadataObject):
 
     def as_dict(self):
         return dict([(key, self[key].as_dict())
-                     for key in self.keys()] +  # if hasattr(self[key], 'as_dict')] +
+                     for key in list(self.keys())] +  # if hasattr(self[key], 'as_dict')] +
                     [('data_mode', self.data_mode), ('time_mode', self.time_mode)])
         # TODO : check if it can be simplified now
 
@@ -608,7 +608,7 @@ class AnalyzerResult(MetadataObject):
             child.tag = name
             root.append(child)
 
-        for key in self.keys():
+        for key in list(self.keys()):
             child = ET.fromstring(self[key].to_xml())
             child.tag = key
             root.append(child)
@@ -637,7 +637,7 @@ class AnalyzerResult(MetadataObject):
         group = h5_file.create_group(self.id)
         group.attrs['data_mode'] = self.__getattribute__('data_mode')
         group.attrs['time_mode'] = self.__getattribute__('time_mode')
-        for key in self.keys():
+        for key in list(self.keys()):
             if key in ['data_mode', 'time_mode']:
                 continue
             subgroup = group.create_group(key)
@@ -648,7 +648,7 @@ class AnalyzerResult(MetadataObject):
         # Read Sub-Group
         result = AnalyzerResult(data_mode=h5group.attrs['data_mode'],
                                 time_mode=h5group.attrs['time_mode'])
-        for subgroup_name, h5subgroup in h5group.items():
+        for subgroup_name, h5subgroup in list(h5group.items()):
             result[subgroup_name].from_hdf5(h5subgroup)
         return result
 
@@ -691,7 +691,7 @@ class AnalyzerResult(MetadataObject):
             ax.autoscale(axis='x', tight=True)
 
         # Export to PIL image
-        from StringIO import StringIO
+        from io import StringIO
         imgdata = StringIO()
         canvas = FigureCanvas(fig)
         canvas.print_png(imgdata, dpi=dpi)
@@ -952,10 +952,10 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         colors = itertools.cycle(['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         ax_color = {}
         legend_patches = []
-        for key, label in self.label_metadata.label.items():
-            ax_color[int(key)] = colors.next()
+        for key, label in list(self.label_metadata.label.items()):
+            ax_color[int(key)] = next(colors)
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
-            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=unicode(label)))
+            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=str(label)))
 
         for time, duration, key in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[int(key)], alpha=0.3)
@@ -997,15 +997,15 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         if media_file is not None:
             elan.add_linked_file(media_file)
         if label_per_tier == 'ONE':
-            for label in self.label_metadata.label.values():
-                tier_id = unicode(label)
+            for label in list(self.label_metadata.label.values()):
+                tier_id = str(label)
                 elan.add_tier(tier_id)
         elif label_per_tier == 'ALL':
             tier_id = 'Analysis'
             elan.add_tier(tier_id)
 
-        for n in xrange(len(self.label)):
-            label_id = self.label_metadata.label[unicode(self.label[n])]
+        for n in range(len(self.label)):
+            label_id = self.label_metadata.label[str(self.label[n])]
             if label_per_tier == 'ONE':
                 tier_id = label_id
             # tier_id = self.label_metadata.label[unicode(label_id)]
@@ -1032,7 +1032,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         specview = sve.add_spectrogram()
 
         # append a labelled interval annotation layer on a new view
-        labels = [self.label_metadata.label[unicode(label_id)] for label_id in self.label]
+        labels = [self.label_metadata.label[str(label_id)] for label_id in self.label]
 
         sve.add_interval_annotations(self.time, self.duration, labels, self.label)
 
@@ -1091,13 +1091,13 @@ class AnalyzerResultContainer(dict):
     def get_result_by_id(self, result_id):
         if self.list_id().count(result_id) > 1:
             raise ValueError('Result id shared by several procesors in the pipe. Get result from the processor instead')
-        for res in self.values():
+        for res in list(self.values()):
             if res.id_metadata.id == result_id:
                 return res
         raise KeyError('No such result id: %s' % result_id)
 
     def list_id(self):
-        return [res.id for res in self.values()]
+        return [res.id for res in list(self.values())]
 
     def to_xml(self, output_file=None):
 
@@ -1105,7 +1105,7 @@ class AnalyzerResultContainer(dict):
         # TODO : cf. telemeta util
         root = ET.Element('timeside')
 
-        for result in self.values():
+        for result in list(self.values()):
             if result is not None:
                 root.append(ET.fromstring(result.to_xml()))
 
@@ -1128,7 +1128,7 @@ class AnalyzerResultContainer(dict):
 
     def to_json(self, output_file=None):
 
-        json_str = json.dumps([res.as_dict() for res in self.values()],
+        json_str = json.dumps([res.as_dict() for res in list(self.values())],
                               default=JSON_NumpyArrayEncoder)
         if output_file:
             open(output_file, 'w').write(json_str)
@@ -1151,7 +1151,7 @@ class AnalyzerResultContainer(dict):
             res = AnalyzerResult(data_mode=res_json['data_mode'],
                                  time_mode=res_json['time_mode'])
 
-            for key in res_json.keys():
+            for key in list(res_json.keys()):
                 if key not in ['data_mode', 'time_mode']:
                     res[key].from_dict(res_json[key])
             self.add(res, overwrite=True)
@@ -1162,13 +1162,13 @@ class AnalyzerResultContainer(dict):
 
         # Define Specialize Yaml encoder for numpy array
         def numpyArray_representer(dumper, obj):
-            return dumper.represent_mapping(u'!numpyArray',
+            return dumper.represent_mapping('!numpyArray',
                                             {'dtype': obj.dtype.__str__(),
                                              'array': obj.tolist()})
 
         yaml.add_representer(np.ndarray, numpyArray_representer)
 
-        yaml_str = yaml.dump([res.as_dict() for res in self.values()])
+        yaml_str = yaml.dump([res.as_dict() for res in list(self.values())])
         if output_file:
             open(output_file, 'w').write(yaml_str)
         else:
@@ -1182,13 +1182,13 @@ class AnalyzerResultContainer(dict):
             mapping = loader.construct_mapping(node, deep=True)
             return np.asarray(mapping['array'], dtype=mapping['dtype'])
 
-        yaml.add_constructor(u'!numpyArray', numpyArray_constructor)
+        yaml.add_constructor('!numpyArray', numpyArray_constructor)
 
         results_yaml = yaml.load(yaml_str)
         for res_yaml in results_yaml:
             res = AnalyzerResult(data_mode=res_yaml['data_mode'],
                                  time_mode=res_yaml['time_mode'])
-            for key in res_yaml.keys():
+            for key in list(res_yaml.keys()):
                 if key not in ['data_mode', 'time_mode']:
                     res[key].from_dict(res_yaml[key])
 
@@ -1206,7 +1206,7 @@ class AnalyzerResultContainer(dict):
     def to_hdf5(self, output_file):
         # Open HDF5 file and save dataset (overwrite any existing file)
         with h5py.File(output_file, 'w') as h5_file:
-            for res in self.values():
+            for res in list(self.values()):
                 res.to_hdf5(h5_file)
 
     def from_hdf5(self, input_file):
@@ -1216,7 +1216,7 @@ class AnalyzerResultContainer(dict):
         # Open HDF5 file for reading and get results
         h5_file = h5py.File(input_file, 'r')
         try:
-            for group in h5_file.values():
+            for group in list(h5_file.values()):
                 result = AnalyzerResult.from_hdf5(group)
                 self.add(result, overwrite=True)
         except TypeError:

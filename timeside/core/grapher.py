@@ -181,7 +181,7 @@ class Grapher(Processor):
             try:
                 self.image.save(output)
             except AttributeError:
-                print("Pixel %s x %d" % (self.image_width, self.image_height))
+                print(("Pixel %s x %d" % (self.image_width, self.image_height)))
                 self.image.savefig(output, dpi=341)
             return
         return self.image

@@ -28,7 +28,7 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-from __future__ import division
+
 
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
 from timeside.core.tools.gstutils import MainloopThread, GLib, Gst
@@ -40,7 +40,7 @@ from timeside.plugins.decoder.utils import get_uri, get_media_uri_info, stack, g
 try:
     import queue
 except:
-    import Queue as queue
+    import queue as queue
 
 GST_APPSINK_MAX_BUFFERS = 10
 QUEUE_SIZE = 10

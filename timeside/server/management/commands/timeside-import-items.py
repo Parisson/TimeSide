@@ -31,7 +31,7 @@ class Command(BaseCommand):
 
         selection, c = Selection.objects.get_or_create(title=selection_title)
         if c:
-            print('Selection "' + selection_title + '" created')
+            print(('Selection "' + selection_title + '" created'))
 
         for root, dirs, files in os.walk(import_dir):
             for filename in files:
@@ -39,10 +39,10 @@ class Command(BaseCommand):
                 os.path.relpath(path, media_dir)
                 relpath = path[len(media_dir)+1:]
                 name, ext = os.path.splitext(filename)
-                title = unicode(selection_title + '_' + filename)
+                title = str(selection_title + '_' + filename)
                 item, c = Item.objects.get_or_create(title=title, source_file=relpath)
                 if c:
-                    print('Item "' + title + '" created')
+                    print(('Item "' + title + '" created'))
                 if not item in selection.items.all():
                     selection.items.add(item)
-                    print('Item "' + title + '" added to selection "' + selection_title +'"')
+                    print(('Item "' + title + '" added to selection "' + selection_title +'"'))

@@ -26,7 +26,7 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-from __future__ import division
+
 
 from timeside.core.decoder import Decoder, IDecoder, interfacedoc, implements
 from timeside.core.tools.gstutils import MainloopThread, GLib, Gst
@@ -34,7 +34,7 @@ from timeside.plugins.decoder.file import FileDecoder
 try:
     import queue
 except:
-    import Queue as queue
+    import queue as queue
 import threading
 
 GST_APPSINK_MAX_BUFFERS = 10

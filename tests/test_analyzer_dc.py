@@ -26,9 +26,9 @@ class TestAnalyzerDC(unittest.TestCase):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
         results = self.analyzer.results
-        for result_id in self.expected.keys():
+        for result_id in list(self.expected.keys()):
             result = results[result_id]
-            self.assertEquals(result.data_object.value,
+            self.assertEqual(result.data_object.value,
                               self.expected[result_id])
 
 if __name__ == '__main__':

@@ -34,8 +34,8 @@ class TestAnalyzers_with_default(unittest.TestCase):
         analyzer = analyzer_cls()
         pipe = (decoder | analyzer)
         pipe.run()
-        for result in analyzer.results.values():
-            if 'value' in result.data_object.keys():
+        for result in list(analyzer.results.values()):
+            if 'value' in list(result.data_object.keys()):
                 # Test for NaN
                 self.assertFalse(np.any(np.isnan(result.data)),
                                  'NaN in %s data value' % result.name)
@@ -49,7 +49,7 @@ class TestAnalyzers_with_default(unittest.TestCase):
 def _tests_factory(test_class, test_doc, list_analyzers, sources, skip_reasons={}):
     """Define a test for each analyzer provided in the list"""
     for analyzer in list_analyzers:
-        for source_type, source_file in sources.items():
+        for source_type, source_file in list(sources.items()):
             def test_func_factory(analyzer):
                 test_func = lambda self: self._perform_test(analyzer, source_file)
                 test_func.__doc__ = test_doc % analyzer.__name__ + '_' + source_type

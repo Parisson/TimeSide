@@ -71,7 +71,7 @@ def get_processor_pids():
     return [(name, [(processor.id(), processor.id())
                     for processor
                     in timeside.core.processor.processors(proc_type)])
-            for name, proc_type in _processor_types.items()]
+            for name, proc_type in list(_processor_types.items())]
 
 public_extra_types = {
     '.webm': 'video/webm',
@@ -90,11 +90,11 @@ private_extra_types = {
     '.hdf5': 'application/x-hdf5',  # HDF5
 }
 
-for ext, mime_type in public_extra_types.items():
+for ext, mime_type in list(public_extra_types.items()):
     if not mimetypes.guess_extension(mime_type) == ext:
         mimetypes.add_type(mime_type, ext)
 
-for ext, mime_type in private_extra_types.items():
+for ext, mime_type in list(private_extra_types.items()):
     mimetypes.add_type(mime_type, ext)
 
 
@@ -197,7 +197,7 @@ class Provider(Named, UUID):
     source_access =  models.BooleanField(default=False)
 
     def __unicode__(self):
-        return unicode(self.pid)
+        return str(self.pid)
 
     def get_provider(self):
         return timeside.core.get_provider(self.pid)
@@ -248,7 +248,7 @@ class Item(Titled, UUID, Dated, Shareable):
         verbose_name = _('item')
 
     def __unicode__(self):
-        return '_'.join([unicode(self.title), str(self.uuid)[:4]])
+        return '_'.join([str(self.title), str(self.uuid)[:4]])
 
     def results(self):
         return [result for result in self.results.all()]
@@ -432,7 +432,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
             result.status_setter(_DONE)
 
-        for preset, proc in presets.iteritems():
+        for preset, proc in presets.items():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
                 set_results_from_processor(proc, preset)
@@ -559,7 +559,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.uuid)[:4]])
+        return '_'.join([str(self.processor), str(self.uuid)[:4]])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %s" % self.uuid
@@ -617,9 +617,9 @@ class Result(UUID, Dated, Shareable):
     def __str__(self):
         if self.preset:
             if self.item:
-                return '_'.join([self.item.title, unicode(self.preset)])
+                return '_'.join([self.item.title, str(self.preset)])
             else:
-                return unicode(self.preset.processor)
+                return str(self.preset.processor)
         else:
             return 'Unamed_result'
 
@@ -636,7 +636,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)[:4]])
+        return '_'.join([str(self.selection), str(self.experience), str(self.uuid)[:4]])
 
     def status_setter(self, status):
         self.status = status

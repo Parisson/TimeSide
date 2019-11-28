@@ -35,7 +35,7 @@ class ItemTests(TimeSideTestServer):
         response = self.client.get(item_list_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), len(self.samples))
-        self.assertEqual(response.data[0].keys(),
+        self.assertEqual(list(response.data[0].keys()),
                          ['uuid', 'url', 'title', 'description', 'player_url',
                           'source_file', 'source_url', 'mime_type'])
 
@@ -47,7 +47,7 @@ class ItemTests(TimeSideTestServer):
         response = self.client.get(item_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
         item = response.data
-        self.assertEqual(item.keys(),
+        self.assertEqual(list(item.keys()),
                         ['uuid', 'url', 'player_url',
                         'title', 'description',
                         'source_file', 'source_url', 'mime_type',
@@ -66,7 +66,7 @@ class ItemTests(TimeSideTestServer):
         """
         item_create_url = reverse('item-list')
 
-        for title in self.samples.keys():
+        for title in list(self.samples.keys()):
             with open(self.samples[title], 'rb') as f:
                 kwargs = {'title':title, 'source_file': f}
                 response = self.client.post(item_create_url, kwargs, format='multipart')

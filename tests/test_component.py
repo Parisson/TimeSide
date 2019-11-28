@@ -42,11 +42,11 @@ class TestComponentArchitecture(unittest.TestCase):
 
     def testInterfaceDoc(self):
         "Test @interfacedoc decorator"
-        self.assertEquals(C10.test.__doc__, "testdoc")
+        self.assertEqual(C10.test.__doc__, "testdoc")
 
     def testInterfaceDocStatic(self):
         "Test @interfacedoc decorator on static method"
-        self.assertEquals(C10.teststatic.__doc__, "teststaticdoc")
+        self.assertEqual(C10.teststatic.__doc__, "teststaticdoc")
 
     def testIntefaceDocReversed(self):
         "Test @interfacedoc on static method (decorators reversed)"

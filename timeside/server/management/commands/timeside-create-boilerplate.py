@@ -60,7 +60,7 @@ class Command(BaseCommand):
 
             samples = generateSamples(samples_dir=samples_dir)
 
-            for sample in samples.items():
+            for sample in list(samples.items()):
                 filename, path = sample
                 title = os.path.splitext(filename)[0]
                 path = os.path.join(media_dir, filename)
@@ -97,14 +97,14 @@ class Command(BaseCommand):
                                                                         parameters=parameters
                                                                         )
                                 if created and verbosity:
-                                           print("    " + str(preset))                     
+                                           print(("    " + str(preset)))                     
 
                             except MultipleObjectsReturned:
-                                print(Preset.objects.get(
+                                print((Preset.objects.get(
                                                         processor=processor,
                                                         parameters=json.dumps(proc._analyzer_parameters)
                                                         )
-                                                    )
+                                                    ))
 
                             sub_processor, c = SubProcessor.objects.get_or_create(
                                                                                 sub_processor_id=proc._result_id,
@@ -122,10 +122,10 @@ class Command(BaseCommand):
                         preset, created = Preset.objects.get_or_create(processor=processor,
                                                                     parameters=json.dumps(processor.get_parameters_default()))
                         if created and verbosity:
-                                           print("    " + str(preset))
+                                           print(("    " + str(preset)))
                     presets.append(preset)
                 except Preset.MultipleObjectsReturned:
-                    print(Preset.objects.filter(processor=processor, parameters='{}'))
+                    print((Preset.objects.filter(processor=processor, parameters='{}')))
 
 
         # ------------ Providers -------------

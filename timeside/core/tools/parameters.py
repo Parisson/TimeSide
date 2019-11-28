@@ -112,14 +112,14 @@ class HasParam(object):
     def schema_from_argspec(cls):
         default_param = cls.get_parameters_default_from_argspec()
         schema = DEFAULT_SCHEMA()
-        for key, value in default_param.items():
-            if isinstance(value, basestring):
+        for key, value in list(default_param.items()):
+            if isinstance(value, str):
                 val_type = "string"
             elif isinstance(value, bool):
                 val_type = "boolean"  # warning : boolean is an int instance
             elif isinstance(value, float):
                 val_type = "number"
-            elif isinstance(value, (int, long)):
+            elif isinstance(value, int):
                 val_type = "integer"
             elif isinstance(value, list):
                 val_type = "array"

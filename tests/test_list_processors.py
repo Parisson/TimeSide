@@ -11,22 +11,22 @@ class TestListCoreProcessors(unittest.TestCase):
     def testHasSomeDecoders(self):
         "has some decoders"
         procs = timeside.core.processor.processors(timeside.core.api.IDecoder)
-        self.assertNotEquals(len(procs), 0)
+        self.assertNotEqual(len(procs), 0)
 
     def testHasSomeEncoders(self):
         "has some encoders"
         procs = timeside.core.processor.processors(timeside.core.api.IEncoder)
-        self.assertNotEquals(len(procs), 0)
+        self.assertNotEqual(len(procs), 0)
 
     def testHasSomeAnalyzers(self):
         "has some analyzers"
         procs = timeside.core.processor.processors(timeside.core.api.IAnalyzer)
-        self.assertNotEquals(len(procs), 0)
+        self.assertNotEqual(len(procs), 0)
 
     def testHasSomeGraphers(self):
         "has some graphers"
         procs = timeside.core.processor.processors(timeside.core.api.IGrapher)
-        self.assertNotEquals(len(procs), 0)
+        self.assertNotEqual(len(procs), 0)
 
     def testListProcessorsCSV(self):
         "list processors in .csv file"

@@ -93,7 +93,7 @@ class GstEncoder(Processor):
             try: # py3
                 import queue
             except: # py2
-                import Queue as queue
+                import queue as queue
             self._streaming_queue = queue.Queue(QUEUE_SIZE)
             # store a pointer to appsink in our encoder object
             self.app = self.pipeline.get_by_name('app')

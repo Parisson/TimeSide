@@ -46,10 +46,9 @@ class MetaProvider(MetaComponent):
         return new_class
 
 
-class Provider(Component):
+class Provider(Component, metaclass=MetaProvider):
 
     """Base component class of all providers"""
-    __metaclass__ = MetaProvider
 
     abstract()
     implements(IProvider)
@@ -70,30 +69,30 @@ def get_provider(provider_id):
     return _providers[provider_id]
 
 def list_providers(interface=IProvider, prefix=""):
-    print(prefix + interface.__name__)
+    print((prefix + interface.__name__))
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print(prefix + underline_char * len(interface.__name__))
+    print((prefix + underline_char * len(interface.__name__)))
     subinterfaces = interface.__subclasses__()
     procs = providers(interface, False)
     for p in procs:
-        print(prefix + "  * %s :" % p.id())
-        print(prefix + "    \t\t%s" % p.name())
-    print('_providers : ' + str(_providers))
+        print((prefix + "  * %s :" % p.id()))
+        print((prefix + "    \t\t%s" % p.name()))
+    print(('_providers : ' + str(_providers)))
 
 
 def list_providers_rst(interface=IProvider, prefix=""):
-    print('\n' + interface.__name__)
+    print(('\n' + interface.__name__))
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print(underline_char * len(interface.__name__) + '\n')
+    print((underline_char * len(interface.__name__) + '\n'))
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
         list_providers_rst(interface=i, prefix=prefix + " ")
     procs = providers(interface, False)
     for p in procs:
-        print(prefix + "  * **%s** : %s" % (p.id(), p.name()))
+        print((prefix + "  * **%s** : %s" % (p.id(), p.name())))

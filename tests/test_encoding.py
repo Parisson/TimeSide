@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from __future__ import division
+
 
 from math import pi
 import numpy as np
@@ -133,8 +133,8 @@ class TestEncoding(unittest.TestCase):
             self.assertEqual(media_samplerate, self.samplerate)
 
         if 0:
-            import commands
-            print(commands.getoutput('sndfile-info ' + self.sink))
+            import subprocess
+            print((subprocess.getoutput('sndfile-info ' + self.sink)))
 
         self.assertEqual(self.expected_total_frames, self.encoder.num_samples)
         self.assertEqual(self.channels, self.encoder.channels())

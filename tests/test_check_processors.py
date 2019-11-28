@@ -22,7 +22,7 @@ class TestCheckProcessorsParam(unittest.TestCase):
         argspec.args.remove('self')  # remove 'self' from arguments list
 
         # print argspec.args
-        parameters = processor_cls.get_parameters_schema()['properties'].keys()
+        parameters = list(processor_cls.get_parameters_schema()['properties'].keys())
         # print traits_parameters
         self.assertTrue(set(parameters).issubset(argspec.args))
 

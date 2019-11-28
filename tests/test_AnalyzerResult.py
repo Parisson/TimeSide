@@ -134,7 +134,7 @@ class TestAnalyzerResultGoodType(TestAnalyzerResult):
     @unittest.skip("String have to be handled through label metadata")
     def testOnUnicode(self):
         "Unicode"
-        self.result.data_object.value = u'\u0107'
+        self.result.data_object.value = '\u0107'
 
     def method(self, numpy_data_type):
         """Good numpy data type"""
@@ -160,8 +160,8 @@ class TestAnalyzerResultNumpy(TestAnalyzerResultGoodType):
         results.to_numpy('/tmp/t.npy')
         d_numpy = results.from_numpy('/tmp/t.npy')
         if verbose:
-            print '%15s' % 'from numpy:',
-            print d_numpy
+            print('%15s' % 'from numpy:', end=' ')
+            print(d_numpy)
         self.assertEqual(d_numpy, results)
 
 
@@ -187,7 +187,7 @@ class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
         elif isinstance(self.result, AnalyzerResultContainer) :
             results = self.result
         else:
-            raise(TypeError, "Wrong type for self.result")
+            raise TypeError
 
         import tempfile
         h5_file = tempfile.NamedTemporaryFile(suffix='.h5', delete=True)
@@ -197,8 +197,8 @@ class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
         from_results.from_hdf5(h5_file.name)
 
         if verbose:
-            print '%15s' % 'from hdf5:',
-            print from_results
+            print('%15s' % 'from hdf5:', end=' ')
+            print(from_results)
         self.assertEqual(results, from_results)
         h5_file.close()
 
@@ -208,13 +208,13 @@ class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
         results = AnalyzerResultContainer(self.result)
         r_yaml = results.to_yaml()
         if verbose:
-            print 'to yaml:'
-            print r_yaml
+            print('to yaml:')
+            print(r_yaml)
         from_results = AnalyzerResultContainer()
         from_results.from_yaml(r_yaml)
         if verbose:
-            print '%15s' % 'from yaml:',
-            print from_results
+            print('%15s' % 'from yaml:', end=' ')
+            print(from_results)
         self.assertEqual(type(self.result.data_object.frame_metadata),
                          type(from_results['foo_bar'].data_object.frame_metadata))
 
@@ -224,14 +224,14 @@ class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
         results = AnalyzerResultContainer([self.result])
         r_xml = results.to_xml()
         if verbose:
-            print 'to xml:'
-            print r_xml
+            print('to xml:')
+            print(r_xml)
 
         from_results = AnalyzerResultContainer()
         from_results.from_xml(r_xml)
         if verbose:
-            print '%15s' % 'from xml:',
-            print from_results
+            print('%15s' % 'from xml:', end=' ')
+            print(from_results)
 
         #for i in range(len(d_xml)):
         self.assertEqual(results, from_results)
@@ -246,14 +246,14 @@ class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
         except TypeError:
             print('TYPE ERROR IN JSON')
         if verbose:
-            print 'to json:'
-            print r_json
+            print('to json:')
+            print(r_json)
 
         from_results = AnalyzerResultContainer()
         from_results.from_json(r_json)
         if verbose:
-            print from_results
-            print '%15s' % 'from json:',
+            print(from_results)
+            print('%15s' % 'from json:', end=' ')
 
         self.assertEqual(results, from_results)
 
@@ -264,8 +264,8 @@ class TestAnalyzerResultAsDict(TestAnalyzerResultGoodType):
     def tearDown(self):
 
         self.assertIsInstance(self.result.as_dict(), dict)
-        self.assertItemsEqual(self.result.keys() + ['data_mode', 'time_mode'],
-                              self.result.as_dict().keys())
+        self.assertItemsEqual(list(self.result.keys()) + ['data_mode', 'time_mode'],
+                              list(self.result.as_dict().keys()))
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from __future__ import division
+
 
 from timeside.plugins.decoder.array import ArrayDecoder
 from unit_timeside import *
@@ -101,7 +101,7 @@ class TestDecoding(unittest.TestCase):
 
         self.assertEqual(totalframes,
                          self.expected_duration * decoder.output_samplerate)
-        self.assertEquals(totalframes, decoder.totalframes())
+        self.assertEqual(totalframes, decoder.totalframes())
 
 
 class TestDecodingSegment(TestDecoding):

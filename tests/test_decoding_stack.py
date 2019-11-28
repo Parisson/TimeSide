@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from __future__ import division
+
 
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.plugins.analyzer.level import Level

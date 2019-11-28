@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from __future__ import division
+
 
 from unit_timeside import unittest, TestRunner
 from timeside.core.analyzer import AnalyzerResult
@@ -21,7 +21,7 @@ class TestAnalyzerResult_factory(unittest.TestCase):
                 result = AnalyzerResult(data_mode, time_mode)
                 self.assertEqual(result.data_mode, data_mode)
                 self.assertEqual(result.time_mode, time_mode)
-                self.assertEqual(result.keys(), ['id_metadata',
+                self.assertEqual(list(result.keys()), ['id_metadata',
                                                  'data_object',
                                                  'audio_metadata',
                                                  'parameters'])
@@ -82,7 +82,7 @@ class TestAnalyzerResult_classes(unittest.TestCase):
 
     def tearDown(self):
         result = AnalyzerResult(self.data_mode, self.time_mode)
-        self.assertEqual(self.data_object_keys, result.data_object.keys())
+        self.assertEqual(self.data_object_keys, list(result.data_object.keys()))
 
 
 class TestAnalyzerResult_Data_Methods(unittest.TestCase):

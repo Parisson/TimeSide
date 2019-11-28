@@ -22,7 +22,7 @@
 #  Thomas Fillon <thomas@parisson.com>
 
 
-from __future__ import absolute_import
+
 
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer

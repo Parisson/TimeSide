@@ -13,7 +13,7 @@ from timeside.server.utils import TS_ENCODERS_EXT
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.schemas import get_schema_view
 
-EXPORT_EXT = "|".join(TS_ENCODERS_EXT.keys())
+EXPORT_EXT = "|".join(list(TS_ENCODERS_EXT.keys()))
 
 admin.autodiscover()
 

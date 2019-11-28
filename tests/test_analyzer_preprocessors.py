@@ -61,12 +61,12 @@ class TestAnalyzerPreProcessors(unittest.TestCase):
         
         input_frames_eod = [(frames, eod) for frames, eod
                             in get_frames(signal=self.input_signal)]
-        input_frames, input_eod = zip(*input_frames_eod)
+        input_frames, input_eod = list(zip(*input_frames_eod))
 
         process_output = []
         for frames, eod in input_frames_eod:
             process_output.append(analyzer.decorated_process(frames, eod))
-        output_frames, output_eod = zip(*process_output)
+        output_frames, output_eod = list(zip(*process_output))
 
         # Check incoming frames = outgoing frames outside the process
         self.assertTupleEqual(input_frames, output_frames)
@@ -90,7 +90,7 @@ class TestDownmixToMono(TestAnalyzerPreProcessors):
         self.process_signal = self.input_signal
         process_frames_eod = [(frames, eod) for frames, eod
                               in get_frames(signal=self.input_signal)]
-        self.process_frames, process_eod = zip(*process_frames_eod)
+        self.process_frames, process_eod = list(zip(*process_frames_eod))
 
     def test_on_stereo(self):
         "Run on stereo"
@@ -99,7 +99,7 @@ class TestDownmixToMono(TestAnalyzerPreProcessors):
         self.process_signal = self.input_signal.mean(axis=1)
         process_frames_eod = [(frames, eod) for frames, eod
                               in get_frames(signal=self.process_signal)]
-        self.process_frames, process_eod = zip(*process_frames_eod)
+        self.process_frames, process_eod = list(zip(*process_frames_eod))
 
     def test_on_multichannel(self):
         "Run on multi-channel"
@@ -107,7 +107,7 @@ class TestDownmixToMono(TestAnalyzerPreProcessors):
         self.process_signal = self.input_signal.mean(axis=1)
         process_frames_eod = [(frames, eod) for frames, eod
                               in get_frames(signal=self.process_signal)]
-        self.process_frames, process_eod = zip(*process_frames_eod)
+        self.process_frames, process_eod = list(zip(*process_frames_eod))
         
 
 class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
@@ -127,7 +127,7 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
                                             blocksize=self.blocksize,
                                             stepsize=self.stepsize,
                                             zeropad=True)]
-        self.process_frames, process_eod = zip(*process_frames_eod)
+        self.process_frames, process_eod = list(zip(*process_frames_eod))
         
 
     def test_on_stereo(self):
@@ -139,7 +139,7 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
                                             blocksize=self.blocksize,
                                             stepsize=self.stepsize,
                                             zeropad=True)]
-        self.process_frames, process_eod = zip(*process_frames_eod)
+        self.process_frames, process_eod = list(zip(*process_frames_eod))
         
     def test_on_stereo_4096(self):
         "Run on stereo, blocksize=4096"
@@ -151,7 +151,7 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
                                             blocksize=self.blocksize,
                                             stepsize=self.stepsize,
                                             zeropad=True)]
-        self.process_frames, process_eod = zip(*process_frames_eod)
+        self.process_frames, process_eod = list(zip(*process_frames_eod))
  
         
 if __name__ == '__main__':

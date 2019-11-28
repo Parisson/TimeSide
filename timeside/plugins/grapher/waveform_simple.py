@@ -81,4 +81,4 @@ class Waveform(Grapher):
         a = 1
         for x in range(self.image_width):
             self.pixel[x, self.image_height / 2] = tuple(
-                map(lambda p: p + a, self.pixel[x, self.image_height / 2]))
+                [p + a for p in self.pixel[x, self.image_height / 2]])

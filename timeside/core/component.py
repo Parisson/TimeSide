@@ -128,10 +128,9 @@ class MetaComponent(type):
         return new_class
 
 
-class Component(object):
+class Component(object, metaclass=MetaComponent):
 
     """Base class of all components"""
-    __metaclass__ = MetaComponent
 
 
 def extend_unique(list1, list2):

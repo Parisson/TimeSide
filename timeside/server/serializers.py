@@ -438,7 +438,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
                 msg = '\n'.join([str(e), default_msg])
                 raise serializers.ValidationError(msg)
             except KeyError as e:
-                msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
+                msg = '\n'.join(['KeyError :' + str(e), default_msg])
                 raise serializers.ValidationError(msg)
 
             processor = proc(**json.loads(data['parameters']))
@@ -494,10 +494,10 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
         if True:
             # if result.data_object.y_value.size:
 
-            import StringIO
+            import io
             pil_image = result._render_PIL(
                 size=(width, height), dpi=80, xlim=(start, stop))
-            image_buffer = StringIO.StringIO()
+            image_buffer = io.StringIO()
             pil_image.save(image_buffer, 'PNG')
             return image_buffer.getvalue()
         else:

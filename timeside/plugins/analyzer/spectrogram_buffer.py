@@ -20,7 +20,7 @@
 
 # Author: Thomas Fillon <thomas@parisson.com>
 
-from __future__ import division
+
 from timeside.core import implements, interfacedoc
 from timeside.core.analyzer import Analyzer
 from timeside.core.api import IAnalyzer

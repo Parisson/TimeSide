@@ -75,7 +75,7 @@ def downsample(vector, factor):
         Downsample (by averaging) a vector by an integer factor.
     """
     if (len(vector) % factor):
-        print("Length of 'vector' is not divisible by 'factor'=%d!" % factor)
+        print(("Length of 'vector' is not divisible by 'factor'=%d!" % factor))
         return 0
     vector.shape = (len(vector) / factor, factor)
     return numpy.mean(vector, axis=1)

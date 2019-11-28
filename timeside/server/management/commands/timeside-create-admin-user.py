@@ -24,6 +24,6 @@ class Command(BaseCommand):
             user.is_staff = True
             user.save()
             if verbosity:
-                print('User "%s" created"' % self.username)
+                print(('User "%s" created"' % self.username))
                 if Token.objects.get(user=user):
-                    print('Token created for User "%s"' % self.username)
+                    print(('Token created for User "%s"' % self.username))
