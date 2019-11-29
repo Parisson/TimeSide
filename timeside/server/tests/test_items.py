@@ -23,7 +23,6 @@ class ItemTests(TimeSideTestServer):
         # Generate test sample files
         self.samples_dir = tempfile.mkdtemp(dir=settings.MEDIA_ROOT)
         self.samples = generateSamples(samples_dir=self.samples_dir)
-
         self.item_title = 'C4_scale'
         self.item_uuid = Item.objects.get(title=self.item_title).uuid
         
@@ -47,7 +46,7 @@ class ItemTests(TimeSideTestServer):
         response = self.client.get(item_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)   
         item = response.data
-        self.assertEqual(item.keys(),
+        self.assertEqual(list(item.keys()),
                         ['uuid', 'url', 'player_url',
                         'title', 'description',
                         'source_file', 'source_url', 'mime_type',
@@ -65,7 +64,6 @@ class ItemTests(TimeSideTestServer):
         Ensure an item can be created from an uploaded track.
         """
         item_create_url = reverse('item-list')
-
         for title in self.samples.keys():
             with open(self.samples[title], 'rb') as f:
                 kwargs = {'title':title, 'source_file': f}
