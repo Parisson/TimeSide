@@ -1,26 +1,10 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.provider import Provider
 from timeside.core.api import IProvider
+from timeside.core.tools.utils import slugify
 
 import os
 from requests import get
-import unicodedata
-import re
-
-
-def slugify(value):
-    """
-    Made after django.utils.text slugify function.
-    Convert to ASCII. Convert spaces to hyphens.
-    Remove characters that aren't alphanumerics, underscores, or hyphens.
-    Convert to lowercase. Also strip leading and trailing whitespace. Convert spaces to hyphens.
-    Remove characters that aren't alphanumerics, underscores, or hyphens.
-    Convert to lowercase. Also strip leading and trailing whitespace.
-    """
-    value = unicode(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-    value = re.sub(r'[^\w\s-]', '', value).strip().lower()
-    return re.sub(r'[-\s]+', '-', value)
 
 
 class Deezer(Provider):
