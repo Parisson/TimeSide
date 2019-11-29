@@ -20,6 +20,9 @@ libofa0
 vamp-examples
 vamp-plugin-sdk
 
+# Youtube's provider needs ffmpag
+ffmpeg
+
 # Misc.
 git
 wget
