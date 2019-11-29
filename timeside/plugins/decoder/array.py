@@ -30,7 +30,6 @@ from timeside.core import implements, interfacedoc
 from timeside.core.decoder import Decoder, IDecoder
 import numpy as np
 
-
 class ArrayDecoder(Decoder):
 
     """ Decoder taking Numpy array as input"""
@@ -117,7 +116,7 @@ class ArrayDecoder(Decoder):
         if self.input_totalframes % self.output_blocksize == 0:
             nb_frames -= 1  # Last frame must send eod=True
 
-        for index in xrange(0,
+        for index in range(0,
                             nb_frames * self.output_blocksize,
                             self.output_blocksize):
             yield (self.samples[index:index + self.output_blocksize], False)
@@ -126,7 +125,7 @@ class ArrayDecoder(Decoder):
 
     @interfacedoc
     def process(self):
-        return self.frames.next()
+        return next(self.frames)
 
     # IDecoder methods
     @interfacedoc

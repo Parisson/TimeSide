@@ -121,7 +121,7 @@ def parse_args():
 
     if options.config_file:
         if not os.path.isfile(options.config_file):
-            print "ERROR: configuration file not found:", options.config_file
+            print("ERROR: configuration file not found:", options.config_file)
             sys.exit(1)
         config = parse_config(options.config_file)
         for key in config:
@@ -142,13 +142,13 @@ if __name__ == '__main__':
     import timeside.core
 
     if len(args) == 0:
-        print usage
+        print(usage)
         sys.exit(1)
 
     if not options.quiet:
         for a in dir(options):
             if not callable(getattr(options,a)) and not a.startswith('_'):
-                print a + ":", getattr(options,a)
+                print(a + ":", getattr(options,a))
 
     verbose = options.verbose and not options.quiet
     channels = options.channels
@@ -228,16 +228,16 @@ if __name__ == '__main__':
                 for f in r_formats:
                     result_path = os.path.join(result_dir, res_uuid + '.' + f)
                     getattr(result,'to_'+f)(result_path)
-                    if verbose : print 'saved', result_path
+                    if verbose : print('saved', result_path)
         if len(_graphers):
             for g in _graphers:
                 for f in i_formats:
                     graph_path = os.path.join(result_dir, g.uuid() + '.' + f)
                     g.render(graph_path)
-                    if verbose : print 'saved', graph_path
+                    if verbose : print('saved', graph_path)
         if len(_encoders):
             for e in _encoders:
-                if verbose : print 'saved', e.filename
+                if verbose : print('saved', e.filename)
 
     for path in args:
         process_file (path)

@@ -69,7 +69,7 @@ numpy_data_types = [
     #'complex128',
     #'complex64',
 ]
-numpy_data_types = map(lambda x: getattr(np, x), numpy_data_types)
+numpy_data_types = list(map(lambda x: getattr(np, x), numpy_data_types))
 # numpy_data_types += [np.ndarray]
 
 
@@ -1004,7 +1004,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
             tier_id = 'Analysis'
             elan.add_tier(tier_id)
 
-        for n in xrange(len(self.label)):
+        for n in range(len(self.label)):
             label_id = self.label_metadata.label[unicode(self.label[n])]
             if label_per_tier == 'ONE':
                 tier_id = label_id

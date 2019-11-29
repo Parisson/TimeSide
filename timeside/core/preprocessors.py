@@ -163,7 +163,7 @@ def frames_adapter(process_func):
             if eod and len(eod_list):
                 eod_list[-1] = eod
 
-            for index, eod in zip(xrange(0, nb_frames * self.stepsize, self.stepsize), eod_list):
+            for index, eod in zip(range(0, nb_frames * self.stepsize, self.stepsize), eod_list):
                 yield (stack[index:index + self.blocksize], eod)
 
     aubio_analyzers = ['aubio_melenergy', 'aubio_mfcc', 'aubio_pitch', 'aubio_specdesc', 'aubio_temporal']

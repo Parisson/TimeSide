@@ -160,8 +160,7 @@ class TestAnalyzerResultNumpy(TestAnalyzerResultGoodType):
         results.to_numpy('/tmp/t.npy')
         d_numpy = results.from_numpy('/tmp/t.npy')
         if verbose:
-            print '%15s' % 'from numpy:',
-            print d_numpy
+            print('%15s' % 'from numpy:', d_numpy)
         self.assertEqual(d_numpy, results)
 
 
@@ -197,8 +196,7 @@ class TestAnalyzerResultHdf5(TestAnalyzerResultGoodType, LevelAnalyzer):
         from_results.from_hdf5(h5_file.name)
 
         if verbose:
-            print '%15s' % 'from hdf5:',
-            print from_results
+            print('%15s' % 'from hdf5:', from_results)
         self.assertEqual(results, from_results)
         h5_file.close()
 
@@ -208,13 +206,11 @@ class TestAnalyzerResultYaml(TestAnalyzerResultGoodType):
         results = AnalyzerResultContainer(self.result)
         r_yaml = results.to_yaml()
         if verbose:
-            print 'to yaml:'
-            print r_yaml
+            print('to yaml:', r_yaml)
         from_results = AnalyzerResultContainer()
         from_results.from_yaml(r_yaml)
         if verbose:
-            print '%15s' % 'from yaml:',
-            print from_results
+            print('%15s' % 'from yaml:', from_results)
         self.assertEqual(type(self.result.data_object.frame_metadata),
                          type(from_results['foo_bar'].data_object.frame_metadata))
 
@@ -224,14 +220,12 @@ class TestAnalyzerResultXml(TestAnalyzerResultGoodType):
         results = AnalyzerResultContainer([self.result])
         r_xml = results.to_xml()
         if verbose:
-            print 'to xml:'
-            print r_xml
+            print('to xml:', r_xml)
 
         from_results = AnalyzerResultContainer()
         from_results.from_xml(r_xml)
         if verbose:
-            print '%15s' % 'from xml:',
-            print from_results
+            print('%15s' % 'from xml:', from_results)
 
         #for i in range(len(d_xml)):
         self.assertEqual(results, from_results)
@@ -246,14 +240,12 @@ class TestAnalyzerResultJson(TestAnalyzerResultGoodType):
         except TypeError:
             print('TYPE ERROR IN JSON')
         if verbose:
-            print 'to json:'
-            print r_json
+            print('to json:', r_json)
 
         from_results = AnalyzerResultContainer()
         from_results.from_json(r_json)
         if verbose:
-            print from_results
-            print '%15s' % 'from json:',
+            print('%15s' % 'from json:', from_results)
 
         self.assertEqual(results, from_results)
 

@@ -82,7 +82,7 @@ class LoudnessITU(Analyzer):
 
         self.input_blocksize = int(round(0.4 * self.input_samplerate))  # return a 400ms block
         self.input_stepsize = int(round(0.1 * self.input_samplerate))  # 75% overlap <=> 25% step
-        self.z = [[] for x in xrange(self.input_channels)]  # generate empty list of list which dimensionality matches the number of channels
+        self.z = [[] for x in range(self.input_channels)]  # generate empty list of list which dimensionality matches the number of channels
 
         # Setting filters coefficients according to sampling frequency
         if self.input_samplerate == 44100:
