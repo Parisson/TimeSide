@@ -40,8 +40,8 @@ class BufferTable(object):
         else:
             self.array_names = [array_names]
         for name in array_names:
-            if not isinstance(name, basestring):
-                raise(TypeError, 'String argument require in array_names')
+            if not isinstance(name, str):
+                raise TypeError('String argument require in array_names')
 
     def __getitem__(self, name):
         return self.fileh.root.__getattr__(name)
