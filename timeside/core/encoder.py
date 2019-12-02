@@ -103,7 +103,7 @@ class GstEncoder(Processor):
             self.app.connect("new-sample", self._on_new_sample_streaming)
             self.app.connect('new-preroll', self._on_new_preroll_streaming)
 
-        srccaps = Gst.caps_from_string("""audio/x-raw-float,
+        srccaps = Gst.Caps("""audio/x-raw,
             format=F32LE,
             layout=interleaved,
             channels=(int)%s,
