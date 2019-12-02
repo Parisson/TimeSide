@@ -101,7 +101,7 @@ class GstEncoder(Processor):
             self.app.set_property("drop", False)
             self.app.set_property('emit-signals', True)
             self.app.connect("new-sample", self._on_new_sample_streaming)
-            #self.app.connect('new-preroll', self._on_new_preroll_streaming)
+            self.app.connect('new-preroll', self._on_new_preroll_streaming)
 
         srccaps = Gst.caps_from_string("""audio/x-raw-float,
             format=F32LE,
