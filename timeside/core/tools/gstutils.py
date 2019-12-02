@@ -12,7 +12,7 @@ import threading
 
 def numpy_array_to_gst_buffer(frames, chunk_size, num_samples, sample_rate):
     """ gstreamer buffer to numpy array conversion """
-    buf = Gst.Buffer(frames.astype("float32").tobytes())
+    buf = Gst.Buffer.new_wrapped(frames.astype("float32").tobytes())
     # Set its timestamp and duration
     buf.timestamp = Gst.util_uint64_scale(num_samples, Gst.SECOND, sample_rate)
     buf.duration = Gst.util_uint64_scale(chunk_size, Gst.SECOND, sample_rate)
