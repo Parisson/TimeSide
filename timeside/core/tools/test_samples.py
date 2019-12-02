@@ -219,6 +219,7 @@ class gst_BuildSample(object):
             print ("Debugging information: %s" % debug_info)
             mainloop.quit()
 
+        pipeline.set_state(Gst.State.PAUSE)
         pipeline.set_state(Gst.State.PLAYING)
         bus = pipeline.get_bus()
         bus.add_signal_watch()
