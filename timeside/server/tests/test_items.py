@@ -34,7 +34,7 @@ class ItemTests(TimeSideTestServer):
         response = self.client.get(item_list_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), len(self.samples))
-        self.assertEqual(response.data[0].keys(),
+        self.assertEqual(list(response.data[0].keys()),
                          ['uuid', 'url', 'title', 'description', 'player_url',
                           'source_file', 'source_url', 'mime_type'])
 
