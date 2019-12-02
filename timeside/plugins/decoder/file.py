@@ -77,7 +77,7 @@ class FileDecoder(Decoder):
     >>> analyzer = get_processor('level')()  # Pick a arbitrary analyzer
     >>> pipe =(decoder | analyzer)
     >>> pipe.run()  # Run the pipe for the given audio source
-"""
+    """
     implements(IDecoder)
 
     output_blocksize = 8 * 1024
