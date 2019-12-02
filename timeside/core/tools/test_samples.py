@@ -282,7 +282,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
-   # sweep 44100 stereo mp3
+    # sweep 44100 stereo mp3
     filename = 'sweep.mp3'
     gst_audio_encoder = ['lamemp3enc', 'xingmux', 'id3v2mux']
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
@@ -292,7 +292,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
-   # sweep 44100 stereo flac
+    # sweep 44100 stereo flac
     filename = 'sweep.flac'
     gst_audio_encoder = 'flacenc'
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
@@ -302,7 +302,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
-   # sweep 44100 stereo ogg
+    # sweep 44100 stereo ogg
     filename = 'sweep.ogg'
     gst_audio_encoder = ['vorbisenc', 'oggmux']
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
