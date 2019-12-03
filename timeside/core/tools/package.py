@@ -77,8 +77,9 @@ def import_module_with_exceptions(name, package=None):
             # Ignore module requiring DJANGO_SETTINGS_MODULE in environnement
             return
         else:
-            print (name, package)
-            raise e
+            print ("Failed loading", name, e)
+            #raise e
+            return
     return name
 
 
