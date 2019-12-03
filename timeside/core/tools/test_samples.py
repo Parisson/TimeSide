@@ -196,6 +196,9 @@ class gst_BuildSample(object):
         #Gst.Element.link_many(*pipe_elements)
         numpy_src.appsrc.link(converter)
         converter.link(encoder_muxer[0])
+        while len(encoder_muxer) > 1:
+            next_el = encoder_muxer.pop(0)
+            next_el.link(encoder_muxer[0])
         encoder_muxer[0].link(filesink)
 
         def _on_new_pad(self, source, pad, target_pad):
@@ -216,6 +219,7 @@ class gst_BuildSample(object):
             print ("Debugging information: %s" % debug_info)
             mainloop.quit()
 
+        pipeline.set_state(Gst.State.PAUSE)
         pipeline.set_state(Gst.State.PLAYING)
         bus = pipeline.get_bus()
         bus.add_signal_watch()
@@ -278,7 +282,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
-   # sweep 44100 stereo mp3
+    # sweep 44100 stereo mp3
     filename = 'sweep.mp3'
     gst_audio_encoder = ['lamemp3enc', 'xingmux', 'id3v2mux']
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
@@ -288,7 +292,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
-   # sweep 44100 stereo flac
+    # sweep 44100 stereo flac
     filename = 'sweep.flac'
     gst_audio_encoder = 'flacenc'
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
@@ -298,7 +302,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
-   # sweep 44100 stereo ogg
+    # sweep 44100 stereo ogg
     filename = 'sweep.ogg'
     gst_audio_encoder = ['vorbisenc', 'oggmux']
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)

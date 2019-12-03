@@ -100,10 +100,10 @@ class GstEncoder(Processor):
             self.app.set_property('max-buffers', GST_APPSINK_MAX_BUFFERS)
             self.app.set_property("drop", False)
             self.app.set_property('emit-signals', True)
-            self.app.connect("new-buffer", self._on_new_buffer_streaming)
-            #self.app.connect('new-preroll', self._on_new_preroll_streaming)
+            self.app.connect("new-sample", self._on_new_sample_streaming)
+            self.app.connect('new-preroll', self._on_new_preroll_streaming)
 
-        srccaps = Gst.caps_from_string("""audio/x-raw-float,
+        srccaps = Gst.Caps("""audio/x-raw,
             format=F32LE,
             layout=interleaved,
             channels=(int)%s,
@@ -148,9 +148,9 @@ class GstEncoder(Processor):
             self.end_cond.notify()
             self.end_cond.release()
 
-    def _on_new_buffer_streaming(self, appsink):
-        # print('pull-buffer')
-        chunk = appsink.emit('pull-buffer')
+    def _on_new_sample_streaming(self, appsink):
+        # print('pull-sample')
+        chunk = appsink.emit('pull-sample')
         self._streaming_queue.put(chunk)
 
     def _on_new_preroll_streaming(self, appsink):

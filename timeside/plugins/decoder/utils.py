@@ -173,7 +173,7 @@ def stack(process_func):
                 decoder.process_pipe.frames_stack.append((frames, eod))
             return frames, eod
         else:
-            return decoder._frames_iterator.next()
+            return next(decoder._frames_iterator)
 
     return wrapper
 

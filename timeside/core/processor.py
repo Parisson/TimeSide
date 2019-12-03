@@ -497,12 +497,12 @@ class ProcessPipe(object):
                                 if item.force_samplerate])
         if force_samplerate:
             if len(force_samplerate) > 1:
-                raise(ValueError,
-                      "Some processors specify different samplerate")
+                raise ValueError \
+                    ("Some processors specify different samplerate")
             force_samplerate = force_samplerate.pop()
 
             if samplerate and samplerate != force_samplerate:
-                raise(ValueError, "A processor try to force the samplerate")
+                raise ValueError("A processor try to force the samplerate")
 
             samplerate = force_samplerate
 

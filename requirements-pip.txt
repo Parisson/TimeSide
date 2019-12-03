@@ -23,7 +23,6 @@ torchvision
 traits
 Werkzeug
 #yaafe
-coreapi
 celery==4.*
 deezer-python
 django-bootstrap-pagination

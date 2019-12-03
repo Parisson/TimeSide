@@ -45,7 +45,6 @@ if 'DISPLAY' not in os.environ:
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from py_sonicvisualiser import SVEnv
 
 numpy_data_types = [
     #'float128',
@@ -891,6 +890,7 @@ class FrameValueObject(ValueObject, FramewiseObject):
         # audio_file = os.path.basename(audio_file)
         # init a sonic visualiser environment file corresponding
         # to the analysis of media wavfname
+        from py_sonicvisualiser import SVEnv
         sve = SVEnv.init_from_wave_file(audio_file)
 
         # append a spectrogram view
@@ -1026,6 +1026,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         # audio_file = os.path.basename(audio_file)
         # init a sonic visualiser environment file corresponding
         # to the analysis of media wavfname
+        from py_sonicvisualiser import SVEnv
         sve = SVEnv.init_from_wave_file(audio_file)
 
         # append a spectrogram view
