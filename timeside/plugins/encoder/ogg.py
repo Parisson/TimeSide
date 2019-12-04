@@ -78,7 +78,7 @@ class VorbisEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def mime_type():
-        return "application/ogg"
+        return "audio/ogg"
 
     @interfacedoc
     def set_metadata(self, metadata):
