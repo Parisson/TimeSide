@@ -118,23 +118,19 @@ class TestDecoding(unittest.TestCase):
 
         input_duration = decoder.input_totalframes / decoder.input_samplerate
         output_duration = decoder.totalframes() / decoder.output_samplerate
+
         if self.test_exact_duration:
             self.assertEqual(input_duration, output_duration)
-            self.assertEqual(input_duration,
-                             decoder.uri_duration)
-            self.assertEqual(self.source_duration,
-                             decoder.uri_duration)
+            self.assertEqual(input_duration, decoder.uri_duration)
+            self.assertEqual(self.source_duration, decoder.uri_duration)
             self.assertEqual(totalframes, expected_totalframes)
-
         else:
             self.assertAlmostEqual(input_duration, output_duration,
-                                   places=1)
-            self.assertAlmostEqual(input_duration,
-                                   decoder.uri_duration,
-                                   places=1)
-            self.assertAlmostEqual(self.source_duration,
-                                   decoder.uri_duration,
-                                   places=1)
+                    places=5)
+            self.assertAlmostEqual(input_duration, decoder.uri_duration,
+                    places=3)
+            self.assertAlmostEqual(self.source_duration, decoder.uri_duration,
+                    delta=.08)
             self.assertAlmostEqual(totalframes, expected_totalframes, delta=69)
 
 
