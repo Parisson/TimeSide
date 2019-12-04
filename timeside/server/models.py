@@ -249,7 +249,7 @@ class Item(Titled, UUID, Dated, Shareable):
     lock = models.BooleanField(default=False)
     external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
     external_id = models.CharField(_('external_id'), blank=True, max_length=256)
-    provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True)
+    provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ['title']
@@ -558,7 +558,7 @@ class SubProcessor(UUID):
 
 class Preset(UUID, Dated, Shareable):
 
-    processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True)
+    processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True, on_delete=models.SET_NULL)
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
     # parameters = models.TextField(_('Parameters'), blank=False, default='{}', null=False)
     # TODO : turn this filed into a JSON Field
@@ -637,9 +637,9 @@ class Result(UUID, Dated, Shareable):
 @python_2_unicode_compatible
 class Task(UUID, Dated, Shareable):
 
-    experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
-    selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True)
-    item =  models.ForeignKey('Item', related_name="task", verbose_name=_('item'), blank=True, null=True)
+    experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True, on_delete=models.SET_NULL)
+    selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True, on_delete=models.SET_NULL)
+    item =  models.ForeignKey('Item', related_name="task", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
     status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
 
     class Meta:
@@ -693,8 +693,8 @@ post_save.connect(run, sender=Task)
 # Session and Tracks related objects
 
 class Analysis(Titled, UUID, Dated, Shareable):
-    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False)
-    preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False)
+    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False, on_delete=models.CASCADE)
+    preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False, on_delete=models.CASCADE)
     parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:
@@ -704,8 +704,8 @@ class Analysis(Titled, UUID, Dated, Shareable):
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
-    analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=False)
-    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False)
+    analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=False, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('Analysis Track')
@@ -722,6 +722,6 @@ class AnnotationTrack(Titled, UUID, Dated, Shareable):
 
 class Annotation(Titled, UUID, Dated, Shareable):
 
-    track = models.ForeignKey(AnnotationTrack, related_name='annotations', verbose_name=_('annotation'), blank=False)
+    track = models.ForeignKey(AnnotationTrack, related_name='annotations', verbose_name=_('annotation'), blank=False, on_delete=models.CASCADE)
     start_time = models.FloatField(_('start time (s)'), default=0)
     stop_time = models.FloatField(_('stop time (s)'))
