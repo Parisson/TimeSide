@@ -69,20 +69,14 @@ class AnalysisTrackAdmin(admin.ModelAdmin):
 class ProviderAdmin(admin.ModelAdmin):
     model = Provider
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid']
+    list_display = ['__str__', 'uuid']
     search_fields = ['uuid', 'name']
     
 class ItemAdmin(admin.ModelAdmin):
     model = Item
     readonly_fields = ('uuid',)
-    list_display = ['__unicode__', 'uuid', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     search_fields = ['uuid', 'title']
-
-# class ProviderIdentifierAdmin(admin.ModelAdmin):
-#     model = ProviderIdentifier
-#     readonly_fields = ('uuid',)
-#     list_display = ['__unicode__', 'uuid']
-#     search_fields = ['uuid']
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item, ItemAdmin)
@@ -99,4 +93,3 @@ admin.site.register(Annotation)
 admin.site.register(AnnotationTrack)
 
 admin.site.register(Provider, ProviderAdmin)
-# admin.site.register(ProviderIdentifier, ProviderIdentifierAdmin)

@@ -16,11 +16,13 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 
 import numpy as np
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+#from builtins import str
 
 from django.contrib.sites.models import Site
 
@@ -438,7 +440,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
                 msg = '\n'.join([str(e), default_msg])
                 raise serializers.ValidationError(msg)
             except KeyError as e:
-                msg = '\n'.join(['KeyError :' + unicode(e), default_msg])
+                msg = '\n'.join(['KeyError :' + str(e), default_msg])
                 raise serializers.ValidationError(msg)
 
             processor = proc(**json.loads(data['parameters']))

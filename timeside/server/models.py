@@ -24,6 +24,7 @@
 # Thomas Fillon <thomas@parisson.com>
 
 
+from __future__ import unicode_literals
 import os
 import uuid
 import mimetypes
@@ -32,6 +33,7 @@ import time
 import datetime
 import gc
 from shutil import copyfile
+from builtins import str
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
@@ -40,6 +42,7 @@ from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.conf import settings
@@ -158,6 +161,8 @@ class UUID(models.Model):
             created = True
         return obj, created
 
+
+@python_2_unicode_compatible
 class Titled(models.Model):
 
     title = models.CharField(_('title'), blank=True, max_length=512)
@@ -170,13 +175,14 @@ class Titled(models.Model):
         abstract = True
 
 
+@python_2_unicode_compatible
 class Named(models.Model):
 
     name = models.CharField(_('name'), blank=True, max_length=512)
     description = models.TextField(_('description'), blank=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         abstract = True
@@ -191,13 +197,14 @@ class Shareable(models.Model):
         abstract = True
 
 
+@python_2_unicode_compatible
 class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, max_length=128)
     source_access =  models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return unicode(self.pid)
+    def __str__(self):
+        return str(self.pid)
 
     def get_provider(self):
         return timeside.core.get_provider(self.pid)
@@ -228,6 +235,7 @@ class Selection(Titled, UUID, Dated, Shareable):
         return qs_items
 
 
+@python_2_unicode_compatible
 class Item(Titled, UUID, Dated, Shareable):
 
     element_type = 'timeside_item'
@@ -247,8 +255,8 @@ class Item(Titled, UUID, Dated, Shareable):
         ordering = ['title']
         verbose_name = _('item')
 
-    def __unicode__(self):
-        return '_'.join([unicode(self.title), str(self.uuid)[:4]])
+    def __str__(self):
+        return '_'.join([str(self.title), str(self.uuid)[:4]])
 
     def results(self):
         return [result for result in self.results.all()]
@@ -492,6 +500,7 @@ class Experience(Titled, UUID, Dated, Shareable):
         verbose_name = _('Experience')
 
 
+@python_2_unicode_compatible
 class Processor(UUID):
 
     pid = models.CharField(_('pid'), max_length=128)
@@ -531,6 +540,7 @@ class Processor(UUID):
         return self.get_processor().get_parameters_default()
 
 
+@python_2_unicode_compatible
 class SubProcessor(UUID):
     """SubProcessor object are intended to store the different results id associated with a given Processor
     """
@@ -559,7 +569,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([unicode(self.processor), str(self.uuid)[:4]])
+        return '_'.join([str(self.processor), str(self.uuid)[:4]])
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %s" % self.uuid
@@ -617,13 +627,14 @@ class Result(UUID, Dated, Shareable):
     def __str__(self):
         if self.preset:
             if self.item:
-                return '_'.join([self.item.title, unicode(self.preset)])
+                return '_'.join([self.item.title, str(self.preset)])
             else:
-                return unicode(self.preset.processor)
+                return str(self.preset.processor)
         else:
             return 'Unamed_result'
 
 
+@python_2_unicode_compatible
 class Task(UUID, Dated, Shareable):
 
     experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True)
@@ -636,7 +647,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([unicode(self.selection), unicode(self.experience), str(self.uuid)[:4]])
+        return '_'.join([str(self.selection), str(self.experience), str(self.uuid)[:4]])
 
     def status_setter(self, status):
         self.status = status

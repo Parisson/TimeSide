@@ -134,7 +134,7 @@ class TestAnalyzerResultGoodType(TestAnalyzerResult):
     @unittest.skip("String have to be handled through label metadata")
     def testOnUnicode(self):
         "Unicode"
-        self.result.data_object.value = u'\u0107'
+        self.result.data_object.value = '\u0107'
 
     def method(self, numpy_data_type):
         """Good numpy data type"""
