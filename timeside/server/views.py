@@ -37,7 +37,7 @@ from rest_framework import status
 from rest_framework.response import Response
 #from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse, reverse_lazy
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework import filters
 # from django_filters.rest_framework import DjangoFilterBackend TODO
 
@@ -139,12 +139,12 @@ class ProcessorViewSet(viewsets.ModelViewSet):
             return serializers.ProcessorListSerializer
         return serializers.ProcessorSerializer
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def parameters_schema(self, request, pid=None):
         serializer = serializers.ParametersSchemaSerializer(self.get_object())
         return Response(serializer.data)
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def parameters_default(self, request, pid=None):
         serializer = serializers.ParametersDefaultSerializer(self.get_object())
         return Response(serializer.data)
@@ -243,7 +243,7 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
         return queryset
 
-    @detail_route(methods=['post'])
+    @action(detail=True, methods=['post'])
     def set_parameters(self, request, uuid=None):
         # Get current Analysis track Preset
         track = self.get_object()
@@ -291,7 +291,7 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
             return Response(data=serializer_track.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
-    @detail_route(methods=['get'])
+    @action(detail=True, methods=['get'])
     def parameters_default(self, request, uuid=None):
         serializer = serializers.ParametersDefaultSerializer(self.get_object())
         return Response(serializer.data)
