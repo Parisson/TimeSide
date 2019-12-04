@@ -547,7 +547,7 @@ class SubProcessor(UUID):
     sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
 
-    processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True)
+    processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = _('Subprocessor')
@@ -713,7 +713,8 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
 class AnnotationTrack(Titled, UUID, Dated, Shareable):
 
-    item = models.ForeignKey(Item, related_name='annotation_tracks', verbose_name=_('item'), blank=False)  # noqa
+    item = models.ForeignKey(Item, related_name='annotation_tracks', verbose_name=_('item'), blank=False, on_delete=models.CASCADE) # noqa
+    start_time = models.FloatField(_('start time (s)'), default=0)
     overlapping = models.BooleanField(default=False)
 
     class Meta:
