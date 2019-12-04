@@ -78,7 +78,7 @@ class AubioPitch(Analyzer):
         if self._stepsize_s:
             self.input_stepsize = int(np.round(self._stepsize_s * samplerate))
         else:
-            self.input_stepsize = self.input_blocksize / 2
+            self.input_stepsize = self.input_blocksize // 2
 
         # Now that frames size metadata are properly set, we can do the set-up
         super(AubioPitch, self).setup(channels,
