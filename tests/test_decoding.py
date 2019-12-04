@@ -54,7 +54,7 @@ class TestDecoding(unittest.TestCase):
         "Test ogg decoding"
         self.source = samples["sweep.ogg"]
 
-        self.expected_mime_type = 'application/ogg'
+        self.expected_mime_type = 'audio/ogg'
         self.test_exact_duration = False
 
     def testMp3(self):
