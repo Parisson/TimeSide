@@ -83,7 +83,7 @@ class HasParam(object):
 
     @classmethod
     def get_parameters_default_from_argspec(cls):
-        args, _, _, defaults = inspect.getargspec(cls.__init__)
+        args, _, _, defaults, _, _, _, = inspect.getfullargspec(cls.__init__)
         args.remove('self')  # remove 'self' from arguments list
         if defaults:
             return {arg: default for arg, default
