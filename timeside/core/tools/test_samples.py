@@ -303,7 +303,7 @@ def generateSamples(overwrite=False, samples_dir=None):
 
     # sweep 44100 stereo ogg
     filename = 'sweep.ogg'
-    gst_audio_encoder = ['vorbisenc', 'oggmux']
+    gst_audio_encoder = ['vorbisenc', 'vorbisparse', 'oggmux']
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
     sample_file = generate_sample_file(filename, samples_dir,
                                        gst_audio_encoder,
