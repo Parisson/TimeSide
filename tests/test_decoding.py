@@ -2,17 +2,8 @@
 
 from __future__ import division
 from unit_timeside import unittest, TestRunner
-
-from timeside.core.processor import ProcessPipe
 from timeside.plugins.decoder.file import FileDecoder
-
 from timeside.core.tools.test_samples import samples
-
-import os.path
-
-#from glib import GError as GST_IOError
-# HINT : to use later with Gnonlin only
-
 
 class TestDecoding(unittest.TestCase):
 

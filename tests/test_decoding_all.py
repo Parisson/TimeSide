@@ -1,6 +1,9 @@
+import os.path
 import unittest
 from unit_timeside import TestRunner
 from test_decoding import TestDecoding, samples
+from timeside.core.processor import ProcessPipe
+from timeside.plugins.decoder.file import FileDecoder
 
 class TestDecodingSegment(TestDecoding):
 
