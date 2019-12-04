@@ -38,6 +38,7 @@ class VorbisEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
                   ! audioconvert ! audioresample
                   ! vorbisenc quality=0.9
+                  ! vorbisparse
                   ! oggmux
                   '''
 
