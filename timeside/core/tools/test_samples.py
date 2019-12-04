@@ -201,12 +201,6 @@ class gst_BuildSample(object):
             next_el.link(encoder_muxer[0])
         encoder_muxer[0].link(filesink)
 
-        def _on_new_pad(self, source, pad, target_pad):
-            print ('on_new_pad')
-            if not pad.is_linked():
-                if target_pad.is_linked():
-                    target_pad.get_peer().unlink(target_pad)
-                pad.link(target_pad)
 
         def on_eos(bus, msg):
             pipeline.set_state(Gst.State.NULL)
@@ -452,7 +446,3 @@ def generateSamples(overwrite=False, samples_dir=None):
 
 
 samples = generateSamples()
-
-
-if __name__ == '__main__':
-    generateSamples()
