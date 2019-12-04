@@ -10,22 +10,7 @@ class TestDecodingSegment(TestDecoding):
         self.duration = 3
         self.source_duration = self.duration
 
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingSegment, self).testMp3()
-
-    def testWav(self):
-        "Test wav decoding"
-        super(TestDecodingSegment, self).testWav()
-
-    def testWavMono(self):
-        "Test mono wav decoding"
-        super(TestDecodingSegment, self).testWavMono()
-
-    def testWav32k(self):
-        "Test 32kHz wav decoding"
-        super(TestDecodingSegment, self).testWav32k()
-
+    """
     @unittest.skip("Flac not supported until bug fix is GST Gnonlin")
     def testFlac(self):
         "Test flac decoding"
@@ -33,6 +18,7 @@ class TestDecodingSegment(TestDecoding):
     @unittest.skip("Ogg not supported until bug fix is GST Gnonlin")
     def testOgg(self):
         "Test ogg decoding"
+    """
 
 
 class TestDecodingSegmentDefaultStart(TestDecodingSegment):
@@ -42,10 +28,6 @@ class TestDecodingSegmentDefaultStart(TestDecodingSegment):
         self.duration = 1
         self.source_duration = self.duration
 
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingSegmentDefaultStart, self).testMp3()
-
 
 class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
 
@@ -53,22 +35,6 @@ class TestDecodingSegmentDefaultDuration(TestDecodingSegment):
         super(TestDecodingSegment, self).setUp()
         self.start = 1
         self.source_duration -= self.start
-
-    def testWav(self):
-        "Test wav decoding"
-        super(TestDecodingSegment, self).testWav()
-
-    def testWavMono(self):
-        "Test mono wav decoding"
-        super(TestDecodingSegment, self).testWavMono()
-
-    def testWav32k(self):
-        "Test 32kHz wav decoding"
-        super(TestDecodingSegment, self).testWav32k()
-
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingSegment, self).testMp3()
 
 
 class TestDecodingSegmentBadParameters(unittest.TestCase):
@@ -102,48 +68,12 @@ class TestDecodingMonoUpsampling(TestDecoding):
         super(TestDecodingMonoUpsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 48000, None, None
 
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingMonoUpsampling, self).testMp3()
-
-    def testWav(self):
-        "Test wav decoding"
-        super(TestDecodingMonoUpsampling, self).testWav()
-
-    def testWavMono(self):
-        "Test mono wav decoding"
-        super(TestDecodingMonoUpsampling, self).testWavMono()
-
-    def testWav32k(self):
-        "Test 32kHz wav decoding"
-        super(TestDecodingMonoUpsampling, self).testWav32k()
-
-    def testFlac(self):
-        "Test flac decoding"
-        super(TestDecodingMonoUpsampling, self).testFlac()
-
-    def testOgg(self):
-        "Test ogg decoding"
-        super(TestDecodingMonoUpsampling, self).testOgg()
-
 
 class TestDecodingMonoDownsampling(TestDecoding):
 
     def setUp(self):
         super(TestDecodingMonoDownsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 16000, None, None
-
-    def testWav32k(self):
-        "Test 32kHz wav decoding"
-        super(TestDecodingMonoDownsampling, self).testWav32k()
-
-    def testOgg(self):
-        "Test ogg decoding"
-        super(TestDecodingMonoDownsampling, self).testOgg()
-
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingMonoDownsampling, self).testMp3()
 
 
 class TestDecodingStereoDownsampling(TestDecoding):
@@ -152,36 +82,12 @@ class TestDecodingStereoDownsampling(TestDecoding):
         super(TestDecodingStereoDownsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 32000, 2, None
 
-    def testWav32k(self):
-        "Test 32kHz wav decoding"
-        super(TestDecodingStereoDownsampling, self).testWav32k()
-
-    def testOgg(self):
-        "Test ogg decoding"
-        super(TestDecodingStereoDownsampling, self).testOgg()
-
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingStereoDownsampling, self).testMp3()
-
 
 class TestDecodingStereoUpsampling(TestDecoding):
 
     def setUp(self):
         super(TestDecodingStereoUpsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 96000, 2, None
-
-    def testWav32k(self):
-        "Test 32kHz wav decoding"
-        super(TestDecodingStereoUpsampling, self).testWav32k()
-
-    def testOgg(self):
-        "Test ogg decoding"
-        super(TestDecodingStereoUpsampling, self).testOgg()
-
-    def testMp3(self):
-        "Test mp3 decoding"
-        super(TestDecodingStereoUpsampling, self).testMp3()
 
 
 class TestDecodingShortBlock(TestDecoding):
