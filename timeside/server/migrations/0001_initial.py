@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(blank=True, max_length=512, verbose_name='title')),
                 ('description', models.TextField(blank=True, verbose_name='description')),
                 ('is_public', models.BooleanField(default=True)),
-                ('parameters_schema', jsonfield.fields.JSONField(default={b'$schema': b'http://json-schema.org/schema#', b'properties': {}, b'type': b'object'})),
+                ('parameters_schema', jsonfield.fields.JSONField(default={'$schema': 'http://json-schema.org/schema#', 'properties': {}, 'type': 'object'})),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='analysis', to=settings.AUTH_USER_MODEL, verbose_name='author')),
             ],
             options={
