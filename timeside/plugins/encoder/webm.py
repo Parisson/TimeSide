@@ -45,7 +45,7 @@ class WebMEncoder(GstEncoder):
                            framerate).astype(int)
         self.pipe = ''
         if self.video:
-            self.pipe += '''videotestsrc pattern=black num_buffers=%d ! ffmpegcolorspace ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.
+            self.pipe += '''videotestsrc pattern=black num_buffers=%d ! videoconvert ! queue ! vp8enc ! queue ! mux.
                          ''' % num_buffers
         self.pipe += '''
               appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.
