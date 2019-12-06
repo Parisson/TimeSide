@@ -3,11 +3,11 @@ Sponsors and Partners
 =====================
 
 * `Parisson <http://parisson.com>`_
-* `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
-* `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
-* `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
+* `CNRS <http://www.cnrs.fr>`_: National Center of Science Research (France)
+* `Huma-Num <http://www.huma-num.fr/>`_: big data equipment for digital humanities (CNRS, France)
+* `CREM <http://www.crem-cnrs.fr>`_: French National Center of Ethomusicology Research (France)
 * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
-* `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
+* `ANR <http://www.agence-nationale-recherche.fr/>`_: Agence Nationale de la Recherche (France)
 * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 * `C4DM <http://c4dm.eecs.qmul.ac.uk/>`_ : Center for Digital Music, Queen Mary University (London, United Kingdom)
 * `NYU Steinhardt <http://steinhardt.nyu.edu/music/>`_ : Music and Performing Arts Professions, New York University (New York, USA)
