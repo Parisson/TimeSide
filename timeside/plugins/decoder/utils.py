@@ -88,9 +88,7 @@ def path2uri(path):
 def source_info(source):
     import os.path
 
-    src_info = {'is_file': False,
-                'uri': '',
-                'pathname': ''}
+    src_info = {'is_file': False, 'uri': '', 'pathname': ''}
 
     if os.path.exists(source):
         src_info['is_file'] = True
