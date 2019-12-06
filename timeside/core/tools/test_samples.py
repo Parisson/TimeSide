@@ -277,7 +277,7 @@ def generateSamples(overwrite=False, samples_dir=None):
 
     # sweep 44100 stereo mp3
     filename = 'sweep.mp3'
-    gst_audio_encoder = ['lamemp3enc', 'xingmux', 'id3v2mux']
+    gst_audio_encoder = ['lamemp3enc']
     sweep_mono = SweepArray(duration=8, samplerate=samplerate)
     sample_file = generate_sample_file(filename, samples_dir,
                                        gst_audio_encoder,
@@ -355,7 +355,7 @@ def generateSamples(overwrite=False, samples_dir=None):
 
     # sine at 440Hz,  44100 stereo mp3
     filename = 'sine440Hz.mp3'
-    gst_audio_encoder = ['lamemp3enc', 'xingmux', 'id3v2mux']
+    gst_audio_encoder = ['lamemp3enc']
     sweep_mono = SineArray(duration=8, samplerate=samplerate, frequency=440)
     sample_file = generate_sample_file(filename, samples_dir,
                                        gst_audio_encoder,
