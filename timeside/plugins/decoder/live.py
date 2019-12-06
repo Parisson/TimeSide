@@ -83,7 +83,7 @@ class LiveDecoder:#(FileDecoder):
              a.results['waveform_analyzer'].data) # doctest: +SKIP
     >>> plt.show() # doctest: +SKIP
 
-        """
+    """
     implements(IDecoder)
 
     # IProcessor methods
