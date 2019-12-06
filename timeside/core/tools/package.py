@@ -90,7 +90,7 @@ def check_aubio():
     try:
         import aubio
     except ImportError:
-        warnings.warn('Aubio librairy is not available', ImportWarning,
+        warnings.warn('Aubio library is not available', ImportWarning,
                       stacklevel=2)
         _WITH_AUBIO = False
     else:
@@ -105,7 +105,7 @@ def check_yaafe():
     try:
         import yaafelib
     except ImportError:
-        warnings.warn('Yaafe librairy is not available', ImportWarning,
+        warnings.warn('Yaafe library is not available', ImportWarning,
                       stacklevel=2)
         _WITH_YAAFE = False
     else:
