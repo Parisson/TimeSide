@@ -155,6 +155,7 @@ def get_media_uri_info(uri):
                        }
         info['streams'].append(stream_info)
 
+    #print('discovered', uri, info)
     return info
 
 
