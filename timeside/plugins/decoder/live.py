@@ -30,7 +30,7 @@ from __future__ import division
 
 from timeside.core.decoder import Decoder, IDecoder, interfacedoc, implements
 from timeside.core.tools.gstutils import MainloopThread, GLib, Gst
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
 try:
     import queue
 except:
@@ -47,7 +47,7 @@ QUEUE_SIZE = 10
 # ['hw:0,0']
 
 
-class LiveDecoder(FileDecoder):
+class LiveDecoder:#(FileDecoder):
     """Live source Decoder based on Gstreamer
    capturing audio from alsasrc
 
@@ -83,7 +83,7 @@ class LiveDecoder(FileDecoder):
              a.results['waveform_analyzer'].data) # doctest: +SKIP
     >>> plt.show() # doctest: +SKIP
 
-        """
+    """
     implements(IDecoder)
 
     # IProcessor methods

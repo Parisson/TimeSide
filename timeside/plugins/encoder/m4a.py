@@ -44,6 +44,7 @@ class AacEncoder(GstEncoder):
         self.pipe = ''' appsrc name=src
             ! audioconvert
             ! voaacenc
+            ! aacparse
             ! mp4mux
             '''
 

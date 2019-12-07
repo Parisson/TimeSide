@@ -77,7 +77,8 @@ def import_module_with_exceptions(name, package=None):
             # Ignore module requiring DJANGO_SETTINGS_MODULE in environnement
             return
         else:
-            print ("Failed loading", name, e)
+            warnings.warn("Failed loading %s (%s)" % (name, e), ImportWarning,
+                    stacklevel=2)
             #raise e
             return
     return name
@@ -89,7 +90,7 @@ def check_aubio():
     try:
         import aubio
     except ImportError:
-        warnings.warn('Aubio librairy is not available', ImportWarning,
+        warnings.warn('Aubio library is not available', ImportWarning,
                       stacklevel=2)
         _WITH_AUBIO = False
     else:
@@ -104,7 +105,7 @@ def check_yaafe():
     try:
         import yaafelib
     except ImportError:
-        warnings.warn('Yaafe librairy is not available', ImportWarning,
+        warnings.warn('Yaafe library is not available', ImportWarning,
                       stacklevel=2)
         _WITH_YAAFE = False
     else:

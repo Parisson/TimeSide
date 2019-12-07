@@ -112,7 +112,7 @@ class GstEncoder(Processor):
         self.src.set_property('emit-signals', True)
         self.src.set_property('num-buffers', -1)
         self.src.set_property('block', False)
-        self.src.set_property('do-timestamp', True)
+        #self.src.set_property('do-timestamp', True)
 
         self.bus = self.pipeline.get_bus()
         self.bus.add_signal_watch()
