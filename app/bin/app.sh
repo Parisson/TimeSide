@@ -4,21 +4,21 @@ SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/app_base.sh"
 
 # waiting for db
-python $manage wait-for-db
+python3 $manage wait-for-db
 
 # django init
 if [ ! -f .init ]; then
-    python $manage migrate --noinput
-    python $manage bower_install --allow-root
+    python3 $manage migrate --noinput
+    python3 $manage bower_install --allow-root
     touch .init
 fi
 
 # run migrations
-python $manage migrate --noinput
+python3 $manage migrate --noinput
 
 # timeside setup
-python $manage timeside-create-admin-user
-python $manage timeside-create-boilerplate
+python3 $manage timeside-create-admin-user
+python3 $manage timeside-create-boilerplate
 
 # if [ $DEBUG = "False" ]; then
 #     python $manage update_index --workers $processes &
@@ -27,10 +27,10 @@ python $manage timeside-create-boilerplate
 # app start
 if [ "$1" = "--runserver" ]
 then
-    python $manage runserver 0.0.0.0:8000
+    python3 $manage runserver 0.0.0.0:8000
 else
     # static files auto update
-    python $manage collectstatic --noinput -i *node_modules*
+    python3 $manage collectstatic --noinput -i *node_modules*
 
     # fix media access rights
     find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user www-data -exec chown www-data:www-data {} \;
