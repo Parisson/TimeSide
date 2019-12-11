@@ -42,4 +42,4 @@ pip install -U youtube-dl
 bash /srv/app/bin/setup_plugins.sh
 
 # wait for other services
-bash $app/bin/wait.sh
+# bash $app/bin/wait.sh

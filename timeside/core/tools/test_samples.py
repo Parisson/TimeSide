@@ -365,7 +365,7 @@ def generateSamples(overwrite=False, samples_dir=None):
 
     # sine at 440Hz,  44100 stereo ogg
     filename = 'sine440Hz.ogg'
-    gst_audio_encoder = ['vorbisenc', 'oggmux']
+    gst_audio_encoder = ['vorbisenc', 'vorbisparse','oggmux']
     sweep_mono = SineArray(duration=8, samplerate=samplerate, frequency=440)
     sample_file = generate_sample_file(filename, samples_dir,
                                        gst_audio_encoder,
