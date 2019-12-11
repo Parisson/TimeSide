@@ -3,7 +3,8 @@
 
 # Author : Thomas Fillon <thomas@parisson.com>
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 import timeside
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.core.tools.test_samples import samples

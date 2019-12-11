@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 from __future__ import division
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 import timeside
 from timeside.core.tools.test_samples import samples
 from tempfile import NamedTemporaryFile

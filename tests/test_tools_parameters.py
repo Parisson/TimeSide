@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.core.tools.parameters import HasParam, HasTraits
 from timeside.core.tools.parameters import Unicode, Int, Float, Range
 from timeside.core.tools.parameters import store_parameters

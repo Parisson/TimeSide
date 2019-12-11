@@ -6,7 +6,8 @@ from timeside.core.processor import get_processor, ProcessPipe
 from timeside.plugins.decoder.file import FileDecoder
 
 import os
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from tools import tmp_file_sink
 from timeside.core.tools.test_samples import samples
 

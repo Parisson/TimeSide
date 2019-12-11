@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.core.analyzer import AnalyzerResult, AnalyzerResultContainer
 from timeside.core import __version__
 import numpy as np

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.core import get_processor
 
@@ -20,7 +21,7 @@ class TestVampTuning(unittest.TestCase):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
         self.assertAlmostEqual( self.analyzer.results['vamp_tuning'].data_object.value, 440.0, places=1)
-        
+
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

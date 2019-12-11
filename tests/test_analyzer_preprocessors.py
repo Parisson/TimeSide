@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 # Author : Thomas fillon <thomas@parisson.com>
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.core.preprocessors import downmix_to_mono, frames_adapter
 import numpy as np
 from numpy.testing import assert_array_equal
@@ -48,17 +49,17 @@ def get_frames(signal, blocksize=2048, stepsize=None, zeropad=False):
 def assertEqualListOfArrays(list1, list2):
     for ar1, ar2 in zip(list1, list2):
         assert_array_equal(ar1, ar2)
-    
+
 
 class TestAnalyzerPreProcessors(unittest.TestCase):
 
 
-                
+
     def tearDown(self):
 
         analyzer = FakeAnalyzer(blocksize=self.blocksize,
                                 stepsize=self.stepsize)
-        
+
         input_frames_eod = [(frames, eod) for frames, eod
                             in get_frames(signal=self.input_signal)]
         input_frames, input_eod = zip(*input_frames_eod)
@@ -108,7 +109,7 @@ class TestDownmixToMono(TestAnalyzerPreProcessors):
         process_frames_eod = [(frames, eod) for frames, eod
                               in get_frames(signal=self.process_signal)]
         self.process_frames, process_eod = zip(*process_frames_eod)
-        
+
 
 class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
 
@@ -118,7 +119,7 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
         FakeAnalyzer.decorated_process = self.decorator(FakeAnalyzer.process)
         self.blocksize = 1024
         self.stepsize = 256
-        
+
     def test_on_mono(self):
         "Run on mono"
         self.input_signal = np.random.randn(2500,)
@@ -128,19 +129,19 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
                                             stepsize=self.stepsize,
                                             zeropad=True)]
         self.process_frames, process_eod = zip(*process_frames_eod)
-        
+
 
     def test_on_stereo(self):
         "Run on stereo"
         self.input_signal = np.random.randn(2500,2)
-        
+
         process_frames_eod = [(frames, eod) for frames, eod
                               in get_frames(signal=self.input_signal,
                                             blocksize=self.blocksize,
                                             stepsize=self.stepsize,
                                             zeropad=True)]
         self.process_frames, process_eod = zip(*process_frames_eod)
-        
+
     def test_on_stereo_4096(self):
         "Run on stereo, blocksize=4096"
         self.blocksize = 4096
@@ -152,7 +153,7 @@ class TestFramesAdapter(TestAnalyzerPreProcessors, unittest.TestCase):
                                             stepsize=self.stepsize,
                                             zeropad=True)]
         self.process_frames, process_eod = zip(*process_frames_eod)
- 
-        
+
+
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

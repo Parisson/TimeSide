@@ -5,7 +5,8 @@
 # Author : Thomas Fillon <thomas at parisson.com>
 
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 import timeside.core
 import inspect
 

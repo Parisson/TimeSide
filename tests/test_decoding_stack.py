@@ -5,7 +5,8 @@ from __future__ import division
 from timeside.plugins.decoder.file import FileDecoder
 from timeside.plugins.analyzer.level import Level
 from timeside.core.processor import ProcessPipe
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.core.tools.test_samples import samples
 
 #from glib import GError as GST_IOError

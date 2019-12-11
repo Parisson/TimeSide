@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
 # Author : Thomas Fillon <thomas@parisson.com>
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 import numpy as np
 
 import timeside.core
@@ -66,7 +67,7 @@ def _tests_factory(test_class, test_doc, list_analyzers, sources, skip_reasons={
 
 sources = {'mono': samples["C4_scale.wav"],
            'stereo': samples["sweep.mp3"]}
-            
+
 # Define test to skip and corresponding reasons
 skip_reasons = {}
 # For each analyzer in TimeSide, test default parameters and schema

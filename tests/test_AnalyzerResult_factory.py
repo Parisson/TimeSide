@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 from __future__ import division
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.core.analyzer import AnalyzerResult
 import numpy as np
 

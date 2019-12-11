@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 import timeside
 import os
 verbose = 0

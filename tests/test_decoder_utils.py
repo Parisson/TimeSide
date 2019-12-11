@@ -4,7 +4,8 @@
 
 from __future__ import division
 
-from unit_timeside import unittest, TestRunner
+import unittest
+from unit_timeside import TestRunner
 from timeside.plugins.decoder.utils import get_uri, get_media_uri_info, path2uri
 from timeside.core.tools.test_samples import samples
 import os.path
