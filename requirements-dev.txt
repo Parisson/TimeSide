@@ -28,7 +28,7 @@ librosa
 markdown
 matplotlib
 mutagen
-networkx
+networkx==1.*
 numpy
 numpydoc
 pandas
