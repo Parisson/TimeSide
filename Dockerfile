@@ -60,8 +60,8 @@ RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 # Install timeside
 WORKDIR /srv/lib/timeside
 RUN pip3 install -U setuptools pip numpy
-COPY ./requirements-pip.txt /srv/lib/timeside/
-RUN pip3 install -r requirements-pip.txt
+COPY ./requirements-dev.txt /srv/lib/timeside/
+RUN pip3 install -r requirements-dev.txt
 
 COPY . /srv/lib/timeside/
 RUN pip3 install -e .
