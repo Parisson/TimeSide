@@ -23,7 +23,7 @@ install:
 script:
 # -------------DEFAULT--------------------
   - if [[ $TEST_TARGET == 'default' ]]; then
-      docker-compose -f docker-compose.yml -f env/build.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py setup.py test";
+      docker-compose -f docker-compose.yml -f env/build.yml -f env/coverage.yml run app  sh -c "cd /srv/lib/timeside;  pip install -U coverage; coverage run --source=timeside --omit=timeside/plugins/analyzer/external/yaafe.py tests/run_all_tests";
     fi
 # -------------DOC------------------------
   - if [[ $TEST_TARGET == 'doc' ]]; then
