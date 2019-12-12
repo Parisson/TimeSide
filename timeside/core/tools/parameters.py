@@ -45,7 +45,7 @@ TRAIT_TYPES = {Unicode: 'str',
 @decorator.decorator
 def store_parameters(__init__func, *args):
     self = args[0]
-    argsname, _, _, _ = inspect.getargspec(__init__func)
+    argsname, _, _, _, _, _, _, = inspect.getfullargspec(__init__func)
 
     parameters = {key: value
                   for key, value in zip(argsname, args)}
