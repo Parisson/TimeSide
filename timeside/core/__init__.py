@@ -20,32 +20,16 @@
 # Authors:
 # Thomas Fillon <thomas@parisson.com>
 
-from __future__ import absolute_import
-
 from . import api
 from . import processor
-from . import provider
 
-from .processor import Processor, get_processor, list_processors
-from .provider import get_provider, list_providers
+from .processor import get_processor, Processor
 from .component import implements, interfacedoc, abstract
-
-__version__ = '0.9'
-
 from .tools import package as ts_package
 
-# Check Availability of Gstreamer python bindings
-ts_package.check_gstreamer()
-
-# Check Availability of external Audio feature extraction librairies
-_WITH_AUBIO = ts_package.check_aubio()
-_WITH_YAAFE = ts_package.check_yaafe()
-_WITH_VAMP = ts_package.check_vamp()
+__version__ = '1.0'
 
 __all__ = ['api', 'processor']
 
-ts_package.discover_modules('plugins', 'timeside')#__name__)
-
-# Clean-up
-del ts_package
-#del absolute_import
+# this line will import all plugins found inside timeside/plugins
+ts_package.discover_modules('plugins', 'timeside')
