@@ -167,9 +167,10 @@ if __name__ == '__main__':
     all_encoders = timeside.core.processor.processors(timeside.core.api.IEncoder)
 
     def match_id_or_class(id_or_class, processors):
-        matches = filter(lambda x: x.__name__ == id_or_class, processors)
-        matches += filter(lambda x: x.id() == id_or_class , processors)
-        matches += filter(lambda x: hasattr(x,'file_extension') and x.file_extension() == id_or_class , processors)
+        matches = list(filter(lambda x: x.__name__ == id_or_class, processors))
+        matches += list(filter(lambda x: x.id() == id_or_class , processors))
+        matches += list(filter(lambda x: hasattr(x,'file_extension') \
+                and x.file_extension() == id_or_class , processors))
         if not len(matches):
             msg  = 'ERROR: could not find \'%s\'.' % id_or_class
             msg += ' possible values:' + repr(processors)
