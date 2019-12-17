@@ -2,16 +2,16 @@
 
 import unittest
 from unit_timeside import TestRunner
-from timeside.plugins.decoder.file import FileDecoder
 from timeside.core.tools.test_samples import samples
+from timeside.core.processor import get_processor
 
-from timeside.core import _WITH_YAAFE
-if _WITH_YAAFE:
-    from timeside.plugins.analyzer.externals.yaafe import Yaafe
-import os
+FileDecoder = get_processor('file_decoder')
+try:
+    Yaafe = get_processor('yaafe')
+except Exception:
+    Yaafe = None
 
-
-@unittest.skipIf(not _WITH_YAAFE, 'Yaafe library is not available')
+@unittest.skipIf(not Yaafe, 'Yaafe library is not available')
 class TestYaafe(unittest.TestCase):
 
     def setUp(self):
@@ -41,10 +41,10 @@ class TestYaafe(unittest.TestCase):
         (decoder | self.analyzer).run()
         results = self.analyzer.results
         self.assertEqual(self.result_length, len(results))
-        # print results
-        # print results.to_yaml()
-        # print results.to_json()
-        # print results.to_xml()
+        # print(results)
+        # print(results.to_yaml())
+        # print(results.to_json())
+        # print(results.to_xml())
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())
