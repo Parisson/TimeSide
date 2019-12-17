@@ -3,7 +3,7 @@
 import unittest
 from unit_timeside import TestRunner
 from timeside.core.tools.test_samples import samples
-from timeside.core.processor import get_processor
+from timeside.core import get_processor
 
 FileDecoder = get_processor('file_decoder')
 try:
