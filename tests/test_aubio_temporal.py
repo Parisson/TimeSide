@@ -2,18 +2,21 @@
 
 import unittest
 from unit_timeside import TestRunner
-from timeside.plugins.decoder.file import FileDecoder
-from timeside.core import get_processor
-from timeside.core import _WITH_AUBIO
-
 from timeside.core.tools.test_samples import samples
+from timeside.core import get_processor
 
 
-@unittest.skipIf(not _WITH_AUBIO, 'Aubio library is not available')
+FileDecoder = get_processor('file_decoder')
+try:
+    AubioTemporal = get_processor('aubio_temporal')
+except:
+    AubioTemporal = None
+
+@unittest.skipIf(not AubioTemporal, 'Aubio library is not available')
 class TestAubioTemporal(unittest.TestCase):
 
     def setUp(self):
-        self.analyzer = get_processor('aubio_temporal')()
+        self.analyzer = AubioTemporal()
 
     def testOnSweep(self):
         "runs on sweep"
