@@ -397,7 +397,9 @@ class ResultEncoderView(View):
 
 
 class ItemDetailExport(DetailView):
-
+    """
+    Export all results of an item
+    """
     model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
