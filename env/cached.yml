@@ -30,8 +30,6 @@ app:
 
 
 worker:
-  env_file:
-    - env/cached.env
   volumes:
     - /etc/._ifpk_2
   volumes_from:
