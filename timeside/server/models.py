@@ -49,6 +49,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.core.files import File
+from celery.utils.log import get_task_logger
 
 import jsonfield
 import json
@@ -59,6 +60,7 @@ from requests import get
 from xml.etree.ElementTree import fromstring
 from xmljson import abdera as ab
 
+worker_logger = get_task_logger(__name__)
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
@@ -368,7 +370,7 @@ class Item(Titled, UUID, Dated, Shareable):
                     parent_analyzers.append(proc.parents['analyzer'])
 
         for preset in experience.presets.all():
-            # get core audio processor corresponding to preset.processor.pid
+            # get core audio metaProcessor corresponding to preset.processor.pid
             proc = preset.processor.get_processor()
             if proc.type == 'encoder':
                 result, c = Result.objects.get_or_create(preset=preset,
@@ -377,12 +379,14 @@ class Item(Titled, UUID, Dated, Shareable):
                                        proc.file_extension()])
                 result.file = os.path.join(result_path, media_file).replace(settings.MEDIA_ROOT, '')
                 result.save()
-                # instantiate a core processor of a encoder
+                # instantiate a core processor of an encoder
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
+                logger_worker.info(f'Run {str(proc)} on {str(self)}')
             elif proc.type in ['analyzer', 'grapher']:
-                # instantiate a core processor of an analyzer of a grapher
+                # instantiate a core processor of an analyzer or a grapher
                 proc = proc(**json.loads(preset.parameters))
+                logger_worker.info(f'Run {str(proc)} on {str(self)} with {str(preset.parameters)}')
 
             if proc not in parent_analyzers:
                 presets[preset] = proc
