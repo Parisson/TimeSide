@@ -440,7 +440,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
             result.status_setter(_DONE)
 
-        for preset, proc in presets.iteritems():
+        for preset, proc in presets.items():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
                 set_results_from_processor(proc, preset)
