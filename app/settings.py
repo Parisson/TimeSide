@@ -151,12 +151,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django_extensions',
-   # 'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'timeside.server',
     'timeside.player',
-    #'djcelery',
+    'django_celery_results',
     'bootstrap3',
     'bootstrap_pagination',
     'djangobower',
@@ -204,22 +203,19 @@ REST_FRAMEWORK = {
     ),
 }
 
-    # 'DEFAULT_FILTER_BACKENDS': (
-    #     'django_filters.rest_framework.DjangoFilterBackend',
-    # ),
-
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
 CELERY_IMPORTS = ("timeside.server.tasks",)
 
+CELERY_BACKEND_URL = 'redis://redis:6379/0'
+CELERY_BROKER_TRANSPORT = 'redis'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
-#TEST_RUNNER = env('TEST_RUNNER')
-#BROKER_BACKEND = env('BROKER_BACKEND')
 
-#from worker import app
+from worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
@@ -239,15 +235,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
-
-# CORS_ORIGIN_WHITELIST = (
-#     'localhost:9000'
-# )
-
-# SOUTH_MIGRATION_MODULES = {
-#     'timeside.server': 'timeside.server.south_migrations'
-# }
-
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
