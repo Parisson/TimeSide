@@ -3,11 +3,11 @@ celery==4.*
 coreapi
 coverage
 deezer-python
-django==1.11.*
+django==2.2.*
 django-bootstrap3
 django-bootstrap-pagination
 django-bower
-#django-celery
+django-celery-results
 django-cors-headers
 django-debug-toolbar
 django-environ
