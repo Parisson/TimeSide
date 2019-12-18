@@ -8,6 +8,8 @@ class AubioDecoder(Decoder):
     """ File decoder based on aubio """
     implements(IDecoder)
 
+    output_blocksize = 8 * 1024
+
     def __init__(self, uri, start=0, duration=None, sha1=None):
         super().__init__(start=start, duration=duration)
         self.uri = uri
@@ -37,7 +39,7 @@ class AubioDecoder(Decoder):
             kwargs.update ({'channels': channels})
         if samplerate is not None:
             kwargs.update ({'samplerate': samplerate})
-        if samplerate is not None:
+        if blocksize is not None and blocksize != self.source.hop_size:
             kwargs.update ({'hop_size': blocksize})
         if len(kwargs):
             self.source = aubio.source(self.uri, **kwargs)
