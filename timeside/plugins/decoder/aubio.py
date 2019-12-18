@@ -11,12 +11,14 @@ class AubioDecoder(Decoder):
     def __init__(self, uri, start=0, duration=None, sha1=None):
         super().__init__(start=start, duration=duration)
         self.uri = uri
-        # create a temporary source to get the original file duration
-        tmp_source = aubio.source(self.uri)
-        self.input_samplerate = tmp_source.samplerate
-        self.input_channels = tmp_source.channels
 
-        self.input_totalframes = tmp_source.duration
+        # create the source with default settings
+        self.source = aubio.source(self.uri, hop_size=self.output_blocksize)
+        self.input_samplerate = self.source.samplerate
+        self.input_channels = self.source.channels
+
+        # get the original file duration
+        self.input_totalframes = self.source.duration
         self.input_duration = self.input_totalframes / self.input_samplerate
         self.uri_duration = self.input_duration
 
@@ -37,7 +39,8 @@ class AubioDecoder(Decoder):
             kwargs.update ({'samplerate': samplerate})
         if samplerate is not None:
             kwargs.update ({'hop_size': blocksize})
-        self.source = aubio.source(self.uri, **kwargs)
+        if len(kwargs):
+            self.source = aubio.source(self.uri, **kwargs)
 
         self.output_blocksize = self.source.hop_size
         self.output_channels = self.source.channels
