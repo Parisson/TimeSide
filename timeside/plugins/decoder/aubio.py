@@ -3,6 +3,7 @@
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
 from timeside.plugins.decoder.utils import get_sha1
 import aubio
+import mimetypes
 
 class AubioDecoder(Decoder):
     """ File decoder based on aubio """
@@ -25,7 +26,7 @@ class AubioDecoder(Decoder):
         self.uri_duration = self.input_duration
 
         # FIXME
-        self.mimetype = 'audio/x-wav'
+        self.mimetype = mimetypes.guess_type(uri)[0]
         self.input_width = 8
 
         if sha1 is not None:
