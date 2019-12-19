@@ -382,11 +382,11 @@ class Item(Titled, UUID, Dated, Shareable):
                 # instantiate a core processor of an encoder
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
-                logger_worker.info(f'Run {str(proc)} on {str(self)}')
+                worker_logger.info(f'Run {str(proc)} on {str(self)}')
             elif proc.type in ['analyzer', 'grapher']:
                 # instantiate a core processor of an analyzer or a grapher
                 proc = proc(**json.loads(preset.parameters))
-                logger_worker.info(f'Run {str(proc)} on {str(self)} with {str(preset.parameters)}')
+                worker_logger.info(f'Run {str(proc)} on {str(self)} with {str(preset.parameters)}')
 
             if proc not in parent_analyzers:
                 presets[preset] = proc
