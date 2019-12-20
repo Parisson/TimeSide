@@ -1,9 +1,9 @@
 aubio
-celery==4.*
+celery==4.4
 coreapi
 coverage
 deezer-python
-django==2.2.*
+django==2.2
 django-bootstrap3
 django-bootstrap-pagination
 django-bower
@@ -13,7 +13,7 @@ django-debug-toolbar
 django-environ
 django-extensions
 django-filter==1.1.0
-djangorestframework==3.8.*
+djangorestframework==3.11
 essentia
 ghp-import
 git+https://github.com/yomguy/py_sonicvisualiser@master#egg=py_sonicvisualiser
