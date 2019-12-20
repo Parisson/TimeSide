@@ -31,12 +31,10 @@ api_router.register(r'tasks', views.TaskViewSet)
 api_router.register(r'users', views.UserViewSet)
 api_router.register(r'analysis', views.AnalysisViewSet)
 api_router.register(r'analysis_tracks', views.AnalysisTrackViewSet,
-                    base_name='analysistrack')
+                    basename='analysistrack')
 api_router.register(r'annotation_tracks', views.AnnotationTrackViewSet)
 api_router.register(r'annotations', views.AnnotationViewSet)
 api_router.register(r'providers', views.ProviderViewSet)
-# api_router.register(r'provider_identifiers', views.ProviderIdentifierViewSet,
-#                     base_name='provideridentifier')
 
 
 urlpatterns = [
