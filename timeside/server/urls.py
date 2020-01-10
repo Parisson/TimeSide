@@ -40,14 +40,12 @@ api_router.register(r'providers', views.ProviderViewSet)
 urlpatterns = [
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
-    # Docs
-    url(r'^api/docs/', include_docs_urls(title='Timeside Web API')),
     # API endpoint for Generating Authentification token
     url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
     # Temporary Endpoint to get CSRF Token
     url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items
-    url('^api/schema/$', schema_view),
+    url(r'^api/schema/$', schema_view),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
         # Get transcoded audio
