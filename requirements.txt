@@ -19,7 +19,6 @@ certifi==2019.11.28
 certipy==0.1.3
 cffi==1.13.2
 chardet==3.0.4
-coreapi==2.3.3
 coreschema==0.0.4
 coverage==5.0
 cryptography==2.8
@@ -27,7 +26,7 @@ cycler==0.10.0
 decorator==4.4.1
 deezer-python==1.3.0
 defusedxml==0.6.0
-Django==2.2.9
+Django==2.2
 django-bootstrap-pagination==1.7.1
 django-bootstrap3==12.0.1
 django-bower==5.2.0
@@ -51,6 +50,7 @@ h5py==2.10.0
 idna==2.8
 imagesize==1.1.0
 importlib-metadata==1.3.0
+inflection==0.3.1
 ipykernel==5.1.3
 ipython==7.10.2
 ipython-genutils==0.2.0
@@ -95,6 +95,7 @@ numexpr==2.7.0
 numpy==1.17.4
 numpydoc==0.9.1
 oauthlib==3.1.0
+openapi==1.1.0
 opt-einsum==3.1.0
 packaging==19.2
 pamela==1.0.0

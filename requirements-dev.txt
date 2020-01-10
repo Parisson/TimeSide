@@ -1,6 +1,6 @@
 aubio
 celery==4.4
-coreapi
+openapi
 coverage
 deezer-python
 django==2.2
