@@ -1,0 +1,2338 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /timeside/api/selections/:
+    get:
+      operationId: listSelections
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Selection'
+          description: ''
+    post:
+      operationId: createSelection
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Selection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Selection'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Selection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Selection'
+          description: ''
+  /timeside/api/selections/{uuid}/:
+    get:
+      operationId: retrieveSelection
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this selection.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Selection'
+          description: ''
+    put:
+      operationId: updateSelection
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this selection.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Selection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Selection'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Selection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Selection'
+          description: ''
+    patch:
+      operationId: partial_updateSelection
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this selection.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Selection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Selection'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Selection'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Selection'
+          description: ''
+    delete:
+      operationId: destroySelection
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this selection.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/items/:
+    get:
+      operationId: listItems
+      description: ''
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+          description: ''
+    post:
+      operationId: createItem
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Item'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+  /timeside/api/items/{uuid}/:
+    get:
+      operationId: retrieveItem
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this item.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+    put:
+      operationId: updateItem
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this item.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Item'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+    patch:
+      operationId: partial_updateItem
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this item.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Item'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+    delete:
+      operationId: destroyItem
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this item.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/experiences/:
+    get:
+      operationId: listExperiences
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Experience'
+          description: ''
+    post:
+      operationId: createExperience
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Experience'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Experience'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Experience'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experience'
+          description: ''
+  /timeside/api/experiences/{uuid}/:
+    get:
+      operationId: retrieveExperience
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Experience.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experience'
+          description: ''
+    put:
+      operationId: updateExperience
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Experience.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Experience'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Experience'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Experience'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experience'
+          description: ''
+    patch:
+      operationId: partial_updateExperience
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Experience.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Experience'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Experience'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Experience'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Experience'
+          description: ''
+    delete:
+      operationId: destroyExperience
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Experience.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/processors/:
+    get:
+      operationId: listProcessors
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Processor'
+          description: ''
+    post:
+      operationId: createProcessor
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Processor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Processor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Processor'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+          description: ''
+  /timeside/api/processors/{pid}/:
+    get:
+      operationId: retrieveProcessor
+      description: ''
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+          description: ''
+    put:
+      operationId: updateProcessor
+      description: ''
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Processor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Processor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Processor'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+          description: ''
+    patch:
+      operationId: partial_updateProcessor
+      description: ''
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Processor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Processor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Processor'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+          description: ''
+    delete:
+      operationId: destroyProcessor
+      description: ''
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/processors/{pid}/parameters_default/:
+    get:
+      operationId: parameters_defaultProcessor
+      description: ''
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+          description: ''
+  /timeside/api/processors/{pid}/parameters_schema/:
+    get:
+      operationId: parameters_schemaProcessor
+      description: ''
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Processor'
+          description: ''
+  /timeside/api/subprocessors/:
+    get:
+      operationId: listSubProcessors
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubProcessor'
+          description: ''
+    post:
+      operationId: createSubProcessor
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubProcessor'
+          description: ''
+  /timeside/api/subprocessors/{sub_processor_id}/:
+    get:
+      operationId: retrieveSubProcessor
+      description: ''
+      parameters:
+      - name: sub_processor_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubProcessor'
+          description: ''
+    put:
+      operationId: updateSubProcessor
+      description: ''
+      parameters:
+      - name: sub_processor_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubProcessor'
+          description: ''
+    patch:
+      operationId: partial_updateSubProcessor
+      description: ''
+      parameters:
+      - name: sub_processor_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SubProcessor'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubProcessor'
+          description: ''
+    delete:
+      operationId: destroySubProcessor
+      description: ''
+      parameters:
+      - name: sub_processor_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/results/:
+    get:
+      operationId: listResults
+      description: ''
+      parameters:
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Result'
+          description: ''
+    post:
+      operationId: createResult
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Result'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Result'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Result'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+          description: ''
+  /timeside/api/results/{uuid}/:
+    get:
+      operationId: retrieveResult
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Result.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+          description: ''
+    put:
+      operationId: updateResult
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Result.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Result'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Result'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Result'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+          description: ''
+    patch:
+      operationId: partial_updateResult
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Result.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Result'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Result'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Result'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+          description: ''
+    delete:
+      operationId: destroyResult
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Result.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/presets/:
+    get:
+      operationId: listPresets
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Preset'
+          description: ''
+    post:
+      operationId: createPreset
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Preset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Preset'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+          description: ''
+  /timeside/api/presets/{uuid}/:
+    get:
+      operationId: retrievePreset
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Preset.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+          description: ''
+    put:
+      operationId: updatePreset
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Preset.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Preset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Preset'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+          description: ''
+    patch:
+      operationId: partial_updatePreset
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Preset.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Preset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Preset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Preset'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preset'
+          description: ''
+    delete:
+      operationId: destroyPreset
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Preset.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/tasks/:
+    get:
+      operationId: listTasks
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+          description: ''
+    post:
+      operationId: createTask
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+  /timeside/api/tasks/{uuid}/:
+    get:
+      operationId: retrieveTask
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Task.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+    put:
+      operationId: updateTask
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Task.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+    patch:
+      operationId: partial_updateTask
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Task.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+    delete:
+      operationId: destroyTask
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Task.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/users/:
+    get:
+      operationId: listUsers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: createUser
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /timeside/api/users/{username}/:
+    get:
+      operationId: retrieveUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: updateUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: partial_updateUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: destroyUser
+      description: ''
+      parameters:
+      - name: username
+        in: path
+        required: true
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/analysis/:
+    get:
+      operationId: listAnalysis
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Analysis'
+          description: ''
+    post:
+      operationId: createAnalysis
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+          description: ''
+  /timeside/api/analysis/{uuid}/:
+    get:
+      operationId: retrieveAnalysis
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Analysis.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+          description: ''
+    put:
+      operationId: updateAnalysis
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Analysis.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+          description: ''
+    patch:
+      operationId: partial_updateAnalysis
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Analysis.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Analysis'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analysis'
+          description: ''
+    delete:
+      operationId: destroyAnalysis
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Analysis.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/analysis_tracks/:
+    get:
+      operationId: listAnalysisTracks
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+    post:
+      operationId: createAnalysisTrack
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+  /timeside/api/analysis_tracks/{uuid}/:
+    get:
+      operationId: retrieveAnalysisTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+    put:
+      operationId: updateAnalysisTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+    patch:
+      operationId: partial_updateAnalysisTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+    delete:
+      operationId: destroyAnalysisTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/analysis_tracks/{uuid}/parameters_default/:
+    get:
+      operationId: parameters_defaultAnalysisTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+  /timeside/api/annotation_tracks/:
+    get:
+      operationId: listAnnotationTracks
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnotationTrack'
+          description: ''
+    post:
+      operationId: createAnnotationTrack
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationTrack'
+          description: ''
+  /timeside/api/annotation_tracks/{uuid}/:
+    get:
+      operationId: retrieveAnnotationTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Annotation Track.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationTrack'
+          description: ''
+    put:
+      operationId: updateAnnotationTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Annotation Track.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationTrack'
+          description: ''
+    patch:
+      operationId: partial_updateAnnotationTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Annotation Track.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnnotationTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationTrack'
+          description: ''
+    delete:
+      operationId: destroyAnnotationTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Annotation Track.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/annotations/:
+    get:
+      operationId: listAnnotations
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Annotation'
+          description: ''
+    post:
+      operationId: createAnnotation
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+          description: ''
+  /timeside/api/annotations/{uuid}/:
+    get:
+      operationId: retrieveAnnotation
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this annotation.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+          description: ''
+    put:
+      operationId: updateAnnotation
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this annotation.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+          description: ''
+    patch:
+      operationId: partial_updateAnnotation
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this annotation.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Annotation'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+          description: ''
+    delete:
+      operationId: destroyAnnotation
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this annotation.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/providers/:
+    get:
+      operationId: listProviders
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Provider'
+          description: ''
+    post:
+      operationId: createProvider
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Provider'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+  /timeside/api/providers/{uuid}/:
+    get:
+      operationId: retrieveProvider
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this provider.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+    put:
+      operationId: updateProvider
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this provider.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Provider'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+    patch:
+      operationId: partial_updateProvider
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this provider.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Provider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Provider'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          description: ''
+    delete:
+      operationId: destroyProvider
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this provider.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /timeside/api/token-csrf/:
+    get:
+      operationId: listCsrf_Tokens
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+  /timeside/api/items/{uuid}/waveform/:
+    get:
+      operationId: RetrieveItem
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this item.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: ''
+  /timeside/api/results/{uuid}/visual/:
+    get:
+      operationId: RetrieveResult
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: A UUID string identifying this Result.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            image/png:
+              schema: {}
+          description: ''
+  /timeside/api/analysis_tracks/{uuid}/set_parameters/:
+    post:
+      operationId: set_parametersAnalysisTrack
+      description: ''
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AnalysisTrack'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+components:
+  schemas:
+    Selection:
+      properties:
+        title:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        url:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            type: string
+        selections:
+          type: array
+          items:
+            type: string
+        author:
+          type: string
+          nullable: true
+    Item:
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        url:
+          type: string
+          readOnly: true
+        player_url:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          maxLength: 512
+        description:
+          type: string
+        source_file:
+          type: string
+          format: binary
+        source_url:
+          type: string
+          format: uri
+          maxLength: 1024
+          pattern: "^(?:[a-z0-9\\.\\-\\+]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:\\\
+            .]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF\
+            0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+            -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\d{2,5})?(?:[/?#][^\\\
+            s]*)?\\Z"
+        mime_type:
+          type: string
+          maxLength: 256
+        audio_url:
+          type: string
+          readOnly: true
+        audio_duration:
+          type: number
+          readOnly: true
+        external_uri:
+          type: string
+          maxLength: 1024
+        external_id:
+          type: string
+          maxLength: 256
+        waveform_url:
+          type: string
+          readOnly: true
+        annotation_tracks:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        analysis_tracks:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        provider:
+          type: string
+          nullable: true
+    Experience:
+      properties:
+        title:
+          type: string
+          maxLength: 512
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        url:
+          type: string
+          readOnly: true
+        presets:
+          type: array
+          items:
+            type: string
+        is_public:
+          type: boolean
+        author:
+          type: string
+          nullable: true
+    Processor:
+      properties:
+        name:
+          type: string
+          maxLength: 256
+        pid:
+          enum:
+          - vamp_simple_host
+          - aubio_melenergy
+          - aubio_mfcc
+          - aubio_pitch
+          - aubio_silence
+          - aubio_specdesc
+          - aubio_temporal
+          - essentia_dissonance
+          - vamp_constantq
+          - loudness_itu
+          - spectrogram_analyzer
+          - onset_detection_function
+          - spectrogram_analyzer_buffer
+          - waveform_analyzer
+          - mean_dc_shift
+          - essentia_dissonance_value
+          - vamp_tempo
+          - vamp_tuning
+          - level
+          - live_encoder
+          - flac_encoder
+          - aac_encoder
+          - mp3_encoder
+          - vorbis_encoder
+          - opus_encoder
+          - wav_encoder
+          - webm_encoder
+          - grapher_aubio_pitch
+          - grapher_aubio_silence
+          - grapher_dissonance
+          - grapher_vamp_cqt
+          - grapher_loudness_itu
+          - spectrogram
+          - grapher_onset_detection_function
+          - grapher_waveform
+          - spectrogram_log
+          - spectrogram_lin
+          - waveform_simple
+          - waveform_centroid
+          - waveform_contour_black
+          - waveform_contour_white
+          - waveform_transparent
+        url:
+          type: string
+          readOnly: true
+        version:
+          type: string
+          maxLength: 64
+        parameters_schema:
+          type: string
+          readOnly: true
+      required:
+      - pid
+    SubProcessor:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 256
+        processor:
+          type: string
+          nullable: true
+        sub_processor_id:
+          type: string
+          maxLength: 128
+      required:
+      - sub_processor_id
+    Result:
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        url:
+          type: string
+          readOnly: true
+        item:
+          type: string
+          nullable: true
+        preset:
+          type: string
+          nullable: true
+        status:
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          minimum: -2147483648
+          maximum: 2147483647
+        hdf5:
+          type: string
+          format: binary
+        file:
+          type: string
+          format: binary
+        run_time:
+          type: string
+          nullable: true
+    Preset:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        processor:
+          type: string
+          nullable: true
+        parameters:
+          type: string
+    Task:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        experience:
+          type: string
+          nullable: true
+        selection:
+          type: string
+          nullable: true
+        status:
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          minimum: -2147483648
+          maximum: 2147483647
+        author:
+          type: string
+          nullable: true
+        item:
+          type: string
+          nullable: true
+    User:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 30
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - username
+    Analysis:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 512
+        description:
+          type: string
+        preset:
+          type: string
+        sub_processor:
+          type: string
+        parameters_schema:
+          type: object
+      required:
+      - preset
+      - sub_processor
+      - parameters_schema
+    AnalysisTrack:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 512
+        description:
+          type: string
+        analysis:
+          type: string
+        item:
+          type: string
+        result_url:
+          type: string
+          readOnly: true
+        parameters_schema:
+          type: string
+          readOnly: true
+        parameters_default:
+          type: string
+          readOnly: true
+        parametrizable:
+          type: string
+          readOnly: true
+      required:
+      - analysis
+      - item
+    AnnotationTrack:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        item:
+          type: string
+        title:
+          type: string
+          maxLength: 512
+        description:
+          type: string
+        author:
+          type: string
+          nullable: true
+        is_public:
+          type: boolean
+        overlapping:
+          type: boolean
+        annotations:
+          type: array
+          items:
+            properties:
+              url:
+                type: string
+                readOnly: true
+              uuid:
+                type: string
+                format: uuid
+                readOnly: true
+              title:
+                type: string
+                maxLength: 512
+              description:
+                type: string
+              start_time:
+                type: number
+              stop_time:
+                type: number
+            required:
+            - stop_time
+          readOnly: true
+      required:
+      - item
+    Annotation:
+      properties:
+        url:
+          type: string
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        track:
+          type: string
+        title:
+          type: string
+          maxLength: 512
+        description:
+          type: string
+        start_time:
+          type: number
+        stop_time:
+          type: number
+      required:
+      - track
+      - stop_time
+    Provider:
+      properties:
+        pid:
+          type: string
+          maxLength: 128
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true

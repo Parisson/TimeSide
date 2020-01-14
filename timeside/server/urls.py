@@ -2,7 +2,9 @@
 
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import path
 from django.conf import settings
+from django.views.generic import TemplateView
 #from django.core.urlresolvers import reverse
 from rest_framework import routers
 
@@ -38,6 +40,19 @@ api_router.register(r'providers', views.ProviderViewSet)
 
 
 urlpatterns = [
+    # docs
+    # Route TemplateView to serve Swagger UI template.
+    #   * Provide `extra_context` with view name of `SchemaView`.
+    path('swagger-ui/', TemplateView.as_view(
+        template_name='timeside/swagger-ui.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='swagger-ui'),
+    # Route TemplateView to serve the ReDoc template.
+    #   * Provide `extra_context` with view name of `SchemaView`.
+    path('redoc/', TemplateView.as_view(
+        template_name='timeside/redoc.html',
+        extra_context={'schema_url':'openapi-schema'}
+    ), name='redoc'),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     # API endpoint for Generating Authentification token
@@ -45,7 +60,7 @@ urlpatterns = [
     # Temporary Endpoint to get CSRF Token
     url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items
-    url(r'^api/schema/$', schema_view),
+    url(r'^api/schema/$', schema_view, name="openapi-schema"),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
         # Get transcoded audio
