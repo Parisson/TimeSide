@@ -36,7 +36,7 @@ pillow
 psycopg2-binary
 pygments
 pympi-ling
-pyyaml
+pyyaml==5.2
 redis
 scipy
 simplejson
