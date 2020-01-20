@@ -13,7 +13,8 @@ django-debug-toolbar
 django-environ
 django-extensions
 django-filter==1.1.0
-djangorestframework==3.11
+# djangorestframework==3.11
+git+https://github.com/gnuletik/django-rest-framework@openapi-reference-components#egg=rest_framework
 essentia
 ghp-import
 git+https://github.com/yomguy/py_sonicvisualiser@master#egg=py_sonicvisualiser
@@ -36,7 +37,7 @@ pillow
 psycopg2-binary
 pygments
 pympi-ling
-pyyaml
+pyyaml==5.2
 redis
 scipy
 simplejson
@@ -47,6 +48,7 @@ tensorflow
 torch
 torchvision
 traits
+uritemplate
 uwsgi
 vamp
 watchdog
