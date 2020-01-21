@@ -14,12 +14,35 @@ from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.schemas import get_schema_view
+from rest_framework.schemas.openapi import SchemaGenerator
 
 EXPORT_EXT = "|".join(TS_ENCODERS_EXT.keys())
 
 admin.autodiscover()
 
-schema_view = get_schema_view(title="TimeSide API")
+class SchemaWithServerInfoGeneraror(SchemaGenerator):
+     def get_schema(self, request=None, public=False):
+        # Adding production and staging server urls ton title and version infos
+        schema = super().get_schema()
+        schema['servers'] = [
+                {
+                    "url": "https://wasabi.telemeta.org/",
+                    "description": "Production server"
+                },
+                {
+                    "url": "https://sandbox.wasabi.telemeta.org/",
+                    "description": "Staging server"
+                }
+        ]
+        return schema
+
+schema_view = get_schema_view(
+    title="TimeSide API",
+    description="RESTful API of TimeSide, a scalable audio processing framework",
+    version="1.0.0",
+    # url="https://wasabi.telemeta.org/",
+    generator_class=SchemaWithServerInfoGeneraror,
+    )
 
 api_router = routers.DefaultRouter()
 api_router.register(r'selections', views.SelectionViewSet)
@@ -60,7 +83,6 @@ urlpatterns = [
     # Temporary Endpoint to get CSRF Token
     url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items
-    url(r'^api/schema/$', schema_view, name="openapi-schema"),
     url(r'^api/items/(?P<uuid>[0-9a-z-]+)/', include([
         url(r'^waveform/', views.ItemWaveView.as_view(), name="item-waveform"),
         # Get transcoded audio
@@ -97,6 +119,8 @@ urlpatterns = [
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
     # Player
     url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),
+    # Schema
+    url(r'^api/schema/$', schema_view, name="openapi-schema"),
 ]
 
 
