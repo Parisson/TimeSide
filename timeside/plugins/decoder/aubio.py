@@ -27,6 +27,9 @@ class AubioDecoder(Decoder):
         self.input_duration = self.input_totalframes / self.input_samplerate
         self.uri_duration = self.input_duration
 
+        self.start = start
+        self.duration = duration
+
         # FIXME
         self.mimetype = mimetypes.guess_type(uri)[0]
         self.input_width = 8
@@ -37,6 +40,12 @@ class AubioDecoder(Decoder):
             self._sha1 = get_sha1(uri)
 
     def setup(self, channels=None, samplerate=None, blocksize=None):
+        if self.start or self.duration:
+            if self.start > self.uri_duration:
+                raise ValueError ('Segment start time exceeds media duration')
+            if self.start + self.duration > self.uri_duration:
+                raise ValueError ('Segment duration exceeds media duration')
+
         kwargs = {}
         if channels is not None:
             kwargs.update ({'channels': channels})
