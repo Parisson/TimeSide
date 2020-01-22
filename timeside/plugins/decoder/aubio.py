@@ -60,6 +60,15 @@ class AubioDecoder(Decoder):
         self.output_channels = self.source.channels
         self.output_samplerate  = self.source.samplerate
 
+        self.frames_read = 0
+        self.start_frame = int(self.start * self.output_samplerate)
+        if self.duration:
+            seconds_to_read = self.duration - self.start
+            self.frames_to_read = int (seconds_to_read * self.output_samplerate)
+
+        if self.start > 0:
+            self.source.seek(self.start_frame)
+
     @staticmethod
     @interfacedoc
     def id():
@@ -74,6 +83,11 @@ class AubioDecoder(Decoder):
     def process(self):
         frames, read = self.source.do_multi()
         self.eod = (read < self.output_blocksize)
+        if self.duration and self.frames_read + read >= self.frames_to_read:
+            extra_read = self.frames_read + read - self.frames_to_read
+            read = self.source.hop_size - extra_read
+            self.eod = True
+        self.frames_read += read
         frames = frames[:, :read].T
         return frames, self.eod
 
