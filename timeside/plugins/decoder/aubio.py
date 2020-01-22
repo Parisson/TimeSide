@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" decoder plugin based on aubio """
+
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
 from timeside.plugins.decoder.utils import get_sha1
 import aubio
