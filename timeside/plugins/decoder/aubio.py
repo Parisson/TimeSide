@@ -18,7 +18,10 @@ class AubioDecoder(Decoder):
         self.uri = uri
 
         # create the source with default settings
-        self.source = aubio.source(self.uri, hop_size=self.output_blocksize)
+        try:
+            self.source = aubio.source(self.uri, hop_size=self.output_blocksize)
+        except RuntimeError as e:
+            raise IOError(e)
         self.input_samplerate = self.source.samplerate
         self.input_channels = self.source.channels
 
