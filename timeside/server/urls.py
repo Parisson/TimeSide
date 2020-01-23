@@ -6,15 +6,20 @@ from django.urls import path
 from django.conf import settings
 from django.views.generic import TemplateView
 #from django.core.urlresolvers import reverse
-from rest_framework import routers
-
-from rest_framework.documentation import include_docs_urls
 
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
+
+from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.schemas import get_schema_view
 from rest_framework.schemas.openapi import SchemaGenerator
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 EXPORT_EXT = "|".join(TS_ENCODERS_EXT.keys())
 
@@ -78,8 +83,13 @@ urlpatterns = [
     ), name='redoc'),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
-    # API endpoint for Generating Authentification token
+    # API endpoint for Generating Simple Web Token
     url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    # API endpoints for Generating access and refresh JSON Web Token (JWT)
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # Verify JWT without having access to signing key
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     # Temporary Endpoint to get CSRF Token
     url(r'^api/token-csrf/', views.Csrf_Token.as_view({'get': 'list'}), name='get_csrf_token'),
     # Items

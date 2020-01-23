@@ -14,6 +14,7 @@ django-environ
 django-extensions
 django-filter==1.1.0
 # djangorestframework==3.11
+djangorestframework-simplejwt
 git+https://github.com/gnuletik/django-rest-framework@openapi-reference-components#egg=rest_framework
 essentia
 ghp-import
