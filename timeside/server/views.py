@@ -126,7 +126,7 @@ class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.ExperienceSerializer
 
 
-class ProcessorViewSet(viewsets.ModelViewSet):
+class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
 
     model = models.Processor
     queryset = model.objects.all()
@@ -159,7 +159,7 @@ class SubProcessorViewSet(viewsets.ModelViewSet):
     lookup_value_regex = '[0-9a-z_.]+'
 
 
-class ResultViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
 
     model = models.Result
     queryset = model.objects.all()
@@ -206,7 +206,7 @@ class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.TaskSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
     model = models.User
     queryset = model.objects.all()
@@ -589,7 +589,7 @@ class Csrf_Token(viewsets.ViewSet):
         return  Response({'csrftoken': get_csrf_token(request)})
 
 
-class ProviderViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
 
     model = models.Provider
     queryset = model.objects.all()
