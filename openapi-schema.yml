@@ -24,14 +24,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id001
               $ref: '#/components/schemas/Selection'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Selection'
+            schema: *id001
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Selection'
+            schema: *id001
       responses:
         '200':
           content:
@@ -70,14 +68,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id002
               $ref: '#/components/schemas/Selection'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Selection'
+            schema: *id002
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Selection'
+            schema: *id002
       responses:
         '200':
           content:
@@ -98,14 +94,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id003
               $ref: '#/components/schemas/Selection'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Selection'
+            schema: *id003
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Selection'
+            schema: *id003
       responses:
         '200':
           content:
@@ -153,14 +147,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id004
               $ref: '#/components/schemas/Item'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Item'
+            schema: *id004
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Item'
+            schema: *id004
       responses:
         '200':
           content:
@@ -211,14 +203,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id005
               $ref: '#/components/schemas/Item'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Item'
+            schema: *id005
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Item'
+            schema: *id005
       responses:
         '200':
           content:
@@ -245,14 +235,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id006
               $ref: '#/components/schemas/Item'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Item'
+            schema: *id006
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Item'
+            schema: *id006
       responses:
         '200':
           content:
@@ -300,14 +288,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id007
               $ref: '#/components/schemas/Experience'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Experience'
+            schema: *id007
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Experience'
+            schema: *id007
       responses:
         '200':
           content:
@@ -346,14 +332,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id008
               $ref: '#/components/schemas/Experience'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Experience'
+            schema: *id008
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Experience'
+            schema: *id008
       responses:
         '200':
           content:
@@ -374,14 +358,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id009
               $ref: '#/components/schemas/Experience'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Experience'
+            schema: *id009
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Experience'
+            schema: *id009
       responses:
         '200':
           content:
@@ -416,28 +398,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/Processor'
           description: ''
-    post:
-      operationId: createProcessor
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Processor'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Processor'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Processor'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Processor'
-          description: ''
   /timeside/api/processors/{pid}/:
     get:
       operationId: retrieveProcessor
@@ -455,75 +415,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Processor'
-          description: ''
-    put:
-      operationId: updateProcessor
-      description: ''
-      parameters:
-      - name: pid
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Processor'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Processor'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Processor'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Processor'
-          description: ''
-    patch:
-      operationId: partial_updateProcessor
-      description: ''
-      parameters:
-      - name: pid
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Processor'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Processor'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Processor'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Processor'
-          description: ''
-    delete:
-      operationId: destroyProcessor
-      description: ''
-      parameters:
-      - name: pid
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '204':
           description: ''
   /timeside/api/processors/{pid}/parameters_default/:
     get:
@@ -561,129 +452,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Processor'
           description: ''
-  /timeside/api/subprocessors/:
-    get:
-      operationId: listSubProcessors
-      description: ''
-      parameters: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SubProcessor'
-          description: ''
-    post:
-      operationId: createSubProcessor
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubProcessor'
-          description: ''
-  /timeside/api/subprocessors/{sub_processor_id}/:
-    get:
-      operationId: retrieveSubProcessor
-      description: ''
-      parameters:
-      - name: sub_processor_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubProcessor'
-          description: ''
-    put:
-      operationId: updateSubProcessor
-      description: ''
-      parameters:
-      - name: sub_processor_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubProcessor'
-          description: ''
-    patch:
-      operationId: partial_updateSubProcessor
-      description: ''
-      parameters:
-      - name: sub_processor_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SubProcessor'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubProcessor'
-          description: ''
-    delete:
-      operationId: destroySubProcessor
-      description: ''
-      parameters:
-      - name: sub_processor_id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      responses:
-        '204':
-          description: ''
   /timeside/api/results/:
     get:
       operationId: listResults
@@ -703,28 +471,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Result'
-          description: ''
-    post:
-      operationId: createResult
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Result'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Result'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Result'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Result'
           description: ''
   /timeside/api/results/{uuid}/:
     get:
@@ -750,93 +496,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Result'
           description: ''
-    put:
-      operationId: updateResult
-      description: ''
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this Result.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Result'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Result'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Result'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Result'
-          description: ''
-    patch:
-      operationId: partial_updateResult
-      description: ''
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this Result.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Result'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Result'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Result'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Result'
-          description: ''
-    delete:
-      operationId: destroyResult
-      description: ''
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this Result.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      responses:
-        '204':
-          description: ''
   /timeside/api/presets/:
     get:
       operationId: listPresets
@@ -858,14 +517,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id010
               $ref: '#/components/schemas/Preset'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Preset'
+            schema: *id010
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Preset'
+            schema: *id010
       responses:
         '200':
           content:
@@ -904,14 +561,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id011
               $ref: '#/components/schemas/Preset'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Preset'
+            schema: *id011
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Preset'
+            schema: *id011
       responses:
         '200':
           content:
@@ -932,14 +587,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id012
               $ref: '#/components/schemas/Preset'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Preset'
+            schema: *id012
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Preset'
+            schema: *id012
       responses:
         '200':
           content:
@@ -981,14 +634,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id013
               $ref: '#/components/schemas/Task'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Task'
+            schema: *id013
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Task'
+            schema: *id013
       responses:
         '200':
           content:
@@ -1027,14 +678,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id014
               $ref: '#/components/schemas/Task'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Task'
+            schema: *id014
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Task'
+            schema: *id014
       responses:
         '200':
           content:
@@ -1055,14 +704,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id015
               $ref: '#/components/schemas/Task'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Task'
+            schema: *id015
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Task'
+            schema: *id015
       responses:
         '200':
           content:
@@ -1097,28 +744,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
           description: ''
-    post:
-      operationId: createUser
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
   /timeside/api/users/{username}/:
     get:
       operationId: retrieveUser
@@ -1137,78 +762,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-          description: ''
-    put:
-      operationId: updateUser
-      description: ''
-      parameters:
-      - name: username
-        in: path
-        required: true
-        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-          only.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
-    patch:
-      operationId: partial_updateUser
-      description: ''
-      parameters:
-      - name: username
-        in: path
-        required: true
-        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-          only.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
-    delete:
-      operationId: destroyUser
-      description: ''
-      parameters:
-      - name: username
-        in: path
-        required: true
-        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-          only.
-        schema:
-          type: string
-      responses:
-        '204':
           description: ''
   /timeside/api/analysis/:
     get:
@@ -1231,14 +784,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id016
               $ref: '#/components/schemas/Analysis'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Analysis'
+            schema: *id016
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Analysis'
+            schema: *id016
       responses:
         '200':
           content:
@@ -1277,14 +828,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id017
               $ref: '#/components/schemas/Analysis'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Analysis'
+            schema: *id017
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Analysis'
+            schema: *id017
       responses:
         '200':
           content:
@@ -1305,14 +854,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id018
               $ref: '#/components/schemas/Analysis'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Analysis'
+            schema: *id018
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Analysis'
+            schema: *id018
       responses:
         '200':
           content:
@@ -1354,14 +901,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id019
               $ref: '#/components/schemas/AnalysisTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id019
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id019
       responses:
         '200':
           content:
@@ -1400,14 +945,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id020
               $ref: '#/components/schemas/AnalysisTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id020
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id020
       responses:
         '200':
           content:
@@ -1428,14 +971,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id021
               $ref: '#/components/schemas/AnalysisTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id021
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id021
       responses:
         '200':
           content:
@@ -1495,14 +1036,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id022
               $ref: '#/components/schemas/AnnotationTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnnotationTrack'
+            schema: *id022
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnnotationTrack'
+            schema: *id022
       responses:
         '200':
           content:
@@ -1541,14 +1080,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id023
               $ref: '#/components/schemas/AnnotationTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnnotationTrack'
+            schema: *id023
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnnotationTrack'
+            schema: *id023
       responses:
         '200':
           content:
@@ -1569,14 +1106,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id024
               $ref: '#/components/schemas/AnnotationTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnnotationTrack'
+            schema: *id024
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnnotationTrack'
+            schema: *id024
       responses:
         '200':
           content:
@@ -1618,14 +1153,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id025
               $ref: '#/components/schemas/Annotation'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Annotation'
+            schema: *id025
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Annotation'
+            schema: *id025
       responses:
         '200':
           content:
@@ -1664,14 +1197,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id026
               $ref: '#/components/schemas/Annotation'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Annotation'
+            schema: *id026
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Annotation'
+            schema: *id026
       responses:
         '200':
           content:
@@ -1692,14 +1223,12 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id027
               $ref: '#/components/schemas/Annotation'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Annotation'
+            schema: *id027
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Annotation'
+            schema: *id027
       responses:
         '200':
           content:
@@ -1734,28 +1263,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/Provider'
           description: ''
-    post:
-      operationId: createProvider
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Provider'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Provider'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Provider'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Provider'
-          description: ''
   /timeside/api/providers/{uuid}/:
     get:
       operationId: retrieveProvider
@@ -1773,75 +1280,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Provider'
-          description: ''
-    put:
-      operationId: updateProvider
-      description: ''
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this provider.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Provider'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Provider'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Provider'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Provider'
-          description: ''
-    patch:
-      operationId: partial_updateProvider
-      description: ''
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this provider.
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Provider'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Provider'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Provider'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Provider'
-          description: ''
-    delete:
-      operationId: destroyProvider
-      description: ''
-      parameters:
-      - name: uuid
-        in: path
-        required: true
-        description: A UUID string identifying this provider.
-        schema:
-          type: string
-      responses:
-        '204':
           description: ''
   /timeside/api/token-csrf/:
     get:
@@ -1905,20 +1343,133 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
+            schema: &id028
               $ref: '#/components/schemas/AnalysisTrack'
           application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id028
           multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/AnalysisTrack'
+            schema: *id028
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalysisTrack'
+          description: ''
+  /timeside/api-token-auth/:
+    post:
+      operationId: CreateObtainAuthToken
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema: &id029 {}
+          multipart/form-data:
+            schema: *id029
+          application/json:
+            schema: *id029
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+  /timeside/api/token/:
+    post:
+      operationId: CreateTokenObtainPair
+      description: 'Takes a set of user credentials and returns an access and refresh
+        JSON web
+
+        token pair to prove the authentication of those credentials.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id030
+              properties:
+                username:
+                  type: string
+              required:
+              - username
+          application/x-www-form-urlencoded:
+            schema: *id030
+          multipart/form-data:
+            schema: *id030
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                required:
+                - username
+          description: ''
+  /timeside/api/token/refresh/:
+    post:
+      operationId: CreateTokenRefresh
+      description: 'Takes a refresh type JSON web token and returns an access type
+        JSON web
+
+        token if the refresh token is valid.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id031
+              properties:
+                refresh:
+                  type: string
+              required:
+              - refresh
+          application/x-www-form-urlencoded:
+            schema: *id031
+          multipart/form-data:
+            schema: *id031
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  refresh:
+                    type: string
+                required:
+                - refresh
+          description: ''
+  /timeside/api/token/verify/:
+    post:
+      operationId: CreateTokenVerify
+      description: 'Takes a token and indicates if it is valid.  This view provides
+        no
+
+        information about a token''s fitness for a particular use.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id032
+              properties:
+                token:
+                  type: string
+              required:
+              - token
+          application/x-www-form-urlencoded:
+            schema: *id032
+          multipart/form-data:
+            schema: *id032
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+                required:
+                - token
           description: ''
 components:
   schemas:
@@ -2087,22 +1638,6 @@ components:
           readOnly: true
       required:
       - pid
-    SubProcessor:
-      properties:
-        url:
-          type: string
-          readOnly: true
-        name:
-          type: string
-          maxLength: 256
-        processor:
-          type: string
-          nullable: true
-        sub_processor_id:
-          type: string
-          maxLength: 128
-      required:
-      - sub_processor_id
     Result:
       properties:
         uuid:
