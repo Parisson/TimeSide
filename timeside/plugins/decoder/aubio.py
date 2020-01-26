@@ -46,6 +46,8 @@ class AubioDecoder(Decoder):
         if self.start or self.duration:
             if self.start > self.uri_duration:
                 raise ValueError ('Segment start time exceeds media duration')
+            if self.duration is None:
+                self.duration = self.uri_duration - self.start
             if self.start + self.duration > self.uri_duration:
                 raise ValueError ('Segment duration exceeds media duration')
 
@@ -66,8 +68,12 @@ class AubioDecoder(Decoder):
         self.frames_read = 0
         self.start_frame = int(self.start * self.output_samplerate)
         if self.duration:
-            seconds_to_read = self.duration - self.start
+            seconds_to_read = self.duration
             self.frames_to_read = int (seconds_to_read * self.output_samplerate)
+
+        if self.duration:
+            self.input_duration = self.duration
+            self.input_totalframes = self.frames_to_read
 
         if self.start > 0:
             self.source.seek(self.start_frame)
@@ -105,3 +111,11 @@ class AubioDecoder(Decoder):
     @interfacedoc
     def metadata(self):
         return {}
+
+    @interfacedoc
+    def totalframes(self):
+        if self.input_samplerate == self.output_samplerate:
+            return self.input_totalframes
+        else:
+            ratio = self.output_samplerate / self.input_samplerate
+            return int(self.input_totalframes * ratio)
