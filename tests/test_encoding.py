@@ -95,6 +95,25 @@ class TestEncoding(unittest.TestCase):
         self.delta = 0.1
         self.samplerate = 48000  # 44100 is not supported by opusenc
 
+    def testWavAubio(self):
+        "Test aubio wav encoding"
+        from timeside.plugins.encoder.aubio_wav import WavEncoder
+        self.encoder_function = WavEncoder
+        self.delta = 0
+
+    def testFlacAubio(self):
+        "Test flac encoding with aubio"
+        from timeside.plugins.encoder.aubio_flac import FlacEncoder
+        self.encoder_function = FlacEncoder
+        self.delta = 0.1
+        self.samplerate = 44100
+
+    def testVorbisAubio(self):
+        "Test vorbis encoding with aubio"
+        from timeside.plugins.encoder.aubio_ogg import VorbisEncoder
+        self.encoder_function = VorbisEncoder
+        self.delta = 0.3
+
     def tearDown(self):
 
         # Source through ArrayDecoder
