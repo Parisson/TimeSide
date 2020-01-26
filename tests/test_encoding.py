@@ -139,8 +139,6 @@ class TestEncoding(unittest.TestCase):
             media_channels = media_info['streams'][0]['channels']
             media_samplerate = media_info['streams'][0]['samplerate']
 
-            os.unlink(self.sink)
-
             if self.test_duration:
                 self.assertAlmostEqual(self.source_duration,
                                        media_duration,
@@ -150,6 +148,8 @@ class TestEncoding(unittest.TestCase):
             else:
                 self.assertEqual(2, media_channels)   # voaacenc bug ?
             self.assertEqual(media_samplerate, self.samplerate)
+
+            os.unlink(self.sink)
 
         if 0:
             import commands
