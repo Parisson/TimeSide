@@ -1,4 +1,4 @@
-aubio
+git+https://git.aubio.org/aubio/aubio@feature/autosink#egg=aubio>0.4.9
 celery==4.*
 coreapi
 coverage
