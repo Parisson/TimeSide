@@ -4,17 +4,13 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
-from django.views.generic import TemplateView
 #from django.core.urlresolvers import reverse
 
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
 
 from rest_framework import routers
-from rest_framework.documentation import include_docs_urls
 from rest_framework.authtoken.views import obtain_auth_token
-from rest_framework.schemas import get_schema_view
-from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -24,30 +20,6 @@ from rest_framework_simplejwt.views import (
 EXPORT_EXT = "|".join(TS_ENCODERS_EXT.keys())
 
 admin.autodiscover()
-
-class SchemaWithServerInfoGeneraror(SchemaGenerator):
-     def get_schema(self, request=None, public=False):
-        # Adding production and staging server urls ton title and version infos
-        schema = super().get_schema()
-        schema['servers'] = [
-                {
-                    "url": "https://wasabi.telemeta.org/",
-                    "description": "Production server"
-                },
-                {
-                    "url": "https://sandbox.wasabi.telemeta.org/",
-                    "description": "Staging server"
-                }
-        ]
-        return schema
-
-schema_view = get_schema_view(
-    title="TimeSide API",
-    description="RESTful API of TimeSide, a scalable audio processing framework",
-    version="1.0.0",
-    # url="https://wasabi.telemeta.org/",
-    generator_class=SchemaWithServerInfoGeneraror,
-    )
 
 api_router = routers.DefaultRouter()
 api_router.register(r'selections', views.SelectionViewSet)
@@ -67,21 +39,13 @@ api_router.register(r'providers', views.ProviderViewSet)
 
 
 urlpatterns = [
-    # docs
-    # Route TemplateView to serve Swagger UI template.
-    #   * Provide `extra_context` with view name of `SchemaView`.
-    path('swagger-ui/', TemplateView.as_view(
-        template_name='timeside/swagger-ui.html',
-        extra_context={'schema_url':'openapi-schema'}
-    ), name='swagger-ui'),
-    # Route TemplateView to serve the ReDoc template.
-    #   * Provide `extra_context` with view name of `SchemaView`.
-    path('redoc/', TemplateView.as_view(
-        template_name='timeside/redoc.html',
-        extra_context={'schema_url':'openapi-schema'}
-    ), name='redoc'),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
+    # docs
+    path('swagger-ui/', views.SwaggerUIView.as_view(), name='swagger-ui'),
+    path('redoc/', views.ReDocView.as_view(), name='redoc'),
+    # Schema
+    url(r'^api/schema/$', views.schema_view, name="openapi-schema"),
     # API endpoint for Generating Simple Web Token
     url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
     # API endpoints for Generating access and refresh JSON Web Token (JWT)
@@ -128,8 +92,6 @@ urlpatterns = [
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
     # Player
     url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),
-    # Schema
-    url(r'^api/schema/$', schema_view, name="openapi-schema"),
 ]
 
 

@@ -34,6 +34,9 @@ from django.middleware.csrf import get_token as get_csrf_token
 
 from rest_framework import viewsets, generics, renderers
 from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.schemas import get_schema_view
+from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework.response import Response
 #from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse, reverse_lazy
@@ -595,3 +598,44 @@ class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
     queryset = model.objects.all()
     serializer_class = serializers.ProviderSerializer   
     search_fields = ('pid')
+
+
+class SwaggerUIView(TemplateView):
+    """TemplateView to serve Swagger UI template"""
+    template_name = "timeside/swagger-ui.html"
+    # `extra_context` provided with view name of `SchemaView`
+    extra_context = {'schema_url':'openapi-schema'}
+
+
+class ReDocView(TemplateView):
+    """TemplateView to serve ReDoc template"""
+    template_name = "timeside/redoc.html"
+    # `extra_context` provided with view name of `SchemaView`
+    extra_context = {'schema_url':'openapi-schema'}
+
+
+class SchemaWithServerInfoGeneraror(SchemaGenerator):
+    """Generate an OpenAPI v3 schema that provide server's prod and staging urls"""
+    def get_schema(self, request=None, public=False):
+        # Adding production and staging server urls ton title and version infos
+        schema = super().get_schema()
+        schema['servers'] = [
+                {
+                    "url": "https://wasabi.telemeta.org/",
+                    "description": "Production server"
+                },
+                {
+                    "url": "https://sandbox.wasabi.telemeta.org/",
+                    "description": "Staging server"
+                }
+        ]
+        return schema
+
+schema_view = get_schema_view(
+    title="TimeSide API",
+    description="RESTful API of TimeSide, a scalable audio processing framework",
+    version="1.0.0",
+    generator_class=SchemaWithServerInfoGeneraror,
+)
+
+
