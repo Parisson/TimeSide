@@ -670,7 +670,7 @@ class Task(UUID, Dated, Shareable):
             status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
-                print('WAITING')
+                worker_logger.info('WAITING')
                 status = Task.objects.get(uuid=str(self.uuid)).status
 
 
