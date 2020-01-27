@@ -602,6 +602,7 @@ class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
 
 class SwaggerUIView(TemplateView):
     """TemplateView to serve Swagger UI template"""
+    permission_classes = [AllowAny]
     template_name = "timeside/swagger-ui.html"
     # `extra_context` provided with view name of `SchemaView`
     extra_context = {'schema_url':'openapi-schema'}
@@ -609,6 +610,7 @@ class SwaggerUIView(TemplateView):
 
 class ReDocView(TemplateView):
     """TemplateView to serve ReDoc template"""
+    permission_classes = [AllowAny]
     template_name = "timeside/redoc.html"
     # `extra_context` provided with view name of `SchemaView`
     extra_context = {'schema_url':'openapi-schema'}
@@ -636,6 +638,7 @@ schema_view = get_schema_view(
     description="RESTful API of TimeSide, a scalable audio processing framework",
     version="1.0.0",
     generator_class=SchemaWithServerInfoGeneraror,
+    permission_classes=[AllowAny],
 )
 
 
