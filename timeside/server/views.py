@@ -34,7 +34,10 @@ from django.middleware.csrf import get_token as get_csrf_token
 
 from rest_framework import viewsets, generics, renderers
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.schemas import get_schema_view
 from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework.response import Response
@@ -130,7 +133,8 @@ class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
 
 class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
-
+    
+    permission_classes = [IsAuthenticatedOrReadOnly]
     model = models.Processor
     queryset = model.objects.all()
     serializer_class = serializers.ProcessorSerializer
@@ -594,6 +598,7 @@ class Csrf_Token(viewsets.ViewSet):
 
 class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
 
+    permission_classes = [IsAuthenticatedOrReadOnly]
     model = models.Provider
     queryset = model.objects.all()
     serializer_class = serializers.ProviderSerializer   
