@@ -8,4 +8,10 @@ source "$SCRIPT_DIR/app_base.sh"
 # see http://celery.readthedocs.org/en/latest/userguide/workers.html#autoreloading
 
 # python $manage celery worker -A worker --uid $uid --gid $gid
-celery -A worker worker --loglevel=DEBUG --logfile=$worker_log
+if [ $worker_autoreload = true ]; then
+    python3 manage.py timeside-celery-worker --loglevel $loglevel --logfile $worker_logfile
+    echo 'OK'
+else
+    celery -A worker worker --loglevel=$loglevel --logfile=$worker_logfile
+fi
+

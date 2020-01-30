@@ -8,7 +8,9 @@ wsgi=$app'/wsgi.py'
 static='/srv/static/'
 media='/srv/media/'
 log='/var/log/uwsgi/app.log'
-worker_log='/var/log/celery/worker.log'
+worker_logfile='/var/log/celery/worker.log'
+loglevel='DEBUG'
+worker_autoreload=true
 
 # uwsgi params
 port=8000
