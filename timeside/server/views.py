@@ -41,7 +41,7 @@ from rest_framework.permissions import (
 from rest_framework.schemas import get_schema_view
 from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework.response import Response
-#from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
 from rest_framework import filters
@@ -69,7 +69,7 @@ class UUIDViewSetMixin(object):
 
 
 class SelectionViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-
+    """Set of items and other selections"""
     model = models.Selection
     queryset = model.objects.all()
     serializer_class = serializers.SelectionSerializer
@@ -81,7 +81,7 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     queryset = models.Item.objects.all()
 
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('provider__pid','external_id')
+    search_fields = ('provider__pid', 'external_id')
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -104,7 +104,7 @@ class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
 
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
-
+    """Gives waveform of item's audio"""
     model = models.Item
     queryset = model.objects.all()
     serializer_class = serializers.ItemWaveformSerializer
@@ -117,23 +117,21 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
         return context
 
     def get_serializer_context(self):
-        """
-        pass request attribute to serializer
-        """
+        """pass request attribute to serializer"""
         context = super(ItemWaveView, self).get_serializer_context()
         # context['plop'] = 92
         return context
 
 
 class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-
+    """Set of presets and other experiences"""
     model = models.Experience
     queryset = model.objects.all()
     serializer_class = serializers.ExperienceSerializer
 
 
 class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
-    
+    """Audio process to compute on items given potential parameters"""
     permission_classes = [IsAuthenticatedOrReadOnly]
     model = models.Processor
     queryset = model.objects.all()
@@ -158,7 +156,7 @@ class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SubProcessorViewSet(viewsets.ModelViewSet):
-
+    """link between a processor depending on another"""
     model = models.SubProcessor
     queryset = model.objects.all()
     serializer_class = serializers.SubProcessorSerializer
@@ -167,18 +165,19 @@ class SubProcessorViewSet(viewsets.ModelViewSet):
 
 
 class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
-
+    """Result of processing on items"""
     model = models.Result
     queryset = model.objects.all()
     serializer_class = serializers.ResultSerializer
 
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('item__uuid','preset__uuid')
+    search_fields = ('item__uuid', 'preset__uuid')
 
     # def get_queryset(self): TODO
     #     return self.queryset \
     #         .filter(item__uuid=self.kwargs.get('project_id')) \
     #         .filter(author=self.request.user)
+
 
 class PNGRenderer(renderers.BaseRenderer):
     media_type = 'image/png'
@@ -191,7 +190,7 @@ class PNGRenderer(renderers.BaseRenderer):
 
 
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
-
+    """"png rendering of 2D numerical data (example: a spectrogram)"""
     model = models.Result
     queryset = model.objects.all()
     serializer_class = serializers.ResultVisualizationSerializer
@@ -200,21 +199,21 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
 
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-
+    """Processor with its potential parameters"""
     model = models.Preset
     queryset = model.objects.all()
     serializer_class = serializers.PresetSerializer
 
 
 class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-
+    """Experience applied to a selection or a single item"""
     model = models.Task
     queryset = model.objects.all()
     serializer_class = serializers.TaskSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-
+    """Users of the API able to share data"""
     model = models.User
     queryset = model.objects.all()
     serializer_class = serializers.UserSerializer
@@ -238,13 +237,15 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
         Optionally restricts the returned purchases analysis track to
         a given analysis and/or a given item,
         by filtering against `analysis` and `item` query parameters in the URL.
-        The query parameters values should be the uuid of the analysis or of the item
+        Query parameters values should be analysis' or of the item's uuid.
         """
         queryset = self.model.objects.all()
         analysis_uuid = self.request.query_params.get('analysis', None)
         item_uuid = self.request.query_params.get('item', None)
         if analysis_uuid is not None:
-            queryset = queryset.filter(analysis__uuid__startswith=analysis_uuid)
+            queryset = queryset.filter(
+                analysis__uuid__startswith=analysis_uuid
+                )
         if item_uuid is not None:
             queryset = queryset.filter(item__uuid__startswith=item_uuid)
 
@@ -263,19 +264,23 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
                                                          context=context)
         if preset_serializer.is_valid():
             preset = preset_serializer.save()
-            return Response(data='Preset is Valid but method not implemented yet',
-                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response(
+                data='Preset is Valid but method not implemented yet',
+                status=status.HTTP_405_METHOD_NOT_ALLOWED
+                )
         else:
             return Response(data=preset_serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        # Create a new Analysis with this Preset
+        # Create a new Analysis with this Preset
         analysis_data = serializers.AnalysisSerializer(track.analysis,
                                                        context=context).data
         # Update preset field
         analysis_data['preset'] = preset_serializer.data['url']
 
-        analysis_serializer = serializers.AnalysisSerializer(data=analysis_data,
-                                                             context=context)
+        analysis_serializer = serializers.AnalysisSerializer(
+            data=analysis_data,
+            context=context
+            )
         if analysis_serializer.is_valid():
             analysis = analysis_serializer.save()
         else:
@@ -367,8 +372,10 @@ class ResultAnalyzerToSVView(View):
         tmp_sv_file = os.path.splitext(os.path.basename(audio_file))[
             0] + '_' + res_id + '.sv'
         abs_tmp_sv_file = os.path.join(tmp_dir, tmp_sv_file)
-        segment_result.data_object.to_sonic_visualiser(svenv_file=abs_tmp_sv_file,
-                                                       audio_file=audio_file)
+        segment_result.data_object.to_sonic_visualiser(
+            svenv_file=abs_tmp_sv_file,
+            audio_file=audio_file
+            )
         file_size = os.path.getsize(abs_tmp_sv_file)
         # read file
         with open(abs_tmp_sv_file, "rb") as f:
@@ -404,9 +411,7 @@ class ResultEncoderView(View):
 
 
 class ItemDetailExport(DetailView):
-    """
-    Export all results of an item
-    """
+    """Export all results of an item"""
     model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
@@ -459,7 +464,6 @@ class ItemList(ListView):
     template_name = 'timeside/item_list.html'
 
 
-
 class ItemDetail(DetailView):
 
     model = models.Item
@@ -470,11 +474,15 @@ class ItemDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ItemDetail, self).get_context_data(**kwargs)
-        ts_item = {'ts_api_root': str(reverse_lazy('api-root', request=self.request)),
-                   'ts_item_uuid': str(self.get_object().uuid)
-                   }
+        ts_item = {
+            'ts_api_root': str(reverse_lazy(
+                'api-root', request=self.request
+                )),
+            'ts_item_uuid': str(self.get_object().uuid)
+            }
         context['ts_item'] = json.dumps(ts_item)
         return context
+
 
 def serve_media(filename, content_type="", buffering=True):
     if not settings.DEBUG:
@@ -483,7 +491,7 @@ def serve_media(filename, content_type="", buffering=True):
                                  buffering=buffering)
     else:
         response = FileResponse(open(filename, 'rb'))
-        response['Content-Disposition'] = 'attachment; ' + 'filename=' + filename
+        response['Content-Disposition'] = 'attachment; filename=' + filename
         response['Content-Type'] = content_type
         return response
 
@@ -500,7 +508,7 @@ def nginx_media_accel(media_path, content_type="", buffering=True):
 
     if not buffering:
         response['X-Accel-Buffering'] = 'no'
-        #response['X-Accel-Limit-Rate'] = 524288
+        # response['X-Accel-Limit-Rate'] = 524288
 
     return response
 
@@ -513,7 +521,9 @@ class AudioRenderer(renderers.BaseRenderer):
     def render(self, data, media_type=None, renderer_context=None):
         return data
 
+
 class ItemTranscode(DetailView):
+    """Transcode an item's audio in a different format"""
     model = models.Item
     renderer_classes = (AudioRenderer,)
 
@@ -521,10 +531,14 @@ class ItemTranscode(DetailView):
         return get_object_or_404(models.Item, uuid=self.kwargs.get("uuid"))
 
     def transcode_segment(self, uri, start, duration, encoder_pid, mime_type):
-        decoder = timeside.core.get_processor('file_decoder')(uri, start=start, duration=duration)
+        decoder = timeside.core.get_processor('file_decoder')(
+            uri, start=start, duration=duration
+            )
         import tempfile
         with tempfile.NamedTemporaryFile(delete=True) as tmp_file:
-            encoder = timeside.core.get_processor(encoder_pid)(tmp_file.name, overwrite=True)
+            encoder = timeside.core.get_processor(encoder_pid)(
+                tmp_file.name, overwrite=True
+                )
             pipe = (decoder | encoder)
             pipe.run()
 
@@ -557,9 +571,13 @@ class ItemTranscode(DetailView):
                                           encoder_pid=encoder,
                                           mime_type=mime_type)
         # Get or Create Processor = encoder
-        processor, created = models.Processor.objects.get_or_create(pid=encoder)
+        processor, created = models.Processor.objects.get_or_create(
+            pid=encoder
+            )
         # Get or Create Preset with processor
-        preset, created = models.Preset.objects.get_or_create(processor=processor)
+        preset, created = models.Preset.objects.get_or_create(
+            processor=processor
+            )
         # Get Result with preset and item
         item = self.get_object()
         try:
@@ -582,8 +600,10 @@ class ItemTranscode(DetailView):
                 selection=item.get_single_selection())
             task.run(wait=True)
             return self.get(request, uuid, extension)
-            # response = StreamingHttpResponse(streaming_content=stream_from_task(task),
-            #                                 content_type=mime_type)
+            # response = StreamingHttpResponse(
+            #     streaming_content=stream_from_task(task),
+            #     content_type=mime_type
+            #     )
             # return response
 
 
@@ -593,15 +613,15 @@ class PlayerView(TemplateView):
 
 class Csrf_Token(viewsets.ViewSet):
     def list(self, request):
-        return  Response({'csrftoken': get_csrf_token(request)})
+        return Response({'csrftoken': get_csrf_token(request)})
 
 
 class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
-
+    """Audio providers available in the API"""
     permission_classes = [IsAuthenticatedOrReadOnly]
     model = models.Provider
     queryset = model.objects.all()
-    serializer_class = serializers.ProviderSerializer   
+    serializer_class = serializers.ProviderSerializer
     search_fields = ('pid')
 
 
@@ -610,7 +630,7 @@ class SwaggerUIView(TemplateView):
     permission_classes = [AllowAny]
     template_name = "timeside/swagger-ui.html"
     # `extra_context` provided with view name of `SchemaView`
-    extra_context = {'schema_url':'openapi-schema'}
+    extra_context = {'schema_url': 'openapi-schema'}
 
 
 class ReDocView(TemplateView):
@@ -618,11 +638,13 @@ class ReDocView(TemplateView):
     permission_classes = [AllowAny]
     template_name = "timeside/redoc.html"
     # `extra_context` provided with view name of `SchemaView`
-    extra_context = {'schema_url':'openapi-schema'}
+    extra_context = {'schema_url': 'openapi-schema'}
 
 
 class SchemaWithServerInfoGeneraror(SchemaGenerator):
-    """Generate an OpenAPI v3 schema that provide server's prod and staging urls"""
+    """
+    Generate an OpenAPI v3 schema providing server's prod and staging urls
+    """
     def get_schema(self, request=None, public=False):
         # Adding production and staging server urls ton title and version infos
         schema = super().get_schema()
@@ -638,12 +660,12 @@ class SchemaWithServerInfoGeneraror(SchemaGenerator):
         ]
         return schema
 
+
 schema_view = get_schema_view(
     title="TimeSide API",
-    description="RESTful API of TimeSide, a scalable audio processing framework",
+    description="""RESTful API of TimeSide,
+                a scalable audio processing framework""",
     version="1.0.0",
     generator_class=SchemaWithServerInfoGeneraror,
     permission_classes=[AllowAny],
 )
-
-
