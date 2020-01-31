@@ -356,25 +356,26 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        if not (self.source_url or self.source_file) and self.provider:
+        # check if item already has url or file source
+        # and a provider that gives free access to audio sources
+        if not (self.source_url or self.source_file) and    \
+           self.provider and                                \
+           self.provider.source_access:
+            if self.external_uri:
+                source = self.provider.get_source_from_url(
+                    self.external_uri, download
+                    )
+            elif self.external_id:
+                source = self.provider.get_source_from_id(
+                    self.external_id, download
+                    )
+            # correct media path while downloading
+            # the audio source as a file
             if download:
-                if self.external_uri:
-                    self.source_file = self.provider.get_source_from_url(
-                        self.external_uri, download
-                        ).replace(settings.MEDIA_ROOT, '')
-                elif self.external_id:
-                    self.source_file = self.provider.get_source_from_id(
-                        self.external_id, download
-                        ).replace(settings.MEDIA_ROOT, '')
+                self.source_file = source.replace(settings.MEDIA_ROOT, '')
+            # store audio url in source_url for streaming
             else:
-                if self.external_uri:
-                    self.source_url = self.provider.get_source_from_url(
-                        self.external_uri, download
-                        )
-                elif self.external_id:
-                    self.source_url = self.provider.get_source_from_id(
-                        self.external_id, download
-                        )
+                self.source_url = source
             super(Item, self).save()
 
     def get_external_id(self):
