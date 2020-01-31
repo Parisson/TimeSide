@@ -38,6 +38,9 @@ gid='www-data'
 
 # conda install django-filter==1.1.0 django==1.9.* djangorestframework==3.6.4
 
+# always take the last youtube-dl version
+pip3 install -U youtube-dl
+
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
 
