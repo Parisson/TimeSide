@@ -20,10 +20,12 @@ def task_run(task_id):
     task = Task.objects.get(uuid=task_id)
     results = []
     if task.selection:
+        logger.info(f'Apply {str(task.experience)} on {str(task.selection)} in task {str(task)}')
         for item in task.selection.get_all_items():
-            results.append(experience_run.delay(str(task.experience.uuid), str(item.uuid)))
+            results.append(experience_run.delay(str(task.experience.uuid), str(item.uuid)))    
         results_id = [res.id for res in results]
     elif task.item:
+        logger.info(f'Apply {str(task.experience)} on {str(task.item)} in task {str(task)}')
         results.append(experience_run.delay(str(task.experience.uuid), str(task.item.uuid)))
         results_id = [res.id for res in results]
     task_monitor.delay(task_id, results_id)
@@ -33,15 +35,16 @@ def task_run(task_id):
 def experience_run(exp_id, item_id):
     item = Item.objects.get(uuid=item_id)
     experience = Experience.objects.get(uuid=exp_id)
+    logger.info(f'Run {str(experience)} on {str(item)}')
     item.run(experience)
     gc.collect()
 
 @shared_task
 def task_monitor(task_id, results_id):
     results = [AsyncResult(id) for id in results_id]
-
+    task = Task.objects.get(uuid=task_id)
+    logger.info(f'Wait for results of {str(task)} to be ready')
     while not all([res.ready() for res in results]):
         time.sleep(1)
-
-    task = Task.objects.get(uuid=task_id)
+    logger.info(f'{str(task)} is done')
     task.status_setter(_DONE)

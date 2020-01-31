@@ -68,31 +68,20 @@ def get_provider(provider_id):
                        % provider_id)
     return _providers[provider_id]
 
-def list_providers(interface=IProvider, prefix=""):
-    print(prefix + interface.__name__)
-    if len(prefix):
-        underline_char = '-'
-    else:
-        underline_char = '='
-    print(prefix + underline_char * len(interface.__name__))
-    subinterfaces = interface.__subclasses__()
-    procs = providers(interface, False)
-    for p in procs:
-        print(prefix + "  * %s :" % p.id())
-        print(prefix + "    \t\t%s" % p.name())
-    print('_providers : ' + str(_providers))
+def list_providers(interface=IProvider):
+    lst = interface.__name__ + "\n"
+    lst += '=' * len(interface.__name__) + "\n"
+    provs = providers(interface, False)
+    for p in provs:
+        lst += f"  * {p.id()} :" + "\n"
+        lst += f"    \t\t{p.name()}" + "\n"
+    return lst
 
 
-def list_providers_rst(interface=IProvider, prefix=""):
-    print('\n' + interface.__name__)
-    if len(prefix):
-        underline_char = '-'
-    else:
-        underline_char = '='
-    print(underline_char * len(interface.__name__) + '\n')
-    subinterfaces = interface.__subclasses__()
-    for i in subinterfaces:
-        list_providers_rst(interface=i, prefix=prefix + " ")
-    procs = providers(interface, False)
-    for p in procs:
-        print(prefix + "  * **%s** : %s" % (p.id(), p.name()))
+def list_providers_rst(interface=IProvider):
+    lst = '\n' + interface.__name__  + '\n'
+    lst += '=' * len(interface.__name__) + '\n'
+    provs = providers(interface, False)
+    for p in provs:
+        lst += f"  * **{p.id()}** : {p.name()}" + '\n'
+    return lst

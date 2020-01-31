@@ -19,7 +19,7 @@ class TestCheckProcessorsParam(unittest.TestCase):
         """Internal function that test if a given processor
         has schema parameters as __init__ arguments"""
 
-        argspec = inspect.getargspec(processor_cls.__init__)
+        argspec = inspect.getfullargspec(processor_cls.__init__)[:4]
         argspec.args.remove('self')  # remove 'self' from arguments list
 
         # print argspec.args

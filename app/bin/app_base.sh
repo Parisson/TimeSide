@@ -29,14 +29,17 @@ gid='www-data'
 #pip install youtube-dl xmljson coreapi psycopg2-binary
 #pip install django-filter==1.1.0 djangorestframework==3.8 django==1.10 librosa==0.6.3
 #npm install -g bower
-pip install librosa==0.7.0
-pip install -U youtube-dl
+#pip install librosa==0.7.0
+#pip install -U youtube-dl
 
 # pip install django-inspect
 
 # apt install glib-networking
 
 # conda install django-filter==1.1.0 django==1.9.* djangorestframework==3.6.4
+
+# always take the last youtube-dl version
+pip3 install -U youtube-dl
 
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh

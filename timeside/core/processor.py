@@ -289,35 +289,39 @@ def get_processor(processor_id):
 
 
 def list_processors(interface=IProcessor, prefix=""):
-    print(prefix + interface.__name__)
+    lst = ""
+    lst += prefix + interface.__name__ + "\n"
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print(prefix + underline_char * len(interface.__name__))
-    subinterfaces = interface.__subclasses__()
-    for i in subinterfaces:
-        list_processors(interface=i, prefix=prefix + "  ")
+    lst += prefix + underline_char * len(interface.__name__)+ "\n"
     procs = processors(interface, False)
     for p in procs:
-        print(prefix + "  * %s :" % p.id())
-        print(prefix + "    \t\t%s" % p.description())
-        print(prefix + "    \t\tversion: %s" % p.version())
+        lst += prefix + f"  * {p.id()}:" + "\n"
+        lst += prefix + f"    \t\t{p.description()}" + "\n"
+        lst += prefix + f"    \t\tversion: {p.version()}" + "\n"
+    subinterfaces = interface.__subclasses__()
+    for i in subinterfaces:
+        lst += list_processors(interface=i, prefix=prefix + "  ")+ "\n"
+    return lst
 
 
 def list_processors_rst(interface=IProcessor, prefix=""):
-    print('\n' + interface.__name__)
+    lst = ""
+    lst += prefix + interface.__name__ + "\n"
     if len(prefix):
         underline_char = '-'
     else:
         underline_char = '='
-    print(underline_char * len(interface.__name__) + '\n')
-    subinterfaces = interface.__subclasses__()
-    for i in subinterfaces:
-        list_processors_rst(interface=i, prefix=prefix + " ")
+    lst += prefix + underline_char * len(interface.__name__)+ "\n"
     procs = processors(interface, False)
     for p in procs:
-        print(prefix + "  * **%s** *v*%s*v*: %s" % (p.id(), p.version(), p.description()))
+        lst += prefix + f"* **{p.id()}** *v*{p.version()}*v*: {p.description()}"+ "\n"
+    subinterfaces = interface.__subclasses__()
+    for i in subinterfaces:
+        lst += list_processors_rst(interface=i, prefix=prefix + " ") + "\n"
+    return lst
 
 def list_processors_csv(interface=IProcessor):
     f = open('list_processors.csv', 'wb')

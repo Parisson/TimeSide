@@ -49,7 +49,7 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
@@ -151,12 +151,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django_extensions',
-   # 'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'timeside.server',
     'timeside.player',
-    #'djcelery',
+    'django_celery_results',
     'bootstrap3',
     'bootstrap_pagination',
     'djangobower',
@@ -178,25 +177,45 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': "/var/log/app/timeside_debug.log",
+            'formatter': 'simple',
+        },
     },
     'loggers': {
+        'timeside': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
-    }
+    },
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
@@ -204,22 +223,19 @@ REST_FRAMEWORK = {
     ),
 }
 
-    # 'DEFAULT_FILTER_BACKENDS': (
-    #     'django_filters.rest_framework.DjangoFilterBackend',
-    # ),
-
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
 CELERY_IMPORTS = ("timeside.server.tasks",)
 
+CELERY_BACKEND_URL = 'redis://redis:6379/0'
+CELERY_BROKER_TRANSPORT = 'redis'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
 
-#TEST_RUNNER = env('TEST_RUNNER')
-#BROKER_BACKEND = env('BROKER_BACKEND')
 
-#from worker import app
+from worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
@@ -237,17 +253,11 @@ BOWER_INSTALLED_APPS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
+
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
-
-# CORS_ORIGIN_WHITELIST = (
-#     'localhost:9000'
-# )
-
-# SOUTH_MIGRATION_MODULES = {
-#     'timeside.server': 'timeside.server.south_migrations'
-# }
-
 
 if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {

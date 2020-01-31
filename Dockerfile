@@ -32,6 +32,7 @@ RUN apt-get update && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
 
+RUN apt-get remove -y --force-yes python3-yaml
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 

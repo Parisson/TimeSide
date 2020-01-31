@@ -94,7 +94,7 @@ class Media2Waveform(object):
 
         waveform = timeside.core.get_processor('waveform_simple')(width=self.width, height=self.height,
                             bg_color=self.bg_color, color_scheme=self.color_scheme)
-        for source, image in self.path_dict.iteritems():
+        for source, image in self.path_dict.items():
             if not os.path.exists(image) or self.force:
                 print 'Processing ', source
                 audio = os.path.join(os.path.dirname(__file__), source)

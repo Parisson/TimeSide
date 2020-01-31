@@ -1,19 +1,21 @@
 aubio
-celery==4.*
-coreapi
+celery==4.4
+openapi
 coverage
 deezer-python
-django==1.11.*
+django==2.2
 django-bootstrap3
 django-bootstrap-pagination
 django-bower
-#django-celery
+django-celery-results
 django-cors-headers
 django-debug-toolbar
 django-environ
 django-extensions
 django-filter==1.1.0
-djangorestframework==3.8.*
+# djangorestframework==3.11
+djangorestframework-simplejwt
+git+https://github.com/gnuletik/django-rest-framework@openapi-reference-components#egg=rest_framework
 essentia
 ghp-import
 git+https://github.com/yomguy/py_sonicvisualiser@master#egg=py_sonicvisualiser
@@ -36,7 +38,7 @@ pillow
 psycopg2-binary
 pygments
 pympi-ling
-pyyaml
+pyyaml==5.2
 redis
 scipy
 simplejson
@@ -47,6 +49,7 @@ tensorflow
 torch
 torchvision
 traits
+uritemplate
 uwsgi
 vamp
 watchdog

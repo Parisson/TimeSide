@@ -49,20 +49,22 @@ from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.core.files import File
+from celery.utils.log import get_task_logger
 
 import jsonfield
 import json
 import youtube_dl
 from requests import get
 
-#XMLtoJSON
+# XMLtoJSON
 from xml.etree.ElementTree import fromstring
 from xmljson import abdera as ab
 
+worker_logger = get_task_logger(__name__)
 app = 'timeside'
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
-#providers = timeside.core.provider.providers(timeside.core.api.IProvider)
+# providers = timeside.core.provider.providers(timeside.core.api.IProvider)
 
 
 _processor_types = {'Analyzers': timeside.core.api.IAnalyzer,
@@ -75,6 +77,7 @@ def get_processor_pids():
                     for processor
                     in timeside.core.processor.processors(proc_type)])
             for name, proc_type in _processor_types.items()]
+
 
 public_extra_types = {
     '.webm': 'video/webm',
@@ -112,6 +115,7 @@ RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
 
+
 class UUIDEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, UUID):
@@ -123,17 +127,27 @@ class UUIDEncoder(json.JSONEncoder):
 def get_mime_type(path):
     return mimetypes.guess_type(path)[0]
 
-#make every user having an automatically generated Token catching the User's post_save signal
+# make every user having an automatically generated Token
+# catching the User's post_save signal
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
+
 # --- Abstract classes -----
 class Dated(models.Model):
 
-    date_added = models.DateTimeField(_('date added'), auto_now_add=True, null=True)
-    date_modified = models.DateTimeField(_('date modified'), auto_now=True, null=True)
+    date_added = models.DateTimeField(
+        _('date added'),
+        auto_now_add=True,
+        null=True
+        )
+    date_modified = models.DateTimeField(
+        _('date modified'),
+        auto_now=True,
+        null=True
+        )
 
     class Meta:
         abstract = True
@@ -141,8 +155,15 @@ class Dated(models.Model):
 
 class UUID(models.Model):
 
-    uuid = models.UUIDField(_('uuid'), default=uuid.uuid4, primary_key=True, blank=False, max_length=255, editable=False)
-    #uuid = models.CharField(_('uuid'), unique=True, blank=True, max_length=255, editable=False)
+    uuid = models.UUIDField(
+        _('uuid'),
+        default=uuid.uuid4,
+        primary_key=True,
+        blank=False,
+        max_length=255,
+        editable=False
+        )
+
     class Meta:
         abstract = True
 
@@ -190,7 +211,13 @@ class Named(models.Model):
 
 class Shareable(models.Model):
 
-    author = models.ForeignKey(User, related_name="%(class)s", verbose_name=_('author'), blank=True, null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey(
+        User,
+        related_name="%(class)s",
+        verbose_name=_('author'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL
+        )
     is_public = models.BooleanField(default=True)
 
     class Meta:
@@ -201,7 +228,11 @@ class Shareable(models.Model):
 class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, max_length=128)
-    source_access =  models.BooleanField(default=False)
+    source_access = models.BooleanField(
+        help_text="""whether or not the audio is
+            freely available from the provider""",
+        default=False,
+        )
 
     def __str__(self):
         return str(self.pid)
@@ -210,20 +241,40 @@ class Provider(Named, UUID):
         return timeside.core.get_provider(self.pid)
 
     def get_source_from_url(self, url, download=False):
-        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source_from_url(url, DOWNLOAD_ROOT, download)
+        DOWNLOAD_ROOT = os.path.join(
+            settings.MEDIA_ROOT, 'items', 'download', ''
+            )
+        return self.get_provider()().get_source_from_url(
+            url, DOWNLOAD_ROOT, download
+            )
 
     def get_source_from_id(self, external_id, download=False):
-        DOWNLOAD_ROOT = os.path.join(settings.MEDIA_ROOT,'items','download','')
-        return self.get_provider()().get_source_from_id(external_id, DOWNLOAD_ROOT, download)
+        DOWNLOAD_ROOT = os.path.join(
+            settings.MEDIA_ROOT, 'items', 'download', ''
+            )
+        return self.get_provider()().get_source_from_id(
+            external_id, DOWNLOAD_ROOT, download
+            )
 
     def get_id_from_url(self, url):
         return self.get_provider()().get_id_from_url(url)
 
+
 class Selection(Titled, UUID, Dated, Shareable):
 
-    items = models.ManyToManyField('Item', related_name="selections", verbose_name=_('items'), blank=True)
-    selections = models.ManyToManyField('Selection', related_name="other_selections", verbose_name=_('other selections'), blank=True)
+    items = models.ManyToManyField(
+        'Item',
+        related_name="selections",
+        verbose_name=_('items'),
+        blank=True
+        )
+    selections = models.ManyToManyField(
+        'Selection',
+        related_name="other_selections",
+        verbose_name=_('other selections'),
+        blank=True,
+        help_text="include other selections in an selection"
+        )
 
     class Meta:
         verbose_name = _('selection')
@@ -240,16 +291,55 @@ class Item(Titled, UUID, Dated, Shareable):
 
     element_type = 'timeside_item'
 
-    source_file = models.FileField(_('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024)
-    source_url = models.URLField(_('URL'), blank=True, max_length=1024)
-    audio_duration = models.FloatField(_('duration'), blank=True, null=True)
-    sha1 = models.CharField(_('sha1'), blank=True, max_length=512)
-    mime_type = models.CharField(_('mime type'), blank=True, max_length=256)
-    hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
+    source_file = models.FileField(
+        _('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
+        help_text="Audio file to process"
+        )
+    source_url = models.URLField(
+        _('URL'), blank=True, max_length=1024,
+        help_text="URL of a streamable audio source to process"
+        )
+    audio_duration = models.FloatField(
+        _('duration'), blank=True, null=True,
+        help_text="Duration of audio track"
+        )
+    sha1 = models.CharField(
+        _('sha1'), blank=True, max_length=512
+        )
+    mime_type = models.CharField(
+        _('mime type'), blank=True, max_length=256
+        )
+    hdf5 = models.FileField(
+        _('HDF5 result file'),
+        upload_to='results/%Y/%m/%d',
+        blank=True,
+        max_length=1024,
+        )
     lock = models.BooleanField(default=False)
-    external_uri = models.CharField(_('external_uri'), blank=True, max_length=1024)
-    external_id = models.CharField(_('external_id'), blank=True, max_length=256)
-    provider = models.ForeignKey('Provider', verbose_name=_('provider'), blank=True, null=True, on_delete=models.SET_NULL)
+    external_uri = models.CharField(
+        _('external_uri'), blank=True, max_length=1024,
+        help_text="""
+        Provider's URI of the audio source.
+        e.g. for Deezer preview: http://www.deezer.com/track/4763165
+        e.g. for YouTube: https://www.youtube.com/watch?v=oRdxUFDoQe0
+        """
+        )
+    external_id = models.CharField(
+        _('external_id'), blank=True, max_length=256,
+        help_text="""
+        Provider's id of the audio source.
+        e.g. for Deezer preview: 4763165
+        e.g. for YouTube: oRdxUFDoQe0
+        """
+        )
+    provider = models.ForeignKey(
+        'Provider',
+        verbose_name=_('provider'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        help_text="Audio provider (e.g. Deezer, Youtube, etc.)"
+        )
 
     class Meta:
         ordering = ['title']
@@ -269,14 +359,22 @@ class Item(Titled, UUID, Dated, Shareable):
         if not (self.source_url or self.source_file) and self.provider:
             if download:
                 if self.external_uri:
-                    self.source_file = self.provider.get_source_from_url(self.external_uri,download).replace(settings.MEDIA_ROOT, '')
+                    self.source_file = self.provider.get_source_from_url(
+                        self.external_uri, download
+                        ).replace(settings.MEDIA_ROOT, '')
                 elif self.external_id:
-                    self.source_file = self.provider.get_source_from_id(self.external_id,download).replace(settings.MEDIA_ROOT, '')
+                    self.source_file = self.provider.get_source_from_id(
+                        self.external_id, download
+                        ).replace(settings.MEDIA_ROOT, '')
             else:
                 if self.external_uri:
-                    self.source_url = self.provider.get_source_from_url(self.external_uri,download)
+                    self.source_url = self.provider.get_source_from_url(
+                        self.external_uri, download
+                        )
                 elif self.external_id:
-                    self.source_url = self.provider.get_source_from_id(self.external_id,download)
+                    self.source_url = self.provider.get_source_from_id(
+                        self.external_id, download
+                        )
             super(Item, self).save()
 
     def get_external_id(self):
@@ -359,7 +457,8 @@ class Item(Titled, UUID, Dated, Shareable):
         pipe = decoder
         parent_analyzers = []
 
-        # search for parent analyzer presets not to add as duplicates in the pipe
+        # search for parent analyzer presets
+        # not to add as duplicates in the pipe
         for preset in experience.presets.all():
             proc = preset.processor.get_processor()
             if proc.type in ['analyzer', 'grapher']:
@@ -368,21 +467,28 @@ class Item(Titled, UUID, Dated, Shareable):
                     parent_analyzers.append(proc.parents['analyzer'])
 
         for preset in experience.presets.all():
-            # get core audio processor corresponding to preset.processor.pid
+            # get core audio metaProcessor
+            # corresponding to preset.processor.pid
             proc = preset.processor.get_processor()
             if proc.type == 'encoder':
                 result, c = Result.objects.get_or_create(preset=preset,
                                                          item=self)
                 media_file = '.'.join([str(result.uuid),
                                        proc.file_extension()])
-                result.file = os.path.join(result_path, media_file).replace(settings.MEDIA_ROOT, '')
+                result.file = os.path.join(result_path, media_file).replace(
+                    settings.MEDIA_ROOT, ''
+                    )
                 result.save()
-                # instantiate a core processor of a encoder
+                # instantiate a core processor of an encoder
                 proc = proc(result.file.path, overwrite=True,
                             streaming=False)
+                worker_logger.info(f'Run {str(proc)} on {str(self)}')
             elif proc.type in ['analyzer', 'grapher']:
-                # instantiate a core processor of an analyzer of a grapher
+                # instantiate a core processor of an analyzer or a grapher
                 proc = proc(**json.loads(preset.parameters))
+                worker_logger.info(
+                    f'Run {proc} on {self} with {preset.parameters}'
+                    )
 
             if proc not in parent_analyzers:
                 presets[preset] = proc
@@ -392,7 +498,9 @@ class Item(Titled, UUID, Dated, Shareable):
 
         if not self.hdf5:
             hdf5_file = str(experience.uuid) + '.hdf5'
-            self.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
+            self.hdf5 = os.path.join(
+                result_path, hdf5_file
+                ).replace(settings.MEDIA_ROOT, '')
             self.save()
 
         pipe.run()
@@ -403,15 +511,22 @@ class Item(Titled, UUID, Dated, Shareable):
             elif preset is None:
                 processor, c = Processor.get_first_or_create(pid=proc.id())
                 parameters = json.dumps(processor.get_parameters_default())
-                preset, c = Preset.get_first_or_create(processor=processor,
-                                                    parameters=parameters)
-            result, c = Result.objects.get_or_create(preset=preset,
-                                                    item=self)
+                preset, c = Preset.get_first_or_create(
+                    processor=processor,
+                    parameters=parameters
+                    )
 
+            result, c = Result.objects.get_or_create(
+                preset=preset,
+                item=self
+                )
 
             if not hasattr(proc, 'external'):
                 hdf5_file = str(result.uuid) + '.hdf5'
-                result.hdf5 = os.path.join(result_path, hdf5_file).replace(settings.MEDIA_ROOT, '')
+                result.hdf5 = os.path.join(
+                    result_path,
+                    hdf5_file
+                    ).replace(settings.MEDIA_ROOT, '')
                 # while result.lock:
                 #     time.sleep(3)
                 # result.lock_setter(True)
@@ -425,13 +540,13 @@ class Item(Titled, UUID, Dated, Shareable):
                     result_file = os.path.join(result_path, filename)
                     copyfile(proc.result_temp_file, result_file)
                     if ext == 'xml':
-                        #XML to JSON conversion
+                        # XML to JSON conversion
                         filename_json = str(result.uuid) + '.' + 'json'
                         result_file = os.path.join(result_path, filename_json)
-                        f_xml = open(proc.result_temp_file,'r')
+                        f_xml = open(proc.result_temp_file, 'r')
                         xml = f_xml.read()
-                        f = open(result_file,'w+')
-                        f.write(json.dumps(ab.data(fromstring(xml)) , indent=4))
+                        f = open(result_file, 'w+')
+                        f.write(json.dumps(ab.data(fromstring(xml)), indent=4))
                         f.close()
                         f_xml.close()
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
@@ -440,7 +555,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
             result.status_setter(_DONE)
 
-        for preset, proc in presets.iteritems():
+        for preset, proc in presets.items():
             if proc.type == 'analyzer':
                 # TODO : set_proc_results
                 set_results_from_processor(proc, preset)
@@ -450,7 +565,10 @@ class Item(Titled, UUID, Dated, Shareable):
                                                          item=self)
                 image_file = str(result.uuid) + '.png'
                 start = datetime.datetime.utcnow()
-                result.file = os.path.join(result_path, image_file).replace(settings.MEDIA_ROOT, '')
+                result.file = os.path.join(
+                    result_path,
+                    image_file
+                    ).replace(settings.MEDIA_ROOT, '')
 
                 # TODO : set as an option
                 proc.watermark('timeside', opacity=.6, margin=(5, 5))
@@ -459,7 +577,6 @@ class Item(Titled, UUID, Dated, Shareable):
                 result.run_time_setter(run_time)
                 result.mime_type_setter(get_mime_type(result.file.path))
                 result.status_setter(_DONE)
-
 
                 if 'analyzer' in proc.parents:
                     analyzer = proc.parents['analyzer']
@@ -481,7 +598,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 try:
                     proc.results = None
                     del proc.results
-                except:
+                except:  # noqa
                     continue
             del proc
 
@@ -493,8 +610,19 @@ class Item(Titled, UUID, Dated, Shareable):
 
 class Experience(Titled, UUID, Dated, Shareable):
 
-    presets = models.ManyToManyField('Preset', related_name="experiences", verbose_name=_('presets'), blank=True)
-    experiences = models.ManyToManyField('Experience', related_name="other_experiences", verbose_name=_('other experiences'), blank=True)
+    presets = models.ManyToManyField(
+        'Preset',
+        related_name="experiences",
+        verbose_name=_('presets'),
+        blank=True
+        )
+    experiences = models.ManyToManyField(
+        'Experience',
+        related_name="other_experiences",
+        verbose_name=_('other experiences'),
+        blank=True,
+        help_text="include other experiences in an experience"
+        )
 
     class Meta:
         verbose_name = _('Experience')
@@ -542,12 +670,20 @@ class Processor(UUID):
 
 @python_2_unicode_compatible
 class SubProcessor(UUID):
-    """SubProcessor object are intended to store the different results id associated with a given Processor
+    """
+    SubProcessor object are intended to store
+    the different results id associated with a given Processor
     """
     sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
-
-    processor = models.ForeignKey('Processor', related_name="sub_results", verbose_name=_('processor'), blank=True, null=True, on_delete=models.SET_NULL)
+    processor = models.ForeignKey(
+        'Processor',
+        related_name="sub_results",
+        verbose_name=_('processor'),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL
+        )
 
     class Meta:
         verbose_name = _('Subprocessor')
@@ -558,11 +694,19 @@ class SubProcessor(UUID):
 
 class Preset(UUID, Dated, Shareable):
 
-    processor = models.ForeignKey('Processor', related_name="presets", verbose_name=_('processor'), blank=True, null=True, on_delete=models.SET_NULL)
+    processor = models.ForeignKey(
+        'Processor',
+        related_name="presets",
+        verbose_name=_('processor'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL
+        )
     parameters = models.TextField(_('Parameters'), blank=True, default='{}')
-    # parameters = models.TextField(_('Parameters'), blank=False, default='{}', null=False)
+    # parameters = models.TextField(
+    # _('Parameters'), blank=False, default='{}', null=False
+    # )
     # TODO : turn this filed into a JSON Field
-    # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration
+    # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration   # noqa
 
     class Meta:
         verbose_name = _('Preset')
@@ -573,14 +717,19 @@ class Preset(UUID, Dated, Shareable):
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %s" % self.uuid
-        exp_description = "\n".join([exp_title,
-                                     "Automatically generated by the TimeSide application."])
-        experience, created = Experience.objects.get_or_create(title=exp_title,
-                                                               description=exp_description)
+        exp_description = "\n".join(
+            [
+                exp_title,
+                "Automatically generated by the TimeSide application."
+            ])
+        experience, created = Experience.objects.get_or_create(
+            title=exp_title,
+            description=exp_description
+            )
         if created:
             experience.save()
             experience.presets.add(self)
-        elif (experience.presets.count() > 1) or (self not in experience.presets.all()):
+        elif (experience.presets.count() > 1) or (self not in experience.presets.all()):  # noqa
             experience.presets.clear()
             experience.presets.add(self)
 
@@ -589,13 +738,63 @@ class Preset(UUID, Dated, Shareable):
 
 class Result(UUID, Dated, Shareable):
 
-    item = models.ForeignKey('Item', related_name="results", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
-    preset = models.ForeignKey('Preset', related_name="results", verbose_name=_('preset'), blank=True, null=True, on_delete=models.SET_NULL)
-    hdf5 = models.FileField(_('HDF5 result file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
-    file = models.FileField(_('Output file'), upload_to='results/%Y/%m/%d', blank=True, max_length=1024)
-    mime_type = models.CharField(_('Output file MIME type'), blank=True, max_length=256)
-    status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
-    run_time = models.DurationField(_('Run time'), blank=True, null=True) # max_value=None, min_value=None)
+    item = models.ForeignKey(
+        'Item',
+        related_name="results",
+        verbose_name=_('item'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        help_text="item on which a preset has been applied"
+        )
+    preset = models.ForeignKey(
+        'Preset',
+        related_name="results",
+        verbose_name=_('preset'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        help_text="preset applied on an item"
+        )
+    hdf5 = models.FileField(
+        _('HDF5 result file'),
+        upload_to='results/%Y/%m/%d',
+        blank=True,
+        max_length=1024,
+        help_text="numerical result of the processing stored in an hdf5 file"
+        )
+    file = models.FileField(
+        _('Output file'),
+        upload_to='results/%Y/%m/%d',
+        blank=True,
+        max_length=1024,
+        help_text="""
+        non numerical result (image, transcoded audio, etc.)
+        stored in a file
+        """
+        )
+    mime_type = models.CharField(
+        _('Output file MIME type'),
+        blank=True,
+        max_length=256
+        )
+    status = models.IntegerField(
+        _('status'),
+        choices=STATUS,
+        default=_DRAFT,
+        help_text=f"""
+        status of the task giving the result:
+        failed: {_FAILED}
+        draft: {_DRAFT}
+        pending: {_PENDING}
+        running: {_RUNNING}
+        done: {_DONE}
+        """
+        )
+    run_time = models.DurationField(
+        _('Run time'),
+        blank=True,
+        null=True,
+        help_text="duration of the result computing"
+        )
     # lock = models.BooleanField(default=False)
 
     class Meta:
@@ -637,17 +836,52 @@ class Result(UUID, Dated, Shareable):
 @python_2_unicode_compatible
 class Task(UUID, Dated, Shareable):
 
-    experience = models.ForeignKey('Experience', related_name="task", verbose_name=_('experience'), blank=True, null=True, on_delete=models.SET_NULL)
-    selection = models.ForeignKey('Selection', related_name="task", verbose_name=_('selection'), blank=True, null=True, on_delete=models.SET_NULL)
-    item =  models.ForeignKey('Item', related_name="task", verbose_name=_('item'), blank=True, null=True, on_delete=models.SET_NULL)
-    status = models.IntegerField(_('status'), choices=STATUS, default=_DRAFT)
+    experience = models.ForeignKey(
+        'Experience',
+        related_name="task",
+        verbose_name=_('experience'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        help_text="experience prossessed in the task"
+        )
+    selection = models.ForeignKey(
+        'Selection',
+        related_name="task",
+        verbose_name=_('selection'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        help_text="selection prossessed in the task"
+        )
+    item = models.ForeignKey(
+        'Item',
+        related_name="task",
+        verbose_name=_('item'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL,
+        help_text="single item prossessed in the task"
+        )
+    status = models.IntegerField(
+        _('status'),
+        choices=STATUS,
+        default=_DRAFT,
+        help_text="""
+        Task's status:
+        failed: {_FAILED}
+        draft: {_DRAFT}
+        pending: {_PENDING}
+        running: {_RUNNING}
+        done: {_DONE}
+        """
+        )
 
     class Meta:
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join([str(self.selection), str(self.experience), str(self.uuid)[:4]])
+        return '_'.join(
+            [str(self.selection), str(self.experience), str(self.uuid)[:4]]
+            )
 
     def status_setter(self, status):
         self.status = status
@@ -666,7 +900,7 @@ class Task(UUID, Dated, Shareable):
             status = Task.objects.get(uuid=str(self.uuid)).status
             while (status != _DONE):
                 time.sleep(0.5)
-                print('WAITING')
+                worker_logger.info('WAITING')
                 status = Task.objects.get(uuid=str(self.uuid)).status
 
 
@@ -693,8 +927,20 @@ post_save.connect(run, sender=Task)
 # Session and Tracks related objects
 
 class Analysis(Titled, UUID, Dated, Shareable):
-    sub_processor = models.ForeignKey(SubProcessor, related_name="analysis", verbose_name=_('sub_processor'), blank=False, on_delete=models.CASCADE)
-    preset = models.ForeignKey(Preset, related_name="analysis", verbose_name=_('preset'), blank=False, on_delete=models.CASCADE)
+    sub_processor = models.ForeignKey(
+        SubProcessor,
+        related_name="analysis",
+        verbose_name=_('sub_processor'),
+        blank=False,
+        on_delete=models.CASCADE
+        )
+    preset = models.ForeignKey(
+        Preset,
+        related_name="analysis",
+        verbose_name=_('preset'),
+        blank=False,
+        on_delete=models.CASCADE
+        )
     parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:
@@ -704,8 +950,20 @@ class Analysis(Titled, UUID, Dated, Shareable):
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
-    analysis = models.ForeignKey(Analysis, related_name='tracks', verbose_name=_('analysis'), blank=False, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, related_name='analysis_tracks', verbose_name=_('item'), blank=False, on_delete=models.CASCADE)
+    analysis = models.ForeignKey(
+        Analysis,
+        related_name='tracks',
+        verbose_name=_('analysis'),
+        blank=False,
+        on_delete=models.CASCADE
+        )
+    item = models.ForeignKey(
+        Item,
+        related_name='analysis_tracks',
+        verbose_name=_('item'),
+        blank=False,
+        on_delete=models.CASCADE
+        )
 
     class Meta:
         verbose_name = _('Analysis Track')
@@ -713,7 +971,13 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
 class AnnotationTrack(Titled, UUID, Dated, Shareable):
 
-    item = models.ForeignKey(Item, related_name='annotation_tracks', verbose_name=_('item'), blank=False, on_delete=models.CASCADE) # noqa
+    item = models.ForeignKey(
+        Item,
+        related_name='annotation_tracks',
+        verbose_name=_('item'),
+        blank=False,
+        on_delete=models.CASCADE
+        )
     start_time = models.FloatField(_('start time (s)'), default=0)
     overlapping = models.BooleanField(default=False)
 
@@ -723,6 +987,11 @@ class AnnotationTrack(Titled, UUID, Dated, Shareable):
 
 class Annotation(Titled, UUID, Dated, Shareable):
 
-    track = models.ForeignKey(AnnotationTrack, related_name='annotations', verbose_name=_('annotation'), blank=False, on_delete=models.CASCADE)
+    track = models.ForeignKey(
+        AnnotationTrack, related_name='annotations',
+        verbose_name=_('annotation'),
+        blank=False,
+        on_delete=models.CASCADE
+        )
     start_time = models.FloatField(_('start time (s)'), default=0)
     stop_time = models.FloatField(_('stop time (s)'))
