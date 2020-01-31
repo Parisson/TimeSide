@@ -23,6 +23,9 @@ gid='www-data'
 # pip install -U django-cors-headers
 # ...
 
+# always take the last youtube-dl version
+pip3 install -U youtube-dl
+
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
 
