@@ -7,19 +7,24 @@ import os
 from requests import get
 
 
-class Deezer(Provider):
-    """Deezer Provider"""
+class DeezerPreview(Provider):
+    """Deezer Plugin to retrieve deezer's 30 seconds tracks preview"""
     implements(IProvider)
     
     @staticmethod
     @interfacedoc
     def id():
-        return 'deezer'
+        return 'deezer_preview'
 
     @staticmethod
     @interfacedoc
     def name():
-        return "Deezer Plugin"
+        return "Deezer Preview"
+
+    @staticmethod
+    @interfacedoc
+    def ressource_access():
+        return True
 
     def get_source_from_id(self, external_id, path, download=False):
         request_url = 'https://api.deezer.com/track/' + external_id
