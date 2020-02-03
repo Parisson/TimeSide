@@ -11,6 +11,7 @@ import os
 
 _providers = {}
 
+
 class MetaProvider(MetaComponent):
     """Metaclass of the Provider class, used mainly for ensuring
     that provider id's are wellformed and unique"""
@@ -55,6 +56,16 @@ class Provider(Component, metaclass=MetaProvider):
 
     def __init__(self):
         super(Provider, self).__init__()
+
+    @interfacedoc
+    @classmethod
+    def description(self):
+        try:
+            descr = self.__doc__.lstrip().split('\n')[0:1]
+        except AttributeError:
+            return '*** NO DESCRIPTION FOR THIS PROVIDER ***'
+
+        return descr
 
 def providers(interface=IProvider, recurse=True):
     """Returns the providers implementing a given interface and, if recurse,

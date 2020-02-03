@@ -282,6 +282,16 @@ class IProvider(Interface):
     def name():
         """name of the provider"""
 
+    @staticmethod
+    def ressource_access():
+        """Boolean informing if the audio is whether or not
+        freely available from the provider"""
+
+    @staticmethod
+    def description():
+        """Return a string describing what this provider is meant for.
+        """
+
     def get_source_from_url(self, url, path, download=False):
         """Get source's uri or even download an audio track
         from the url of the provider's ressource of the provider

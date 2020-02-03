@@ -5,8 +5,9 @@ from timeside.core.api import IProvider
 import youtube_dl
 import os
 
+
 class YouTube(Provider):
-    """YouTube Provider"""
+    """YouTube audio Provider using youtube-dl"""
     implements(IProvider)
     
     @staticmethod
@@ -18,6 +19,11 @@ class YouTube(Provider):
     @interfacedoc
     def name():
         return "YouTube Plugin"
+
+    @staticmethod
+    @interfacedoc
+    def ressource_access():
+        return True
 
     def get_source_from_url(self, url, path, download=False):
         return self.get_source(url, path, download)
