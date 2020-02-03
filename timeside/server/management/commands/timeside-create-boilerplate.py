@@ -132,7 +132,12 @@ class Command(BaseCommand):
         providers = timeside.core.provider.providers(timeside.core.api.IProvider)
 
         for prov in providers:
-            provider, c = Provider.objects.get_or_create(pid=prov.id())
+            provider, c = Provider.objects.get_or_create(
+                pid=prov.id(),
+                source_access=prov.ressource_access(),
+                description=prov.description(),
+                name=prov.name()
+                )
 
         # ---------- Experience All ----------
         experience, c = Experience.objects.get_or_create(title='All')
