@@ -17,7 +17,7 @@ class TestProvider(TimeSideTestServer):
         for provider in request_providers.data:
             if provider['pid'] == 'youtube':
                 self.youtube_uuid = provider['uuid']
-            if provider['pid'] == 'deezer':
+            if provider['pid'] == 'deezer_preview':
                 self.deezer_uuid = provider['uuid']
         
        
