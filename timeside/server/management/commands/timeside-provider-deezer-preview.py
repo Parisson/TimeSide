@@ -22,6 +22,7 @@ class Command(BaseCommand):
             provider, c = Provider.objects.get_or_create(
                 pid=prov.id(),
                 source_access=prov.ressource_access(),
+                description=prov.description(),
                 name=prov.name()
                 )
             server_prodivers[prov.id()] = provider
