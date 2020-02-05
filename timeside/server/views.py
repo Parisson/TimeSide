@@ -69,7 +69,7 @@ class UUIDViewSetMixin(object):
 
 
 class SelectionViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-    """Set of items and other selections"""
+    """Set of items and other selections."""
     model = models.Selection
     queryset = model.objects.all()
     serializer_class = serializers.SelectionSerializer
@@ -104,7 +104,7 @@ class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
 
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
-    """Gives waveform of item's audio"""
+    """Gives audio waveform of an item."""
     model = models.Item
     queryset = model.objects.all()
     serializer_class = serializers.ItemWaveformSerializer
@@ -124,7 +124,7 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
 
 
 class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-    """Set of presets and other experiences"""
+    """Set of presets and other experiences."""
     model = models.Experience
     queryset = model.objects.all()
     serializer_class = serializers.ExperienceSerializer
@@ -156,7 +156,7 @@ class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SubProcessorViewSet(viewsets.ModelViewSet):
-    """link between a processor depending on another"""
+    """Link between a processor depending on another."""
     model = models.SubProcessor
     queryset = model.objects.all()
     serializer_class = serializers.SubProcessorSerializer
@@ -165,7 +165,7 @@ class SubProcessorViewSet(viewsets.ModelViewSet):
 
 
 class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    """Result of processing on items"""
+    """Result of processing on items."""
     model = models.Result
     queryset = model.objects.all()
     serializer_class = serializers.ResultSerializer
@@ -190,7 +190,7 @@ class PNGRenderer(renderers.BaseRenderer):
 
 
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
-    """"png rendering of 2D numerical data (example: a spectrogram)"""
+    """PNG rendering of 2D numerical data (example: a spectrogram)."""
     model = models.Result
     queryset = model.objects.all()
     serializer_class = serializers.ResultVisualizationSerializer
@@ -199,21 +199,21 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
 
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-    """Processor with its potential parameters"""
+    """Processor with its potential parameters."""
     model = models.Preset
     queryset = model.objects.all()
     serializer_class = serializers.PresetSerializer
 
 
 class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
-    """Experience applied to a selection or a single item"""
+    """Experience applied to a selection or a single item."""
     model = models.Task
     queryset = model.objects.all()
     serializer_class = serializers.TaskSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """Users of the API able to share data"""
+    """Users of the API able to share data."""
     model = models.User
     queryset = model.objects.all()
     serializer_class = serializers.UserSerializer
@@ -411,7 +411,7 @@ class ResultEncoderView(View):
 
 
 class ItemDetailExport(DetailView):
-    """Export all results of an item"""
+    """Export all results of an item."""
     model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
@@ -523,7 +523,7 @@ class AudioRenderer(renderers.BaseRenderer):
 
 
 class ItemTranscode(DetailView):
-    """Transcode an item's audio in a different format"""
+    """Transcode an item's audio in a different format."""
     model = models.Item
     renderer_classes = (AudioRenderer,)
 
@@ -617,7 +617,7 @@ class Csrf_Token(viewsets.ViewSet):
 
 
 class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    """Audio providers available in the API"""
+    """Audio providers available in the API."""
     permission_classes = [IsAuthenticatedOrReadOnly]
     model = models.Provider
     queryset = model.objects.all()
@@ -626,7 +626,7 @@ class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class SwaggerUIView(TemplateView):
-    """TemplateView to serve Swagger UI template"""
+    """TemplateView to serve Swagger UI template."""
     permission_classes = [AllowAny]
     template_name = "timeside/swagger-ui.html"
     # `extra_context` provided with view name of `SchemaView`
@@ -634,7 +634,7 @@ class SwaggerUIView(TemplateView):
 
 
 class ReDocView(TemplateView):
-    """TemplateView to serve ReDoc template"""
+    """TemplateView to serve ReDoc template."""
     permission_classes = [AllowAny]
     template_name = "timeside/redoc.html"
     # `extra_context` provided with view name of `SchemaView`
@@ -643,7 +643,7 @@ class ReDocView(TemplateView):
 
 class SchemaWithServerInfoGeneraror(SchemaGenerator):
     """
-    Generate an OpenAPI v3 schema providing server's prod and staging urls
+    Generate an OpenAPI v3 schema providing server's prod and staging urls.
     """
     def get_schema(self, request=None, public=False):
         # Adding production and staging server urls ton title and version infos
@@ -663,8 +663,8 @@ class SchemaWithServerInfoGeneraror(SchemaGenerator):
 
 schema_view = get_schema_view(
     title="TimeSide API",
-    description="""RESTful API of TimeSide,
-                a scalable audio processing framework""",
+    description=("RESTful API of TimeSide, "
+                 "a scalable audio processing framework."),
     version="1.0.0",
     generator_class=SchemaWithServerInfoGeneraror,
     permission_classes=[AllowAny],

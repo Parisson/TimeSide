@@ -56,6 +56,8 @@ import json
 import youtube_dl
 from requests import get
 
+from inspect import cleandoc
+
 # XMLtoJSON
 from xml.etree.ElementTree import fromstring
 from xmljson import abdera as ab
@@ -229,8 +231,10 @@ class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, max_length=128)
     source_access = models.BooleanField(
-        help_text="""whether or not the audio is
-            freely available from the provider""",
+        help_text=_(
+            "Whether or not the audio is "
+            "freely available from the provider."
+            ),
         default=False,
         )
 
@@ -273,8 +277,7 @@ class Selection(Titled, UUID, Dated, Shareable):
         related_name="other_selections",
         verbose_name=_('other selections'),
         blank=True,
-        help_text="include other selections in an selection"
-        )
+        help_text=_("Include other selections in an selection."))
 
     class Meta:
         verbose_name = _('selection')
@@ -293,15 +296,15 @@ class Item(Titled, UUID, Dated, Shareable):
 
     source_file = models.FileField(
         _('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
-        help_text="Audio file to process"
+        help_text=_("Audio file to process.")
         )
     source_url = models.URLField(
         _('URL'), blank=True, max_length=1024,
-        help_text="URL of a streamable audio source to process"
+        help_text=_("URL of a streamable audio source to process.")
         )
     audio_duration = models.FloatField(
         _('duration'), blank=True, null=True,
-        help_text="Duration of audio track"
+        help_text=_("Duration of audio track.")
         )
     sha1 = models.CharField(
         _('sha1'), blank=True, max_length=512
@@ -318,19 +321,19 @@ class Item(Titled, UUID, Dated, Shareable):
     lock = models.BooleanField(default=False)
     external_uri = models.CharField(
         _('external_uri'), blank=True, max_length=1024,
-        help_text="""
-        Provider's URI of the audio source.
-        e.g. for Deezer preview: http://www.deezer.com/track/4763165
+        help_text=_(cleandoc("""
+        Provider's URI of the audio source.\n
+        e.g. for Deezer preview: http://www.deezer.com/track/4763165\n
         e.g. for YouTube: https://www.youtube.com/watch?v=oRdxUFDoQe0
-        """
+        """))
         )
     external_id = models.CharField(
         _('external_id'), blank=True, max_length=256,
-        help_text="""
-        Provider's id of the audio source.
-        e.g. for Deezer preview: 4763165
-        e.g. for YouTube: oRdxUFDoQe0
-        """
+        help_text=_(cleandoc("""
+            Provider's id of the audio source.\n
+            e.g. for Deezer preview: 4763165\n
+            e.g. for YouTube: oRdxUFDoQe0
+            """))
         )
     provider = models.ForeignKey(
         'Provider',
@@ -338,7 +341,7 @@ class Item(Titled, UUID, Dated, Shareable):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        help_text="Audio provider (e.g. Deezer, Youtube, etc.)"
+        help_text=_("Audio provider (e.g. Deezer, Youtube, etc.)")
         )
 
     class Meta:
@@ -622,7 +625,7 @@ class Experience(Titled, UUID, Dated, Shareable):
         related_name="other_experiences",
         verbose_name=_('other experiences'),
         blank=True,
-        help_text="include other experiences in an experience"
+        help_text=_("Include other experiences in an experience.")
         )
 
     class Meta:
@@ -745,7 +748,7 @@ class Result(UUID, Dated, Shareable):
         verbose_name=_('item'),
         blank=True, null=True,
         on_delete=models.SET_NULL,
-        help_text="item on which a preset has been applied"
+        help_text=_("Item on which a preset has been applied.")
         )
     preset = models.ForeignKey(
         'Preset',
@@ -753,24 +756,26 @@ class Result(UUID, Dated, Shareable):
         verbose_name=_('preset'),
         blank=True, null=True,
         on_delete=models.SET_NULL,
-        help_text="preset applied on an item"
+        help_text=_("Preset applied on an item.")
         )
     hdf5 = models.FileField(
         _('HDF5 result file'),
         upload_to='results/%Y/%m/%d',
         blank=True,
         max_length=1024,
-        help_text="numerical result of the processing stored in an hdf5 file"
+        help_text=_(
+            "Numerical result of the processing stored in an hdf5 file."
+            )
         )
     file = models.FileField(
         _('Output file'),
         upload_to='results/%Y/%m/%d',
         blank=True,
         max_length=1024,
-        help_text="""
-        non numerical result (image, transcoded audio, etc.)
-        stored in a file
-        """
+        help_text=_(cleandoc("""
+            Non numerical result stored in a file
+            (image, transcoded audio, etc.)
+            """))
         )
     mime_type = models.CharField(
         _('Output file MIME type'),
@@ -781,20 +786,20 @@ class Result(UUID, Dated, Shareable):
         _('status'),
         choices=STATUS,
         default=_DRAFT,
-        help_text=f"""
-        status of the task giving the result:
-        failed: {_FAILED}
-        draft: {_DRAFT}
-        pending: {_PENDING}
-        running: {_RUNNING}
-        done: {_DONE}
-        """
+        help_text=_(cleandoc(f"""
+                Status of the task giving the result:\n
+                failed: {_FAILED}\n
+                draft: {_DRAFT}\n
+                pending: {_PENDING}\n
+                running: {_RUNNING}\n
+                done: {_DONE}
+                """))
         )
     run_time = models.DurationField(
         _('Run time'),
         blank=True,
         null=True,
-        help_text="duration of the result computing"
+        help_text=_("Duration of the result computing.")
         )
     # lock = models.BooleanField(default=False)
 
@@ -843,7 +848,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name=_('experience'),
         blank=True, null=True,
         on_delete=models.SET_NULL,
-        help_text="experience prossessed in the task"
+        help_text=_("Experience prossessed in the task.")
         )
     selection = models.ForeignKey(
         'Selection',
@@ -851,7 +856,7 @@ class Task(UUID, Dated, Shareable):
         verbose_name=_('selection'),
         blank=True, null=True,
         on_delete=models.SET_NULL,
-        help_text="selection prossessed in the task"
+        help_text=_("Selection prossessed in the task.")
         )
     item = models.ForeignKey(
         'Item',
@@ -859,20 +864,20 @@ class Task(UUID, Dated, Shareable):
         verbose_name=_('item'),
         blank=True, null=True,
         on_delete=models.SET_NULL,
-        help_text="single item prossessed in the task"
+        help_text=_("Single item prossessed in the task.")
         )
     status = models.IntegerField(
         _('status'),
         choices=STATUS,
         default=_DRAFT,
-        help_text="""
-        Task's status:
-        failed: {_FAILED}
-        draft: {_DRAFT}
-        pending: {_PENDING}
-        running: {_RUNNING}
-        done: {_DONE}
-        """
+        help_text=_(cleandoc(f"""
+            Task's status:\n
+            failed: {_FAILED}\n
+            draft: {_DRAFT}\n
+            pending: {_PENDING}\n
+            running: {_RUNNING}\n
+            done: {_DONE}
+            """))
         )
 
     class Meta:
