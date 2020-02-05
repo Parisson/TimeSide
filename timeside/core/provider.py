@@ -61,7 +61,7 @@ class Provider(Component, metaclass=MetaProvider):
     @classmethod
     def description(self):
         try:
-            descr = self.__doc__.lstrip().split('\n')[0:1]
+            descr = self.__doc__.lstrip().split('\n')[0]
         except AttributeError:
             return '*** NO DESCRIPTION FOR THIS PROVIDER ***'
 

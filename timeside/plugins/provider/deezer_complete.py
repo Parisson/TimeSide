@@ -8,12 +8,9 @@ from requests import get
 
 
 class DeezerComplete(Provider):
-    """
-    Represents Deezer Provider while loading results
-    computed on complete tracks on Deezer's infrastructure
-    """
+    """Deezer Plugin representing complete tracks on Deezer's infrastructure"""
     implements(IProvider)
-   
+
     @staticmethod
     @interfacedoc
     def id():
@@ -31,7 +28,7 @@ class DeezerComplete(Provider):
 
     def get_source_from_id(self, external_id, path, download=False):
         return ''
-            
+
     def get_source_from_url(self, url, path, download=False):
         return ''
 
