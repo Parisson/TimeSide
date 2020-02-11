@@ -68,19 +68,41 @@ class ItemListSerializer(ItemPlayableSerializer):
             )
 
 
+class AudioUrlSerializer(serializers.Serializer):
+
+    mp3 = serializers.URLField(read_only=True)
+    ogg = serializers.URLField(read_only=True)
+
+    def to_representation(self, instance):
+        request = self.context['request']
+        extensions = ['mp3', 'ogg']
+        self.audio_url = {
+            ext:
+            reverse(
+                'item-transcode-api',
+                kwargs={'uuid': instance.uuid, 'extension': ext},
+                request=request
+                )
+            for ext in extensions
+            }
+        return self.audio_url
+
+
 class ItemSerializer(ItemPlayableSerializer):
 
     waveform_url = serializers.SerializerMethodField()
     player_url = serializers.SerializerMethodField()
-    audio_url = serializers.SerializerMethodField()
-
+    audio_url = AudioUrlSerializer(
+        source='*',
+        many=False,
+        read_only=True,
+    )
     annotation_tracks = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
         view_name='annotationtrack-detail',
         lookup_field='uuid'
     )
-
     analysis_tracks = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -123,44 +145,30 @@ class ItemSerializer(ItemPlayableSerializer):
             request=request
             )
 
-    def get_audio_url(self, obj):
+
+class WaveformSerializer(serializers.Serializer):
+    """Populate waveform"""
+    start = serializers.IntegerField(default=0)
+    stop = serializers.IntegerField(default=-1)
+    nb_pixels = serializers.IntegerField(min_value=0)
+    min_values = serializers.ListField(
+        child=serializers.FloatField(read_only=True)
+        )
+    max_values = serializers.ListField(
+        child=serializers.FloatField(read_only=True)
+        )
+    time_values = serializers.ListField(
+        child=serializers.IntegerField(read_only=True)
+        )
+
+    def to_representation(self, instance):
         request = self.context['request']
-        extensions = ['mp3', 'ogg']
-        return {ext:
-                reverse('item-transcode-api',
-                        kwargs={'uuid': obj.uuid, 'extension': ext},
-                        request=request)
-                for ext in extensions}
-
-
-class ItemWaveformSerializer(ItemSerializer):
-
-    item_url = serializers.SerializerMethodField('get_url')
-    waveform = serializers.SerializerMethodField()
-    waveform_image_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ts.models.Item
-        fields = ('item_url', 'title', 'waveform_url',
-                  'waveform', 'waveform_image_url')
-
-    def get_waveform_image_url(self, obj):
-        request = self.context['request']
-        from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=obj)
-        return reverse('timeside-result-visualization',
-                       kwargs={'uuid': result.uuid},
-                       request=request)+'?id=waveform_analyzer'
-
-    def get_waveform(self, obj):
-        request = self.context['request']
-        start = float(request.GET.get('start', 0))
-        stop = float(request.GET.get('stop', -1))
-        nb_pixels = int(request.GET.get('nb_pixels', 1024))
-        # plop = self.context['plop']
+        self.start = float(request.GET.get('start', 0))
+        self.stop = float(request.GET.get('stop', -1))
+        self.nb_pixels = int(request.GET.get('nb_pixels', 1024))
 
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        result = get_or_run_proc_result('waveform_analyzer', item=instance)
         import h5py
 
         result_id = 'waveform_analyzer'
@@ -170,38 +178,68 @@ class ItemWaveformSerializer(ItemSerializer):
         samplerate = wav_res['data_object'][
             'frame_metadata'].attrs['samplerate']
 
-        if start < 0:
-            start = 0
-        if start > duration:
+        if self.start < 0:
+            self.start = 0
+        if self.start > duration:
             raise serializers.ValidationError(
                 "start must be less than duration")
-        if stop == -1:
-            stop = duration
+        if self.stop == -1:
+            self.stop = duration
 
-        if stop > duration:
-            stop = duration
+        if self.stop > duration:
+            self.stop = duration
 
-        min_values = np.zeros(nb_pixels)
-        max_values = np.zeros(nb_pixels)
-        time_values = np.linspace(start=start, stop=stop, num=nb_pixels + 1,
-                                  endpoint=True)
+        self.min_values = np.zeros(self.nb_pixels)
+        self.max_values = np.zeros(self.nb_pixels)
+        self.time_values = np.linspace(
+            start=self.start,
+            stop=self.stop,
+            num=self.nb_pixels + 1,
+            endpoint=True
+            )
 
-        sample_values = np.round(time_values * samplerate).astype('int')
+        sample_values = np.round(self.time_values * samplerate).astype('int')
 
-        for i in range(nb_pixels):
+        for i in range(self.nb_pixels):
             values = wav_res['data_object']['value'][
                 sample_values[i]:sample_values[i + 1]]
             if values.size:
-                min_values[i] = np.min(values)
-                max_values[i] = np.max(values)
+                self.min_values[i] = np.min(values)
+                self.max_values[i] = np.max(values)
 
-        return {'start': start,
-                'stop': stop,
-                'nb_pixels': nb_pixels,
-                'time': time_values[0:-1],
-                'min': min_values,
-                'max': max_values}
+        return {'start': self.start,
+                'stop': self.stop,
+                'nb_pixels': self.nb_pixels,
+                'time': self.time_values[0:-1],
+                'min': self.min_values,
+                'max': self.max_values}
 
+
+class ItemWaveformSerializer(ItemSerializer):
+
+    item_url = serializers.SerializerMethodField('get_url')
+    waveform = WaveformSerializer(
+        source='*',
+        many=False,
+        read_only=True,
+        )
+    waveform_image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ts.models.Item
+        fields = ('item_url', 'title', 'waveform_url',
+                  'waveform', 'waveform_image_url')
+        # depth = 2
+        # extra_kwargs
+
+    def get_waveform_image_url(self, obj):
+        request = self.context['request']
+        from .utils import get_or_run_proc_result
+        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        return reverse('timeside-result-visualization',
+                       kwargs={'uuid': result.uuid},
+                       request=request)+'?id=waveform_analyzer'
+    
 
 class ItemAnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
