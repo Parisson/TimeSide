@@ -2,17 +2,21 @@
 
 import unittest
 from unit_timeside import TestRunner
-from timeside.plugins.decoder.file import FileDecoder
-from timeside.core import get_processor
-from timeside.core import _WITH_VAMP
 from timeside.core.tools.test_samples import samples
+from timeside.core import get_processor
 
 
-@unittest.skipIf(not _WITH_VAMP, 'vamp-simple-host library is not available')
+FileDecoder = get_processor('file_decoder')
+try:
+    VampSimpleHost = get_processor('vamp_simple_host')
+except:
+    VampSimpleHost = None
+
+@unittest.skipIf(not VampSimpleHost, 'vamp-simple-host library is not available')
 class TestVampsimpleHost(unittest.TestCase):
 
     def setUp(self):
-        self.analyzer = get_processor('vamp_simple_host')()
+        self.analyzer = VampSimpleHost()
 
     def testOnC4_scale(self):
         "runs on C4_scale"

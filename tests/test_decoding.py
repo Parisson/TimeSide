@@ -3,8 +3,13 @@
 from __future__ import division
 import unittest
 from unit_timeside import TestRunner
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 from timeside.core.tools.test_samples import samples
+
+# are we using aubio decoder?
+is_aubio = FileDecoder.__module__ == 'timeside.plugins.decoder.aubio'
+is_gstreamer = FileDecoder.__module__ == 'timeside.plugins.decoder.file'
 
 class TestDecoding(unittest.TestCase):
 
@@ -40,7 +45,7 @@ class TestDecoding(unittest.TestCase):
     def testFlac(self):
         "Test flac decoding"
         self.source = samples["sweep.flac"]
-        self.expected_mime_type = 'audio/x-flac'
+        self.expected_mime_type = is_aubio and 'audio/flac' or 'audio/x-flac'
 
     def testOgg(self):
         "Test ogg decoding"
@@ -80,6 +85,8 @@ class TestDecoding(unittest.TestCase):
             print("ratio:", ratio)
             print("input / output_channels:", decoder.input_channels, decoder.output_channels)
             print("input_duration:", decoder.input_duration)
+            print("uri_duration:", decoder.uri_duration)
+            print("duration:", decoder.duration)
             print("input_totalframes:", decoder.input_totalframes)
             print("mime_type", decoder.mime_type())
 
@@ -108,14 +115,44 @@ class TestDecoding(unittest.TestCase):
         expected_totalframes = int(decoder.input_duration *
                                    decoder.output_samplerate)
 
+        # aubio estimates the total number of frames before resampling
+        if is_aubio:
+            delta = decoder.output_samplerate // 8
+        elif is_gstreamer:
+            delta = 0
+        self.assertAlmostEqual(totalframes, decoder.totalframes(),
+                delta=delta)
+
         input_duration = decoder.input_totalframes / decoder.input_samplerate
         output_duration = decoder.totalframes() / decoder.output_samplerate
 
+        if is_aubio:
+            self.check_aubio(decoder, input_duration, output_duration,
+                    expected_totalframes)
+        elif is_gstreamer:
+            self.check_gstreamer(decoder, input_duration, output_duration,
+                    expected_totalframes)
+        else:
+            raise ValueError
+
+    def check_aubio(self, decoder, input_duration, output_duration,
+            expected_totalframes):
+        self.assertAlmostEqual(input_duration, output_duration,
+                places=4)
+        self.assertAlmostEqual(input_duration, decoder.input_duration,
+                places=3)
+        self.assertAlmostEqual(self.source_duration, decoder.input_duration,
+                delta=.08)
+        self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,
+                delta=decoder.output_samplerate // 16)
+
+    def check_gstreamer(self, decoder, input_duration, output_duration,
+            expected_totalframes):
         if self.test_exact_duration:
             self.assertEqual(input_duration, output_duration)
             self.assertEqual(input_duration, decoder.uri_duration)
             self.assertEqual(self.source_duration, decoder.uri_duration)
-            self.assertEqual(totalframes, expected_totalframes)
+            self.assertEqual(decoder.totalframes(), expected_totalframes)
         else:
             self.assertAlmostEqual(input_duration, output_duration,
                     places=5)

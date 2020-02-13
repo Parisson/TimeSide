@@ -76,6 +76,9 @@ class MetaProcessor(MetaComponent):
 
         return new_class
 
+    def __repr__(self):
+        return self.id()
+
 
 class Processor(Component, HasParam, metaclass=MetaProcessor):
 
