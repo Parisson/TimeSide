@@ -67,7 +67,6 @@ app:
     - "8000"
   ports:
     - "9030:8000"
-  # mac_address: 02:42:ac:11:00:07
 
 
 worker:

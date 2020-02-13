@@ -21,6 +21,7 @@ vamp-examples
 vamp-plugin-sdk
 
 # Youtube's provider needs ffmpeg
+# aubio needs libav
 ffmpeg
 
 # Misc.
