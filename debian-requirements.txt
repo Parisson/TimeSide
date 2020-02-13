@@ -30,6 +30,7 @@ bzip2
 build-essential
 vim
 curl
+procps
 
 # Frontend
 nodejs
