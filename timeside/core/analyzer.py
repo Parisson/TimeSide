@@ -690,7 +690,7 @@ class AnalyzerResult(MetadataObject):
             ax.autoscale(axis='x', tight=True)
 
         # Export to PIL image
-        from StringIO import StringIO
+        from io import StringIO
         imgdata = StringIO()
         canvas = FigureCanvas(fig)
         canvas.print_png(imgdata, dpi=dpi)
