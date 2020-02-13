@@ -23,8 +23,7 @@
 
 
 app:
-  image: parisson/timeside:latest-dev
-  #build: .
+  build: .
   volumes:
     - ./app:/srv/app
     - .:/srv/lib/timeside
@@ -35,8 +34,7 @@ app:
     - env/debug.env
 
 worker:
-  image: parisson/timeside:latest-dev
-  #build: .
+  build: .
   command: /bin/bash /srv/app/bin/worker.sh
   env_file:
     - env/debug.env
