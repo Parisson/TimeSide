@@ -1,6 +1,6 @@
-aubio
 celery==4.4
 openapi
+git+https://git.aubio.org/aubio/aubio@feature/autosink#egg=aubio>0.4.9
 coverage
 deezer-python
 django==2.2

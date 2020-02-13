@@ -95,6 +95,25 @@ class TestEncoding(unittest.TestCase):
         self.delta = 0.1
         self.samplerate = 48000  # 44100 is not supported by opusenc
 
+    def testWavAubio(self):
+        "Test aubio wav encoding"
+        from timeside.plugins.encoder.aubio_wav import WavEncoder
+        self.encoder_function = WavEncoder
+        self.delta = 0
+
+    def testFlacAubio(self):
+        "Test flac encoding with aubio"
+        from timeside.plugins.encoder.aubio_flac import FlacEncoder
+        self.encoder_function = FlacEncoder
+        self.delta = 0.1
+        self.samplerate = 44100
+
+    def testVorbisAubio(self):
+        "Test vorbis encoding with aubio"
+        from timeside.plugins.encoder.aubio_ogg import VorbisEncoder
+        self.encoder_function = VorbisEncoder
+        self.delta = 0.3
+
     def tearDown(self):
 
         # Source through ArrayDecoder
@@ -120,8 +139,6 @@ class TestEncoding(unittest.TestCase):
             media_channels = media_info['streams'][0]['channels']
             media_samplerate = media_info['streams'][0]['samplerate']
 
-            os.unlink(self.sink)
-
             if self.test_duration:
                 self.assertAlmostEqual(self.source_duration,
                                        media_duration,
@@ -131,6 +148,8 @@ class TestEncoding(unittest.TestCase):
             else:
                 self.assertEqual(2, media_channels)   # voaacenc bug ?
             self.assertEqual(media_samplerate, self.samplerate)
+
+            os.unlink(self.sink)
 
         if 0:
             import commands

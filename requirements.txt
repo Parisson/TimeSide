@@ -7,7 +7,7 @@ asn1crypto==0.24.0
 astor==0.8.1
 async-generator==1.10
 attrs==19.3.0
-aubio==0.4.9
+git+https://git.aubio.org/aubio/aubio@feature/autosink#egg=aubio>0.4.9
 audioread==2.1.8
 Babel==2.7.0
 backcall==0.1.0
