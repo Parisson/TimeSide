@@ -64,18 +64,23 @@ class Command(BaseCommand):
                 filename, path = sample
                 title = os.path.splitext(filename)[0]
                 path = os.path.join(media_dir, filename)
-                item, c = Item.objects.get_or_create(title=title, source_file=path)
-                if not item in selection.items.all():
+                item, c = Item.objects.get_or_create(
+                    title=title, source_file=path
+                    )
+                if not item not in selection.items.all():
                     selection.items.add(item)
                 if self.cleanup:
                     for result in item.results.all():
                         result.delete()
 
-        # ------ Processors and Presets ------
         presets = []
         blacklist = ['decoder', 'live', 'gain', 'vamp', 'yaafe']
-        processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
-        graphers = timeside.core.processor.processors(timeside.core.api.IGrapher)
+        processors = timeside.core.processor.processors(
+            timeside.core.api.IProcessor
+            )
+        graphers = timeside.core.processor.processors(
+            timeside.core.api.IGrapher
+            )
 
         if verbosity:
             print(" - created presets:")
@@ -85,24 +90,32 @@ class Command(BaseCommand):
                 if black in proc.id():
                     trig = False
             if trig:
-                processor, c = Processor.objects.get_or_create(pid=proc.id())#,version=proc.version())
+                processor, c = Processor.objects.get_or_create(
+                    pid=proc.id(),
+                    version=proc.version()
+                    )
                 try:
                     if proc in graphers:
+                        # TODO: resolve missing Graphers !!! maybe if hasattrb ... else : get_or_greate()
                         # ---- Graphers -----
                         if hasattr(proc, '_from_analyzer') and proc._from_analyzer and not(proc._staging):
                             try:
-                                parameters = json.dumps(proc._analyzer_parameters)
+                                parameters = json.dumps(
+                                    proc._analyzer_parameters
+                                    )
                                 preset, created = Preset.objects.get_or_create(
                                                                         processor=processor,
                                                                         parameters=parameters
                                                                         )
                                 if created and verbosity:
-                                           print("    " + str(preset))                     
+                                    print("    " + str(preset))
 
                             except MultipleObjectsReturned:
                                 print(Preset.objects.get(
                                                         processor=processor,
-                                                        parameters=json.dumps(proc._analyzer_parameters)
+                                                        parameters=json.dumps(
+                                                            proc._analyzer_parameters
+                                                            )
                                                         )
                                                     )
 
@@ -116,8 +129,6 @@ class Command(BaseCommand):
                                                                         preset=preset,
                                                                         title=proc._grapher_name
                                                                         )
-
-                    
                     else:
                         preset, created = Preset.objects.get_or_create(processor=processor,
                                                                     parameters=json.dumps(processor.get_parameters_default()))
@@ -146,7 +157,10 @@ class Command(BaseCommand):
                 experience.presets.add(preset)
 
         # ---- Task All on Test selection ----
-        task, c = Task.objects.get_or_create(experience=experience, selection=selection)
+        task, c = Task.objects.get_or_create(
+            experience=experience,
+            selection=selection
+            )
         if verbosity and c:
             print(' - created task:')
             print(task)
@@ -154,6 +168,7 @@ class Command(BaseCommand):
             task.status = _PENDING
             task.save()
 
+        # ------------- Analysis -------------
         for analysis in Analysis.objects.all():
             analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
             analysis.save()
