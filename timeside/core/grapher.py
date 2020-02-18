@@ -80,16 +80,18 @@ class Spectrum(object):
         while nsamples > self.fft_size:
             self.fft_size = 2 * self.fft_size
 
-        zeros_p = numpy.zeros(self.fft_size / 2 - int(nsamples / 2))
+        zeros_p = numpy.zeros(int(self.fft_size / 2) - int(nsamples / 2))
         if nsamples % 2:
-            zeros_n = numpy.zeros(self.fft_size / 2 - int(nsamples / 2) - 1)
+            zeros_n = numpy.zeros(
+                int(self.fft_size / 2) - int(nsamples / 2) - 1
+                )
         else:
-            zeros_n = numpy.zeros(self.fft_size / 2 - int(nsamples / 2))
+            zeros_n = numpy.zeros(int(self.fft_size / 2) - int(nsamples / 2))
         samples = numpy.concatenate((zeros_p, samples, zeros_n), axis=0)
 
         fft = numpy.fft.fft(samples)
         # normalized abs(FFT) between 0 and 1
-        spectrum = numpy.abs(fft[:fft.shape[0] / 2 + 1]) / float(nsamples)
+        spectrum = numpy.abs(fft[:int(fft.shape[0] / 2 + 1)]) / float(nsamples)
         length = numpy.float64(spectrum.shape[0])
 
         # scale the db spectrum from [- spec_range db ... 0 db] > [0..1]
