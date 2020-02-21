@@ -20,7 +20,7 @@ Contents:
    ui
    doc
    Tutorials <tutorials/index>
-   API <api/index>
+   Core API <core_api/index>
    development
    production
    related
