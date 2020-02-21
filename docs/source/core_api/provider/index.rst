@@ -13,7 +13,7 @@ Core module
   :members:
 
 Providers
-========
+=========
 
 
 YouTube

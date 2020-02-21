@@ -1,6 +1,6 @@
-============
-TimeSide API
-============
+=================
+TimeSide core API
+=================
 
 
 .. toctree::
@@ -11,4 +11,4 @@ TimeSide API
    analyzer/index
    encoder/index
    grapher/index
-   server/index
+   provider/index
