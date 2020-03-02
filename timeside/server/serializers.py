@@ -151,13 +151,13 @@ class WaveformSerializer(serializers.Serializer):
     start = serializers.IntegerField(default=0)
     stop = serializers.IntegerField(default=-1)
     nb_pixels = serializers.IntegerField(min_value=0)
-    min_values = serializers.ListField(
+    min = serializers.ListField(
         child=serializers.FloatField(read_only=True)
         )
-    max_values = serializers.ListField(
+    max = serializers.ListField(
         child=serializers.FloatField(read_only=True)
         )
-    time_values = serializers.ListField(
+    time = serializers.ListField(
         child=serializers.IntegerField(read_only=True)
         )
 
