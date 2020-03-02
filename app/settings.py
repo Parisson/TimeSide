@@ -6,6 +6,7 @@ env = environ.Env(DEBUG=(bool, False),
                   )
 # Django settings for server project.
 DEBUG = env('DEBUG')  # False if not in os.environ
+DEBUG=True
 
 import os
 import sys
@@ -268,5 +269,5 @@ if DEBUG:
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_HOST = '134.158.33.163'
-EMAIL_SUBJECT_PREFIX = '[TimeSide]'
-
+EMAIL_SUBJECT_PREFIX = '[TimeSide-feature/next]'
+DEFAULT_FROM_EMAIL = 'root@cchum-kvm-telemeta-dev.in2p3.fr'

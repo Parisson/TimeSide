@@ -29,7 +29,7 @@ app:
     - .:/srv/lib/timeside
   command: /bin/bash /srv/app/bin/app.sh --runserver
   ports:
-    - '9030:8000'
+    - '9080:8000'
   env_file:
     - env/debug.env
 
