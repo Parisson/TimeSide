@@ -112,7 +112,7 @@ prompt-toolkit==2.0.10
 protobuf==3.11.1
 psycopg2-binary==2.8.4
 ptyprocess==0.6.0
-py-sonicvisualiser===0.3-1-g7cf994d
+py-sonicvisualiser==0.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.7
 pycparser==2.19
