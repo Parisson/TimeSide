@@ -33,6 +33,7 @@ vim
 curl
 procps
 pkg-config
+cairo
 
 # Frontend
 nodejs
