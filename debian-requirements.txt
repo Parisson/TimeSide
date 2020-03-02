@@ -33,7 +33,7 @@ vim
 curl
 procps
 pkg-config
-cairo
+python3-cairo
 
 # Frontend
 nodejs
