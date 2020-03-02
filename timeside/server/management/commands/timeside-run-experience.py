@@ -15,16 +15,20 @@ import simplejson as json
 
 class Command(BaseCommand):
     help = "Create and run the WASABI experience on a given directory or a selection"
-    
+
     media_root = os.path.normpath(settings.MEDIA_ROOT)
-    experience_processors = ['aubio_temporal', 'aubio_pitch', 'essentia_dissonance', ]
-    #experience_processors = ['ircam_music_descriptor', ]
     processor_blacklist = ['decoder', 'live', 'gain', 'vamp']
 
     def add_arguments(self, parser):
         parser.add_argument('-s', '--selection_title',
             dest='selection_title',
             help='define the title of the selection')
+
+        parser.add_argument('-mp', '--media_path',
+            dest='media_path',
+            nargs='+',
+            type=str,
+            help='define the path of a media')
 
         parser.add_argument('-e', '--experience_title',
             dest='experience_title',
@@ -47,6 +51,16 @@ class Command(BaseCommand):
             action='store_true',
             dest='cleanup',
             help='Cleanup result data')
+
+        parser.add_argument('-t', '--test',
+                            action='store_true',
+                            dest='test',
+                            help='test mode')
+
+        parser.add_argument('-p', '--pid',
+                            nargs='+',
+                            type=str,
+                            help='Processor ID')
 
     def write_file(self, item, media):
         filename = media.split(os.sep)[-1]
@@ -77,10 +91,10 @@ class Command(BaseCommand):
                 filename_pre, ext = os.path.splitext(filename)
                 item_title = filename_pre
                 item, c = Item.objects.get_or_create(title=item_title, source_file=path)
-                    
+
                 if not item in items:
                     self.selection.items.add(item)
-                
+
                 if self.cleanup:
                     for result in item.results.all():
                         result.delete()
@@ -91,7 +105,7 @@ class Command(BaseCommand):
         for proc in processors:
             trig = True
             # print(proc.id())
-            if proc.id() in self.experience_processors:
+            if proc.id() in self.pid:
                 for processor in self.processor_blacklist:
                     if processor in proc.id():
                         trig = False
@@ -103,16 +117,23 @@ class Command(BaseCommand):
                     except Preset.MultipleObjectsReturned:
                         print(Preset.objects.filter(processor=processor, parameters='{}'))
 
-        self.experience, c = Experience.objects.get_or_create(title=self.experience_title)
+        if self.experience_title:
+            self.experience, c = Experience.objects.get_or_create(title=self.experience_title)
+        else:
+            self.experience = Experience()
+            self.experience.save()
+
         for preset in presets:
             if not preset in self.experience.presets.all():
                 self.experience.presets.add(preset)
-        
+
     def handle(self, *args, **options):
         self.selection_title = options.get('selection_title')
         self.experience_title = options.get('experience_title')
         self.media_directory =  options.get('media_directory')
         self.force = options.get('force')
+        self.test = options.get('test')
+        self.pid = options.get('pid')
         self.cleanup = options.get('cleanup')
 
         self.create_selection()
@@ -123,4 +144,3 @@ class Command(BaseCommand):
             task.status = _PENDING
             task.save()
 
-        

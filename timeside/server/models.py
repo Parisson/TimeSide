@@ -408,7 +408,7 @@ class Item(Titled, UUID, Dated, Shareable):
         Return item audio duration
         """
         if (force or not self.audio_duration) and self.source_file:
-            decoder = timeside.core.get_processor('file_decoder')(
+            decoder = timeside.core.get_processor('aubio_decoder')(
                 uri=self.get_uri())
             self.audio_duration = decoder.uri_total_duration
             super(Item, self).save()
