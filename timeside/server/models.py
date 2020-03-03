@@ -118,6 +118,9 @@ if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
 
 
+DEFAULT_DECODER = getattr(settings, 'TIMESIDE_DEFAULT_DECODER', 'file_decoder')
+
+
 class UUIDEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, UUID):
@@ -408,9 +411,9 @@ class Item(Titled, UUID, Dated, Shareable):
         Return item audio duration
         """
         if (force or not self.audio_duration) and self.source_file:
-            decoder = timeside.core.get_processor('file_decoder')(
+            decoder = timeside.core.get_processor(DEFAULT_DECODER)(
                 uri=self.get_uri())
-            self.audio_duration = decoder.uri_total_duration
+            self.audio_duration = decoder.uri_duration
             super(Item, self).save()
 
     def get_hash(self, force=False):
@@ -455,8 +458,14 @@ class Item(Titled, UUID, Dated, Shareable):
         uri = self.get_uri()
 
         # decode audio source
-        decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
+        # TODO: use get_processor
+        if DEFAULT_DECODER == 'aubio_decoder':
+            decoder = timeside.plugins.decoder.aubio.AubioDecoder(uri=uri,
                                                             sha1=self.sha1)
+        else:
+            decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
+                                                            sha1=self.sha1)
+
         presets = {}
         pipe = decoder
         parent_analyzers = []

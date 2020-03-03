@@ -107,6 +107,7 @@ class FileDecoder(Decoder):
             self._sha1 = sha1.encode('utf8')
 
         self.uri_total_duration = get_media_uri_info(self.uri)['duration']
+        self.uri_duration = self.uri_total_duration
 
         self.mimetype = None
 

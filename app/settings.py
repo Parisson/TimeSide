@@ -269,5 +269,7 @@ if DEBUG:
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_HOST = '134.158.33.163'
-EMAIL_SUBJECT_PREFIX = '[TimeSide-feature/next]'
+EMAIL_SUBJECT_PREFIX = '[TimeSide-SANDBOX]'
 DEFAULT_FROM_EMAIL = 'root@cchum-kvm-telemeta-dev.in2p3.fr'
+
+TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'

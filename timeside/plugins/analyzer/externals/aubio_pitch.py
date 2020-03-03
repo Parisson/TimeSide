@@ -104,7 +104,7 @@ class AubioPitch(Analyzer):
     @staticmethod
     @interfacedoc
     def version():
-        return "0.4.7"
+        return "0.4.6"
 
     @staticmethod
     @interfacedoc
