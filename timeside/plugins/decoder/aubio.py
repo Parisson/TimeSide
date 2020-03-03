@@ -3,7 +3,7 @@
 """ decoder plugin based on aubio """
 
 from timeside.core.decoder import Decoder, IDecoder, implements, interfacedoc
-from timeside.plugins.decoder.utils import get_sha1
+from timeside.plugins.decoder.utils import get_sha1, get_media_uri_info
 import aubio
 import mimetypes
 
