@@ -245,7 +245,7 @@ class Provider(Named, UUID):
         return str(self.pid)
 
     def get_provider(self):
-        return timeside.core.get_provider(self.pid)
+        return timeside.core.provider.get_provider(self.pid)
 
     def get_source_from_url(self, url, download=False):
         DOWNLOAD_ROOT = os.path.join(
@@ -460,11 +460,15 @@ class Item(Titled, UUID, Dated, Shareable):
         # decode audio source
         # TODO: use get_processor
         if DEFAULT_DECODER == 'aubio_decoder':
-            decoder = timeside.plugins.decoder.aubio.AubioDecoder(uri=uri,
-                                                            sha1=self.sha1)
+            decoder = timeside.plugins.decoder.aubio.AubioDecoder(
+                uri=uri,
+                sha1=self.sha1
+                )
         else:
-            decoder = timeside.plugins.decoder.file.FileDecoder(uri=uri,
-                                                            sha1=self.sha1)
+            decoder = timeside.plugins.decoder.file.FileDecoder(
+                uri=uri,
+                sha1=self.sha1
+                )
 
         presets = {}
         pipe = decoder
