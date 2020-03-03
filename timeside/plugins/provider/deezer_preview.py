@@ -10,7 +10,7 @@ from requests import get
 class DeezerPreview(Provider):
     """Deezer Plugin to retrieve deezer's 30 seconds tracks preview"""
     implements(IProvider)
-    
+
     @staticmethod
     @interfacedoc
     def id():
@@ -26,6 +26,7 @@ class DeezerPreview(Provider):
     def ressource_access():
         return True
 
+    @interfacedoc
     def get_source_from_id(self, external_id, path, download=False):
         request_url = 'https://api.deezer.com/track/' + external_id
         request_json = get(request_url).json()
@@ -43,10 +44,12 @@ class DeezerPreview(Provider):
             return file_path
         else:
             return source_uri
-    
+
+    @interfacedoc
     def get_source_from_url(self, url, path, download=False):
         deezer_track_id = self.get_id_from_url(url)
         return self.get_source_from_id(deezer_track_id, path, download)
 
+    @interfacedoc
     def get_id_from_url(self, url):
         return url.split("/")[-1:][0]
