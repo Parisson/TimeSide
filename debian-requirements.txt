@@ -25,10 +25,10 @@ vamp-plugin-sdk
 ffmpeg
 
 # aubio needs libav
-libavcodec
-libavformat
-libavutil
-libavresample
+libavcodec58
+libavformat58
+libavutil56
+libavresample4
 
 # Misc.
 git
