@@ -1,8 +1,9 @@
 # Python
 python3
 python3-pip
+python3-cairo
 
-# TimeSide Core need Gstreamer
+# Legacy decoders and encoders need Gstreamer
 python3-gst-1.0
 gstreamer1.0-plugins-good
 #gstreamer1.0-gnonlin
@@ -21,8 +22,13 @@ vamp-examples
 vamp-plugin-sdk
 
 # Youtube's provider needs ffmpeg
-# aubio needs libav
 ffmpeg
+
+# aubio needs libav
+libavcodec
+libavformat
+libavutil
+libavresample
 
 # Misc.
 git
@@ -33,7 +39,6 @@ vim
 curl
 procps
 pkg-config
-python3-cairo
 
 # Frontend
 nodejs
