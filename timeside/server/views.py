@@ -615,7 +615,7 @@ class PlayerView(TemplateView):
     template_name = "timeside/player.html"
 
 
-class Csrf_Token(viewsets.ViewSet):
+class CsrfToken(viewsets.ViewSet):
     def list(self, request):
         return Response({'csrftoken': get_csrf_token(request)})
 
