@@ -55,7 +55,7 @@ urlpatterns = [
     # Verify JWT without having access to signing key
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     # Temporary Endpoint to get CSRF Token
-    url(r'^api/token-csrf/', views.Csrf_Token.as_view(
+    url(r'^api/token-csrf/', views.CsrfToken.as_view(
         {'get': 'list'}),
         name='get_csrf_token'),
     # Items
