@@ -14,7 +14,7 @@ django-environ
 django-extensions
 django-filter==1.1.0
 # djangorestframework==3.11
-git+https://github.com/encode/django-rest-framework.git@609f708a27bd38496b912c44742287c57e7af912#egg=rest_framework
+git+https://github.com/encode/django-rest-framework.git@6a23fa06495c6010239dda926f55f2d6baa79cf3#egg=rest_framework
 djangorestframework-simplejwt
 essentia
 ghp-import
