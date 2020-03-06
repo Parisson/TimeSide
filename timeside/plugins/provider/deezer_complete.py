@@ -26,11 +26,14 @@ class DeezerComplete(Provider):
     def ressource_access():
         return False
 
+    @interfacedoc
     def get_source_from_id(self, external_id, path, download=False):
         return ''
 
+    @interfacedoc
     def get_source_from_url(self, url, path, download=False):
         return ''
 
+    @interfacedoc
     def get_id_from_url(self, url):
         return url.split("/")[-1:][0]

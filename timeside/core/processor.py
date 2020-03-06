@@ -298,12 +298,10 @@ def list_processors(interface=IProcessor, prefix=""):
     lst += prefix + underline_char * len(interface.__name__)+ "\n"
     procs = processors(interface, False)
     for p in procs:
-        lst += prefix + f"  * {p.id()}:" + "\n"
-        lst += prefix + f"    \t\t{p.description()}" + "\n"
-        lst += prefix + f"    \t\tversion: {p.version()}" + "\n"
+        lst += prefix + f"  * {p.id()} {p.version()}: {p.description()}" + "\n"
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
-        lst += list_processors(interface=i, prefix=prefix + "  ")+ "\n"
+        lst += list_processors(interface=i, prefix=prefix + "\t")+ "\n"
     return lst
 
 

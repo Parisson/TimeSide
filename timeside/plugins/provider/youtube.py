@@ -7,7 +7,7 @@ import os
 
 
 class YouTube(Provider):
-    """YouTube audio Provider using youtube-dl"""
+    """YouTube audio Provider based on Youtube DL"""
     implements(IProvider)
     
     @staticmethod
@@ -25,9 +25,11 @@ class YouTube(Provider):
     def ressource_access():
         return True
 
+    @interfacedoc
     def get_source_from_url(self, url, path, download=False):
         return self.get_source(url, path, download)
 
+    @interfacedoc
     def get_source_from_id(self, external_id, path, download=False):
         return self.get_source(external_id, path, download)
 
@@ -59,6 +61,7 @@ class YouTube(Provider):
         else:
             return source_uri
     
+    @interfacedoc
     def get_id_from_url(self, url):
         with youtube_dl.YoutubeDL({}) as ydl:
             info = ydl.extract_info(url, download=False)
