@@ -39,6 +39,7 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from rest_framework.schemas import get_schema_view
+from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework.response import Response
 # from django.core.urlresolvers import reverse
@@ -105,6 +106,7 @@ class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
     """Gives audio waveform of an item."""
+    schema = AutoSchema(operation_id_base='ItemWaveform')
     model = models.Item
     queryset = model.objects.all()
     serializer_class = serializers.ItemWaveformSerializer
@@ -191,7 +193,9 @@ class PNGRenderer(renderers.BaseRenderer):
 
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     """PNG rendering of 2D numerical data (example: a spectrogram)."""
+
     model = models.Result
+    schema = AutoSchema(operation_id_base='ResultVisualization')
     queryset = model.objects.all()
     serializer_class = serializers.ResultVisualizationSerializer
 
