@@ -36,7 +36,7 @@ django-environ==0.4.5
 django-extensions==2.2.8
 django-filter==1.1.0
 # djangorestframework==3.11.0
-git+https://github.com/encode/django-rest-framework.git@609f708a27bd38496b912c44742287c57e7af912#egg=rest_framework
+git+https://github.com/encode/django-rest-framework.git@6a23fa06495c6010239dda926f55f2d6baa79cf3#egg=rest_framework
 djangorestframework-simplejwt==4.4.0
 docutils==0.16
 entrypoints==0.3
