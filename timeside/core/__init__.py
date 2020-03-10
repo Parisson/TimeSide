@@ -20,6 +20,8 @@
 # Authors:
 # Thomas Fillon <thomas@parisson.com>
 
+import sys
+
 from . import api
 from . import processor
 
@@ -33,3 +35,6 @@ __all__ = ['api', 'processor']
 
 # this line will import all plugins found inside timeside/plugins
 ts_package.discover_modules('plugins', 'timeside')
+
+# avoid *.pyc file generation
+sys.dont_write_bytecode = True
