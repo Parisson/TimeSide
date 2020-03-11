@@ -14,7 +14,6 @@ Contents:
    intro
    news
    architecture
-   processors
    divein
    install
    ui
