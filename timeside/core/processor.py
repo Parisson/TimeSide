@@ -305,20 +305,21 @@ def list_processors(interface=IProcessor, prefix=""):
     return lst
 
 
-def list_processors_rst(interface=IProcessor, prefix=""):
+def list_processors_rst(interface=IProcessor, recurse=False):
     lst = ""
-    lst += prefix + interface.__name__ + "\n"
-    if len(prefix):
+    # remove letter I from core API interface classes
+    lst += interface.__name__[1:] + "\n"
+    if recurse:
         underline_char = '-'
     else:
         underline_char = '='
-    lst += prefix + underline_char * len(interface.__name__)+ "\n"
+    lst += underline_char * len(interface.__name__)+ "\n"
     procs = processors(interface, False)
     for p in procs:
-        lst += prefix + f"* **{p.id()}** *v*{p.version()}*v*: {p.description()}"+ "\n"
+        lst += f"* **{p.id()}** **{p.version()}**: {p.description()}"+ "\n"
     subinterfaces = interface.__subclasses__()
     for i in subinterfaces:
-        lst += list_processors_rst(interface=i, prefix=prefix + " ") + "\n"
+        lst += "\n" + list_processors_rst(interface=i, recurse=True)
     return lst
 
 def list_processors_csv(interface=IProcessor):
