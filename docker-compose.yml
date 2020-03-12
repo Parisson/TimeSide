@@ -49,7 +49,8 @@ broker:
   image: redis:5
 
 app:
-  image: parisson/timeside:latest-dev
+  # image: parisson/timeside:latest-dev
+  build: .
   command: /bin/bash /srv/app/bin/app.sh
   volumes:
     - ./app:/srv/app
@@ -70,7 +71,8 @@ app:
 
 
 worker:
-  image: parisson/timeside:latest-dev
+  # image: parisson/timeside:latest-dev
+  build: .
   command: /bin/bash /srv/app/bin/worker.sh
   volumes:
     - /etc/._ifpk_2
