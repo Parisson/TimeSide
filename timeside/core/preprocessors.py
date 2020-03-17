@@ -21,11 +21,11 @@
 '''
     Collections of preprocessors to use as decorators for the analyzers process
 
-    Preprocessors process the (frame, eod) arguments in order to handle various
+    Preprocessors process `(frame, eod)` arguments in order to handle various
     preprocessing such as :
-        - Downmixing to mono
-        - Adapt the frames to match the input_blocksize and input_stepsize
-            of the analyzer
+
+    - Downmixing to mono
+    - Adapt the frames to match the input_blocksize and input_stepsize of the analyzer
 '''
 
 
@@ -151,19 +151,19 @@ def frames_adapter(process_func):
             if eod:
                 # Final zeropadding
                 pad_shape = tuple(
-                    self.blocksize - last_block_size if i == 0 else x
+                    int(self.blocksize - last_block_size) if i == 0 else x
                     for i, x in enumerate(frames.shape))
                 stack = np.concatenate([stack, np.zeros(pad_shape,
                                                         dtype=frames.dtype)])
                 nb_frames += 1
 
-            self.buffer = stack[nb_frames * self.stepsize:]
+            self.buffer = stack[int(nb_frames * self.stepsize):]
 
             eod_list = np.repeat(False, nb_frames)
             if eod and len(eod_list):
                 eod_list[-1] = eod
 
-            for index, eod in zip(range(0, nb_frames * self.stepsize, self.stepsize), eod_list):
+            for index, eod in zip(range(0, int(nb_frames * self.stepsize), int(self.stepsize)), eod_list):
                 yield (stack[index:index + self.blocksize], eod)
 
     aubio_analyzers = ['aubio_melenergy', 'aubio_mfcc', 'aubio_pitch', 'aubio_specdesc', 'aubio_temporal']
