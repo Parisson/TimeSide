@@ -1,4 +1,0 @@
-sphinx:
-    builder: html
-    configuration: docs/source/conf.py
-    fail_on_warning: true
