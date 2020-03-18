@@ -14,6 +14,7 @@ sys.dont_write_bytecode = True
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
     ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
+    ('Martin Desrumaux', 'martin.desrumaux@ircam.fr'),
 )
 
 MANAGERS = ADMINS
