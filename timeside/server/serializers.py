@@ -304,7 +304,7 @@ def get_result(item, preset, wait=True):
         # the corresponding task has to be created and run
         task, created = ts.models.Task.objects.get_or_create(
             experience=preset.get_single_experience(),
-            selection=item.get_single_selection()
+            item=item
             )
         if created:
             task.run(wait=False)

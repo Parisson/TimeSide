@@ -1,3 +1,5 @@
+.. _provider:
+
 ================
 Provider package
 ================
@@ -15,6 +17,7 @@ Core module
 Providers
 =========
 
+.. _youtube:
 
 YouTube
 -----------
@@ -22,11 +25,15 @@ YouTube
 .. automodule:: timeside.plugins.provider.youtube
   :members:
 
+.. _deezer-preview:
+
 DeezerPreview
 ------------------
 
 .. automodule:: timeside.plugins.provider.deezer_preview
   :members:
+
+.. _deezer-complete:
 
 DeezerComplete
 ------------------

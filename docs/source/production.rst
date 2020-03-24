@@ -4,8 +4,8 @@ Production
 
 Deploying
 ---------
-
-Our docker composition already bundles some powerful containers and bleeding edge frameworks like: Nginx, MySQL, Redis, Celery, Django and Python. It thus provides a safe and continuous way to deploy your project from an early development stage to a massive production environment.
+and bleeding edge frameworks like: Nginx, PostgreSQL, Redis, Celery, Django, Django REST Framework and Python. It thus provides a safe and continuous way to deploy your project from an early development stage to a massive production environment.
+Our docker composition already bundles some powerful containers 
 
 .. warning :: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
 

@@ -31,7 +31,7 @@ WaveformCentroid
 WaveformTransparent
 --------------------
 
-.. automodule:: timeside.plugins.grapher.waveform_centroid
+.. automodule:: timeside.plugins.grapher.waveform_transparent
   :members:
 
 WaveformContour
