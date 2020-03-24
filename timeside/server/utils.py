@@ -26,7 +26,7 @@ def get_or_run_proc_result(pid, item, parameters='{}'):
   
     if created or not result.hdf5 or not os.path.exists(result.hdf5.path): 
         task, c = Task.get_first_or_create(experience=preset.get_single_experience(),
-                                                        selection=item.get_single_selection())
+                                                        item=item)
         task.run(wait=True)
         result, created = Result.get_first_or_create(preset=preset, 
                                    item=item)

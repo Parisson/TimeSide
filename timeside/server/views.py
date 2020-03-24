@@ -601,7 +601,7 @@ class ItemTranscode(DetailView):
             # the corresponding task has to be created and run
             task, created = models.Task.objects.get_or_create(
                 experience=preset.get_single_experience(),
-                selection=item.get_single_selection())
+                item=item)
             task.run(wait=True)
             return self.get(request, uuid, extension)
             # response = StreamingHttpResponse(
