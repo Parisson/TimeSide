@@ -15,6 +15,7 @@ sys.dont_write_bytecode = True
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
     ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
+    ('Martin Desrumaux', 'martin.desrumaux@ircam.fr'),
 )
 
 MANAGERS = ADMINS
@@ -84,6 +85,9 @@ STATIC_ROOT = '/srv/static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+# django-npm
+NPM_ROOT_PATH = '/srv/app/'
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -97,7 +101,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    # 'djangobower.finders.BowerFinder',
+    'npm.finders.NpmFinder',
 )
 
 TEMPLATES = [
@@ -159,7 +163,6 @@ INSTALLED_APPS = (
     'django_celery_results',
     'bootstrap3',
     'bootstrap_pagination',
-    'djangobower',
     'corsheaders',
     'debug_toolbar',
     # 'south',

@@ -9,7 +9,8 @@ python3 $manage wait-for-db
 # django init
 if [ ! -f .init ]; then
     python3 $manage migrate --noinput
-    python3 $manage bower_install --allow-root
+    #python3 $manage bower_install --allow-root
+    npm install --prefix /srv/app
     touch .init
 fi
 
@@ -30,7 +31,7 @@ then
     python3 $manage runserver 0.0.0.0:8000
 else
     # static files auto update
-    python3 $manage collectstatic --noinput -i *node_modules*
+    python3 $manage collectstatic --noinput
 
     # fix media access rights
     find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user www-data -exec chown www-data:www-data {} \;
