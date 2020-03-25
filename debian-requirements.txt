@@ -24,6 +24,9 @@ vamp-plugin-sdk
 # Youtube's provider needs ffmpeg
 ffmpeg
 
+# Add support to both flac and ogg through aubio's sink_sndfile
+libsndfile1-dev
+
 # aubio needs libav
 libavcodec-dev
 libavformat-dev
