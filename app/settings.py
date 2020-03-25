@@ -84,8 +84,8 @@ STATIC_ROOT = '/srv/static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-# django-npm
-NPM_ROOT_PATH = '/srv/cache/node_modules'
+# django-npm
+NPM_ROOT_PATH = '/srv/app/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -162,7 +162,6 @@ INSTALLED_APPS = (
     'django_celery_results',
     'bootstrap3',
     'bootstrap_pagination',
-    'djangobower',
     'corsheaders',
     'debug_toolbar',
     # 'south',
