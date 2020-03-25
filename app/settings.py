@@ -84,6 +84,9 @@ STATIC_ROOT = '/srv/static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+# django-npm
+NPM_ROOT_PATH = '/srv/cache/node_modules'
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -97,7 +100,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    # 'djangobower.finders.BowerFinder',
+    'npm.finders.NpmFinder',
 )
 
 TEMPLATES = [
