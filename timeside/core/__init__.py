@@ -29,6 +29,7 @@ from .processor import get_processor, Processor
 from .component import implements, interfacedoc, abstract
 from .tools import package as ts_package
 
+# TODO: enable to get TimeSide version without `import timeside.core`
 __version__ = '1.0'
 
 __all__ = ['api', 'processor']
