@@ -11,7 +11,7 @@
 
 {% block stylesheets %}
 <link href="{{ STATIC_URL }}bootstrap/dist/css/bootstrap.min.css" type="text/css" media="all" rel="stylesheet" />
-<link href="{{ STATIC_URL }}bootstrap-select/bootstrap-select.css" type="text/css" media="all" rel="stylesheet" />
+<link href="{{ STATIC_URL }}bootstrap-select/dist/css/bootstrap-select.css" type="text/css" media="all" rel="stylesheet" />
 <link href="{{ STATIC_URL }}timeside/css/timeside.css" type="text/css" media="all" rel="stylesheet" />
 {% endblock %}
 
@@ -19,13 +19,13 @@
 
 {% block javascript %}
     <script src="{{ STATIC_URL }}jquery/dist/jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}jquery-migrate/jquery-migrate.min.js"></script>
+    <script src="{{ STATIC_URL }}jquery-migrate/idist/jquery-migrate.min.js"></script>
 
     <script src="{{ STATIC_URL }}bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
     <script src="{{ STATIC_URL }}timeside/js/timeside.js"></script>
- 
+
 {% endblock %}
 
 {% block extra_javascript %}{% endblock %}
@@ -37,8 +37,8 @@
   <div id="auth_info" class="well">
     <span class="glyphicon glyphicon-user"></span>
     {% if user.is_authenticated %}
-    
-    Welcome, 
+
+    Welcome,
     <a>
       {% if user.first_name or user.last_name %}
       {{ user.first_name }} {{ user.last_name }}</a> |
@@ -51,9 +51,9 @@
     <a href="{% url "timeside-login" %}" type="button" class="btn btn-default">
       Sign in <span class="glyphicon glyphicon-log-in"></span></a>
     {% endif %}
-    
+
   </div>
-                
+
 {% block content %}
 {% endblock content %}
 
