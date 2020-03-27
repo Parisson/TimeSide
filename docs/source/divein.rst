@@ -8,7 +8,7 @@ First, list all available plugins:
 .. doctest::
 
    >>> import timeside.core
-   >>> timeside.core.list_processors()  # doctest: +ELLIPSIS
+   >>> print(timeside.core.processor.list_processors())  # doctest: +ELLIPSIS
    IProcessor
    ==========
    ...
@@ -49,8 +49,8 @@ Show the analyzer results:
 
 .. doctest::
 
-   >>> print 'Level:', analyzer.results  # doctest: +ELLIPSIS
-   Level: {'level.max': AnalyzerResult(...), 'level.rms': AnalyzerResult(...)}
+   >>> ('Level:', analyzer.results)  # doctest: +ELLIPSIS
+   ('Level:', {'level.max': AnalyzerResult(...), 'level.rms': AnalyzerResult(...)})
 
 
 So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.

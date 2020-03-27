@@ -52,11 +52,16 @@ analysis and encoding:
 
 .. doctest:: test_3
 
-   >>> import timeside
+   >>> import timeside, os
    >>> from timeside.core.tools.test_samples import samples
    >>> from timeside.core import get_processor
    >>> decoder = get_processor('file_decoder')(samples["sweep.wav"])
    >>> levels = get_processor('level')()
    >>> encoders = get_processor('mp3_encoder')('sweep.mp3') | get_processor('flac_encoder')('sweep.flac')
    >>> (decoder | levels | encoders).run()
-   >>> print levels.results
+   >>> print(levels.results) # doctest: +ELIPSE
+   {'level.max': AnalyzerResult(...), 'level.rms': AnalyzerResult(...)}
+   >>> os.system('file sweep.mp3') # doctest: +ELIPSE
+   sweep.mp3: Audio file with ID3 version 2.4.0, contains:MPEG ADTS, ...
+   >>> # os.remove('sweep.mp3')
+   >>> # os.remove('sweep.wav')

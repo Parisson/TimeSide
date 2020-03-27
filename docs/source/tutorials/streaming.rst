@@ -21,7 +21,7 @@ Create a process callback method so that you can retrieve end send the chunks:
 >>> def streaming_callback():
 ...     for chunk in pipe.stream():
 ...         # Do something with chunk
-...         print chunk.timestamp
+...         print(chunk.timestamp)
 
 Now you can use the callback to stream the audio data outside TimeSide!
 

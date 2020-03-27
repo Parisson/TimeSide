@@ -54,7 +54,7 @@ class Spectrogram(Analyzer):
     >>> pipe = (decoder | spectrogram)
     >>> pipe.run()
     >>> spectrogram.results.keys()
-    ['spectrogram_analyzer']
+    dict_keys(['spectrogram_analyzer'])
     >>> result = spectrogram.results['spectrogram_analyzer']
     >>> result.data.shape
     (344, 1025)

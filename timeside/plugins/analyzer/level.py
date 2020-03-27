@@ -42,7 +42,7 @@ class Level(Analyzer):
     >>> level = get_processor('level')()
     >>> (decoder | level).run()
     >>> level.results.keys()
-    ['level.max', 'level.rms']
+    dict_keys(['level.max', 'level.rms'])
     >>> max = level.results['level.max']
     >>> print(max.data)
     [0.]

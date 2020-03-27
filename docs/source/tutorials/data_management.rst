@@ -38,11 +38,11 @@ Create a new analyzer result without default arguments
    ['id_metadata', 'data_object', 'audio_metadata', 'parameters']
 
    >>> for key,value in res.items():
-   ...     print '%s : %s' % (key, value)
+   ...     print('%s : %s' % (key, value))
    ...
-   id_metadata : {'description': '', 'author': '', 'version': '', 'date': '', 'proc_uuid': '', 'id': '', 'unit': '', 'name': ''}
-   data_object : {'y_value': array([], dtype=float64), 'value': array([], dtype=float64), 'frame_metadata': {'blocksize': None, 'samplerate': None, 'stepsize': None}}
-   audio_metadata : {'sha1': '', 'is_segment': None, 'uri': '', 'channels': None, 'start': 0, 'channelsManagement': '', 'duration': None}
+   id_metadata : {'id': '', 'name': '', 'unit': '', 'description': '', 'date': '', 'version': '', 'author': '', 'proc_uuid': ''}
+   data_object : {'value': array([], dtype=float64), 'y_value': array([], dtype=float64), 'frame_metadata': {'samplerate': None, 'blocksize': None, 'stepsize': None}}
+   audio_metadata : {'uri': '', 'start': 0, 'duration': None, 'is_segment': None, 'sha1': '', 'channels': None, 'channelsManagement': ''}
    parameters : {}
 
 

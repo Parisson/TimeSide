@@ -68,14 +68,14 @@ class LiveDecoder:#(FileDecoder):
     Examples
     --------
 
-    >>> import timeside
+    >>> import timeside # doctest: +SKIP
 
-    >>> from timeside.core import get_processor
-    >>> live_decoder = get_processor('live_decoder')(num_buffers=5)
-    >>> waveform = get_processor('waveform_analyzer')()
+    >>> from timeside.core import get_processor # doctest: +SKIP
+    >>> live_decoder = get_processor('live_decoder')(num_buffers=5) # doctest: +SKIP
+    >>> waveform = get_processor('waveform_analyzer')() # doctest: +SKIP
     >>> mp3_encoder = timeside.plugins.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
-    ...                                               overwrite=True)
-    >>> pipe = (live_decoder | waveform | mp3_encoder)
+    ...                                               overwrite=True) # doctest: +SKIP
+    >>> pipe = (live_decoder | waveform | mp3_encoder) # doctest: +SKIP
     >>> pipe.run()  # doctest: +SKIP
     >>> # Show the audio as captured by the decoder
     >>> import matplotlib.pyplot as plt # doctest: +SKIP

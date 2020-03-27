@@ -23,7 +23,7 @@ Setup an arbitrary analyzer to check that decoding process from file and from st
 
 >>> level = get_processor('level')()
 >>> pipe = (decoder | level)
->>> print pipe.processors #doctest: +ELLIPSIS
+>>> print(pipe.processors) #doctest: +ELLIPSIS
 [file_decoder-{}, level-{}]
 
 
@@ -33,17 +33,17 @@ Run the pipe:
 
 The processed frames are stored in the pipe attribute `frames_stack` as a list of frames :
 
->>> print type(pipe.frames_stack)
-<type 'list'>
+>>> print(type(pipe.frames_stack))
+<class 'list'>
 
 First frame :
 
->>> print pipe.frames_stack[0] #doctest: +ELLIPSIS
+>>> print(pipe.frames_stack[0]) #doctest: +ELLIPSIS
 (array([[...]], dtype=float32), False)
 
 Last frame :
 
->>> print pipe.frames_stack[-1] #doctest: +ELLIPSIS
+>>> print(pipe.frames_stack[-1]) #doctest: +ELLIPSIS
 (array([[...]], dtype=float32), True)
 
 If the pipe is used for a second run, the processed frames stored in the stack are passed to the other processors without decoding the audio source again.
