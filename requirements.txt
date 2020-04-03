@@ -29,6 +29,7 @@ Django==2.2
 django-bootstrap-pagination==1.7.1
 django-bootstrap3==12.0.3
 django-celery-results==1.2.0
+django-cookies-samesite==0.5.1
 django-cors-headers==3.2.1
 django-debug-toolbar==2.2
 django-environ==0.4.5

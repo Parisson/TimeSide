@@ -134,6 +134,7 @@ MIDDLEWARE = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django_cookies_samesite.middleware.CookiesSameSite',
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Debug Toolbar
@@ -257,10 +258,11 @@ BOWER_INSTALLED_APPS = (
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True
+DCS_SESSION_COOKIE_SAMESITE = None
+DCS_SESSION_COOKIE_SECURE = True
+DCS_CSRF_COOKIE_SAMESITE = None
+DCS_CSRF_COOKIE_SECURE = True
+# DCS_SESSION_COOKIE_SAMESITE_FORCE_ALL = True
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
