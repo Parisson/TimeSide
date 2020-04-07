@@ -44,7 +44,11 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import (
+    post_save,
+    pre_save,
+    pre_delete,
+)
 from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -918,12 +922,21 @@ def item_post_save(sender, **kwargs):
     instance.get_audio_duration()
 
 
+def result_pre_delete(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file and os.path.exists(instance.file.path):
+        os.remove(instance.file.path)    
+    if instance.hdf5 and os.path.exists(instance.hdf5.path):
+        os.remove(instance.hdf5.path)
+
+
 def run(sender, **kwargs):
     task = kwargs['instance']
     if task.status == _PENDING:
         task.run()
 
 
+pre_delete.connect(result_pre_delete, sender=Result)
 post_save.connect(item_post_save, sender=Item)
 # TODO post_save.connect(set_mimetype, sender=Result)
 post_save.connect(run, sender=Task)
