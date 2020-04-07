@@ -98,7 +98,7 @@ class AubioDecoder(Decoder):
             self.eod = True
         self.frames_read += read
         frames = frames[:, :read].T
-        return frames, self.eod
+        return frames.copy(), self.eod
 
     @interfacedoc
     def mime_type(self):
