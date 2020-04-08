@@ -3,8 +3,6 @@ from django.conf import settings
 
 import os
 
-from .remove_empty_folders import removeEmptyFolders
-
 from timeside.server.models import (
     Result,
     _DONE,
@@ -58,4 +56,3 @@ class Command(BaseCommand):
                 if path not in media_paths:
                     os.remove(path)
         # TODO remove empty folders
-
