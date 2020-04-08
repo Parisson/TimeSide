@@ -46,7 +46,7 @@ class TaskAdmin(admin.ModelAdmin):
 class ResultAdmin(admin.ModelAdmin):
     model = Result
     readonly_fields = ('uuid',)
-    list_display = ['__str__', 'run_time', 'status', 'date_added', 'date_modified', 'uuid']
+    list_display = ['__str__', 'run_time', 'mime_type', 'status', 'date_added', 'date_modified', 'uuid']
     list_filter = ['date_modified', 'status', 'item', 'preset']
     search_fields = ['uuid']
 

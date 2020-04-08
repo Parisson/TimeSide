@@ -41,8 +41,7 @@ urlpatterns = [
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     # docs
-    path('swagger-ui/', views.SwaggerUIView.as_view(), name='swagger-ui'),
-    path('redoc/', views.ReDocView.as_view(), name='redoc'),
+    path('api/docs/', views.ReDocView.as_view(), name='redoc'),
     # Schema
     url(r'^api/schema/$', views.schema_view, name="openapi-schema"),
     # API endpoint for Generating Simple Web Token

@@ -161,6 +161,7 @@ class WaveformSerializer(serializers.Serializer):
         child=serializers.IntegerField(read_only=True)
         )
 
+
     def to_representation(self, instance):
         request = self.context['request']
         self.start = float(request.GET.get('start', 0))
@@ -519,7 +520,7 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Result
         fields = ('uuid', 'url', 'item', 'preset', 'status',
-                  'hdf5', 'file', 'run_time')
+                  'mime_type', 'hdf5', 'file', 'run_time')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},

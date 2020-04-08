@@ -34,8 +34,6 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx.ext.autosummary',
               'sphinx.ext.doctest', 'numpydoc',
-              'matplotlib.sphinxext.mathmpl',
-              'matplotlib.sphinxext.plot_directive',
               ]
 
 doctest_path = os.path.abspath('../../')

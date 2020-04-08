@@ -44,7 +44,11 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import (
+    post_save,
+    pre_save,
+    pre_delete,
+)
 from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
@@ -116,6 +120,12 @@ STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
 RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
+
+DOWNLOAD_ROOT = os.path.join(
+            settings.MEDIA_ROOT, 'items', 'download', ''
+            )
+if not os.path.exists(DOWNLOAD_ROOT):
+    os.makedirs(DOWNLOAD_ROOT)
 
 
 DEFAULT_DECODER = getattr(settings, 'TIMESIDE_DEFAULT_DECODER', 'file_decoder')
@@ -248,17 +258,11 @@ class Provider(Named, UUID):
         return timeside.core.provider.get_provider(self.pid)
 
     def get_source_from_url(self, url, download=False):
-        DOWNLOAD_ROOT = os.path.join(
-            settings.MEDIA_ROOT, 'items', 'download', ''
-            )
         return self.get_provider()().get_source_from_url(
             url, DOWNLOAD_ROOT, download
             )
 
     def get_source_from_id(self, external_id, download=False):
-        DOWNLOAD_ROOT = os.path.join(
-            settings.MEDIA_ROOT, 'items', 'download', ''
-            )
         return self.get_provider()().get_source_from_id(
             external_id, DOWNLOAD_ROOT, download
             )
@@ -819,6 +823,12 @@ class Result(UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
+    def has_file(self):
+        return bool(self.file and os.path.exists(self.file.path))
+
+    def has_hdf5(self):
+        return bool(self.hdf5 and os.path.exists(self.hdf5.path))
+
     def run_time_setter(self, run_time):
         self.run_time = run_time
         self.save()
@@ -918,12 +928,21 @@ def item_post_save(sender, **kwargs):
     instance.get_audio_duration()
 
 
+def result_pre_delete(sender, **kwargs):
+    instance = kwargs['instance']
+    if instance.file and os.path.exists(instance.file.path):
+        os.remove(instance.file.path)    
+    if instance.hdf5 and os.path.exists(instance.hdf5.path):
+        os.remove(instance.hdf5.path)
+
+
 def run(sender, **kwargs):
     task = kwargs['instance']
     if task.status == _PENDING:
         task.run()
 
 
+pre_delete.connect(result_pre_delete, sender=Result)
 post_save.connect(item_post_save, sender=Item)
 # TODO post_save.connect(set_mimetype, sender=Result)
 post_save.connect(run, sender=Task)

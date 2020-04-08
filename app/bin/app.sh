@@ -6,14 +6,6 @@ source "$SCRIPT_DIR/app_base.sh"
 # waiting for db
 python3 $manage wait-for-db
 
-# django init
-if [ ! -f .init ]; then
-    python3 $manage migrate --noinput
-    #python3 $manage bower_install --allow-root
-    npm install --prefix /srv/app
-    touch .init
-fi
-
 # run migrations
 python3 $manage migrate --noinput
 
@@ -24,6 +16,11 @@ python3 $manage timeside-create-boilerplate
 # if [ $DEBUG = "False" ]; then
 #     python $manage update_index --workers $processes &
 # fi
+
+
+# NPM modules install
+npm install --prefix /srv/app
+
 
 # app start
 if [ "$1" = "--runserver" ]
