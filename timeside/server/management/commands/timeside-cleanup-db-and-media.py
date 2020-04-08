@@ -53,6 +53,6 @@ class Command(BaseCommand):
         for root, dirs, files in os.walk(settings.MEDIA_ROOT):
             for f in files:
                 path = os.path.join(root, f)
-                if path[0] != '.' and path not in media_paths:
+                if f[0] != '.' and path not in media_paths:
                     os.remove(path)
         # TODO remove empty folders
