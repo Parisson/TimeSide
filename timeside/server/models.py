@@ -121,6 +121,12 @@ RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
     os.makedirs(RESULTS_ROOT)
 
+DOWNLOAD_ROOT = os.path.join(
+            settings.MEDIA_ROOT, 'items', 'download', ''
+            )
+if not os.path.exists(DOWNLOAD_ROOT):
+    os.makedirs(DOWNLOAD_ROOT)
+
 
 DEFAULT_DECODER = getattr(settings, 'TIMESIDE_DEFAULT_DECODER', 'file_decoder')
 
@@ -252,17 +258,11 @@ class Provider(Named, UUID):
         return timeside.core.provider.get_provider(self.pid)
 
     def get_source_from_url(self, url, download=False):
-        DOWNLOAD_ROOT = os.path.join(
-            settings.MEDIA_ROOT, 'items', 'download', ''
-            )
         return self.get_provider()().get_source_from_url(
             url, DOWNLOAD_ROOT, download
             )
 
     def get_source_from_id(self, external_id, download=False):
-        DOWNLOAD_ROOT = os.path.join(
-            settings.MEDIA_ROOT, 'items', 'download', ''
-            )
         return self.get_provider()().get_source_from_id(
             external_id, DOWNLOAD_ROOT, download
             )
@@ -822,6 +822,12 @@ class Result(UUID, Dated, Shareable):
     def lock_setter(self, lock):
         self.lock = lock
         self.save()
+
+    def has_file(self):
+        return bool(self.file and os.path.exists(self.file.path))
+
+    def has_hdf5(self):
+        return bool(self.hdf5 and os.path.exists(self.hdf5.path))
 
     def run_time_setter(self, run_time):
         self.run_time = run_time
