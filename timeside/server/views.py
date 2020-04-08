@@ -629,14 +629,6 @@ class ProviderViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
     search_fields = ('pid')
 
 
-class SwaggerUIView(TemplateView):
-    """TemplateView to serve Swagger UI template."""
-    permission_classes = [AllowAny]
-    template_name = "timeside/swagger-ui.html"
-    # `extra_context` provided with view name of `SchemaView`
-    extra_context = {'schema_url': 'openapi-schema'}
-
-
 class ReDocView(TemplateView):
     """TemplateView to serve ReDoc template."""
     permission_classes = [AllowAny]
