@@ -51,6 +51,7 @@ from rest_framework import filters
 
 from . import models
 from . import serializers
+from .utils import get_or_run_proc_result
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -625,41 +626,11 @@ class ItemTranscode(DetailView):
                                           duration=duration,
                                           encoder_pid=encoder,
                                           mime_type=mime_type)
-        # Get or Create Processor = encoder
-        processor, created = models.Processor.objects.get_or_create(
-            pid=encoder
-            )
-        # Get or Create Preset with processor
-        preset, created = models.Preset.objects.get_or_create(
-            processor=processor
-            )
-        # Get Result with preset and item
-        item = self.get_object()
-        try:
-            result = models.Result.objects.get(item=item, preset=preset)
-            if not os.path.exists(result.file.path):
-                # Result exists but not file (may have been deleted)
-                result.delete()
-                return self.get(request, uuid, extension)
-            # Result and file exist --> OK
-
-            # Serve file using X-Accel-Redirect Nginx if DEBUG=False
+        else:
+            item = self.get_object()
+            result = get_or_run_proc_result(encoder, item)
             return serve_media(filename=result.file.path,
-                               content_type=result.mime_type)
-
-        except models.Result.DoesNotExist:
-            # Result does not exist
-            # the corresponding task has to be created and run
-            task, created = models.Task.objects.get_or_create(
-                experience=preset.get_single_experience(),
-                item=item)
-            task.run(wait=True)
-            return self.get(request, uuid, extension)
-            # response = StreamingHttpResponse(
-            #     streaming_content=stream_from_task(task),
-            #     content_type=mime_type
-            #     )
-            # return response
+                               content_type=result.mime_type)       
 
 
 class PlayerView(TemplateView):
