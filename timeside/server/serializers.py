@@ -72,10 +72,11 @@ class AudioUrlSerializer(serializers.Serializer):
 
     mp3 = serializers.URLField(read_only=True)
     ogg = serializers.URLField(read_only=True)
+    flac = serializers.URLField(read_only=True)
 
     def to_representation(self, instance):
         request = self.context['request']
-        extensions = ['mp3', 'ogg']
+        extensions = ['mp3', 'ogg', 'flac']
         self.audio_url = {
             ext:
             reverse(

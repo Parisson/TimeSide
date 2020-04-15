@@ -28,6 +28,7 @@ def get_or_run_proc_result(pid, item, parameters='{}'):
         task, c = Task.get_first_or_create(experience=preset.get_single_experience(),
                                                         item=item)
         task.run(wait=True)
+        # SMELLS: might not get the last good result
         result, created = Result.get_first_or_create(preset=preset, 
                                    item=item)
         return result
