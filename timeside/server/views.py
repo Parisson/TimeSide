@@ -104,12 +104,63 @@ class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.AnnotationSerializer
 
 
+"""
+Empty filter used for schema generation
+
+Adapted from :
+https://github.com/encode/django-rest-framework/blob/8cba4f87ca8e785d1a8c022a7a8ea9649e049c11/rest_framework/filters.py#L19
+"""
+class ItemWaveViewFilter:
+    def filter_queryset(self, request, queryset, view):
+        """
+        Return a filtered queryset.
+        """
+        return queryset
+
+    # For CoreAPI (not used / deprecated)
+    def get_schema_fields(self, view):
+        return []
+
+    # For OpenAPI
+    def get_schema_operation_parameters(self, view):
+        return [
+            {
+                'name': 'start',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                },
+            },
+            {
+                'name': 'stop',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                },
+            },
+            {
+                'name': 'nb_pixels',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                },
+            },
+        ]
+
+
 class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
     """Gives audio waveform of an item."""
     schema = AutoSchema(operation_id_base='ItemWaveform')
     model = models.Item
     queryset = model.objects.all()
     serializer_class = serializers.ItemWaveformSerializer
+    filter_backends = [ ItemWaveViewFilter ]
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
