@@ -16,6 +16,9 @@ def get_or_run_proc_result(pid, item, parameters='{}'):
     # Get or Create Processor
     processor, c = Processor.objects.get_or_create(pid=pid)
 
+    if not parameters:
+        parameters = processor.get_parameters_default()
+
     # Get or Create Preset with processor
     preset, c = Preset.get_first_or_create(processor=processor,
                                     parameters=parameters)
