@@ -13,12 +13,7 @@ def restart_celery(*args, **kwargs):
     kwargs = kwargs['kwargs']
     kill_worker_cmd = 'pkill -9 celery'
     subprocess.call(shlex.split(kill_worker_cmd))
-<<<<<<< HEAD
-    start_worker_cmd = 'celery -A worker worker --loglevel=%s --logfile=%s --uid=%uid --gid=%gid' %
-        (kwargs['loglevel'], kwargs['logfile'], kwargs['uid'], kwargs['gid'])
-=======
     start_worker_cmd = 'celery -A worker worker --loglevel=%s --logfile=%s --uid=%s --gid=%s' % (kwargs['loglevel'], kwargs['logfile'], kwargs['uid'], kwargs['gid'])
->>>>>>> [server] add uid and gid args to celery worker command
     subprocess.call(shlex.split(start_worker_cmd))
 
 
@@ -35,21 +30,12 @@ class Command(BaseCommand):
 
         parser.add_argument('-u', '--uid',
             dest='uid',
-<<<<<<< HEAD
-            help='define the uid')
-
-        parser.add_argument('-g', '--gid',
-            dest='gid',
-            help='define the gid')
-
-=======
             help='define worker uid')
 
         parser.add_argument('-g', '--gid',
             dest='gid',
             help='define worker gid')
             
->>>>>>> [server] add uid and gid args to celery worker command
 
     def handle(self, *args, **options):
         self.stdout.write('Starting celery worker with autoreload...')
@@ -60,7 +46,3 @@ class Command(BaseCommand):
                 'gid': options.get('gid'),
             }
         autoreload.run_with_reloader(restart_celery, args=None, kwargs=kwargs)
-<<<<<<< HEAD
-=======
-
->>>>>>> [server] add uid and gid args to celery worker command
