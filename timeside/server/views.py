@@ -209,7 +209,7 @@ class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class SubProcessorViewSet(viewsets.ModelViewSet):
+class SubProcessorViewSet(viewsets.ReadOnlyModelViewSet):
     """Link between a processor depending on another."""
     model = models.SubProcessor
     queryset = model.objects.all()
