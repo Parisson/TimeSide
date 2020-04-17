@@ -16,6 +16,7 @@ port=8000
 processes=4
 threads=4
 autoreload=3
+# uwsgi and celery params
 uid='www-data'
 gid='www-data'
 
