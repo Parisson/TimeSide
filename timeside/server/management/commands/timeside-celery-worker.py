@@ -30,12 +30,12 @@ class Command(BaseCommand):
 
         parser.add_argument('-u', '--uid',
             dest='uid',
-            help='define worker uid')
+            help='define the worker uid')
 
         parser.add_argument('-g', '--gid',
             dest='gid',
-            help='define worker gid')
-            
+            help='define the worker gid')
+
 
     def handle(self, *args, **options):
         self.stdout.write('Starting celery worker with autoreload...')
