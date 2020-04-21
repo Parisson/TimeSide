@@ -33,5 +33,16 @@ pip3 install -U youtube-dl
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
 
+# fix media access rights
+find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user www-data -exec chown www-data:www-data {} \;
+
+mkdir -p '/var/log/celery/'
+mkdir -p '/var/log/app/'
+
+# fix log access for app and celery
+chown -R $uid:$gid '/var/log/celery/'
+chown -R $uid:$gid '/var/log/app/'
+chown -R $uid:$gid '/srv/static'
+
 # wait for other services
 # bash $app/bin/wait.sh
