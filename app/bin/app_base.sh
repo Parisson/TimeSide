@@ -27,9 +27,6 @@ gid='www-data'
 # always take the last youtube-dl version
 pip3 install -U youtube-dl
 
-# always take the last youtube-dl version
-pip3 install -U youtube-dl
-
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
 
