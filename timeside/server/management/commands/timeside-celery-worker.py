@@ -35,7 +35,6 @@ class Command(BaseCommand):
         parser.add_argument('-g', '--gid',
             dest='gid',
             help='define worker gid')
-            
 
     def handle(self, *args, **options):
         self.stdout.write('Starting celery worker with autoreload...')
