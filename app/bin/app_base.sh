@@ -27,11 +27,11 @@ gid='www-data'
 # always take the last youtube-dl version
 pip3 install -U youtube-dl
 
-# always take the last youtube-dl version
-pip3 install -U youtube-dl
-
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
+
+# fix media access rights
+find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user www-data -exec chown www-data:www-data {} \;
 
 # wait for other services
 # bash $app/bin/wait.sh

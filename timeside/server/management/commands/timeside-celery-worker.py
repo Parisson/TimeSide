@@ -13,8 +13,7 @@ def restart_celery(*args, **kwargs):
     kwargs = kwargs['kwargs']
     kill_worker_cmd = 'pkill -9 celery'
     subprocess.call(shlex.split(kill_worker_cmd))
-    start_worker_cmd = 'celery -A worker worker --loglevel=%s --logfile=%s --uid=%uid --gid=%gid' %
-        (kwargs['loglevel'], kwargs['logfile'], kwargs['uid'], kwargs['gid'])
+    start_worker_cmd = 'celery -A worker worker --loglevel=%s --logfile=%s --uid=%s --gid=%s' % (kwargs['loglevel'], kwargs['logfile'], kwargs['uid'], kwargs['gid'])
     subprocess.call(shlex.split(start_worker_cmd))
 
 
@@ -31,11 +30,11 @@ class Command(BaseCommand):
 
         parser.add_argument('-u', '--uid',
             dest='uid',
-            help='define the uid')
+            help='define the worker uid')
 
         parser.add_argument('-g', '--gid',
             dest='gid',
-            help='define the gid')
+            help='define the worker gid')
 
 
     def handle(self, *args, **options):
