@@ -42,7 +42,6 @@ from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
 from django.db.models.signals import (
     post_save,
@@ -198,7 +197,6 @@ class UUID(models.Model):
         return obj, created
 
 
-@python_2_unicode_compatible
 class Titled(models.Model):
 
     title = models.CharField(_('title'), blank=True, max_length=512)
@@ -211,7 +209,6 @@ class Titled(models.Model):
         abstract = True
 
 
-@python_2_unicode_compatible
 class Named(models.Model):
 
     name = models.CharField(_('name'), blank=True, max_length=512)
@@ -239,7 +236,6 @@ class Shareable(models.Model):
         abstract = True
 
 
-@python_2_unicode_compatible
 class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, max_length=128)
@@ -296,7 +292,6 @@ class Selection(Titled, UUID, Dated, Shareable):
         return qs_items
 
 
-@python_2_unicode_compatible
 class Item(Titled, UUID, Dated, Shareable):
 
     element_type = 'timeside_item'
@@ -635,7 +630,6 @@ class Experience(Titled, UUID, Dated, Shareable):
         verbose_name = _('Experience')
 
 
-@python_2_unicode_compatible
 class Processor(UUID):
 
     pid = models.CharField(_('pid'), max_length=128)
@@ -675,7 +669,6 @@ class Processor(UUID):
         return self.get_processor().get_parameters_default()
 
 
-@python_2_unicode_compatible
 class SubProcessor(UUID):
     """
     SubProcessor object are intended to store
@@ -848,7 +841,6 @@ class Result(UUID, Dated, Shareable):
             return 'Unamed_result'
 
 
-@python_2_unicode_compatible
 class Task(UUID, Dated, Shareable):
 
     experience = models.ForeignKey(
