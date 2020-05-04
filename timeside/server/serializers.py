@@ -162,7 +162,6 @@ class WaveformSerializer(serializers.Serializer):
         child=serializers.IntegerField(read_only=True)
         )
 
-
     def to_representation(self, instance):
         request = self.context['request']
         self.start = float(request.GET.get('start', 0))
@@ -190,6 +189,12 @@ class WaveformSerializer(serializers.Serializer):
 
         if self.stop > duration:
             self.stop = duration
+
+        # nb_pixel must not be to big to keep minimum 2 samples per pixel
+        # to ensure 2 different values for min and max
+        cap_value = int(samplerate * abs(self.stop - self.start) / 2)
+        if self.nb_pixels > cap_value:
+            self.nb_pixels = cap_value
 
         self.min_values = np.zeros(self.nb_pixels)
         self.max_values = np.zeros(self.nb_pixels)
