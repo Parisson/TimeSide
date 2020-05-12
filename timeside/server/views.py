@@ -666,6 +666,8 @@ class CustomSchemaGenerator(SchemaGenerator):
     def get_schema(self, request=None, public=False):
         # Adding production and staging server urls ton title and version infos
         schema = super().get_schema()
+
+        # Add production and staging urls to schema
         schema['servers'] = [
                 {
                     "url": "https://wasabi.telemeta.org/",
@@ -676,6 +678,9 @@ class CustomSchemaGenerator(SchemaGenerator):
                     "description": "Staging server"
                 }
         ]
+
+        # Redefine JWT shema fixing the one produced
+        # by djangorestframework-simplejwt roots
         schema['security'] = [
                 {
                     "bearerAuth": []
@@ -688,6 +693,29 @@ class CustomSchemaGenerator(SchemaGenerator):
                 'scheme': 'bearer',
                 'bearerFormat': 'JWT',
             }
+        }
+        schema['components']['schemas']['TokenObtainPair'] = {
+            'type': 'object',
+            'properties': {
+                'username': {'type': 'string', 'writeOnly': True},
+                'password': {'type': 'string', 'writeOnly': True},
+                'refresh': {'type': 'string', 'readOnly': True},
+                'access': {'type': 'string', 'readOnly': True},
+            },
+            'required': ['username', 'password']
+            }
+        schema['components']['schemas']['TokenRefresh'] = {
+            'type': 'object',
+            'properties': {
+                'refresh': {'type': 'string', 'writeOnly': True},
+                'access': {'type': 'string', 'readOnly': True},
+                },
+            'required': ['refresh']
+        }
+        schema['components']['schemas']['TokenVerify'] = {
+            'type': 'object',
+            'properties': {'token': {'type': 'string', 'writeOnly': True}},
+            'required': ['token']
         }
 
         return schema
