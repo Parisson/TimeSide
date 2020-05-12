@@ -659,7 +659,7 @@ class ReDocView(TemplateView):
     extra_context = {'schema_url': 'openapi-schema'}
 
 
-class SchemaWithServerInfoGeneraror(SchemaGenerator):
+class CustomSchemaGenerator(SchemaGenerator):
     """
     Generate an OpenAPI v3 schema providing server's prod and staging urls.
     """
@@ -686,7 +686,7 @@ class SchemaWithServerInfoGeneraror(SchemaGenerator):
             {
                 'type': 'http',
                 'scheme': 'bearer',
-                'bearerFomrat': 'JWT',
+                'bearerFormat': 'JWT',
             }
         }
 
@@ -698,6 +698,6 @@ schema_view = get_schema_view(
     description=("RESTful API of TimeSide, "
                  "a scalable audio processing framework."),
     version="1.0.0",
-    generator_class=SchemaWithServerInfoGeneraror,
+    generator_class=CustomSchemaGenerator,
     permission_classes=[AllowAny],
 )
