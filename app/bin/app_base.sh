@@ -27,10 +27,8 @@ gid='www-data'
 # always take the last youtube-dl version
 pip3 install -U youtube-dl
 
-pip3 install django==2.2
-
-# pip3 install django-cookies-samesite==0.5.1
-pip3 install -v -e git+https://github.com/abdul-rafiu/django-cookies-samesite@issue-23#egg=django-cookies-samesite
+# waiting for further django-cookies-samesite release
+pip3 install -v -e git+https://github.com/jotes/django-cookies-samesite@master#egg=django-cookies-samesite
 
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
