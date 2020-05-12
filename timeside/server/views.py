@@ -676,6 +676,20 @@ class SchemaWithServerInfoGeneraror(SchemaGenerator):
                     "description": "Staging server"
                 }
         ]
+        schema['security'] = [
+                {
+                    "bearerAuth": []
+                }
+        ]
+        schema['components']['securitySchemes'] = {
+            'bearerAuth':
+            {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFomrat': 'JWT',
+            }
+        }
+
         return schema
 
 
