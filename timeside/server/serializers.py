@@ -570,10 +570,10 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
         if True:
             # if result.data_object.y_value.size:
 
-            import StringIO
+            import BytesIO
             pil_image = result._render_PIL(
                 size=(width, height), dpi=80, xlim=(start, stop))
-            image_buffer = StringIO.StringIO()
+            image_buffer = BytesIO.BytesIO()
             pil_image.save(image_buffer, 'PNG')
             return image_buffer.getvalue()
         else:
