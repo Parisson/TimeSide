@@ -690,8 +690,8 @@ class AnalyzerResult(MetadataObject):
             ax.autoscale(axis='x', tight=True)
 
         # Export to PIL image
-        from io import StringIO
-        imgdata = StringIO()
+        from io import BytesIO
+        imgdata = BytesIO()
         canvas = FigureCanvas(fig)
         canvas.print_png(imgdata, dpi=dpi)
         imgdata.seek(0)  # rewind the data
@@ -953,9 +953,9 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         ax_color = {}
         legend_patches = []
         for key, label in self.label_metadata.label.items():
-            ax_color[int(key)] = colors.next()
+            ax_color[int(key)] = next(colors)
             # Creating artists specifically for adding to the legend (aka. Proxy artists)
-            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=unicode(label)))
+            legend_patches.append(mpatches.Patch(color=ax_color[int(key)], label=label))
 
         for time, duration, key in zip(self.time, self.duration, self.data):
             ax.axvspan(time, time + duration, color=ax_color[int(key)], alpha=0.3)
@@ -1033,7 +1033,7 @@ class SegmentLabelObject(LabelObject, SegmentObject):
         specview = sve.add_spectrogram()
 
         # append a labelled interval annotation layer on a new view
-        labels = [self.label_metadata.label[unicode(label_id)] for label_id in self.label]
+        labels = [self.label_metadata.label[label_id] for label_id in self.label]
 
         sve.add_interval_annotations(self.time, self.duration, labels, self.label)
 

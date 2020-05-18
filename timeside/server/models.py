@@ -677,10 +677,7 @@ class Processor(UUID):
 
 @python_2_unicode_compatible
 class SubProcessor(UUID):
-    """
-    SubProcessor object are intended to store
-    the different results id associated with a given Processor
-    """
+    """Store a result id associated with a given Processor"""
     sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
     processor = models.ForeignKey(
@@ -723,7 +720,7 @@ class Preset(UUID, Dated, Shareable):
         return '_'.join([str(self.processor), str(self.uuid)[:4]])
 
     def get_single_experience(self):
-        exp_title = "Simple experience for preset %s" % self.uuid
+        exp_title = "Simple experience for preset %s" % self.__str__()
         exp_description = "\n".join(
             [
                 exp_title,
@@ -894,9 +891,14 @@ class Task(UUID, Dated, Shareable):
         verbose_name_plural = _('Tasks')
 
     def __str__(self):
-        return '_'.join(
-            [str(self.selection), str(self.experience), str(self.uuid)[:4]]
-            )
+        if self.item:
+            return '_'.join(
+                [str(self.item), str(self.experience), str(self.uuid)[:4]]
+                )
+        else:
+            return '_'.join(
+                [str(self.selection), str(self.experience), str(self.uuid)[:4]]
+                )
 
     def status_setter(self, status):
         self.status = status

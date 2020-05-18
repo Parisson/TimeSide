@@ -14,7 +14,7 @@ Four different *time_mode* can be specified :
 - 'framewise' : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
 - 'global' : a global data value is return for the entire audio item
 - 'segment' : data are returned on a segment basis (i.e. with specified start time and duration)
-- 'event' :  data are returned on a segment basis (i.e. with specified start time)
+- 'event' :  data are returned on a instantaneous event basis (i.e. with specified start time)
 
 Two different *data_mode* can be specified :
 
