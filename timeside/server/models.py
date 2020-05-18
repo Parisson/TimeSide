@@ -677,10 +677,7 @@ class Processor(UUID):
 
 @python_2_unicode_compatible
 class SubProcessor(UUID):
-    """
-    SubProcessor object are intended to store
-    the different results id associated with a given Processor
-    """
+    """Store a result id associated with a given Processor"""
     sub_processor_id = models.CharField(_('sub_processor_id'), max_length=128)
     name = models.CharField(_('name'), max_length=256, blank=True)
     processor = models.ForeignKey(

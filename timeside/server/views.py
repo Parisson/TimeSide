@@ -210,7 +210,10 @@ class ProcessorViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SubProcessorViewSet(viewsets.ReadOnlyModelViewSet):
-    """Link between a processor depending on another."""
+    """
+    Store a result id associated with a given Processor,
+    i.e. the id of one of the different process it does.
+    """
     model = models.SubProcessor
     queryset = model.objects.all()
     serializer_class = serializers.SubProcessorSerializer
