@@ -45,8 +45,7 @@ from rest_framework.response import Response
 # from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
-from rest_framework import filters
-# from django_filters.rest_framework import DjangoFilterBackend TODO
+import django_filters.rest_framework as filters
 
 
 from . import models
@@ -77,13 +76,19 @@ class SelectionViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.SelectionSerializer
 
 
+class ItemFilter(filters.FilterSet):
+    provider_pid = filters.CharFilter(field_name="provider__pid")
+
+    class Meta:
+        model = models.Item
+        fields = ['provider_pid', 'external_id']
+
+
 class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.Item
     queryset = models.Item.objects.all()
-
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('provider__pid', 'external_id')
+    filterset_class = ItemFilter
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -91,11 +96,20 @@ class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
         return serializers.ItemSerializer
 
 
+class AnnotationTrackFilter(filters.FilterSet):
+    item_uuid = filters.UUIDFilter(field_name="item__uuid")
+
+    class Meta:
+        model = models.AnnotationTrack
+        fields = ['item_uuid']
+
+
 class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.AnnotationTrack
     queryset = model.objects.all()
     serializer_class = serializers.AnnotationTrackSerializer
+    filterset_class = AnnotationTrackFilter
 
 
 class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
@@ -105,13 +119,13 @@ class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.AnnotationSerializer
 
 
-"""
-Empty filter used for schema generation
-
-Adapted from :
-https://github.com/encode/django-rest-framework/blob/8cba4f87ca8e785d1a8c022a7a8ea9649e049c11/rest_framework/filters.py#L19
-"""
 class ItemWaveViewFilter:
+    """
+    Empty filter used for schema generation
+
+    Adapted from :
+    https://github.com/encode/django-rest-framework/blob/8cba4f87ca8e785d1a8c022a7a8ea9649e049c11/rest_framework/filters.py#L19
+    """
     def filter_queryset(self, request, queryset, view):
         """
         Return a filtered queryset.
@@ -221,14 +235,21 @@ class SubProcessorViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_value_regex = '[0-9a-z_.]+'
 
 
+class ResultFilter(filters.FilterSet):
+    item_uuid = filters.UUIDFilter(field_name="item__uuid")
+    preset_uuid = filters.UUIDFilter(field_name="preset__uuid")
+
+    class Meta:
+        model = models.Result
+        fields = ['item_uuid', 'preset_uuid']
+
+
 class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
     """Result of processing on items."""
     model = models.Result
     queryset = model.objects.all()
     serializer_class = serializers.ResultSerializer
-
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('item__uuid', 'preset__uuid')
+    filterset_class = ResultFilter
 
     # def get_queryset(self): TODO
     #     return self.queryset \
