@@ -32,6 +32,8 @@ from timeside.server.models import _RUNNING, _PENDING
 from jsonschema import ValidationError
 import json
 
+from .utils import get_result
+
 
 class ItemPlayableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -246,7 +248,7 @@ class ItemWaveformSerializer(ItemSerializer):
         return reverse('timeside-result-visualization',
                        kwargs={'uuid': result.uuid},
                        request=request)+'?id=waveform_analyzer'
-    
+
 
 class ItemAnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -295,34 +297,6 @@ class ItemAnnotationsSerializer(serializers.HyperlinkedModelSerializer):
         annotations = ts.models.Annotation.objects.all()
 
         return {a.title: annotations_url + a.uuid for a in annotations}
-
-
-def get_result(item, preset, wait=True):
-    # Get Result with preset and item
-    try:
-        result = ts.models.Result.objects.get(item=item, preset=preset)
-        if not result.hdf5 or not os.path.exists(result.hdf5.path):
-            # Result exists but there is no file (may have been deleted)
-            result.delete()
-            return get_result(item=item, preset=preset)
-        return result
-    except ts.models.Result.DoesNotExist:
-        # Result does not exist
-        # the corresponding task has to be created and run
-        task, created = ts.models.Task.objects.get_or_create(
-            experience=preset.get_single_experience(),
-            item=item
-            )
-        if created:
-            task.run(wait=False)
-        elif task.status == _RUNNING:
-            return 'Task Running'
-        else:
-            # Result does not exist but task exist and is done, draft or
-            # pending
-            task.status = _PENDING
-            task.save()
-        return 'Task Created and launched'
 
 
 class ItemAnalysisResultSerializer(serializers.HyperlinkedModelSerializer):
@@ -675,12 +649,11 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         if self._result_uuid is not None:
             url_kwargs = {'uuid': self._result_uuid}
             request = self.context['request']
-            parameters = '?id=%s' % obj.analysis.sub_processor
             return reverse(
-                'timeside-result-visualization',
+                'result-detail',
                 kwargs=url_kwargs,
                 request=request
-                ) + parameters
+                )
         else:
             return 'Task running'
 
