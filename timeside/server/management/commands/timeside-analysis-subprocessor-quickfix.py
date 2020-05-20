@@ -38,7 +38,7 @@ class Command(BaseCommand):
         # get presets
         spectrogram, c = Preset.get_first_or_create(
             processor=proc_spectrogram,
-            parameters=json.dumps(proc_spectrogram.get_parameters_default())
+            parameters='{}'
             )
         aubio_pitch, c = Preset.get_first_or_create(
             processor=proc_aubio_pitch,
@@ -78,6 +78,6 @@ class Command(BaseCommand):
             )
         Analysis.objects.get_or_create(
             sub_processor=sub_onset,
-            preset=aubio_pitch,
-            title='Pitch'
+            preset=onset_detection,
+            title='Onset Detection'
             )
