@@ -649,12 +649,11 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         if self._result_uuid is not None:
             url_kwargs = {'uuid': self._result_uuid}
             request = self.context['request']
-            parameters = '?id=%s' % obj.analysis.sub_processor
             return reverse(
-                'timeside-result-visualization',
+                'result-detail',
                 kwargs=url_kwargs,
                 request=request
-                ) + parameters
+                )
         else:
             return 'Task running'
 
