@@ -78,6 +78,6 @@ class Command(BaseCommand):
             )
         Analysis.objects.get_or_create(
             sub_processor=sub_onset,
-            preset=aubio_pitch,
-            title='Pitch'
+            preset=onset_detection,
+            title='Onset Detection'
             )
