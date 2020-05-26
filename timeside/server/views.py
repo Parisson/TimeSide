@@ -112,11 +112,20 @@ class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     filterset_class = AnnotationTrackFilter
 
 
+class AnnotationFilter(filters.FilterSet):
+    track_uuid = filters.UUIDFilter(field_name="track__uuid")
+
+    class Meta:
+        model = models.Annotation
+        fields = ['track_uuid']
+
+
 class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.Annotation
     queryset = model.objects.all()
     serializer_class = serializers.AnnotationSerializer
+    filterset_class = AnnotationFilter
 
 
 class ItemWaveViewFilter:
