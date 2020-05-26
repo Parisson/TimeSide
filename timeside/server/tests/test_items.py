@@ -44,19 +44,22 @@ class ItemTests(TimeSideTestServer):
         """
         item_url = reverse('item-detail', args=[self.item_uuid])
         response = self.client.get(item_url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)   
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         item = response.data
-        self.assertEqual(list(item.keys()),
-                        ['uuid', 'url', 'player_url',
-                        'title', 'description',
-                        'source_file', 'source_url', 'mime_type',
-                        'audio_url', 'audio_duration','external_uri',
-                        'external_id',
-                        'waveform_url',
-                        'annotation_tracks',
-                        'analysis_tracks',
-                        'provider',
-                        ])
+        self.assertEqual(
+            list(item.keys()),
+            [
+                'uuid', 'url', 'player_url',
+                'title', 'description',
+                'source_file', 'source_url', 'mime_type',
+                'audio_url', 'audio_duration', 'samplerate',
+                'external_uri',
+                'external_id',
+                'waveform_url',
+                'annotation_tracks',
+                'analysis_tracks',
+                'provider',
+            ])
         self.assertEqual(item['title'], self.item_title)
 
     def test_create_item(self):
@@ -66,8 +69,11 @@ class ItemTests(TimeSideTestServer):
         item_create_url = reverse('item-list')
         for title in self.samples.keys():
             with open(self.samples[title], 'rb') as f:
-                kwargs = {'title':title, 'source_file': f}
-                response = self.client.post(item_create_url, kwargs, format='multipart')
+                kwargs = {'title': title, 'source_file': f}
+                response = self.client.post(
+                    item_create_url, kwargs, 
+                    format='multipart'
+                    )
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_waveform(self):

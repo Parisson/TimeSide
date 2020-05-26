@@ -313,6 +313,10 @@ class Item(Titled, UUID, Dated, Shareable):
         _('duration'), blank=True, null=True,
         help_text=_("Duration of audio track.")
         )
+    samplerate = models.IntegerField(
+        _('sampling rate'), blank=True, null=True,
+        help_text=_("Sampling rate of audio source file.")
+    )
     sha1 = models.CharField(
         _('sha1'), blank=True, max_length=512
         )
@@ -410,14 +414,18 @@ class Item(Titled, UUID, Dated, Shareable):
             os.makedirs(result_path)
         return result_path
 
-    def get_audio_duration(self, force=False):
+    def get_audio_info(self, force=False):
         """
         Return item audio duration
         """
-        if (force or not self.audio_duration) and self.source_file:
+        if (
+            (force or not (self.audio_duration and self.samplerate))
+            and self.source_file
+           ):
             decoder = timeside.core.get_processor(DEFAULT_DECODER)(
                 uri=self.get_uri())
             self.audio_duration = decoder.uri_duration
+            self.samplerate = decoder.input_samplerate
             super(Item, self).save()
 
     def get_hash(self, force=False):
@@ -927,13 +935,13 @@ def item_post_save(sender, **kwargs):
     instance.get_external_id()
     instance.get_hash()
     instance.get_mimetype()
-    instance.get_audio_duration()
+    instance.get_audio_info()
 
 
 def result_pre_delete(sender, **kwargs):
     instance = kwargs['instance']
     if instance.file and os.path.exists(instance.file.path):
-        os.remove(instance.file.path)    
+        os.remove(instance.file.path)
     if instance.hdf5 and os.path.exists(instance.hdf5.path):
         os.remove(instance.hdf5.path)
 
