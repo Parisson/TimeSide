@@ -118,7 +118,8 @@ class ItemSerializer(ItemPlayableSerializer):
         fields = ('uuid', 'url', 'player_url',
                   'title', 'description',
                   'source_file', 'source_url', 'mime_type',
-                  'audio_url', 'audio_duration', 'external_uri',
+                  'audio_url', 'audio_duration', 'samplerate',
+                  'external_uri',
                   'external_id',
                   'waveform_url',
                   'annotation_tracks',
@@ -130,7 +131,11 @@ class ItemSerializer(ItemPlayableSerializer):
             'provider': {'lookup_field': 'uuid'}
         }
 
-        read_only_fields = ('url', 'uuid', 'audio_duration', 'player_url',)
+        read_only_fields = (
+            'url', 'uuid',
+            'audio_duration', 'samplerate',
+            'player_url',
+            )
 
     def get_url(self, obj):
         request = self.context['request']
@@ -509,10 +514,15 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('uuid',)
 
 
-class ResultVisualizationSerializer(serializers.BaseSerializer):
+class ResultVisualizationSerializer(serializers.Serializer):
     """
     A read-only serializer that deals with subprocessor results
     """
+    subprocessor_id = serializers.CharField(default='', allow_blank=True)
+    start = serializers.IntegerField(default=0, read_only=True)
+    stop = serializers.IntegerField(default=-1, read_only=True)
+    width = serializers.IntegerField(default=1024, read_only=True)
+    height = serializers.IntegerField(default=128, read_only=True)
 
     def to_representation(self, obj):
         subprocessor_id = self.context.get('request').query_params.get('id')
@@ -544,14 +554,63 @@ class ResultVisualizationSerializer(serializers.BaseSerializer):
         if True:
             # if result.data_object.y_value.size:
 
-            import BytesIO
+            from io import BytesIO
             pil_image = result._render_PIL(
                 size=(width, height), dpi=80, xlim=(start, stop))
-            image_buffer = BytesIO.BytesIO()
+            image_buffer = BytesIO()
             pil_image.save(image_buffer, 'PNG')
             return image_buffer.getvalue()
         else:
             return result.to_json()
+
+
+class AnalysisResultContentSerializer(serializers.BaseSerializer):
+    """
+    A read-only serializer that deals with analyzers hdf5 content
+    """
+
+    def to_representation(self, obj):
+        # subprocessor_id = self.context.get('request').query_params.get('id')
+
+        # start = float(self.context.get('request').query_params.get('start', 0))
+        # stop = float(self.context.get('request').query_params.get('stop', -1))
+        # width = int(self.context.get(
+        #     'request'
+        #     ).query_params.get('width', 1024))
+        # height = int(self.context.get(
+        #     'request'
+        #     ).query_params.get('height', 128))
+
+        # import h5py
+        # hdf5_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
+        # from timeside.core.analyzer import AnalyzerResult
+        # result = AnalyzerResult().from_hdf5(hdf5_result)
+        # duration = hdf5_result['audio_metadata'].attrs['duration']
+
+        # if start < 0:
+        #     start = 0
+        # if start > duration:
+        #     raise serializers.ValidationError(
+        #         "start must be less than duration")
+        # if stop == -1:
+        #     stop = duration
+
+        #     if stop > duration:
+        #         stop = duration
+        subprocessor_id = self.context.get('request').query_params.get('id')
+        import h5py
+        hdf5_file = h5py.File(obj.hdf5.path, 'r')
+        if subprocessor_id:
+            hdf5_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
+        else:
+            hdf5_result = hdf5_file.visit(hdf5_file.get)
+        from timeside.core.analyzer import AnalyzerResult
+        result = AnalyzerResult().from_hdf5(hdf5_result)
+        return result.as_dict()
+        # from timeside.core.analyzer import AnalyzerResult
+        # container = AnalyzerResult().from_hdf5(obj.hdf5.path)
+        # return container  # container.to_json()
+        # # SMELLS to_json did double serialization
 
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
@@ -618,22 +677,22 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ('url', 'uuid',)
 
-    def create(self, validated_data):
-        item = validated_data['item']
-        analysis = validated_data['analysis']
+    # def create(self, validated_data):
+    #     item = validated_data['item']
+    #     analysis = validated_data['analysis']
 
-        preset = analysis.preset
+    #     preset = analysis.preset
 
-        result = get_result(item=item, preset=preset)
+    #     result = get_result(item=item, preset=preset)
 
-        # if isinstance(result, Result):
-        #    res_msg = result.uuid
-        # else:
-        #    res_msg = result
-        # return {'analysis': analysis.uuid,
-        #        'item': item.uuid}
+    #     if isinstance(result, Result):
+    #        res_msg = result.uuid
+    #     else:
+    #        res_msg = result
+    #     return {'analysis': analysis.uuid,
+    #            'item': item.uuid}
 
-        return super(AnalysisTrackSerializer, self).create(validated_data)
+    #     return super(AnalysisTrackSerializer, self).create(validated_data)
 
     def get_result_uuid(self, obj):
         result = get_result(item=obj.item, preset=obj.analysis.preset)
