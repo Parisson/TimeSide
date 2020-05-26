@@ -38,7 +38,7 @@ class Command(BaseCommand):
         # get presets
         spectrogram, c = Preset.get_first_or_create(
             processor=proc_spectrogram,
-            parameters=json.dumps(proc_spectrogram.get_parameters_default())
+            parameters='{}'
             )
         aubio_pitch, c = Preset.get_first_or_create(
             processor=proc_aubio_pitch,
