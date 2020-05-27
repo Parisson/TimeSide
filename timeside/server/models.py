@@ -110,12 +110,15 @@ for ext, mime_type in private_extra_types.items():
     mimetypes.add_type(mime_type, ext)
 
 
-# Status
+# Tasks and Results status
 _FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
 STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
           (_PENDING, _('pending')), (_RUNNING, _('running')),
           (_DONE, _('done')))
 
+# Analysis render type
+_VECTOR, _IMAGE,  = 0, 1
+RENDER_TYPES = ((_VECTOR, _('vector')), (_IMAGE, _('image')))
 
 RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
 if not os.path.exists(RESULTS_ROOT):
@@ -975,6 +978,17 @@ class Analysis(Titled, UUID, Dated, Shareable):
         blank=False,
         on_delete=models.CASCADE
         )
+    render_type = models.IntegerField(
+        _('render type'),
+        choices=RENDER_TYPES,
+        default=_VECTOR,
+        help_text=_(cleandoc(f"""
+            Rendering types:\n
+            vector: {_VECTOR}\n
+            image: {_IMAGE}\n
+            """))
+        )
+
     parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
     class Meta:

@@ -672,7 +672,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Analysis
         fields = ('url', 'uuid',
-                  'title', 'description',
+                  'title', 'description', 'render_type',
                   'preset', 'sub_processor',
                   'parameters_schema')
         extra_kwargs = {

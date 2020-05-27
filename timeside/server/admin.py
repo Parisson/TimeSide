@@ -10,6 +10,7 @@ class PresetAdmin(admin.ModelAdmin):
     list_filter = ['date_modified', 'processor']
     search_fields = ['uuid', 'processor__name']
 
+
 class ProcessorAdmin(admin.ModelAdmin):
     model = Processor
     readonly_fields = ('uuid',)
@@ -54,7 +55,7 @@ class ResultAdmin(admin.ModelAdmin):
 class AnalysisAdmin(admin.ModelAdmin):
     model = Analysis
     readonly_fields = ('uuid',)
-    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'render_type']
     list_filter = ['date_modified', 'uuid']
 
 
