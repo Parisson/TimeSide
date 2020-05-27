@@ -276,6 +276,78 @@ class PNGRenderer(renderers.BaseRenderer):
         return data
 
 
+class ResultVisualizationViewFilter:
+    """
+    Empty filter used for schema generation
+
+    Adapted from :
+    https://github.com/encode/django-rest-framework/blob/8cba4f87ca8e785d1a8c022a7a8ea9649e049c11/rest_framework/filters.py#L19
+    """
+    def filter_queryset(self, request, queryset, view):
+        """
+        Return a filtered queryset.
+        """
+        return queryset
+
+    # For CoreAPI (not used / deprecated)
+    def get_schema_fields(self, view):
+        return []
+
+    # For OpenAPI
+    def get_schema_operation_parameters(self, view):
+        return [
+            {
+                'name': 'subprocessor_id',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                },
+            },
+            {
+                'name': 'start',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 0,
+                },
+            },
+            {
+                'name': 'stop',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 0,
+                },
+            },
+            {
+                'name': 'width',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 1024,
+                },
+            },
+            {
+                'name': 'height',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 128,
+                },
+            },
+        ]
+
+
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     """PNG rendering of 2D numerical data (example: a spectrogram)."""
 

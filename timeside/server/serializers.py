@@ -31,6 +31,9 @@ from timeside.server.models import _RUNNING, _PENDING
 
 from jsonschema import ValidationError
 import json
+import h5py
+
+from timeside.core.analyzer import AnalyzerResult
 
 from .utils import get_result
 
@@ -560,6 +563,19 @@ class ResultVisualizationSerializer(serializers.Serializer):
             image_buffer = BytesIO()
             pil_image.save(image_buffer, 'PNG')
             return image_buffer.getvalue()
+
+    def get_subprocessor_id(self, obj):
+        request = self.context['request']
+        subprocessor_id = request.GET.get('subprocessor_id', '')
+        if subprocessor_id:
+            return subprocessor_id
+        else:
+            hdf5_file = h5py.File(obj.hdf5.path, 'r')
+            if len(hdf5_file.keys()) > 1:
+                raise serializers.ValidationError(
+                        """a subprocessor id must be specified
+                        for result with multiple ids"""
+                        )                        
         else:
             return result.to_json()
 
