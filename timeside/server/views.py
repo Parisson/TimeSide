@@ -184,7 +184,7 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
     model = models.Item
     queryset = model.objects.all()
     serializer_class = serializers.ItemWaveformSerializer
-    filter_backends = [ ItemWaveViewFilter ]
+    filter_backends = [ItemWaveViewFilter]
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -266,14 +266,86 @@ class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
     #         .filter(author=self.request.user)
 
 
-class PNGRenderer(renderers.BaseRenderer):
+class PNGVizualisationRenderer(renderers.BaseRenderer):
     media_type = 'image/png'
     format = 'png'
     charset = None
     render_style = 'binary'
 
     def render(self, data, media_type=None, renderer_context=None):
-        return data
+        return data['visualization']
+
+
+class ResultVisualizationViewFilter:
+    """
+    Empty filter used for schema generation
+
+    Adapted from :
+    https://github.com/encode/django-rest-framework/blob/8cba4f87ca8e785d1a8c022a7a8ea9649e049c11/rest_framework/filters.py#L19
+    """
+    def filter_queryset(self, request, queryset, view):
+        """
+        Return a filtered queryset.
+        """
+        return queryset
+
+    # For CoreAPI (not used / deprecated)
+    def get_schema_fields(self, view):
+        return []
+
+    # For OpenAPI
+    def get_schema_operation_parameters(self, view):
+        return [
+            {
+                'name': 'subprocessor_id',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                },
+            },
+            {
+                'name': 'start',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 0,
+                },
+            },
+            {
+                'name': 'stop',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 0,
+                },
+            },
+            {
+                'name': 'width',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 1024,
+                },
+            },
+            {
+                'name': 'height',
+                'required': False,
+                'in': 'query',
+                'description': '',
+                'schema': {
+                    'type': 'number',
+                    'default': 128,
+                },
+            },
+        ]
 
 
 class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
@@ -283,8 +355,8 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     schema = AutoSchema(operation_id_base='ResultVisualization')
     queryset = model.objects.all()
     serializer_class = serializers.ResultVisualizationSerializer
-
-    renderer_classes = (PNGRenderer,)  # renderers.JSONRenderer,
+    filter_backends = [ResultVisualizationViewFilter]
+    renderer_classes = (PNGVizualisationRenderer,)
 
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
