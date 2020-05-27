@@ -517,52 +517,50 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('uuid',)
 
 
-class ResultVisualizationSerializer(serializers.Serializer):
+class VisualizationSerializer(serializers.Serializer):
     """
     A read-only serializer that deals with subprocessor results
     """
-    subprocessor_id = serializers.CharField(default='', allow_blank=True)
-    start = serializers.IntegerField(default=0, read_only=True)
-    stop = serializers.IntegerField(default=-1, read_only=True)
-    width = serializers.IntegerField(default=1024, read_only=True)
-    height = serializers.IntegerField(default=128, read_only=True)
+    subprocessor_id = serializers.SerializerMethodField()
+    start = serializers.FloatField(default=0)
+    stop = serializers.FloatField(default=-1)
+    width = serializers.IntegerField(default=1024)
+    height = serializers.IntegerField(default=128)
 
     def to_representation(self, obj):
-        subprocessor_id = self.context.get('request').query_params.get('id')
+        request = self.context['request']
+        self.subprocessor_id = str(request.GET.get('subprocessor_id', ''))
+        self.start = float(request.GET.get('start', 0))
+        self.stop = float(request.GET.get('stop', -1))
+        self.width = int(request.GET.get('width', 1024))
+        self.height = int(request.GET.get('height', 128))
 
-        start = float(self.context.get('request').query_params.get('start', 0))
-        stop = float(self.context.get('request').query_params.get('stop', -1))
-        width = int(self.context.get(
-            'request').query_params.get('width', 1024))
-        height = int(self.context.get(
-            'request').query_params.get('height', 128))
+        if not self.subprocessor_id:
+            self.subprocessor_id = self.get_subprocessor_id(obj)
 
-        import h5py
-        hdf5_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
-        from timeside.core.analyzer import AnalyzerResult
+        hdf5_result = h5py.File(obj.hdf5.path, 'r').get(self.subprocessor_id)
         result = AnalyzerResult().from_hdf5(hdf5_result)
         duration = hdf5_result['audio_metadata'].attrs['duration']
 
-        if start < 0:
-            start = 0
-        if start > duration:
+        if self.start < 0:
+            self.start = 0
+        if self.start > duration:
             raise serializers.ValidationError(
                 "start must be less than duration")
-        if stop == -1:
-            stop = duration
+        if self.stop == -1:
+            self.stop = duration
 
-            if stop > duration:
-                stop = duration
+            if self.stop > duration:
+                self.stop = duration
 
-        if True:
-            # if result.data_object.y_value.size:
-
-            from io import BytesIO
-            pil_image = result._render_PIL(
-                size=(width, height), dpi=80, xlim=(start, stop))
-            image_buffer = BytesIO()
-            pil_image.save(image_buffer, 'PNG')
-            return image_buffer.getvalue()
+        from io import BytesIO
+        pil_image = result._render_PIL(
+            size=(self.width, self.height),
+            dpi=80, xlim=(self.start, self.stop)
+            )
+        image_buffer = BytesIO()
+        pil_image.save(image_buffer, 'PNG')
+        return image_buffer.getvalue()
 
     def get_subprocessor_id(self, obj):
         request = self.context['request']
@@ -576,8 +574,21 @@ class ResultVisualizationSerializer(serializers.Serializer):
                         """a subprocessor id must be specified
                         for result with multiple ids"""
                         )                        
-        else:
-            return result.to_json()
+            else:
+                for key in hdf5_file.keys():
+                    return key
+
+
+class ResultVisualizationSerializer(serializers.HyperlinkedModelSerializer):
+    visualization = VisualizationSerializer(
+        source='*',
+        many=False,
+        read_only=True,
+        )
+
+    class Meta:
+        model = ts.models.Result
+        fields = ('visualization',)
 
 
 class AnalysisResultContentSerializer(serializers.BaseSerializer):
@@ -722,6 +733,7 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     def get_result_url(self, obj):
         self.get_result_uuid(obj)
         if self._result_uuid is not None:
+
             url_kwargs = {'uuid': self._result_uuid}
             request = self.context['request']
             return reverse(
