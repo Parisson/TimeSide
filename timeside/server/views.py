@@ -32,7 +32,7 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.middleware.csrf import get_token as get_csrf_token
 
-from rest_framework import viewsets, generics, renderers
+from rest_framework import viewsets, generics
 from rest_framework import status
 from rest_framework.permissions import (
     AllowAny,
@@ -42,6 +42,7 @@ from rest_framework.schemas import get_schema_view
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 # from django.core.urlresolvers import reverse
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
@@ -50,7 +51,11 @@ import django_filters.rest_framework as filters
 
 from . import models
 from . import serializers
-from .utils import get_or_run_proc_result
+from .utils import (
+    get_or_run_proc_result,
+    AudioRenderer,
+    PNGRenderer,
+)
 
 import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
@@ -266,16 +271,6 @@ class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
     #         .filter(author=self.request.user)
 
 
-class PNGVizualisationRenderer(renderers.BaseRenderer):
-    media_type = 'image/png'
-    format = 'png'
-    charset = None
-    render_style = 'binary'
-
-    def render(self, data, media_type=None, renderer_context=None):
-        return data['visualization']
-
-
 class ResultVisualizationViewFilter:
     """
     Empty filter used for schema generation
@@ -354,9 +349,25 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     model = models.Result
     schema = AutoSchema(operation_id_base='ResultVisualization')
     queryset = model.objects.all()
-    serializer_class = serializers.ResultVisualizationSerializer
     filter_backends = [ResultVisualizationViewFilter]
-    renderer_classes = (PNGVizualisationRenderer,)
+    renderer_classes = (PNGRenderer, )
+
+    def get(self, request, *args, **kwargs):
+        try:
+            result = models.Result.objects.get(uuid=kwargs['uuid'])
+            serializer = serializers.ResultVisualizationSerializer(
+                result,
+                context={'request': request}
+                )
+            return Response(
+                serializer.data['visualization'],
+                content_type='image/png',
+                )
+        except ValidationError as e:
+            return Response(
+                serializer.data,
+                content_type='application/json',
+                )
 
 
 class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
@@ -674,15 +685,6 @@ def nginx_media_accel(media_path, content_type="", buffering=True):
     return response
 
 
-class AudioRenderer(renderers.BaseRenderer):
-    media_type = 'audio/*'
-    charset = None
-    render_style = 'binary'
-
-    def render(self, data, media_type=None, renderer_context=None):
-        return data
-
-
 class ItemTranscode(DetailView):
     """Transcode an item's audio in a different format."""
     model = models.Item
@@ -735,7 +737,7 @@ class ItemTranscode(DetailView):
             item = self.get_object()
             result = get_or_run_proc_result(encoder, item)
             return serve_media(filename=result.file.path,
-                               content_type=result.mime_type)       
+                               content_type=result.mime_type)
 
 
 class PlayerView(TemplateView):

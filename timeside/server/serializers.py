@@ -538,6 +538,10 @@ class VisualizationSerializer(serializers.Serializer):
         if not self.subprocessor_id:
             self.subprocessor_id = self.get_subprocessor_id(obj)
 
+        if not obj.has_hdf5():
+            raise serializers.ValidationError(
+                    "result must have an hdf5 file to be visualized")
+
         hdf5_result = h5py.File(obj.hdf5.path, 'r').get(self.subprocessor_id)
         result = AnalyzerResult().from_hdf5(hdf5_result)
         duration = hdf5_result['audio_metadata'].attrs['duration']
@@ -568,12 +572,15 @@ class VisualizationSerializer(serializers.Serializer):
         if subprocessor_id:
             return subprocessor_id
         else:
+            if not obj.has_hdf5():
+                raise serializers.ValidationError(
+                    "result must have an hdf5 file to be visualized")
             hdf5_file = h5py.File(obj.hdf5.path, 'r')
             if len(hdf5_file.keys()) > 1:
                 raise serializers.ValidationError(
                         """a subprocessor id must be specified
                         for result with multiple ids"""
-                        )                        
+                        )
             else:
                 for key in hdf5_file.keys():
                     return key

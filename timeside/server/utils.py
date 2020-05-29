@@ -6,6 +6,9 @@ import json
 from timeside.core.api import IEncoder
 from timeside.server.models import Processor, Preset, Result, Task
 
+from rest_framework.views import exception_handler
+from rest_framework.renderers import BaseRenderer, JSONRenderer
+
 TS_ENCODERS = timeside.core.processor.processors(IEncoder)
 TS_ENCODERS_EXT = {encoder.file_extension(): encoder.id()
                    for encoder in TS_ENCODERS
@@ -54,3 +57,32 @@ def get_result(item, preset, wait=True):
 
     else:
         return result
+
+
+def custom_exception_handler(exc, context):
+    """ Switch from PNGRenderer to JSONRenderer for exceptions """
+    if context['request'].accepted_renderer.format == 'png':
+        context['request'].accepted_renderer = JSONRenderer()
+
+    return exception_handler(exc, context)
+
+
+class PNGRenderer(BaseRenderer):
+    """ Custom renderer for hdf5 results bitmap serialization """
+    media_type = 'image/png'
+    format = 'png'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
+
+class AudioRenderer(BaseRenderer):
+    """ Custom renderer for item's audio source transcode view """
+    media_type = 'audio/*'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
