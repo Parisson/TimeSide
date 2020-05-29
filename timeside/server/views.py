@@ -350,6 +350,7 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
     schema = AutoSchema(operation_id_base='ResultVisualization')
     queryset = model.objects.all()
     filter_backends = [ResultVisualizationViewFilter]
+    serializer_class = serializers.ResultVisualizationSerializer
     renderer_classes = (PNGRenderer, )
 
     def get(self, request, *args, **kwargs):
