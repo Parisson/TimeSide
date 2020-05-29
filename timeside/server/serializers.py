@@ -545,6 +545,8 @@ class VisualizationSerializer(serializers.Serializer):
         hdf5_result = h5py.File(obj.hdf5.path, 'r').get(self.subprocessor_id)
         result = AnalyzerResult().from_hdf5(hdf5_result)
         duration = hdf5_result['audio_metadata'].attrs['duration']
+        samplerate = hdf5_result['data_object'][
+            'frame_metadata'].attrs['samplerate']
 
         if self.start < 0:
             self.start = 0
@@ -556,6 +558,12 @@ class VisualizationSerializer(serializers.Serializer):
 
             if self.stop > duration:
                 self.stop = duration
+
+        # following same cap_value for width
+        # as for waveform's nb_pixel serialization
+        cap_value = int(samplerate * abs(self.stop - self.start) / 2)
+        if self.width > cap_value:
+            self.width = cap_value
 
         from io import BytesIO
         pil_image = result._render_PIL(
