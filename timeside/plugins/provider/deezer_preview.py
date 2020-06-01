@@ -1,5 +1,6 @@
 from timeside.core import implements, interfacedoc
 from timeside.core.provider import Provider
+from timeside.core.exceptions import ProviderError
 from timeside.core.api import IProvider
 from timeside.core.tools.utils import slugify
 
@@ -29,7 +30,11 @@ class DeezerPreview(Provider):
     @interfacedoc
     def get_source_from_id(self, external_id, path, download=False):
         request_url = 'https://api.deezer.com/track/' + external_id
-        request_json = get(request_url).json()
+        try:
+            request = get(request_url)
+            assert request.status_code == '200'
+        except AssertionError:
+            raise ProviderError('deezer_preview', external_id=external_id)
         source_uri = request_json['preview']
         if download:
             file_name = request_json['artist']['name'] + '-' + request_json['title_short'] + '-' + external_id
@@ -48,7 +53,10 @@ class DeezerPreview(Provider):
     @interfacedoc
     def get_source_from_url(self, url, path, download=False):
         deezer_track_id = self.get_id_from_url(url)
-        return self.get_source_from_id(deezer_track_id, path, download)
+        try:
+            return self.get_source_from_id(deezer_track_id, path, download)
+        except ProviderError:
+            raise ProviderError('deezer_preview', external_uri=url)
 
     @interfacedoc
     def get_id_from_url(self, url):
