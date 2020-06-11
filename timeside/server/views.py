@@ -400,10 +400,19 @@ class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
     serializer_class = serializers.AnalysisSerializer
 
 
+class AnalysisTrackFilter(filters.FilterSet):
+    item_uuid = filters.UUIDFilter(field_name="item__uuid")
+
+    class Meta:
+        model = models.Result
+        fields = ['item_uuid']
+
+
 class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.AnalysisTrack
     serializer_class = serializers.AnalysisTrackSerializer
+    filterset_class = AnalysisTrackFilter
 
     def get_queryset(self):
         """
