@@ -404,7 +404,7 @@ class AnalysisTrackFilter(filters.FilterSet):
     item_uuid = filters.UUIDFilter(field_name="item__uuid")
 
     class Meta:
-        model = models.Result
+        model = models.AnalysisTrack
         fields = ['item_uuid']
 
 
