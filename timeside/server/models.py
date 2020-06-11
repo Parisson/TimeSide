@@ -66,8 +66,12 @@ from inspect import cleandoc
 from xml.etree.ElementTree import fromstring
 from xmljson import abdera as ab
 
+import logging
+
+
 worker_logger = get_task_logger(__name__)
 app = 'timeside'
+app_logger = logging.getLogger(app)
 
 processors = timeside.core.processor.processors(timeside.core.api.IProcessor)
 # providers = timeside.core.provider.providers(timeside.core.api.IProvider)
@@ -373,31 +377,48 @@ class Item(Titled, UUID, Dated, Shareable):
         self.save()
 
     def get_source(self, download=False):
-        # check if item already has url or file source
-        # and a provider that gives free access to audio sources
+        # check if item has not already an audio source url or file,
+        # has an external id or url to retrieve audio source,
+        # and a has provider that gives free access to audio sources.
         if not (self.source_url or self.source_file) and    \
-           self.provider and                                \
-           self.provider.source_access:
-            if self.external_uri:
-                source = self.provider.get_source_from_url(
-                    self.external_uri, download
-                    )
-            elif self.external_id:
-                source = self.provider.get_source_from_id(
-                    self.external_id, download
-                    )
-            # correct media path while downloading
-            # the audio source as a file
-            if download:
-                self.source_file = source.replace(settings.MEDIA_ROOT, '')
-            # store audio url in source_url for streaming
-            else:
-                self.source_url = source
+           (self.external_uri or self.external_id) and      \
+           self.provider and self.provider.source_access:
+            try:
+                if self.external_uri:
+                    source = self.provider.get_source_from_url(
+                        self.external_uri, download
+                        )
+                elif self.external_id:
+                    source = self.provider.get_source_from_id(
+                        self.external_id, download
+                        )
+                else:
+                    source = ''
+                # correct media path while downloading
+                # the audio source as a file
+                if download:
+                    self.source_file = source.replace(settings.MEDIA_ROOT, '')
+                # store audio url in source_url for streaming
+                else:
+                    self.source_url = source
+            except timeside.core.exceptions.ProviderError as e:
+                app_logger.warning(e)
+                self.external_uri = ''
+                self.external_id = ''
+
             super(Item, self).save()
 
     def get_external_id(self):
         if not (self.source_url or self.external_id) and self.external_uri:
-            self.external_id = self.provider.get_id_from_url(self.external_uri)
+            try:
+                self.external_id = self.provider.get_id_from_url(
+                    self.external_uri
+                    )
+            except timeside.core.exceptions.ProviderError as e:
+                app_logger.warning(e)
+                self.external_uri = ''
+                self.external_id = ''
+
             super(Item, self).save()
 
     def get_uri(self):
