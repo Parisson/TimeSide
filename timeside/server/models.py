@@ -555,7 +555,7 @@ class Item(Titled, UUID, Dated, Shareable):
                     parameters=parameters
                     )
 
-            result, c = Result.objects.get_or_create(
+            result, c = Result.get_first_or_create(
                 preset=preset,
                 item=self
                 )
