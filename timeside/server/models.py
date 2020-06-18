@@ -479,6 +479,9 @@ class Item(Titled, UUID, Dated, Shareable):
         # get audio source
         uri = self.get_uri()
 
+        if not uri:
+            raise ValueError('Item does not have any source URI, nothing can be run.')
+
         # decode audio source
         # TODO: use get_processor
         if DEFAULT_DECODER == 'aubio_decoder':
