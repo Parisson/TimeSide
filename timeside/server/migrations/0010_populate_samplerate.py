@@ -9,12 +9,10 @@ def update_providers(apps, schema_editor):
     # update provider's fields and ensure item's provider FK
     call_command('timeside-provider-deezer-preview', verbosity=0)
 
-
 def save_items(apps, schema_editor):
     # Clean deprecated deezer provider, delete provider duplicates
     # update provider's fields and ensure item's provider FK
     call_command('timeside-save-items', verbosity=0)
-
 
 class Migration(migrations.Migration):
 

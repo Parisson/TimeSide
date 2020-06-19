@@ -532,8 +532,8 @@ class VisualizationSerializer(serializers.Serializer):
         self.subprocessor_id = str(request.GET.get('subprocessor_id', ''))
         self.start = float(request.GET.get('start', 0))
         self.stop = float(request.GET.get('stop', -1))
-        self.width = int(request.GET.get('width', 1024))
-        self.height = int(request.GET.get('height', 128))
+        self.width = int(float(request.GET.get('width', 1024)))
+        self.height = int(float(request.GET.get('height', 128)))
 
         if not self.subprocessor_id:
             self.subprocessor_id = self.get_subprocessor_id(obj)

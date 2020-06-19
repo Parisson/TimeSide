@@ -68,4 +68,5 @@ COPY . /srv/lib/timeside/
 RUN pip3 install -e .
 
 WORKDIR /srv/app
+ENTRYPOINT /srv/app/bin/app.sh
 
