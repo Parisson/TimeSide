@@ -70,7 +70,7 @@ class FlacEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def file_extension():
-        return "flac"
+        return "gst.flac"
 
     @staticmethod
     @interfacedoc

@@ -71,7 +71,7 @@ class WavEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def file_extension():
-        return "wav"
+        return "gst.wav"
 
     @staticmethod
     @interfacedoc

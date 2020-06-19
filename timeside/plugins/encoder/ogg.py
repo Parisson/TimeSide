@@ -73,7 +73,7 @@ class VorbisEncoder(GstEncoder):
     @staticmethod
     @interfacedoc
     def file_extension():
-        return "ogg"
+        return "gst.ogg"
 
     @staticmethod
     @interfacedoc
