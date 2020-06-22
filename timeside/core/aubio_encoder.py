@@ -52,11 +52,20 @@ class AubioEncoder(Processor):
         self.metadata = None
         self.num_samples = 0
 
-        self.sink = aubio.sink(self.filename)
+    @interfacedoc
+    def setup(self, channels=None, samplerate=None, blocksize=None,
+            totalframes=None):
+        super(AubioEncoder, self).setup(
+            channels, samplerate, blocksize, totalframes)
+        print ('setting up aubio with with', samplerate, blocksize)
+
+        self.sink = aubio.sink(self.filename, samplerate, channels)
 
     @interfacedoc
     def release(self):
-        self.sink.close()
+        if hasattr (self, 'sink'):
+            self.sink.close()
+            delattr(self, 'sink')
 
     @interfacedoc
     def set_metadata(self, metadata):
@@ -69,6 +78,6 @@ class AubioEncoder(Processor):
         indices = range(max_write, frames.shape[0], max_write)
         for f_slice in np.array_split(frames, indices):
             write_frames = f_slice.shape[0]
-            self.sink.do_multi(f_slice.T, write_frames)
+            self.sink.do_multi(f_slice.T.copy(), write_frames)
             self.num_samples += write_frames
         return frames, eod
