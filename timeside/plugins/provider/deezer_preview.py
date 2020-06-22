@@ -6,6 +6,7 @@ from timeside.core.tools.utils import slugify
 
 import os
 from requests import get
+import json
 
 
 class DeezerPreview(Provider):
@@ -30,14 +31,18 @@ class DeezerPreview(Provider):
     @interfacedoc
     def get_source_from_id(self, external_id, path, download=False):
         request_url = 'https://api.deezer.com/track/' + external_id
+
         try:
-            request = get(request_url)
+        request = get(request_url)
             assert request.status_code == '200'
         except AssertionError:
             raise ProviderError('deezer_preview', external_id=external_id)
-        source_uri = request_json['preview']
+
+        request_dict = json.loads(request.content)
+        source_uri = request_dict['preview']
+
         if download:
-            file_name = request_json['artist']['name'] + '-' + request_json['title_short'] + '-' + external_id
+            file_name = request_dict['artist']['name'] + '-' + request_dict['title_short'] + '-' + external_id
             file_name = slugify(file_name) + '.mp3'
             file_path = os.path.join(path,file_name)
             r = get(source_uri)
