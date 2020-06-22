@@ -33,7 +33,7 @@ class DeezerPreview(Provider):
         request_url = 'https://api.deezer.com/track/' + external_id
 
         try:
-        request = get(request_url)
+            request = get(request_url)
             assert request.status_code == '200'
         except AssertionError:
             raise ProviderError('deezer_preview', external_id=external_id)
