@@ -31,7 +31,6 @@ class DeezerPreview(Provider):
     @interfacedoc
     def get_source_from_id(self, external_id, path, download=False):
         request_url = 'https://api.deezer.com/track/' + external_id
-        print(request_url)
 
         try:
             request = get(request_url)

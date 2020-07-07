@@ -31,7 +31,7 @@ class ExperienceAdmin(admin.ModelAdmin):
     model = Experience
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
-    list_filter = ['date_modified', 'title']
+    list_filter = ['date_modified',]
     filter_horizontal = ['presets', 'experiences']
     search_fields = ['uuid', 'title']
 
@@ -48,15 +48,16 @@ class ResultAdmin(admin.ModelAdmin):
     model = Result
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'run_time', 'mime_type', 'status', 'date_added', 'date_modified', 'uuid']
-    list_filter = ['date_modified', 'status', 'item', 'preset']
-    search_fields = ['uuid']
+    list_filter = ['date_modified', 'status',]
+    search_fields = ['uuid', 'item', 'preset']
 
 
 class AnalysisAdmin(admin.ModelAdmin):
     model = Analysis
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'render_type']
-    list_filter = ['date_modified', 'uuid']
+    search_fields = ['uuid',]
+    list_filter = ['date_modified',]
 
 
 class AnalysisTrackAdmin(admin.ModelAdmin):
@@ -72,12 +73,15 @@ class ProviderAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid']
     search_fields = ['uuid', 'name']
-    
+
+
 class ItemAdmin(admin.ModelAdmin):
     model = Item
     readonly_fields = ('uuid',)
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
     search_fields = ['uuid', 'title']
+    list_filter = ['author',]
+
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item, ItemAdmin)
