@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: var
+  name: var
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: var
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: var
+    spec:
+      containers:
+      - args:
+        - "true"
+        image: debian:buster
+        imagePullPolicy: ""
+        name: var
+        resources: {}
+        volumeMounts:
+        - mountPath: /srv/bin
+          name: var-claim0
+        - mountPath: /srv/media
+          name: var-claim1
+        - mountPath: /srv/backup
+          name: var-claim2
+        - mountPath: /srv/static
+          name: var-claim3
+        - mountPath: /var/log/nginx
+          name: var-claim4
+        - mountPath: /var/log/uwsgi
+          name: var-claim5
+        - mountPath: /var/log/celery
+          name: var-claim6
+        - mountPath: /var/log/app
+          name: var-claim7
+        - mountPath: /srv/cache
+          name: var-claim8
+        - mountPath: /srv/bower
+          name: var-claim9
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: var-claim0
+        persistentVolumeClaim:
+          claimName: var-claim0
+      - name: var-claim1
+        persistentVolumeClaim:
+          claimName: var-claim1
+      - name: var-claim2
+        persistentVolumeClaim:
+          claimName: var-claim2
+      - name: var-claim3
+        persistentVolumeClaim:
+          claimName: var-claim3
+      - name: var-claim4
+        persistentVolumeClaim:
+          claimName: var-claim4
+      - name: var-claim5
+        persistentVolumeClaim:
+          claimName: var-claim5
+      - name: var-claim6
+        persistentVolumeClaim:
+          claimName: var-claim6
+      - name: var-claim7
+        persistentVolumeClaim:
+          claimName: var-claim7
+      - name: var-claim8
+        persistentVolumeClaim:
+          claimName: var-claim8
+      - name: var-claim9
+        persistentVolumeClaim:
+          claimName: var-claim9
+status: {}

@@ -1,0 +1,55 @@
+# This file takes care of transforming the environment variables for Kubernetes use
+# 
+# Here's how to make it work :
+# 1. To create this Pod based on this manifest you must do : kubectl apply -f env_prod.yaml
+# 2. Check its running : kubectl get pods -l purpose=environment-prod
+# 3. Get a shell for this container : kubectl exec -it env_prod -- /bin/bash
+# 4. In our shell, run the printenv command to list the environment variables. (To exit the shell, enter exit.)
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env_prod
+  labels:
+    purpose: environment-prod
+spec:
+  containers:
+  - name: env_prod
+    image: gcr.io/google-samples/node-hello:1.0
+    env:
+      # DATABASE
+    - name: POSTGRES_PASSWORD
+      value: "mysecretpassword"
+
+      
+      # DJANGO
+    - name: DEBUG
+      value: "False"
+    - name: SECRET_KEY
+      value: "ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7"  
+      
+
+      # replace broker by localhost if you start your app outside docker-compose
+    - name: CELERY_BROKER_URL
+      value: "redis://broker:6379/0"
+      
+
+      # If this is True, all tasks will be executed locally by blocking until the task returns.
+    - name: CELERY_TASK_ALWAYS_EAGER
+      value: "False"
+
+    - name: PYTHONWARNINGS
+      value: "ignore::DeprecationWarning"
+      
+
+      # CACHE
+    - name: bower_storage__packages
+      value: "/srv/cache/bower"
+      
+    - name: PIP_DOWNLOAD_CACHE
+      value: "/srv/cache/pip"
+      
+    - name: CONDA_ENVS_PATH
+      value: "/srv/cache/miniconda/envs:/opt/miniconda/envs"
+
