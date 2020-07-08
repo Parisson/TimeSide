@@ -10,12 +10,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: env_prod
+  name: env-prod
   labels:
     purpose: environment-prod
 spec:
   containers:
-  - name: env_prod
+  - name: env-prod
     image: gcr.io/google-samples/node-hello:1.0
     env:
       # DATABASE
