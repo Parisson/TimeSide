@@ -118,9 +118,6 @@ spec:
       - name: var-claim9
         persistentVolumeClaim:
           claimName: var-claim9
-      - name: worker-claim0
-        persistentVolumeClaim:
-          claimName: worker-claim0
       - name: app-claim0
         persistentVolumeClaim:
           claimName: app-claim0
