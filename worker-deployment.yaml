@@ -74,8 +74,6 @@ spec:
           name: var-claim8
         - mountPath: /srv/bower
           name: var-claim9
-        - mountPath: /etc/._ifpk_2
-          name: worker-claim0
         - mountPath: /srv/app
           name: app-claim0
         - mountPath: /srv/lib/timeside/timeside
