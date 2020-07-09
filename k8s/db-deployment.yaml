@@ -51,37 +51,37 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: db-claim0
-          subpath: data
+          subPath: data
         - mountPath: /srv/bin
           name: var-claim0
-          subpath: bin
+          subPath: bin
         - mountPath: /srv/media
           name: var-claim1
-          subpath: media
+          subPath: media
         - mountPath: /srv/backup
           name: var-claim2
-          subpath: backup
+          subPath: backup
         - mountPath: /srv/static
           name: var-claim3
-          subpath: static
+          subPath: static
         - mountPath: /var/log/nginx
           name: var-claim4
-          subpath: nginx
+          subPath: nginx
         - mountPath: /var/log/uwsgi
           name: var-claim5
-          subpath: uwsgi
+          subPath: uwsgi
         - mountPath: /var/log/celery
           name: var-claim6
-          subpath: celery
+          subPath: celery
         - mountPath: /var/log/app
           name: var-claim7
-          subpath: app
+          subPath: app
         - mountPath: /srv/cache
           name: var-claim8
-          subpath: cache
+          subPath: cache
         - mountPath: /srv/bower
           name: var-claim9
-          subpath: bower
+          subPath: bower
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
