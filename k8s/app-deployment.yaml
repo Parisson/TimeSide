@@ -48,97 +48,43 @@ spec:
         - name: bower_storage__packages
           value: /srv/cache/bower
         image: parisson/timeside:latest-dev
-        imagePullPolicy: ""
+        imagePullPolicy: Always
         name: app
         ports:
         - containerPort: 8000
         resources: {}
         volumeMounts:
-        - mountPath: /srv/app
-          name: app-claim0
-          subPath: app
-        - mountPath: /srv/lib/timeside/timeside
-          name: app-claim1
-          subPath: timeside
-        - mountPath: /srv/lib/plugins
-          name: app-claim2
-          subPath: plugins
-        - mountPath: /etc/apt/sources.list
-          name: app-claim3
-          subPath: sources.list
-        - mountPath: /srv/bin
-          name: var-claim0
-          subPath: bin
-        - mountPath: /srv/media
-          name: var-claim1
-          subPath: media
-        - mountPath: /srv/backup
-          name: var-claim2
-          subPath: backup
+        #- mountPath: /srv/media
+        #  name: app-srv-media
+        #  subPath: media
         - mountPath: /srv/static
-          name: var-claim3
+          name: app-srv-static
           subPath: static
-        - mountPath: /var/log/nginx
-          name: var-claim4
-          subPath: nginx
         - mountPath: /var/log/uwsgi
-          name: var-claim5
+          name: app-log-uwsgi
           subPath: uwsgi
-        - mountPath: /var/log/celery
-          name: var-claim6
-          subPath: celery
         - mountPath: /var/log/app
-          name: var-claim7
+          name: app-log-app
           subPath: app
         - mountPath: /srv/cache
-          name: var-claim8
+          name: app-srv-cache
           subPath: cache
-        - mountPath: /srv/bower
-          name: var-claim9
-          subPath: bower
       restartPolicy: Always
       serviceAccountName: ""
       volumes:
-      - name: app-claim0
+      #- name: app-srv-media
+      #  persistentVolumeClaim:
+      #  claimName: app-srv-media
+      - name: app-srv-static
         persistentVolumeClaim:
-          claimName: app-claim0
-      - name: app-claim1
+          claimName: app-srv-static
+      - name: app-log-uwsgi
         persistentVolumeClaim:
-          claimName: app-claim1
-      - name: app-claim2
+          claimName: app-log-uwsgi
+      - name: app-log-app
         persistentVolumeClaim:
-          claimName: app-claim2
-      - name: app-claim3
+          claimName: app-log-app
+      - name: app-srv-cache
         persistentVolumeClaim:
-          claimName: app-claim3
-      - name: var-claim0
-        persistentVolumeClaim:
-          claimName: var-claim0
-      - name: var-claim1
-        persistentVolumeClaim:
-          claimName: var-claim1
-      - name: var-claim2
-        persistentVolumeClaim:
-          claimName: var-claim2
-      - name: var-claim3
-        persistentVolumeClaim:
-          claimName: var-claim3
-      - name: var-claim4
-        persistentVolumeClaim:
-          claimName: var-claim4
-      - name: var-claim5
-        persistentVolumeClaim:
-          claimName: var-claim5
-      - name: var-claim6
-        persistentVolumeClaim:
-          claimName: var-claim6
-      - name: var-claim7
-        persistentVolumeClaim:
-          claimName: var-claim7
-      - name: var-claim8
-        persistentVolumeClaim:
-          claimName: var-claim8
-      - name: var-claim9
-        persistentVolumeClaim:
-          claimName: var-claim9
+          claimName: app-srv-cache
 status: {}

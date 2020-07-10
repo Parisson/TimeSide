@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: var-claim9
-  name: var-claim9
+    io.kompose.service: db-var-lib-postgresql-data
+  name: db-var-lib-postgresql-data
 spec:
   accessModes:
   - ReadWriteOnce

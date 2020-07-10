@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - image: redis:5
-        imagePullPolicy: ""
+        imagePullPolicy: Always
         name: broker
         resources: {}
       restartPolicy: Always
