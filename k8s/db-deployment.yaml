@@ -30,8 +30,6 @@ spec:
           value: redis://broker:6379/0
         - name: CELERY_TASK_ALWAYS_EAGER
           value: "False"
-        - name: CONDA_ENVS_PATH
-          value: /srv/cache/miniconda/envs:/opt/miniconda/envs
         - name: DEBUG
           value: "False"
         - name: PIP_DOWNLOAD_CACHE
