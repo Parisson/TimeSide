@@ -11,7 +11,7 @@ sys.dont_write_bytecode = True
 env = environ.Env()
 
 # Django settings for server project.
-DEBUG = env('DEBUG')  # False if not in os.environ
+DEBUG = True if env('DEBUG') == 'True' else False
 
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
@@ -245,7 +245,8 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
+# If this is True, all tasks will be executed locally by blocking until the task returns.
+CELERY_TASK_ALWAYS_EAGER = True if env('DEBUG') == 'True' else False
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
@@ -264,10 +265,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = False if os.environ.get('DEBUG') == 'True' else True
+SESSION_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
 
 CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = False if os.environ.get('DEBUG') == 'True' else True
+CSRF_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']

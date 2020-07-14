@@ -49,7 +49,7 @@ class TaskAdmin(admin.ModelAdmin):
             task.status = 2
             task.save()
 
-    execute_task.short_description = "Execute tasks"
+    execute_task.short_description = "Execute selected Tasks"
 
 
 class ResultAdmin(admin.ModelAdmin):
