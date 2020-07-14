@@ -1,16 +1,17 @@
-import environ
-
-# set default values and casting
-env = environ.Env(DEBUG=(bool, False),
-                  CELERY_TASK_ALWAYS_EAGER=(bool, False),
-                  )
-# Django settings for server project.
-DEBUG = env('DEBUG')  # False if not in os.environ
-DEBUG=True
-
 import os
 import sys
+import environ
+
+from worker import app
+
+
 sys.dont_write_bytecode = True
+
+# set default values and casting
+env = environ.Env()
+
+# Django settings for server project.
+DEBUG = env('DEBUG')  # False if not in os.environ
 
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
@@ -20,9 +21,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# Full filesystem path to the project.
-# project_root = environ.Path(__file__) - 1
-# data_root = project_root - 2
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 DATABASES = {
     'default': {
@@ -66,6 +67,10 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
+
+# App path
+APP_PATH = '/srv/app/'
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = '/srv/media/'
@@ -85,8 +90,11 @@ STATIC_ROOT = '/srv/static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+ROOT_URLCONF = 'urls'
+
 # django-npm
-NPM_ROOT_PATH = '/srv/app/'
+NPM_ROOT_PATH = APP_PATH
+
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -94,6 +102,9 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'wsgi.application'
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -127,6 +138,7 @@ TEMPLATES = [
         },
     },
 ]
+
 MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -139,13 +151,6 @@ MIDDLEWARE = (
     # Debug Toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
-
-ROOT_URLCONF = 'urls'
-
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'wsgi.application'
-
-
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -233,18 +238,14 @@ REST_FRAMEWORK = {
 }
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-
-CELERY_BACKEND_URL = 'redis://redis:6379/0'
+CELERY_BACKEND_URL = 'redis://broker:6379/0'
 CELERY_BROKER_TRANSPORT = 'redis'
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://broker:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = env('CELERY_TASK_ALWAYS_EAGER')  # If this is True, all tasks will be executed locally by blocking until the task returns.
-
-
-from worker import app
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
@@ -263,9 +264,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False if os.environ.get('DEBUG') == 'True' else True
+
 CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False if os.environ.get('DEBUG') == 'True' else True
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
@@ -274,12 +276,5 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda x : True
     }
-
-
-LOGIN_REDIRECT_URL = '/'
-
-EMAIL_HOST = '134.158.33.163'
-EMAIL_SUBJECT_PREFIX = '[TimeSide-SANDBOX]'
-DEFAULT_FROM_EMAIL = 'root@cchum-kvm-telemeta-dev.in2p3.fr'
 
 TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'

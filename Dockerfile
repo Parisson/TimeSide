@@ -52,9 +52,6 @@ RUN /bin/bash /srv/app/bin/setup_plugins.sh
 # Install Vamp plugins
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
-# Install bower
-#RUN npm install -g bower
-
 # Install timeside
 WORKDIR /srv/lib/timeside
 RUN pip3 install -U setuptools pip numpy
@@ -63,6 +60,10 @@ RUN pip3 install -r requirements.txt
 
 COPY . /srv/lib/timeside/
 RUN pip3 install -e .
+
+# Install npm modules
+#RUN npm install -g bower
+RUN npm install --prefix /srv/app
 
 WORKDIR /srv/app
 
