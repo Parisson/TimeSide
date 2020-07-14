@@ -42,6 +42,14 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'uuid', 'date_added', 'date_modified', 'status']
     list_filter = ['date_modified', 'status']
     search_fields = ['uuid']
+    actions = ['execute_task']
+
+    def execute_task(self, request, queryset):
+        for task in queryset:
+            task.status = 2
+            task.save()
+
+    execute_task.short_description = "Execute tasks"
 
 
 class ResultAdmin(admin.ModelAdmin):
