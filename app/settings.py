@@ -245,8 +245,8 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_ALWAYS_EAGER = False
 # If this is True, all tasks will be executed locally by blocking until the task returns.
-CELERY_TASK_ALWAYS_EAGER = True if env('DEBUG') == 'True' else False
 
 BOWER_COMPONENTS_ROOT = '/srv/static/'
 BOWER_PATH = '/usr/local/bin/bower'
