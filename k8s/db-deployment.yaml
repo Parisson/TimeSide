@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: db
+    spec:
+      containers:
+      - env:
+        - name: CELERY_BROKER_URL
+          value: redis://broker:6379/0
+        - name: CELERY_TASK_ALWAYS_EAGER
+          value: "False"
+        - name: DEBUG
+          value: "False"
+        - name: PIP_DOWNLOAD_CACHE
+          value: /srv/cache/pip
+        - name: POSTGRES_PASSWORD
+          value: mysecretpassword
+        - name: PYTHONWARNINGS
+          value: ignore::DeprecationWarning
+        - name: SECRET_KEY
+          value: ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7
+        - name: bower_storage__packages
+          value: /srv/cache/bower
+        image: postgres:9
+        imagePullPolicy: Always
+        name: db
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-var-lib-postgresql-data
+          subPath: data
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      - name: db-var-lib-postgresql-data
+        persistentVolumeClaim:
+          claimName: db-var-lib-postgresql-data
+status: {}
