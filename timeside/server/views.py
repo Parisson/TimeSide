@@ -498,7 +498,10 @@ class ResultAnalyzerView(View):
     def get(self, request, *args, **kwargs):
         result = models.Result.objects.get(uuid=kwargs['uuid'])
         container = AnalyzerResultContainer()
-        container.from_hdf5(result.hdf5.path)
+        if result.hdf5:
+            container.from_hdf5(result.hdf5.path)
+        else:
+
         return HttpResponse(container.to_json(),
                             content_type='application/json')
 
