@@ -501,8 +501,7 @@ class ResultAnalyzerView(View):
         if result.hdf5:
             container.from_hdf5(result.hdf5.path)
         else:
-
-        return HttpResponse(container.to_json(),
+            return HttpResponse(container.to_json(),
                             content_type='application/json')
 
 
