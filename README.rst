@@ -45,27 +45,6 @@ Thanks for your help!
 News
 =====
 
-1.0
----
-* Server refactoring:
-
-  * audio process run on items (REST API track's model)
-  * several tools, views, models and serializers
-  * REST API's schema on OpenAPI 3 specification and automatic Redoc generation
-
-* Move core and server from Python 2.7 to 3.7
-* Upgrade Django to 2.2, Django REST Framework to 3.11, Celery to 4.4
-* Add an `Aubio <https://github.com/aubio/aubio>`_ based decoder
-* Add core and server processors' versioning and server process' run time
-* Regroup all dependencies on pip requirements removing conda use
-* Add :ref:`provider` as a core API component and as a REST API model
-* Add provider plugins :ref:`deezer-preview`, :ref:`deezer-complete` and :ref:`youtube`
-* Improve server unit testing
-* Add JWT authentication on REST API
-* Various bug fixes
-* Add core, server and workers logging
-
-
 0.9
 ---
 
