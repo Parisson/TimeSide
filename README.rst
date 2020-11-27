@@ -24,7 +24,7 @@ Goals
 * **Visualize** sounds with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Serialize** feature analysis data through various portable formats,
-* **Provide** audio sources from plateform like YouTube or Deezer  
+* **Provide** audio sources from plateform like YouTube or Deezer
 * **Deliver** analysis and transcode on provided or uploaded tracks over the web through a REST API
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
@@ -138,9 +138,6 @@ Then clone TimeSide::
     docker-compose pull
 
 That's it! Now please go to the documentation to see how to use it.
-
-.. note::
-   If you need to user TimeSide outside a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this usercase anymore (the dependency list is now huge). To get commercial support in more various usecases, please reach the Parisson dev team.
 
 Sponsors and Partners
 =====================
