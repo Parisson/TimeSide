@@ -1,6 +1,6 @@
-==================================================
-TimeSide : audio processing framework for the web
-==================================================
+===========================================================================
+TimeSide : scalable audio processing framework and server written in Python
+===========================================================================
 
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic web frontend.
 
@@ -24,6 +24,8 @@ Goals
 * **Visualize** sounds with various fancy waveforms, spectrograms and other cool graphers,
 * **Transcode** audio data in various media formats and stream them through web apps,
 * **Serialize** feature analysis data through various portable formats,
+* **Provide** audio sources from plateform like YouTube or Deezer  
+* **Deliver** analysis and transcode on provided or uploaded tracks over the web through a REST API
 * **Playback** and **interact** **on demand** through a smart high-level HTML5 extensible player,
 * **Index**, **tag** and **annotate** audio archives with semantic metadata (see `Telemeta <http://telemeta.org>`__ which embed TimeSide).
 * **Deploy** and **scale** your own audio processing engine through any infrastructure
@@ -36,12 +38,33 @@ To fund the project and continue our fast development process, we need your expl
 
 * staring or forking the project on `GitHub <https://github.com/Parisson/TimeSide>`_
 * tweeting something to `@parisson_studio <https://twitter.com/parisson_studio>`_ or `@telemeta <https://twitter.com/telemeta>`_
-* drop us an email <support@parisson.com>
+* drop us an email on <support@parisson.com> or <pow@ircam.fr>
 
 Thanks for your help!
 
 News
 =====
+
+1.0
+---
+* Server refactoring:
+
+  * audio process run on items (REST API track's model)
+  * several tools, views, models and serializers
+  * REST API's schema on OpenAPI 3 specification and automatic Redoc generation
+
+* Move core and server from Python 2.7 to 3.7
+* Upgrade Django to 2.2, Django REST Framework to 3.11, Celery to 4.4
+* Add an `Aubio <https://github.com/aubio/aubio>`_ based decoder
+* Add core and server processors' versioning and server process' run time
+* Regroup all dependencies on pip requirements removing conda use
+* Add :ref:`provider` as a core API component and as a REST API model
+* Add provider plugins :ref:`deezer-preview`, :ref:`deezer-complete` and :ref:`youtube`
+* Improve server unit testing
+* Add JWT authentication on REST API
+* Various bug fixes
+* Add core, server and workers logging
+
 
 0.9
 ---
@@ -55,7 +78,6 @@ News
 * Improve REST API and various serialzers
 * Improve unit testing
 * Various bug fixes
-
 
 0.8
 ---
@@ -79,10 +101,10 @@ News
 
 * Code refactoring:
 
-   - Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx
-   - WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`
-   - `timeside.plugins` is now a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a **real** plugin host, yeah!
-   - A dummy timeside plugin will soon be provided for easy development start.
+  * Create a new module `timeside.plugins` and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx
+  * WARNING: to properly manage the namespace packages structure, the TimeSide main module is now `timeside.core` and code should now be initialized with `import timeside.core`
+  * `timeside.plugins` is now a `namespace package <https://pythonhosted.org/setuptools/setuptools.html#namespace-packages>`_ enabling external plugins to be **automatically** plugged into TimeSide (see for example `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_). This now makes TimeSide a **real** plugin host, yeah!
+  * A dummy timeside plugin will soon be provided for easy development start.
 
 * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
 * Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
@@ -93,13 +115,14 @@ For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/N
 Documentation
 ==============
 
-* General documentation : http://parisson.github.io/TimeSide/
-* Tutorials : http://parisson.github.io/TimeSide/tutorials/index.html
-* API : http://parisson.github.io/TimeSide/api/index.html
-* Publications : https://github.com/Parisson/Telemeta-doc
-* Some online notebooks : http://mybinder.org/repo/thomasfillon/Timeside-demos
-* Player UI (v1) wiki : https://github.com/Parisson/TimeSide/wiki/Ui-Guide
-* A player example : http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
+* General documentation: http://parisson.github.io/TimeSide/
+* Tutorials: http://parisson.github.io/TimeSide/tutorials/index.html
+* core API: http://parisson.github.io/TimeSide/api/index.html
+* RESTful API: https://sandbox.wasabi.telemeta.org/timeside/redoc/
+* Publications: https://github.com/Parisson/Telemeta-doc
+* Some online notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
+* Player UI (v1) wiki: https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+* A player example: http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
 =======
@@ -116,41 +139,44 @@ Then clone TimeSide::
 
 That's it! Now please go to the documentation to see how to use it.
 
-.. note ::
-
-If you need to use TimeSide outside a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this usercase anymore (the dependency list is now huge). To get commercial support in more various usecases, please reach the Parisson dev team.
+.. note::
+   If you need to user TimeSide outside a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this usercase anymore (the dependency list is now huge). To get commercial support in more various usecases, please reach the Parisson dev team.
 
 Sponsors and Partners
 =====================
 
 * `Parisson <http://parisson.com>`_
-* `CNRS <http://www.cnrs.fr>`_ (National Center of Science Research, France)
-* `Huma-Num <http://www.huma-num.fr/>`_ (big data equipment for digital humanities, ex TGE Adonis)
-* `CREM <http://www.crem-cnrs.fr>`_ (french National Center of Ethomusicology Research, France)
+* `CNRS <http://www.cnrs.fr>`_: National Center of Science Research (France)
+* `Huma-Num <http://www.huma-num.fr/>`_: big data equipment for digital humanities (CNRS, France)
+* `CREM <http://www.crem-cnrs.fr>`_: French National Center of Ethomusicology Research (France)
 * `Université Pierre et Marie Curie <http://www.upmc.fr>`_ (UPMC Paris, France)
-* `ANR <http://www.agence-nationale-recherche.fr/>`_ (CONTINT 2012 project : DIADEMS)
+* `ANR <http://www.agence-nationale-recherche.fr/>`_: Agence Nationale de la Recherche (France)
 * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 * `C4DM <http://c4dm.eecs.qmul.ac.uk/>`_ : Center for Digital Music, Queen Mary University (London, United Kingdom)
 * `NYU Steinhardt <http://steinhardt.nyu.edu/music/>`_ : Music and Performing Arts Professions, New York University (New York, USA)
+* `IRCAM <https://www.ircam.fr>`_ : IRCAM (Paris, France)
 
 Related projects
 =================
 
 * `Telemeta <http://telemeta.org>`__ : Open web audio platform
-* `Sound archives of the CNRS <http://archives.crem-cnrs.fr/>`_, CREM and the "Musée de l'Homme" in Paris, France.
+* `Sound archives of the CNRS <http://archives.crem-cnrs.fr/>`_, CREM and the "Musée de l'Homme" in Paris, France
 * `DIADEMS <http://www.irit.fr/recherches/SAMOVA/DIADEMS/en/welcome/>`_ sponsored by the ANR.
 * `DaCaRyh <http://gtr.rcuk.ac.uk/projects?ref=AH/N504531/1>`_, Data science for the study of calypso-rhythm through history
 * `KAMoulox <https://anr-kamoulox.github.io/>`_ Online unmixing of large historical archives
-* NYU/CREM/Parisson : arabic music analysis
+* NYU+CREM+Parisson : arabic music analysis from the full CREM database
+* `WASABI <http://wasabihome.i3s.unice.fr/>`_: Web Audio Semantic Aggregated in the Browser for Indexation, sponsored by the ANR
 
 Copyrights
 ==========
 
-* Copyright (c) 2006, 2018 Parisson Sarl
-* Copyright (c) 2006, 2018 Guillaume Pellerin
+* Copyright (c) 2019, 2020 IRCAM
+* Copyright (c) 2006, 2020 Guillaume Pellerin
+* Copyright (c) 2010, 2020 Paul Brossier
+* Copyright (c) 2019, 2020 Antoine Grandry
+* Copyright (c) 2006, 2019 Parisson SARL
 * Copyright (c) 2013, 2017 Thomas Fillon
 * Copyright (c) 2016, 2017 Eric Debeir
-* Copyright (c) 2010, 2014 Paul Brossier
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
 * Copyright (c) 2006, 2010 Olivier Guilyardi
