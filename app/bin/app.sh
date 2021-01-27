@@ -12,7 +12,7 @@ su $uid -g $gid -s /bin/bash -c "python3 $manage migrate --noinput"
 # timeside setup
 su $uid -g $gid -s /bin/bash -c "python3 $manage timeside-create-admin-user"
 su $uid -g $gid -s /bin/bash -c "python3 $manage timeside-create-boilerplate"
-su $uid -g $gid -s /bin/bash -c "python3 $manage timeside-analysis-subprocessor-quickfix"
+# su $uid -g $gid -s /bin/bash -c "python3 $manage timeside-analysis-subprocessor-quickfix"
 
 # if [ $DEBUG = "False" ]; then
 #     python $manage update_index --workers $processes &

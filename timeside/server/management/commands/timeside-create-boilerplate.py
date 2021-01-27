@@ -37,7 +37,7 @@ class Command(BaseCommand):
     def task_cleanup(self):
         for task in Task.objects.all():
             task.delete()
-    
+
     def analysis_cleanup(self):
         for analysis in Analysis.objects.all():
             analysis.delete()
@@ -52,8 +52,8 @@ class Command(BaseCommand):
             print("---------------------------")
 
         # ---------- Test Selection ----------
-        Selection.objects.get_or_create(title='WASABI')
         selection, c = Selection.objects.get_or_create(title='Tests')
+
         if c | (selection.items.count() == 0):
             if verbosity:
                 print(" -  generate samples")
@@ -73,102 +73,102 @@ class Command(BaseCommand):
                     for result in item.results.all():
                         result.delete()
 
-        presets = []
-        blacklist = ['decoder', 'live', 'gain', 'vamp', 'yaafe']
-        processors = timeside.core.processor.processors(
-            timeside.core.api.IProcessor
-            )
-        graphers = timeside.core.processor.processors(
-            timeside.core.api.IGrapher
-            )
-
-        if verbosity:
-            print(" - created presets:")
-        for proc in processors:
-            trig = True
-            for black in blacklist:
-                if black in proc.id():
-                    trig = False
-            if trig:
-                processor, c = Processor.objects.get_or_create(
-                    pid=proc.id(),
-                    version=proc.version()
-                    )
-                try:
-                    if proc in graphers:
-                        # TODO: resolve missing Graphers !!! maybe if hasattrb ... else : get_or_greate()
-                        # ---- Graphers -----
-                        if hasattr(proc, '_from_analyzer') and proc._from_analyzer and not(proc._staging):
-                            try:
-                                parameters = json.dumps(
-                                    proc._analyzer_parameters
-                                    )
-                                preset, created = Preset.objects.get_or_create(
-                                                                        processor=processor,
-                                                                        parameters=parameters
-                                                                        )
-                                if created and verbosity:
-                                    print("    " + str(preset))
-
-                            except MultipleObjectsReturned:
-                                print(Preset.objects.get(
-                                                        processor=processor,
-                                                        parameters=json.dumps(
-                                                            proc._analyzer_parameters
-                                                            )
-                                                        )
-                                                    )
-
-                            sub_processor, c = SubProcessor.objects.get_or_create(
-                                                                                sub_processor_id=proc._result_id,
-                                                                                processor=processor
-                                                                                )
-
-                            analysis, c = Analysis.objects.get_or_create(
-                                                                        sub_processor=sub_processor,
-                                                                        preset=preset,
-                                                                        title=proc._grapher_name
-                                                                        )
-                    else:
-                        preset, created = Preset.objects.get_or_create(processor=processor,
-                                                                    parameters=json.dumps(processor.get_parameters_default()))
-                        if created and verbosity:
-                                           print("    " + str(preset))
-                    presets.append(preset)
-                except Preset.MultipleObjectsReturned:
-                    print(Preset.objects.filter(processor=processor, parameters='{}'))
-
-
-        # ------------ Providers -------------
-        providers = timeside.core.provider.providers(timeside.core.api.IProvider)
-
-        for prov in providers:
-            provider, c = Provider.objects.get_or_create(
-                pid=prov.id(),
-                source_access=prov.ressource_access(),
-                description=prov.description(),
-                name=prov.name()
+            presets = []
+            blacklist = ['decoder', 'live', 'gain', 'vamp', 'yaafe']
+            processors = timeside.core.processor.processors(
+                timeside.core.api.IProcessor
+                )
+            graphers = timeside.core.processor.processors(
+                timeside.core.api.IGrapher
                 )
 
-        # ---------- Experience All ----------
-        experience, c = Experience.objects.get_or_create(title='All')
-        for preset in presets:
-            if not preset in experience.presets.all():
-                experience.presets.add(preset)
+            if verbosity:
+                print(" - created presets:")
+            for proc in processors:
+                trig = True
+                for black in blacklist:
+                    if black in proc.id():
+                        trig = False
+                if trig:
+                    processor, c = Processor.objects.get_or_create(
+                        pid=proc.id(),
+                        version=proc.version()
+                        )
+                    try:
+                        if proc in graphers:
+                            # TODO: resolve missing Graphers !!! maybe if hasattrb ... else : get_or_greate()
+                            # ---- Graphers -----
+                            if hasattr(proc, '_from_analyzer') and proc._from_analyzer and not(proc._staging):
+                                try:
+                                    parameters = json.dumps(
+                                        proc._analyzer_parameters
+                                        )
+                                    preset, created = Preset.objects.get_or_create(
+                                                                            processor=processor,
+                                                                            parameters=parameters
+                                                                            )
+                                    if created and verbosity:
+                                        print("    " + str(preset))
 
-        # ---- Task All on Test selection ----
-        task, c = Task.objects.get_or_create(
-            experience=experience,
-            selection=selection
-            )
-        if verbosity and c:
-            print(' - created task:')
-            print(task)
-        if c | task.status != _DONE:
-            task.status = _PENDING
-            task.save()
+                                except MultipleObjectsReturned:
+                                    print(Preset.objects.get(
+                                                            processor=processor,
+                                                            parameters=json.dumps(
+                                                                proc._analyzer_parameters
+                                                                )
+                                                            )
+                                                        )
 
-        # ------------- Analysis -------------
-        for analysis in Analysis.objects.all():
-            analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
-            analysis.save()
+                                sub_processor, c = SubProcessor.objects.get_or_create(
+                                                                                    sub_processor_id=proc._result_id,
+                                                                                    processor=processor
+                                                                                    )
+
+                                analysis, c = Analysis.objects.get_or_create(
+                                                                            sub_processor=sub_processor,
+                                                                            preset=preset,
+                                                                            title=proc._grapher_name
+                                                                            )
+                        else:
+                            preset, created = Preset.objects.get_or_create(processor=processor,
+                                                                        parameters=json.dumps(processor.get_parameters_default()))
+                            if created and verbosity:
+                                               print("    " + str(preset))
+                        presets.append(preset)
+                    except Preset.MultipleObjectsReturned:
+                        print(Preset.objects.filter(processor=processor, parameters='{}'))
+
+
+            # ------------ Providers -------------
+            providers = timeside.core.provider.providers(timeside.core.api.IProvider)
+
+            for prov in providers:
+                provider, c = Provider.objects.get_or_create(
+                    pid=prov.id(),
+                    source_access=prov.ressource_access(),
+                    description=prov.description(),
+                    name=prov.name()
+                    )
+
+            # ---------- Experience All ----------
+            experience, c = Experience.objects.get_or_create(title='All')
+            for preset in presets:
+                if not preset in experience.presets.all():
+                    experience.presets.add(preset)
+
+            # ---- Task All on Test selection ----
+            task, c = Task.objects.get_or_create(
+                experience=experience,
+                selection=selection
+                )
+            if verbosity and c:
+                print(' - created task:')
+                print(task)
+            if c | task.status != _DONE:
+                task.status = _PENDING
+                task.save()
+
+            # ------------- Analysis -------------
+            for analysis in Analysis.objects.all():
+                analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
+                analysis.save()
