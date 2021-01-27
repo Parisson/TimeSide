@@ -363,7 +363,7 @@ class Item(Titled, UUID, Dated, Shareable):
         )
 
     class Meta:
-        ordering = ['title']
+        ordering = ['-date_modified']
         verbose_name = _('item')
 
     def __str__(self):
