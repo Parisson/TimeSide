@@ -24,9 +24,9 @@ WORKDIR /srv/lib
 
 # install confs, keys and deps
 RUN apt-get update && apt-get install -y apt-transport-https
-COPY debian-requirements.txt /srv/lib/
+COPY requirements-debian.txt /srv/lib/
 RUN apt-get update && \
-    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" requirements-debian.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
 
