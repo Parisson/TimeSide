@@ -49,14 +49,13 @@ broker:
   image: redis:5
 
 app:
-  # image: parisson/timeside:latest-dev
-  build: .
+  image: parisson/timeside:latest-dev
+  # build: .
   command: /bin/bash /srv/app/bin/app.sh
   volumes:
     - ./app:/srv/app
     - ./timeside:/srv/lib/timeside/timeside
     - ./lib/plugins:/srv/lib/plugins
-    - ./etc/apt/sources.list:/etc/apt/sources.list
   volumes_from:
     - var
   env_file:
@@ -67,12 +66,12 @@ app:
   expose:
     - "8000"
   ports:
-    - "9070:8000"
+    - "9080:8000"
 
 
 worker:
-  # image: parisson/timeside:latest-dev
-  build: .
+  image: parisson/timeside:latest-dev
+  # build: .
   command: /bin/bash /srv/app/bin/worker.sh
   volumes:
     - /etc/._ifpk_2

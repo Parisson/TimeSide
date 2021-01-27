@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: worker
+    spec:
+      containers:
+      - args:
+        - /bin/bash
+        - /srv/app/bin/worker.sh
+        env:
+        - name: CELERY_BROKER_URL
+          value: redis://broker:6379/0
+        - name: CELERY_TASK_ALWAYS_EAGER
+          value: "False"
+        - name: DEBUG
+          value: "False"
+        - name: PIP_DOWNLOAD_CACHE
+          value: /srv/cache/pip
+        - name: POSTGRES_PASSWORD
+          value: mysecretpassword
+        - name: PYTHONWARNINGS
+          value: ignore::DeprecationWarning
+        - name: SECRET_KEY
+          value: ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7
+        - name: bower_storage__packages
+          value: /srv/cache/bower
+        image: parisson/timeside:latest-dev
+        imagePullPolicy: Always
+        name: worker
+        resources: {}
+        volumeMounts:
+        #- mountPath: /srv/media
+        #  name: var-claim1
+        #  subPath: media
+        - mountPath: /var/log/uwsgi
+          name: worker-log-uwsgi
+          subPath: uwsgi
+        - mountPath: /var/log/celery
+          name: worker-log-celery
+          subPath: celery
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+      #- name: var-claim1
+      #  persistentVolumeClaim:
+      #    claimName: var-claim1
+      - name: worker-log-uwsgi
+        persistentVolumeClaim:
+          claimName: worker-log-uwsgi
+      - name: worker-log-celery
+        persistentVolumeClaim:
+          claimName: worker-log-celery
+status: {}

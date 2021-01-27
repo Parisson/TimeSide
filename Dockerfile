@@ -17,18 +17,16 @@ FROM debian:buster
 
 MAINTAINER Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 
-RUN mkdir -p /srv/app
 RUN mkdir -p /srv/lib
 RUN mkdir -p /srv/lib/timeside
 
 WORKDIR /srv/lib
 
 # install confs, keys and deps
-COPY ./etc/apt/sources.list /etc/apt/
 RUN apt-get update && apt-get install -y apt-transport-https
-COPY debian-requirements.txt /srv/lib/
+COPY requirements-debian.txt /srv/lib/
 RUN apt-get update && \
-    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" debian-requirements.txt) && \
+    DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" requirements-debian.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
 
@@ -40,23 +38,19 @@ ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
+# Install app
+COPY ./app /srv/app
+
 # Link python gstreamer
-RUN mkdir -p /srv/app/bin
-COPY ./app/bin/link_gstreamer.py /srv/app/bin/
 RUN python /srv/app/bin/link_gstreamer.py
 
 # Install Timeside plugins from ./lib
 RUN mkdir -p /srv/lib/plugins
 COPY ./lib/plugins/ /srv/lib/plugins/
-COPY ./app/bin/setup_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/setup_plugins.sh
 
 # Install Vamp plugins
-COPY ./app/bin/install_vamp_plugins.sh /srv/app/bin/
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
-
-# Install bower
-#RUN npm install -g bower
 
 # Install timeside
 WORKDIR /srv/lib/timeside
@@ -66,6 +60,10 @@ RUN pip3 install -r requirements.txt
 
 COPY . /srv/lib/timeside/
 RUN pip3 install -e .
+
+# Install npm modules
+#RUN npm install -g bower
+RUN npm install --prefix /srv/app
 
 WORKDIR /srv/app
 
