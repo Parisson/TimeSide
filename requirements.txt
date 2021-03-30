@@ -118,7 +118,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.19
 pycrypto==2.6.1
-Pygments==2.3.1
+Pygments==2.7.4
 PyGObject==3.30.4
 PyJWT==1.7.1
 pympi-ling==1.69
