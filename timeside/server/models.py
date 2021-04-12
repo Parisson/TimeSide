@@ -135,7 +135,7 @@ if not os.path.exists(DOWNLOAD_ROOT):
     os.makedirs(DOWNLOAD_ROOT)
 
 
-DEFAULT_DECODER = getattr(settings, 'TIMESIDE_DEFAULT_DECODER', 'file_decoder')
+DEFAULT_DECODER = getattr(settings, 'TIMESIDE_DEFAULT_DECODER', 'aubio_decoder')
 
 
 class UUIDEncoder(json.JSONEncoder):
