@@ -445,4 +445,4 @@ def generateSamples(overwrite=False, samples_dir=None):
     return samples
 
 
-# samples = generateSamples()
+samples = generateSamples()
