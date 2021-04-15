@@ -134,6 +134,7 @@ class TestEncoding(unittest.TestCase):
         (decoder | self.encoder).run()
 
         if self.encode_to_file:
+            print(type(self.sink))
             media_info = get_media_uri_info(get_uri(self.sink))
             media_duration = media_info['duration']
             media_channels = media_info['streams'][0]['channels']

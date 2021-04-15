@@ -15,7 +15,6 @@ class TestFxGain(unittest.TestCase):
         self.fx = get_processor('fx_gain')(gain=self.gain)
         self.level = get_processor('level')()
 
-
     def testOnC4Scale(self):
         "runs on C4 scale"
         self.source = samples["C4_scale.wav"]
@@ -32,7 +31,7 @@ class TestFxGain(unittest.TestCase):
         results = self.level.results
         for result_id in self.expected.keys():
             result = results[result_id]
-            self.assertAlmostEquals(result.data_object.value,
+            self.assertAlmostEquals(result.data_object.value[0],
                                     self.expected[result_id],
                                     places=2)
 

@@ -597,9 +597,8 @@ class AnalyzerResult(MetadataObject):
 
     def to_xml(self):
         import xml.etree.ElementTree as ET
-        root = ET.Element('result')
-        root.metadata = {'name': self.id_metadata.name,
-                         'id': self.id_metadata.id}
+        root = ET.Element('result', metadata = {'name': self.id_metadata.name,
+                         'id': self.id_metadata.id})
 
         for name in ['data_mode', 'time_mode']:
             child = ET.SubElement(root, name)
@@ -1202,7 +1201,7 @@ class AnalyzerResultContainer(dict):
             return self
 
     def from_numpy(self, input_file):
-        return np.load(input_file)
+        return np.load(input_file,allow_pickle=True)
 
     def to_hdf5(self, output_file):
         # Open HDF5 file and save dataset (overwrite any existing file)

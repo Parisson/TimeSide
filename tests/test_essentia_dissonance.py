@@ -22,7 +22,7 @@ class TestEssentiaDissonance(unittest.TestCase):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer_dissonance | self.analyzer_dissonance_value).run()
         self.assertAlmostEqual(self.analyzer_dissonance.results['essentia_dissonance'].data_object.value.mean(), 0.003, places=3)
-        self.assertAlmostEqual(self.analyzer_dissonance_value.results['essentia_dissonance_value'].data_object.value, 0.109, places=2)
+        self.assertAlmostEqual(self.analyzer_dissonance_value.results['essentia_dissonance_value'].data_object.value.mean(), 0.109, places=2)
 
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

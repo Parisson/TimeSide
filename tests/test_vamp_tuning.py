@@ -20,7 +20,7 @@ class TestVampTuning(unittest.TestCase):
     def tearDown(self):
         decoder = FileDecoder(self.source)
         (decoder | self.analyzer).run()
-        self.assertAlmostEqual( self.analyzer.results['vamp_tuning'].data_object.value, 440.0, places=1)
+        self.assertAlmostEqual( self.analyzer.results['vamp_tuning'].data_object.value.mean(), 440.0, places=1)
 
 
 if __name__ == '__main__':
