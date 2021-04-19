@@ -37,11 +37,11 @@ class TestTranscodingFromWav(unittest.TestCase):
         self.encoder_id = 'webm_encoder'
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
-
+    """
     def testM4a(self):
         "Test conversion to m4a"
         self.encoder_id = 'aac_encoder'
-
+    """
     def tearDown(self):
         decoder = FileDecoder(self.source)
 
@@ -84,12 +84,12 @@ class TestTranscodingFromMonoWav(TestTranscodingFromWav):
     def setUp(self):
         super(TestTranscodingFromMonoWav, self).setUp()
         self.source = samples["sweep_mono.wav"]
-
+    """
     def testM4a(self):
         "Test conversion to m4a"
         super(TestTranscodingFromMonoWav, self).testM4a()
         self.test_channels = False  # voaacenc bug ? : always encode stereo
-
+    """
 
 class TestTranscodingFromAnotherWav(TestTranscodingFromMonoWav):
     "Test transcoding from another wav"

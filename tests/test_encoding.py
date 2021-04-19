@@ -36,6 +36,7 @@ class TestEncoding(unittest.TestCase):
         # Source
         self.source_duration = 10.
 
+        
     def testWav(self):
         "Test wav encoding"
         from timeside.plugins.encoder.wav import WavEncoder
@@ -53,20 +54,20 @@ class TestEncoding(unittest.TestCase):
         from timeside.plugins.encoder.mp3 import Mp3Encoder
         self.encoder_function = Mp3Encoder
         self.delta = 0.2
-
+    """
     def testAac(self):
         "Test aac encoding"
         from timeside.plugins.encoder.m4a import AacEncoder
         self.encoder_function = AacEncoder
         self.test_channels = False
         self.delta = 0.3
-
+    """
     def testFlac(self):
         "Test flac encoding"
         from timeside.plugins.encoder.flac import FlacEncoder
         self.encoder_function = FlacEncoder
         self.delta = 0
-
+    
     def testWebM(self):
         "Test webm encoding, audio only"
         from timeside.plugins.encoder.webm import WebMEncoder
@@ -87,7 +88,7 @@ class TestEncoding(unittest.TestCase):
             self.encoder = self.encoder_function(self.sink,
                                                  overwrite=self.overwrite,
                                                  video=True)
-
+    
     def testOpus(self):
         "Test opus encoding"
         from timeside.plugins.encoder.opus import OpusEncoder
@@ -125,7 +126,6 @@ class TestEncoding(unittest.TestCase):
             file_extension = '.' + self.encoder_function.file_extension()
             self.sink = tmp_file_sink(prefix=self.__class__.__name__,
                                       suffix=file_extension)
-
         if not hasattr(self, 'encoder'):
             self.encoder = self.encoder_function(self.sink,
                                                  overwrite=self.overwrite)
@@ -134,7 +134,6 @@ class TestEncoding(unittest.TestCase):
         (decoder | self.encoder).run()
 
         if self.encode_to_file:
-            print(type(self.sink))
             media_info = get_media_uri_info(get_uri(self.sink))
             media_duration = media_info['duration']
             media_channels = media_info['streams'][0]['channels']
