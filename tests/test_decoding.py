@@ -137,14 +137,20 @@ class TestDecoding(unittest.TestCase):
 
     def check_aubio(self, decoder, input_duration, output_duration,
             expected_totalframes):
-        self.assertAlmostEqual(input_duration, output_duration,
-                places=4)
-        self.assertAlmostEqual(input_duration, decoder.input_duration,
-                places=3)
-        self.assertAlmostEqual(self.source_duration, decoder.input_duration,
-                delta=.08)
-        self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,
-                delta=decoder.output_samplerate // 16)
+        if self.test_exact_duration:
+            self.assertEqual(input_duration, output_duration)
+            self.assertEqual(input_duration, decoder.uri_duration)
+            self.assertEqual(self.source_duration, decoder.uri_duration)
+            self.assertEqual(decoder.totalframes(), expected_totalframes)
+        else:
+            self.assertAlmostEqual(input_duration, output_duration,
+                    places=4)
+            self.assertAlmostEqual(input_duration, decoder.input_duration,
+                    places=3)
+            self.assertAlmostEqual(self.source_duration, decoder.input_duration,
+                    delta=.08)
+            self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,
+                    delta=decoder.output_samplerate // 16)
 
     def check_gstreamer(self, decoder, input_duration, output_duration,
             expected_totalframes):
