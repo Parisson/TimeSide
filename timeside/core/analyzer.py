@@ -1054,7 +1054,6 @@ def JSON_NumpyArrayEncoder(obj):
 class AnalyzerResultContainer(dict):
     
     '''
-    @unittest.skip("example")
     >>> import timeside
     >>> from timeside.core.analyzer import Analyzer
     >>> from timeside.core.tools.test_samples import samples

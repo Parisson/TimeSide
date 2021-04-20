@@ -94,7 +94,7 @@ class TestGetMediaInfo(unittest.TestCase):
     def testMp3(self):
         "Test mp3 decoding"
         self.source = samples["sweep.mp3"]
-        self.expected_depth = 16
+        self.expected_depth = 16 # ?
         self.test_exact_duration = False
 
     def tearDown(self):
