@@ -1052,7 +1052,7 @@ def JSON_NumpyArrayEncoder(obj):
 
 
 class AnalyzerResultContainer(dict):
-
+    
     '''
     >>> import timeside
     >>> from timeside.core.analyzer import Analyzer

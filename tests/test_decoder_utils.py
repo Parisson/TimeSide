@@ -89,12 +89,12 @@ class TestGetMediaInfo(unittest.TestCase):
         "Test ogg decoding"
         self.source = samples["sweep.ogg"]
         self.test_exact_duration = False
-        self.expected_depth = 0  # ?
+        self.expected_depth = 32  # ?
 
     def testMp3(self):
         "Test mp3 decoding"
         self.source = samples["sweep.mp3"]
-        self.expected_depth = 32
+        self.expected_depth = 16 # ?
         self.test_exact_duration = False
 
     def tearDown(self):
@@ -105,7 +105,7 @@ class TestGetMediaInfo(unittest.TestCase):
         else:
             self.assertAlmostEqual(self.source_duration,
                                    uri_info['duration'],
-                                   places=1)
+                                   places=0)
         self.assertEqual(self.expected_channels,
                          uri_info['streams'][0]['channels'])
         self.assertEqual(self.expected_samplerate,

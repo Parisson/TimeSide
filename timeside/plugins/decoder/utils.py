@@ -225,7 +225,7 @@ def sha1sum_url(url):
     max_file_size = 10 * 1024 * 1024  # 10Mo limit in case of very large file
 
     total_read = 0
-    with closing(urllib.urlopen(url)) as url_obj:
+    with closing(urllib.request.urlopen(url)) as url_obj:
         for chunk in iter(lambda: url_obj.read(chunk_size), b''):
             sha1.update(chunk)
             total_read += chunk_size

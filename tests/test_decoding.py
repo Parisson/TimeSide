@@ -120,8 +120,7 @@ class TestDecoding(unittest.TestCase):
             delta = decoder.output_samplerate // 8
         elif is_gstreamer:
             delta = 0
-        self.assertAlmostEqual(totalframes, decoder.totalframes(),
-                delta=delta)
+        self.assertAlmostEqual(totalframes, decoder.totalframes(), delta=delta)
 
         input_duration = decoder.input_totalframes / decoder.input_samplerate
         output_duration = decoder.totalframes() / decoder.output_samplerate

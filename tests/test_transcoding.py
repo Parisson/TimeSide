@@ -84,12 +84,13 @@ class TestTranscodingFromMonoWav(TestTranscodingFromWav):
     def setUp(self):
         super(TestTranscodingFromMonoWav, self).setUp()
         self.source = samples["sweep_mono.wav"]
-    """
+    
+    @unittest.skip('aac encoding not working')
     def testM4a(self):
         "Test conversion to m4a"
         super(TestTranscodingFromMonoWav, self).testM4a()
         self.test_channels = False  # voaacenc bug ? : always encode stereo
-    """
+    
 
 class TestTranscodingFromAnotherWav(TestTranscodingFromMonoWav):
     "Test transcoding from another wav"

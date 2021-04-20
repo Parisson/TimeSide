@@ -53,15 +53,17 @@ class TestEncoding(unittest.TestCase):
         "Test mp3 encoding"
         from timeside.plugins.encoder.mp3 import Mp3Encoder
         self.encoder_function = Mp3Encoder
-        self.delta = 0.2
-    """
+        self.delta = 0.23
+    
+    
+    @unittest.skip("aac encoding not working")
     def testAac(self):
         "Test aac encoding"
         from timeside.plugins.encoder.m4a import AacEncoder
         self.encoder_function = AacEncoder
         self.test_channels = False
         self.delta = 0.3
-    """
+    
     def testFlac(self):
         "Test flac encoding"
         from timeside.plugins.encoder.flac import FlacEncoder
