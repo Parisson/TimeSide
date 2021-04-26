@@ -3,7 +3,8 @@
 import unittest
 from unit_timeside import TestRunner
 import os
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 from timeside.core import get_processor
 from timeside.core.processor import Processor
 from timeside.core.api import IProcessor

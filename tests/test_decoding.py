@@ -25,6 +25,7 @@ class TestDecoding(unittest.TestCase):
         self.test_exact_duration = True
         self.source_duration = 8
         self.expected_mime_type = 'audio/x-wav'
+        self.mp3=False
 
     def testWav(self):
         "Test wav decoding"
@@ -60,6 +61,7 @@ class TestDecoding(unittest.TestCase):
 
         self.expected_mime_type = 'audio/mpeg'
         self.test_exact_duration = False
+        self.mp3=True
 
     def tearDown(self):
         decoder = FileDecoder(uri=self.source,
@@ -117,7 +119,10 @@ class TestDecoding(unittest.TestCase):
 
         # aubio estimates the total number of frames before resampling
         if is_aubio:
-            delta = decoder.output_samplerate // 8
+            if self.mp3 :
+                delta = decoder.output_samplerate // 2
+
+            else : delta = decoder.output_samplerate // 8
         elif is_gstreamer:
             delta = 0
         self.assertAlmostEqual(totalframes, decoder.totalframes(), delta=delta)
@@ -136,15 +141,19 @@ class TestDecoding(unittest.TestCase):
 
     def check_aubio(self, decoder, input_duration, output_duration,
             expected_totalframes):
-        self.assertAlmostEqual(input_duration, output_duration,
-                places=4)
-        self.assertAlmostEqual(input_duration, decoder.input_duration,
-                places=3)
-        self.assertAlmostEqual(self.source_duration, decoder.input_duration,
-                delta=.08)
-        self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,
-                delta=decoder.output_samplerate // 16)
 
+        if self.mp3:
+            self.assertAlmostEqual(input_duration, output_duration,places=5)
+            self.assertEqual(input_duration, decoder.input_duration)
+            self.assertAlmostEqual(self.source_duration, decoder.input_duration,delta=.4)
+            self.assertEqual(decoder.totalframes(), expected_totalframes)
+
+        else:
+            self.assertEqual(input_duration, output_duration)
+            self.assertEqual(input_duration, decoder.input_duration)
+            self.assertEqual(self.source_duration, decoder.input_duration)
+            self.assertEqual(decoder.totalframes(), expected_totalframes)
+            
     def check_gstreamer(self, decoder, input_duration, output_duration,
             expected_totalframes):
         if self.test_exact_duration:

@@ -3,7 +3,8 @@
 from __future__ import division
 
 from timeside.core.processor import get_processor, ProcessPipe
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 
 import os
 import unittest
@@ -19,6 +20,7 @@ class TestTranscodingFromWav(unittest.TestCase):
         self.source = samples["sweep.wav"]
         self.test_duration = True
         self.test_channels = True
+        self.source_is_mp3 = False
 
     def testWav(self):
         "Test conversion to wav"
@@ -37,11 +39,12 @@ class TestTranscodingFromWav(unittest.TestCase):
         self.encoder_id = 'webm_encoder'
         self.test_duration = False  # webmmux encoder with streamable=true
                                     # does not return a valid duration
-    """
+                                    
+    @unittest.skip('aac encoding not working')
     def testM4a(self):
         "Test conversion to m4a"
         self.encoder_id = 'aac_encoder'
-    """
+    
     def tearDown(self):
         decoder = FileDecoder(self.source)
 
@@ -73,9 +76,13 @@ class TestTranscodingFromWav(unittest.TestCase):
                          decoder_encoded.samplerate())
 
         if self.test_duration:
-            self.assertAlmostEqual(decoder.input_duration,
+            decoder_input_duration = decoder.input_duration
+            if self.source_is_mp3 :
+                decoder_input_duration -= 0.39
+                #sweep.mp3 duration is 8.39s
+            self.assertAlmostEqual(decoder_input_duration,
                                    decoder_encoded.input_duration,
-                                   delta=0.2)
+                                   delta=0.1)
 
 
 class TestTranscodingFromMonoWav(TestTranscodingFromWav):
@@ -106,6 +113,7 @@ class TestTranscodingFromMp3(TestTranscodingFromWav):
     def setUp(self):
         super(TestTranscodingFromMp3, self).setUp()
         self.source = samples["sweep.mp3"]
+        self.source_is_mp3 = True
 
 
 class TestTranscodingFromFlac(TestTranscodingFromWav):

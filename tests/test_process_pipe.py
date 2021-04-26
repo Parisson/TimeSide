@@ -6,7 +6,8 @@
 import unittest
 from unit_timeside import TestRunner
 import timeside
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 from timeside.core.tools.test_samples import samples
 
 

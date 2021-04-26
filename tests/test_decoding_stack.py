@@ -3,6 +3,7 @@
 from __future__ import division
 
 from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 from timeside.plugins.analyzer.level import Level
 from timeside.core.processor import ProcessPipe
 import unittest
