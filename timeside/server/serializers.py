@@ -737,7 +737,7 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     #     return super(AnalysisTrackSerializer, self).create(validated_data)
 
     def get_result_uuid(self, obj):
-        result = get_result(item=obj.item, preset=obj.analysis.preset)
+        result = get_result(item=obj.item, preset=obj.analysis.preset, test=obj.analysis.test)
         if isinstance(result, ts.models.Result):
             self._result_uuid = result.uuid
             return result.uuid

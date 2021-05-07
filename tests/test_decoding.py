@@ -72,10 +72,12 @@ class TestDecoding(unittest.TestCase):
                       blocksize=self.blocksize)
 
         totalframes = 0
+        compteur=0
 
         while True:
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
+            compteur+=1
             if eod or decoder.eod:
                 break
             self.assertEqual(frames.shape[0], decoder.blocksize())
@@ -120,7 +122,7 @@ class TestDecoding(unittest.TestCase):
         # aubio estimates the total number of frames before resampling
         if is_aubio:
             if self.mp3 :
-                delta = decoder.output_samplerate // 2
+                delta = decoder.output_samplerate // 4
 
             else : delta = decoder.output_samplerate // 8
         elif is_gstreamer:

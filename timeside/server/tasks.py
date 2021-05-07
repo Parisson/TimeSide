@@ -16,19 +16,31 @@ from celery.utils.log import get_task_logger
 logger = get_task_logger(__name__)
 
 @shared_task
-def task_run(task_id):
+def task_run(task_id,test=False):
+    #test : can't access the db with celery when testing
     task = Task.objects.get(uuid=task_id)
     results = []
+    results_id=[]
     if task.selection:
         logger.info(f'Apply {str(task.experience)} on {str(task.selection)} in task {str(task)}')
         for item in task.selection.get_all_items():
-            results.append(experience_run.delay(str(task.experience.uuid), str(item.uuid)))    
-        results_id = [res.id for res in results]
+            if test :
+                results.append(experience_run(str(task.experience.uuid), str(item.uuid)))    
+            else : 
+                results.append(experience_run.delay(str(task.experience.uuid), str(item.uuid)))    
+        if not test : 
+            results_id = [res.id for res in results]
     elif task.item:
         logger.info(f'Apply {str(task.experience)} on {str(task.item)} in task {str(task)}')
-        results.append(experience_run.delay(str(task.experience.uuid), str(task.item.uuid)))
-        results_id = [res.id for res in results]
-    task_monitor.delay(task_id, results_id)
+        if test : 
+            results.append(experience_run(str(task.experience.uuid), str(task.item.uuid)))
+        else : 
+            results.append(experience_run.delay(str(task.experience.uuid), str(task.item.uuid)))
+            results_id = [res.id for res in results]
+    if test : 
+        task_monitor(task_id, results_id)
+    else : 
+        task_monitor.delay(task_id, results_id)
 
 
 @shared_task
