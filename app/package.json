@@ -9,7 +9,7 @@
   "devDependencies": {
     "jquery": "~2.2.4",
     "jquery-migrate": "~1.2.1",
-    "underscore": "~1.8.3",
+    "underscore": "~1.12.1",
     "bootstrap": "~3.3.6",
     "bootstrap-select": "~1.6.2",
     "font-awesome": "~4.4.0",
