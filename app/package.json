@@ -11,7 +11,7 @@
     "jquery-migrate": "~1.2.1",
     "underscore": "~1.8.3",
     "bootstrap": "~3.3.6",
-    "bootstrap-select": "~1.6.2",
+    "bootstrap-select": "~1.13.6",
     "font-awesome": "~4.4.0",
     "raphael": "~2.2.0",
     "soundmanager2": "2.97.20150601"
