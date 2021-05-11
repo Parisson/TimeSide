@@ -39,7 +39,7 @@ mkdir -p $media
 chown -R $uid:$gid $media
 
 # install the last version of those packages
-pip3 install -U youtube-dl
+pip3 install -U youtube-dl aubio numpy
 
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh
