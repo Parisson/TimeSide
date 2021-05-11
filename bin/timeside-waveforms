@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2009-2013 Guillaume Pellerin <yomguy@parisson.com>
@@ -20,7 +20,7 @@
 
 # Author: Guillaume Pellerin <yomguy@parisson.com>
 
-version = '0.4'
+version = '0.5'
 
 import os
 import sys
@@ -96,9 +96,9 @@ class Media2Waveform(object):
                             bg_color=self.bg_color, color_scheme=self.color_scheme)
         for source, image in self.path_dict.items():
             if not os.path.exists(image) or self.force:
-                print 'Processing ', source
+                print('Processing ', source)
                 audio = os.path.join(os.path.dirname(__file__), source)
-                decoder  = timeside.core.get_processor('file_decoder')(audio)
+                decoder  = timeside.core.get_processor('aubio_decoder')(audio)
                 (decoder | waveform).run()
                 dir_name, img_name = os.path.split(image)
                 img_root, img_ext = os.path.splitext(img_name)
@@ -107,20 +107,20 @@ class Media2Waveform(object):
                                     )+img_ext
                 filename = os.path.join(dir_name, )
                 #waveform.graph.filename = image
-                print 'Rendering %s '% filename
-                #print 'frames per pixel = ', waveform.graph.samples_per_pixel
+                print('Rendering %s '% filename)
+                #print('frames per pixel = ', waveform.graph.samples_per_pixel)
                 waveform.render(output=image)
 
 
 if __name__ == '__main__':
     if len(sys.argv) <= 1:
-        print """
+        print("""
  timeside-waveforms : TimeSide simple batch waveform generator
 
  usage      : timeside-waveforms /path/to/media_dir /path/to/img_dir
  infos      : https://github.com/Parisson/TimeSide/
  version    : %s
-        """ % version
+        """ % version)
     else:
         media_dir = sys.argv[-2]
         img_dir = sys.argv[-1]

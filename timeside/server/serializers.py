@@ -187,7 +187,7 @@ class WaveformSerializer(serializers.Serializer):
 
         duration = wav_res['audio_metadata'].attrs['duration']
         samplerate = wav_res['data_object'][
-            'frame_metadata'].attrs['samplerate']
+                'frame_metadata'].attrs['samplerate']
 
         if self.start < 0:
             self.start = 0
