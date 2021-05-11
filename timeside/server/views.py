@@ -47,7 +47,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
 import django_filters.rest_framework as filters
-
+from django.http import Http404
 
 from . import models
 from . import serializers
@@ -503,8 +503,7 @@ class ResultAnalyzerView(View):
             return HttpResponse(container.to_json(),
                             content_type='application/json')
         else:
-            return HttpResponse(container.to_json(),
-                            content_type='application/json')
+            raise Http404("HDF5 file does not exist")
 
 
 class ResultAnalyzerToElanView(View):
