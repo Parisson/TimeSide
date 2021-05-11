@@ -65,6 +65,7 @@ class ItemListSerializer(ItemPlayableSerializer):
         }
 
     def get_url(self, obj):
+        print(self.context.keys())
         request = self.context['request']
         return reverse(
             'item-detail',
@@ -80,6 +81,7 @@ class AudioUrlSerializer(serializers.Serializer):
     flac = serializers.URLField(read_only=True)
 
     def to_representation(self, instance):
+        print(self.context.keys())
         request = self.context['request']
         extensions = ['mp3', 'ogg', 'flac']
         self.audio_url = {

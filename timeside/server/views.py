@@ -494,12 +494,14 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 class ResultAnalyzerView(View):
 
     model = models.Result
-
+    
     def get(self, request, *args, **kwargs):
         result = models.Result.objects.get(uuid=kwargs['uuid'])
         container = AnalyzerResultContainer()
         if result.hdf5:
             container.from_hdf5(result.hdf5.path)
+            return HttpResponse(container.to_json(),
+                            content_type='application/json')
         else:
             return HttpResponse(container.to_json(),
                             content_type='application/json')

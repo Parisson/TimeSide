@@ -40,6 +40,7 @@ class test_try(TimeSideTestServer):
         pitch_analysis=Analysis.objects.get(title='Pitch')
         pitch_analysis.test=True
         pitch_analysis.save()
+
         
         params = {'title':'test_analysis',
                 'description':'pitch on sweep_32000 for testing',
@@ -48,21 +49,73 @@ class test_try(TimeSideTestServer):
                 }
 
         response = self.client.post('/timeside/api/analysis_tracks/', params, format='json')
-        response_result=self.client.get(response.data['result_url'],format=json)
-        print(response_result.data)
+        response_result_png=self.client.get(response.data['result_url'],format=json)
+        print(response.status_code)
 
-
+        pitch_preset=Preset.objects.get(
+            processor=Processor.objects.get(pid='aubio_pitch')
+            )
 
         result=Result.objects.get(
             item=self.sweep_32000,
-            preset=pitch_analysis.preset
+            preset=pitch_preset
         )
-        print(result.file.path)
-        file=open(result.file.path, 'rb')
+       
+        hdf5_file=h5py.File(result.hdf5,'r')
+        print(hdf5_file.keys())
+        print(hdf5_file['aubio_pitch.pitch_confidence']['data_object']['value'][:])
+
         
 
-        response= self.client.get('/timeside/results/'+str(result.uuid)+'/png/',format=json)
+        response_hdf5= self.client.get('/timeside/api/results/'+str(result.uuid)+'/',format=json)
+    
+    def test_new_analysis(self):
+        pitch_processor=Processor.objects.get(pid='aubio_pitch')
+        pitch_subprocessor=SubProcessor.objects.create(processor=pitch_processor)
+        pitch_preset=Preset.objects.create(processor=pitch_processor)
+        pitch_analysis=Analysis.objects.create(
+            sub_processor=pitch_subprocessor,
+            preset=pitch_preset,
+            test=True
+        )
+        params = {'title':'test_new_analysis',
+                'description':'aubio_pitch on sweep_32000',
+                'analysis':'/timeside/api/analysis/'+str(pitch_analysis.uuid)+ '/',
+                'item': '/timeside/api/items/' + str(self.sweep_32000.uuid) + '/',
+                }
+        response = self.client.post('/timeside/api/analysis_tracks/', params, format='json')
+        print(response.status_code)
+        result=Result.objects.get(
+            item=self.sweep_32000,
+            preset=pitch_preset
+        )
+        response_result=self.client.get(response.data['result_url'],format=json)
+        print(response_result.data)
+        response_data=self.client.get('/timeside/results/'+str(result.uuid)+'/json/')
+        print(response_data.data)
+
         
+    def test_all_analysis(self):
+        all_analysis=Analysis.objects.all()
+        all_items=Item.objects.all()
+        items=[]
+        for i in range (8):
+            items.append(Item.objects.get(uuid=all_items[i].uuid))
+        c=0
+        for a in all_analysis :
+            a.test=True
+            a.save()
+            params = {'title':'test_all_analysis',
+                'description':'',
+                'analysis':'/timeside/api/analysis/'+str(a.uuid)+ '/',
+                'item': '/timeside/api/items/' + str(items[c].uuid) + '/',
+                }
+            response = self.client.post('/timeside/api/analysis_tracks/', params, format='json')
+            print(a.sub_processor.processor.pid)
+            print(Result.objects.filter(item=items[c]))
+            
+            c+=1
+
       
         
         
