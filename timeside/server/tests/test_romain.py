@@ -33,7 +33,11 @@ class test_try(TimeSideTestServer):
         self.client.login(username='admin', password='admin')
         self.sweep_32000=Item.objects.get(title="sweep_32000")
 
-
+    def test_create_analysis_in_boiler(self):
+        processors = timeside.core.processor.processors(
+                timeside.core.api.IAnalyzer
+                )
+        print(processors)
     
     def test_analysis(self):
         

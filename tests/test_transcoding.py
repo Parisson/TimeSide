@@ -78,8 +78,8 @@ class TestTranscodingFromWav(unittest.TestCase):
         if self.test_duration:
             decoder_input_duration = decoder.input_duration
             if self.source_is_mp3 :
-                decoder_input_duration -= 0.39
-                #sweep.mp3 duration is 8.39s
+                decoder_input_duration -= 0.05
+                #sweep.mp3 duration is 8.05s
             self.assertAlmostEqual(decoder_input_duration,
                                    decoder_encoded.input_duration,
                                    delta=0.1)

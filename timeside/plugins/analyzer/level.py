@@ -48,7 +48,7 @@ class Level(Analyzer):
     [0.]
     >>> rms = level.results['level.rms']
     >>> print(rms.data)  # doctest: +ELLIPSIS
-    [-3.27...]
+    [-3.7...]
     """
     implements(IValueAnalyzer)
 

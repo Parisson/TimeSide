@@ -26,6 +26,7 @@ class TestDecoding(unittest.TestCase):
         self.source_duration = 8
         self.expected_mime_type = 'audio/x-wav'
         self.mp3=False
+        self.upsampling=False
 
     def testWav(self):
         "Test wav decoding"
@@ -45,8 +46,12 @@ class TestDecoding(unittest.TestCase):
 
     def testFlac(self):
         "Test flac decoding"
-        self.source = samples["sweep.flac"]
+        if self.upsampling:
+            self.source = samples["sweep_96000.flac"]
+        else : 
+            self.source = samples["sweep.flac"]
         self.expected_mime_type = is_aubio and 'audio/flac' or 'audio/x-flac'
+
 
     def testOgg(self):
         "Test ogg decoding"
@@ -62,6 +67,8 @@ class TestDecoding(unittest.TestCase):
         self.expected_mime_type = 'audio/mpeg'
         self.test_exact_duration = False
         self.mp3=True
+        
+    
 
     def tearDown(self):
         decoder = FileDecoder(uri=self.source,
@@ -120,11 +127,12 @@ class TestDecoding(unittest.TestCase):
                                    decoder.output_samplerate)
 
         # aubio estimates the total number of frames before resampling
+        delta=0
         if is_aubio:
-            if self.mp3 :
-                delta = decoder.output_samplerate // 4
-
-            else : delta = decoder.output_samplerate // 8
+                #delta = 0.1s
+                delta = self.expected_samplerate//10  
+                if self.expected_channels==2:
+                    delta*=2
         elif is_gstreamer:
             delta = 0
         self.assertAlmostEqual(totalframes, decoder.totalframes(), delta=delta)
@@ -145,10 +153,10 @@ class TestDecoding(unittest.TestCase):
             expected_totalframes):
 
         if self.mp3:
-            self.assertAlmostEqual(input_duration, output_duration,places=5)
-            self.assertEqual(input_duration, decoder.input_duration)
-            self.assertAlmostEqual(self.source_duration, decoder.input_duration,delta=.4)
-            self.assertEqual(decoder.totalframes(), expected_totalframes)
+            self.assertAlmostEqual(input_duration, output_duration,delta=0.00001)
+            self.assertAlmostEqual(input_duration, decoder.input_duration,delta=0.0001)
+            self.assertAlmostEqual(self.source_duration, decoder.input_duration,delta=0.05)
+            self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,delta=1)
 
         else:
             self.assertEqual(input_duration, output_duration)

@@ -79,6 +79,7 @@ class TestGetMediaInfo(unittest.TestCase):
         "Test 32kHz wav decoding"
         self.source = samples["sweep_32000.wav"]
         self.expected_samplerate = 32000
+        self.expected_depth = 16 # ?
 
     def testFlac(self):
         "Test flac decoding"

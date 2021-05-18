@@ -38,4 +38,4 @@ docs/src
 .init
 .vscode/*
 .DS_Store
-/tests/test_romain.py
+/timeside/server/tests/test_romain.py
