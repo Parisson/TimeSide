@@ -9,7 +9,7 @@ from timeside.server.serializers import ProviderSerializer
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
 
 
-class test_try(TimeSideTestServer):
+class test_romain(TimeSideTestServer):
 
     #allow_database_queries = True
 
@@ -33,12 +33,35 @@ class test_try(TimeSideTestServer):
         self.client.login(username='admin', password='admin')
         self.sweep_32000=Item.objects.get(title="sweep_32000")
 
-    def test_create_analysis_in_boiler(self):
-        processors = timeside.core.processor.processors(
-                timeside.core.api.IAnalyzer
-                )
-        print(processors)
+    def test_create_analyzer(self):
+        analysis=Analysis.objects.all()
+        self.assertEqual(analysis.count(),0)
     
+    def test_analyzer(self):
+        analyzers=Analysis.objects.all()
+        analysis_sweep=[]
+        for a in analyzers:
+            analysis_sweep.append((self.analyzer_work_test(a.uuid)))
+        print(analysis_sweep)
+        
+            
+    def analyzer_work_test(self, analysis_uuid):
+        analysis=Analysis.objects.get(uuid=analysis_uuid)
+        analysis.test=True
+        analysis.save()
+
+        params = {'title':'test_analysis_'+str(analysis_uuid),
+                'description':'',
+                'analysis':'/timeside/api/analysis/'+str(analysis_uuid)+ '/',
+                'item': '/timeside/api/items/' + str(self.sweep_32000.uuid) + '/',
+                }
+        analysis_track_response=self.client.post('/timeside/api/analysis_tracks/', params, format='json')
+        result_response=self.client.get(analysis_track_response.data['result_url'],format=json)
+        result=Result.objects.get(uuid=result_response.data['uuid'])
+        if analysis.render_type:
+            return result.has_file()
+        else : return result.has_hdf5()
+
     def test_analysis(self):
         
         pitch_analysis=Analysis.objects.get(title='Pitch')

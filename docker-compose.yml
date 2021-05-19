@@ -50,7 +50,7 @@ broker:
 
 app:
   image: parisson/timeside:latest-dev
-  # build: .
+  #build: .
   command: /bin/bash /srv/app/bin/app.sh
   volumes:
     - ./app:/srv/app
