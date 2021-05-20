@@ -35,7 +35,7 @@ def get_or_run_proc_result(pid, item, parameters='{}'):
 # don't run the task if results exist for a proc with its version
 
 
-def get_result(item, preset, wait=True):
+def get_result(item, preset, wait=True, test=False):
     # Get or create Result with preset and item
     result, created = Result.get_first_or_create(
         preset=preset,
@@ -44,7 +44,8 @@ def get_result(item, preset, wait=True):
     if created or not result.has_file() and not result.has_hdf5():
         task, c = Task.get_first_or_create(
             experience=preset.get_single_experience(),
-            item=item
+            item=item,
+            test=test
             )
         task.run(wait=wait)
         # SMELLS: might not get the last good result

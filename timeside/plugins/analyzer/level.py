@@ -41,14 +41,14 @@ class Level(Analyzer):
     >>> decoder = get_processor('file_decoder')(uri=source)
     >>> level = get_processor('level')()
     >>> (decoder | level).run()
-    >>> level.results.keys()
-    ['level.max', 'level.rms']
+    >>> ('level.max' in level.results.keys()) and ('level.rms' in level.results.keys() )
+    True
     >>> max = level.results['level.max']
     >>> print(max.data)
     [0.]
     >>> rms = level.results['level.rms']
     >>> print(rms.data)  # doctest: +ELLIPSIS
-    [-3.26...]
+    [-3.7...]
     """
     implements(IValueAnalyzer)
 

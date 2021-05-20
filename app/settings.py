@@ -171,6 +171,7 @@ INSTALLED_APPS = (
     'bootstrap_pagination',
     'corsheaders',
     'debug_toolbar',
+    # 'celery.contrib.testing.tasks',
     # 'south',
 )
 
@@ -279,3 +280,4 @@ if DEBUG:
     }
 
 TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
+

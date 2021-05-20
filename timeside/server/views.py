@@ -47,7 +47,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
 import django_filters.rest_framework as filters
-
+from django.http import Http404
 
 from . import models
 from . import serializers
@@ -494,15 +494,16 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 class ResultAnalyzerView(View):
 
     model = models.Result
-
+    
     def get(self, request, *args, **kwargs):
         result = models.Result.objects.get(uuid=kwargs['uuid'])
         container = AnalyzerResultContainer()
         if result.hdf5:
             container.from_hdf5(result.hdf5.path)
-        else:
             return HttpResponse(container.to_json(),
                             content_type='application/json')
+        else:
+            raise Http404("HDF5 file does not exist")
 
 
 class ResultAnalyzerToElanView(View):

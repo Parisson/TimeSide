@@ -17,6 +17,7 @@ Gst.init(None)
 import numpy
 import scipy.signal.waveforms
 import os.path
+import ffmpeg
 
 #import timeside
 
@@ -225,7 +226,6 @@ class gst_BuildSample(object):
 def generate_sample_file(filename, samples_dir, gst_audio_encoder,
                          sample_array, overwrite=False):
     sample_file = os.path.join(samples_dir, filename)
-
     if overwrite or not os.path.exists(sample_file):
             gst_builder = gst_BuildSample(sample_array=sample_array,
                                           output_file=sample_file,
@@ -253,6 +253,7 @@ def generateSamples(overwrite=False, samples_dir=None):
     samples = dict()
 
     # --------- Sweeps ---------
+
     # sweep 44100 mono wav
     filename = 'sweep_mono.wav'
     samplerate = 44100
@@ -275,6 +276,19 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
 
+
+    sweep_wav=ffmpeg.input('/srv/lib/timeside/tests/samples/sweep.wav')
+
+    sweep_list=[('sweep.mp3',44100),('sweep_96000.flac',96000),('sweep.flac',44100),('sweep.ogg',44100),('sweep_32000.wav',32000)]
+
+    for filename,sample_rate in sweep_list :
+        sample_file = os.path.join(samples_dir, filename)
+        if not os.path.exists(sample_file) :
+            sweep=ffmpeg.output(sweep_wav, sample_file,ar=sample_rate)
+            ffmpeg.run(sweep)
+        samples.update({filename: sample_file})
+
+    '''
     # sweep 44100 stereo mp3
     filename = 'sweep.mp3'
     gst_audio_encoder = ['lamemp3enc']
@@ -284,6 +298,18 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        sample_array=sweep_stereo,
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
+    
+    
+    #sweep 96000 stereo flac
+    filename = 'sweep_96000.flac'
+    samplerate = 96000
+    gst_audio_encoder = 'wavenc'
+    sweep_96000 = SweepArray(duration=8, samplerate=samplerate)
+    sample_file = generate_sample_file(filename, samples_dir,
+                                       gst_audio_encoder,
+                                       sample_array=sweep_96000)
+    samples.update({filename: sample_file})
+
 
     # sweep 44100 stereo flac
     filename = 'sweep.flac'
@@ -318,6 +344,7 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        sample_array=sweep_stereo,
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
+    '''
 
     # --------- Sines ---------
     # sine at 440Hz,  44100 mono wav
@@ -445,4 +472,4 @@ def generateSamples(overwrite=False, samples_dir=None):
     return samples
 
 
-# samples = generateSamples()
+samples = generateSamples()

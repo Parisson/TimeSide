@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 import unittest
 from unit_timeside import TestRunner
 from timeside.core.tools.test_samples import samples

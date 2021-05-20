@@ -81,6 +81,9 @@ class Command(BaseCommand):
             graphers = timeside.core.processor.processors(
                 timeside.core.api.IGrapher
                 )
+            analyzers = timeside.core.processor.processors(
+                timeside.core.api.IAnalyzer
+                )
 
             if verbosity:
                 print(" - created presets:")
@@ -95,9 +98,9 @@ class Command(BaseCommand):
                         version=proc.version()
                         )
                     try:
-                        if proc in graphers:
-                            # TODO: resolve missing Graphers !!! maybe if hasattrb ... else : get_or_greate()
-                            # ---- Graphers -----
+                        if proc in analyzers:
+                
+                            # ---- Analysers -----
                             if hasattr(proc, '_from_analyzer') and proc._from_analyzer and not(proc._staging):
                                 try:
                                     parameters = json.dumps(

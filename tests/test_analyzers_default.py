@@ -6,7 +6,8 @@ from unit_timeside import TestRunner
 import numpy as np
 
 import timeside.core
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 from timeside.core.tools.test_samples import samples
 from jsonschema import Draft4Validator
 

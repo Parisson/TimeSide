@@ -361,7 +361,8 @@ class Item(Titled, UUID, Dated, Shareable):
         on_delete=models.SET_NULL,
         help_text=_("Audio provider (e.g. Deezer, Youtube, etc.)")
         )
-
+        
+    
     class Meta:
         ordering = ['-date_modified']
         verbose_name = _('item')
@@ -921,6 +922,12 @@ class Task(UUID, Dated, Shareable):
             """))
         )
 
+    test= models.BooleanField(
+        blank=True,
+        default=False,
+        help_text=_('boolean to avoid celery when testing')
+        )  
+
     class Meta:
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
@@ -946,7 +953,10 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        task_run.delay(task_id=str(self.uuid))
+        if not self.test:
+            task_run.delay(task_id=str(self.uuid))
+        else:
+            task_run(task_id=str(self.uuid),test=True)
 
         if wait:
             status = Task.objects.get(uuid=str(self.uuid)).status
@@ -1012,6 +1022,11 @@ class Analysis(Titled, UUID, Dated, Shareable):
             image: {_IMAGE}\n
             """))
         )
+    test= models.BooleanField(
+        blank=True,
+        default=False,
+        help_text=_('boolean to avoid celery when testing')
+        )  
 
     parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
 
