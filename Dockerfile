@@ -38,7 +38,7 @@ RUN mkdir -p $PYTHON_EGG_CACHE && \
 COPY ./app /srv/app
 
 # Link python gstreamer
-RUN python /srv/app/bin/link_gstreamer.py
+RUN python3 /srv/app/bin/link_gstreamer.py
 
 # Install Timeside plugins from ./lib
 RUN mkdir -p /srv/lib/plugins
