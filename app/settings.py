@@ -112,7 +112,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    'npm.finders.NpmFinder',
 )
 
 TEMPLATES = [
@@ -165,14 +164,12 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'timeside.server',
-    'timeside.player',
     'django_celery_results',
     'bootstrap3',
     'bootstrap_pagination',
     'corsheaders',
     'debug_toolbar',
     # 'celery.contrib.testing.tasks',
-    # 'south',
 )
 
 # dj A sample logging configuration. The only tangible logging
@@ -248,19 +245,6 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = False
 # If this is True, all tasks will be executed locally by blocking until the task returns.
-
-BOWER_COMPONENTS_ROOT = '/srv/static/'
-BOWER_PATH = '/usr/local/bin/bower'
-BOWER_INSTALLED_APPS = (
-    'jquery#2.2.4',
-    'jquery-migrate#~1.2.1',
-    'underscore#1.8.3',
-    'bootstrap#3.3.6',
-    'bootstrap-select#1.5.4',
-    'font-awesome#~4.4.0',
-    'raphael#2.2.0',
-    'soundmanager#V2.97a.20150601',
-)
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True

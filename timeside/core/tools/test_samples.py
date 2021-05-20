@@ -298,8 +298,8 @@ def generateSamples(overwrite=False, samples_dir=None):
                                        sample_array=sweep_stereo,
                                        overwrite=overwrite)
     samples.update({filename: sample_file})
-    
-    
+
+
     #sweep 96000 stereo flac
     filename = 'sweep_96000.flac'
     samplerate = 96000
