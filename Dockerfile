@@ -34,25 +34,25 @@ ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
+# Install timeside
+WORKDIR /srv/lib/timeside
+RUN pip3 install -U setuptools pip numpy
+COPY ./requirements.txt /srv/lib/timeside/
+RUN pip3 install -r requirements.txt
+
 # Install app
 COPY ./app /srv/app
-
-# Link python gstreamer
-RUN python3 /srv/app/bin/link_gstreamer.py
 
 # Install Timeside plugins from ./lib
 RUN mkdir -p /srv/lib/plugins
 COPY ./lib/plugins/ /srv/lib/plugins/
 RUN /bin/bash /srv/app/bin/setup_plugins.sh
 
+# Link python gstreamer
+RUN python3 /srv/app/bin/link_gstreamer.py
+
 # Install Vamp plugins
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
-
-# Install timeside
-WORKDIR /srv/lib/timeside
-RUN pip3 install -U setuptools pip numpy
-COPY ./requirements.txt /srv/lib/timeside/
-RUN pip3 install -r requirements.txt
 
 COPY . /srv/lib/timeside/
 RUN pip3 install -e .
