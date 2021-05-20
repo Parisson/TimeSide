@@ -34,7 +34,7 @@ ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
-RUN pip3 install -U setuptools pip
+RUN pip3 install -U setuptools pip numpy
 
 # Install timeside
 WORKDIR /srv/lib/timeside

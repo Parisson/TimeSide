@@ -132,7 +132,6 @@ python-editor==1.0.4
 python-json-logger==0.1.11
 pytz==2019.3
 pyxdg==0.25
-PyYAML==5.2
 pyzmq==18.1.1
 qtconsole==4.6.0
 redis==3.4.1
