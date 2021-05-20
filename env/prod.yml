@@ -22,12 +22,14 @@
 # Thomas Fillon <thomas@parisson.com>
 
 
-app:
-  command: /bin/bash /srv/app/bin/app.sh
-  env_file:
-    - env/prod.env
+services:
 
-worker:
-  env_file:
-    - env/prod.env
+  app:
+    command: /bin/bash /srv/app/bin/app.sh
+    env_file:
+      - env/prod.env
+
+  worker:
+    env_file:
+      - env/prod.env
 

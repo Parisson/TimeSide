@@ -21,11 +21,13 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-notebook:
-  image: parisson/timeside:latest-dev
-  #build: .
-  ports:
-    - "8888:8888"
-  volumes_from:
-    - app
-  command: sh -c "cd /srv/lib/timeside/docs/ipynb; jupyter notebook --no-browser --ip=0.0.0.0 --allow-root"
+services:
+
+  notebook:
+    image: parisson/timeside:latest-dev
+    #build: .
+    ports:
+      - "8888:8888"
+    volumes_from:
+      - app
+    command: sh -c "cd /srv/lib/timeside/docs/ipynb; jupyter notebook --no-browser --ip=0.0.0.0 --allow-root"

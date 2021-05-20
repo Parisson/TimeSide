@@ -21,12 +21,14 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-app:
-  env_file:
-    - env/debug.env
-  command: /bin/bash bin/app.sh --runserver
+services:
 
-worker:
-  env_file:
-    - env/debug.env
+  app:
+    env_file:
+      - env/debug.env
+    command: /bin/bash bin/app.sh --runserver
+
+  worker:
+    env_file:
+      - env/debug.env
 

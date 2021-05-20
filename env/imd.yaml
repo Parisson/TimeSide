@@ -1,8 +1,11 @@
-app:
-  volumes:
-    - ./etc/._ifpk_2:/etc/._ifpk_2
-  mac_address: 02:42:ac:11:00:07
+
+services:
+
+  app:
+    volumes:
+      - ./etc/._ifpk_2:/etc/._ifpk_2
+    mac_address: 02:42:ac:11:00:07
 
 
-worker:
-  mac_address: 02:42:ac:11:00:07
+  worker:
+    mac_address: 02:42:ac:11:00:07

@@ -21,10 +21,11 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
+services:
 
-app:
-  env_file:
-    - env/sqlite.env
-  ports:
-    - "8000:8000"
-  command: /bin/bash /srv/app/bin/app.sh --runserver
+  app:
+    env_file:
+      - env/sqlite.env
+    ports:
+      - "8000:8000"
+    command: /bin/bash /srv/app/bin/app.sh --runserver
