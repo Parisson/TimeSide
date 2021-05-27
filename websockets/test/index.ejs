@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Timeside / Websockets test page</title>
+
+</head>
+
+<body>
+  <label>Token<input id="token" type='text' /></label>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+
+    window.addEventListener("DOMContentLoaded", (event) => {
+      
+      document.getElementById("token").addEventListener("input", function(e){
+        ws_connect(e.target.value)
+      })
+
+    });
+
+    var socket = null
+    function ws_connect(token){
+      if(socket != null) socket.disconnect()
+      socket = io(
+        "localhost:<%= port %>", 
+        {
+          auth: {
+            token: token
+          }
+        }
+      );
+      socket.on("connect_error", (err) => {
+        console.log(err.message); // prints the message associated with the error
+      });
+    }
+
+  </script>
+</body>
+</html>

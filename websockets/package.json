@@ -1,0 +1,30 @@
+{
+  "name": "websockets",
+  "version": "0.0.1",
+  "description": "Websockets server for Ircam Timeside Application",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "dev": "npm install && babel-watch server.js",
+    "build": "babel server.js --out-file server-transpiled.js",
+    "prod": "node server-transpiled.js",
+    "install:build:prod": "npm install && npm run build && npm run prod",
+    "lint": "eslint server.js --ext .js"
+  },
+  "author": "Clément Gérard",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@babel/node": "^7.12.16",
+    "axios": "^0.21.1",
+    "babel-cli": "^6.26.0",
+    "babel-watch": "^7.4.0",
+    "ejs": "^3.1.6",
+    "eslint": "^7.20.0",
+    "express": "^4.17.1",
+    "redis": "^3.0.2",
+    "socket.io": "^3.1.1"
+  }
+}
