@@ -402,7 +402,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         queryset lookups.  Eg if objects are referenced using multiple
         keyword arguments in the url conf.
         """
-
         if self.request.parser_context["kwargs"]["username"] == 'me':
             obj = self.request._user
         else:

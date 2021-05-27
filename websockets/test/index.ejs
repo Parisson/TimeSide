@@ -31,6 +31,12 @@
           }
         }
       );
+      socket.on("connect", function(datas){
+        console.log("websocket connected")
+      });
+      socket.on("task_progress", function(datas){
+        console.log(data)
+      });
       socket.on("connect_error", (err) => {
         console.log(err.message); // prints the message associated with the error
       });

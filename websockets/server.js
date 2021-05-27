@@ -32,26 +32,19 @@ const socketPort = process.env.PORT
 io.use((socket, next) => {
   const token = socket.handshake.auth.token
   axios.get(
-      process.env.DJANGO_API_URL + '/users/me',
+      process.env.DJANGO_API_URL + 'users/me',
       {
           headers : {
               Authorization: 'Token ' + token 
           }
       }
   )
-  .then((response)=>{
-      console.log("hey")
-      console.log(response)
+  .then(() => {
+      next()
   })
   .catch((error)=>{
-      console.log("hay")
-      next(new Error(error + "\n\ntoken '" + token + "' is not valid"));
+      next(new Error(error + "\n\ntoken '" + token + "' is not valid"))
   })
-  /*if (isValid(socket.request)) {
-    next();
-  } else {
-    
-  }*/
 });
 
 
