@@ -8,7 +8,8 @@
 </head>
 
 <body>
-  <label>Token<input id="token" type='text' /></label>
+  <label>Token :<input id="token" type='text' /></label>
+  <p>Open dev console for see websocket messages</p>
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
@@ -34,8 +35,8 @@
       socket.on("connect", function(datas){
         console.log("websocket connected")
       });
-      socket.on("task_progress", function(datas){
-        console.log(data)
+      socket.on("timeside-done", function(datas){
+        console.log("Task done : " + datas.taskId)
       });
       socket.on("connect_error", (err) => {
         console.log(err.message); // prints the message associated with the error

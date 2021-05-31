@@ -2,9 +2,10 @@ const express = require('express')
 const redis = require('redis');
 const axios = require('axios')
 const subscriber = redis.createClient(process.env.REDIS_URL);
-// const publisher = redis.createClient("redis://broker:6379");
+const publisher = redis.createClient("redis://broker:6379");
 const app = express();
 const http = require('http').createServer(app)
+const { v4: uuidv4 } = require('uuid');
 
 
 let origins = [process.env.ORIGIN]
@@ -39,7 +40,12 @@ io.use((socket, next) => {
           }
       }
   )
-  .then(() => {
+  .then((datas) => {
+      socket.details = {
+          'username': datas.data.username,
+          'firstName': datas.data.first_name,
+          'lastName' : datas.data.last_name
+      }
       next()
   })
   .catch((error)=>{
@@ -48,77 +54,71 @@ io.use((socket, next) => {
 });
 
 
-const events = []
-
-function addSubscriber(event, id, client){
-    const eventName = event + "-" + id
-    if(typeof events[eventName] == "undefined") events[eventName] = []
-    events[eventName].push(client)
-}
-
-function getAllIndexes(arr, val) {
-    const indexes = []
-    let i = -1;
-    while ((i = arr.indexOf(val, i+1)) != -1){
-        indexes.push(i);
-    }
-    return indexes;
-}
+const clients = []
 
 io.on("connection", (client) => {
-    client.on("subscribe", (data) => {
-        addSubscriber(data.event, data.id, client)
-    })
+    
+    if(typeof clients[client.details.username] == 'undefined') clients[client.details.username] = {}
+    
+    const uuid = uuidv4()
+    clients[client.details.username][uuid] = client
+    
     client.on("disconnect", () => {
-        for(let e in events){
-            const indexes = getAllIndexes(events[e], client)
-            for(let i in indexes){
-                events[e].splice(indexes[i], 1)
-            }
-            if(Object.keys(events[e]).length == 0) delete events[e]
-        }
+        delete clients[client.details.username][uuid]
+        if(clients[client.details.username].length == 0) delete clients[client.details.username]
     })
 })
 
 subscriber.on("message", (channel, message) => {
-    let eventName = ""
-    if(channel == "timeside-progress-signal"){
-        const parts = message.split(":")
-        eventName = "timeside-progress-signal" + "-" + parts[0]
-        for(let client in events[eventName]){
-            events[eventName][client].emit("timeside-progress-signal", {
-                id : parts[0],
-                completion : parseFloat(parts[1])
-            })
+    const parts = message.split(":")
+    const clientName = parts[0]
+    const taskId = parts[1]
+    if(channel == "timeside-progress"){
+        for(let uuid in [clientName]){
+            clients[clientName][uuid].emit(
+                "timeside-progress",
+                {
+                    taskId : taskId,
+                    completion : parseFloat(parts[2])
+                }
+            )
         }
-    }else if(channel == "timeside-done-signal"){
-        eventName = "timeside-done-signal" + "-" + message
-        for(let client in events[eventName]){
-            events[eventName][client].emit("timeside-done-signal", {
-                id : message
-            })
+    }else if(channel == "timeside-done"){
+        for(let uuid in clients[clientName]){
+            clients[clientName][uuid].emit(
+                "timeside-done",
+                {
+                    taskId : taskId,
+                }
+            )
         }
-    }else if(channel == "timeside-fail-signal"){
-        eventName = "timeside-fail-signal" + "-" + message
-        for(let client in events[eventName]){
-            events[eventName][client].emit("timeside-fail-signal", {
-                id : message
-            })
+    }else if(channel == "timeside-fail"){
+        for(let uuid in [clientName]){
+            clients[clientName][uuid].emit(
+                "timeside-fail",
+                {
+                    taskId : taskId,
+                }
+            )
         }
-    }else if(channel == "timeside-delete-signal"){
-        eventName = "timeside-delete-signal" + "-" + message
-        for(let client in events[eventName]){
-            events[eventName][client].emit("timeside-delete-signal", {
-                id : message
-            })
+        
+    }else if(channel == "timeside-delete"){
+        for(let uuid in [clientName]){
+            clients[clientName][uuid].emit(
+                "timeside-delete",
+                {
+                    taskId : taskId,
+                }
+            )
         }
     }
 })
 
-subscriber.subscribe("timeside-progress-signal");
-subscriber.subscribe("timeside-done-signal");
-subscriber.subscribe("timeside-fail-signal");
-subscriber.subscribe("timeside-delete-signal");
+subscriber.subscribe("timeside-progress");
+subscriber.subscribe("timeside-done");
+subscriber.subscribe("timeside-fail");
+subscriber.subscribe("timeside-delete");
+
 
 http.listen(socketPort, () => {
     console.log("socket server started on port " + socketPort + "...");
