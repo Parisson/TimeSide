@@ -123,5 +123,3 @@ subscriber.subscribe("timeside-delete");
 http.listen(socketPort, () => {
     console.log("socket server started on port " + socketPort + "...");
 })
-
-

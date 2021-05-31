@@ -13,6 +13,8 @@ env = environ.Env()
 # Django settings for server project.
 DEBUG = True if env('DEBUG') == 'True' else False
 
+CACHE_RESULT = not DEBUG
+
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
     ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
@@ -264,4 +266,3 @@ if DEBUG:
     }
 
 TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
-

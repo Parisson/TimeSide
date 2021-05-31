@@ -3,6 +3,9 @@ import os
 
 import timeside.core
 import json
+
+from django.conf import settings
+
 from timeside.core.api import IEncoder
 from timeside.server.models import Processor, Preset, Result, Task
 
@@ -41,7 +44,13 @@ def get_result(item, preset, wait=True, test=False):
         preset=preset,
         item=item
         )
-    if created or not result.has_file() and not result.has_hdf5():
+    print
+    if created or \
+            not settings.CACHE_RESULT or \
+            (
+                not result.has_file() and
+                not result.has_hdf5()
+            ):
         task, c = Task.get_first_or_create(
             experience=preset.get_single_experience(),
             item=item,
