@@ -266,3 +266,6 @@ if DEBUG:
     }
 
 TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
+
+MESSAGE_BROKER = env('REDIS_URL') + '/1'
+COMPLETION_INTERVAL = 10  # blocks

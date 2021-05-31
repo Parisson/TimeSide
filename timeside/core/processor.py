@@ -34,6 +34,9 @@ import os
 import csv
 import sys
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
@@ -113,11 +116,12 @@ class Processor(Component, HasParam, metaclass=MetaProcessor):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
-              totalframes=None):
+              totalframes=None, task=None):
         self.source_channels = channels
         self.source_samplerate = samplerate
         self.source_blocksize = blocksize
         self.source_totalframes = totalframes
+        self.task = task
 
         # If empty Set default values for input_* attributes
         # may be setted by the processor during __init__()
@@ -492,7 +496,15 @@ class ProcessPipe(object):
                 pipe += ' | '
         return pipe
 
-    def run(self, channels=None, samplerate=None, blocksize=None):
+    def run(
+        self,
+        channels=None,
+        samplerate=None,
+        blocksize=None,
+        task=None,
+        item=None,
+        experience=None
+    ):
         """Setup/reset all processors in cascade"""
 
         source = self.processors[0]
@@ -549,10 +561,20 @@ class ProcessPipe(object):
         for item in items:
             item.start_time = datetime.datetime.utcnow()
 
+        sample_cursor = 0
         while not eod:
-            frames, eod = source.process()
+            frames, eod = source.process(
+                task=task,
+                experience=experience,
+                item=item,
+                sample_cursor=sample_cursor
+            )
             for item in items:
-                frames, eod = item.process(frames, eod)
+                frames, eod = item.process(
+                    frames,
+                    eod
+                )
+                sample_cursor += source.blocksize()
 
         if source.id() == 'live_decoder':
             # Restore default handler for Interruption signal

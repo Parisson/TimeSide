@@ -31,6 +31,14 @@ from __future__ import division
 from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.core.api import IDecoder
 
+from django.conf import settings
+
+import logging
+import redis
+
+r = redis.Redis.from_url(settings.MESSAGE_BROKER)
+logger = logging.getLogger(__name__)
+
 
 class Decoder(Processor):
 
@@ -102,3 +110,25 @@ class Decoder(Processor):
     @interfacedoc
     def resolution(self):
         return self.input_width
+
+    def process(
+        self,
+        frames,
+        eod,
+        experience=None,
+        task=None,
+        item=None,
+        sample_cursor=None
+    ):
+
+        if sample_cursor is not None and (sample_cursor // self.blocksize() % settings.COMPLETION_INTERVAL == 0):
+            r.publish(
+                'timeside-experience-progress',
+
+                'cgerard' +
+                ":" + str(task.uuid) +
+                ":" + str(experience.uuid) +
+                ":" + str(item.uuid()) +
+                ":" + str(sample_cursor / self.totalframes())
+            )
+        super(Decoder, self).process(frames, eod)

@@ -361,8 +361,7 @@ class Item(Titled, UUID, Dated, Shareable):
         on_delete=models.SET_NULL,
         help_text=_("Audio provider (e.g. Deezer, Youtube, etc.)")
         )
-        
-    
+
     class Meta:
         ordering = ['-date_modified']
         verbose_name = _('item')
@@ -475,7 +474,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 self.mime_type = get_mime_type(path)
             super(Item, self).save()
 
-    def run(self, experience):
+    def run(self, experience, task=None, item=None):
         result_path = self.get_results_path()
         # get audio source
         uri = self.get_uri()
@@ -546,7 +545,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 ).replace(settings.MEDIA_ROOT, '')
             self.save()
 
-        pipe.run()
+        pipe.run(experience=experience, task=task, item=item)
 
         def set_results_from_processor(proc, preset=None):
             if preset:
@@ -755,7 +754,7 @@ class Preset(UUID, Dated, Shareable):
     def __str__(self):
         return '_'.join([str(self.processor), str(self.uuid)[:4]])
 
-    def get_single_experience(self):
+    def get_single_experience(self, author=None):
         exp_title = "Simple experience for preset %s" % self.__str__()
         exp_description = "\n".join(
             [
@@ -922,7 +921,7 @@ class Task(UUID, Dated, Shareable):
             """))
         )
 
-    test= models.BooleanField(
+    test = models.BooleanField(
         blank=True,
         default=False,
         help_text=_('boolean to avoid celery when testing')

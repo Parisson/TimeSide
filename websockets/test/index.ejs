@@ -35,8 +35,41 @@
       socket.on("connect", function(datas){
         console.log("websocket connected")
       });
-      socket.on("timeside-done", function(datas){
-        console.log("Task done : " + datas.taskId)
+      socket.on("timeside-task-start", function(datas){
+        console.log("Task started : " + datas.taskId)
+      });
+      socket.on("timeside-experience-start", function(datas){
+        console.log(
+          "Experience started : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId
+        )
+      });
+      socket.on("timeside-experience-fail", function(datas){
+        console.log(
+          "Experience failed : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId
+        )
+      });
+      socket.on("timeside-experience-done", function(datas){
+        console.log(
+          "Experience done : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId
+        )
+      });
+      socket.on("timeside-experience-progress", function(datas){
+        console.log(
+          "Experience progression : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId +
+          "\completion : " + datas.completion
+        )
       });
       socket.on("connect_error", (err) => {
         console.log(err.message); // prints the message associated with the error

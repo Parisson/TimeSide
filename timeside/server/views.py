@@ -780,7 +780,7 @@ class ItemTranscode(DetailView):
                                           mime_type=mime_type)
         else:
             item = self.get_object()
-            result = get_or_run_proc_result(encoder, item)
+            result = get_or_run_proc_result(encoder, item, user=request.user)
             return serve_media(filename=result.file.path,
                                content_type=result.mime_type)
 
