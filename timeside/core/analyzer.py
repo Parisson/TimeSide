@@ -48,11 +48,9 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 from django.conf import settings
 
-import logging
 import redis
 
 r = redis.Redis.from_url(settings.MESSAGE_BROKER)
-logger = logging.getLogger(__name__)
 
 numpy_data_types = [
     #'float128',
@@ -1247,7 +1245,7 @@ class Analyzer(Processor):
         super(Analyzer, self).__init__()
 
     def setup(self, channels=None, samplerate=None,
-              blocksize=None, totalframes=None, task=None):
+              blocksize=None, totalframes=None):
         super(Analyzer, self).setup(channels, samplerate,
                                     blocksize, totalframes)
 
@@ -1257,7 +1255,6 @@ class Analyzer(Processor):
         self.result_samplerate = self.input_samplerate
         self.result_blocksize = self.input_blocksize
         self.result_stepsize = self.input_stepsize
-        self.task = task
 
     def add_result(self, result):
         if not self.uuid() in self.process_pipe.results:

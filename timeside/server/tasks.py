@@ -27,7 +27,6 @@ def task_run(task_id, test=False):
     task = Task.objects.get(uuid=task_id)
     results = []
     results_id = []
-    logger.info("BBB", task.author.id)
     r.publish(
         'timeside-task-start',
         str(task.author.username) + ":" + str(task.uuid)

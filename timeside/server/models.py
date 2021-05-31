@@ -754,7 +754,7 @@ class Preset(UUID, Dated, Shareable):
     def __str__(self):
         return '_'.join([str(self.processor), str(self.uuid)[:4]])
 
-    def get_single_experience(self, author=None):
+    def get_single_experience(self):
         exp_title = "Simple experience for preset %s" % self.__str__()
         exp_description = "\n".join(
             [

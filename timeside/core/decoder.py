@@ -33,11 +33,9 @@ from timeside.core.api import IDecoder
 
 from django.conf import settings
 
-import logging
 import redis
 
 r = redis.Redis.from_url(settings.MESSAGE_BROKER)
-logger = logging.getLogger(__name__)
 
 
 class Decoder(Processor):

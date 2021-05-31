@@ -116,12 +116,11 @@ class Processor(Component, HasParam, metaclass=MetaProcessor):
 
     @interfacedoc
     def setup(self, channels=None, samplerate=None, blocksize=None,
-              totalframes=None, task=None):
+              totalframes=None):
         self.source_channels = channels
         self.source_samplerate = samplerate
         self.source_blocksize = blocksize
         self.source_totalframes = totalframes
-        self.task = task
 
         # If empty Set default values for input_* attributes
         # may be setted by the processor during __init__()
@@ -569,12 +568,12 @@ class ProcessPipe(object):
                 item=item,
                 sample_cursor=sample_cursor
             )
+            sample_cursor += source.blocksize()
             for item in items:
                 frames, eod = item.process(
                     frames,
                     eod
                 )
-                sample_cursor += source.blocksize()
 
         if source.id() == 'live_decoder':
             # Restore default handler for Interruption signal
