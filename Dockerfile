@@ -35,6 +35,7 @@ RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
 RUN pip3 install -U setuptools pip numpy
+RUN apt-get remove -y python3-yaml
 
 # Install timeside
 WORKDIR /srv/lib/timeside
