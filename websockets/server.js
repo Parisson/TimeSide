@@ -73,7 +73,7 @@ subscriber.on("message", (channel, message) => {
     const parts = message.split(":")
     const clientName = parts[0]
     const taskId = parts[1]
-    if(channel == "timeside-task-start"){
+    if(channel === "timeside-task-start"){
         for(let uuid in clients[clientName]){
             clients[clientName][uuid].emit(
                 "timeside-task-start",
@@ -82,7 +82,7 @@ subscriber.on("message", (channel, message) => {
                 }
             )
         }  
-    }else if(channel == "timeside-experience-start"){
+    }else if(channel === "timeside-experience-start"){
         const experienceId = parts[2]
         const itemId = parts[3]
         for(let uuid in clients[clientName]){
@@ -95,7 +95,7 @@ subscriber.on("message", (channel, message) => {
                 }
             )
         }   
-    }else if(channel == "timeside-experience-progress"){
+    }else if(channel === "timeside-experience-progress"){
         const experienceId = parts[2]
         const itemId = parts[3]
         const completion = parseFloat(parts[4])
@@ -110,7 +110,7 @@ subscriber.on("message", (channel, message) => {
                 }
             )
         }
-    }else if(channel == "timeside-experience-done"){
+    }else if(channel === "timeside-experience-done"){
         const experienceId = parts[2]
         const itemId = parts[3]
         for(let uuid in clients[clientName]){
@@ -123,7 +123,7 @@ subscriber.on("message", (channel, message) => {
                 }
             )
         }
-    }else if(channel == "timeside-experience-fail"){
+    }else if(channel === "timeside-experience-fail"){
         const experienceId = parts[2]
         const itemId = parts[3]
         for(let uuid in clients[clientName]){
