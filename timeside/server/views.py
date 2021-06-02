@@ -61,9 +61,6 @@ import timeside.core
 from timeside.core.analyzer import AnalyzerResultContainer
 import os
 
-import logging
-logger = logging.getLogger(__name__)
-
 
 def stream_from_task(task):
     for chunk in task.run(streaming=True):
