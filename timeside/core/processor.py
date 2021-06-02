@@ -34,9 +34,6 @@ import os
 import csv
 import sys
 
-import logging
-logger = logging.getLogger(__name__)
-
 
 __all__ = ['Processor', 'MetaProcessor', 'implements', 'abstract',
            'interfacedoc', 'processors', 'get_processor', 'ProcessPipe',
