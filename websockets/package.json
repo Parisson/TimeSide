@@ -11,6 +11,7 @@
     "install:build:prod": "npm install && npm run build && npm run prod",
     "lint": "eslint server.js --ext .js"
   },
+  "type": "module",
   "author": "Clément Gérard",
   "license": "ISC",
   "dependencies": {

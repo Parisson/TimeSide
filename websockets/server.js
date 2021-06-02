@@ -1,11 +1,15 @@
-const express = require('express')
-const redis = require('redis');
-const axios = require('axios')
+import express from 'express'
+import redis from 'redis'
+import axios from 'axios'
+import http from 'http'
+import { v4 as uuidv4 } from 'uuid'
+import resolve from 'path'
+import { Server } from "socket.io";
+
 const subscriber = redis.createClient(process.env.REDIS_URL);
 // const publisher = redis.createClient("redis://broker:6379");
 const app = express();
-const http = require('http').createServer(app)
-const { v4: uuidv4 } = require('uuid');
+const server = http.createServer(app)
 
 
 let origins = [process.env.ORIGIN]
@@ -13,15 +17,15 @@ let origins = [process.env.ORIGIN]
 // Websocket test page
 if(process.env.DEBUG){
     origins.push('http://localhost:' + process.env.PORT)
-    const resolve = require('path').resolve
+    
     app.set("view engine", "ejs");
-    app.set("views", resolve('./test'));
+    app.set("views", resolve.resolve('./test'));
     app.get('/', (req, res) => {
         res.render('index.ejs', { port: process.env.PORT })
     })
 }
 
-const io = require('socket.io')(http, {
+const io = new Server(server, {
     cors: {
         origin: origins,
         methods: ["GET", "POST"]
@@ -72,70 +76,79 @@ io.on("connection", (client) => {
 subscriber.on("message", (channel, message) => {
     const parts = message.split(":")
     const clientName = parts[0]
-    const taskId = parts[1]
-    if(channel === "timeside-task-start"){
-        for(let uuid in clients[clientName]){
-            clients[clientName][uuid].emit(
-                "timeside-task-start",
-                {
-                    taskId : taskId,
-                }
-            )
-        }  
-    }else if(channel === "timeside-experience-start"){
-        const experienceId = parts[2]
-        const itemId = parts[3]
-        for(let uuid in clients[clientName]){
-            clients[clientName][uuid].emit(
-                "timeside-experience-start",
-                {
-                    taskId : taskId,
-                    experienceId : experienceId,
-                    itemId : itemId
-                }
-            )
-        }   
-    }else if(channel === "timeside-experience-progress"){
-        const experienceId = parts[2]
-        const itemId = parts[3]
-        const completion = parseFloat(parts[4])
-        for(let uuid in clients[clientName]){
-            clients[clientName][uuid].emit(
-                "timeside-experience-progress",
-                {
-                    taskId : taskId,
-                    experienceId : experienceId,
-                    itemId : itemId,
-                    completion : completion
-                }
-            )
-        }
-    }else if(channel === "timeside-experience-done"){
-        const experienceId = parts[2]
-        const itemId = parts[3]
-        for(let uuid in clients[clientName]){
-            clients[clientName][uuid].emit(
-                "timeside-experience-done",
-                {
-                    taskId : taskId,
-                    experienceId : experienceId,
-                    itemId : itemId,
-                }
-            )
-        }
-    }else if(channel === "timeside-experience-fail"){
-        const experienceId = parts[2]
-        const itemId = parts[3]
-        for(let uuid in clients[clientName]){
-            clients[clientName][uuid].emit(
-                "timeside-experience-fail",
-                {
-                    taskId : taskId,
-                    experienceId : experienceId,
-                    itemId : itemId,
-                }
-            )
-        }    
+    
+    let taskId = null
+    if(typeof parts[1] !== "undefined") taskId = parts[1]
+
+    let experienceId = null
+    if(typeof parts[2] !== "undefined") experienceId = parts[2]
+
+    let itemId = null
+    if(typeof parts[3] !== "undefined") itemId = parts[3]
+
+    let completion = null
+    if(typeof parts[4] !== "undefined") completion = parseFloat(parts[4])
+
+    switch(channel){
+        case "timeside-task-start":
+            for(let uuid in clients[clientName]){
+                clients[clientName][uuid].emit(
+                    "timeside-task-start",
+                    {
+                        taskId : taskId,
+                    }
+                )
+            }
+            break  
+        case "timeside-experience-start":
+            for(let uuid in clients[clientName]){
+                clients[clientName][uuid].emit(
+                    "timeside-experience-start",
+                    {
+                        taskId : taskId,
+                        experienceId : experienceId,
+                        itemId : itemId
+                    }
+                )
+            }
+            break 
+        case "timeside-experience-progress":
+            for(let uuid in clients[clientName]){
+                clients[clientName][uuid].emit(
+                    "timeside-experience-progress",
+                    {
+                        taskId : taskId,
+                        experienceId : experienceId,
+                        itemId : itemId,
+                        completion : completion
+                    }
+                )
+            }
+            break
+        case "timeside-experience-done":
+            for(let uuid in clients[clientName]){
+                clients[clientName][uuid].emit(
+                    "timeside-experience-done",
+                    {
+                        taskId : taskId,
+                        experienceId : experienceId,
+                        itemId : itemId,
+                    }
+                )
+            }
+            break
+        case "timeside-experience-fail":
+            for(let uuid in clients[clientName]){
+                clients[clientName][uuid].emit(
+                    "timeside-experience-fail",
+                    {
+                        taskId : taskId,
+                        experienceId : experienceId,
+                        itemId : itemId,
+                    }
+                )
+            }
+            break    
     }
 })
 
@@ -146,6 +159,6 @@ subscriber.subscribe("timeside-experience-done");
 subscriber.subscribe("timeside-experience-fail");
 
 
-http.listen(socketPort, () => {
+server.listen(socketPort, () => {
     console.log("socket server started on port " + socketPort + "...");
 })
