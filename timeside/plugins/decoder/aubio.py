@@ -91,9 +91,7 @@ class AubioDecoder(Decoder):
     @interfacedoc
     def process(
         self,
-        task=None,
-        experience=None,
-        item=None,
+        progress_callback=None,
         sample_cursor=None
     ):
         frames, read = self.source.do_multi()
@@ -107,9 +105,7 @@ class AubioDecoder(Decoder):
         super(AubioDecoder, self).process(
             frames.copy(),
             self.eod,
-            task=task,
-            experience=experience,
-            item=item,
+            progress_callback=progress_callback,
             sample_cursor=sample_cursor
         )
         return frames.copy(), self.eod

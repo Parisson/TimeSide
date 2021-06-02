@@ -325,9 +325,7 @@ class FileDecoder(Decoder):
     @stack
     def process(
         self,
-        task=None,
-        experience=None,
-        item=None,
+        progress_callback=None,
         sample_cursor=None
     ):
         buf = self.queue.get()
@@ -337,9 +335,7 @@ class FileDecoder(Decoder):
         super(FileDecoder, self).process(
             frames,
             eod,
-            task=task,
-            experience=experience,
-            item=item,
+            progress_callback=progress_callback,
             sample_cursor=sample_cursor
         )
         return frames, eod

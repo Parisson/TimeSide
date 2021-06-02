@@ -46,12 +46,6 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
-from django.conf import settings
-
-import redis
-
-r = redis.Redis.from_url(settings.MESSAGE_BROKER)
-
 numpy_data_types = [
     #'float128',
     'float64',

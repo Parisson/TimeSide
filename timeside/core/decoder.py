@@ -33,10 +33,6 @@ from timeside.core.api import IDecoder
 
 from django.conf import settings
 
-import redis
-
-r = redis.Redis.from_url(settings.MESSAGE_BROKER)
-
 
 class Decoder(Processor):
 
@@ -113,20 +109,15 @@ class Decoder(Processor):
         self,
         frames,
         eod,
-        experience=None,
-        task=None,
-        item=None,
+        progress_callback=None,
         sample_cursor=None
     ):
 
-        if sample_cursor is not None and (sample_cursor // self.blocksize() % settings.COMPLETION_INTERVAL == 0):
-            r.publish(
-                'timeside-experience-progress',
+        if progress_callback is not None and sample_cursor is not None and\
+                (sample_cursor // self.blocksize() % settings.COMPLETION_INTERVAL == 0):
 
-                'cgerard' +
-                ":" + str(task.uuid) +
-                ":" + str(experience.uuid) +
-                ":" + str(item.uuid()) +
-                ":" + str(sample_cursor / self.totalframes())
+            progress_callback(
+                sample_cursor / self.totalframes()
             )
+
         super(Decoder, self).process(frames, eod)

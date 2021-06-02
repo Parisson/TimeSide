@@ -68,6 +68,10 @@ from xmljson import abdera as ab
 
 import logging
 
+import redis
+
+r = redis.Redis.from_url(settings.MESSAGE_BROKER)
+
 
 worker_logger = get_task_logger(__name__)
 app = 'timeside'
@@ -545,7 +549,25 @@ class Item(Titled, UUID, Dated, Shareable):
                 ).replace(settings.MEDIA_ROOT, '')
             self.save()
 
-        pipe.run(experience=experience, task=task, item=item)
+        if task and experience and item:
+
+            task_uuid = str(task.uuid)
+            experience_uuid = str(experience.uuid)
+            item_uuid = str(item.uuid)
+
+            def progress_callback(completion):
+                r.publish(
+                    'timeside-experience-progress',
+
+                    'cgerard' +
+                    ":" + task_uuid +
+                    ":" + experience_uuid +
+                    ":" + item_uuid +
+                    ":" + str(completion)
+                )
+            pipe.run(progress_callback=progress_callback)
+        else:
+            pipe.run()
 
         def set_results_from_processor(proc, preset=None):
             if preset:
