@@ -375,7 +375,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid', 'title')
+        read_only_fields = ('url', 'uuid')
 
     def update(self, instance, validated_data):
         instance.author = validated_data.get('title', instance.author)
