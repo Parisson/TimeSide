@@ -1,18 +1,15 @@
 #! /usr/bin/env python
 
+from timeside.server.models import Item, Provider
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
-from rest_framework import status
-from timeside.server.models import Provider,Item
 
-from django.conf import settings
 
-import os
-
-class TestProviderModel(TimeSideTestServer):
+class TestProvider(TimeSideTestServer):
     #test that providers work and item creation with provider
 
     def setUp(self):
         TimeSideTestServer.setUp(self)
+        self.client.login(username='admin', password='admin')
 
     def test_youtube_provider_from_uri(self):
         youtube_provider=Provider.objects.get(pid='youtube')
@@ -54,7 +51,7 @@ class TestProviderModel(TimeSideTestServer):
     
 
 
-class TestProvider(TimeSideTestServer):
+class TestProviderWithRequests(TimeSideTestServer):
     """ test item creation with providers """
 
     def setUp(self):
@@ -78,8 +75,8 @@ class TestProvider(TimeSideTestServer):
                 }
 
         response = self.client.post('/timeside/api/items/', params, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.data = response.data
+        self.assertEqual(response.status_code, 201)
+        self.assertNotEqual(response.data['source_file'],None)
 
     def testProviderYoutubeFromID(self):
         """ test item creation with youtube's MJ 'Beat It' track's ID """
@@ -91,8 +88,9 @@ class TestProvider(TimeSideTestServer):
                 }
 
         response = self.client.post('/timeside/api/items/', params, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.data = response.data
+        self.assertEqual(response.status_code, 201)
+        self.assertNotEqual(response.data['source_file'],None)
+        
 
     def testProviderDeezerFromURI(self):
         """ test item creation with Beatles' deezer's track's URI """
@@ -103,8 +101,9 @@ class TestProvider(TimeSideTestServer):
                 'provider': '/timeside/api/providers/' + self.deezer_uuid + '/'
                 }
         response = self.client.post('/timeside/api/items/', params, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.data = response.data
+        self.assertEqual(response.status_code, 201)
+        self.assertNotEqual(response.data['source_file'],None)
+        
 
     def testProviderDeezerFromID(self):
         """ test item creation with Beatles' deezer's track's ID """
@@ -115,7 +114,8 @@ class TestProvider(TimeSideTestServer):
                 'provider': '/timeside/api/providers/' + self.deezer_uuid + '/'
                 }
         response = self.client.post('/timeside/api/items/', params, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.data = response.data
+        self.assertEqual(response.status_code, 201)
+        self.assertNotEqual(response.data['source_file'],None)
+        
 
     

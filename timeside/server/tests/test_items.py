@@ -1,6 +1,4 @@
-from rest_framework import status
-from rest_framework.test import APITestCase
-from rest_framework.reverse import reverse
+
 
 from django.conf import settings
 
@@ -91,10 +89,5 @@ class ItemTests(TimeSideTestServer):
             print(response)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_download_mp3(self):
-        pass
-
-    def tearDown(self):
-        shutil.rmtree(self.samples_dir)
         
 

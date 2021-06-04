@@ -1,6 +1,8 @@
-from timeside.server.tests.timeside_test_server import TimeSideTestServer
-from timeside.server.models import Analysis,Result,Item
 import json
+
+from timeside.server.models import Analysis, Item, Result
+from timeside.server.tests.timeside_test_server import TimeSideTestServer
+
 
 class TestAnalyzer(TimeSideTestServer):
 
@@ -11,7 +13,6 @@ class TestAnalyzer(TimeSideTestServer):
 
     def test_analyzer(self):
         analyzers=Analysis.objects.all()
-        analysis_sweep=[]
         for a in analyzers:
             self.analyzer_work_test(a.uuid)
 
@@ -30,4 +31,5 @@ class TestAnalyzer(TimeSideTestServer):
         result=Result.objects.get(uuid=result_response.data['uuid'])
         if analysis.render_type:
             self.assertTrue(result.has_file())
-        else : self.assertTrue(result.has_hdf5())
+        else : 
+            self.assertTrue(result.has_hdf5())

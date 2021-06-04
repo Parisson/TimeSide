@@ -65,7 +65,6 @@ class ItemListSerializer(ItemPlayableSerializer):
         }
 
     def get_url(self, obj):
-        print(self.context.keys())
         request = self.context['request']
         return reverse(
             'item-detail',
@@ -81,7 +80,6 @@ class AudioUrlSerializer(serializers.Serializer):
     flac = serializers.URLField(read_only=True)
 
     def to_representation(self, instance):
-        print(self.context.keys())
         request = self.context['request']
         extensions = ['mp3', 'ogg', 'flac']
         self.audio_url = {
@@ -375,7 +373,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid', 'title')
+        read_only_fields = ('url', 'uuid')
 
     def update(self, instance, validated_data):
         instance.author = validated_data.get('title', instance.author)
@@ -403,7 +401,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
             'presets': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid',)
+        read_only_fields = ('url', 'uuid')
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -662,7 +660,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Task
         fields = ('url', 'uuid', 'experience',
-                  'selection', 'status', 'author', 'item')
+                  'selection', 'status', 'author', 'item','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
@@ -691,7 +689,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'uuid',
                   'title', 'description', 'render_type',
                   'preset', 'sub_processor',
-                  'parameters_schema')
+                  'parameters_schema','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},

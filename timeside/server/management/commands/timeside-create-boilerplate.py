@@ -163,10 +163,12 @@ class Command(BaseCommand):
                                 processor=processor,
                                 parameters=json.dumps(a.get_parameters_default())
                                 )
+
                     sub_processor,c= SubProcessor.objects.get_or_create(
                                 sub_processor_id=a.id(),
                                 processor=processor
                                 )
+                                
                     analysis,c = Analysis.objects.get_or_create(
                                 sub_processor=sub_processor,
                                 preset=preset,

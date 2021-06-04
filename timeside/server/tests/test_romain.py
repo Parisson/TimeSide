@@ -1,3 +1,4 @@
+from timeside.core import processor
 import h5py
 from app.worker import app
 from celery.contrib.testing.worker import start_worker
@@ -11,148 +12,90 @@ from timeside.server.tests.timeside_test_server import TimeSideTestServer
 
 class test_romain(TimeSideTestServer):
 
-    #allow_database_queries = True
-
-    # @classmethod
-    # def setUpClass(cls):
-    #     super().setUpClass()
-
-    #     # Start up celery worker
-    #     cls.celery_worker = start_worker(app, perform_ping_check=False)
-    #     cls.celery_worker.__enter__()
-
-    # @classmethod
-    # def tearDownClass(cls):
-    #     super().tearDownClass()
-
-    #     # Close worker
-    #     cls.celery_worker.__exit__(None, None, None)
 
     def setUp(self):
         TimeSideTestServer.setUp(self)
         self.client.login(username='admin', password='admin')
         self.sweep_32000=Item.objects.get(title="sweep_32000")
 
-    def test_create_analyzer(self):
-        analysis=Analysis.objects.all()
-        self.assertEqual(analysis.count(),0)
+    def test_youtube_dl(self):
+        youtube_prov=Provider.objects.get(pid='youtube')
+        data={'description': "Youtube Music from This Is It - Michael Jackson",
+            'externalUri': "https://www.youtube.com/watch?v=oRdxUFDoQe0",
+            'provider': "/timeside/api/providers/"+str(youtube_prov.uuid)+'/',
+            'title': "Beat It"}
     
-    def test_analyzer(self):
-        analyzers=Analysis.objects.all()
-        analysis_sweep=[]
-        for a in analyzers:
-            analysis_sweep.append((self.analyzer_work_test(a.uuid)))
-        print(analysis_sweep)
+
+        item=self.client.post('/timeside/api/items/',data,format='json')
+        print(item.content)
+
+    def test_selection_title(self):
+        sweeps=Item.objects.filter(title='sweep')
+        sweeps_url=[]
+        for s in sweeps :
+            sweeps_url.append('timeside/api/items/'+str(s.uuid)+'/')
+        data={
+            #'title':'c la fete',
+            'items': [],
+            'author': '/timeside/api/users/admin/',
+        }
+        response=self.client.post('/timeside/api/selections/',data)
+        print(response.content)
         
-            
-    def analyzer_work_test(self, analysis_uuid):
-        analysis=Analysis.objects.get(uuid=analysis_uuid)
+
+
+
+    def test_create_task(self):
+        sweeps=Item.objects.filter(title='sweep')
+        selection_sweep=Selection.objects.create()
+        selection_sweep.items.set(sweeps)
+        
+        pitch_processor=Processor.objects.get(pid='aubio_pitch')
+        pitch_preset=Preset.objects.create(processor=pitch_processor)
+        experience=Experience.objects.create()
+        experience.presets.add(pitch_preset)
+
+        task=Task.objects.create(
+            experience=experience,
+            selection=selection_sweep,
+            test=True
+        )
+        task.run()
+
+        result_sweep0=Result.objects.get(
+            item=sweeps[0],
+            preset=pitch_preset
+        )
+        print(result_sweep0.has_file())
+        print(result_sweep0.has_hdf5())
+
+        hdf5=h5py.File(result_sweep0.hdf5,'r')
+        print(hdf5.keys())
+        print(hdf5['aubio_pitch.pitch'].keys())
+        print(hdf5['aubio_pitch.pitch']['data_object'].keys())
+        print(hdf5['aubio_pitch.pitch']['data_object']['value'][:])
+
+
+    def test_create_analysis(self):
+        print(str(a.preset.processor.pid) for a in Analysis.objects.all())
+        preset=Preset.objects.get(
+                processor=Processor.objects.get(pid='aubio_pitch'))
+        analysis=Analysis.objects.get(preset=preset)
         analysis.test=True
         analysis.save()
-
-        params = {'title':'test_analysis_'+str(analysis_uuid),
+        params = {'title':'test_analysis_'+str(analysis.uuid),
                 'description':'',
-                'analysis':'/timeside/api/analysis/'+str(analysis_uuid)+ '/',
+                'analysis':'/timeside/api/analysis/'+str(analysis.uuid)+ '/',
                 'item': '/timeside/api/items/' + str(self.sweep_32000.uuid) + '/',
                 }
         analysis_track_response=self.client.post('/timeside/api/analysis_tracks/', params, format='json')
-        result_response=self.client.get(analysis_track_response.data['result_url'],format=json)
+        result_response=self.client.get(analysis_track_response.data['result_url'],format='json')
         result=Result.objects.get(uuid=result_response.data['uuid'])
-        if analysis.render_type:
-            return result.has_file()
-        else : return result.has_hdf5()
 
-    def test_analysis(self):
-        
-        pitch_analysis=Analysis.objects.get(title='Pitch')
-        pitch_analysis.test=True
-        pitch_analysis.save()
+        print(result.has_file())
+        print(result.has_hdf5())
 
-        
-        params = {'title':'test_analysis',
-                'description':'pitch on sweep_32000 for testing',
-                'analysis':'/timeside/api/analysis/'+str(pitch_analysis.uuid)+ '/',
-                'item': '/timeside/api/items/' + str(self.sweep_32000.uuid) + '/',
-                }
 
-        response = self.client.post('/timeside/api/analysis_tracks/', params, format='json')
-        response_result_png=self.client.get(response.data['result_url'],format=json)
-        print(response.status_code)
-
-        pitch_preset=Preset.objects.get(
-            processor=Processor.objects.get(pid='aubio_pitch')
-            )
-
-        result=Result.objects.get(
-            item=self.sweep_32000,
-            preset=pitch_preset
-        )
-       
-        hdf5_file=h5py.File(result.hdf5,'r')
-        print(hdf5_file.keys())
-        print(hdf5_file['aubio_pitch.pitch_confidence']['data_object']['value'][:])
-
-        
-
-        response_hdf5= self.client.get('/timeside/api/results/'+str(result.uuid)+'/',format=json)
-    
-    def test_new_analysis(self):
-        pitch_processor=Processor.objects.get(pid='aubio_pitch')
-        pitch_subprocessor=SubProcessor.objects.create(processor=pitch_processor)
-        pitch_preset=Preset.objects.create(processor=pitch_processor)
-        pitch_analysis=Analysis.objects.create(
-            sub_processor=pitch_subprocessor,
-            preset=pitch_preset,
-            test=True
-        )
-        params = {'title':'test_new_analysis',
-                'description':'aubio_pitch on sweep_32000',
-                'analysis':'/timeside/api/analysis/'+str(pitch_analysis.uuid)+ '/',
-                'item': '/timeside/api/items/' + str(self.sweep_32000.uuid) + '/',
-                }
-        response = self.client.post('/timeside/api/analysis_tracks/', params, format='json')
-        print(response.status_code)
-        result=Result.objects.get(
-            item=self.sweep_32000,
-            preset=pitch_preset
-        )
-        response_result=self.client.get(response.data['result_url'],format=json)
-        print(response_result.data)
-        response_data=self.client.get('/timeside/results/'+str(result.uuid)+'/json/')
-        print(response_data.data)
-
-        
-    def test_all_analysis(self):
-        all_analysis=Analysis.objects.all()
-        all_items=Item.objects.all()
-        items=[]
-        for i in range (8):
-            items.append(Item.objects.get(uuid=all_items[i].uuid))
-        c=0
-        for a in all_analysis :
-            a.test=True
-            a.save()
-            params = {'title':'test_all_analysis',
-                'description':'',
-                'analysis':'/timeside/api/analysis/'+str(a.uuid)+ '/',
-                'item': '/timeside/api/items/' + str(items[c].uuid) + '/',
-                }
-            response = self.client.post('/timeside/api/analysis_tracks/', params, format='json')
-            print(a.sub_processor.processor.pid)
-            print(Result.objects.filter(item=items[c]))
-            
-            c+=1
-
-      
-        
-        
-
-    def test_item_request(self):
-        
-        sweep_32000=Item.objects.get(title="sweep_32000")
-        item_url = reverse('item-detail', args=[sweep_32000.uuid])
-        response = self.client.get(item_url, format='json')
-        print(response.status_code)
 
 
     def test_get_waveform(self):

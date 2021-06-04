@@ -911,7 +911,7 @@ class Task(UUID, Dated, Shareable):
     status = models.IntegerField(
         _('status'),
         choices=STATUS,
-        default=_DRAFT,
+        default=_PENDING,
         help_text=_(cleandoc(f"""
             Task's status:\n
             failed: {_FAILED}\n

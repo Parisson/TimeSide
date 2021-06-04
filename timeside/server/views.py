@@ -31,6 +31,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.middleware.csrf import get_token as get_csrf_token
+from requests.api import request
 
 from rest_framework import viewsets, generics
 from rest_framework import status
@@ -48,6 +49,7 @@ from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
 import django_filters.rest_framework as filters
 from django.http import Http404
+from django.db.models import Q
 
 from . import models
 from . import serializers
@@ -112,11 +114,23 @@ class AnnotationTrackFilter(filters.FilterSet):
 class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.AnnotationTrack
-    queryset = model.objects.all()
     serializer_class = serializers.AnnotationTrackSerializer
+    #queryset=model.objects.all()
+    queryset=model.objects.filter(
+        Q(is_public=True) | Q(is_public=False)
+        )
     filterset_class = AnnotationTrackFilter
+    
+    """ def get_queryset(self):
+        if self.request is None:
+            return self.model.objects.none()
+        return self.model.objects.all()
 
-
+        return self.model.objects.filter(
+            Q(is_public=True) | Q(author=self.request.user)
+        )
+        """
+    
 class AnnotationFilter(filters.FilterSet):
     track_uuid = filters.UUIDFilter(field_name="track__uuid")
 
