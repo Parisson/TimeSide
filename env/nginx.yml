@@ -1,12 +1,15 @@
 
-nginx:
-  image: nginx
-  ports:
-    - "8080:80"
-  volumes:
-    - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
-  volumes_from:
-    - app
-    - var
-  links:
-    - app
+services:
+
+  nginx:
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./var/log/nginx:/var/log/nginx
+    volumes_from:
+      - app
+      - var
+    links:
+      - app

@@ -21,11 +21,13 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-tensorboard:
-  image: parisson/timeside:latest-dev
-  #build: .
-  ports:
-    - "6006:6006"
-  volumes_from:
-    - app
-  command: sh -c "cd /srv/lib/timeside/docs/ipynb; tensorboard --logdir=."
+services:
+
+  tensorboard:
+    image: parisson/timeside:latest-dev
+    #build: .
+    ports:
+      - "6006:6006"
+    volumes_from:
+      - app
+    command: sh -c "cd /srv/lib/timeside/docs/ipynb; tensorboard --logdir=."

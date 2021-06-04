@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-app:
-  build: .
+services:
 
-worker:
-  build: .
+  app:
+    build: .
+
+  worker:
+    build: .
 

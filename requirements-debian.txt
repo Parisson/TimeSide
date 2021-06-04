@@ -1,7 +1,7 @@
 # Python
 python3
 python3-pip
-python3-cairo
+python3-yaml
 
 # Legacy decoders and encoders need Gstreamer
 python3-gst-1.0
@@ -16,6 +16,7 @@ glib-networking
 gobject-introspection
 libges-1.0-0
 libofa0
+libgirepository1.0-dev
 
 # Optionnal Audio Analysis libraries
 vamp-examples
@@ -42,4 +43,4 @@ vim
 curl
 procps
 pkg-config
-
+libcairo2-dev

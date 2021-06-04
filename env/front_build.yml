@@ -23,11 +23,13 @@
 
 # Usage : docker-compose -f docker-compose.yml -f env/build.yml -f env/debug.yml -f env/dev.yml -f env/js_build.yml run --service-ports js_build
 
-front_build:
-  image: andreptb/grunt
-  volumes_from:
-    - app
-  ports:
-    - "9001:9000"
-    - "35729:35729"
-  command: sh -c "cd /srv/lib/timeside/timeside/player/static/timeside2; npm install --silent; bower install --allow-root; grunt build --force; npm prune --production;"
+services:
+
+  front_build:
+    image: andreptb/grunt
+    volumes_from:
+      - app
+    ports:
+      - "9001:9000"
+      - "35729:35729"
+    command: sh -c "cd /srv/lib/timeside/timeside/player/static/timeside2; npm install --silent; bower install --allow-root; grunt build --force; npm prune --production;"
