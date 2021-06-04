@@ -65,6 +65,7 @@ class ItemListSerializer(ItemPlayableSerializer):
         }
 
     def get_url(self, obj):
+        print(self.context.keys())
         request = self.context['request']
         return reverse(
             'item-detail',
@@ -80,6 +81,7 @@ class AudioUrlSerializer(serializers.Serializer):
     flac = serializers.URLField(read_only=True)
 
     def to_representation(self, instance):
+        print(self.context.keys())
         request = self.context['request']
         extensions = ['mp3', 'ogg', 'flac']
         self.audio_url = {
@@ -373,7 +375,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid', 'title')
+        read_only_fields = ('url', 'uuid')
 
     def update(self, instance, validated_data):
         instance.author = validated_data.get('title', instance.author)
@@ -737,7 +739,7 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     #     return super(AnalysisTrackSerializer, self).create(validated_data)
 
     def get_result_uuid(self, obj):
-        result = get_result(item=obj.item, preset=obj.analysis.preset)
+        result = get_result(item=obj.item, preset=obj.analysis.preset, test=obj.analysis.test)
         if isinstance(result, ts.models.Result):
             self._result_uuid = result.uuid
             return result.uuid

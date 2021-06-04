@@ -21,7 +21,9 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-app:
-  volumes:
-    - .:/srv/lib/timeside
+services:
+
+  app:
+    volumes:
+      - .:/srv/lib/timeside
 

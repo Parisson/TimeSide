@@ -20,12 +20,14 @@ class TestCheckProcessorsParam(unittest.TestCase):
         has schema parameters as __init__ arguments"""
 
         argspec = inspect.getfullargspec(processor_cls.__init__)[:4]
-        argspec.args.remove('self')  # remove 'self' from arguments list
+        print(argspec)
+        print(type(argspec[0]))
+        argspec[0].remove('self')  # remove 'self' from arguments list
 
         # print argspec.args
         parameters = processor_cls.get_parameters_schema()['properties'].keys()
         # print traits_parameters
-        self.assertTrue(set(parameters).issubset(argspec.args))
+        self.assertTrue(set(parameters).issubset(argspec[0]))
 
 
 def _tests_factory(test_class, test_doc, list_processors, skip_reasons={}):
@@ -35,6 +37,7 @@ def _tests_factory(test_class, test_doc, list_processors, skip_reasons={}):
         def test_func_factory(proc):
             test_func = lambda self: self._check_param_test(proc)
             test_func.__doc__ = test_doc % proc.__name__
+
             return test_func
 
         test_func_name = "test_%s" % proc.__name__

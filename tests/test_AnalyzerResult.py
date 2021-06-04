@@ -10,7 +10,6 @@ from math import pi
 
 verbose = 0
 
-
 class TestAnalyzerResult(unittest.TestCase):
     """ test AnalyzerResult """
 
@@ -36,7 +35,7 @@ class TestAnalyzerResult(unittest.TestCase):
 
 # Get good and bad types for AnalyzerResult.data_object.data.value
 from timeside.core.analyzer import numpy_data_types as good_dtypes
-good_numpy_data_types = [str(dtype)[13:-2] for dtype in good_dtypes]
+good_numpy_data_types = [str(dtype)[14:-2] for dtype in good_dtypes]
 bad_numpy_data_types = [
     # not understood by json or yaml
     'float128',
@@ -257,7 +256,7 @@ class TestAnalyzerResultAsDict(TestAnalyzerResultGoodType):
     def tearDown(self):
 
         self.assertIsInstance(self.result.as_dict(), dict)
-        self.assertItemsEqual(self.result.keys() + ['data_mode', 'time_mode'],
+        self.assertCountEqual(self.result.keys() + ['data_mode', 'time_mode'],
                               self.result.as_dict().keys())
 
 if __name__ == '__main__':

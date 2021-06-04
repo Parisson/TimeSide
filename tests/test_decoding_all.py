@@ -92,6 +92,7 @@ class TestDecodingStereoUpsampling(TestDecoding):
     def setUp(self):
         super(TestDecodingStereoUpsampling, self).setUp()
         self.samplerate, self.channels, self.blocksize = 96000, 2, None
+        self.upsampling=True
 
 
 class TestDecodingShortBlock(TestDecoding):

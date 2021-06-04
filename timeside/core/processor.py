@@ -323,7 +323,7 @@ def list_processors_rst(interface=IProcessor, recurse=False):
     return lst
 
 def list_processors_csv(interface=IProcessor):
-    f = open('list_processors.csv', 'wb')
+    f = open('list_processors.csv', 'w')
     writer = csv.writer(f,delimiter=';')
     writer.writerow(['id','version','APInterface','ValueType','description','unit','parent','repository'])
     _list_processors_csv_rec(interface,f)

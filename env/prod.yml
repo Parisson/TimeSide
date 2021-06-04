@@ -22,20 +22,15 @@
 # Thomas Fillon <thomas@parisson.com>
 
 
-app:
-  build: .
-  volumes:
-    - ./app:/srv/app
-    - .:/srv/lib/timeside
-  command: /bin/bash /srv/app/bin/app.sh --runserver
-  ports:
-    - '9080:8000'
-  env_file:
-    - env/debug.env
+services:
 
-worker:
-  build: .
-  command: /bin/bash /srv/app/bin/worker.sh
-  env_file:
-    - env/debug.env
+  app:
+    command: /bin/bash /srv/app/bin/app.sh
+    env_file:
+      - env/prod.env
+
+  worker:
+    command: /bin/bash /srv/app/bin/worker.sh
+    env_file:
+      - env/prod.env
 

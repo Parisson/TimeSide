@@ -192,7 +192,7 @@ def sha1sum_file(filename):
 
     >>> from timeside.core.tools.test_samples import samples
     >>> wav_file = samples["C4_scale.wav"]
-    >>> print sha1sum_file(wav_file)
+    >>> print (sha1sum_file(wav_file))
     a598e78d0b5c90da54a77e34c083abdcd38d42ba
     '''
     import hashlib
@@ -211,7 +211,7 @@ def sha1sum_url(url):
     '''Return the secure hash digest with sha1 algorithm for a given url
 
     >>> url = "https://github.com/yomguy/timeside-samples/raw/master/samples/guitar.wav"
-    >>> print sha1sum_url(url)
+    >>> print (sha1sum_url(url))
     08301c3f9a8d60926f31e253825cc74263e52ad1
 
     '''
@@ -225,7 +225,7 @@ def sha1sum_url(url):
     max_file_size = 10 * 1024 * 1024  # 10Mo limit in case of very large file
 
     total_read = 0
-    with closing(urllib.urlopen(url)) as url_obj:
+    with closing(urllib.request.urlopen(url)) as url_obj:
         for chunk in iter(lambda: url_obj.read(chunk_size), b''):
             sha1.update(chunk)
             total_read += chunk_size

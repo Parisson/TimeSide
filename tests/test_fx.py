@@ -2,7 +2,8 @@
 
 import unittest
 from unit_timeside import TestRunner
-from timeside.plugins.decoder.file import FileDecoder
+#from timeside.plugins.decoder.file import FileDecoder
+from timeside.plugins.decoder.aubio import AubioDecoder as FileDecoder
 from timeside.core import get_processor
 
 from timeside.core.tools.test_samples import samples
@@ -14,7 +15,6 @@ class TestFxGain(unittest.TestCase):
         self.gain = 2
         self.fx = get_processor('fx_gain')(gain=self.gain)
         self.level = get_processor('level')()
-
 
     def testOnC4Scale(self):
         "runs on C4 scale"
@@ -32,7 +32,7 @@ class TestFxGain(unittest.TestCase):
         results = self.level.results
         for result_id in self.expected.keys():
             result = results[result_id]
-            self.assertAlmostEquals(result.data_object.value,
+            self.assertAlmostEquals(result.data_object.value[0],
                                     self.expected[result_id],
                                     places=2)
 

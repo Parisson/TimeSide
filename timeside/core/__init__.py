@@ -25,7 +25,7 @@ import sys
 from . import api
 from . import processor
 
-from .processor import get_processor, Processor
+from .processor import get_processor, Processor, list_processors
 from .component import implements, interfacedoc, abstract
 from .tools import package as ts_package
 

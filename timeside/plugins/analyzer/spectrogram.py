@@ -53,8 +53,8 @@ class Spectrogram(Analyzer):
     >>> spectrogram = get_processor('spectrogram_analyzer')(input_blocksize=2048, input_stepsize=1024)
     >>> pipe = (decoder | spectrogram)
     >>> pipe.run()
-    >>> spectrogram.results.keys()
-    ['spectrogram_analyzer']
+    >>> 'spectrogram_analyzer' in spectrogram.results.keys()
+    True
     >>> result = spectrogram.results['spectrogram_analyzer']
     >>> result.data.shape
     (344, 1025)
