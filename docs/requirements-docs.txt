@@ -1,5 +1,5 @@
 Sphinx==2.4.1
-Django==2.2
+Django==2.2.21
 sphinx-rtd-theme==0.4.3
 sphinxcontrib-applehelp==1.0.1
 sphinxcontrib-devhelp==1.0.1
