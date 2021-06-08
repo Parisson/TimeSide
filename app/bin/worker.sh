@@ -10,6 +10,6 @@ chown -R $uid:$gid '/var/log/celery/'
 if [ $DEBUG = True ]; then
     python3 manage.py timeside-celery-worker --loglevel $log_level --logfile $worker_log_file --uid $uid --gid $gid
 else
-    celery -A worker worker --loglevel=$loglevel --logfile=$worker_log_file --uid=$uid --gid=$gid
+    celery -A worker worker --loglevel=$log_level --logfile=$worker_log_file --uid=$uid --gid=$gid
 fi
 

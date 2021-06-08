@@ -23,7 +23,7 @@
 
 services:
   var:
-    image: debian:jessie
+    image: debian:buster
     volumes:
        - ./bin:/srv/bin
        - /archive/WASABI/media:/srv/media

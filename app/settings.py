@@ -2,8 +2,15 @@ import os
 import sys
 import environ
 
-from worker import app
+# set default values and casting
+env = environ.Env(DEBUG=(bool, False),
+                  CELERY_TASK_ALWAYS_EAGER=(bool, False),
+                  )
+# Django settings for server project.
+DEBUG = env('DEBUG')  # False if not in os.environ
+#DEBUG=True
 
+from worker import app
 
 sys.dont_write_bytecode = True
 
@@ -54,7 +61,7 @@ TIME_ZONE = 'Europe/Paris'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 1
+SITE_ID = 2
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.

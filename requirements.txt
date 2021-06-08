@@ -35,8 +35,8 @@ django-environ==0.4.5
 django-extensions==2.2.8
 django-filter==2.2.0
 django-npm==1.0.0
-# djangorestframework==3.11.0
-git+https://github.com/encode/django-rest-framework.git@6a23fa06495c6010239dda926f55f2d6baa79cf3#egg=djangorestframework
+djangorestframework==3.12.4
+#git+https://github.com/encode/django-rest-framework.git@6a23fa06495c6010239dda926f55f2d6baa79cf3#egg=djangorestframework
 djangorestframework-simplejwt==4.4.0
 docutils==0.16
 entrypoints==0.3
@@ -132,6 +132,7 @@ python-editor==1.0.4
 python-json-logger==0.1.11
 pytz==2019.3
 pyxdg==0.25
+PyYAML==5.4.1
 pyzmq==18.1.1
 qtconsole==4.6.0
 redis==3.4.1

@@ -1,7 +1,6 @@
 # Python
 python3
 python3-pip
-python3-yaml
 
 # Legacy decoders and encoders need Gstreamer
 python3-gst-1.0
@@ -44,3 +43,4 @@ curl
 procps
 pkg-config
 libcairo2-dev
+libyaml-dev

@@ -432,6 +432,8 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
         by filtering against `analysis` and `item` query parameters in the URL.
         Query parameters values should be analysis' or of the item's uuid.
         """
+        if self.request is None:
+            return self.model.objects.none()
         queryset = self.model.objects.all()
         analysis_uuid = self.request.query_params.get('analysis', None)
         item_uuid = self.request.query_params.get('item', None)
