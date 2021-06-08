@@ -1,5 +1,6 @@
 from timeside.server.models import *
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
+from django.test.client import MULTIPART_CONTENT, encode_multipart, BOUNDARY
 
 
 class TestItemRequests(TimeSideTestServer):
@@ -56,8 +57,8 @@ class TestItemWithRequests(TimeSideTestServer):
         item=self.client.post('/timeside/api/items/', data, format='json')
         self.assertEqual(item.status_code, 201)
         self.assertEqual(item.data['source_file'],None)
+        
         item_obj=Item.objects.get(uuid=item.data['uuid'])
-
         experience=Experience.objects.create()
         experience.presets.add( 
             Preset.objects.create(
@@ -66,21 +67,29 @@ class TestItemWithRequests(TimeSideTestServer):
         )
         item_obj.run(experience)
 
-    def test_create_item_from_local_song(self):
+    def test_create_item_with_local_song(self):
         from timeside import __file__ as ts_file
         ts_path = os.path.split(os.path.abspath(ts_file))[0]
         tests_dir = os.path.abspath(os.path.join(ts_path, '../tests'))
-        tests_dir+='/samples/sweep.mp3'
-        print(tests_dir)
-        data={
+        tests_dir+='/samples/sweep.flac'
+        f = open(tests_dir, 'rb')
+        data=encode_multipart(BOUNDARY,{
             "title": "test_create_item_from_local_song",
             "description": "sweep.mp3 from local test directory",
-            'source_file': tests_dir
-        }
-        item=self.client.post('/timeside/api/items/', data, format='json')
+            'source_file': f
+        })
+        item=self.client.post('/timeside/api/items/', data, content_type=MULTIPART_CONTENT)
         self.assertEqual(item.status_code, 201)
-        print(item.content)
+        self.assertEqual(item.data['source_file'][-5:],'.flac')
 
+        item_obj=Item.objects.get(uuid=item.data['uuid'])
+        experience=Experience.objects.create()
+        experience.presets.add( 
+            Preset.objects.create(
+                processor=Processor.objects.get(pid='aubio_pitch')
+            )
+        )
+        item_obj.run(experience)
 
 
     def test_update_item(self):
@@ -104,6 +113,14 @@ class TestItemWithRequests(TimeSideTestServer):
         self.assertEqual(delete_request.status_code,204)
         get_request=self.client.get(self.obj_url(item_obj),format='json')
         self.assertEqual(get_request.status_code,404)
+
+
+    def test_get_waveform(self):
+        item_obj=Item.objects.get(title="sweep_32000")
+        item=self.client.get(self.obj_url(item_obj))
+        waveform=self.client.get(item.data['waveform_url'])
+        self.assertEqual(waveform.status_code, 200)
+        self.assertIn('waveform',waveform.data.keys())
 
 
     

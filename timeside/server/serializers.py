@@ -179,7 +179,7 @@ class WaveformSerializer(serializers.Serializer):
         self.nb_pixels = int(request.GET.get('nb_pixels', 1024))
 
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=instance)
+        result = get_or_run_proc_result('waveform_analyzer', item=instance, test=True)
         import h5py
 
         result_id = 'waveform_analyzer'
@@ -252,7 +252,7 @@ class ItemWaveformSerializer(ItemSerializer):
     def get_waveform_image_url(self, obj):
         request = self.context['request']
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        result = get_or_run_proc_result('waveform_analyzer', item=obj, test=True)
         return reverse('timeside-result-visualization',
                        kwargs={'uuid': result.uuid},
                        request=request)+'?id=waveform_analyzer'

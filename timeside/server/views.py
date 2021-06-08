@@ -115,21 +115,18 @@ class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.AnnotationTrack
     serializer_class = serializers.AnnotationTrackSerializer
-    #queryset=model.objects.all()
-    queryset=model.objects.filter(
-        Q(is_public=True) | Q(is_public=False)
-        )
+    queryset=model.objects.all()
     filterset_class = AnnotationTrackFilter
     
-    """ def get_queryset(self):
+    def get_queryset(self):
         if self.request is None:
             return self.model.objects.none()
-        return self.model.objects.all()
-
         return self.model.objects.filter(
             Q(is_public=True) | Q(author=self.request.user)
         )
-        """
+
+        
+
     
 class AnnotationFilter(filters.FilterSet):
     track_uuid = filters.UUIDFilter(field_name="track__uuid")
