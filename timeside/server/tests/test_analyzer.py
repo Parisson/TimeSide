@@ -6,25 +6,20 @@ from timeside.server.tests.timeside_test_server import TimeSideTestServer
 
 class TestAnalyzer(TimeSideTestServer):
 
-    def setUp(self):
-        TimeSideTestServer.setUp(self)
-        self.client.login(username='admin', password='admin')
-        self.sweep_32000=Item.objects.get(title="sweep_32000")
 
     def test_analyzer(self):
         analyzers=Analysis.objects.all()
         for a in analyzers:
-            self.analyzer_work_test(a.uuid)
+            self.analyzer_work_test(a)
 
-    def analyzer_work_test(self, analysis_uuid):
-        analysis=Analysis.objects.get(uuid=analysis_uuid)
+    def analyzer_work_test(self, analysis):
         analysis.test=True
         analysis.save()
 
-        params = {'title':'test_analysis_'+str(analysis_uuid),
+        params = {'title':'test_analysis_'+analysis.title,
                 'description':'',
-                'analysis':'/timeside/api/analysis/'+str(analysis_uuid)+ '/',
-                'item': '/timeside/api/items/' + str(self.sweep_32000.uuid) + '/',
+                'analysis':'/timeside/api/analysis/'+str(analysis.uuid)+ '/',
+                'item': self.item_url,
                 }
         analysis_track_response=self.client.post('/timeside/api/analysis_tracks/', params, format='json')
         result_response=self.client.get(analysis_track_response.data['result_url'],format=json)

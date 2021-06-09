@@ -7,10 +7,6 @@ from timeside.server.tests.timeside_test_server import TimeSideTestServer
 class TestProvider(TimeSideTestServer):
     #test that providers work and item creation with provider
 
-    def setUp(self):
-        TimeSideTestServer.setUp(self)
-        self.client.login(username='admin', password='admin')
-
     def test_youtube_provider_from_uri(self):
         youtube_provider=Provider.objects.get(pid='youtube')
         song_from_provider=Item.objects.create(
@@ -51,7 +47,7 @@ class TestProvider(TimeSideTestServer):
     
 
 
-class TestProviderWithRequests(TimeSideTestServer):
+class TestProviderRequests(TimeSideTestServer):
     """ test item creation with providers """
 
     def setUp(self):

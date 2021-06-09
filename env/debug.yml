@@ -21,6 +21,8 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
+version: '3'
+
 services:
 
   app:

@@ -3,24 +3,32 @@ from timeside.server.tests.timeside_test_server import TimeSideTestServer
 
 class TestResults(TimeSideTestServer):
 
-    def test_get_hdf5(self):
+    def get_result(self,analyzer):
         
-        analyzer=Analysis.objects.get(
-            title='f0 (aubio)'
-        )
         analyzer.test=True
         analyzer.save()
-        item=Item.objects.all()[0]
 
         param={
             "title": "string",
             "analysis": "/timeside/api/analysis/"+str(analyzer.uuid)+'/',
-            "item": "/timeside/api/items/"+str(item.uuid)+'/'
+            "item": self.item_url
         }
         analysis_track=self.client.post('/timeside/api/analysis_tracks/',param)
-        result=self.client.get(analysis_track.data['result_url']+'visual/')
-    
-        print(result.content)
+        self.assertEqual(analysis_track.status_code,201)
+        result=self.client.get(analysis_track.data['result_url'])
+        self.assertEqual(result.status_code,200)
+        return result
+
+
+
+    def test_get_hdf5(self):
+
+        analyzer=Analysis.objects.get(
+            title='f0 (aubio)'
+        )
+        
+        result=self.get_result(analyzer)
+        self.assertEqual(result.data['hdf5'][-5:],'.hdf5')
 
         
         
@@ -29,16 +37,27 @@ class TestResults(TimeSideTestServer):
                 title='Pitch grapher'
             )
 
-        analyzer.test=True
-        analyzer.save()
-        item=Item.objects.all()[0]
+        result=self.get_result(analyzer)    
+        self.assertEqual(result.data['file'][-4:],'.png')
 
-        param={
-            "title": "string",
-            "analysis": "/timeside/api/analysis/"+str(analyzer.uuid)+'/',
-            "item": "/timeside/api/items/"+str(item.uuid)+'/'
-        }
-        analysis_track=self.client.post('/timeside/api/analysis_tracks/',param)
-        result=self.client.get(analysis_track.data['result_url']+'png/$')
+
+
+    def test_get_visual(self):
+        analyzer=Analysis.objects.get(
+            title="Onset Detection Function"
+            )
+        result=self.get_result(analyzer)
+        self.assertEqual(result.data['hdf5'][-5:],'.hdf5')
+
+        visual=self.client.get(result.data['url']+"visual/")
+        self.assertEqual(visual.content_type,'image/png')
+
+
+
+
+        
+
+
+
+
     
-        print(result.content)

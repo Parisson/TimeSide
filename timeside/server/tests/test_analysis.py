@@ -2,12 +2,7 @@ from timeside.server.models import *
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
 
 
-class TestAnalysisWithRequests(TimeSideTestServer):
-
-    def setUp(self):
-        TimeSideTestServer.setUp(self)
-        self.client.login(username='admin', password='admin')
-        self.sweeps=Item.objects.filter(title='sweep')
+class TestAnalysisRequests(TimeSideTestServer):
     
     def test_subprocessor_requests(self):
         #listSubProcessors
@@ -18,15 +13,7 @@ class TestAnalysisWithRequests(TimeSideTestServer):
         #retrieveSubProcessor
         processor=self.client.get(list_subprocessors.data[0]['url'], format='json')
         self.assertEqual(processor.status_code, 200)
-        
-        #TODO: create a createSubProcessor request
-
-    def delete_test(self,obj):
-        delete_request=self.client.delete(obj.data['url'],format='json')
-        self.assertEqual(delete_request.status_code,204)
-        get_request=self.client.get(obj.data['url'],format='json')
-        self.assertEqual(get_request.status_code,404)
-
+    
     def test_analysis_requests(self):
         #listAnalysis
         list_analysis=self.client.get('/timeside/api/analysis/', format='json')
@@ -68,21 +55,12 @@ class TestAnalysisWithRequests(TimeSideTestServer):
         self.assertEqual(list_analysis_tracks.status_code, 200)
         self.assertEqual(len(list_analysis_tracks.data),AnalysisTrack.objects.count())
 
-        #getAnalysis
-        analysis_obj=Analysis.objects.get(
-            sub_processor=SubProcessor.objects.get(
-                processor=Processor.objects.get(pid='aubio_pitch')
-        ))
-        analysis_obj.test=True
-        analysis_obj.save()
-        analysis=self.client.get('/timeside/api/analysis/'+str(analysis_obj.uuid)+'/', format='json')
-
         #createAnalysisTrack
         data={
             'title':'test_analysis_track',
             'description':'',
-            'analysis':analysis.data['url'],
-            'item':self.client.get('/timeside/api/items/', format='json').data[0]['url']
+            'analysis':self.analysis_url,
+            'item':self.item_url
         }
         analysis_track=self.client.post('/timeside/api/analysis_tracks/',data,format='json')
         self.assertEqual(analysis_track.status_code,201)
@@ -95,18 +73,18 @@ class TestAnalysisWithRequests(TimeSideTestServer):
         self.assertEqual(self.client.get(analysis_track.data['url'], format='json').status_code,200)
 
         #update : change item
-        data['item']=self.client.get('/timeside/api/items/', format='json').data[1]['url']
+        data['item']=self.item2_url
         analysis_track=self.client.put(analysis_track.data['url'], data, format='json')
-        self.assertEqual(analysis_track.data['item'],data['item'])
+        self.assertEqual(analysis_track.data['item'][-40:],data['item'][-40:])
         
         result=self.client.get(analysis_track.data['result_url'], format='json')
-        self.assertEqual(result.data['item'],data['item'])
+        self.assertEqual(result.data['item'][-40:],data['item'][-40:])
         
         #update : change analysis
         analysis_obj=Analysis.objects.get(
             sub_processor=SubProcessor.objects.get(
-                processor=Processor.objects.get(pid='aubio_silence')
-        ))
+                processor=self.processor2)
+            )
         analysis_obj.test=True
         analysis_obj.save()
         analysis=self.client.get('/timeside/api/analysis/'+str(analysis_obj.uuid)+'/', format='json')
