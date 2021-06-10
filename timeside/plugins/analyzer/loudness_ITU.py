@@ -124,7 +124,6 @@ class LoudnessITU(Analyzer):
 
     @frames_adapter
     def process(self, frames, eod=False):
-
         SumTerm = 0
         for n in range(0, self.input_channels):
             y = lfilter(self.B2, self.A2,

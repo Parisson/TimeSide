@@ -1,0 +1,19 @@
+# Use `allow` to specify which dependencies to maintain
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/websocket"
+    target-branch: "dev"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "all"
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    target-branch: "dev"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-name: "all"

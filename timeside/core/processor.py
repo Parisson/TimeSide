@@ -492,7 +492,13 @@ class ProcessPipe(object):
                 pipe += ' | '
         return pipe
 
-    def run(self, channels=None, samplerate=None, blocksize=None):
+    def run(
+        self,
+        channels=None,
+        samplerate=None,
+        blocksize=None,
+        progress_callback=None
+    ):
         """Setup/reset all processors in cascade"""
 
         source = self.processors[0]
@@ -549,10 +555,18 @@ class ProcessPipe(object):
         for item in items:
             item.start_time = datetime.datetime.utcnow()
 
+        sample_cursor = 0
         while not eod:
-            frames, eod = source.process()
+            frames, eod = source.process(
+                progress_callback=progress_callback,
+                sample_cursor=sample_cursor
+            )
+            sample_cursor += source.blocksize()
             for item in items:
-                frames, eod = item.process(frames, eod)
+                frames, eod = item.process(
+                    frames,
+                    eod
+                )
 
         if source.id() == 'live_decoder':
             # Restore default handler for Interruption signal
