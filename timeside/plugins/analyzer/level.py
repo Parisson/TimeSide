@@ -119,6 +119,7 @@ class Level(Analyzer):
         rms_level.data_object.value = np.round(20 * np.log10(rms_val), 3)
         self.add_result(rms_level)
 
+
 if __name__ == "__main__":
     import doctest
     import timeside

@@ -68,6 +68,10 @@ from xmljson import abdera as ab
 
 import logging
 
+import redis
+
+r = redis.Redis.from_url(settings.MESSAGE_BROKER)
+
 
 worker_logger = get_task_logger(__name__)
 app = 'timeside'
@@ -361,8 +365,7 @@ class Item(Titled, UUID, Dated, Shareable):
         on_delete=models.SET_NULL,
         help_text=_("Audio provider (e.g. Deezer, Youtube, etc.)")
         )
-        
-    
+
     class Meta:
         ordering = ['-date_modified']
         verbose_name = _('item')
@@ -475,7 +478,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 self.mime_type = get_mime_type(path)
             super(Item, self).save()
 
-    def run(self, experience):
+    def run(self, experience, task=None, item=None):
         result_path = self.get_results_path()
         # get audio source
         uri = self.get_uri()
@@ -546,7 +549,25 @@ class Item(Titled, UUID, Dated, Shareable):
                 ).replace(settings.MEDIA_ROOT, '')
             self.save()
 
-        pipe.run()
+        if task and experience and item:
+
+            task_uuid = str(task.uuid)
+            experience_uuid = str(experience.uuid)
+            item_uuid = str(item.uuid)
+
+            def progress_callback(completion):
+                r.publish(
+                    'timeside-experience-progress',
+
+                    'cgerard' +
+                    ":" + task_uuid +
+                    ":" + experience_uuid +
+                    ":" + item_uuid +
+                    ":" + str(completion)
+                )
+            pipe.run(progress_callback=progress_callback)
+        else:
+            pipe.run()
 
         def set_results_from_processor(proc, preset=None):
             if preset:
@@ -922,7 +943,7 @@ class Task(UUID, Dated, Shareable):
             """))
         )
 
-    test= models.BooleanField(
+    test = models.BooleanField(
         blank=True,
         default=False,
         help_text=_('boolean to avoid celery when testing')
