@@ -24,7 +24,6 @@ CACHE_RESULT = not DEBUG
 
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
-    ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
     ('Martin Desrumaux', 'martin.desrumaux@ircam.fr'),
 )
 
@@ -170,14 +169,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_extensions',
     'django_filters',
+    'timeside.server',
     'rest_framework',
     'rest_framework.authtoken',
-    'timeside.server',
-    'django_celery_results',
-    'bootstrap3',
-    'bootstrap_pagination',
     'corsheaders',
     'debug_toolbar',
+    'django_celery_results',
     # 'celery.contrib.testing.tasks',
 )
 
