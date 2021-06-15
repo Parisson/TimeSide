@@ -20,9 +20,10 @@ env = environ.Env()
 # Django settings for server project.
 DEBUG = True if env('DEBUG') == 'True' else False
 
+CACHE_RESULT = not DEBUG
+
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
-    ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
     ('Martin Desrumaux', 'martin.desrumaux@ircam.fr'),
 )
 
@@ -168,14 +169,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_extensions',
     'django_filters',
+    'timeside.server',
     'rest_framework',
     'rest_framework.authtoken',
-    'timeside.server',
-    'django_celery_results',
-    'bootstrap3',
-    'bootstrap_pagination',
     'corsheaders',
     'debug_toolbar',
+    'django_celery_results',
     # 'celery.contrib.testing.tasks',
 )
 
@@ -243,9 +242,9 @@ REST_FRAMEWORK = {
 }
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_BACKEND_URL = 'redis://broker:6379/0'
+CELERY_BACKEND_URL = env('REDIS_URL') + '/0'
 CELERY_BROKER_TRANSPORT = 'redis'
-CELERY_BROKER_URL = 'redis://broker:6379/0'
+CELERY_BROKER_URL = env('REDIS_URL') + '/0'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
@@ -272,3 +271,5 @@ if DEBUG:
 
 TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
 
+MESSAGE_BROKER = env('REDIS_URL') + '/1'
+COMPLETION_INTERVAL = 10  # blocks

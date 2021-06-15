@@ -22,12 +22,16 @@ import os
 import numpy as np
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from rest_framework.response import Response
 # from builtins import str
 
 from django.contrib.sites.models import Site
 
 import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
+
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 from jsonschema import ValidationError
 import json
@@ -179,7 +183,14 @@ class WaveformSerializer(serializers.Serializer):
         self.nb_pixels = int(request.GET.get('nb_pixels', 1024))
 
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=instance, test=True)
+
+        result = get_or_run_proc_result(
+            'waveform_analyzer',
+            item=instance,
+            user=request.user,
+            test=True
+        )
+  
         import h5py
 
         result_id = 'waveform_analyzer'
@@ -252,7 +263,14 @@ class ItemWaveformSerializer(ItemSerializer):
     def get_waveform_image_url(self, obj):
         request = self.context['request']
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=obj, test=True)
+
+        result = get_or_run_proc_result(
+            'waveform_analyzer',
+            item=obj,
+            user=request.user,
+            test=True
+        )
+
         return reverse('timeside-result-visualization',
                        kwargs={'uuid': result.uuid},
                        request=request)+'?id=waveform_analyzer'
@@ -353,7 +371,10 @@ class ItemAnalysisResultSerializer(serializers.HyperlinkedModelSerializer):
 
         preset = analysis.preset
 
-        result = get_result(item=obj, preset=preset)
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        result = get_result(item=obj, preset=preset, user=user)
         if isinstance(result, ts.models.Result):
             res_msg = result.uuid
         else:
@@ -737,7 +758,17 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     #     return super(AnalysisTrackSerializer, self).create(validated_data)
 
     def get_result_uuid(self, obj):
-        result = get_result(item=obj.item, preset=obj.analysis.preset, test=obj.analysis.test)
+
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        result = get_result(
+            item=obj.item, 
+            preset=obj.analysis.preset,
+            user=user,
+            test=obj.analysis.test
+        )
         if isinstance(result, ts.models.Result):
             self._result_uuid = result.uuid
             return result.uuid

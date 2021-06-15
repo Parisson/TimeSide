@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Timeside / Websockets test page</title>
+
+</head>
+
+<body>
+  <label>Token :<input id="token" type='text' /></label>
+  <p>Open dev console for see websocket messages</p>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+
+    window.addEventListener("DOMContentLoaded", (event) => {
+      
+      document.getElementById("token").addEventListener("input", function(e){
+        ws_connect(e.target.value)
+      })
+
+    });
+
+    var socket = null
+    function ws_connect(token){
+      if(socket != null) socket.disconnect()
+      socket = io(
+        "localhost:<%= port %>", 
+        {
+          auth: {
+            token: token
+          }
+        }
+      );
+      socket.on("connect", function(datas){
+        console.log("websocket connected")
+      });
+      socket.on("timeside-task-start", function(datas){
+        console.log("Task started : " + datas.taskId)
+      });
+      socket.on("timeside-experience-start", function(datas){
+        console.log(
+          "Experience started : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId
+        )
+      });
+      socket.on("timeside-experience-fail", function(datas){
+        console.log(
+          "Experience failed : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId
+        )
+      });
+      socket.on("timeside-experience-done", function(datas){
+        console.log(
+          "Experience done : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId
+        )
+      });
+      socket.on("timeside-experience-progress", function(datas){
+        console.log(
+          "Experience progression : " + 
+          "\ntaskId : " + datas.taskId +
+          "\nexperienceId : " + datas.experienceId +
+          "\nitemId : " + datas.itemId +
+          "\completion : " + datas.completion
+        )
+      });
+      socket.on("connect_error", (err) => {
+        console.log(err.message); // prints the message associated with the error
+      });
+    }
+
+  </script>
+</body>
+</html>
