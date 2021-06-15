@@ -8,41 +8,41 @@ class TestProvider(TimeSideTestServer):
     #test that providers work and item creation with provider
 
     def test_youtube_provider_from_uri(self):
-        youtube_provider=Provider.objects.get(pid='youtube')
-        song_from_provider=Item.objects.create(
-            provider=youtube_provider,
-            title="SevenDoors - Movement Of Whale (LGMX rework)",
-            external_uri='https://www.youtube.com/watch?v=BMWpfG_Bpto&ab_channel=LGMX'
+        youtube_provider = Provider.objects.get(pid = 'youtube')
+        song_from_provider = Item.objects.create(
+            provider = youtube_provider,
+            title = "SevenDoors - Movement Of Whale (LGMX rework)",
+            external_uri = 'https://www.youtube.com/watch?v=BMWpfG_Bpto&ab_channel=LGMX'
         )
-        self.assertEqual(song_from_provider.get_uri(),"/srv/media/items/download/SevenDoors_-_Movement_Of_Whale_LGMX_rework-BMWpfG_Bpto.opus")
+        self.assertEqual(song_from_provider.get_uri(), "/srv/media/items/download/SevenDoors_-_Movement_Of_Whale_LGMX_rework-BMWpfG_Bpto.opus")
     
     def test_youtube_provider_from_id(self):
-        youtube_provider=Provider.objects.get(pid='youtube')
-        song_from_provider=Item.objects.create(
-            provider=youtube_provider,
-            title="LGMX - Elevation (Para One rework)",
-            external_id='REdstcbwstg'
+        youtube_provider = Provider.objects.get(pid = 'youtube')
+        song_from_provider = Item.objects.create(
+            provider = youtube_provider,
+            title = "LGMX - Elevation (Para One rework)",
+            external_id = 'REdstcbwstg'
         )
-        self.assertEqual(song_from_provider.get_uri(),"/srv/media/items/download/LGMX_-_Elevation_Para_One_rework-REdstcbwstg.opus")
+        self.assertEqual(song_from_provider.get_uri(), "/srv/media/items/download/LGMX_-_Elevation_Para_One_rework-REdstcbwstg.opus")
     
 
     def test_deezer_provider_from_uri(self):
-        deezer_provider=Provider.objects.get(pid='deezer_preview')
-        song_from_provider=Item.objects.create(
-            provider=deezer_provider,
-            title="Raw",
-            external_uri='https://www.deezer.com/en/track/823528792'
+        deezer_provider = Provider.objects.get(pid = 'deezer_preview')
+        song_from_provider = Item.objects.create(
+            provider = deezer_provider,
+            title = "Raw",
+            external_uri = 'https://www.deezer.com/en/track/823528792'
         )
-        self.assertEqual(song_from_provider.get_uri(),"/srv/media/items/download/meute-raw-823528792.mp3")
+        self.assertEqual(song_from_provider.get_uri(), "/srv/media/items/download/meute-raw-823528792.mp3")
     
     def test_deezer_provider_from_id(self):
-        deezer_provider=Provider.objects.get(pid='deezer_preview')
-        song_from_provider=Item.objects.create(
-            provider=deezer_provider,
-            title="Raw",
-            external_id='823528792'
+        deezer_provider = Provider.objects.get(pid = 'deezer_preview')
+        song_from_provider = Item.objects.create(
+            provider = deezer_provider,
+            title = "Raw",
+            external_id = '823528792'
         )
-        self.assertEqual(song_from_provider.get_uri(),"/srv/media/items/download/meute-raw-823528792.mp3")
+        self.assertEqual(song_from_provider.get_uri(), "/srv/media/items/download/meute-raw-823528792.mp3")
    
     
 
