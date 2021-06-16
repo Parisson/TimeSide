@@ -19,6 +19,7 @@ TS_ENCODERS_EXT = {encoder.file_extension(): encoder.id()
 
 
 def get_or_run_proc_result(pid, item, parameters='{}', user=None):
+
     # Get or Create Processor
     processor, c = Processor.objects.get_or_create(pid=pid)
 
@@ -37,8 +38,8 @@ def get_or_run_proc_result(pid, item, parameters='{}', user=None):
 # don't run the task if results exist for a proc with its version
 
 
-def get_result(item, preset, user=None, wait=True):
-  # Get or create Result with preset and item
+def get_result(item, preset, user=None, wait=True, test=False):
+    # Get or create Result with preset and item
     result, created = Result.get_first_or_create(
         preset=preset,
         item=item
@@ -52,12 +53,9 @@ def get_result(item, preset, user=None, wait=True):
         task, c = Task.get_first_or_create(
             experience=preset.get_single_experience(),
             item=item,
-            test=item.test,
+            test=test,
             author=user
-
-            )
-
-        task.save()
+        )
         task.run(wait=wait)
         # SMELLS: might not get the last good result
         # TODO: manage Task running return for Analysis through API
