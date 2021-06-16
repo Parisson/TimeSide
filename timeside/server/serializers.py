@@ -187,8 +187,7 @@ class WaveformSerializer(serializers.Serializer):
         result = get_or_run_proc_result(
             'waveform_analyzer',
             item=instance,
-            user=request.user,
-            test=True
+            user=request.user
         )
   
         import h5py
@@ -267,8 +266,7 @@ class ItemWaveformSerializer(ItemSerializer):
         result = get_or_run_proc_result(
             'waveform_analyzer',
             item=obj,
-            user=request.user,
-            test=True
+            user=request.user
         )
 
         return reverse('timeside-result-visualization',
@@ -767,7 +765,6 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
             item=obj.item, 
             preset=obj.analysis.preset,
             user=user,
-            test=obj.analysis.test
         )
         if isinstance(result, ts.models.Result):
             self._result_uuid = result.uuid

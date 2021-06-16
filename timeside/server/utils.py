@@ -18,7 +18,7 @@ TS_ENCODERS_EXT = {encoder.file_extension(): encoder.id()
                    if encoder.file_extension()}
 
 
-def get_or_run_proc_result(pid, item, test=False, parameters='{}', user=None):
+def get_or_run_proc_result(pid, item, parameters='{}', user=None):
     # Get or Create Processor
     processor, c = Processor.objects.get_or_create(pid=pid)
 
@@ -31,13 +31,13 @@ def get_or_run_proc_result(pid, item, test=False, parameters='{}', user=None):
         parameters=parameters
         )
 
-    return get_result(item, preset, user=user, wait=True, test=test)
+    return get_result(item, preset, user=user, wait=True)
 
 # TODO def get_or_run_proc_item(pid, version, item, prarameters={}):
 # don't run the task if results exist for a proc with its version
 
 
-def get_result(item, preset, user=None, wait=True, test=False):
+def get_result(item, preset, user=None, wait=True):
   # Get or create Result with preset and item
     result, created = Result.get_first_or_create(
         preset=preset,
@@ -52,7 +52,7 @@ def get_result(item, preset, user=None, wait=True, test=False):
         task, c = Task.get_first_or_create(
             experience=preset.get_single_experience(),
             item=item,
-            test=test,
+            test=item.test,
             author=user
 
             )

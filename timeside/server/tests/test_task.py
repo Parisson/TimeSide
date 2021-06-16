@@ -1,5 +1,6 @@
 from timeside.server.models import *
 from timeside.server.tests.timeside_test_server import TimeSideTestServer
+from django.contrib.auth.models import User
 
 
 class TestTask(TimeSideTestServer):
@@ -12,7 +13,8 @@ class TestTask(TimeSideTestServer):
         task = Task.objects.create(
             experience = self.experience,
             item = self.item,
-            test = True
+            test = True,
+            author=User.objects.get(username='admin')
         )
         task.run()
         result = Result.objects.get(
@@ -68,7 +70,8 @@ class TestTask(TimeSideTestServer):
             task = Task.objects.create(
                 experience = experience,
                 item = self.item,
-                test = True
+                test = True,
+                author=User.objects.get(username='admin')
             )
             task.run()
     
@@ -168,6 +171,7 @@ class TestTaskRequests(TimeSideTestServer):
             'status': 2,
             'item':self.item_url,
             'test':True,
+            'author':'/timeside/api/users/admin/'
         }
 
     def test_task_requests(self):

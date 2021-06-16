@@ -74,8 +74,17 @@ class TestItem(TimeSideTestServer):
         self.assertIn('waveform', waveform.data.keys())
 
     def test_download(self):
-        file=self.client.get(self.item_url + 'download/flac')
-        print(file.content)
+        file = self.client.get(self.item_url + 'download/flac')
+        self.assertEqual(file.status_code,200)
+        self.assertEqual(file['content-type'], 'audio/flac')
+
+        file = self.client.get(self.item_url + 'download/wav')
+        self.assertEqual(file.status_code,200)
+        self.assertEqual(file['content-type'], 'audio/x-wav')
+
+        file = self.client.get(self.item_url + 'download/mp3')
+        self.assertEqual(file.status_code,200)
+        self.assertEqual(file['content-type'], 'audio/mpeg')
 
 
     
