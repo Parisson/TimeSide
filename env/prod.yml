@@ -34,3 +34,9 @@ services:
     env_file:
       - env/prod.env
 
+
+  websockets:
+    environment:
+      - ORIGIN=https://timeside.ircam.fr
+    env_file:
+      - env/prod.env

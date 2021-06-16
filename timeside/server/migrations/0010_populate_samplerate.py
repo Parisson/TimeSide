@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(save_items),
-        migrations.RunPython(update_providers)
+        # migrations.RunPython(save_items),
+      #  migrations.RunPython(update_providers)
     ]

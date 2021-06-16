@@ -34,3 +34,16 @@ services:
     env_file:
       - env/debug.env
 
+  websockets:  
+    build: ./websockets
+    ports:
+      - "9031:8000"
+    environment:
+      - ORIGIN=http://localhost:9030
+    command: "npm run dev"
+    volumes:
+      - ./websockets:/srv/app/
+    user: "root:root"
+    env_file:
+      - env/debug.env
+

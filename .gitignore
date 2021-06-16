@@ -39,3 +39,4 @@ docs/src
 .vscode/*
 .DS_Store
 timeside/server/test/test_romain.py
+.env
