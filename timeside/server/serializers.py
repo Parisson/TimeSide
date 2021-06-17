@@ -69,7 +69,6 @@ class ItemListSerializer(ItemPlayableSerializer):
         }
 
     def get_url(self, obj):
-        print(self.context.keys())
         request = self.context['request']
         return reverse(
             'item-detail',
@@ -85,7 +84,6 @@ class AudioUrlSerializer(serializers.Serializer):
     flac = serializers.URLField(read_only=True)
 
     def to_representation(self, instance):
-        print(self.context.keys())
         request = self.context['request']
         extensions = ['mp3', 'ogg', 'flac']
         self.audio_url = {
@@ -190,6 +188,7 @@ class WaveformSerializer(serializers.Serializer):
             item=instance,
             user=request.user
         )
+  
         import h5py
 
         result_id = 'waveform_analyzer'
@@ -418,7 +417,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
             'presets': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid',)
+        read_only_fields = ('url', 'uuid')
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -677,7 +676,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Task
         fields = ('url', 'uuid', 'experience',
-                  'selection', 'status', 'author', 'item')
+                  'selection', 'status', 'author', 'item','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
@@ -706,7 +705,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'uuid',
                   'title', 'description', 'render_type',
                   'preset', 'sub_processor',
-                  'parameters_schema')
+                  'parameters_schema','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},
@@ -763,7 +762,6 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
             item=obj.item, 
             preset=obj.analysis.preset,
             user=user,
-            test=obj.analysis.test
         )
         if isinstance(result, ts.models.Result):
             self._result_uuid = result.uuid

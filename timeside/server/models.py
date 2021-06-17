@@ -366,6 +366,12 @@ class Item(Titled, UUID, Dated, Shareable):
         help_text=_("Audio provider (e.g. Deezer, Youtube, etc.)")
         )
 
+    test= models.BooleanField(
+        blank=True,
+        default=False,
+        help_text=_('boolean to avoid celery when testing')
+        )  
+
     class Meta:
         ordering = ['-date_modified']
         verbose_name = _('item')
@@ -932,7 +938,7 @@ class Task(UUID, Dated, Shareable):
     status = models.IntegerField(
         _('status'),
         choices=STATUS,
-        default=_DRAFT,
+        default=_PENDING,
         help_text=_(cleandoc(f"""
             Task's status:\n
             failed: {_FAILED}\n
