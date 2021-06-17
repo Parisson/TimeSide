@@ -96,6 +96,7 @@ urlpatterns = [
         views.ResultAnalyzerToSVView.as_view(), name="timeside-result-sonic"),
     # Player
     url(r'^player/$', views.PlayerView.as_view(), name="timeside-player"),
+
 ]
 
 

@@ -29,7 +29,8 @@
 # Usage : docker-compose -f docker-compose.yml -f env/build.yml -f env/build_plugins.yml run app
 #
 
-app:
-  volumes:
-    - ./lib:/srv/lib/plugins
-  command: /bin/bash /srv/app/bin/setup_plugins.sh
+services:
+  app:
+    volumes:
+      - ./lib:/srv/lib/plugins
+    command: /bin/bash /srv/app/bin/setup_plugins.sh

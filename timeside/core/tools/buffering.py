@@ -76,7 +76,7 @@ class BufferTable(object):
             self.append(name, new_array)
 
     def close(self):
-        for name in self.array_names:
-            self.fileh.remove_node(self.fileh.root, name)
+        #for name in self.array_names:
+        #    self.fileh.remove_node(self.fileh.root, name)
         self.fileh.close()
         self._tempfile.close()

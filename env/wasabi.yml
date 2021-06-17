@@ -21,17 +21,18 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-var:
-  image: debian:jessie
-  volumes:
-     - ./bin:/srv/bin
-     - /archive/WASABI/media:/srv/media
-     - /home/wasabi/TimeSide-WASABI/var/media/results:/srv/media/results
-     - ./var/backup:/srv/backup
-     - ./var/static:/srv/static
-     - ./var/log/nginx:/var/log/nginx
-     - ./var/log/uwsgi:/var/log/uwsgi
-     - ./var/log/celery:/var/log/celery
-     - /srv/bower
-     - ./var/cache:/srv/cache
-  command: "true"
+services:
+  var:
+    image: debian:buster
+    volumes:
+       - ./bin:/srv/bin
+       - /archive/WASABI/media:/srv/media
+       - /home/wasabi/TimeSide-WASABI/var/media/results:/srv/media/results
+       - ./var/backup:/srv/backup
+       - ./var/static:/srv/static
+       - ./var/log/nginx:/var/log/nginx
+       - ./var/log/uwsgi:/var/log/uwsgi
+       - ./var/log/celery:/var/log/celery
+       - /srv/bower
+       - ./var/cache:/srv/cache
+    command: "true"

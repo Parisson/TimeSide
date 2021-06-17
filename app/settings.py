@@ -2,8 +2,15 @@ import os
 import sys
 import environ
 
-from worker import app
+# set default values and casting
+env = environ.Env(DEBUG=(bool, False),
+                  CELERY_TASK_ALWAYS_EAGER=(bool, False),
+                  )
+# Django settings for server project.
+DEBUG = env('DEBUG')  # False if not in os.environ
+#DEBUG=True
 
+from worker import app
 
 sys.dont_write_bytecode = True
 
@@ -13,9 +20,10 @@ env = environ.Env()
 # Django settings for server project.
 DEBUG = True if env('DEBUG') == 'True' else False
 
+CACHE_RESULT = not DEBUG
+
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
-    ('Antoine Grandry', 'antoine.grandry@ircam.fr'),
     ('Martin Desrumaux', 'martin.desrumaux@ircam.fr'),
 )
 
@@ -54,7 +62,7 @@ TIME_ZONE = 'Europe/Paris'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 1
+SITE_ID = 2
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -112,7 +120,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    'npm.finders.NpmFinder',
 )
 
 TEMPLATES = [
@@ -162,16 +169,13 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_extensions',
     'django_filters',
+    'timeside.server',
     'rest_framework',
     'rest_framework.authtoken',
-    'timeside.server',
-    'timeside.player',
-    'django_celery_results',
-    'bootstrap3',
-    'bootstrap_pagination',
     'corsheaders',
     'debug_toolbar',
-    # 'south',
+    'django_celery_results',
+    # 'celery.contrib.testing.tasks',
 )
 
 # dj A sample logging configuration. The only tangible logging
@@ -238,28 +242,15 @@ REST_FRAMEWORK = {
 }
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_BACKEND_URL = 'redis://broker:6379/0'
+CELERY_BACKEND_URL = env('REDIS_URL') + '/0'
 CELERY_BROKER_TRANSPORT = 'redis'
-CELERY_BROKER_URL = 'redis://broker:6379/0'
+CELERY_BROKER_URL = env('REDIS_URL') + '/0'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_TASK_SERIALIZER = "json"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = False
 # If this is True, all tasks will be executed locally by blocking until the task returns.
-
-BOWER_COMPONENTS_ROOT = '/srv/static/'
-BOWER_PATH = '/usr/local/bin/bower'
-BOWER_INSTALLED_APPS = (
-    'jquery#2.2.4',
-    'jquery-migrate#~1.2.1',
-    'underscore#1.8.3',
-    'bootstrap#3.3.6',
-    'bootstrap-select#1.5.4',
-    'font-awesome#~4.4.0',
-    'raphael#2.2.0',
-    'soundmanager#V2.97a.20150601',
-)
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
@@ -279,3 +270,6 @@ if DEBUG:
     }
 
 TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
+
+MESSAGE_BROKER = env('REDIS_URL') + '/1'
+COMPLETION_INTERVAL = 10  # blocks

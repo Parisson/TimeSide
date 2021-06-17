@@ -323,7 +323,7 @@ def list_processors_rst(interface=IProcessor, recurse=False):
     return lst
 
 def list_processors_csv(interface=IProcessor):
-    f = open('list_processors.csv', 'wb')
+    f = open('list_processors.csv', 'w')
     writer = csv.writer(f,delimiter=';')
     writer.writerow(['id','version','APInterface','ValueType','description','unit','parent','repository'])
     _list_processors_csv_rec(interface,f)
@@ -492,7 +492,13 @@ class ProcessPipe(object):
                 pipe += ' | '
         return pipe
 
-    def run(self, channels=None, samplerate=None, blocksize=None):
+    def run(
+        self,
+        channels=None,
+        samplerate=None,
+        blocksize=None,
+        progress_callback=None
+    ):
         """Setup/reset all processors in cascade"""
 
         source = self.processors[0]
@@ -549,10 +555,18 @@ class ProcessPipe(object):
         for item in items:
             item.start_time = datetime.datetime.utcnow()
 
+        sample_cursor = 0
         while not eod:
-            frames, eod = source.process()
+            frames, eod = source.process(
+                progress_callback=progress_callback,
+                sample_cursor=sample_cursor
+            )
+            sample_cursor += source.blocksize()
             for item in items:
-                frames, eod = item.process(frames, eod)
+                frames, eod = item.process(
+                    frames,
+                    eod
+                )
 
         if source.id() == 'live_decoder':
             # Restore default handler for Interruption signal
