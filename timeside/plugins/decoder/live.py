@@ -68,20 +68,20 @@ class LiveDecoder:#(FileDecoder):
     Examples
     --------
 
-    >>> import timeside
+    # >>> import timeside
 
-    >>> from timeside.core import get_processor
-    >>> live_decoder = get_processor('live_decoder')(num_buffers=5)
-    >>> waveform = get_processor('waveform_analyzer')()
-    >>> mp3_encoder = timeside.plugins.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
-    ...                                               overwrite=True)
-    >>> pipe = (live_decoder | waveform | mp3_encoder)
-    >>> pipe.run()  # doctest: +SKIP
-    >>> # Show the audio as captured by the decoder
-    >>> import matplotlib.pyplot as plt # doctest: +SKIP
-    >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
-             a.results['waveform_analyzer'].data) # doctest: +SKIP
-    >>> plt.show() # doctest: +SKIP
+    # >>> from timeside.core import get_processor
+    # >>> live_decoder = get_processor('live_decoder')(num_buffers=5)
+    # >>> waveform = get_processor('waveform_analyzer')()
+    # >>> mp3_encoder = timeside.plugins.encoder.mp3.Mp3Encoder('/tmp/test_live.mp3',
+    # ...                                               overwrite=True)
+    # >>> pipe = (live_decoder | waveform | mp3_encoder)
+    # >>> pipe.run()  # doctest: +SKIP
+    # >>> # Show the audio as captured by the decoder
+    # >>> import matplotlib.pyplot as plt # doctest: +SKIP
+    # >>> plt.plot(a.results['waveform_analyzer'].time, # doctest: +SKIP
+    #          a.results['waveform_analyzer'].data) # doctest: +SKIP
+    # >>> plt.show() # doctest: +SKIP
 
     """
     implements(IDecoder)

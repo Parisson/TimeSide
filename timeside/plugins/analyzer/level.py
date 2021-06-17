@@ -41,14 +41,14 @@ class Level(Analyzer):
     >>> decoder = get_processor('file_decoder')(uri=source)
     >>> level = get_processor('level')()
     >>> (decoder | level).run()
-    >>> level.results.keys()
-    ['level.max', 'level.rms']
+    >>> ('level.max' in level.results.keys()) and ('level.rms' in level.results.keys() )
+    True
     >>> max = level.results['level.max']
     >>> print(max.data)
     [0.]
     >>> rms = level.results['level.rms']
     >>> print(rms.data)  # doctest: +ELLIPSIS
-    [-3.26...]
+    [-3.7...]
     """
     implements(IValueAnalyzer)
 
@@ -118,6 +118,7 @@ class Level(Analyzer):
 
         rms_level.data_object.value = np.round(20 * np.log10(rms_val), 3)
         self.add_result(rms_level)
+
 
 if __name__ == "__main__":
     import doctest

@@ -31,6 +31,8 @@ from __future__ import division
 from timeside.core import Processor, implements, interfacedoc, abstract
 from timeside.core.api import IDecoder
 
+from django.conf import settings
+
 
 class Decoder(Processor):
 
@@ -102,3 +104,20 @@ class Decoder(Processor):
     @interfacedoc
     def resolution(self):
         return self.input_width
+
+    def process(
+        self,
+        frames,
+        eod,
+        progress_callback=None,
+        sample_cursor=None
+    ):
+
+        if progress_callback is not None and sample_cursor is not None and\
+                (sample_cursor // self.blocksize() % settings.COMPLETION_INTERVAL == 0):
+
+            progress_callback(
+                sample_cursor / self.totalframes()
+            )
+
+        super(Decoder, self).process(frames, eod)

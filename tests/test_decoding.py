@@ -25,6 +25,8 @@ class TestDecoding(unittest.TestCase):
         self.test_exact_duration = True
         self.source_duration = 8
         self.expected_mime_type = 'audio/x-wav'
+        self.mp3=False
+        self.upsampling=False
 
     def testWav(self):
         "Test wav decoding"
@@ -44,8 +46,12 @@ class TestDecoding(unittest.TestCase):
 
     def testFlac(self):
         "Test flac decoding"
-        self.source = samples["sweep.flac"]
+        if self.upsampling:
+            self.source = samples["sweep_96000.flac"]
+        else : 
+            self.source = samples["sweep.flac"]
         self.expected_mime_type = is_aubio and 'audio/flac' or 'audio/x-flac'
+
 
     def testOgg(self):
         "Test ogg decoding"
@@ -60,6 +66,9 @@ class TestDecoding(unittest.TestCase):
 
         self.expected_mime_type = 'audio/mpeg'
         self.test_exact_duration = False
+        self.mp3=True
+        
+    
 
     def tearDown(self):
         decoder = FileDecoder(uri=self.source,
@@ -70,10 +79,12 @@ class TestDecoding(unittest.TestCase):
                       blocksize=self.blocksize)
 
         totalframes = 0
+        compteur=0
 
         while True:
             frames, eod = decoder.process()
             totalframes += frames.shape[0]
+            compteur+=1
             if eod or decoder.eod:
                 break
             self.assertEqual(frames.shape[0], decoder.blocksize())
@@ -116,12 +127,15 @@ class TestDecoding(unittest.TestCase):
                                    decoder.output_samplerate)
 
         # aubio estimates the total number of frames before resampling
+        delta=0
         if is_aubio:
-            delta = decoder.output_samplerate // 8
+                #delta = 0.1s
+                delta = self.expected_samplerate//10  
+                if self.expected_channels==2:
+                    delta*=2
         elif is_gstreamer:
             delta = 0
-        self.assertAlmostEqual(totalframes, decoder.totalframes(),
-                delta=delta)
+        self.assertAlmostEqual(totalframes, decoder.totalframes(), delta=delta)
 
         input_duration = decoder.input_totalframes / decoder.input_samplerate
         output_duration = decoder.totalframes() / decoder.output_samplerate
@@ -137,15 +151,19 @@ class TestDecoding(unittest.TestCase):
 
     def check_aubio(self, decoder, input_duration, output_duration,
             expected_totalframes):
-        self.assertAlmostEqual(input_duration, output_duration,
-                places=4)
-        self.assertAlmostEqual(input_duration, decoder.input_duration,
-                places=3)
-        self.assertAlmostEqual(self.source_duration, decoder.input_duration,
-                delta=.08)
-        self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,
-                delta=decoder.output_samplerate // 16)
 
+        if self.mp3:
+            self.assertAlmostEqual(input_duration, output_duration,delta=0.00001)
+            self.assertAlmostEqual(input_duration, decoder.input_duration,delta=0.0001)
+            self.assertAlmostEqual(self.source_duration, decoder.input_duration,delta=0.05)
+            self.assertAlmostEqual(decoder.totalframes(), expected_totalframes,delta=1)
+
+        else:
+            self.assertEqual(input_duration, output_duration)
+            self.assertEqual(input_duration, decoder.input_duration)
+            self.assertEqual(self.source_duration, decoder.input_duration)
+            self.assertEqual(decoder.totalframes(), expected_totalframes)
+            
     def check_gstreamer(self, decoder, input_duration, output_duration,
             expected_totalframes):
         if self.test_exact_duration:

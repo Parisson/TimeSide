@@ -21,65 +21,76 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-var:
-  image: debian:buster
-  volumes:
-     - ./bin:/srv/bin
-     - ./var/media:/srv/media
-     - ./var/backup:/srv/backup
-     - ./var/static:/srv/static
-     - ./var/log/nginx:/var/log/nginx
-     - ./var/log/uwsgi:/var/log/uwsgi
-     - ./var/log/celery:/var/log/celery
-     - ./var/log/app:/var/log/app
-     - ./var/cache:/srv/cache
-     - /srv/bower
-  command: "true"
+version: '3'
 
-db:
-  image: postgres:9
-  volumes:
-    - ./var/lib/postgresql/data:/var/lib/postgresql/data
-  volumes_from:
-    - var
-  env_file:
-    - env/prod.env
+services:
 
-broker:
-  image: redis:5
+  db:
+    image: postgres:9
+    volumes:
+      - ./var/lib/postgresql/data:/var/lib/postgresql/data
+      - ./var/backup:/srv/backup
+    env_file:
+      - env/prod.env
 
-app:
-  image: parisson/timeside:latest-dev
-  # build: .
-  command: /bin/bash /srv/app/bin/app.sh
-  volumes:
-    - ./app:/srv/app
-    - ./timeside:/srv/lib/timeside/timeside
-    - ./lib/plugins:/srv/lib/plugins
-  volumes_from:
-    - var
-  env_file:
-    - env/prod.env
-  links:
-    - broker
-    - db
-  expose:
-    - "8000"
-  ports:
-    - "9080:8000"
+  broker:
+    image: redis:5
+
+  app:
+    image: parisson/timeside:latest-dev
+    command: /bin/bash /srv/app/bin/app.sh --runserver
+    volumes:
+      - ./app:/srv/app
+      - ./bin:/srv/bin
+      - ./timeside:/srv/lib/timeside/timeside
+      - ./tests:/srv/lib/timeside/tests
+      - ./lib/plugins:/srv/lib/plugins
+      - ./var/media:/srv/media
+      - ./var/backup:/srv/backup
+      - ./var/static:/srv/static
+      - ./var/log/uwsgi:/var/log/uwsgi
+      - ./var/log/app:/var/log/app
+      - ./var/cache:/srv/cache
+    env_file:
+      - env/debug.env
+    links:
+      - broker
+      - db
+    expose:
+      - "8000"
+    ports:
+      - "9080:8000"
+
+  worker:
+    image: parisson/timeside:latest-dev
+    command: /bin/bash /srv/app/bin/worker.sh
+    volumes:
+      - /etc/._ifpk_2
+      - ./var/log/celery:/var/log/celery
+    volumes_from:
+      - app
+    env_file:
+      - env/debug.env
+    links:
+      - broker
+      - db
+
+  websockets:
+    build: ./websockets
+    environment:
+      - PORT=13000
+      # ORIGIN needs to be define
+    depends_on:
+      - app
+      - broker
+    expose:
+      - "13000" 
+    ports:
+      - "13000:13000"
+    restart: always
 
 
-worker:
-  image: parisson/timeside:latest-dev
-  # build: .
-  command: /bin/bash /srv/app/bin/worker.sh
-  volumes:
-    - /etc/._ifpk_2
-  volumes_from:
-    - var
-    - app
-  env_file:
-    - env/prod.env
-  links:
-    - broker
-    - db
+volumes:
+  app:
+  db:
+  worker:

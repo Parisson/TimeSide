@@ -22,12 +22,16 @@ import os
 import numpy as np
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from rest_framework.response import Response
 # from builtins import str
 
 from django.contrib.sites.models import Site
 
 import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
+
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 from jsonschema import ValidationError
 import json
@@ -179,7 +183,12 @@ class WaveformSerializer(serializers.Serializer):
         self.nb_pixels = int(request.GET.get('nb_pixels', 1024))
 
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=instance)
+        result = get_or_run_proc_result(
+            'waveform_analyzer',
+            item=instance,
+            user=request.user
+        )
+  
         import h5py
 
         result_id = 'waveform_analyzer'
@@ -187,7 +196,7 @@ class WaveformSerializer(serializers.Serializer):
 
         duration = wav_res['audio_metadata'].attrs['duration']
         samplerate = wav_res['data_object'][
-            'frame_metadata'].attrs['samplerate']
+                'frame_metadata'].attrs['samplerate']
 
         if self.start < 0:
             self.start = 0
@@ -252,7 +261,11 @@ class ItemWaveformSerializer(ItemSerializer):
     def get_waveform_image_url(self, obj):
         request = self.context['request']
         from .utils import get_or_run_proc_result
-        result = get_or_run_proc_result('waveform_analyzer', item=obj)
+        result = get_or_run_proc_result(
+            'waveform_analyzer',
+            item=obj,
+            user=request.user
+        )
         return reverse('timeside-result-visualization',
                        kwargs={'uuid': result.uuid},
                        request=request)+'?id=waveform_analyzer'
@@ -353,7 +366,10 @@ class ItemAnalysisResultSerializer(serializers.HyperlinkedModelSerializer):
 
         preset = analysis.preset
 
-        result = get_result(item=obj, preset=preset)
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        result = get_result(item=obj, preset=preset, user=user)
         if isinstance(result, ts.models.Result):
             res_msg = result.uuid
         else:
@@ -373,7 +389,7 @@ class SelectionSerializer(serializers.HyperlinkedModelSerializer):
             'items': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid', 'title')
+        read_only_fields = ('url', 'uuid')
 
     def update(self, instance, validated_data):
         instance.author = validated_data.get('title', instance.author)
@@ -401,7 +417,7 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
             'presets': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'}
         }
-        read_only_fields = ('url', 'uuid',)
+        read_only_fields = ('url', 'uuid')
 
 
 class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
@@ -660,7 +676,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Task
         fields = ('url', 'uuid', 'experience',
-                  'selection', 'status', 'author', 'item')
+                  'selection', 'status', 'author', 'item','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
@@ -689,7 +705,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'uuid',
                   'title', 'description', 'render_type',
                   'preset', 'sub_processor',
-                  'parameters_schema')
+                  'parameters_schema','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},
@@ -737,7 +753,16 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     #     return super(AnalysisTrackSerializer, self).create(validated_data)
 
     def get_result_uuid(self, obj):
-        result = get_result(item=obj.item, preset=obj.analysis.preset)
+
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        result = get_result(
+            item=obj.item, 
+            preset=obj.analysis.preset,
+            user=user,
+        )
         if isinstance(result, ts.models.Result):
             self._result_uuid = result.uuid
             return result.uuid

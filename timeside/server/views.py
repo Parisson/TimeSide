@@ -31,6 +31,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.middleware.csrf import get_token as get_csrf_token
+from requests.api import request
 
 from rest_framework import viewsets, generics
 from rest_framework import status
@@ -47,7 +48,8 @@ from rest_framework.serializers import ValidationError
 from rest_framework.reverse import reverse, reverse_lazy
 from rest_framework.decorators import action
 import django_filters.rest_framework as filters
-
+from django.http import Http404
+from django.db.models import Q
 
 from . import models
 from . import serializers
@@ -112,11 +114,20 @@ class AnnotationTrackFilter(filters.FilterSet):
 class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
     model = models.AnnotationTrack
-    queryset = model.objects.all()
     serializer_class = serializers.AnnotationTrackSerializer
+    queryset=model.objects.all()
     filterset_class = AnnotationTrackFilter
+    
+    def get_queryset(self):
+        if self.request is None:
+            return self.model.objects.none()
+        return self.model.objects.filter(
+            Q(is_public=True) | Q(author=self.request.user)
+        )
 
+        
 
+    
 class AnnotationFilter(filters.FilterSet):
     track_uuid = filters.UUIDFilter(field_name="track__uuid")
 
@@ -392,6 +403,35 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.UserSerializer
     lookup_field = 'username'
 
+    def get_object(self):
+        """
+        Returns the object the view is displaying.
+        You may want to override this if you need to provide non-standard
+        queryset lookups.  Eg if objects are referenced using multiple
+        keyword arguments in the url conf.
+        """
+        if self.request.parser_context["kwargs"]["username"] == 'me':
+            obj = self.request._user
+        else:
+            queryset = self.filter_queryset(self.get_queryset())
+            # Perform the lookup filtering.
+            lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+            assert lookup_url_kwarg in self.kwargs, (
+                'Expected view %s to be called with a URL keyword argument '
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                'attribute on the view correctly.' %
+                (self.__class__.__name__, lookup_url_kwarg)
+            )
+
+            filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+            obj = get_object_or_404(queryset, **filter_kwargs)
+
+        # May raise a permission denied
+        self.check_object_permissions(self.request, obj)
+
+        return obj
+
 
 class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
@@ -421,6 +461,8 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
         by filtering against `analysis` and `item` query parameters in the URL.
         Query parameters values should be analysis' or of the item's uuid.
         """
+        if self.request is None:
+            return self.model.objects.none()
         queryset = self.model.objects.all()
         analysis_uuid = self.request.query_params.get('analysis', None)
         item_uuid = self.request.query_params.get('item', None)
@@ -494,15 +536,16 @@ class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 class ResultAnalyzerView(View):
 
     model = models.Result
-
+    
     def get(self, request, *args, **kwargs):
         result = models.Result.objects.get(uuid=kwargs['uuid'])
         container = AnalyzerResultContainer()
         if result.hdf5:
             container.from_hdf5(result.hdf5.path)
-        else:
             return HttpResponse(container.to_json(),
                             content_type='application/json')
+        else:
+            raise Http404("HDF5 file does not exist")
 
 
 class ResultAnalyzerToElanView(View):
@@ -747,7 +790,7 @@ class ItemTranscode(DetailView):
                                           mime_type=mime_type)
         else:
             item = self.get_object()
-            result = get_or_run_proc_result(encoder, item)
+            result = get_or_run_proc_result(encoder, item, user=request.user)
             return serve_media(filename=result.file.path,
                                content_type=result.mime_type)
 
