@@ -24,7 +24,7 @@ class TestAnalyzer(TimeSideTestServer):
         analysis_track_response = self.client.post('/timeside/api/analysis_tracks/', params, format = 'json')
         result_response = self.client.get(analysis_track_response.data['result_url'], format = json)
         result = Result.objects.get(uuid = result_response.data['uuid'])
-        if analysis.render_type:
+        if analysis.render_type and analysis.title!="Spectrogram Analyzer":
             self.assertTrue(result.has_file())
         else : 
             self.assertTrue(result.has_hdf5())
