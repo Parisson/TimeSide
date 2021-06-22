@@ -175,6 +175,8 @@ class Command(BaseCommand):
                                 title=a.name(),
                                 )
                 except : pass
+            spectrogram_analyzer=Analysis.objects.get(title="Spectrogram Analyzer")
+            spectrogram_analyzer.render_type=1
                 
             # ------------ Providers -------------
             providers = timeside.core.provider.providers(timeside.core.api.IProvider)
