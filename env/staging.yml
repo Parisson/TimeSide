@@ -36,6 +36,7 @@ services:
 
   websockets:
     environment:
-      - ORIGIN=https://timeside.ircam.fr
+      - ORIGIN=https://staging.timeside.ircam.fr
     env_file:
       - env/prod.env
+
