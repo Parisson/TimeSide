@@ -1,15 +1,6 @@
 import os
 import sys
 import environ
-
-# set default values and casting
-env = environ.Env(DEBUG=(bool, False),
-                  CELERY_TASK_ALWAYS_EAGER=(bool, False),
-                  )
-# Django settings for server project.
-DEBUG = env('DEBUG')  # False if not in os.environ
-#DEBUG=True
-
 from worker import app
 
 sys.dont_write_bytecode = True
