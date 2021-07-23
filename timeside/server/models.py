@@ -1107,5 +1107,13 @@ class Annotation(Titled, UUID, Dated, Shareable):
         blank=False,
         on_delete=models.CASCADE
         )
+    
+    results = models.ManyToManyField(
+        'Result',
+        related_name="annotations",
+        verbose_name=_('results'),
+        blank=True
+        )
+
     start_time = models.FloatField(_('start time (s)'), default=0)
     stop_time = models.FloatField(_('stop time (s)'))

@@ -824,12 +824,13 @@ class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Annotation
-        fields = ('url', 'uuid', 'track',
+        fields = ('url', 'uuid', 'track', 'results',
                   'title', 'description',
                   'start_time', 'stop_time')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'track': {'lookup_field': 'uuid'},
+            'results': {'lookup_field': 'uuid'},
         }
         read_only_fields = ('uuid',)
 
