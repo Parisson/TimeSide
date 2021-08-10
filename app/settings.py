@@ -53,7 +53,7 @@ TIME_ZONE = 'Europe/Paris'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 2
+SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -264,3 +264,17 @@ TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
 
 MESSAGE_BROKER = env('REDIS_URL') + '/1'
 COMPLETION_INTERVAL = 10  # blocks
+
+
+##################
+# LOCAL SETTINGS #
+##################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_settings import *
+except ImportError as e:
+    if "local_settings" not in str(e):
+        raise e
