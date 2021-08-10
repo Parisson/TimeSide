@@ -2,13 +2,13 @@
 Copyrights
 ==========
 
-* Copyright (c) 2019, 2020 IRCAM
-* Copyright (c) 2006, 2020 Guillaume Pellerin
-* Copyright (c) 2010, 2020 Paul Brossier
+* Copyright (c) 2019, 2021 IRCAM
+* Copyright (c) 2006, 2021 Guillaume Pellerin
+* Copyright (c) 2010, 2021 Paul Brossier
+* Copyright (c) 2021       Romain Herbelleau
 * Copyright (c) 2019, 2020 Antoine Grandry
 * Copyright (c) 2006, 2019 Parisson SARL
 * Copyright (c) 2013, 2017 Thomas Fillon
-* Copyright (c) 2016, 2017 Eric Debeir
 * Copyright (c) 2013, 2014 Maxime Lecoz
 * Copyright (c) 2013, 2014 David Doukhan
 * Copyright (c) 2006, 2010 Olivier Guilyardi
