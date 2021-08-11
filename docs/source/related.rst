@@ -2,7 +2,8 @@
 Sponsors and Partners
 =====================
 
-* `Parisson <http://parisson.com>`_
+* `IRCAM <https://www.ircam.fr>`_ (Paris, France)
+* `Parisson <http://parisson.com>`_ (Paris, France)
 * `CNRS <http://www.cnrs.fr>`_: National Center of Science Research (France)
 * `Huma-Num <http://www.huma-num.fr/>`_: big data equipment for digital humanities (CNRS, France)
 * `CREM <http://www.crem-cnrs.fr>`_: French National Center of Ethomusicology Research (France)
@@ -11,7 +12,6 @@ Sponsors and Partners
 * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 * `C4DM <http://c4dm.eecs.qmul.ac.uk/>`_ : Center for Digital Music, Queen Mary University (London, United Kingdom)
 * `NYU Steinhardt <http://steinhardt.nyu.edu/music/>`_ : Music and Performing Arts Professions, New York University (New York, USA)
-* `IRCAM <https://www.ircam.fr>`_ : IRCAM (Paris, France)
 
 Related projects
 =================
