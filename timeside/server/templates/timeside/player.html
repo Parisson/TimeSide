@@ -11,14 +11,21 @@
         <meta name="mobile-web-app-capable" content="yes">
         {% block stylesheets %}
         {% load static %}
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}timeside2/dist/styles/main.css" />
         {% endblock stylesheets %}
     </head>
     <body>
       {% block player %}
-      <div class="ts-content full"></div>
+        <!-- Player location -->
+        <div id="timeside-player"></div>
 
-      <script data-main="{{ STATIC_URL }}timeside2/dist/scripts/main.js" src="{{ STATIC_URL }}timeside2/dist/scripts/require.js"></script>
+        <!-- Load latest version -->
+        <script src="https://unpkg.com/@ircam/timeside-player@latest/lib/timeside-player.umd.min.js"></script>
+
+        <!-- Init the player -->
+        <script>
+            const timesideUuid = '0407c3fc-f5d2-4ad7-a4a1-23a51d7583d6'
+            const player = window.timesidePlayer('#timeside-player', timesideUuid)
+        </script>
       {% endblock player %}
     </body>
 </html>

@@ -7,33 +7,20 @@
 {% endblock %}
 {% block content %}
 
-<h1>{{ object.title }}</h1>
+{% block ts-player %}
+  <h1>{{ object.title }}</h1>
 
-{% block html5-player %}
-<h2>Audio</h2>
-<audio controls preload="none">
-  <source src="download/ogg" type="audio/ogg">
-  <source src="download/mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-<h2>Information</h2>
-  <ul>
-    <li><b>Title</b>: {{ object.title }}</li>
-    <li><b>Description:</b> {{ object.description }}</li>
-    <li> <b>Source and type:</b>
-      <ul>
-        {% for source in object.get_source %}
-        <li> {{ source }}</li>
-        {% endfor %}
-      </ul>
-  </ul>
-{% endblock html5-player %}
+  <!-- Player location -->
+  <div id="timeside-player"></div>
 
-  {% block ts-player %}
-  <h2>Player</h2>
+  <!-- Load latest version -->
+  <script src="https://unpkg.com/@ircam/timeside-player@latest/lib/timeside-player.umd.min.js"></script>
 
-<iframe src={% url "timeside-player" %}#item/{{object.uuid}}  width="1200" height="1000"></iframe>
-
+  <!-- Init the player -->
+  <script>
+      const timesideUuid = '{{ object.uuid }}'
+      const player = window.timesidePlayer('#timeside-player', timesideUuid)
+  </script>
 {% endblock ts-player %}
 
 {% endblock content %}
