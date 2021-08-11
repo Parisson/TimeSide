@@ -87,7 +87,6 @@ services:
       - "13000" 
     ports:
       - "13000:13000"
-    restart: always
 
 
 volumes:
