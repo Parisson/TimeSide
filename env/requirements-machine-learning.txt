@@ -1,5 +1,5 @@
 tensorboard==2.1.0
-tensorflow==2.4.0
+tensorflow==2.5.1
 tensorflow-estimator==2.1.0
 torch==1.4.0
 torchvision==0.5.0
