@@ -89,11 +89,7 @@ class AubioDecoder(Decoder):
         return "1.0"
 
     @interfacedoc
-    def process(
-        self,
-        progress_callback=None,
-        sample_cursor=None
-    ):
+    def process(self):
         frames, read = self.source.do_multi()
         self.eod = (read < self.output_blocksize)
         if self.duration and self.frames_read + read >= self.frames_to_read:
@@ -105,8 +101,6 @@ class AubioDecoder(Decoder):
         super(AubioDecoder, self).process(
             frames.copy(),
             self.eod,
-            progress_callback=progress_callback,
-            sample_cursor=sample_cursor
         )
         return frames.copy(), self.eod
 

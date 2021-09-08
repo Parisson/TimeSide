@@ -168,7 +168,8 @@ class IDecoder(IProcessor):
     a given driver may support several input formats, hence this interface doesn't
     export any static method, all informations are dynamic."""
 
-    def __init__(self, filename):
+    def __init__(self, filename, uri, start=0, duration=None, stack=False,
+                 sha1=None, progress_callback=None, sample_cursor=None):
         """Create a new decoder for filename."""
         # implementation: additional optionnal arguments are allowed
 

@@ -497,7 +497,6 @@ class ProcessPipe(object):
         channels=None,
         samplerate=None,
         blocksize=None,
-        progress_callback=None
     ):
         """Setup/reset all processors in cascade"""
 
@@ -555,13 +554,8 @@ class ProcessPipe(object):
         for item in items:
             item.start_time = datetime.datetime.utcnow()
 
-        sample_cursor = 0
         while not eod:
-            frames, eod = source.process(
-                progress_callback=progress_callback,
-                sample_cursor=sample_cursor
-            )
-            sample_cursor += source.blocksize()
+            frames, eod = source.process()
             for item in items:
                 frames, eod = item.process(
                     frames,
