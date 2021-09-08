@@ -1184,7 +1184,7 @@ class AnalyzerResultContainer(dict):
 
         yaml.add_constructor(u'!numpyArray', numpyArray_constructor)
 
-        results_yaml = yaml.load(yaml_str)
+        results_yaml = yaml.load(yaml_str, Loader=yaml.Loader)
         for res_yaml in results_yaml:
             res = AnalyzerResult(data_mode=res_yaml['data_mode'],
                                  time_mode=res_yaml['time_mode'])
