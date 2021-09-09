@@ -494,15 +494,37 @@ class Item(Titled, UUID, Dated, Shareable):
 
         # decode audio source
         # TODO: use get_processor
+
+        if task and experience and item:
+
+            task_uuid = str(task.uuid)
+            experience_uuid = str(experience.uuid)
+            item_uuid = str(item.uuid)
+
+            def progress_callback(completion):
+                r.publish(
+                    'timeside-experience-progress',
+
+                    'cgerard' +
+                    ":" + task_uuid +
+                    ":" + experience_uuid +
+                    ":" + item_uuid +
+                    ":" + str(completion)
+                )
+        else:
+            progress_callback = None 
+
         if DEFAULT_DECODER == 'aubio_decoder':
             decoder = timeside.plugins.decoder.aubio.AubioDecoder(
                 uri=uri,
-                sha1=self.sha1
+                sha1=self.sha1,
+                progress_callback=progress_callback
                 )
         else:
             decoder = timeside.plugins.decoder.file.FileDecoder(
                 uri=uri,
-                sha1=self.sha1
+                sha1=self.sha1,
+                progress_callback=progress_callback
                 )
 
         presets = {}
@@ -555,25 +577,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 ).replace(settings.MEDIA_ROOT, '')
             self.save()
 
-        if task and experience and item:
-
-            task_uuid = str(task.uuid)
-            experience_uuid = str(experience.uuid)
-            item_uuid = str(item.uuid)
-
-            def progress_callback(completion):
-                r.publish(
-                    'timeside-experience-progress',
-
-                    'cgerard' +
-                    ":" + task_uuid +
-                    ":" + experience_uuid +
-                    ":" + item_uuid +
-                    ":" + str(completion)
-                )
-            pipe.run(progress_callback=progress_callback)
-        else:
-            pipe.run()
+        pipe.run()
 
         def set_results_from_processor(proc, preset=None):
             if preset:

@@ -47,7 +47,8 @@ class Decoder(Processor):
     output_samplerate = None
     output_channels = None
 
-    def __init__(self, start=0, duration=None):
+    def __init__(self, start=0, duration=None, progress_callback=None,
+                 sample_cursor=None):
         super(Decoder, self).__init__()
 
         self.uri_start = float(start)
@@ -60,6 +61,14 @@ class Decoder(Processor):
             self.is_segment = False
         else:
             self.is_segment = True
+        if progress_callback:
+            self.progress_callback = progress_callback
+        else:
+            self.progress_callback = None
+        if sample_cursor:
+            self.sample_cursor = sample_cursor
+        else:
+            self.sample_cursor = 0
 
     @interfacedoc
     def channels(self):
@@ -109,15 +118,15 @@ class Decoder(Processor):
         self,
         frames,
         eod,
-        progress_callback=None,
-        sample_cursor=None
     ):
-
-        if progress_callback is not None and sample_cursor is not None and\
-                (sample_cursor // self.blocksize() % settings.COMPLETION_INTERVAL == 0):
-
-            progress_callback(
-                sample_cursor / self.totalframes()
-            )
+        if self.sample_cursor is not None:
+            self.sample_cursor += self.blocksize()
+            if self.progress_callback and (
+                        self.sample_cursor // self.blocksize() %
+                        settings.COMPLETION_INTERVAL == 0
+                    ):
+                self.progress_callback(
+                    self.sample_cursor / self.totalframes()
+                )
 
         super(Decoder, self).process(frames, eod)

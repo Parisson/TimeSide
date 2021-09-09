@@ -39,8 +39,8 @@ services:
     ports:
       - "9031:8000"
     environment:
-      - ORIGIN=http://localhost:9030
-    command: "npm run dev"
+      - ORIGIN=http://localhost:9080
+    command: "yarn run dev"
     volumes:
       - ./websockets:/srv/app/
     user: "root:root"

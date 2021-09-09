@@ -92,7 +92,7 @@ class FileDecoder(Decoder):
     def id():
         return "file_decoder"
 
-    def __init__(self, uri, start=0, duration=None, stack=False, sha1=None):
+    def __init__(self, uri, start=0, duration=None, stack=False, sha1=None, progress_callback=None):
 
         super(FileDecoder, self).__init__(start=start, duration=duration)
 
@@ -323,11 +323,7 @@ class FileDecoder(Decoder):
 
     @interfacedoc
     @stack
-    def process(
-        self,
-        progress_callback=None,
-        sample_cursor=None
-    ):
+    def process(self):
         buf = self.queue.get()
         if buf == Gst.MessageType.EOS:
             return self.last_buffer, True
@@ -335,8 +331,6 @@ class FileDecoder(Decoder):
         super(FileDecoder, self).process(
             frames,
             eod,
-            progress_callback=progress_callback,
-            sample_cursor=sample_cursor
         )
         return frames, eod
 
