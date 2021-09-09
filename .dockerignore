@@ -7,3 +7,4 @@ data/
 env/
 tmp/
 var/
+node_modules

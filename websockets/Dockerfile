@@ -10,4 +10,4 @@ RUN chown node -R /srv/app
 
 USER node
 
-CMD [ "npm", "run", "install:build:prod" ]
+CMD [ "yarn", "run", "install:build:prod" ]

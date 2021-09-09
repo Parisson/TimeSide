@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "test",
-    "dev": "npm install && babel-watch server.js",
+    "dev": "yarn install && babel-watch server.js",
     "build": "babel server.js --out-file server-transpiled.js",
     "prod": "node server-transpiled.js",
-    "install:build:prod": "npm install && npm run build && npm run prod",
+    "install:build:prod": "yarn install && yarn run build && yarn run prod",
     "lint": "eslint server.js --ext .js"
   },
   "type": "module",
