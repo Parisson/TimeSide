@@ -39,7 +39,7 @@ services:
     ports:
       - "9031:8000"
     environment:
-      - ORIGIN=http://localhost:9030
+      - ORIGIN=http://localhost:9080
     command: "npm run dev"
     volumes:
       - ./websockets:/srv/app/

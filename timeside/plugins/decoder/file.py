@@ -92,7 +92,7 @@ class FileDecoder(Decoder):
     def id():
         return "file_decoder"
 
-    def __init__(self, uri, start=0, duration=None, stack=False, sha1=None):
+    def __init__(self, uri, start=0, duration=None, stack=False, sha1=None, progress_callback=None):
 
         super(FileDecoder, self).__init__(start=start, duration=duration)
 

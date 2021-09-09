@@ -119,11 +119,9 @@ class Decoder(Processor):
         frames,
         eod,
     ):
-
-        if self.progress_callback and self.sample_cursor and\
+        self.sample_cursor += self.blocksize()
+        if self.progress_callback and self.sample_cursor is not None and\
                 (self.sample_cursor // self.blocksize() % settings.COMPLETION_INTERVAL == 0):
-
-            self.sample_cursor += self.blocksize()
             self.progress_callback(
                 self.sample_cursor / self.totalframes()
             )

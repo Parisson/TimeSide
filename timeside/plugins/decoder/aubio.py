@@ -13,8 +13,8 @@ class AubioDecoder(Decoder):
 
     output_blocksize = 8 * 1024
 
-    def __init__(self, uri, start=0, duration=None, sha1=None):
-        super().__init__(start=start, duration=duration)
+    def __init__(self, uri, start=0, duration=None, sha1=None, progress_callback=None):
+        super().__init__(start=start, duration=duration, progress_callback=progress_callback)
         self.uri = uri
 
         # create the source with default settings
