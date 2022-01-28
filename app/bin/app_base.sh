@@ -35,8 +35,8 @@ mkdir -p $app_log_dir
 chown -R $uid:$gid $app_log_dir
 mkdir -p $worker_log_dir
 chown -R $uid:$gid $worker_log_dir
-mkdir -p $media
-chown -R $uid:$gid $media
+# mkdir -p $media
+# chown -R $uid:$gid $media
 
 # install the last version of those packages
 pip3 install -U youtube-dl
@@ -45,7 +45,7 @@ pip3 install -U youtube-dl
 bash /srv/app/bin/setup_plugins.sh
 
 # fix media access rights
-find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user $uid -exec chown $uid:$gid {} \;
+# find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user $uid -exec chown $uid:$gid {} \;
 
 # wait for other services
 # bash $app/bin/wait.sh
