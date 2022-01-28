@@ -1,4 +1,9 @@
 VAMP_DIR=/usr/lib/vamp
+VAMP_LOCAL_DIR=/usr/local/lib/vamp
+
+if [ ! -d $VAMP_LOCAL_DIR ]; then
+    ln -s /usr/lib/x86_64-linux-gnu/vamp $VAMP_LOCAL_DIR
+fi
 
 # Install Vampy
 #wget https://code.soundsoftware.ac.uk/hg/vampy/archive/e2bb3cf7adf1.tar.bz2
@@ -14,14 +19,14 @@ VAMP_DIR=/usr/lib/vamp
 # Link Python vamp plugins from Timeside
 #ln -s /srv/lib/timeside/timeside/plugins/analyzer/externals/vampy/* $VAMP_DIR/
 
-# QM Vamp Plugins
+# QM Vamp Plugins
 wget --no-check-certificate https://code.soundsoftware.ac.uk/attachments/download/1602/qm-vamp-plugins-linux64-v1.7.1.tar.bz2
 tar -xf qm-vamp-plugins-linux64-v1.7.1.tar.bz2
 mv qm-vamp-plugins-linux64-v1.7.1/*{.cat,.n3,.so} $VAMP_DIR
 rm -r qm-vamp-plugins-linux64-v1.7.1
 rm qm-vamp-plugins-linux64-v1.7.1.tar.bz2
 
-# BBC Vamp Plugins
+# BBC Vamp Plugins
 wget --no-check-certificate https://github.com/bbc/bbc-vamp-plugins/releases/download/v1.1/Linux.64-bit.tar.gz
 mkdir bbctmp
 tar -xf Linux.64-bit.tar.gz -C bbctmp
@@ -35,3 +40,10 @@ tar -xf nnls-chroma-linux64-v1.1.tar.bz2
 mv nnls-chroma-linux64-v1.1/*{.cat,.n3,.so} $VAMP_DIR
 rm -r nnls-chroma-linux64-v1.1
 rm nnls-chroma-linux64-v1.1.tar.bz2
+
+# LibXtract
+wget --no-check-certificate https://code.soundsoftware.ac.uk/attachments/download/620/vamp-libxtract-plugins-0.6.6.20121204-amd64-linux.tar.gz
+tar -xf vamp-libxtract-plugins-0.6.6.20121204-amd64-linux.tar.gz
+mv vamp-libxtract-plugins-0.6.6.20121204-amd64-linux/*{.cat,.n3,.so} $VAMP_DIR
+rm -r vamp-libxtract-plugins-0.6.6.20121204-amd64-linux
+rm vamp-libxtract-plugins-0.6.6.20121204-amd64-linux.tar.gz
