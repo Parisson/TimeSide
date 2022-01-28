@@ -7,6 +7,9 @@ source "$SCRIPT_DIR/app_base.sh"
 mkdir -p '/var/log/celery/'
 chown -R $uid:$gid '/var/log/celery/'
 
+uid=root
+gid=root
+
 if [ $DEBUG = True ]; then
     python3 manage.py timeside-celery-worker --loglevel $log_level --logfile $worker_log_file --uid $uid --gid $gid
 else
