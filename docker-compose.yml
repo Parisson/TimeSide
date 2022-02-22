@@ -38,7 +38,7 @@ services:
 
   app:
     build: .
-    command: /bin/bash /srv/app/bin/app.sh --runserver
+    command: /bin/bash /srv/app/app.sh --runserver
     volumes:
       - ./app:/srv/app
       - ./bin:/srv/bin
@@ -63,7 +63,7 @@ services:
 
   worker:
     build: .
-    command: /bin/bash /srv/app/bin/worker.sh
+    command: /bin/bash /srv/app/worker.sh
     volumes:
       - /etc/._ifpk_2
       - ./var/log/celery:/var/log/celery

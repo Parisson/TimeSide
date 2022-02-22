@@ -28,7 +28,7 @@ services:
   app:
     env_file:
       - env/debug.env
-    command: /bin/bash bin/app.sh --runserver
+    command: /bin/bash app.sh --runserver
 
   worker:
     env_file:
