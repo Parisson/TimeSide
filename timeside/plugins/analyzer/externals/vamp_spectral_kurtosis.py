@@ -46,7 +46,7 @@ class VampSpectralKurtosis(VampAnalyzer):
     def __init__(self):
         super(VampSpectralKurtosis, self).__init__()
         # Define Vamp plugin key and output
-        self.plugin_key = 'spectral_kurtosis'
+        self.plugin_key = 'vamp-libxtract:spectral_kurtosis'
         self.plugin_output = 'spectral_kurtosis'
 
     @interfacedoc
