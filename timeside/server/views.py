@@ -71,19 +71,32 @@ def stream_from_task(task):
 
 
 class UUIDViewSetMixin(object):
+    """Abstract class to use UUID as default lookup field."""
 
     lookup_field = 'uuid'
     lookup_value_regex = '[0-9a-z-]+'
 
 
-class SelectionViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class AuthorizedViewSetMixin(object):
+    """Abstract class to autofill author field."""
+
+    def perform_create(self, serializer):
+        """Autofill author."""
+        serializer.save(author=self.request.user)
+
+
+class SelectionViewSet(AuthorizedViewSetMixin,
+                       UUIDViewSetMixin,
+                       viewsets.ModelViewSet):
     """Set of items and other selections."""
+
     model = models.Selection
     queryset = model.objects.all()
     serializer_class = serializers.SelectionSerializer
 
 
 class ItemFilter(filters.FilterSet):
+
     provider_pid = filters.CharFilter(field_name="provider__pid")
 
     class Meta:
@@ -91,7 +104,9 @@ class ItemFilter(filters.FilterSet):
         fields = ['provider_pid', 'external_id']
 
 
-class ItemViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class ItemViewSet(AuthorizedViewSetMixin,
+                  UUIDViewSetMixin,
+                  viewsets.ModelViewSet):
 
     model = models.Item
     queryset = models.Item.objects.all()
@@ -111,13 +126,15 @@ class AnnotationTrackFilter(filters.FilterSet):
         fields = ['item_uuid']
 
 
-class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class AnnotationTrackViewSet(AuthorizedViewSetMixin,
+                             UUIDViewSetMixin,
+                             viewsets.ModelViewSet):
 
     model = models.AnnotationTrack
     serializer_class = serializers.AnnotationTrackSerializer
     queryset=model.objects.all()
     filterset_class = AnnotationTrackFilter
-    
+
     def get_queryset(self):
         if self.request is None:
             return self.model.objects.none()
@@ -125,9 +142,7 @@ class AnnotationTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
             Q(is_public=True) | Q(author=self.request.user)
         )
 
-        
 
-    
 class AnnotationFilter(filters.FilterSet):
     track_uuid = filters.UUIDFilter(field_name="track__uuid")
 
@@ -136,7 +151,9 @@ class AnnotationFilter(filters.FilterSet):
         fields = ['track_uuid']
 
 
-class AnnotationViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class AnnotationViewSet(AuthorizedViewSetMixin,
+                        UUIDViewSetMixin,
+                        viewsets.ModelViewSet):
 
     model = models.Annotation
     queryset = model.objects.all()
@@ -216,8 +233,11 @@ class ItemWaveView(UUIDViewSetMixin, generics.RetrieveAPIView):
         return context
 
 
-class ExperienceViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class ExperienceViewSet(AuthorizedViewSetMixin,
+                        UUIDViewSetMixin,
+                        viewsets.ModelViewSet):
     """Set of presets and other experiences."""
+
     model = models.Experience
     queryset = model.objects.all()
     serializer_class = serializers.ExperienceSerializer
@@ -269,8 +289,11 @@ class ResultFilter(filters.FilterSet):
         fields = ['item_uuid', 'preset_uuid']
 
 
-class ResultViewSet(UUIDViewSetMixin, viewsets.ReadOnlyModelViewSet):
+class ResultViewSet(AuthorizedViewSetMixin,
+                    UUIDViewSetMixin,
+                    viewsets.ReadOnlyModelViewSet):
     """Result of processing on items."""
+
     model = models.Result
     queryset = model.objects.all()
     serializer_class = serializers.ResultSerializer
@@ -382,15 +405,21 @@ class ResultVisualizationViewSet(UUIDViewSetMixin, generics.RetrieveAPIView):
                 )
 
 
-class PresetViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class PresetViewSet(AuthorizedViewSetMixin,
+                    UUIDViewSetMixin,
+                    viewsets.ModelViewSet):
     """Processor with its potential parameters."""
+
     model = models.Preset
     queryset = model.objects.all()
     serializer_class = serializers.PresetSerializer
 
 
-class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class TaskViewSet(AuthorizedViewSetMixin,
+                  UUIDViewSetMixin,
+                  viewsets.ModelViewSet):
     """Experience applied to a selection or a single item."""
+
     model = models.Task
     queryset = model.objects.all()
     serializer_class = serializers.TaskSerializer
@@ -398,6 +427,7 @@ class TaskViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """Users of the API able to share data."""
+
     model = models.User
     queryset = model.objects.all()
     serializer_class = serializers.UserSerializer
@@ -433,7 +463,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         return obj
 
 
-class AnalysisViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class AnalysisViewSet(AuthorizedViewSetMixin,
+                      UUIDViewSetMixin,
+                      viewsets.ModelViewSet):
 
     model = models.Analysis
     queryset = model.objects.all()
@@ -448,7 +480,9 @@ class AnalysisTrackFilter(filters.FilterSet):
         fields = ['item_uuid']
 
 
-class AnalysisTrackViewSet(UUIDViewSetMixin, viewsets.ModelViewSet):
+class AnalysisTrackViewSet(AuthorizedViewSetMixin,
+                           UUIDViewSetMixin,
+                           viewsets.ModelViewSet):
 
     model = models.AnalysisTrack
     serializer_class = serializers.AnalysisTrackSerializer
@@ -639,6 +673,7 @@ class ResultEncoderView(View):
 
 class ItemDetailExport(DetailView):
     """Export all results of an item."""
+
     model = models.Item
     template_name = 'timeside/item_detail_export.html'
 
