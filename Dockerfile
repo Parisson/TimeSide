@@ -57,7 +57,7 @@ RUN python3 /srv/app/bin/link_gstreamer.py
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 COPY . /srv/lib/timeside/
-RUN pip3 install -e .
+RUN python3 setup.py develop
 
 WORKDIR /srv/app
 
