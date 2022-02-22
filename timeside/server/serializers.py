@@ -65,7 +65,8 @@ class ItemListSerializer(ItemPlayableSerializer):
         fields = ('uuid', 'url', 'title', 'description', 'player_url',
                   'source_file', 'source_url', 'mime_type', 'author')
         extra_kwargs = {
-            'url': {'lookup_field': 'uuid'}
+            'url': {'lookup_field': 'uuid'},
+            'author': {'lookup_field': 'username'},
         }
 
     def get_url(self, obj):
@@ -810,7 +811,7 @@ class AnnotationSerializer_inTrack(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Annotation
-        fields = ('url', 'uuid',
+        fields = ('url', 'uuid', 'track',
                   'title', 'description',
                   'start_time', 'stop_time')
         extra_kwargs = {
