@@ -38,6 +38,9 @@ chown -R $uid:$gid $worker_log_dir
 # mkdir -p $media
 # chown -R $uid:$gid $media
 
+# FIXME install timeisde at start (pip bug on build)
+cd /srv/lib/timeside; pip3 install -e .
+
 # install the last version of those packages
 pip3 install -U youtube-dl
 
