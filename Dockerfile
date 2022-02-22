@@ -58,10 +58,10 @@ RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 COPY ./README.rst /srv/lib/timeside/
 COPY ./LICENSE.txt /srv/lib/timeside/
-COPY ./docs /srv/lib/timeside/
-COPY ./tests /srv/lib/timeside/
 COPY ./setup.py /srv/lib/timeside/
-COPY ./timeside /srv/lib/timeside/
+COPY ./docs /srv/lib/timeside/docs/
+COPY ./tests /srv/lib/timeside/tests/
+COPY ./timeside /srv/lib/timeside/timeside/
 RUN pip3 install -e .
 
 WORKDIR /srv/app
