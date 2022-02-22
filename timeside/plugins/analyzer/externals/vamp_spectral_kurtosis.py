@@ -55,7 +55,7 @@ class VampSpectralKurtosis(VampAnalyzer):
         super(VampSpectralKurtosis, self).setup(
             channels, samplerate, blocksize, totalframes)
 
-        self.spectral_kurtosis = self.plugin.get_parameter_value('spectral_kurtosis')
+        # self.spectral_kurtosis = self.plugin.get_parameter_value('spectral_kurtosis')
 
     @staticmethod
     @interfacedoc
@@ -80,7 +80,7 @@ class VampSpectralKurtosis(VampAnalyzer):
     def post_process(self):
         super(VampSpectralKurtosis, self).post_process()  # get remaining results
 
-        spectral_kurtosis = self.new_result(data_mode='value', time_mode='framewise')
-        spectral_kurtosis.data_object.y_value = self.spectral_kurtosis
-        spectral_kurtosis.data_object.value = self.vamp_results['matrix'][1]
-        self.add_result(spectral_kurtosis)
+        result = self.new_result(data_mode='value', time_mode='framewise')
+        result.data_object.value = self.vamp_results['vector'][0]
+        result.data_object.y_value = self.vamp_results['vector'][1]
+        self.add_result(result)
