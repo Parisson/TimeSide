@@ -299,6 +299,7 @@ class Selection(Titled, UUID, Dated, Shareable):
 
     class Meta:
         verbose_name = _('selection')
+        ordering = ['-date_modified']
 
     def get_all_items(self):
         qs_items = self.items.all()
@@ -700,6 +701,7 @@ class Experience(Titled, UUID, Dated, Shareable):
 
     class Meta:
         verbose_name = _('Experience')
+        ordering = ['-date_modified']
 
 
 @python_2_unicode_compatible
@@ -873,7 +875,7 @@ class Result(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
-        ordering = ['-date_added']
+        ordering = ['-date_modified']
 
     def status_setter(self, status):
         self.status = status
@@ -962,6 +964,7 @@ class Task(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
+        ordering = ['-date_modified']
 
     def __str__(self):
         if self.item:
@@ -1064,6 +1067,7 @@ class Analysis(Titled, UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Analysis')
         verbose_name_plural = _('Analyses')
+        ordering = ['-date_modified']
 
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
@@ -1085,6 +1089,7 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
     class Meta:
         verbose_name = _('Analysis Track')
+        ordering = ['-date_modified']
 
 
 class AnnotationTrack(Titled, UUID, Dated, Shareable):
@@ -1101,6 +1106,7 @@ class AnnotationTrack(Titled, UUID, Dated, Shareable):
 
     class Meta:
         verbose_name = _('Annotation Track')
+        ordering = ['-date_modified']
 
 
 class Annotation(Titled, UUID, Dated, Shareable):
@@ -1121,3 +1127,7 @@ class Annotation(Titled, UUID, Dated, Shareable):
 
     start_time = models.FloatField(_('start time (s)'), default=0)
     stop_time = models.FloatField(_('stop time (s)'))
+
+    class Meta:
+        verbose_name = _('Annotation')
+        ordering = ['-date_modified']
