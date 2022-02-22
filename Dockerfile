@@ -61,6 +61,7 @@ COPY ./LICENSE.txt /srv/lib/timeside/
 COPY ./setup.py /srv/lib/timeside/
 COPY ./docs /srv/lib/timeside/docs/
 COPY ./tests /srv/lib/timeside/tests/
+COPY ./bin /srv/lib/timeside/bin/
 COPY ./timeside /srv/lib/timeside/timeside/
 RUN pip3 install -e .
 
