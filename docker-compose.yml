@@ -37,7 +37,7 @@ services:
     image: redis:5
 
   app:
-    image: parisson/timeside:latest-dev
+    build: .
     command: /bin/bash /srv/app/bin/app.sh --runserver
     volumes:
       - ./app:/srv/app
@@ -62,7 +62,7 @@ services:
       - "9080:8000"
 
   worker:
-    image: parisson/timeside:latest-dev
+    build: .
     command: /bin/bash /srv/app/bin/worker.sh
     volumes:
       - /etc/._ifpk_2

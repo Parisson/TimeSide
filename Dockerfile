@@ -56,7 +56,11 @@ RUN python3 /srv/app/bin/link_gstreamer.py
 # Install Vamp plugins
 RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
-COPY . /srv/lib/timeside/
+COPY ./LICENSE.txt /srv/lib/timeside/
+COPY ./docs /srv/lib/timeside/
+COPY ./tests /srv/lib/timeside/
+COPY ./setup.py /srv/lib/timeside/
+COPY ./timeside /srv/lib/timeside/
 RUN pip3 install -e .
 
 WORKDIR /srv/app
