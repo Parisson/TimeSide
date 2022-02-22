@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PYTHONPATH=/srv/lib/timeside:/srv/app
+
 # uwsgi params
 port=8000
 processes=4
@@ -38,8 +40,8 @@ chown -R $uid:$gid $worker_log_dir
 # mkdir -p $media
 # chown -R $uid:$gid $media
 
-# FIXME install timeisde at start (pip bug on build)
-cd /srv/lib/timeside; pip3 install -e .
+# # FIXME install timeisde at start (pip bug on build)
+# cd /srv/lib/timeside; pip3 install -e .
 
 # install the last version of those packages
 pip3 install -U youtube-dl
