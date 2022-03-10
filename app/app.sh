@@ -21,7 +21,7 @@ python3 $manage timeside-create-boilerplate
 # app start
 if [ "$1" = "--runserver" ]
 then
-    python3 $manage runserver 0.0.0.0:8000
+    su $uid -g $gid -s /bin/bash -c "python3 $manage runserver 0.0.0.0:8000"
 else
 
     # fix static access

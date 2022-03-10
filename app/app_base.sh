@@ -51,6 +51,7 @@ bash /srv/app/bin/setup_plugins.sh
 
 # fix media access rights
 # find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user $uid -exec chown $uid:$gid {} \;
+chown -R $uid:$gid $media
 
 # wait for other services
 # bash $app/bin/wait.sh
