@@ -4,8 +4,8 @@ export PYTHONPATH=/srv/lib/timeside:/srv/app
 
 # uwsgi params
 port=8000
-processes=4
-threads=4
+processes=8
+threads=8
 autoreload=3
 
 # uid / gid params for app and worker
