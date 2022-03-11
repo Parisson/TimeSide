@@ -660,7 +660,7 @@ class AnalysisResultContentSerializer(serializers.BaseSerializer):
         import h5py
         hdf5_file = h5py.File(obj.hdf5.path, 'r')
         if subprocessor_id:
-            hdf5_result = h5py.File(obj.hdf5.path, 'r').get(subprocessor_id)
+            hdf5_result = hdf5_file.get(subprocessor_id)
         else:
             hdf5_result = hdf5_file.visit(hdf5_file.get)
         from timeside.core.analyzer import AnalyzerResult
