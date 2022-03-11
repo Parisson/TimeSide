@@ -81,6 +81,6 @@ class VampSpectralKurtosis(VampAnalyzer):
         super(VampSpectralKurtosis, self).post_process()  # get remaining results
 
         result = self.new_result(data_mode='value', time_mode='framewise')
-        result.data_object.value = self.vamp_results['vector'][0]
-        result.data_object.y_value = self.vamp_results['vector'][1]
+        result.data_object.value = self.vamp_results['vector'][1]
+        result.data_object.y_value = self.vamp_results['vector'][0]
         self.add_result(result)
