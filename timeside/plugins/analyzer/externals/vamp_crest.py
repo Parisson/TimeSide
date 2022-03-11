@@ -63,7 +63,7 @@ class VampCrest(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Crest"
+        return "Crest (vamp)"
 
     @staticmethod
     @interfacedoc

@@ -63,7 +63,7 @@ class VampFlatness(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Flatness"
+        return "Flatness (vamp)"
 
     @staticmethod
     @interfacedoc

@@ -99,7 +99,7 @@ class AubioPitch(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "f0 (aubio)"
+        return "F0 (aubio)"
 
     @staticmethod
     @interfacedoc

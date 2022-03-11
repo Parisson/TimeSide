@@ -24,17 +24,19 @@ class Command(BaseCommand):
 
         for a in analyzers :
             try :
-                processor,c= Processor.objects.get_or_create(
+                processor,c = Processor.objects.get_or_create(
                             pid=a.id(),
                             version=a.version()
                             )
+                processor.name = a.name()
+                processor.save()
 
-                preset,c= Preset.objects.get_or_create(
+                preset,c = Preset.objects.get_or_create(
                             processor=processor,
                             parameters=json.dumps(a.get_parameters_default())
                             )
 
-                sub_processor,c= SubProcessor.objects.get_or_create(
+                sub_processor,c = SubProcessor.objects.get_or_create(
                             sub_processor_id=a.id(),
                             processor=processor
                             )

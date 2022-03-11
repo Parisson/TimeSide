@@ -63,7 +63,7 @@ class VampKurtosis(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "kurtosis"
+        return "kurtosis (vamp)"
 
     @staticmethod
     @interfacedoc

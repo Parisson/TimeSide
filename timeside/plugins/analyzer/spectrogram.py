@@ -122,7 +122,7 @@ class Spectrogram(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectrogram Analyzer"
+        return "Spectrogram (python)"
 
     @staticmethod
     @interfacedoc

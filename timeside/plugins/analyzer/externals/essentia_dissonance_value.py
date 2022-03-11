@@ -59,7 +59,7 @@ class Essentia_Dissonance_Value(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Dissonance mean value from Essentia"
+        return "Dissonance mean value (essentia)"
 
     @staticmethod
     @interfacedoc

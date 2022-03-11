@@ -63,7 +63,7 @@ class VampSpectralSlope(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectral slope"
+        return "Spectral slope (vamp)"
 
     @staticmethod
     @interfacedoc

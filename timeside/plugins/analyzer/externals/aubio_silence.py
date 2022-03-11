@@ -69,7 +69,7 @@ class AubioSilence(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "silence detection (aubio)"
+        return "Silence detection (aubio)"
 
     @staticmethod
     @interfacedoc

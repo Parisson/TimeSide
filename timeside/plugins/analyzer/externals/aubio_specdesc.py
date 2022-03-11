@@ -70,7 +70,7 @@ class AubioSpecdesc(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectral Descriptor (aubio)"
+        return "Spectral descriptor (aubio)"
 
     @staticmethod
     @interfacedoc

@@ -74,7 +74,7 @@ class OnsetDetectionFunction(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Onset Detection Function"
+        return "Onset detection function (python)"
 
     @staticmethod
     @interfacedoc

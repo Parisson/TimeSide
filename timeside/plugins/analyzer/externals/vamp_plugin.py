@@ -101,7 +101,7 @@ class VampSimpleHost(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Vamp Plugins host"
+        return "Vamp plugin host"
 
     @staticmethod
     @interfacedoc

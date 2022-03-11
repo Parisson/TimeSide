@@ -63,7 +63,7 @@ class VampSpectralCentroid(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectral centroid"
+        return "Spectral centroid (vamp)"
 
     @staticmethod
     @interfacedoc

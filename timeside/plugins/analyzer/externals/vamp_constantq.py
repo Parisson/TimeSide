@@ -79,7 +79,7 @@ class VampConstantQ(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Constant Q transform from QMUL vamp plugins"
+        return "Constant Q (vamp)"
 
     @staticmethod
     @interfacedoc

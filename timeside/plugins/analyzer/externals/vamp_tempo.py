@@ -63,7 +63,7 @@ class VampTempo(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Tempo"
+        return "Tempo value (vamp)"
 
     @staticmethod
     @interfacedoc

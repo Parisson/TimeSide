@@ -61,7 +61,7 @@ class VampTuning(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Tuning"
+        return "Tuning value (vamp)"
 
     @staticmethod
     @interfacedoc

@@ -65,7 +65,7 @@ class VampSpectralKurtosis(VampAnalyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Spectral kurtosis"
+        return "Spectral kurtosis (vamp)"
 
     @staticmethod
     @interfacedoc

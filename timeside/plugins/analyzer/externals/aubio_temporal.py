@@ -71,7 +71,7 @@ class AubioTemporal(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "onsets (aubio)"
+        return "Onsets (aubio)"
 
     @staticmethod
     @interfacedoc

@@ -110,7 +110,7 @@ class LoudnessITU(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Loudness ITU"
+        return "Loudness ITU (python)"
 
     @staticmethod
     @interfacedoc

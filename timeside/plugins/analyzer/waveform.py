@@ -53,7 +53,7 @@ class Waveform(Analyzer):
     @staticmethod
     @interfacedoc
     def name():
-        return "Waveform Analyzer"
+        return "Waveform (python)"
 
     @staticmethod
     @interfacedoc
