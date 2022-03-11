@@ -44,7 +44,9 @@ class Command(BaseCommand):
                 analysis,c = Analysis.objects.get_or_create(
                             sub_processor=sub_processor,
                             preset=preset,
-                            title=a.name(),
                             )
+                analysis.title = a.name()
+                analysis.save()
+
             except:
                 pass
