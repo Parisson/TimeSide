@@ -53,7 +53,6 @@ def get_result(item, preset, user=None, wait=True):
             experience=preset.get_single_experience(),
             item=item,
             test=item.test,
-            author=user
             )
 
         task.save()
