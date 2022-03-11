@@ -93,12 +93,17 @@ def experience_run(task_id, exp_id, item_id):
     item = Item.objects.get(uuid=item_id)
     task = Task.objects.get(uuid=task_id)
     experience = Experience.objects.get(uuid=exp_id)
+    if task.author:
+        author = task.author.username
+    else:
+        author = ''
+
     try:
         logger.info(f'Run {str(experience)} on {str(item)}')
         r.publish(
             'timeside-experience-start',
 
-            str(task.author.username) +
+            str(author) +
             ":" + str(task.uuid) +
             ":" + str(experience.uuid) +
             ":" + str(item.uuid)
@@ -108,7 +113,7 @@ def experience_run(task_id, exp_id, item_id):
         r.publish(
             'timeside-experience-done',
 
-            str(task.author.username) +
+            str(author) +
             ":" + str(task.uuid) +
             ":" + str(experience.uuid) +
             ":" + str(item.uuid)
@@ -117,7 +122,7 @@ def experience_run(task_id, exp_id, item_id):
         r.publish(
             'timeside-experience-fail',
 
-            str(task.author.username) +
+            str(author) +
             ":" + str(task.uuid) +
             ":" + str(experience.uuid) +
             ":" + str(item.uuid)
