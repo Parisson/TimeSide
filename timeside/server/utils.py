@@ -20,7 +20,7 @@ TS_ENCODERS_EXT = {encoder.file_extension(): encoder.id()
 
 def get_or_run_proc_result(pid, item, parameters='{}', user=None):
     # Get or Create Processor
-    processor, c = Processor.objects.get_or_create(pid=pid)
+    processor = Processor.get_first(pid=pid)
 
     if not parameters:
         parameters = processor.get_parameters_default()
@@ -43,20 +43,31 @@ def get_result(item, preset, user=None, wait=True):
         preset=preset,
         item=item
         )
+
     if created or \
             not settings.CACHE_RESULT or \
             (
                 not result.has_file() and
                 not result.has_hdf5()
             ):
-        task, c = Task.get_first_or_create(
-            experience=preset.get_single_experience(),
-            item=item,
-            test=item.test,
-            )
+
+        if user.is_authenticated:
+            task, c = Task.get_first_or_create(
+                experience=preset.get_single_experience(),
+                item=item,
+                test=item.test,
+                author=user
+                )
+        else:
+            task, c = Task.get_first_or_create(
+                experience=preset.get_single_experience(),
+                item=item,
+                test=item.test
+                )
 
         task.save()
         task.run(wait=wait)
+
         # SMELLS: might not get the last good result
         # TODO: manage Task running return for Analysis through API
         result, created = Result.get_first_or_create(
