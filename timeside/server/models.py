@@ -187,7 +187,8 @@ class UUID(models.Model):
         primary_key=True,
         blank=False,
         max_length=255,
-        editable=False
+        editable=False,
+        unique=True
         )
 
     class Meta:
@@ -207,6 +208,14 @@ class UUID(models.Model):
             obj.save()
             created = True
         return obj, created
+
+    @classmethod
+    def get_first(cls, **kwargs):
+        """
+         get first object
+        """
+        objs = cls.objects.filter(**kwargs)
+        return objs[0]
 
 
 @python_2_unicode_compatible
@@ -717,9 +726,10 @@ class Processor(UUID):
 
     class Meta:
         verbose_name = _('processor')
+        ordering = ['-version']
 
     def __str__(self):
-        return '_'.join([self.pid, 'v' + self.version])
+        return self.pid + '-v' + self.version
 
     def save(self, **kwargs):
         if not self.version:
@@ -786,7 +796,7 @@ class Preset(UUID, Dated, Shareable):
         verbose_name_plural = _('Presets')
 
     def __str__(self):
-        return '_'.join([str(self.processor), str(self.uuid)[:4]])
+        return str(self.processor) + '_' + str(self.uuid)[:4]
 
     def get_single_experience(self):
         exp_title = "Simple experience for preset %s" % self.__str__()
@@ -907,11 +917,11 @@ class Result(UUID, Dated, Shareable):
     def __str__(self):
         if self.preset:
             if self.item:
-                return '_'.join([self.item.title, str(self.preset)])
+                return self.item.title + '_' + str(self.preset)
             else:
-                return str(self.preset.processor)
+                return str(self.preset)
         else:
-            return 'Unamed_result'
+            return 'Unnamed_result'
 
 
 @python_2_unicode_compatible
