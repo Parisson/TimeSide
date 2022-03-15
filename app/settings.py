@@ -143,6 +143,7 @@ MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -265,6 +266,7 @@ TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
 MESSAGE_BROKER = env('REDIS_URL') + '/1'
 COMPLETION_INTERVAL = 10  # blocks
 
+CACHE_RESULT = True
 
 ##################
 # LOCAL SETTINGS #
