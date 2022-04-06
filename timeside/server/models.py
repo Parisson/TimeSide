@@ -887,7 +887,7 @@ class Result(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
-        ordering = ['-date_modified']
+        ordering = ['-date_added']
 
     def status_setter(self, status):
         self.status = status
