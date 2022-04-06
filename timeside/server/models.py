@@ -726,7 +726,7 @@ class Processor(UUID):
 
     class Meta:
         verbose_name = _('processor')
-        ordering = ['-version']
+        ordering = ['pid', '-version']
 
     def __str__(self):
         return self.pid + '-v' + self.version
@@ -770,6 +770,7 @@ class SubProcessor(UUID):
 
     class Meta:
         verbose_name = _('Subprocessor')
+        ordering = ['sub_processor_id',]
 
     def __str__(self):
         return self.sub_processor_id
@@ -794,6 +795,7 @@ class Preset(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
+        ordering = ['processor__pid',]
 
     def __str__(self):
         return str(self.processor) + '_' + str(self.uuid)[:4]
