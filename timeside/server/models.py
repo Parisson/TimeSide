@@ -1077,7 +1077,7 @@ class Analysis(Titled, UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Analysis')
         verbose_name_plural = _('Analyses')
-        ordering = ['-date_modified']
+        ordering = ['title']
 
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
