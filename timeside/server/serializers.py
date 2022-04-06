@@ -18,28 +18,33 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import json
+
+from io import BytesIO
 
 import numpy as np
+import h5py
+
+from PIL import Image
+
+import timeside.server as ts
+from timeside.core.analyzer import AnalyzerResult
+
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 # from builtins import str
 
+from jsonschema import ValidationError
+
 from django.contrib.sites.models import Site
 
-import timeside.server as ts
 from timeside.server.models import _RUNNING, _PENDING
 
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from jsonschema import ValidationError
-import json
-import h5py
-
-from timeside.core.analyzer import AnalyzerResult
-
-from .utils import get_result
+from .utils import get_result, get_or_run_proc_result
 
 
 class ItemPlayableSerializer(serializers.HyperlinkedModelSerializer):
@@ -183,14 +188,11 @@ class WaveformSerializer(serializers.Serializer):
         self.stop = float(request.GET.get('stop', -1))
         self.nb_pixels = int(request.GET.get('nb_pixels', 1024))
 
-        from .utils import get_or_run_proc_result
         result = get_or_run_proc_result(
             'waveform_analyzer',
             item=instance,
             user=request.user
         )
-  
-        import h5py
 
         result_id = 'waveform_analyzer'
         wav_res = h5py.File(result.hdf5.path, 'r').get(result_id)
@@ -261,7 +263,6 @@ class ItemWaveformSerializer(ItemSerializer):
 
     def get_waveform_image_url(self, obj):
         request = self.context['request']
-        from .utils import get_or_run_proc_result
         result = get_or_run_proc_result(
             'waveform_analyzer',
             item=obj,
@@ -546,48 +547,61 @@ class VisualizationSerializer(serializers.Serializer):
 
     def to_representation(self, obj):
         request = self.context['request']
-        self.subprocessor_id = str(request.GET.get('subprocessor_id', ''))
         self.start = float(request.GET.get('start', 0))
         self.stop = float(request.GET.get('stop', -1))
         self.width = int(float(request.GET.get('width', 1024)))
         self.height = int(float(request.GET.get('height', 128)))
 
-        if not self.subprocessor_id:
-            self.subprocessor_id = self.get_subprocessor_id(obj)
+        image_buffer = BytesIO()
 
-        if not obj.has_hdf5():
+        if not obj.has_hdf5() and not obj.has_file():
             raise serializers.ValidationError(
-                    "result must have an hdf5 file to be visualized")
+                    "result must have an HDF5 file or a PNG file to be visualized")
 
-        hdf5_result = h5py.File(obj.hdf5.path, 'r').get(self.subprocessor_id)
-        result = AnalyzerResult().from_hdf5(hdf5_result)
-        duration = hdf5_result['audio_metadata'].attrs['duration']
-        samplerate = hdf5_result['data_object'][
-            'frame_metadata'].attrs['samplerate']
+        if obj.file:
+            # Result givers a PNG from a Grapher
+            image = Image.open(obj.file)
+            pixel_resolution = image.width / obj.item.audio_duration
+            pixel_start = int(self.start*pixel_resolution)
+            pixel_stop = int(self.stop*pixel_resolution)
+            if pixel_stop > image.width:
+                pixel_stop = image_width
+            area = (pixel_start, 0, pixel_stop, image.height)
+            pil_image = image.crop(area)
+        else:
+            # Result gives a HDF5 from an Analyzer
+            self.subprocessor_id = str(request.GET.get('subprocessor_id', ''))
+            if not self.subprocessor_id:
+                self.subprocessor_id = self.get_subprocessor_id(obj)
 
-        if self.start < 0:
-            self.start = 0
-        if self.start > duration:
-            raise serializers.ValidationError(
-                "start must be less than duration")
-        if self.stop == -1:
-            self.stop = duration
+            hdf5_result = h5py.File(obj.hdf5.path, 'r').get(self.subprocessor_id)
+            result = AnalyzerResult().from_hdf5(hdf5_result)
+            duration = hdf5_result['audio_metadata'].attrs['duration']
+            samplerate = hdf5_result['data_object'][
+                'frame_metadata'].attrs['samplerate']
 
-            if self.stop > duration:
+            if self.start < 0:
+                self.start = 0
+            if self.start > duration:
+                raise serializers.ValidationError(
+                    "start must be less than duration")
+            if self.stop == -1:
                 self.stop = duration
 
-        # following same cap_value for width
-        # as for waveform's nb_pixel serialization
-        cap_value = int(samplerate * abs(self.stop - self.start) / 2)
-        if self.width > cap_value:
-            self.width = cap_value
+                if self.stop > duration:
+                    self.stop = duration
 
-        from io import BytesIO
-        pil_image = result._render_PIL(
-            size=(self.width, self.height),
-            dpi=80, xlim=(self.start, self.stop)
-            )
-        image_buffer = BytesIO()
+            # following same cap_value for width
+            # as for waveform's nb_pixel serialization
+            cap_value = int(samplerate * abs(self.stop - self.start) / 2)
+            if self.width > cap_value:
+                self.width = cap_value
+
+            pil_image = result._render_PIL(
+                size=(self.width, self.height),
+                dpi=80, xlim=(self.start, self.stop)
+                )
+
         pil_image.save(image_buffer, 'PNG')
         return image_buffer.getvalue()
 
