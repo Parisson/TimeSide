@@ -247,6 +247,11 @@ CELERY_TASK_ALWAYS_EAGER = False
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
+CORS_ALLOWED_ORIGINS = [
+    'https://ircam-web.github.io',
+    'http://localhost:3000',
+]
+
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
 
