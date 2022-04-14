@@ -209,6 +209,7 @@ class UUID(models.Model):
             created = True
         return obj, created
 
+
     @classmethod
     def get_first(cls, **kwargs):
         """
@@ -579,13 +580,6 @@ class Item(Titled, UUID, Dated, Shareable):
                 pipe |= proc
 
         # item.lock_setter(True)
-
-        if not self.hdf5:
-            hdf5_file = str(experience.uuid) + '.hdf5'
-            self.hdf5 = os.path.join(
-                result_path, hdf5_file
-                ).replace(settings.MEDIA_ROOT, '')
-            self.save()
 
         pipe.run()
 
@@ -1097,6 +1091,11 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
         verbose_name=_('item'),
         blank=False,
         on_delete=models.CASCADE
+        )
+    color = models.CharField(
+        _('RVB color'),
+        max_length=6,
+        blank=True
         )
 
     class Meta:
