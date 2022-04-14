@@ -165,7 +165,7 @@ class TestAnalyzerResultNumpy(TestAnalyzerResultGoodType):
 
 
 class LevelAnalyzer(object):
-    def testOnLevelAnaylyzer(self):
+    def testOnLevelAnalyzer(self):
         from timeside.core import get_processor
         from timeside.core.tools.test_samples import samples
 
