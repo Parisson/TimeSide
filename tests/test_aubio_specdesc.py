@@ -35,5 +35,12 @@ class TestAubioSpecdesc(unittest.TestCase):
         #results.to_json()
         #results.to_xml()
 
+        for proc_id in results.list_id():
+            result = results.get_result_by_id (proc_id)
+            # check we have a result with coherent length (±100ms)
+            duration = result.audio_metadata.duration
+            data_duration = result.data_object.time[-1]
+            self.assertAlmostEqual (duration, data_duration, 1)
+
 if __name__ == '__main__':
     unittest.main(testRunner=TestRunner())

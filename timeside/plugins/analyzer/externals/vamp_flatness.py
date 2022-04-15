@@ -45,6 +45,8 @@ class VampFlatness(VampAnalyzer):
     @store_parameters
     def __init__(self):
         super(VampFlatness, self).__init__()
+        self.input_blocksize = 1024
+        self.input_stepsize = self.input_blocksize
         # Define Vamp plugin key and output
         self.plugin_key = 'vamp-libxtract:flatness'
         self.plugin_output = 'flatness'
@@ -80,5 +82,4 @@ class VampFlatness(VampAnalyzer):
 
         result = self.new_result(data_mode='value', time_mode='framewise')
         result.data_object.value = self.vamp_results['vector'][1]
-        result.data_object.y_value = self.vamp_results['vector'][0]
         self.add_result(result)
