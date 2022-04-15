@@ -37,7 +37,7 @@ class SpectrogramLog(Grapher):
     implements(IGrapher)
 
     @interfacedoc
-    def __init__(self, width=2048, height=256, bg_color=(0, 0, 0),
+    def __init__(self, width=4096, height=256, bg_color=(0, 0, 0),
                  color_scheme='default'):
         super(SpectrogramLog, self).__init__(
             width, height, bg_color, color_scheme)
