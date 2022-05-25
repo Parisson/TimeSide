@@ -122,7 +122,7 @@ pycparser==2.19
 pycrypto==2.6.1
 Pygments==2.3.1
 PyGObject==3.30.4
-PyJWT==1.7.1
+PyJWT==2.4.0
 pympi-ling==1.69
 pyOpenSSL==19.1.0
 pyparsing==2.4.6
