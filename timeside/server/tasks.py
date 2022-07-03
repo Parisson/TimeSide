@@ -150,15 +150,11 @@ def item_post_save_async(uuid, download=True):
     if not item.source_file:
         if item.external_id:
             source_file = item.get_source_from_id(download=download)
-
         if item.external_uri:
             source_file = item.get_source_from_uri(download=download)
-
-
         Item.objects.filter(uuid=uuid).update(
                 source_file=source_file.replace(settings.MEDIA_ROOT, '')
                 )
-
         item = Item.objects.get(uuid=uuid)
 
     if item.source_file:
