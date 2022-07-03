@@ -139,3 +139,34 @@ def task_monitor(task_id, results_id):
         time.sleep(1)
     logger.info(f'{str(task)} is done')
     task.status_setter(_DONE)
+
+
+@shared_task
+def item_post_save_async(uuid, download=True):
+    time.sleep(0.1)
+    item = Item.objects.get(uuid=uuid)
+    source_file = ''
+
+    if item.external_id and not item.source_file:
+        source_file = item.get_source_from_id(download=download)
+
+    if item.external_uri and not item.source_url:
+        source_file = item.get_source_from_uri(download=download)
+
+    Item.objects.filter(uuid=uuid).update(
+            source_file=source_file.replace(settings.MEDIA_ROOT, '')
+            )
+
+    item = Item.objects.get(uuid=uuid)
+
+    if item.source_file:
+        sha1 = item.get_hash()
+        mime_type = item.get_mime_type()
+        audio_duration = item.get_audio_duration()
+        Item.objects.filter(uuid=uuid).update(
+            sha1=sha1,
+            mime_type=mime_type,
+            audio_duration=audio_duration,
+            )
+        item.process_waveform()
+

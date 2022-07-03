@@ -397,53 +397,66 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_source(self, download=False):
+    def get_source_from_id(self, download=True):
         # check if item has not already an audio source url or file,
-        # has an external id or url to retrieve audio source,
+        # has an external id to retrieve audio source,
         # and a has provider that gives free access to audio sources.
-        if not (self.source_url or self.source_file) and    \
-           (self.external_uri or self.external_id) and      \
-           self.provider and self.provider.source_access:
+
+        source = ''
+        if not (self.source_url or self.source_file) and \
+                self.external_id and \
+                self.provider and self.provider.source_access:
             try:
-                if self.external_uri:
-                    source = self.provider.get_source_from_url(
-                        self.external_uri, download
-                        )
-                elif self.external_id:
-                    source = self.provider.get_source_from_id(
+                source = self.provider.get_source_from_id(
                         self.external_id, download
                         )
-                else:
-                    source = ''
-                # correct media path while downloading
-                # the audio source as a file
-                if download:
-                    self.source_file = source.replace(settings.MEDIA_ROOT, '')
-                # store audio url in source_url for streaming
-                else:
-                    self.source_url = source
             except timeside.core.exceptions.ProviderError as e:
                 app_logger.warning(e)
                 self.external_uri = ''
                 self.external_id = ''
+        return source
 
-            super(Item, self).save()
+    def get_source_from_uri(self, download=True):
+        # check if item has not already an audio source url or file,
+        # has an external uri to retrieve audio source,
+        # and a has provider that gives free access to audio sources.
+
+        source = ''
+        if not (self.source_url or self.source_file) and \
+                self.external_uri and \
+                self.provider and \
+                self.provider.source_access:
+            try:
+                source = self.provider.get_source_from_url(
+                        self.external_uri, download
+                        )
+            except timeside.core.exceptions.ProviderError as e:
+                app_logger.warning(e)
+                self.external_uri = ''
+                self.external_id = ''
+        return source
 
     def get_external_id(self):
+        """
+        """
+
+        external_id = ''
         if not (self.source_url or self.external_id) and self.external_uri:
             try:
-                self.external_id = self.provider.get_id_from_url(
+                external_id = self.provider.get_id_from_url(
                     self.external_uri
                     )
             except timeside.core.exceptions.ProviderError as e:
                 app_logger.warning(e)
                 self.external_uri = ''
                 self.external_id = ''
-
-            super(Item, self).save()
+        return external_id
 
     def get_uri(self):
-        """Return the Item source"""
+        """
+        Return the Item source
+        """
+
         if self.source_file and os.path.exists(self.source_file.path):
             return self.source_file.path
         elif self.source_url:
@@ -454,46 +467,53 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return Item result path
         """
+
         result_path = os.path.join(RESULTS_ROOT, str(self.uuid))
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         return result_path
 
-    def get_audio_info(self, force=False):
+    def get_audio_duration(self, force=False):
         """
         Return item audio duration
         """
+
+        audio_duration = None
         if (
             (force or not (self.audio_duration and self.samplerate))
             and self.source_file
            ):
             decoder = timeside.core.get_processor(DEFAULT_DECODER)(
                 uri=self.get_uri())
-            self.audio_duration = decoder.uri_duration
-            self.samplerate = decoder.input_samplerate
-            super(Item, self).save()
+            audio_duration = decoder.uri_duration
+        return audio_duration
 
     def get_hash(self, force=False):
-        "Set SHA1 hash from file binary content"
-        if force or (self.sha1 is None):
+        """
+        Set SHA1 hash from file binary content
+        """
+
+        sha1 = ''
+        if force or not self.sha1:
             if self.source_file:
                 sha1 = sha1sum_file(self.source_file.path)
             elif self.source_url:
                 sha1 = sha1sum_url(self.source_url)
-            else:
-                return
-            self.sha1 = sha1
-            super(Item, self).save()
+        return sha1
 
-    def get_mimetype(self, force=False):
-        if force or (self.mime_type is None):
+    def get_mime_type(self, force=False):
+        """
+        """
+
+        mime_type = ''
+        if force or not self.mime_type:
             if self.source_url:
                 path = self.source_url
             elif self.source_file:
                 path = self.source_file.path
             if os.path.exists(path):
-                self.mime_type = get_mime_type(path)
-            super(Item, self).save()
+                mime_type = get_mime_type(path)
+        return mime_type
 
     def process_waveform(self):
         processor = Processor.get_first(pid='waveform_analyzer')
@@ -691,7 +711,14 @@ class Item(Titled, UUID, Dated, Shareable):
         del pipe
         gc.collect()
 
-        # item.lock_setter(False)
+
+def item_post_save(sender, **kwargs):
+    """ """
+    from timeside.server.tasks import item_post_save_async
+    instance = kwargs['instance']
+    item_post_save_async.delay(uuid=instance.uuid)
+
+post_save.connect(item_post_save, sender=Item)
 
 
 class Experience(Titled, UUID, Dated, Shareable):
@@ -928,6 +955,19 @@ class Result(UUID, Dated, Shareable):
             return 'Unnamed_result'
 
 
+def result_pre_delete(sender, **kwargs):
+    """ """
+    instance = kwargs['instance']
+    if instance.file and os.path.exists(instance.file.path):
+        os.remove(instance.file.path)
+    if instance.hdf5 and os.path.exists(instance.hdf5.path):
+        os.remove(instance.hdf5.path)
+
+
+pre_delete.connect(result_pre_delete, sender=Result)
+# TODO post_save.connect(set_mimetype, sender=Result)
+
+
 @python_2_unicode_compatible
 class Task(UUID, Dated, Shareable):
 
@@ -955,6 +995,7 @@ class Task(UUID, Dated, Shareable):
         on_delete=models.SET_NULL,
         help_text=_("Single item prossessed in the task.")
         )
+
     status = models.IntegerField(
         _('status'),
         choices=STATUS,
@@ -1014,34 +1055,13 @@ class Task(UUID, Dated, Shareable):
                 status = Task.objects.get(uuid=str(self.uuid)).status
 
 
-def item_post_save(sender, **kwargs):
-    instance = kwargs['instance']
-    instance.get_source(download=True)
-    instance.get_external_id()
-    instance.get_hash()
-    instance.get_mimetype()
-    instance.get_audio_info()
-    instance.process_waveform()
-
-
-def result_pre_delete(sender, **kwargs):
-    instance = kwargs['instance']
-    if instance.file and os.path.exists(instance.file.path):
-        os.remove(instance.file.path)
-    if instance.hdf5 and os.path.exists(instance.hdf5.path):
-        os.remove(instance.hdf5.path)
-
-
-def run(sender, **kwargs):
+def task_run(sender, **kwargs):
     task = kwargs['instance']
     if task.status == _PENDING:
         task.run()
 
+post_save.connect(task_run, sender=Task)
 
-pre_delete.connect(result_pre_delete, sender=Result)
-post_save.connect(item_post_save, sender=Item)
-# TODO post_save.connect(set_mimetype, sender=Result)
-post_save.connect(run, sender=Task)
 
 
 # Session and Tracks related objects
