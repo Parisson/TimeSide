@@ -147,26 +147,30 @@ def item_post_save_async(uuid, download=True):
     item = Item.objects.get(uuid=uuid)
     source_file = ''
 
-    if item.external_id and not item.source_file:
-        source_file = item.get_source_from_id(download=download)
+    if not item.source_file:
+        if item.external_id:
+            source_file = item.get_source_from_id(download=download)
 
-    if item.external_uri and not item.source_url:
-        source_file = item.get_source_from_uri(download=download)
+        if item.external_uri:
+            source_file = item.get_source_from_uri(download=download)
 
-    Item.objects.filter(uuid=uuid).update(
-            source_file=source_file.replace(settings.MEDIA_ROOT, '')
-            )
 
-    item = Item.objects.get(uuid=uuid)
+        Item.objects.filter(uuid=uuid).update(
+                source_file=source_file.replace(settings.MEDIA_ROOT, '')
+                )
+
+        item = Item.objects.get(uuid=uuid)
 
     if item.source_file:
         sha1 = item.get_hash()
         mime_type = item.get_mime_type()
         audio_duration = item.get_audio_duration()
+        samplerate = item.get_audio_samplerate()
         Item.objects.filter(uuid=uuid).update(
             sha1=sha1,
             mime_type=mime_type,
             audio_duration=audio_duration,
+            samplerate=samplerate,
             )
         item.process_waveform()
 

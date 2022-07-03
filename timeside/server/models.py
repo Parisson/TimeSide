@@ -420,6 +420,7 @@ class Item(Titled, UUID, Dated, Shareable):
         # check if item has not already an audio source url or file,
         # has an external uri to retrieve audio source,
         # and a has provider that gives free access to audio sources.
+        # TODO: merge this with get_source_from_id
 
         source = ''
         if not (self.source_url or self.source_file) and \
@@ -454,7 +455,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def get_uri(self):
         """
-        Return the Item source
+        Return the Item source URI
         """
 
         if self.source_file and os.path.exists(self.source_file.path):
@@ -480,13 +481,30 @@ class Item(Titled, UUID, Dated, Shareable):
 
         audio_duration = None
         if (
-            (force or not (self.audio_duration and self.samplerate))
+            (force or not self.audio_duration)
             and self.source_file
            ):
             decoder = timeside.core.get_processor(DEFAULT_DECODER)(
                 uri=self.get_uri())
-            audio_duration = decoder.uri_duration
-        return audio_duration
+            return decoder.uri_duration
+        else:
+            return self.audio_duration
+
+    def get_audio_samplerate(self, force=False):
+        """
+        Return item audio samplerate
+        """
+
+        samplerate = None
+        if (
+            (force or not self.samplerate)
+            and self.source_file
+           ):
+            decoder = timeside.core.get_processor(DEFAULT_DECODER)(
+                uri=self.get_uri())
+            return decoder.input_samplerate
+        else:
+            return self.samplerate
 
     def get_hash(self, force=False):
         """
