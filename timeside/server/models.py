@@ -495,6 +495,14 @@ class Item(Titled, UUID, Dated, Shareable):
                 self.mime_type = get_mime_type(path)
             super(Item, self).save()
 
+    def process_waveform(self):
+        processor = Processor.get_first(pid='waveform_analyzer')
+        preset, c = Preset.objects.get_or_create(processor=processor)
+        experience = preset.get_single_experience()
+        task, c = Task.objects.get_or_create(item=self, experience=experience)
+        if not c:
+            task.run()
+
     def run(self, experience, task=None, item=None):
         result_path = self.get_results_path()
         # get audio source
@@ -1013,6 +1021,7 @@ def item_post_save(sender, **kwargs):
     instance.get_hash()
     instance.get_mimetype()
     instance.get_audio_info()
+    instance.process_waveform()
 
 
 def result_pre_delete(sender, **kwargs):
