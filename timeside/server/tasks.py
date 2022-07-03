@@ -143,12 +143,13 @@ def task_monitor(task_id, results_id):
 
 @shared_task
 def item_post_save_async(uuid, download=True):
-    # arbitrary, ensure the item.save() is already done
-    time.sleep(0.1)
-
-    item = Item.objects.get(uuid=uuid)
     items = Item.objects.filter(uuid=uuid)
+    # arbitrary sleep ensuring the item.save() is already done
+    while not items:
+        items = Item.objects.filter(uuid=uuid)
+        time.sleep(0.5)
     items.update(lock=True)
+    item = items[0]
 
     if not item.source_file:
         if item.external_id:
