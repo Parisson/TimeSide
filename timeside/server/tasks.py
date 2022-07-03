@@ -143,18 +143,21 @@ def task_monitor(task_id, results_id):
 
 @shared_task
 def item_post_save_async(uuid, download=True):
+    # arbitrary, ensure the item.save() is already done
     time.sleep(0.1)
+
     item = Item.objects.get(uuid=uuid)
-    source_file = ''
+    items = Item.objects.filter(uuid=uuid)
+    items.update(lock=True)
 
     if not item.source_file:
         if item.external_id:
             source_file = item.get_source_from_id(download=download)
-        if item.external_uri:
+        elif item.external_uri:
             source_file = item.get_source_from_uri(download=download)
-        Item.objects.filter(uuid=uuid).update(
-                source_file=source_file.replace(settings.MEDIA_ROOT, '')
-                )
+        else:
+            source_file = ''
+        items.update(source_file=source_file.replace(settings.MEDIA_ROOT, ''))
         item = Item.objects.get(uuid=uuid)
 
     if item.source_file:
@@ -162,11 +165,13 @@ def item_post_save_async(uuid, download=True):
         mime_type = item.get_mime_type()
         audio_duration = item.get_audio_duration()
         samplerate = item.get_audio_samplerate()
-        Item.objects.filter(uuid=uuid).update(
+        items.update(
             sha1=sha1,
             mime_type=mime_type,
             audio_duration=audio_duration,
             samplerate=samplerate,
             )
         item.process_waveform()
+
+    items.update(lock=False)
 

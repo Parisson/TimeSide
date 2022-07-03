@@ -625,8 +625,6 @@ class Item(Titled, UUID, Dated, Shareable):
                 presets[preset] = proc
                 pipe |= proc
 
-        # item.lock_setter(True)
-
         pipe.run()
 
         def set_results_from_processor(proc, preset=None):
@@ -651,11 +649,7 @@ class Item(Titled, UUID, Dated, Shareable):
                     result_path,
                     hdf5_file
                     ).replace(settings.MEDIA_ROOT, '')
-                # while result.lock:
-                #     time.sleep(3)
-                # result.lock_setter(True)
                 proc.results.to_hdf5(result.hdf5.path)
-                # result.lock_setter(False)
             else:
                 if proc.external:
                     filename = proc.result_temp_file.split(os.sep)[-1]
@@ -676,7 +670,6 @@ class Item(Titled, UUID, Dated, Shareable):
                     result.file = result_file.replace(settings.MEDIA_ROOT, '')
 
             result.run_time_setter(proc.run_time)
-
             result.status_setter(_DONE)
 
         for preset, proc in presets.items():
