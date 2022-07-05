@@ -86,10 +86,20 @@ class ProviderAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     model = Item
     readonly_fields = ('uuid',)
-    list_display = ['__str__', 'uuid', 'date_added', 'date_modified']
+    list_display = ['__str__', 'uuid', 'date_added', 'date_modified', \
+        'has_source_file', 'has_source_url']
     search_fields = ['uuid', 'title']
     list_filter = ['author',]
 
+    def has_source_file(self, obj):
+        if obj.source_file:
+            return True
+        return False
+
+    def has_source_url(self, obj):
+        if obj.source_url:
+            return True
+        return False
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item, ItemAdmin)
