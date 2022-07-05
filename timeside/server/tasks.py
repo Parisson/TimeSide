@@ -100,24 +100,30 @@ def experience_run(task_id, exp_id, item_id):
 
     try:
         logger.info(f'Run {str(experience)} on {str(item)}')
-        r.publish(
-            'timeside-experience-start',
+        if not (item.source_url or item.source_file):
+            logger.info(f'Item does not have any source_file nor source_url. \
+                            Saving it again to retrieve data. \
+                            Please re-run task {str(task.uuid)} after finish')
+            item.save()
+        else:
+            r.publish(
+                'timeside-experience-start',
 
-            str(author) +
-            ":" + str(task.uuid) +
-            ":" + str(experience.uuid) +
-            ":" + str(item.uuid)
-        )
-        item.run(experience, task=task, item=item)
-        gc.collect()
-        r.publish(
-            'timeside-experience-done',
+                str(author) +
+                ":" + str(task.uuid) +
+                ":" + str(experience.uuid) +
+                ":" + str(item.uuid)
+            )
+            item.run(experience, task=task, item=item)
+            gc.collect()
+            r.publish(
+                'timeside-experience-done',
 
-            str(author) +
-            ":" + str(task.uuid) +
-            ":" + str(experience.uuid) +
-            ":" + str(item.uuid)
-        )
+                str(author) +
+                ":" + str(task.uuid) +
+                ":" + str(experience.uuid) +
+                ":" + str(item.uuid)
+            )
     except Exception as e:
         r.publish(
             'timeside-experience-fail',
