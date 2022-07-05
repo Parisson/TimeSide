@@ -90,7 +90,7 @@ class ItemAdmin(admin.ModelAdmin):
         'has_source_file', 'has_source_url']
     search_fields = ['uuid', 'title']
     list_filter = ['author',]
-    actions = [re_save_items,]
+    actions = ['re_save_items',]
 
     def has_source_file(self, obj):
         if obj.source_file:
@@ -102,11 +102,10 @@ class ItemAdmin(admin.ModelAdmin):
             return True
         return False
 
-    def re_save_items(modeladmin, request, queryset):
+    def re_save_items(self, request, queryset):
         for item in queryset:
             item.save()
-
-    re_save_items.description = "Re-save selected items"
+    re_save_items.short_description = "Re-save selected items"
 
 
 admin.site.register(Selection, SelectionAdmin)
