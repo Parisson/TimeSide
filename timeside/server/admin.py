@@ -83,6 +83,11 @@ class ProviderAdmin(admin.ModelAdmin):
     search_fields = ['uuid', 'name']
 
 
+@admin.action(description='Re-save all selected items')
+def re_save_items(modeladmin, request, queryset):
+    for item in queryset:
+        item.save()
+
 class ItemAdmin(admin.ModelAdmin):
     model = Item
     readonly_fields = ('uuid',)
@@ -90,6 +95,7 @@ class ItemAdmin(admin.ModelAdmin):
         'has_source_file', 'has_source_url']
     search_fields = ['uuid', 'title']
     list_filter = ['author',]
+    actions = [re_save_items,]
 
     def has_source_file(self, obj):
         if obj.source_file:
@@ -100,6 +106,8 @@ class ItemAdmin(admin.ModelAdmin):
         if obj.source_url:
             return True
         return False
+
+
 
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Item, ItemAdmin)
