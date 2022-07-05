@@ -867,11 +867,11 @@ class CustomSchemaGenerator(SchemaGenerator):
         # Add production and staging urls to schema
         schema['servers'] = [
                 {
-                    "url": "https://wasabi.telemeta.org/",
+                    "url": "https://timeside.ircam.fr/",
                     "description": "Production server"
                 },
                 {
-                    "url": "https://sandbox.wasabi.telemeta.org/",
+                    "url": "https://staging.timeside.ircam.fr/",
                     "description": "Staging server"
                 }
         ]
