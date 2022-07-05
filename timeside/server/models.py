@@ -388,7 +388,10 @@ class Item(Titled, UUID, Dated, Shareable):
         verbose_name = _('item')
 
     def __str__(self):
-        return '_'.join([str(self.title), str(self.uuid)[:4]])
+        if self.title:
+            return '_'.join([str(self.title), str(self.uuid)[:4]])
+        else:
+            return str(self.uuid)
 
     def results(self):
         return [result for result in self.results.all()]
@@ -721,6 +724,11 @@ class Item(Titled, UUID, Dated, Shareable):
 
         del pipe
         gc.collect()
+
+    def save(self, **kwargs):
+        if not self.title:
+            self.title = str(self.uuid)
+        super(Item, self).save(**kwargs)
 
 
 def item_post_save(sender, **kwargs):
