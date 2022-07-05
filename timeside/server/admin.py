@@ -83,11 +83,6 @@ class ProviderAdmin(admin.ModelAdmin):
     search_fields = ['uuid', 'name']
 
 
-@admin.action(description='Re-save all selected items')
-def re_save_items(modeladmin, request, queryset):
-    for item in queryset:
-        item.save()
-
 class ItemAdmin(admin.ModelAdmin):
     model = Item
     readonly_fields = ('uuid',)
@@ -107,6 +102,11 @@ class ItemAdmin(admin.ModelAdmin):
             return True
         return False
 
+    def re_save_items(modeladmin, request, queryset):
+        for item in queryset:
+            item.save()
+
+    re_save_items.description = "Re-save selected items"
 
 
 admin.site.register(Selection, SelectionAdmin)
