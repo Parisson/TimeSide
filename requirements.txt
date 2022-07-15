@@ -28,7 +28,7 @@ defusedxml==0.6.0
 Django==2.2.24
 django-bootstrap-pagination==1.7.1
 django-bootstrap3==12.0.3
-django-celery-results==1.2.0
+django-celery-results==2.4.0
 django-cors-headers==3.2.1
 django-debug-toolbar==2.2.1
 django-environ==0.4.5
