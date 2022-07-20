@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3-buster
+FROM debian:buster
 
 MAINTAINER Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 
