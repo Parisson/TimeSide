@@ -17,6 +17,22 @@ libges-1.0-0
 libofa0
 libgirepository1.0-dev
 
+# python
+python3-h5py
+python3-tables
+python3-cffi
+python3-cffi-backend
+python3-grpcio
+python3-cairo
+python3-yaml
+python3-ruamel.yaml
+python3-ruamel.yaml.clib
+python3-llvmlite
+python3-numba
+python3-numexpr
+python3-zmq
+python-gi-dev
+
 # Optionnal Audio Analysis libraries
 vamp-examples
 vamp-plugin-sdk
@@ -44,3 +60,5 @@ procps
 pkg-config
 libcairo2-dev
 libyaml-dev
+uwsgi
+uwsgi-plugin-python3

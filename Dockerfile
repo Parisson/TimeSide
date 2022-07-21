@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3-buster
+FROM python:3-bullseye
 
 MAINTAINER Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 
@@ -34,7 +34,7 @@ ENV PYTHON_EGG_CACHE=/srv/.python-eggs
 RUN mkdir -p $PYTHON_EGG_CACHE && \
     chown www-data:www-data $PYTHON_EGG_CACHE
 
-RUN pip3 install -U setuptools pip numpy
+RUN pip3 install -U setuptools pip numpy pandas scipy
 RUN apt-get remove -y python3-yaml
 
 # Install timeside
