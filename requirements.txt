@@ -36,7 +36,6 @@ django-extensions==2.2.8
 django-filter==2.2.0
 django-npm==1.0.0
 djangorestframework==3.12.4
-#git+https://github.com/encode/django-rest-framework.git@6a23fa06495c6010239dda926f55f2d6baa79cf3#egg=djangorestframework
 djangorestframework-simplejwt==4.5.0
 docutils==0.16
 entrypoints==0.3
@@ -90,7 +89,7 @@ mistune==0.8.4
 mutagen==1.44.0
 nbconvert==5.6.1
 nbformat==5.0.4
-networkx==1.11
+networkx==2.8.5
 notebook==6.1.5
 #numba==0.48.0
 #numexpr==2.7.1
@@ -130,7 +129,7 @@ pyrsistent==0.15.7
 python-dateutil==2.8.1
 python-editor==1.0.4
 python-json-logger==0.1.11
-pytz==2019.3
+pytz==2020.1
 pyxdg==0.25
 PyYAML==5.4.1
 #pyzmq==18.1.1
@@ -141,7 +140,7 @@ resampy==0.2.2
 rsa==4.0
 #ruamel.yaml==0.16.10
 #ruamel.yaml.clib==0.2.0
-scikit-learn==0.22.1
+#scikit-learn==0.22.1
 #scipy==1.4.1
 SecretStorage==2.3.1
 Send2Trash==1.5.0

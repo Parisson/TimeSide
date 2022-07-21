@@ -32,6 +32,7 @@ python3-numba
 python3-numexpr
 python3-zmq
 python-gi-dev
+python3-sklearn
 
 # Optionnal Audio Analysis libraries
 vamp-examples
