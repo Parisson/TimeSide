@@ -111,7 +111,7 @@ Pillow==7.0.0
 ply==3.11
 prometheus-client==0.7.1
 prompt-toolkit==3.0.3
-protobuf==3.11.3
+protobuf==3.18.3
 psycopg2-binary==2.8.4
 ptyprocess==0.6.0
 # py-sonicvisualiser===0.3-1-g7cf994d
