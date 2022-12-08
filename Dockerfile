@@ -65,7 +65,5 @@ COPY ./bin /srv/lib/timeside/bin/
 COPY ./timeside /srv/lib/timeside/timeside/
 RUN pip3 install -e .
 
-RUN export PYTHONPATH=/srv/lib/timeside:/srv/app
-
 WORKDIR /srv/app
 

@@ -19,7 +19,8 @@ Contents:
    ui
    doc
    Tutorials <tutorials/index>
-   Core API <core_api/index>
+   Core framewor <core_api/index>
+   Web API <core_api/index>
    development
    production
    related

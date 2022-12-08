@@ -60,6 +60,8 @@ services:
       - "8000"
     ports:
       - "9080:8000"
+    environment:
+      - PYTHONPATH=/srv/lib/timeside:/srv/app
 
   worker:
     build: .
@@ -74,6 +76,8 @@ services:
     links:
       - broker
       - db
+    environment:
+      - PYTHONPATH=/srv/lib/timeside:/srv/app
 
   websockets:
     build: ./websockets
