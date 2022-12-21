@@ -21,7 +21,7 @@ class Command(BaseCommand):
         for prov in core_providers:
             provider, c = Provider.objects.get_or_create(
                 pid=prov.id(),
-                source_access=prov.ressource_access(),
+                source_access=prov.resource_access(),
                 description=prov.description(),
                 name=prov.name()
                 )

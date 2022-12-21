@@ -25,7 +25,7 @@ class DeezerPreview(Provider):
 
     @staticmethod
     @interfacedoc
-    def ressource_access():
+    def resource_access():
         return True
 
     @interfacedoc

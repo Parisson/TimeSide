@@ -23,7 +23,7 @@ class DeezerComplete(Provider):
 
     @staticmethod
     @interfacedoc
-    def ressource_access():
+    def resource_access():
         return False
 
     @interfacedoc

@@ -275,21 +275,20 @@ class Provider(Named, UUID):
     def __str__(self):
         return str(self.pid)
 
-    def get_provider(self):
-        return timeside.core.provider.get_provider(self.pid)
+    def get_provider(self, url=None, id=None, download=False):
+        provider = timeside.core.provider.get_provider(self.pid)
+        self.provider = provider(url=url,
+                            id=id,
+                            path=DOWNLOAD_ROOT,
+                            download=download
+                            )
+        return self.provider
 
-    def get_source_from_url(self, url, download=False):
-        return self.get_provider()().get_source_from_url(
-            url, DOWNLOAD_ROOT, download
-            )
-
-    def get_source_from_id(self, external_id, download=False):
-        return self.get_provider()().get_source_from_id(
-            external_id, DOWNLOAD_ROOT, download
-            )
+    def get_source(self):
+        return self.provider.get_source()
 
     def get_id_from_url(self, url):
-        return self.get_provider()().get_id_from_url(url)
+        return self.provider.get_id_from_url()
 
 
 class Selection(Titled, UUID, Dated, Shareable):

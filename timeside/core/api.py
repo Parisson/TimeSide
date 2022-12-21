@@ -273,6 +273,9 @@ class IEffect(IProcessor):
 
 class IProvider(Interface):
 
+    def __init__(self, url=None, id=None, path=None, download=False):
+        """Create a new provider instance from a URL or an ID"""
+
     @staticmethod
     def id():
         """Short alphanumeric, lower-case string which uniquely identify this
@@ -284,24 +287,27 @@ class IProvider(Interface):
         """name of the provider"""
 
     @staticmethod
-    def ressource_access():
-        """Boolean informing if the audio is whether or not
-        freely available from the provider"""
-
-    @staticmethod
     def description():
         """Return a string describing what this provider is meant for.
         """
 
-    def get_source_from_url(self, url, path, download=False):
-        """Get source's uri or even download an audio track
-        from the url of the provider's ressource of the provider
-        (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
+    @staticmethod
+    def source_access():
+        """Boolean informing if the audio is whether or not
+        freely available from the provider"""
 
-    def get_source_from_id(self, id, path, download=False):
-        """Get source's uri or even download an audio track
-        from the id of the provider's ressource of the provider
-        (Youtube video id, Deezer 30 sec preview from track's id, etc.)"""
+    @staticmethod
+    def resource_exists(self):
+        """Boolean informing if the resource is available
+        from the provider instance"""
 
-    def get_id_from_url(self, url):
+    def get_title(self):
+       """Get title of the resource from the provider instance"""
+
+    # def get_source(self):
+    #     """Get source's uri or even download an audio track to the path
+    #     from the URL or ID of the resource of the provider instance
+    #     (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
+
+    def get_id_from_url(self):
         """Get provider's id for a ressource from its url"""
