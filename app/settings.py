@@ -167,6 +167,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'debug_toolbar',
     'django_celery_results',
+    'django_minio_backend',
     # 'celery.contrib.testing.tasks',
 )
 
@@ -273,6 +274,13 @@ COMPLETION_INTERVAL = 10  # blocks
 
 CACHE_RESULT = True
 
+# DJANGO MINIO BACKEND
+MINIO_ENDPOINT = 'localhost:9000'
+# MINIO_EXTERNAL_ENDPOINT = "external-minio.your-company.co.uk"  # Default is same as MINIO_ENDPOINT
+# MINIO_EXTERNAL_ENDPOINT_USE_HTTPS = True  # Default is same as MINIO_USE_HTTPS
+MINIO_ACCESS_KEY = env('MINIO_ACCESS_KEY')
+MINIO_SECRET_KEY = env('MINIO_SECRET_KEY')
+MINIO_USE_HTTPS = False
 ##################
 # LOCAL SETTINGS #
 ##################
