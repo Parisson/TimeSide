@@ -53,6 +53,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.core.files import File
+from django_minio_backend import MinioBackend, iso_date_prefix
 from celery.utils.log import get_task_logger
 
 import jsonfield
@@ -324,7 +325,8 @@ class Item(Titled, UUID, Dated, Shareable):
     element_type = 'timeside_item'
 
     source_file = models.FileField(
-        _('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
+        _('file'), storage=MinioBackend(bucket_name='timeside-upload'),
+        upload_to=iso_date_prefix, blank=True, max_length=1024,
         help_text=_("Audio file to process.")
         )
     source_url = models.URLField(
