@@ -45,6 +45,7 @@ services:
       - ./timeside:/srv/lib/timeside/timeside
       - ./tests:/srv/lib/timeside/tests
       - ./lib/plugins:/srv/lib/plugins
+      - ./minio:/srv/minio
       - ./var/media:/srv/media
       - ./var/backup:/srv/backup
       - ./var/static:/srv/static
