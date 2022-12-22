@@ -1,0 +1,256 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analyzer package &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Core" href="core.html" />
+    <link rel="prev" title="Decoder package" href="../decoder/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../processors_list/processors_list.html">List of available processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decoder/index.html">Decoder package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Analyzer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html">Analyzer Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analyzers.html">Analyzers processors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocessors.html">Analyzer preprocessors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../encoder/index.html">Encoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grapher/index.html">Grapher package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../provider/index.html">Provider package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+      <li>Analyzer package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/analyzer/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analyzer-package">
+<h1>Analyzer package<a class="headerlink" href="#analyzer-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Analyzer Core module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#analyzerresult">AnalyzerResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#analyzerresultcontainer">AnalyzerResultContainer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analyzers.html">Analyzers processors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core_analyzers.html">Timeside Core Analyzers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_analyzers.html">Analyzers from external librairies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="preprocessors.html">Analyzer preprocessors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="preprocessors.html#downmix-to-mono">downmix_to_mono</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessors.html#frames-adapter">frames_adapter</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="core.html" class="btn btn-neutral float-right" title="Core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../decoder/index.html" class="btn btn-neutral float-left" title="Decoder package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

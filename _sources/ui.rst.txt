@@ -2,40 +2,21 @@
 User Interfaces
 ===============
 
-Linux
------
+Ipython
+-------
 
-To run the python shell, just do it through the docker composition::
+To run the ipython shell, just do it through the docker composition::
 
     docker-compose run app ipython
-
-
-MacOS or Windows
-----------------
-
-Same as in Linux, but you need to create a docker machine first::
-
-    docker-machine create --driver virtualbox --virtualbox-memory 8096 timeside
-    eval "$(docker-machine env timeside)"
-    docker-compose run app ipython
-
-More infos about the TimeSide docker image: https://registry.hub.docker.com/u/parisson/timeside/
-
 
 Notebook
 ---------
 
 You can also run your code in the wonderful `Jupyter Notebook <http://jupyter.org/>`_ which gives you a web interface to run your own code and share the results with your collaborators::
 
-    docker-compose -f docker-compose.yml -f conf/dev.yml run --service-ports notebook
+    docker-compose -f docker-compose.yml -f env/notebook.yml up
 
-and then browse  http://localhost:8888 to acces the Jupyter notebook interface.
-
-On MacOS or Windows, you will need to ask the IP of the virtual machine to docker-machine::
-
-    docker-machine ip timeside
-
-If it gives you for example 192.168.59.103, you should be able to browse the notebook at http://192.168.59.103:8888/
+and then browse  http://localhost:8888 to access the Jupyter notebook interface. Use the token given in the docker logs of the `notebook` container to login.
 
 .. warning :: Running a Jupyter notebook server with this setup in a non-secured network is not safe. See `Running a notebook server <http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/>`_ for a documented solution to this security problem.
 
@@ -43,11 +24,11 @@ If it gives you for example 192.168.59.103, you should be able to browse the not
 Use you own data
 ----------------
 
-The var/media directory is mounted in /srv/media in the container so you can use it to exchange data between the host and the app container.
+The `var/media` directory is mounted in `/srv/media` inside the container so you can use it to exchange data between the host and the app container.
 
 
-Web Server (experimental)
--------------------------
+Web Server
+----------
 
 TimeSide now includes an experimental web service with a REST API::
 

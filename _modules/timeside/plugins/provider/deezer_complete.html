@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeside.plugins.provider.deezer_complete &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../../copyright.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>timeside.plugins.provider.deezer_complete</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for timeside.plugins.provider.deezer_complete</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">implements</span><span class="p">,</span> <span class="n">interfacedoc</span>
+<span class="kn">from</span> <span class="nn">timeside.core.provider</span> <span class="k">import</span> <span class="n">Provider</span>
+<span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IProvider</span>
+<span class="kn">from</span> <span class="nn">timeside.core.tools.utils</span> <span class="k">import</span> <span class="n">slugify</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">requests</span> <span class="k">import</span> <span class="n">get</span>
+
+
+<div class="viewcode-block" id="DeezerComplete"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete">[docs]</a><span class="k">class</span> <span class="nc">DeezerComplete</span><span class="p">(</span><span class="n">Provider</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Deezer Plugin representing complete tracks on Deezer&#39;s infrastructure&quot;&quot;&quot;</span>
+    <span class="n">implements</span><span class="p">(</span><span class="n">IProvider</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DeezerComplete.id"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete.id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s1">&#39;deezer_complete&#39;</span></div>
+
+<div class="viewcode-block" id="DeezerComplete.name"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete.name">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;Deezer Complete&quot;</span></div>
+
+<div class="viewcode-block" id="DeezerComplete.ressource_access"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete.ressource_access">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">ressource_access</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="DeezerComplete.get_source_from_id"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete.get_source_from_id">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">get_source_from_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">external_id</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="DeezerComplete.get_source_from_url"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete.get_source_from_url">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">get_source_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+<div class="viewcode-block" id="DeezerComplete.get_id_from_url"><a class="viewcode-back" href="../../../../core_api/provider/index.html#timeside.plugins.provider.deezer_complete.DeezerComplete.get_id_from_url">[docs]</a>    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">get_id_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">:][</span><span class="mi">0</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>timeside.plugins.decoder.array &mdash; TimeSide 0.8 documentation</title>
+  <title>timeside.plugins.decoder.array &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,42 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../../search.html"/>
-        <link rel="copyright" title="Copyright" href="../../../../copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="../../../../index.html"/>
-        <link rel="up" title="Module code" href="../../../index.html"/> 
-
-  
-  <script src="../../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../../copyright.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +59,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -91,16 +84,16 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../ui.html">User Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../related.html">Sponsors and Partners</a></li>
@@ -118,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">TimeSide</a>
@@ -126,9 +119,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -157,8 +151,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -203,8 +195,7 @@
 <span class="kn">from</span> <span class="nn">timeside.core.decoder</span> <span class="k">import</span> <span class="n">Decoder</span><span class="p">,</span> <span class="n">IDecoder</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-
-<div class="viewcode-block" id="ArrayDecoder"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder">[docs]</a><span class="k">class</span> <span class="nc">ArrayDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+<div class="viewcode-block" id="ArrayDecoder"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder">[docs]</a><span class="k">class</span> <span class="nc">ArrayDecoder</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot; Decoder taking Numpy array as input&quot;&quot;&quot;</span>
     <span class="n">implements</span><span class="p">(</span><span class="n">IDecoder</span><span class="p">)</span>
@@ -213,7 +204,7 @@
 
     <span class="c1"># IProcessor methods</span>
 
-<div class="viewcode-block" id="ArrayDecoder.id"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ArrayDecoder.id"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;array_decoder&quot;</span></div>
@@ -251,7 +242,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sha1</span> <span class="o">=</span> <span class="n">sha1sum_numpy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frames</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ArrayDecoder.setup"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ArrayDecoder.setup"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="c1"># the output data format we want</span>
         <span class="k">if</span> <span class="n">blocksize</span><span class="p">:</span>
@@ -283,36 +274,41 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">input_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_totalframes</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_samplerate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">itemsize</span> <span class="o">*</span> <span class="mi">8</span></div>
 
-<div class="viewcode-block" id="ArrayDecoder.get_frames"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.get_frames">[docs]</a>    <span class="k">def</span> <span class="nf">get_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ArrayDecoder.get_frames"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.get_frames">[docs]</a>    <span class="k">def</span> <span class="nf">get_frames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">&quot;Define an iterator that will return frames at the given blocksize&quot;</span>
         <span class="n">nb_frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_totalframes</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_blocksize</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_totalframes</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_blocksize</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">nb_frames</span> <span class="o">-=</span> <span class="mi">1</span>  <span class="c1"># Last frame must send eod=True</span>
 
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
                             <span class="n">nb_frames</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_blocksize</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">output_blocksize</span><span class="p">):</span>
             <span class="k">yield</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_blocksize</span><span class="p">],</span> <span class="kc">False</span><span class="p">)</span>
 
         <span class="k">yield</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">[</span><span class="n">nb_frames</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_blocksize</span><span class="p">:],</span> <span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ArrayDecoder.process"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.process">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="ArrayDecoder.process"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.process">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">.</span><span class="n">next</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">)</span></div>
 
     <span class="c1"># IDecoder methods</span>
-<div class="viewcode-block" id="ArrayDecoder.format"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.format">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="ArrayDecoder.format"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.format">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="kn">import</span> <span class="nn">re</span>
         <span class="n">base_type</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;^[a-z]*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;audio/x-raw-&#39;</span> <span class="o">+</span> <span class="n">base_type</span></div>
 
-<div class="viewcode-block" id="ArrayDecoder.metadata"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="ArrayDecoder.version"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.version">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span></div>
+
+<div class="viewcode-block" id="ArrayDecoder.metadata"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ArrayDecoder.release"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.release">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="ArrayDecoder.release"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.array.ArrayDecoder.release">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_frames</span><span class="p">()</span></div></div>
 
@@ -322,9 +318,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -333,11 +327,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -350,36 +344,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../../',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

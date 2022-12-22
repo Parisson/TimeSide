@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>timeside.plugins.decoder.live &mdash; TimeSide 0.8 documentation</title>
+  <title>timeside.plugins.decoder.live &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,42 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../../search.html"/>
-        <link rel="copyright" title="Copyright" href="../../../../copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="../../../../index.html"/>
-        <link rel="up" title="Module code" href="../../../index.html"/> 
-
-  
-  <script src="../../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../../copyright.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +59,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -91,16 +84,16 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../ui.html">User Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../related.html">Sponsors and Partners</a></li>
@@ -118,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">TimeSide</a>
@@ -126,9 +119,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -157,8 +151,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -202,24 +194,25 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 
 <span class="kn">from</span> <span class="nn">timeside.core.decoder</span> <span class="k">import</span> <span class="n">Decoder</span><span class="p">,</span> <span class="n">IDecoder</span><span class="p">,</span> <span class="n">interfacedoc</span><span class="p">,</span> <span class="n">implements</span>
-<span class="kn">from</span> <span class="nn">timeside.core.tools.gstutils</span> <span class="k">import</span> <span class="n">MainloopThread</span><span class="p">,</span> <span class="n">gobject</span>
-<span class="kn">from</span> <span class="nn">timeside.plugins.decoder.file</span> <span class="k">import</span> <span class="n">FileDecoder</span>
-<span class="kn">import</span> <span class="nn">Queue</span>
+<span class="kn">from</span> <span class="nn">timeside.core.tools.gstutils</span> <span class="k">import</span> <span class="n">MainloopThread</span><span class="p">,</span> <span class="n">GLib</span><span class="p">,</span> <span class="n">Gst</span>
+<span class="c1">#from timeside.plugins.decoder.file import FileDecoder</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">queue</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">Queue</span> <span class="k">as</span> <span class="nn">queue</span>
 <span class="kn">import</span> <span class="nn">threading</span>
-
-<span class="kn">from</span> <span class="nn">gst</span> <span class="k">import</span> <span class="n">_gst</span> <span class="k">as</span> <span class="n">gst</span>
 
 <span class="n">GST_APPSINK_MAX_BUFFERS</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">QUEUE_SIZE</span> <span class="o">=</span> <span class="mi">10</span>
 
 <span class="c1">#  TODO:</span>
 <span class="c1"># check if a soundcard device is available</span>
-<span class="c1"># alsasrc = gst.element_factory_make(&quot;alsasrc&quot;, &quot;alsasrc&quot;)</span>
+<span class="c1"># alsasrc = Gst.ElementFactory.make(&quot;alsasrc&quot;, &quot;alsasrc&quot;)</span>
 <span class="c1"># alsasrc.probe_get_values_name(&#39;device&#39;)</span>
 <span class="c1"># [&#39;hw:0,0&#39;]</span>
 
 
-<div class="viewcode-block" id="LiveDecoder"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder">[docs]</a><span class="k">class</span> <span class="nc">LiveDecoder</span><span class="p">(</span><span class="n">FileDecoder</span><span class="p">):</span>
+<div class="viewcode-block" id="LiveDecoder"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder">[docs]</a><span class="k">class</span> <span class="nc">LiveDecoder</span><span class="p">:</span><span class="c1">#(FileDecoder):</span>
     <span class="sd">&quot;&quot;&quot;Live source Decoder based on Gstreamer</span>
 <span class="sd">   capturing audio from alsasrc</span>
 
@@ -240,30 +233,35 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    &gt;&gt;&gt; import timeside</span>
+<span class="sd">    # &gt;&gt;&gt; import timeside</span>
 
-<span class="sd">    &gt;&gt;&gt; from timeside.core import get_processor</span>
-<span class="sd">    &gt;&gt;&gt; live_decoder = get_processor(&#39;live_decoder&#39;)(num_buffers=5)</span>
-<span class="sd">    &gt;&gt;&gt; waveform = get_processor(&#39;waveform_analyzer&#39;)()</span>
-<span class="sd">    &gt;&gt;&gt; mp3_encoder = timeside.plugins.encoder.mp3.Mp3Encoder(&#39;/tmp/test_live.mp3&#39;,</span>
-<span class="sd">    ...                                               overwrite=True)</span>
-<span class="sd">    &gt;&gt;&gt; pipe = (live_decoder | waveform | mp3_encoder)</span>
-<span class="sd">    &gt;&gt;&gt; pipe.run()  # doctest: +SKIP</span>
-<span class="sd">    &gt;&gt;&gt; # Show the audio as captured by the decoder</span>
-<span class="sd">    &gt;&gt;&gt; import matplotlib.pyplot as plt # doctest: +SKIP</span>
-<span class="sd">    &gt;&gt;&gt; plt.plot(a.results[&#39;waveform_analyzer&#39;].time, # doctest: +SKIP</span>
-<span class="sd">             a.results[&#39;waveform_analyzer&#39;].data) # doctest: +SKIP</span>
-<span class="sd">    &gt;&gt;&gt; plt.show() # doctest: +SKIP</span>
+<span class="sd">    # &gt;&gt;&gt; from timeside.core import get_processor</span>
+<span class="sd">    # &gt;&gt;&gt; live_decoder = get_processor(&#39;live_decoder&#39;)(num_buffers=5)</span>
+<span class="sd">    # &gt;&gt;&gt; waveform = get_processor(&#39;waveform_analyzer&#39;)()</span>
+<span class="sd">    # &gt;&gt;&gt; mp3_encoder = timeside.plugins.encoder.mp3.Mp3Encoder(&#39;/tmp/test_live.mp3&#39;,</span>
+<span class="sd">    # ...                                               overwrite=True)</span>
+<span class="sd">    # &gt;&gt;&gt; pipe = (live_decoder | waveform | mp3_encoder)</span>
+<span class="sd">    # &gt;&gt;&gt; pipe.run()  # doctest: +SKIP</span>
+<span class="sd">    # &gt;&gt;&gt; # Show the audio as captured by the decoder</span>
+<span class="sd">    # &gt;&gt;&gt; import matplotlib.pyplot as plt # doctest: +SKIP</span>
+<span class="sd">    # &gt;&gt;&gt; plt.plot(a.results[&#39;waveform_analyzer&#39;].time, # doctest: +SKIP</span>
+<span class="sd">    #          a.results[&#39;waveform_analyzer&#39;].data) # doctest: +SKIP</span>
+<span class="sd">    # &gt;&gt;&gt; plt.show() # doctest: +SKIP</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">implements</span><span class="p">(</span><span class="n">IDecoder</span><span class="p">)</span>
 
     <span class="c1"># IProcessor methods</span>
 
-<div class="viewcode-block" id="LiveDecoder.id"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="LiveDecoder.id"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;live_decoder&quot;</span></div>
+
+<div class="viewcode-block" id="LiveDecoder.version"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.version">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span></div>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_buffers</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_src</span><span class="o">=</span><span class="s1">&#39;alsasrc&#39;</span><span class="p">):</span>
 
@@ -276,7 +274,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">input_src</span> <span class="o">=</span> <span class="n">input_src</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sha1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-<div class="viewcode-block" id="LiveDecoder.setup"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="LiveDecoder.setup"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">eod</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_buffer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -300,7 +298,7 @@
 <span class="s1">                       ! appsink name=sink sync=False async=True</span>
 <span class="s1">                       &#39;&#39;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_src</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_buffers</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">gst</span><span class="o">.</span><span class="n">parse_launch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Gst</span><span class="o">.</span><span class="n">parse_launch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_channels</span><span class="p">:</span>
             <span class="n">caps_channels</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_channels</span><span class="p">)</span>
@@ -310,10 +308,9 @@
             <span class="n">caps_samplerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_samplerate</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">caps_samplerate</span> <span class="o">=</span> <span class="s2">&quot;{ 8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 96000 }&quot;</span>
-        <span class="n">sink_caps</span> <span class="o">=</span> <span class="n">gst</span><span class="o">.</span><span class="n">Caps</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;audio/x-raw-float,</span>
-<span class="s2">            endianness=(int)1234,</span>
+        <span class="n">sink_caps</span> <span class="o">=</span> <span class="n">Gst</span><span class="o">.</span><span class="n">Caps</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;audio/x-raw,</span>
+<span class="s2">            format=F32LE,</span>
 <span class="s2">            channels=(int)</span><span class="si">%s</span><span class="s2">,</span>
-<span class="s2">            width=(int)32,</span>
 <span class="s2">            rate=(int)</span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">caps_channels</span><span class="p">,</span> <span class="n">caps_samplerate</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_by_name</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">)</span>
@@ -331,16 +328,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">add_signal_watch</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_message_cb</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">QUEUE_SIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">QUEUE_SIZE</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span> <span class="o">=</span> <span class="n">gobject</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span> <span class="o">=</span> <span class="n">GLib</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainloopthread</span> <span class="o">=</span> <span class="n">MainloopThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainloopthread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="c1">#self.mainloopthread = get_loop_thread()</span>
         <span class="c1">##self.mainloop = self.mainloopthread.mainloop</span>
 
         <span class="c1"># start pipeline</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">gst</span><span class="o">.</span><span class="n">STATE_PLAYING</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Gst</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAYING</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">discovered_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">discovered</span><span class="p">:</span>
@@ -354,16 +351,16 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;no known audio stream found&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LiveDecoder.process"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.process">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="LiveDecoder.process"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.process">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">buf</span> <span class="o">==</span> <span class="n">gst</span><span class="o">.</span><span class="n">MESSAGE_EOS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">buf</span> <span class="o">==</span> <span class="n">Gst</span><span class="o">.</span><span class="n">MessageType</span><span class="o">.</span><span class="n">EOS</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_buffer</span><span class="p">,</span> <span class="kc">True</span>
 
         <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span> <span class="o">=</span> <span class="n">buf</span>
         <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span></div>
 
-<div class="viewcode-block" id="LiveDecoder.release"><a class="viewcode-back" href="../../../../api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.release">[docs]</a>    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LiveDecoder.release"><a class="viewcode-back" href="../../../../core_api/decoder/index.html#timeside.plugins.decoder.live.LiveDecoder.release">[docs]</a>    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO : check if stack support is needed here</span>
         <span class="c1">#if self.stack:</span>
         <span class="c1">#    self.stack = False</span>
@@ -379,9 +376,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -390,11 +385,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -407,36 +402,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../../',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

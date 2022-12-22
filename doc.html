@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Documentation &mdash; TimeSide 0.8 documentation</title>
+  <title>Documentation &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-        <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="index.html"/>
-        <link rel="next" title="TimeSide : Tutorials" href="tutorials/index.html"/>
-        <link rel="prev" title="User Interfaces" href="ui.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="TimeSide : Tutorials" href="tutorials/index.html" />
+    <link rel="prev" title="User Interfaces" href="ui.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -92,16 +86,16 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ui.html">User Interfaces</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="related.html">Sponsors and Partners</a></li>
@@ -119,7 +113,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">TimeSide</a>
@@ -127,9 +121,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -174,21 +169,26 @@
   <div class="section" id="documentation">
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li>General documentation : <a class="reference external" href="http://parisson.github.io/TimeSide/">http://parisson.github.io/TimeSide/</a></li>
-<li>Tutorials : <a class="reference external" href="http://parisson.github.io/TimeSide/tutorials/index.html">http://parisson.github.io/TimeSide/tutorials/index.html</a></li>
-<li>API : <a class="reference external" href="http://parisson.github.io/TimeSide/api/index.html">http://parisson.github.io/TimeSide/api/index.html</a></li>
-<li>Publications : <a class="reference external" href="https://github.com/Parisson/Telemeta-doc">https://github.com/Parisson/Telemeta-doc</a></li>
-<li>Some online notebooks : <a class="reference external" href="http://mybinder.org/repo/thomasfillon/Timeside-demos">http://mybinder.org/repo/thomasfillon/Timeside-demos</a></li>
-<li>Player UI (v1) wiki : <a class="reference external" href="https://github.com/Parisson/TimeSide/wiki/Ui-Guide">https://github.com/Parisson/TimeSide/wiki/Ui-Guide</a></li>
-<li>A player example : <a class="reference external" href="http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/">http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/</a></li>
+<li><p>General documentation: <a class="reference external" href="https://timeside.readthedocs.io/en/latest/index.html">https://timeside.readthedocs.io/en/latest/index.html</a></p></li>
+<li><p>Tutorials: <a class="reference external" href="https://timeside.readthedocs.io/en/latest/tutorials/index.html">https://timeside.readthedocs.io/en/latest/tutorials/index.html</a></p></li>
+<li><p>RESTful API: <a class="reference external" href="https://timeside.ircam.fr/timeside/api/docs/">https://timeside.ircam.fr/timeside/api/docs/</a></p></li>
+<li><p>Publications:</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/Parisson/Telemeta-doc">https://github.com/Parisson/Telemeta-doc</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Ircam-WAM/timeside-papers">https://github.com/Ircam-WAM/timeside-papers</a></p></li>
+</ul>
+</li>
+<li><p>Slides: <a class="reference external" href="https://ircam-web.github.io/timeside-slides/#1">https://ircam-web.github.io/timeside-slides/#1</a></p></li>
+<li><p>Some (old) notebooks: <a class="reference external" href="http://mybinder.org/repo/thomasfillon/Timeside-demos">http://mybinder.org/repo/thomasfillon/Timeside-demos</a></p></li>
+<li><p>Player UI v2: <a class="reference external" href="https://github.com/Ircam-WAM/timeside-player">https://github.com/Ircam-WAM/timeside-player</a></p></li>
+<li><p>Player UI wiki (v1): <a class="reference external" href="https://github.com/Parisson/TimeSide/wiki/Ui-Guide">https://github.com/Parisson/TimeSide/wiki/Ui-Guide</a></p></li>
+<li><p>A player example (v1): <a class="reference external" href="http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/">http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/</a></p></li>
 </ul>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -197,7 +197,7 @@
         <a href="tutorials/index.html" class="btn btn-neutral float-right" title="TimeSide : Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ui.html" class="btn btn-neutral" title="User Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ui.html" class="btn btn-neutral float-left" title="User Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -206,11 +206,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -223,36 +223,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

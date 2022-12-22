@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>TimeSide : audio processing framework for the web &mdash; TimeSide 0.8 documentation</title>
+  <title>TimeSide : scalable audio processing framework and server written in Python &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-        <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="index.html"/>
-        <link rel="next" title="News" href="news.html"/>
-        <link rel="prev" title="TimeSide : open web audio processing framework" href="index.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="News" href="news.html" />
+    <link rel="prev" title="TimeSide : open web audio processing framework" href="index.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -92,7 +86,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">TimeSide : audio processing framework for the web</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TimeSide : scalable audio processing framework and server written in Python</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#use-cases">Use cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#goals">Goals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#funding-and-support">Funding and support</a></li>
@@ -100,13 +94,13 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ui.html">User Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="related.html">Sponsors and Partners</a></li>
@@ -124,7 +118,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">TimeSide</a>
@@ -132,9 +126,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -157,7 +152,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>TimeSide : audio processing framework for the web</li>
+      <li>TimeSide : scalable audio processing framework and server written in Python</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -176,41 +171,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="timeside-audio-processing-framework-for-the-web">
-<h1>TimeSide : audio processing framework for the web<a class="headerlink" href="#timeside-audio-processing-framework-for-the-web" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="https://pypi.python.org/pypi/TimeSide/"><img alt="Version" src="https://img.shields.io/pypi/v/timeside.svg" /></a> <a href="#id1"><span class="problematic" id="id2">|downloads|</span></a> <a class="reference external" href="https://travis-ci.org/Parisson/TimeSide/"><img alt="travis_master" src="https://travis-ci.org/Parisson/TimeSide.svg" /></a> <a class="reference external" href="https://coveralls.io/r/Parisson/TimeSide?branch=master"><img alt="coveralls_master" src="https://coveralls.io/repos/Parisson/TimeSide/badge.png?branch=master" /></a></p>
+  <div class="section" id="timeside-scalable-audio-processing-framework-and-server-written-in-python">
+<h1>TimeSide : scalable audio processing framework and server written in Python<a class="headerlink" href="#timeside-scalable-audio-processing-framework-and-server-written-in-python" title="Permalink to this headline">¶</a></h1>
 <p>TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic web frontend.</p>
 <div class="section" id="use-cases">
 <h2>Use cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Scaled audio computing (filtering, machine learning, etc)</li>
-<li>Web audio visualization</li>
-<li>Audio process prototyping</li>
-<li>Realtime and on-demand transcoding and streaming over the web</li>
-<li>Automatic segmentation and labelling synchronized with audio events</li>
+<li><p>Scaled audio computing (filtering, machine learning, etc)</p></li>
+<li><p>Web audio visualization</p></li>
+<li><p>Audio process prototyping</p></li>
+<li><p>Realtime and on-demand transcoding and streaming over the web</p></li>
+<li><p>Automatic segmentation and labelling synchronized with audio events</p></li>
 </ul>
 </div>
 <div class="section" id="goals">
 <h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><strong>Do</strong> asynchronous and fast audio processing with Python,</li>
-<li><strong>Decode</strong> audio frames from <strong>any</strong> audio or video media format into numpy arrays,</li>
-<li><strong>Analyze</strong> audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors</li>
-<li><strong>Visualize</strong> sounds with various fancy waveforms, spectrograms and other cool graphers,</li>
-<li><strong>Transcode</strong> audio data in various media formats and stream them through web apps,</li>
-<li><strong>Serialize</strong> feature analysis data through various portable formats,</li>
-<li><strong>Playback</strong> and <strong>interact</strong> <strong>on demand</strong> through a smart high-level HTML5 extensible player,</li>
-<li><strong>Index</strong>, <strong>tag</strong> and <strong>annotate</strong> audio archives with semantic metadata (see <a class="reference external" href="http://telemeta.org">Telemeta</a> which embed TimeSide).</li>
-<li><strong>Deploy</strong> and <strong>scale</strong> your own audio processing engine through any infrastructure</li>
+<li><p><strong>Do</strong> asynchronous and fast audio processing with Python,</p></li>
+<li><p><strong>Decode</strong> audio frames from <strong>any</strong> audio or video media format into numpy arrays,</p></li>
+<li><p><strong>Analyze</strong> audio content with some state-of-the-art audio feature extraction libraries like Aubio, Yaafe and VAMP as well as some pure python processors</p></li>
+<li><p><strong>Visualize</strong> sounds with various fancy waveforms, spectrograms and other cool graphers,</p></li>
+<li><p><strong>Transcode</strong> audio data in various media formats and stream them through web apps,</p></li>
+<li><p><strong>Serialize</strong> feature analysis data through various portable formats,</p></li>
+<li><p><strong>Provide</strong> audio sources from plateform like YouTube or Deezer</p></li>
+<li><p><strong>Deliver</strong> analysis and transcode on provided or uploaded tracks over the web through a REST API</p></li>
+<li><p><strong>Playback</strong> and <strong>interact</strong> <strong>on demand</strong> through a smart high-level HTML5 extensible player,</p></li>
+<li><p><strong>Index</strong>, <strong>tag</strong> and <strong>annotate</strong> audio archives with semantic metadata (see <a class="reference external" href="http://telemeta.org">Telemeta</a> which embed TimeSide).</p></li>
+<li><p><strong>Deploy</strong> and <strong>scale</strong> your own audio processing engine through any infrastructure</p></li>
 </ul>
 </div>
 <div class="section" id="funding-and-support">
 <h2>Funding and support<a class="headerlink" href="#funding-and-support" title="Permalink to this headline">¶</a></h2>
 <p>To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in a development or experimental setup, please let us know by:</p>
 <ul class="simple">
-<li>staring or forking the project on <a class="reference external" href="https://github.com/Parisson/TimeSide">GitHub</a></li>
-<li>tweeting something to <a class="reference external" href="https://twitter.com/parisson_studio">&#64;parisson_studio</a> or <a class="reference external" href="https://twitter.com/telemeta">&#64;telemeta</a></li>
-<li>drop us an email &lt;<a class="reference external" href="mailto:support&#37;&#52;&#48;parisson&#46;com">support<span>&#64;</span>parisson<span>&#46;</span>com</a>&gt;</li>
+<li><p>staring or forking the project on <a class="reference external" href="https://github.com/Parisson/TimeSide">GitHub</a></p></li>
+<li><p>tweeting something to <a class="reference external" href="https://twitter.com/parisson_studio">&#64;parisson_studio</a> or <a class="reference external" href="https://twitter.com/telemeta">&#64;telemeta</a></p></li>
+<li><p>drop us an email on &lt;<a class="reference external" href="mailto:support&#37;&#52;&#48;parisson&#46;com">support<span>&#64;</span>parisson<span>&#46;</span>com</a>&gt; or &lt;<a class="reference external" href="mailto:pow&#37;&#52;&#48;ircam&#46;fr">pow<span>&#64;</span>ircam<span>&#46;</span>fr</a>&gt;</p></li>
 </ul>
 <p>Thanks for your help!</p>
 </div>
@@ -218,9 +214,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -229,7 +223,7 @@
         <a href="news.html" class="btn btn-neutral float-right" title="News" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="TimeSide : open web audio processing framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="TimeSide : open web audio processing framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -238,11 +232,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -255,36 +249,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

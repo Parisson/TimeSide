@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>List of available processors &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Decoder package" href="../decoder/index.html" />
+    <link rel="prev" title="TimeSide core API" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">List of available processors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#encoder">Encoder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#decoder">Decoder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grapher">Grapher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analyzer">Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#valueanalyzer">ValueAnalyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#effect">Effect</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../decoder/index.html">Decoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analyzer/index.html">Analyzer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../encoder/index.html">Encoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grapher/index.html">Grapher package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../provider/index.html">Provider package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+      <li>List of available processors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/processors_list/processors_list.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="list-of-available-processors">
+<h1>List of available processors<a class="headerlink" href="#list-of-available-processors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="encoder">
+<h2>Encoder<a class="headerlink" href="#encoder" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>flac_aubio_encoder</strong> <strong>1.0</strong>: FLAC encoder based on aubio</p></li>
+<li><p><strong>vorbis_aubio_encoder</strong> <strong>1.0</strong>: OGG Vorbis encoder based on aubio</p></li>
+<li><p><strong>wav_aubio_encoder</strong> <strong>1.0</strong>: Wav encoder based on aubio</p></li>
+<li><p><strong>live_encoder</strong> <strong>1.0</strong>: Gstreamer-based Audio Sink</p></li>
+<li><p><strong>flac_encoder</strong> <strong>1.0</strong>: FLAC encoder based on Gstreamer</p></li>
+<li><p><strong>aac_encoder</strong> <strong>1.0</strong>: AAC encoder based on Gstreamer</p></li>
+<li><p><strong>mp3_encoder</strong> <strong>1.0</strong>: MP3 encoder based on Gstreamer</p></li>
+<li><p><strong>vorbis_encoder</strong> <strong>1.0</strong>: OGG Vorbis encoder based on Gstreamer</p></li>
+<li><p><strong>opus_encoder</strong> <strong>1.0</strong>: Opus encoder based on Gstreamer</p></li>
+<li><p><strong>wav_encoder</strong> <strong>1.0</strong>: WAV encoder based on Gstreamer</p></li>
+<li><p><strong>webm_encoder</strong> <strong>1.0</strong>: WebM encoder based on Gstreamer</p></li>
+</ul>
+</div>
+<div class="section" id="decoder">
+<h2>Decoder<a class="headerlink" href="#decoder" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>array_decoder</strong> <strong>1.0</strong>: Decoder taking Numpy array as input</p></li>
+<li><p><strong>aubio_decoder</strong> <strong>1.0</strong>: File decoder based on aubio</p></li>
+<li><p><strong>file_decoder</strong> <strong>1.0</strong>: File Decoder based on Gstreamer</p></li>
+</ul>
+</div>
+<div class="section" id="grapher">
+<h2>Grapher<a class="headerlink" href="#grapher" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>grapher_aubio_pitch</strong> <strong>1.0</strong>: Image representing Pitch</p></li>
+<li><p><strong>grapher_aubio_silence</strong> <strong>1.0</strong>: Image representing Aubio Silence</p></li>
+<li><p><strong>grapher_dissonance</strong> <strong>1.0</strong>: Image representing Dissonance</p></li>
+<li><p><strong>grapher_vamp_cqt</strong> <strong>1.0</strong>: Image representing Constant Q Transform</p></li>
+<li><p><strong>grapher_loudness_itu</strong> <strong>1.0</strong>: Image representing Loudness ITU</p></li>
+<li><p><strong>spectrogram</strong> <strong>1.0</strong>: Image representing Linear Spectrogram</p></li>
+<li><p><strong>grapher_onset_detection_function</strong> <strong>1.0</strong>: Image representing Onset detection</p></li>
+<li><p><strong>grapher_waveform</strong> <strong>1.0</strong>: Image representing Waveform from Analyzer</p></li>
+<li><p><strong>spectrogram_log</strong> <strong>1.0</strong>: Logarithmic scaled spectrogram (level vs. frequency vs. time).</p></li>
+<li><p><strong>spectrogram_lin</strong> <strong>1.0</strong>: Linear scaled spectrogram (level vs. frequency vs. time).</p></li>
+<li><p><strong>waveform_simple</strong> <strong>1.0</strong>: Simple monochrome waveform image.</p></li>
+<li><p><strong>waveform_centroid</strong> <strong>1.0</strong>: Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.</p></li>
+<li><p><strong>waveform_contour_black</strong> <strong>1.0</strong>: Black amplitude contour waveform.</p></li>
+<li><p><strong>waveform_contour_white</strong> <strong>1.0</strong>: an white amplitude contour wavform.</p></li>
+<li><p><strong>waveform_transparent</strong> <strong>1.0</strong>: Transparent waveform.</p></li>
+</ul>
+</div>
+<div class="section" id="analyzer">
+<h2>Analyzer<a class="headerlink" href="#analyzer" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>aubio_melenergy</strong> <strong>0.4.6</strong>: Aubio Mel Energy analyzer</p></li>
+<li><p><strong>aubio_mfcc</strong> <strong>0.4.6</strong>: Aubio MFCC analyzer</p></li>
+<li><p><strong>aubio_pitch</strong> <strong>0.4.6</strong>: Aubio Pitch estimation analyzer</p></li>
+<li><p><strong>aubio_silence</strong> <strong>0.4.6</strong>: Aubio Silence detection analyzer</p></li>
+<li><p><strong>aubio_specdesc</strong> <strong>0.4.6</strong>: Aubio Spectral Descriptors collection analyzer</p></li>
+<li><p><strong>aubio_temporal</strong> <strong>0.4.6</strong>: Aubio Temporal analyzer</p></li>
+<li><p><strong>essentia_dissonance</strong> <strong>2.1b5.dev416</strong>: Dissonance from Essentia</p></li>
+<li><p><strong>vamp_constantq</strong> <strong>1.1.0</strong>: Constant Q transform from QMUL vamp plugins</p></li>
+<li><p><strong>vamp_simple_host</strong> <strong>1.1.0</strong>: Vamp plugins library interface analyzer</p></li>
+<li><p><strong>loudness_itu</strong> <strong>1.0</strong>: Measure of audio loudness using standard ITU-R BS.1770-3</p></li>
+<li><p><strong>spectrogram_analyzer</strong> <strong>1.0</strong>: Spectrogram image builder with an extensible buffer based on tables</p></li>
+<li><p><strong>onset_detection_function</strong> <strong>1.0</strong>: Onset Detection Function analyzer</p></li>
+<li><p><strong>spectrogram_analyzer_buffer</strong> <strong>1.0</strong>: Spectrogram image builder with an extensible buffer based on tables</p></li>
+<li><p><strong>waveform_analyzer</strong> <strong>1.0</strong>: Waveform analyzer</p></li>
+</ul>
+</div>
+<div class="section" id="valueanalyzer">
+<h2>ValueAnalyzer<a class="headerlink" href="#valueanalyzer" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>mean_dc_shift</strong> <strong>1.0</strong>: Mean DC shift analyzer</p></li>
+<li><p><strong>essentia_dissonance_value</strong> <strong>2.1b5.dev416</strong>: Mean Dissonance Value from Essentia</p></li>
+<li><p><strong>vamp_tempo</strong> <strong>1.1.0</strong>: Tempo from QMUL vamp plugins</p></li>
+<li><p><strong>vamp_tuning</strong> <strong>1.1.0</strong>: Tuning from NNLS Chroma vamp plugins</p></li>
+<li><p><strong>level</strong> <strong>1.0</strong>: Audio level analyzer</p></li>
+</ul>
+</div>
+<div class="section" id="effect">
+<h2>Effect<a class="headerlink" href="#effect" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>fx_gain</strong> <strong>1.0</strong>: Gain effect processor</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../decoder/index.html" class="btn btn-neutral float-right" title="Decoder package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="TimeSide core API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

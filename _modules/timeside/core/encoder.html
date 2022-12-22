@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>timeside.core.encoder &mdash; TimeSide 0.8 documentation</title>
+  <title>timeside.core.encoder &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,42 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-        <link rel="copyright" title="Copyright" href="../../../copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../copyright.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +59,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -91,16 +84,16 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../ui.html">User Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../related.html">Sponsors and Partners</a></li>
@@ -118,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">TimeSide</a>
@@ -126,9 +119,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -157,8 +151,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -199,12 +191,11 @@
 <span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IEncoder</span>
 <span class="kn">from</span> <span class="nn">.tools.gstutils</span> <span class="k">import</span> <span class="n">numpy_array_to_gst_buffer</span><span class="p">,</span> <span class="n">MainloopThread</span>
 
-<span class="kn">import</span> <span class="nn">pygst</span>
-<span class="n">pygst</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s1">&#39;0.10&#39;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">gst</span>
-
-<span class="kn">import</span> <span class="nn">gobject</span>
-<span class="n">gobject</span><span class="o">.</span><span class="n">threads_init</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">gi</span>
+<span class="n">gi</span><span class="o">.</span><span class="n">require_version</span><span class="p">(</span><span class="s1">&#39;Gst&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">)</span>
+<span class="n">gi</span><span class="o">.</span><span class="n">require_version</span><span class="p">(</span><span class="s1">&#39;GLib&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">gi.repository</span> <span class="k">import</span> <span class="n">GLib</span><span class="p">,</span> <span class="n">Gst</span>
+<span class="n">Gst</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">threading</span>
 
@@ -213,7 +204,7 @@
 <span class="n">GST_APPSINK_MAX_BUFFERS</span> <span class="o">=</span> <span class="mi">10</span>
 
 
-<div class="viewcode-block" id="GstEncoder"><a class="viewcode-back" href="../../../api/encoder/index.html#timeside.core.encoder.GstEncoder">[docs]</a><span class="k">class</span> <span class="nc">GstEncoder</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
+<div class="viewcode-block" id="GstEncoder"><a class="viewcode-back" href="../../../core_api/encoder/index.html#timeside.core.encoder.GstEncoder">[docs]</a><span class="k">class</span> <span class="nc">GstEncoder</span><span class="p">(</span><span class="n">Processor</span><span class="p">):</span>
     <span class="n">implements</span><span class="p">(</span><span class="n">IEncoder</span><span class="p">)</span>
     <span class="n">abstract</span><span class="p">()</span>
 
@@ -223,7 +214,7 @@
 
         <span class="nb">super</span><span class="p">(</span><span class="n">GstEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="kn">import</span> <span class="nn">os.path</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Encoder output must be a file, not a directory&quot;</span><span class="p">)</span>
@@ -245,7 +236,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_len</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="GstEncoder.release"><a class="viewcode-back" href="../../../api/encoder/index.html#timeside.core.encoder.GstEncoder.release">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="GstEncoder.release"><a class="viewcode-back" href="../../../core_api/encoder/index.html#timeside.core.encoder.GstEncoder.release">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;eod&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;mainloopthread&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
@@ -258,60 +249,63 @@
     <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
-<div class="viewcode-block" id="GstEncoder.start_pipeline"><a class="viewcode-back" href="../../../api/encoder/index.html#timeside.core.encoder.GstEncoder.start_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">start_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">gst</span><span class="o">.</span><span class="n">parse_launch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="p">)</span>
+<div class="viewcode-block" id="GstEncoder.start_pipeline"><a class="viewcode-back" href="../../../core_api/encoder/index.html#timeside.core.encoder.GstEncoder.start_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">start_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Gst</span><span class="o">.</span><span class="n">parse_launch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipe</span><span class="p">)</span>
         <span class="c1"># store a pointer to appsrc in our encoder object</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_by_name</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">Queue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">QUEUE_SIZE</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span> <span class="c1"># py3</span>
+                <span class="kn">import</span> <span class="nn">queue</span>
+            <span class="k">except</span><span class="p">:</span> <span class="c1"># py2</span>
+                <span class="kn">import</span> <span class="nn">Queue</span> <span class="k">as</span> <span class="nn">queue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">QUEUE_SIZE</span><span class="p">)</span>
             <span class="c1"># store a pointer to appsink in our encoder object</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_by_name</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s1">&#39;max-buffers&#39;</span><span class="p">,</span> <span class="n">GST_APPSINK_MAX_BUFFERS</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">&quot;drop&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s1">&#39;emit-signals&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;new-buffer&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_new_buffer_streaming</span><span class="p">)</span>
-            <span class="c1">#self.app.connect(&#39;new-preroll&#39;, self._on_new_preroll_streaming)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;new-sample&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_new_sample_streaming</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;new-preroll&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_new_preroll_streaming</span><span class="p">)</span>
 
-        <span class="n">srccaps</span> <span class="o">=</span> <span class="n">gst</span><span class="o">.</span><span class="n">Caps</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;audio/x-raw-float,</span>
-<span class="s2">            endianness=(int)1234,</span>
+        <span class="n">srccaps</span> <span class="o">=</span> <span class="n">Gst</span><span class="o">.</span><span class="n">Caps</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;audio/x-raw,</span>
+<span class="s2">            format=F32LE,</span>
+<span class="s2">            layout=interleaved,</span>
 <span class="s2">            channels=(int)</span><span class="si">%s</span><span class="s2">,</span>
-<span class="s2">            width=(int)32,</span>
 <span class="s2">            rate=(int)</span><span class="si">%d</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">channels</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">samplerate</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s2">&quot;caps&quot;</span><span class="p">,</span> <span class="n">srccaps</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s1">&#39;emit-signals&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s1">&#39;num-buffers&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s1">&#39;block&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">src</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="s1">&#39;do-timestamp&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#self.src.set_property(&#39;do-timestamp&#39;, True)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">get_bus</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">add_signal_watch</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_message_cb</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span> <span class="o">=</span> <span class="n">gobject</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span> <span class="o">=</span> <span class="n">GLib</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainloopthread</span> <span class="o">=</span> <span class="n">MainloopThread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainloopthread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
         <span class="c1"># start pipeline</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">gst</span><span class="o">.</span><span class="n">STATE_PLAYING</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Gst</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">PLAYING</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_on_message_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bus</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">type</span>
-        <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">gst</span><span class="o">.</span><span class="n">MESSAGE_EOS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">Gst</span><span class="o">.</span><span class="n">MessageType</span><span class="o">.</span><span class="n">EOS</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">gst</span><span class="o">.</span><span class="n">MESSAGE_EOS</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">Gst</span><span class="o">.</span><span class="n">MessageType</span><span class="o">.</span><span class="n">EOS</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">gst</span><span class="o">.</span><span class="n">STATE_NULL</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Gst</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">NULL</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_reached</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
-        <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="n">gst</span><span class="o">.</span><span class="n">MESSAGE_ERROR</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="n">Gst</span><span class="o">.</span><span class="n">MessageType</span><span class="o">.</span><span class="n">ERROR</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">gst</span><span class="o">.</span><span class="n">STATE_NULL</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Gst</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">NULL</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mainloop</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_reached</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">err</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">parse_error</span><span class="p">()</span>
@@ -319,21 +313,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">end_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_on_new_buffer_streaming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appsink</span><span class="p">):</span>
-        <span class="c1"># print &#39;pull-buffer&#39;</span>
-        <span class="n">chunk</span> <span class="o">=</span> <span class="n">appsink</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;pull-buffer&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_on_new_sample_streaming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appsink</span><span class="p">):</span>
+        <span class="c1"># print(&#39;pull-sample&#39;)</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">appsink</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;pull-sample&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_on_new_preroll_streaming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">appsink</span><span class="p">):</span>
-        <span class="c1"># print &#39;preroll&#39;</span>
+        <span class="c1"># print(&#39;preroll&#39;)</span>
         <span class="n">chunk</span> <span class="o">=</span> <span class="n">appsink</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s1">&#39;pull-preroll&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GstEncoder.set_metadata"><a class="viewcode-back" href="../../../api/encoder/index.html#timeside.core.encoder.GstEncoder.set_metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="GstEncoder.set_metadata"><a class="viewcode-back" href="../../../core_api/encoder/index.html#timeside.core.encoder.GstEncoder.set_metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">set_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span></div>
 
-<div class="viewcode-block" id="GstEncoder.process"><a class="viewcode-back" href="../../../api/encoder/index.html#timeside.core.encoder.GstEncoder.process">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="GstEncoder.process"><a class="viewcode-back" href="../../../core_api/encoder/index.html#timeside.core.encoder.GstEncoder.process">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eod</span> <span class="o">=</span> <span class="n">eod</span>
         <span class="k">if</span> <span class="n">eod</span><span class="p">:</span>
@@ -350,10 +344,10 @@
 
         <span class="k">return</span> <span class="n">frames</span><span class="p">,</span> <span class="n">eod</span></div>
 
-<div class="viewcode-block" id="GstEncoder.get_stream_chunk"><a class="viewcode-back" href="../../../api/encoder/index.html#timeside.core.encoder.GstEncoder.get_stream_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">get_stream_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GstEncoder.get_stream_chunk"><a class="viewcode-back" href="../../../core_api/encoder/index.html#timeside.core.encoder.GstEncoder.get_stream_chunk">[docs]</a>    <span class="k">def</span> <span class="nf">get_stream_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
             <span class="n">chunk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="n">gst</span><span class="o">.</span><span class="n">MESSAGE_EOS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="n">Gst</span><span class="o">.</span><span class="n">MessageType</span><span class="o">.</span><span class="n">EOS</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_streaming_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
@@ -368,9 +362,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -379,11 +371,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="../../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -396,36 +388,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

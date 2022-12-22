@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Streaming out encoded audio &mdash; TimeSide 0.8 documentation</title>
+  <title>Streaming out encoded audio &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,44 +17,37 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="../index.html"/>
-        <link rel="up" title="TimeSide : Tutorials" href="index.html"/>
-        <link rel="next" title="TimeSide API" href="../api/index.html"/>
-        <link rel="prev" title="Using the ‘stack’ (previously decoded frames)" href="frames_stack.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="TimeSide core API" href="../core_api/index.html" />
+    <link rel="prev" title="Using the ‘stack’ (previously decoded frames)" href="frames_stack.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -68,7 +61,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -93,10 +86,9 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ui.html">User Interfaces</a></li>
@@ -108,7 +100,8 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Streaming out encoded audio</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../related.html">Sponsors and Partners</a></li>
@@ -126,7 +119,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">TimeSide</a>
@@ -134,9 +127,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -183,7 +177,7 @@
   <div class="section" id="streaming-out-encoded-audio">
 <h1>Streaming out encoded audio<a class="headerlink" href="#streaming-out-encoded-audio" title="Permalink to this headline">¶</a></h1>
 <p>Instead of calling a pipe.run(), the chunks of an encoding processor can also be retrieved and streamed outside the pipe during the process.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">get_processor</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.tools.test_samples</span> <span class="k">import</span> <span class="n">samples</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -195,32 +189,30 @@
 </pre></div>
 </div>
 <p>Create a process callback method so that you can retrieve end send the chunks:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">streaming_callback</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">streaming_callback</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pipe</span><span class="o">.</span><span class="n">stream</span><span class="p">():</span>
 <span class="gp">... </span>        <span class="c1"># Do something with chunk</span>
 <span class="gp">... </span>        <span class="nb">print</span> <span class="n">chunk</span><span class="o">.</span><span class="n">timestamp</span>
 </pre></div>
 </div>
 <p>Now you can use the callback to stream the audio data outside TimeSide!</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">streaming_callback</span><span class="p">()</span>  
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">streaming_callback</span><span class="p">()</span>  
 </pre></div>
 </div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../api/index.html" class="btn btn-neutral float-right" title="TimeSide API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../core_api/index.html" class="btn btn-neutral float-right" title="TimeSide core API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="frames_stack.html" class="btn btn-neutral" title="Using the ‘stack’ (previously decoded frames)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="frames_stack.html" class="btn btn-neutral float-left" title="Using the ‘stack’ (previously decoded frames)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -229,11 +221,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -246,36 +238,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

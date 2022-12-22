@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Provider package &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="TimeSide server API" href="../../server_api/index.html" />
+    <link rel="prev" title="Grapher package" href="../grapher/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../processors_list/processors_list.html">List of available processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decoder/index.html">Decoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analyzer/index.html">Analyzer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../encoder/index.html">Encoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grapher/index.html">Grapher package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Provider package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-timeside.core.provider">Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#providers">Providers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#youtube">YouTube</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.provider.deezer_preview">DeezerPreview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.provider.deezer_complete">DeezerComplete</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+      <li>Provider package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/provider/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="provider-package">
+<span id="provider"></span><h1>Provider package<a class="headerlink" href="#provider-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="module-timeside.core.provider">
+<span id="core-module"></span><h2>Core module<a class="headerlink" href="#module-timeside.core.provider" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.core.provider.MetaProvider">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.core.provider.</code><code class="sig-name descname">MetaProvider</code><a class="reference internal" href="../../_modules/timeside/core/provider.html#MetaProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.provider.MetaProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metaclass of the Provider class, used mainly for ensuring
+that provider id’s are wellformed and unique</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="timeside.core.provider.Provider">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.core.provider.</code><code class="sig-name descname">Provider</code><a class="reference internal" href="../../_modules/timeside/core/provider.html#Provider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.provider.Provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base component class of all providers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="timeside.core.provider.get_provider">
+<code class="sig-prename descclassname">timeside.core.provider.</code><code class="sig-name descname">get_provider</code><span class="sig-paren">(</span><em class="sig-param">provider_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/provider.html#get_provider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.provider.get_provider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a provider by its pid</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="timeside.core.provider.providers">
+<code class="sig-prename descclassname">timeside.core.provider.</code><code class="sig-name descname">providers</code><span class="sig-paren">(</span><em class="sig-param">interface=&lt;class 'timeside.core.api.IProvider'&gt;</em>, <em class="sig-param">recurse=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/provider.html#providers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.provider.providers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the providers implementing a given interface and, if recurse,
+any of the descendants of this interface.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="providers">
+<h2>Providers<a class="headerlink" href="#providers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="youtube">
+<span id="id1"></span><h3>YouTube<a class="headerlink" href="#youtube" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-timeside.plugins.provider.youtube"></span><dl class="class">
+<dt id="timeside.plugins.provider.youtube.YouTube">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.provider.youtube.</code><code class="sig-name descname">YouTube</code><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube" title="Permalink to this definition">¶</a></dt>
+<dd><p>YouTube audio Provider based on Youtube DL</p>
+<dl class="method">
+<dt id="timeside.plugins.provider.youtube.YouTube.get_id_from_url">
+<code class="sig-name descname">get_id_from_url</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube.get_id_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube.get_id_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get provider’s id for a ressource from its url</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.youtube.YouTube.get_source_from_id">
+<code class="sig-name descname">get_source_from_id</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ext_id</em>, <em class="sig-param">path</em>, <em class="sig-param">download=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube.get_source_from_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube.get_source_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get source’s uri or even download an audio track
+from the id of the provider’s ressource of the provider
+(Youtube video id, Deezer 30 sec preview from track’s id, etc.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.youtube.YouTube.get_source_from_url">
+<code class="sig-name descname">get_source_from_url</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ext_uri</em>, <em class="sig-param">path</em>, <em class="sig-param">download=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube.get_source_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube.get_source_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get source’s uri or even download an audio track
+from the url of the provider’s ressource of the provider
+(Youtube video link, Deezer 30 sec preview from track’s URL, etc.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.youtube.YouTube.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+provider, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.youtube.YouTube.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of the provider</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.youtube.YouTube.ressource_access">
+<em class="property">static </em><code class="sig-name descname">ressource_access</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/youtube.html#YouTube.ressource_access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.youtube.YouTube.ressource_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boolean informing if the audio is whether or not
+freely available from the provider</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.provider.deezer_preview">
+<span id="deezerpreview"></span><span id="deezer-preview"></span><h3>DeezerPreview<a class="headerlink" href="#module-timeside.plugins.provider.deezer_preview" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.provider.deezer_preview.</code><code class="sig-name descname">DeezerPreview</code><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deezer Plugin to retrieve deezer’s 30 seconds tracks preview</p>
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview.get_id_from_url">
+<code class="sig-name descname">get_id_from_url</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview.get_id_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview.get_id_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get provider’s id for a ressource from its url</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview.get_source_from_id">
+<code class="sig-name descname">get_source_from_id</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">external_id</em>, <em class="sig-param">path</em>, <em class="sig-param">download=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview.get_source_from_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview.get_source_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get source’s uri or even download an audio track
+from the id of the provider’s ressource of the provider
+(Youtube video id, Deezer 30 sec preview from track’s id, etc.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview.get_source_from_url">
+<code class="sig-name descname">get_source_from_url</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">url</em>, <em class="sig-param">path</em>, <em class="sig-param">download=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview.get_source_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview.get_source_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get source’s uri or even download an audio track
+from the url of the provider’s ressource of the provider
+(Youtube video link, Deezer 30 sec preview from track’s URL, etc.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+provider, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of the provider</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_preview.DeezerPreview.ressource_access">
+<em class="property">static </em><code class="sig-name descname">ressource_access</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_preview.html#DeezerPreview.ressource_access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_preview.DeezerPreview.ressource_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boolean informing if the audio is whether or not
+freely available from the provider</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.provider.deezer_complete">
+<span id="deezercomplete"></span><span id="deezer-complete"></span><h3>DeezerComplete<a class="headerlink" href="#module-timeside.plugins.provider.deezer_complete" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.provider.deezer_complete.</code><code class="sig-name descname">DeezerComplete</code><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deezer Plugin representing complete tracks on Deezer’s infrastructure</p>
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete.get_id_from_url">
+<code class="sig-name descname">get_id_from_url</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete.get_id_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete.get_id_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get provider’s id for a ressource from its url</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete.get_source_from_id">
+<code class="sig-name descname">get_source_from_id</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">external_id</em>, <em class="sig-param">path</em>, <em class="sig-param">download=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete.get_source_from_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete.get_source_from_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get source’s uri or even download an audio track
+from the id of the provider’s ressource of the provider
+(Youtube video id, Deezer 30 sec preview from track’s id, etc.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete.get_source_from_url">
+<code class="sig-name descname">get_source_from_url</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">url</em>, <em class="sig-param">path</em>, <em class="sig-param">download=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete.get_source_from_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete.get_source_from_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get source’s uri or even download an audio track
+from the url of the provider’s ressource of the provider
+(Youtube video link, Deezer 30 sec preview from track’s URL, etc.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+provider, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of the provider</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.provider.deezer_complete.DeezerComplete.ressource_access">
+<em class="property">static </em><code class="sig-name descname">ressource_access</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/provider/deezer_complete.html#DeezerComplete.ressource_access"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.provider.deezer_complete.DeezerComplete.ressource_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boolean informing if the audio is whether or not
+freely available from the provider</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../server_api/index.html" class="btn btn-neutral float-right" title="TimeSide server API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../grapher/index.html" class="btn btn-neutral float-left" title="Grapher package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

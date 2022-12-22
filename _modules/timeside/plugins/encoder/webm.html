@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>timeside.plugins.encoder.webm &mdash; TimeSide 0.8 documentation</title>
+  <title>timeside.plugins.encoder.webm &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,42 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../../search.html"/>
-        <link rel="copyright" title="Copyright" href="../../../../copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="../../../../index.html"/>
-        <link rel="up" title="Module code" href="../../../index.html"/> 
-
-  
-  <script src="../../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../../copyright.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -66,7 +59,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -91,16 +84,16 @@
             
             
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../ui.html">User Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../related.html">Sponsors and Partners</a></li>
@@ -118,7 +111,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">TimeSide</a>
@@ -126,9 +119,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -157,8 +151,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -197,7 +189,7 @@
 <span class="kn">from</span> <span class="nn">timeside.core.api</span> <span class="k">import</span> <span class="n">IEncoder</span>
 
 
-<div class="viewcode-block" id="WebMEncoder"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder">[docs]</a><span class="k">class</span> <span class="nc">WebMEncoder</span><span class="p">(</span><span class="n">GstEncoder</span><span class="p">):</span>
+<div class="viewcode-block" id="WebMEncoder"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder">[docs]</a><span class="k">class</span> <span class="nc">WebMEncoder</span><span class="p">(</span><span class="n">GstEncoder</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;WebM encoder based on Gstreamer&quot;&quot;&quot;</span>
 
@@ -207,7 +199,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">WebMEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">streaming</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">video</span> <span class="o">=</span> <span class="n">video</span>
 
-<div class="viewcode-block" id="WebMEncoder.setup"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.setup">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="WebMEncoder.setup"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.setup">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">totalframes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WebMEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">blocksize</span><span class="p">,</span>
@@ -218,7 +210,7 @@
                            <span class="n">framerate</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">video</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;&#39;&#39;videotestsrc pattern=black num_buffers=</span><span class="si">%d</span><span class="s1"> ! ffmpegcolorspace ! queue ! vp8enc speed=2 threads=4 quality=9.0 ! queue ! mux.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;&#39;&#39;videotestsrc pattern=black num_buffers=</span><span class="si">%d</span><span class="s1"> ! videoconvert ! queue ! vp8enc ! queue ! mux.</span>
 <span class="s1">                         &#39;&#39;&#39;</span> <span class="o">%</span> <span class="n">num_buffers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipe</span> <span class="o">+=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">              appsrc name=src ! queue ! audioconvert ! vorbisenc quality=0.9 ! queue ! mux.</span>
@@ -237,27 +229,32 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">start_pipeline</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="WebMEncoder.id"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="WebMEncoder.id"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.id">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;webm_encoder&quot;</span></div>
 
-<div class="viewcode-block" id="WebMEncoder.format"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.format">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="WebMEncoder.format"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.format">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">format</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;WebM&quot;</span></div>
 
-<div class="viewcode-block" id="WebMEncoder.file_extension"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.file_extension">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="WebMEncoder.version"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.version">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@interfacedoc</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;1.0&quot;</span></div>
+
+<div class="viewcode-block" id="WebMEncoder.file_extension"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.file_extension">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">file_extension</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;webm&quot;</span></div>
 
-<div class="viewcode-block" id="WebMEncoder.mime_type"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.mime_type">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="WebMEncoder.mime_type"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.mime_type">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">mime_type</span><span class="p">():</span>
         <span class="k">return</span> <span class="s2">&quot;video/webm&quot;</span></div>
 
-<div class="viewcode-block" id="WebMEncoder.set_metadata"><a class="viewcode-back" href="../../../../api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.set_metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
+<div class="viewcode-block" id="WebMEncoder.set_metadata"><a class="viewcode-back" href="../../../../core_api/encoder/index.html#timeside.plugins.encoder.webm.WebMEncoder.set_metadata">[docs]</a>    <span class="nd">@interfacedoc</span>
     <span class="k">def</span> <span class="nf">set_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span></div></div>
 
@@ -267,9 +264,7 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -278,11 +273,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="../../../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -295,36 +290,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../../',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

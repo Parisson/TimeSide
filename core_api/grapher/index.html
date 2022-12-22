@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Grapher package &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Provider package" href="../provider/index.html" />
+    <link rel="prev" title="Encoder package" href="../encoder/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../processors_list/processors_list.html">List of available processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decoder/index.html">Decoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analyzer/index.html">Analyzer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../encoder/index.html">Encoder package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Grapher package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-timeside.core.grapher">Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphers">Graphers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.grapher.waveform_simple">Waveform</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.grapher.waveform_centroid">WaveformCentroid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.grapher.waveform_transparent">WaveformTransparent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.grapher.waveform_contour">WaveformContour</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.grapher.spectrogram_log">SpectrogramLog</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.grapher.spectrogram_lin">SpectrogramLin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../provider/index.html">Provider package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+      <li>Grapher package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/grapher/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="grapher-package">
+<h1>Grapher package<a class="headerlink" href="#grapher-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="module-timeside.core.grapher">
+<span id="core-module"></span><h2>Core module<a class="headerlink" href="#module-timeside.core.grapher" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.core.grapher.DisplayAnalyzer">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.core.grapher.</code><code class="sig-name descname">DisplayAnalyzer</code><span class="sig-paren">(</span><em class="sig-param">width=1024</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(0</em>, <em class="sig-param">0</em>, <em class="sig-param">0)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#DisplayAnalyzer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.DisplayAnalyzer" title="Permalink to this definition">¶</a></dt>
+<dd><p>image from analyzer result
+This is an Abstract base class</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.core.grapher.DisplayAnalyzer.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#DisplayAnalyzer.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.DisplayAnalyzer.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.grapher.DisplayAnalyzer.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#DisplayAnalyzer.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.DisplayAnalyzer.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="timeside.core.grapher.Grapher">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.core.grapher.</code><code class="sig-name descname">Grapher</code><span class="sig-paren">(</span><em class="sig-param">width=1024</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=None</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Grapher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Grapher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic abstract class for the graphers</p>
+<dl class="method">
+<dt id="timeside.core.grapher.Grapher.draw_anti_aliased_pixels">
+<code class="sig-name descname">draw_anti_aliased_pixels</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y1</em>, <em class="sig-param">y2</em>, <em class="sig-param">color</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Grapher.draw_anti_aliased_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Grapher.draw_anti_aliased_pixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>vertical anti-aliasing at y1 and y2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.grapher.Grapher.draw_peaks">
+<code class="sig-name descname">draw_peaks</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">peaks</em>, <em class="sig-param">line_color</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Grapher.draw_peaks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Grapher.draw_peaks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw 2 peaks at x</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.grapher.Grapher.draw_peaks_inverted">
+<code class="sig-name descname">draw_peaks_inverted</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">peaks</em>, <em class="sig-param">line_color</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Grapher.draw_peaks_inverted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Grapher.draw_peaks_inverted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw 2 inverted peaks at x</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.grapher.Grapher.render">
+<code class="sig-name descname">render</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">output=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Grapher.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Grapher.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PIL Image object visually representing all of the data passed
+by repeatedly calling process() and write the image to the output if specified</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.grapher.Grapher.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Grapher.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Grapher.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="timeside.core.grapher.Spectrum">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.core.grapher.</code><code class="sig-name descname">Spectrum</code><span class="sig-paren">(</span><em class="sig-param">fft_size</em>, <em class="sig-param">samplerate</em>, <em class="sig-param">blocksize</em>, <em class="sig-param">totalframes</em>, <em class="sig-param">lower</em>, <em class="sig-param">higher</em>, <em class="sig-param">window_function=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Spectrum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFT based frequency analysis of audio frames.</p>
+<dl class="method">
+<dt id="timeside.core.grapher.Spectrum.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod</em>, <em class="sig-param">spec_range=120.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/grapher.html#Spectrum.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.grapher.Spectrum.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple containing the spectral centroid and
+the spectrum (dB scales) of the input audio frames.
+FFT window sizes are adatable to the input frame size.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="graphers">
+<h2>Graphers<a class="headerlink" href="#graphers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-timeside.plugins.grapher.waveform_simple">
+<span id="waveform"></span><h3>Waveform<a class="headerlink" href="#module-timeside.plugins.grapher.waveform_simple" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.waveform_simple.</code><code class="sig-name descname">Waveform</code><span class="sig-paren">(</span><em class="sig-param">width=1024</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(255</em>, <em class="sig-param">255</em>, <em class="sig-param">255)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple monochrome waveform image.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">output=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_simple.Waveform.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_simple.html#Waveform.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_simple.Waveform.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.grapher.waveform_centroid">
+<span id="waveformcentroid"></span><h3>WaveformCentroid<a class="headerlink" href="#module-timeside.plugins.grapher.waveform_centroid" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.grapher.waveform_centroid.WaveformCentroid">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.waveform_centroid.</code><code class="sig-name descname">WaveformCentroid</code><span class="sig-paren">(</span><em class="sig-param">width=4096</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(0</em>, <em class="sig-param">0</em>, <em class="sig-param">0)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_centroid.html#WaveformCentroid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_centroid.WaveformCentroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waveform where peaks are colored relatively to the spectral centroids of each frame buffer.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_centroid.WaveformCentroid.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_centroid.html#WaveformCentroid.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_centroid.WaveformCentroid.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_centroid.WaveformCentroid.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_centroid.html#WaveformCentroid.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_centroid.WaveformCentroid.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_centroid.WaveformCentroid.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_centroid.html#WaveformCentroid.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_centroid.WaveformCentroid.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_centroid.WaveformCentroid.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_centroid.html#WaveformCentroid.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_centroid.WaveformCentroid.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_centroid.WaveformCentroid.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_centroid.html#WaveformCentroid.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_centroid.WaveformCentroid.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.grapher.waveform_transparent">
+<span id="waveformtransparent"></span><h3>WaveformTransparent<a class="headerlink" href="#module-timeside.plugins.grapher.waveform_transparent" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.grapher.waveform_transparent.WaveformTransparent">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.waveform_transparent.</code><code class="sig-name descname">WaveformTransparent</code><span class="sig-paren">(</span><em class="sig-param">width=1024</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=None</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_transparent.html#WaveformTransparent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_transparent.WaveformTransparent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transparent waveform.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_transparent.WaveformTransparent.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_transparent.html#WaveformTransparent.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_transparent.WaveformTransparent.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_transparent.WaveformTransparent.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_transparent.html#WaveformTransparent.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_transparent.WaveformTransparent.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_transparent.WaveformTransparent.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_transparent.html#WaveformTransparent.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_transparent.WaveformTransparent.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_transparent.WaveformTransparent.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_transparent.html#WaveformTransparent.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_transparent.WaveformTransparent.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_transparent.WaveformTransparent.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_transparent.html#WaveformTransparent.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_transparent.WaveformTransparent.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.grapher.waveform_contour">
+<span id="waveformcontour"></span><h3>WaveformContour<a class="headerlink" href="#module-timeside.plugins.grapher.waveform_contour" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourBlack">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.waveform_contour.</code><code class="sig-name descname">WaveformContourBlack</code><span class="sig-paren">(</span><em class="sig-param">width=1024</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(0</em>, <em class="sig-param">0</em>, <em class="sig-param">0)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourBlack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourBlack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Black amplitude contour waveform.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourBlack.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourBlack.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourBlack.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourBlack.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourBlack.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourBlack.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourBlack.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourBlack.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourBlack.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourBlack.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourBlack.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourBlack.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourBlack.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourBlack.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourBlack.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourWhite">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.waveform_contour.</code><code class="sig-name descname">WaveformContourWhite</code><span class="sig-paren">(</span><em class="sig-param">width=1024</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(255</em>, <em class="sig-param">255</em>, <em class="sig-param">255)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourWhite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourWhite" title="Permalink to this definition">¶</a></dt>
+<dd><p>an white amplitude contour wavform.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourWhite.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourWhite.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourWhite.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.waveform_contour.WaveformContourWhite.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/waveform_contour.html#WaveformContourWhite.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.waveform_contour.WaveformContourWhite.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.grapher.spectrogram_log">
+<span id="spectrogramlog"></span><h3>SpectrogramLog<a class="headerlink" href="#module-timeside.plugins.grapher.spectrogram_log" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.spectrogram_log.</code><code class="sig-name descname">SpectrogramLog</code><span class="sig-paren">(</span><em class="sig-param">width=4096</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(0</em>, <em class="sig-param">0</em>, <em class="sig-param">0)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logarithmic scaled spectrogram (level vs. frequency vs. time).</p>
+<p>Adds pixels iteratively thanks to the adapter providing
+fixed size frame buffers.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply last 2D transforms</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.set_scale">
+<code class="sig-name descname">set_scale</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.set_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.set_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate the lookup which translates y-coordinate to fft-bin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_log.SpectrogramLog.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_log.html#SpectrogramLog.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_log.SpectrogramLog.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.grapher.spectrogram_lin">
+<span id="spectrogramlin"></span><h3>SpectrogramLin<a class="headerlink" href="#module-timeside.plugins.grapher.spectrogram_lin" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.grapher.spectrogram_lin.</code><code class="sig-name descname">SpectrogramLinear</code><span class="sig-paren">(</span><em class="sig-param">width=4096</em>, <em class="sig-param">height=256</em>, <em class="sig-param">bg_color=(0</em>, <em class="sig-param">0</em>, <em class="sig-param">0)</em>, <em class="sig-param">color_scheme='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_lin.html#SpectrogramLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear scaled spectrogram (level vs. frequency vs. time).</p>
+<p>Adds pixels iteratively thanks to the adapter providing fixed size frame buffers.</p>
+<p>Create a new grapher. width and height are generally
+in pixels but could be something else for eg. svg rendering, etc..</p>
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_lin.html#SpectrogramLinear.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_lin.html#SpectrogramLinear.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the graph name, such as “Waveform”, “Spectral view”,
+etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.set_scale">
+<code class="sig-name descname">set_scale</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_lin.html#SpectrogramLinear.set_scale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.set_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate the lookup which translates y-coordinate to fft-bin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_lin.html#SpectrogramLinear.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/grapher/spectrogram_lin.html#SpectrogramLinear.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.grapher.spectrogram_lin.SpectrogramLinear.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../provider/index.html" class="btn btn-neutral float-right" title="Provider package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../encoder/index.html" class="btn btn-neutral float-left" title="Encoder package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

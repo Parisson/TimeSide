@@ -1,0 +1,758 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Encoder package &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Grapher package" href="../grapher/index.html" />
+    <link rel="prev" title="Preprocessors" href="../analyzer/preprocessors.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../processors_list/processors_list.html">List of available processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decoder/index.html">Decoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analyzer/index.html">Analyzer package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Encoder package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-timeside.core.encoder">Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#encoders">Encoders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.flac">Flac encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.m4a">Aac encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.mp3">Mp3 encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.ogg">Vorbis encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.wav">Wav encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.webm">WebM encoder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-timeside.plugins.encoder.audiosink">AudioSink encoder</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../grapher/index.html">Grapher package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../provider/index.html">Provider package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+      <li>Encoder package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/encoder/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="encoder-package">
+<h1>Encoder package<a class="headerlink" href="#encoder-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="module-timeside.core.encoder">
+<span id="core-module"></span><h2>Core module<a class="headerlink" href="#module-timeside.core.encoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.core.encoder.GstEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.core.encoder.</code><code class="sig-name descname">GstEncoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/encoder.html#GstEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.encoder.GstEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="timeside.core.encoder.GstEncoder.get_stream_chunk">
+<code class="sig-name descname">get_stream_chunk</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/encoder.html#GstEncoder.get_stream_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.encoder.GstEncoder.get_stream_chunk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.encoder.GstEncoder.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/encoder.html#GstEncoder.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.encoder.GstEncoder.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.encoder.GstEncoder.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/encoder.html#GstEncoder.release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.encoder.GstEncoder.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release resources owned by this processor. The processor cannot
+be used anymore after calling this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.encoder.GstEncoder.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/encoder.html#GstEncoder.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.encoder.GstEncoder.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.core.encoder.GstEncoder.start_pipeline">
+<code class="sig-name descname">start_pipeline</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels</em>, <em class="sig-param">samplerate</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/core/encoder.html#GstEncoder.start_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.core.encoder.GstEncoder.start_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.core.encoder.GstEncoder.type">
+<code class="sig-name descname">type</code><em class="property"> = 'encoder'</em><a class="headerlink" href="#timeside.core.encoder.GstEncoder.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="encoders">
+<h2>Encoders<a class="headerlink" href="#encoders" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-timeside.plugins.encoder.flac">
+<span id="flac-encoder"></span><h3>Flac encoder<a class="headerlink" href="#module-timeside.plugins.encoder.flac" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.flac.</code><code class="sig-name descname">FlacEncoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>FLAC encoder based on Gstreamer</p>
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.flac.FlacEncoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/flac.html#FlacEncoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.flac.FlacEncoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.encoder.m4a">
+<span id="aac-encoder"></span><h3>Aac encoder<a class="headerlink" href="#module-timeside.plugins.encoder.m4a" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.m4a.</code><code class="sig-name descname">AacEncoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>AAC encoder based on Gstreamer</p>
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.m4a.AacEncoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/m4a.html#AacEncoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.m4a.AacEncoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.encoder.mp3">
+<span id="mp3-encoder"></span><h3>Mp3 encoder<a class="headerlink" href="#module-timeside.plugins.encoder.mp3" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.mp3.</code><code class="sig-name descname">Mp3Encoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em>, <em class="sig-param">target='quality'</em>, <em class="sig-param">target_value=2</em>, <em class="sig-param">cbr=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>MP3 encoder based on Gstreamer</p>
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.mp3.Mp3Encoder.write_metadata">
+<code class="sig-name descname">write_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/mp3.html#Mp3Encoder.write_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.mp3.Mp3Encoder.write_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all ID3v2.4 tags to file from self.metadata</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.encoder.ogg">
+<span id="vorbis-encoder"></span><h3>Vorbis encoder<a class="headerlink" href="#module-timeside.plugins.encoder.ogg" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.ogg.</code><code class="sig-name descname">VorbisEncoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>OGG Vorbis encoder based on Gstreamer</p>
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.ogg.VorbisEncoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/ogg.html#VorbisEncoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.ogg.VorbisEncoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.encoder.wav">
+<span id="wav-encoder"></span><h3>Wav encoder<a class="headerlink" href="#module-timeside.plugins.encoder.wav" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.wav.WavEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.wav.</code><code class="sig-name descname">WavEncoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>WAV encoder based on Gstreamer</p>
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.wav.WavEncoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/wav.html#WavEncoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.wav.WavEncoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.encoder.webm">
+<span id="webm-encoder"></span><h3>WebM encoder<a class="headerlink" href="#module-timeside.plugins.encoder.webm" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.webm.</code><code class="sig-name descname">WebMEncoder</code><span class="sig-paren">(</span><em class="sig-param">output</em>, <em class="sig-param">streaming=False</em>, <em class="sig-param">overwrite=False</em>, <em class="sig-param">video=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>WebM encoder based on Gstreamer</p>
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.webm.WebMEncoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/webm.html#WebMEncoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.webm.WebMEncoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.encoder.audiosink">
+<span id="audiosink-encoder"></span><h3>AudioSink encoder<a class="headerlink" href="#module-timeside.plugins.encoder.audiosink" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.encoder.audiosink.</code><code class="sig-name descname">AudioSink</code><span class="sig-paren">(</span><em class="sig-param">output_sink='autoaudiosink'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gstreamer-based Audio Sink</p>
+<p>This encoder plays the decoded audio stream to the sound card</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>output_sink</strong><span class="classifier">str, optional</span></dt><dd><p>Gstreamer sink element
+Default to ‘autoaudiosink’
+Possible values : ‘autoaudiosink’, ‘alsasink’, ‘osssink’</p>
+</dd>
+<dt><strong>&gt;&gt;&gt; import timeside</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; from timeside.core import get_processor</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; from timeside.core.tools.test_samples import samples</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; wav_file = samples[‘sine440Hz_mono_1s.wav’]</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; d = get_processor(‘file_decoder’)(wav_file)</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; e = get_processor(‘live_encoder’)()</strong></dt><dd></dd>
+<dt><strong>&gt;&gt;&gt; (d|e).run()  # doctest: +SKIP</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.file_extension">
+<em class="property">static </em><code class="sig-name descname">file_extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.file_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.file_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the filename extension corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.format">
+<em class="property">static </em><code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the encode/encoding format as a short string
+Example: “MP3”, “OGG”, “AVI”, …</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.mime_type">
+<em class="property">static </em><code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this encode format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.set_metadata">
+<code class="sig-name descname">set_metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.set_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.set_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the metadata to be embedded in the encoded output.</p>
+<p>In non-streaming mode, this method updates the metadata directly into the
+output file, without re-encoding the audio data, provided this file already
+exists.</p>
+<p>It isn’t required to call this method, but if called, it must be before
+process().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.encoder.audiosink.AudioSink.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/encoder/audiosink.html#AudioSink.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.encoder.audiosink.AudioSink.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../grapher/index.html" class="btn btn-neutral float-right" title="Grapher package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../analyzer/preprocessors.html" class="btn btn-neutral float-left" title="Preprocessors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

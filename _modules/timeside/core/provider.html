@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>timeside.core.provider &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../../copyright.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>timeside.core.provider</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for timeside.core.provider</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.component</span> <span class="k">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">MetaComponent</span><span class="p">,</span> <span class="n">abstract</span>
+<span class="kn">from</span> <span class="nn">.component</span> <span class="k">import</span> <span class="n">implements</span><span class="p">,</span> <span class="n">implementations</span><span class="p">,</span> <span class="n">interfacedoc</span>
+<span class="kn">from</span> <span class="nn">.api</span> <span class="k">import</span> <span class="n">IProvider</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">PIDError</span><span class="p">,</span> <span class="n">ApiError</span>
+<span class="kn">from</span> <span class="nn">.tools.parameters</span> <span class="k">import</span> <span class="n">HasParam</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">youtube_dl</span>
+<span class="kn">from</span> <span class="nn">requests</span> <span class="k">import</span> <span class="n">get</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">_providers</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="MetaProvider"><a class="viewcode-back" href="../../../core_api/provider/index.html#timeside.core.provider.MetaProvider">[docs]</a><span class="k">class</span> <span class="nc">MetaProvider</span><span class="p">(</span><span class="n">MetaComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Metaclass of the Provider class, used mainly for ensuring</span>
+<span class="sd">    that provider id&#39;s are wellformed and unique&quot;&quot;&quot;</span>
+
+    <span class="n">valid_id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^[a-z][_a-z0-9]*$&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="n">new_class</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MetaProvider</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_class</span> <span class="ow">in</span> <span class="n">implementations</span><span class="p">(</span><span class="n">IProvider</span><span class="p">):</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">new_class</span><span class="o">.</span><span class="n">id</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">_providers</span><span class="p">:</span>
+                <span class="c1"># Doctest test can duplicate a provider</span>
+                <span class="c1"># This can be identify by the conditon &quot;module == &#39;__main__&#39;&quot;</span>
+                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">new_class</span><span class="p">))</span>
+                <span class="n">id_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">_provider</span><span class="p">[</span><span class="nb">id</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="n">new_class</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+                    <span class="n">new_class</span> <span class="o">=</span> <span class="n">_provider</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">_provider</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">new_path</span> <span class="o">==</span> <span class="n">id_path</span><span class="p">:</span>
+                    <span class="n">new_class</span> <span class="o">=</span> <span class="n">_provider</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ApiError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> at </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2"> at </span><span class="si">%s</span><span class="s2"> have the same id: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                                   <span class="o">%</span> <span class="p">(</span><span class="n">new_class</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">new_path</span><span class="p">,</span>
+                                      <span class="n">_provider</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">id_path</span><span class="p">,</span>
+                                      <span class="nb">id</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">MetaProvider</span><span class="o">.</span><span class="n">valid_id</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ApiError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has a malformed id: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                               <span class="o">%</span> <span class="p">(</span><span class="n">new_class</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">id</span><span class="p">))</span>
+
+            <span class="n">_providers</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_class</span>
+
+        <span class="k">return</span> <span class="n">new_class</span></div>
+
+
+<div class="viewcode-block" id="Provider"><a class="viewcode-back" href="../../../core_api/provider/index.html#timeside.core.provider.Provider">[docs]</a><span class="k">class</span> <span class="nc">Provider</span><span class="p">(</span><span class="n">Component</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">MetaProvider</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Base component class of all providers&quot;&quot;&quot;</span>
+
+    <span class="n">abstract</span><span class="p">()</span>
+    <span class="n">implements</span><span class="p">(</span><span class="n">IProvider</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Provider</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="nd">@interfacedoc</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">descr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;*** NO DESCRIPTION FOR THIS PROVIDER ***&#39;</span>
+
+        <span class="k">return</span> <span class="n">descr</span></div>
+
+<div class="viewcode-block" id="providers"><a class="viewcode-back" href="../../../core_api/provider/index.html#timeside.core.provider.providers">[docs]</a><span class="k">def</span> <span class="nf">providers</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">IProvider</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the providers implementing a given interface and, if recurse,</span>
+<span class="sd">    any of the descendants of this interface.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">implementations</span><span class="p">(</span><span class="n">interface</span><span class="p">,</span> <span class="n">recurse</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_provider"><a class="viewcode-back" href="../../../core_api/provider/index.html#timeside.core.provider.get_provider">[docs]</a><span class="k">def</span> <span class="nf">get_provider</span><span class="p">(</span><span class="n">provider_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a provider by its pid&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">provider_id</span> <span class="ow">in</span> <span class="n">_providers</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PIDError</span><span class="p">(</span><span class="s2">&quot;No provider registered with id: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                       <span class="o">%</span> <span class="n">provider_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_providers</span><span class="p">[</span><span class="n">provider_id</span><span class="p">]</span></div>
+
+<span class="k">def</span> <span class="nf">list_providers</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">IProvider</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">lst</span> <span class="o">+=</span> <span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">provs</span> <span class="o">=</span> <span class="n">providers</span><span class="p">(</span><span class="n">interface</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">provs</span><span class="p">:</span>
+        <span class="n">lst</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">&quot;  * {p.id()} :&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">lst</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">&quot;    </span><span class="se">\t\t</span><span class="s2">{p.name()}&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">lst</span>
+
+
+<span class="k">def</span> <span class="nf">list_providers_rst</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">IProvider</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">interface</span><span class="o">.</span><span class="vm">__name__</span>  <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">lst</span> <span class="o">+=</span> <span class="s1">&#39;=&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">provs</span> <span class="o">=</span> <span class="n">providers</span><span class="p">(</span><span class="n">interface</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">provs</span><span class="p">:</span>
+        <span class="n">lst</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">&quot;  * **{p.id()}** : {p.name()}&quot;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="n">lst</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

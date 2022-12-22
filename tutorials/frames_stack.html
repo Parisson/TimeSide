@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using the ‘stack’ (previously decoded frames) &mdash; TimeSide 0.8 documentation</title>
+  <title>Using the ‘stack’ (previously decoded frames) &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,44 +17,37 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-        <link rel="copyright" title="Copyright" href="../copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="../index.html"/>
-        <link rel="up" title="TimeSide : Tutorials" href="index.html"/>
-        <link rel="next" title="Streaming out encoded audio" href="streaming.html"/>
-        <link rel="prev" title="Data management" href="data_management.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="next" title="Streaming out encoded audio" href="streaming.html" />
+    <link rel="prev" title="Data management" href="data_management.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -68,7 +61,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -93,10 +86,9 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ui.html">User Interfaces</a></li>
@@ -108,7 +100,8 @@
 <li class="toctree-l2"><a class="reference internal" href="streaming.html">Streaming out encoded audio</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../related.html">Sponsors and Partners</a></li>
@@ -126,7 +119,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">TimeSide</a>
@@ -134,9 +127,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -182,42 +176,42 @@
             
   <div class="section" id="using-the-stack-previously-decoded-frames">
 <h1>Using the ‘stack’ (previously decoded frames)<a class="headerlink" href="#using-the-stack-previously-decoded-frames" title="Permalink to this headline">¶</a></h1>
-<p>This is an example of using the <cite>stack</cite> argument in <a class="reference internal" href="../api/decoder/index.html#timeside.plugins.decoder.file.FileDecoder" title="timeside.plugins.decoder.file.FileDecoder"><code class="xref py py-class docutils literal"><span class="pre">timeside.plugins.decoder.file.FileDecoder</span></code></a> to run a pipe with previously decoded frames stacked in memory on a second pass.</p>
+<p>This is an example of using the <cite>stack</cite> argument in <a class="reference internal" href="../core_api/decoder/index.html#timeside.plugins.decoder.file.FileDecoder" title="timeside.plugins.decoder.file.FileDecoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.plugins.decoder.file.FileDecoder</span></code></a> to run a pipe with previously decoded frames stacked in memory on a second pass.</p>
 <p>First, let’s import everything and define the audio file source :</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside.core</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside.core</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">get_processor</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.tools.test_samples</span> <span class="k">import</span> <span class="n">samples</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">audio_file</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="s1">&#39;sweep.mp3&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Then let’s setup a <a class="reference internal" href="../api/decoder/index.html#timeside.plugins.decoder.file.FileDecoder" title="timeside.plugins.decoder.file.FileDecoder"><code class="xref py py-class docutils literal"><span class="pre">FileDecoder</span></code></a> with argument <cite>stack=True</cite> (default argument is <cite>stack=False</cite>) :</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">FileDecoder</span><span class="p">(</span><span class="n">audio_file</span><span class="p">,</span> <span class="n">stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<p>Then let’s setup a <a class="reference internal" href="../core_api/decoder/index.html#timeside.plugins.decoder.file.FileDecoder" title="timeside.plugins.decoder.file.FileDecoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileDecoder</span></code></a> with argument <cite>stack=True</cite> (default argument is <cite>stack=False</cite>) :</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span> <span class="o">=</span> <span class="n">timeside</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">FileDecoder</span><span class="p">(</span><span class="n">audio_file</span><span class="p">,</span> <span class="n">stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Setup an arbitrary analyzer to check that decoding process from file and from stack are equivalent:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">level</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">)()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">level</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">)()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="p">(</span><span class="n">decoder</span> <span class="o">|</span> <span class="n">level</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">processors</span> 
 <span class="go">[file_decoder-{}, level-{}]</span>
 </pre></div>
 </div>
 <p>Run the pipe:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The processed frames are stored in the pipe attribute <cite>frames_stack</cite> as a list of frames :</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">)</span>
 <span class="go">&lt;type &#39;list&#39;&gt;</span>
 </pre></div>
 </div>
 <p>First frame :</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
 <span class="go">(array([[...]], dtype=float32), False)</span>
 </pre></div>
 </div>
 <p>Last frame :</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">pipe</span><span class="o">.</span><span class="n">frames_stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
 <span class="go">(array([[...]], dtype=float32), True)</span>
 </pre></div>
 </div>
@@ -226,9 +220,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -237,7 +229,7 @@
         <a href="streaming.html" class="btn btn-neutral float-right" title="Streaming out encoded audio" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="data_management.html" class="btn btn-neutral" title="Data management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="data_management.html" class="btn btn-neutral float-left" title="Data management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -246,11 +238,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="../copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -263,36 +255,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

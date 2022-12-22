@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Decoder package &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Analyzer package" href="../analyzer/index.html" />
+    <link rel="prev" title="List of available processors" href="../processors_list/processors_list.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../processors_list/processors_list.html">List of available processors</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Decoder package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#file-decoder">File Decoder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#array-decoder">Array Decoder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#live-decoder">Live Decoder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../analyzer/index.html">Analyzer package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../encoder/index.html">Encoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grapher/index.html">Grapher package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../provider/index.html">Provider package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+      <li>Decoder package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/decoder/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="decoder-package">
+<h1>Decoder package<a class="headerlink" href="#decoder-package" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-timeside.plugins.decoder"></span><div class="section" id="file-decoder">
+<h2>File Decoder<a class="headerlink" href="#file-decoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.plugins.decoder.file.FileDecoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.decoder.file.</code><code class="sig-name descname">FileDecoder</code><span class="sig-paren">(</span><em class="sig-param">uri</em>, <em class="sig-param">start=0</em>, <em class="sig-param">duration=None</em>, <em class="sig-param">stack=False</em>, <em class="sig-param">sha1=None</em>, <em class="sig-param">progress_callback=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.decoder.Decoder</span></code></p>
+<p>File Decoder based on Gstreamer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>uri</strong><span class="classifier">str</span></dt><dd><p>uri of the media</p>
+</dd>
+<dt><strong>start</strong><span class="classifier">float, optional</span></dt><dd><p>start time of the segment in seconds</p>
+</dd>
+<dt><strong>duration</strong><span class="classifier">float, optional</span></dt><dd><p>duration of the segment in seconds</p>
+</dd>
+<dt><strong>stack</strong><span class="classifier">boolean, optional</span></dt><dd><p>keep decoded data in the stack</p>
+</dd>
+<dt><strong>sha1</strong><span class="classifier">boolean, optional</span></dt><dd><p>compute the sha1 hash of the data</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">timeside</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core</span> <span class="k">import</span> <span class="n">get_processor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">timeside.core.tools.test_samples</span> <span class="k">import</span> <span class="n">samples</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">audio_source</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="s1">&#39;sweep.wav&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">FileDecoder</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;file_decoder&#39;</span><span class="p">)</span>  <span class="c1"># Get the decoder class</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use decoder with default parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decoder</span> <span class="o">=</span> <span class="n">FileDecoder</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="n">audio_source</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">analyzer</span> <span class="o">=</span> <span class="n">get_processor</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">)()</span>  <span class="c1"># Pick a arbitrary analyzer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span><span class="p">(</span><span class="n">decoder</span> <span class="o">|</span> <span class="n">analyzer</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>  <span class="c1"># Run the pipe for the given audio source</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.encoding">
+<code class="sig-name descname">encoding</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.encoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a user-friendly encoding string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.format">
+<code class="sig-name descname">format</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a user-friendly file format string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.plugins.decoder.file.FileDecoder.mainloopthread">
+<code class="sig-name descname">mainloopthread</code><em class="property"> = None</em><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.mainloopthread" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.metadata">
+<code class="sig-name descname">metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the metadata embedded into the encoded stream, if any.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.mime_type">
+<code class="sig-name descname">mime_type</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.mime_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.mime_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mime type corresponding to this decoded format</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.plugins.decoder.file.FileDecoder.output_blocksize">
+<code class="sig-name descname">output_blocksize</code><em class="property"> = 8192</em><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.output_blocksize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.plugins.decoder.file.FileDecoder.pipeline">
+<code class="sig-name descname">pipeline</code><em class="property"> = None</em><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release resources owned by this processor. The processor cannot
+be used anymore after calling this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.resolution">
+<code class="sig-name descname">resolution</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.resolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sample width (8, 16, etc..) of original audio file/stream,
+or None if not applicable/known</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.totalframes">
+<code class="sig-name descname">totalframes</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.totalframes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.totalframes" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total number of frames that this processor will output, or None if
+the number is unknown.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.file.FileDecoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/file.html#FileDecoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.file.FileDecoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="array-decoder">
+<h2>Array Decoder<a class="headerlink" href="#array-decoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.decoder.array.</code><code class="sig-name descname">ArrayDecoder</code><span class="sig-paren">(</span><em class="sig-param">samples</em>, <em class="sig-param">samplerate=44100</em>, <em class="sig-param">start=0</em>, <em class="sig-param">duration=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.decoder.Decoder</span></code></p>
+<p>Decoder taking Numpy array as input</p>
+<p>Construct a new ArrayDecoder from an numpy array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>samples</strong><span class="classifier">numpy array of dimension 1 (mono) or 2 (multichannel)</span></dt><dd><p>if shape = (n) or (n,1) : n samples, mono
+if shape = (n,m) : n samples with m channels</p>
+</dd>
+<dt><strong>start</strong><span class="classifier">float</span></dt><dd><p>start time of the segment in seconds</p>
+</dd>
+<dt><strong>duration</strong><span class="classifier">float</span></dt><dd><p>duration of the segment in seconds</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.format">
+<code class="sig-name descname">format</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a user-friendly file format string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.get_frames">
+<code class="sig-name descname">get_frames</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.get_frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.get_frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define an iterator that will return frames at the given blocksize</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.metadata">
+<code class="sig-name descname">metadata</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the metadata embedded into the encoded stream, if any.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.output_blocksize">
+<code class="sig-name descname">output_blocksize</code><em class="property"> = 8192</em><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.output_blocksize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.release" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release resources owned by this processor. The processor cannot
+be used anymore after calling this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.array.ArrayDecoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/array.html#ArrayDecoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.array.ArrayDecoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="live-decoder">
+<h2>Live Decoder<a class="headerlink" href="#live-decoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="timeside.plugins.decoder.live.LiveDecoder">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.decoder.live.</code><code class="sig-name descname">LiveDecoder</code><span class="sig-paren">(</span><em class="sig-param">num_buffers=-1</em>, <em class="sig-param">input_src='alsasrc'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/live.html#LiveDecoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.live.LiveDecoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Live source Decoder based on Gstreamer
+capturing audio from alsasrc</p>
+<blockquote>
+<div><p>Construct a new LiveDecoder capturing audio from alsasrc</p>
+</div></blockquote>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>num_buffers</strong><span class="classifier">int, optional</span></dt><dd><blockquote>
+<div><p>Number of buffers to output before sending End Of Stream signal
+(-1 = unlimited).
+(Allowed values: &gt;= -1, Default value: -1)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>input_src<span class="classifier">str, optional</span></dt><dd><p>Gstreamer source element
+default to ‘alsasrc’
+possible values :  ‘autoaudiosrc’, ‘alsasrc’, ‘osssrc’</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p># &gt;&gt;&gt; import timeside</p>
+<p># &gt;&gt;&gt; from timeside.core import get_processor
+# &gt;&gt;&gt; live_decoder = get_processor(‘live_decoder’)(num_buffers=5)
+# &gt;&gt;&gt; waveform = get_processor(‘waveform_analyzer’)()
+# &gt;&gt;&gt; mp3_encoder = timeside.plugins.encoder.mp3.Mp3Encoder(‘/tmp/test_live.mp3’,
+# …                                               overwrite=True)
+# &gt;&gt;&gt; pipe = (live_decoder | waveform | mp3_encoder)
+# &gt;&gt;&gt; pipe.run()  # doctest: +SKIP
+# &gt;&gt;&gt; # Show the audio as captured by the decoder
+# &gt;&gt;&gt; import matplotlib.pyplot as plt # doctest: +SKIP
+# &gt;&gt;&gt; plt.plot(a.results[‘waveform_analyzer’].time, # doctest: +SKIP
+#          a.results[‘waveform_analyzer’].data) # doctest: +SKIP
+# &gt;&gt;&gt; plt.show() # doctest: +SKIP</p>
+<dl class="method">
+<dt id="timeside.plugins.decoder.live.LiveDecoder.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/live.html#LiveDecoder.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.live.LiveDecoder.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;interfacedoc</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.live.LiveDecoder.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/live.html#LiveDecoder.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.live.LiveDecoder.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;interfacedoc</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.live.LiveDecoder.release">
+<code class="sig-name descname">release</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/live.html#LiveDecoder.release"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.live.LiveDecoder.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.live.LiveDecoder.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/live.html#LiveDecoder.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.live.LiveDecoder.setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.decoder.live.LiveDecoder.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/decoder/live.html#LiveDecoder.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.decoder.live.LiveDecoder.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;interfacedoc</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../analyzer/index.html" class="btn btn-neutral float-right" title="Analyzer package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../processors_list/processors_list.html" class="btn btn-neutral float-left" title="List of available processors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

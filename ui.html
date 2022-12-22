@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>User Interfaces &mdash; TimeSide 0.8 documentation</title>
+  <title>User Interfaces &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-        <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="index.html"/>
-        <link rel="next" title="Documentation" href="doc.html"/>
-        <link rel="prev" title="Install" href="install.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Documentation" href="doc.html" />
+    <link rel="prev" title="Install" href="install.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -92,25 +86,24 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="news.html">News</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Interfaces</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#linux">Linux</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#macos-or-windows">MacOS or Windows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ipython">Ipython</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#notebook">Notebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#use-you-own-data">Use you own data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#web-server-experimental">Web Server (experimental)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-server">Web Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batch">Batch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#web-player">Web player</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="related.html">Sponsors and Partners</a></li>
@@ -128,7 +121,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">TimeSide</a>
@@ -136,9 +129,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -182,86 +176,74 @@
             
   <div class="section" id="user-interfaces">
 <h1>User Interfaces<a class="headerlink" href="#user-interfaces" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="linux">
-<h2>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h2>
-<p>To run the python shell, just do it through the docker composition:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">ipython</span>
+<div class="section" id="ipython">
+<h2>Ipython<a class="headerlink" href="#ipython" title="Permalink to this headline">¶</a></h2>
+<p>To run the ipython shell, just do it through the docker composition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">ipython</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="macos-or-windows">
-<h2>MacOS or Windows<a class="headerlink" href="#macos-or-windows" title="Permalink to this headline">¶</a></h2>
-<p>Same as in Linux, but you need to create a docker machine first:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">machine</span> <span class="n">create</span> <span class="o">--</span><span class="n">driver</span> <span class="n">virtualbox</span> <span class="o">--</span><span class="n">virtualbox</span><span class="o">-</span><span class="n">memory</span> <span class="mi">8096</span> <span class="n">timeside</span>
-<span class="nb">eval</span> <span class="s2">&quot;$(docker-machine env timeside)&quot;</span>
-<span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">ipython</span>
-</pre></div>
-</div>
-<p>More infos about the TimeSide docker image: <a class="reference external" href="https://registry.hub.docker.com/u/parisson/timeside/">https://registry.hub.docker.com/u/parisson/timeside/</a></p>
 </div>
 <div class="section" id="notebook">
 <h2>Notebook<a class="headerlink" href="#notebook" title="Permalink to this headline">¶</a></h2>
 <p>You can also run your code in the wonderful <a class="reference external" href="http://jupyter.org/">Jupyter Notebook</a> which gives you a web interface to run your own code and share the results with your collaborators:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">f</span> <span class="n">conf</span><span class="o">/</span><span class="n">dev</span><span class="o">.</span><span class="n">yml</span> <span class="n">run</span> <span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">ports</span> <span class="n">notebook</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">f</span> <span class="n">env</span><span class="o">/</span><span class="n">notebook</span><span class="o">.</span><span class="n">yml</span> <span class="n">up</span>
 </pre></div>
 </div>
-<p>and then browse  <a class="reference external" href="http://localhost:8888">http://localhost:8888</a> to acces the Jupyter notebook interface.</p>
-<p>On MacOS or Windows, you will need to ask the IP of the virtual machine to docker-machine:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">machine</span> <span class="n">ip</span> <span class="n">timeside</span>
-</pre></div>
-</div>
-<p>If it gives you for example 192.168.59.103, you should be able to browse the notebook at <a class="reference external" href="http://192.168.59.103:8888/">http://192.168.59.103:8888/</a></p>
+<p>and then browse  <a class="reference external" href="http://localhost:8888">http://localhost:8888</a> to access the Jupyter notebook interface. Use the token given in the docker logs of the <cite>notebook</cite> container to login.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Running a Jupyter notebook server with this setup in a non-secured network is not safe. See <a class="reference external" href="http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/">Running a notebook server</a> for a documented solution to this security problem.</p>
+<p class="admonition-title">Warning</p>
+<p>Running a Jupyter notebook server with this setup in a non-secured network is not safe. See <a class="reference external" href="http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/">Running a notebook server</a> for a documented solution to this security problem.</p>
 </div>
 </div>
 <div class="section" id="use-you-own-data">
 <h2>Use you own data<a class="headerlink" href="#use-you-own-data" title="Permalink to this headline">¶</a></h2>
-<p>The var/media directory is mounted in /srv/media in the container so you can use it to exchange data between the host and the app container.</p>
+<p>The <cite>var/media</cite> directory is mounted in <cite>/srv/media</cite> inside the container so you can use it to exchange data between the host and the app container.</p>
 </div>
-<div class="section" id="web-server-experimental">
-<h2>Web Server (experimental)<a class="headerlink" href="#web-server-experimental" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="web-server">
+<h2>Web Server<a class="headerlink" href="#web-server" title="Permalink to this headline">¶</a></h2>
 <p>TimeSide now includes an experimental web service with a REST API:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Parisson</span><span class="o">/</span><span class="n">TimeSide</span><span class="o">.</span><span class="n">git</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Parisson</span><span class="o">/</span><span class="n">TimeSide</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">TimeSide</span>
 <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="n">db</span>
 </pre></div>
 </div>
 <p>This will pull all needed images for running the server and then initialize the database. Leave the session with CTRL+C and then finally do:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span>
 </pre></div>
 </div>
 <p>This will initialize everything and create a bunch a test sample boilerplate. You can browse the TimeSide API at:</p>
 <blockquote>
-<div><a class="reference external" href="http://localhost:8000/timeside/api/">http://localhost:8000/timeside/api/</a></div></blockquote>
+<div><p><a class="reference external" href="http://localhost:8000/timeside/api/">http://localhost:8000/timeside/api/</a></p>
+</div></blockquote>
 <p>and the admin interface (login: admin, password: admin) at:</p>
 <blockquote>
-<div><a class="reference external" href="http://localhost:8000/timeside/admin">http://localhost:8000/timeside/admin</a></div></blockquote>
+<div><p><a class="reference external" href="http://localhost:8000/timeside/admin">http://localhost:8000/timeside/admin</a></p>
+</div></blockquote>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A documentation about using the objects and processors from the webserver will be written soon. We need help on this!</p>
+<p class="admonition-title">Note</p>
+<p>A documentation about using the objects and processors from the webserver will be written soon. We need help on this!</p>
 </div>
 <p>All (raw, still experimental) results are accessible at :</p>
 <blockquote>
-<div><a class="reference external" href="http://localhost:8000/timeside/">http://localhost:8000/timeside/</a></div></blockquote>
+<div><p><a class="reference external" href="http://localhost:8000/timeside/">http://localhost:8000/timeside/</a></p>
+</div></blockquote>
 <div class="admonition tip">
-<p class="first admonition-title">Tip</p>
-<p class="last">On MacOS or Windows, replace “localhost” by the virtual machine IP given by <cite>docker-machine ip timeside</cite></p>
+<p class="admonition-title">Tip</p>
+<p>On MacOS or Windows, replace “localhost” by the virtual machine IP given by <cite>docker-machine ip timeside</cite></p>
 </div>
 <p>To process some data by hand in the web environment context, just start a django shell session:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">run</span> <span class="n">app</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">shell</span>
 </pre></div>
 </div>
 <p>To run the webserver in background as a daemon, just add the <cite>-d</cite> option:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="o">-</span><span class="n">d</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span> <span class="o">-</span><span class="n">d</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="batch">
 <h2>Batch<a class="headerlink" href="#batch" title="Permalink to this headline">¶</a></h2>
 <p>A shell script is provided to enable preset based and recursive processing through your command line interface:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="o">-</span><span class="n">h</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="o">-</span><span class="n">h</span>
 <span class="n">Usage</span><span class="p">:</span> <span class="nb">bin</span><span class="o">/</span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">file</span><span class="o">.</span><span class="n">conf</span> <span class="n">file1</span><span class="o">.</span><span class="n">wav</span> <span class="p">[</span><span class="n">file2</span><span class="o">.</span><span class="n">wav</span> <span class="o">...</span><span class="p">]</span>
  <span class="n">help</span><span class="p">:</span> <span class="nb">bin</span><span class="o">/</span><span class="n">timeside</span><span class="o">-</span><span class="n">launch</span> <span class="o">-</span><span class="n">h</span>
 
@@ -299,30 +281,28 @@
 <p>TimeSide comes with a smart and pure <strong>HTML5</strong> audio player.</p>
 <p>Features:</p>
 <ul class="simple">
-<li>embed it in any audio web application</li>
-<li>stream, playback and download various audio formats on the fly</li>
-<li>synchronize sound with text, bitmap and vectorial events</li>
-<li>seek through various semantic, analytic and time synced data</li>
-<li>fully skinnable with CSS style</li>
+<li><p>embed it in any audio web application</p></li>
+<li><p>stream, playback and download various audio formats on the fly</p></li>
+<li><p>synchronize sound with text, bitmap and vectorial events</p></li>
+<li><p>seek through various semantic, analytic and time synced data</p></li>
+<li><p>fully skinnable with CSS style</p></li>
 </ul>
 <img alt="TimeSide player" src="https://raw.githubusercontent.com/Parisson/TimeSide/dev/docs/images/timeside_player_01.png" />
 <p>Examples of the player embeded in the Telemeta open web audio CMS:</p>
 <ul class="simple">
-<li><a class="reference external" href="http://parisson.telemeta.org/archives/items/PRS_07_01_03/">http://parisson.telemeta.org/archives/items/PRS_07_01_03/</a></li>
-<li><a class="reference external" href="http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/">http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/</a></li>
+<li><p><a class="reference external" href="http://parisson.telemeta.org/archives/items/PRS_07_01_03/">http://parisson.telemeta.org/archives/items/PRS_07_01_03/</a></p></li>
+<li><p><a class="reference external" href="http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/">http://archives.crem-cnrs.fr/items/CNRSMH_I_1956_002_001_01/</a></p></li>
 </ul>
 <p>Development documentation:</p>
 <ul class="simple">
-<li><a class="reference external" href="https://github.com/Parisson/TimeSide/wiki/Ui-Guide">https://github.com/Parisson/TimeSide/wiki/Ui-Guide</a></li>
+<li><p><a class="reference external" href="https://github.com/Parisson/TimeSide/wiki/Ui-Guide">https://github.com/Parisson/TimeSide/wiki/Ui-Guide</a></p></li>
 </ul>
 </div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -331,7 +311,7 @@
         <a href="doc.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="install.html" class="btn btn-neutral" title="Install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-left" title="Install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -340,11 +320,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -357,36 +337,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

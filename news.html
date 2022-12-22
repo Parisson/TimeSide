@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>News &mdash; TimeSide 0.8 documentation</title>
+  <title>News &mdash; TimeSide 1.1 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-        <link rel="copyright" title="Copyright" href="copyright.html"/>
-    <link rel="top" title="TimeSide 0.8 documentation" href="index.html"/>
-        <link rel="next" title="Architecture" href="architecture.html"/>
-        <link rel="prev" title="TimeSide : audio processing framework for the web" href="intro.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="copyright" title="Copyright" href="copyright.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="TimeSide : scalable audio processing framework and server written in Python" href="intro.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                0.8
+                1.1
               </div>
             
           
@@ -92,21 +86,24 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">TimeSide : audio processing framework for the web</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">News</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">0.7.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">0.7.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">0.7</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
-<li class="toctree-l1"><a class="reference internal" href="processors.html">Processors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="divein.html">Dive in</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ui.html">User Interfaces</a></li>
 <li class="toctree-l1"><a class="reference internal" href="doc.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core_api/index.html">core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_api/index.html">server API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="production.html">Production</a></li>
 <li class="toctree-l1"><a class="reference internal" href="related.html">Sponsors and Partners</a></li>
@@ -124,7 +121,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">TimeSide</a>
@@ -132,9 +129,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -179,43 +177,96 @@
   <div class="section" id="news">
 <h1>News<a class="headerlink" href="#news" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.8<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>1.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Add <em>Docker</em> support for instant installation. This allows to run TimeSide now on <em>any</em> OS platform!</li>
-<li>Add <a class="reference external" href="http://jupyter.org/">Jupyter Notebook</a> support for easy prototyping, experimenting and sharing (see the examples in the doc).</li>
-<li>Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).</li>
-<li>Start the development of a new player interface thanks to Angular and WavesJS.</li>
-<li>Huge cleanup of JS files. Please now use bower to get all JS dependencies as <a class="reference external" href="https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199">listed in settings</a>.</li>
-<li>Add metadata export to Elan annotation files.</li>
-<li>Fix and improve some data structures in analyzer result containers.</li>
-<li>Many various bugfixes.</li>
+<li><p>Core:</p>
+<ul>
+<li><p>Use the libav based aubio decoder by default (fastest audio to numpy array converter on the planet!)</p></li>
+<li><p>Add a VAMP based analyzer and a few plugins like VampFlatness, VampCrest, VampTempo, VampTuning, VampSpectralCentroid, VampSpectralKurtosis and VampSpectralSlope</p></li>
+</ul>
+</li>
+<li><p>Server:</p>
+<ul>
+<li><p>Fix a lot of asynchronous processing issues: now do every pre-processing, processing and post-processing tasks through the worker including source stream fetching from youtube</p></li>
+<li><p>Add a process monitor based on websocket</p></li>
+<li><p>Waveform automatically processed on Item.save()</p></li>
+<li><p>Make UUID really unique</p></li>
+<li><p>Reordering models</p></li>
+<li><p>Improve unit tests</p></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section" id="id2">
-<h2>0.7.1<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>fix django version to 1.6.10 (sync with Telemeta 1.5)</li>
+<li><p>Server refactoring:</p>
+<ul>
+<li><p>audio process run on items (REST API track’s model)</p></li>
+<li><p>several tools, views, models and serializers</p></li>
+<li><p>REST API’s schema on OpenAPI 3 specification and automatic Redoc generation</p></li>
+</ul>
+</li>
+<li><p>Move core and server from Python 2.7 to 3.7</p></li>
+<li><p>Upgrade Django to 2.2, Django REST Framework to 3.11, Celery to 4.4</p></li>
+<li><p>Add an <a class="reference external" href="https://github.com/aubio/aubio">Aubio</a> based decoder</p></li>
+<li><p>Add core and server processors’ versioning and server process’ run time</p></li>
+<li><p>Regroup all dependencies on pip requirements removing conda use</p></li>
+<li><p>Add <a class="reference internal" href="core_api/provider/index.html#provider"><span class="std std-ref">Provider package</span></a> as a core API component and as a REST API model</p></li>
+<li><p>Add provider plugins <a class="reference internal" href="core_api/provider/index.html#deezer-preview"><span class="std std-ref">DeezerPreview</span></a>, <a class="reference internal" href="core_api/provider/index.html#deezer-complete"><span class="std std-ref">DeezerComplete</span></a> and <a class="reference internal" href="core_api/provider/index.html#youtube"><span class="std std-ref">YouTube</span></a></p></li>
+<li><p>Improve server unit testing</p></li>
+<li><p>Add JWT authentication on REST API</p></li>
+<li><p>Various bug fixes</p></li>
+<li><p>Add core, server and workers logging</p></li>
 </ul>
 </div>
 <div class="section" id="id3">
-<h2>0.7<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first">Code refactoring:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Create a new module <cite>timeside.plugins</cite> and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx</li>
-<li>WARNING: to properly manage the namespace packages structure, the TimeSide main module is now <cite>timeside.core</cite> and code should now be initialized with <cite>import timeside.core</cite></li>
-<li><cite>timeside.plugins</cite> is now a <a class="reference external" href="https://pythonhosted.org/setuptools/setuptools.html#namespace-packages">namespace package</a> enabling external plugins to be <strong>automatically</strong> plugged into TimeSide (see for example <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems">timeside-diadems</a>). This now makes TimeSide a <strong>real</strong> plugin host, yeah!</li>
-<li>A dummy timeside plugin will soon be provided for easy development start.</li>
+<h2>0.9<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Upgrade all python dependencies</p></li>
+<li><p>Add Vamp, Essentia, Yaafe, librosa, PyTorch, Tensorflow libs and wrappers</p></li>
+<li><p>Add a few analyzing plugins (Essentia Dissonance, Vamp Constant Q, Vamp Tempo, Vamp general wrapper, Yaafe general wrapper)</p></li>
+<li><p>Add processor parameter management</p></li>
+<li><p>Add processor inheritance</p></li>
+<li><p>Improve HTML5 player with clever data streaming</p></li>
+<li><p>Improve REST API and various serialzers</p></li>
+<li><p>Improve unit testing</p></li>
+<li><p>Various bug fixes</p></li>
 </ul>
-</div></blockquote>
+</div>
+<div class="section" id="id4">
+<h2>0.8<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Add <em>Docker</em> support for instant installation. This allows to run TimeSide now on <em>any</em> OS platform!</p></li>
+<li><p>Add <a class="reference external" href="http://jupyter.org/">Jupyter Notebook</a> support for easy prototyping, experimenting and sharing (see the examples in the doc).</p></li>
+<li><p>Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).</p></li>
+<li><p>Start the development of a new player interface thanks to Angular and WavesJS.</p></li>
+<li><p>Huge cleanup of JS files. Please now use bower to get all JS dependencies as <a class="reference external" href="https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199">listed in settings</a>.</p></li>
+<li><p>Add metadata export to Elan annotation files.</p></li>
+<li><p>Fix and improve some data structures in analyzer result containers.</p></li>
+<li><p>Many various bugfixes.</p></li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h2>0.7.1<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>fix django version to 1.6.10 (sync with Telemeta 1.5)</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h2>0.7<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Code refactoring:</p>
+<ul>
+<li><p>Create a new module <cite>timeside.plugins</cite> and move processors therein: timeside.plugins.decoder,analyzer, timeside.plugins.encoder, timeside.plugins.fx</p></li>
+<li><p>WARNING: to properly manage the namespace packages structure, the TimeSide main module is now <cite>timeside.core</cite> and code should now be initialized with <cite>import timeside.core</cite></p></li>
+<li><p><cite>timeside.plugins</cite> is now a <a class="reference external" href="https://pythonhosted.org/setuptools/setuptools.html#namespace-packages">namespace package</a> enabling external plugins to be <strong>automatically</strong> plugged into TimeSide (see for example <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems">timeside-diadems</a>). This now makes TimeSide a <strong>real</strong> plugin host, yeah!</p></li>
+<li><p>A dummy timeside plugin will soon be provided for easy development start.</p></li>
+</ul>
 </li>
-<li><p class="first">Move all analyzers developped by the partners of the Diadems project to a new repository: <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems">timeside-diadems</a></p>
-</li>
-<li><p class="first">Many fixes for a better processing by <a class="reference external" href="https://travis-ci.org/Parisson/TimeSide">Travis-CI</a></p>
-</li>
-<li><p class="first">Add a dox file to test the docker building continously on <a class="reference external" href="https://github.com/Parisson/Docker">various distributions</a></p>
-</li>
+<li><p>Move all analyzers developped by the partners of the Diadems project to a new repository: <a class="reference external" href="https://github.com/ANR-DIADEMS/timeside-diadems">timeside-diadems</a></p></li>
+<li><p>Many fixes for a better processing by <a class="reference external" href="https://travis-ci.org/Parisson/TimeSide">Travis-CI</a></p></li>
+<li><p>Add a dox file to test the docker building continously on <a class="reference external" href="https://github.com/Parisson/Docker">various distributions</a></p></li>
 </ul>
 <p>For older news, please visit: <a class="reference external" href="https://github.com/Parisson/TimeSide/blob/master/NEWS.rst">https://github.com/Parisson/TimeSide/blob/master/NEWS.rst</a></p>
 </div>
@@ -223,9 +274,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -234,7 +283,7 @@
         <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="intro.html" class="btn btn-neutral" title="TimeSide : audio processing framework for the web" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="intro.html" class="btn btn-neutral float-left" title="TimeSide : scalable audio processing framework and server written in Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -243,11 +292,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; <a href="copyright.html">Copyright</a> 2014-2017 Guillaume Pellerin, Paul Brossier, Thomas Fillon.
+        &copy; <a href="copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -260,36 +309,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.8',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

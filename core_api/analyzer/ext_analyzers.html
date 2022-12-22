@@ -1,0 +1,590 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analyzer from External librairies &mdash; TimeSide 1.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="copyright" title="Copyright" href="../../copyright.html" />
+    <link rel="next" title="Preprocessors" href="preprocessors.html" />
+    <link rel="prev" title="Timeside Core Analyzers" href="core_analyzers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TimeSide
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">TimeSide : scalable audio processing framework and server written in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../news.html">News</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../divein.html">Dive in</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">core API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../processors_list/processors_list.html">List of available processors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../decoder/index.html">Decoder package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Analyzer package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="core.html">Analyzer Core module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="analyzers.html">Analyzers processors</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="core_analyzers.html">Timeside Core Analyzers</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Analyzers from external librairies</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="preprocessors.html">Analyzer preprocessors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../encoder/index.html">Encoder package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grapher/index.html">Grapher package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../provider/index.html">Provider package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../server_api/index.html">server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production.html">Production</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html">Sponsors and Partners</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html">Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../copyright.html#license">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TimeSide</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">TimeSide core API</a> &raquo;</li>
+        
+          <li><a href="index.html">Analyzer package</a> &raquo;</li>
+        
+          <li><a href="analyzers.html">Analyzers</a> &raquo;</li>
+        
+      <li>Analyzer from External librairies</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/core_api/analyzer/ext_analyzers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analyzer-from-external-librairies">
+<h1>Analyzer from External librairies<a class="headerlink" href="#analyzer-from-external-librairies" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="aubio">
+<h2>Aubio<a class="headerlink" href="#aubio" title="Permalink to this headline">¶</a></h2>
+<p><strong>aubio</strong> is a tool designed for the extraction of annotations from audio signals. Its features include segmenting a sound file before each of its attacks, performing pitch detection, tapping the beat and producing midi streams from live audio.
+See <a class="reference external" href="http://aubio.org/">http://aubio.org/</a></p>
+<div class="section" id="module-timeside.plugins.analyzer.externals.aubio_melenergy">
+<span id="aubio-melenergy"></span><h3>Aubio Melenergy<a class="headerlink" href="#module-timeside.plugins.analyzer.externals.aubio_melenergy" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.analyzer.externals.aubio_melenergy.</code><code class="sig-name descname">AubioMelEnergy</code><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.analyzer.Analyzer</span></code></p>
+<p>Aubio Mel Energy analyzer</p>
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the analyzer name, such as “Mean Level”, “Max level”,
+“Total length, etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.unit">
+<em class="property">static </em><code class="sig-name descname">unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit of the data such as “dB”, “seconds”, etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_melenergy.html#AubioMelEnergy.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_melenergy.AubioMelEnergy.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.analyzer.externals.aubio_mfcc">
+<span id="aubio-mfcc"></span><h3>Aubio MFCC<a class="headerlink" href="#module-timeside.plugins.analyzer.externals.aubio_mfcc" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.analyzer.externals.aubio_mfcc.</code><code class="sig-name descname">AubioMfcc</code><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.analyzer.Analyzer</span></code></p>
+<p>Aubio MFCC analyzer</p>
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the analyzer name, such as “Mean Level”, “Max level”,
+“Total length, etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.unit">
+<em class="property">static </em><code class="sig-name descname">unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit of the data such as “dB”, “seconds”, etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_mfcc.html#AubioMfcc.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_mfcc.AubioMfcc.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.analyzer.externals.aubio_pitch">
+<span id="aubio-pitch"></span><h3>Aubio Pitch<a class="headerlink" href="#module-timeside.plugins.analyzer.externals.aubio_pitch" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.analyzer.externals.aubio_pitch.</code><code class="sig-name descname">AubioPitch</code><span class="sig-paren">(</span><em class="sig-param">blocksize_s=None</em>, <em class="sig-param">stepsize_s=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.analyzer.Analyzer</span></code></p>
+<p>Aubio Pitch estimation analyzer</p>
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the analyzer name, such as “Mean Level”, “Max level”,
+“Total length, etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.unit">
+<em class="property">static </em><code class="sig-name descname">unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit of the data such as “dB”, “seconds”, etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_pitch.html#AubioPitch.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_pitch.AubioPitch.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.analyzer.externals.aubio_specdesc">
+<span id="aubio-spectral-descriptors-collection"></span><h3>Aubio Spectral Descriptors collection<a class="headerlink" href="#module-timeside.plugins.analyzer.externals.aubio_specdesc" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.analyzer.externals.aubio_specdesc.</code><code class="sig-name descname">AubioSpecdesc</code><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.analyzer.Analyzer</span></code></p>
+<p>Aubio Spectral Descriptors collection analyzer</p>
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the analyzer name, such as “Mean Level”, “Max level”,
+“Total length, etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.unit">
+<em class="property">static </em><code class="sig-name descname">unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit of the data such as “dB”, “seconds”, etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_specdesc.html#AubioSpecdesc.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_specdesc.AubioSpecdesc.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-timeside.plugins.analyzer.externals.aubio_temporal">
+<span id="aubio-temporal"></span><h3>Aubio Temporal<a class="headerlink" href="#module-timeside.plugins.analyzer.externals.aubio_temporal" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal">
+<em class="property">class </em><code class="sig-prename descclassname">timeside.plugins.analyzer.externals.aubio_temporal.</code><code class="sig-name descname">AubioTemporal</code><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">timeside.core.analyzer.Analyzer</span></code></p>
+<p>Aubio Temporal analyzer</p>
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.id">
+<em class="property">static </em><code class="sig-name descname">id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Short alphanumeric, lower-case string which uniquely identify this
+processor, suitable for use as an HTTP/GET argument value, in filenames,
+etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.name">
+<em class="property">static </em><code class="sig-name descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the analyzer name, such as “Mean Level”, “Max level”,
+“Total length, etc..</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.post_process">
+<code class="sig-name descname">post_process</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.post_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.post_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-Process data after processign the input frames with process()</p>
+<p>Processors such as analyzers will produce Results during the Post-Process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">frames</em>, <em class="sig-param">eod=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input frames and return a (output_frames, eod) tuple.
+Both input and output frames are 2D numpy arrays, where columns are
+channels, and containing an undetermined number of frames.  eod=True
+means that the end-of-data has been reached.</p>
+<p>Output-only processors (such as decoders) will raise an exception if the
+frames argument is not None. All processors (even encoders) return data,
+even if that means returning the input unchanged.</p>
+<p>Warning: it is required to call setup() before this method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.setup">
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">channels=None</em>, <em class="sig-param">samplerate=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">totalframes=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate internal resources and reset state, so that this processor is
+ready for a new run.</p>
+<p>The channels, samplerate and/or blocksize and/or totalframes arguments
+may be required by processors which accept input. An error will occur if any of
+these arguments is passed to an output-only processor such as a decoder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.unit">
+<em class="property">static </em><code class="sig-name descname">unit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.unit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the unit of the data such as “dB”, “seconds”, etc…</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.version">
+<em class="property">static </em><code class="sig-name descname">version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/timeside/plugins/analyzer/externals/aubio_temporal.html#AubioTemporal.version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#timeside.plugins.analyzer.externals.aubio_temporal.AubioTemporal.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the processor</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="yaafe">
+<h2>Yaafe<a class="headerlink" href="#yaafe" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="preprocessors.html" class="btn btn-neutral float-right" title="Preprocessors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="core_analyzers.html" class="btn btn-neutral float-left" title="Timeside Core Analyzers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; <a href="../../copyright.html">Copyright</a> 2014-2022 Guillaume Pellerin, Paul Brossier, Thomas Fillon, Antoine Grandry
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

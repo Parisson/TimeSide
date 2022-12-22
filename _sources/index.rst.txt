@@ -14,13 +14,13 @@ Contents:
    intro
    news
    architecture
-   processors
    divein
    install
    ui
    doc
    Tutorials <tutorials/index>
-   API <api/index>
+   core API <core_api/index>
+   server API <server_api/index>
    development
    production
    related
