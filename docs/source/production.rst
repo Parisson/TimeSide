@@ -4,14 +4,18 @@ Production
 
 Deploying
 ---------
-and bleeding edge frameworks like: Nginx, PostgreSQL, Redis, Celery, Django, Django REST Framework and Python. It thus provides a safe and continuous way to deploy your project from an early development stage to a massive production environment.
-Our docker composition already bundles some powerful containers 
+
+The docker composition already bundles some powerful containers based on: Nginx, PostgreSQL, Redis, Celery, Django, Django REST Framework, Python and various related librairies. It thus provides a safe and continuous way to deploy your project from an early development stage to a massive production environment.
 
 .. warning :: Before any serious production usecase, you *must* modify all the passwords and secret keys in the configuration files of the sandbox.
-
-Thanks to Celery, each TimeSide worker of the server will process each task asynchronously over independant threads so that you can load all the cores of your CPU.
 
 Scaling
 --------
 
-To scale it up through your cluster, Docker finally provides some nice tools for orchestrating it very easily: `Machine and Swarm <https://blog.docker.com/2015/02/orchestrating-docker-with-machine-swarm-and-compose/>`_.
+The Celery based worker container scales on all local CPUs automatically so that each processing pipelines is run asynchronously from its own thread. To scale on more machines, Kubernetes should offer evrything like demonstrated in these tutorials:
+
+  - https://learnk8s.io/scaling-celery-rabbitmq-kubernetes
+  - https://blog.devgenius.io/django-celery-in-kubernetes-for-scheduling-tasks-12718ef38bce
+
+A Google Cloud based configuration is provided as an example in the k8s/ directory.
+

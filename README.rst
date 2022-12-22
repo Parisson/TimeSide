@@ -45,8 +45,27 @@ Thanks for your help!
 News
 =====
 
+1.1
+---
+
+- Core:
+
+  - Use the libav based aubio decoder by default (fastest audio to numpy array converter on the planet!)
+  - Add a VAMP based analyzer and a few plugins like VampFlatness, VampCrest, VampTempo, VampTuning, VampSpectralCentroid, VampSpectralKurtosis and VampSpectralSlope
+
+- Server:
+
+  - Fix a lot of asynchronous processing issues: now do every pre-processing, processing and post-processing tasks through the worker including source stream fetching from youtube
+  - Add a process monitor based on websocket
+  - Waveform automatically processed on Item.save()
+  - Make UUID really unique
+  - Reordering models
+  - Improve unit tests
+
+
 1.0
 ---
+
 * Server refactoring:
 
   * audio process run on items (REST API track's model)
@@ -115,37 +134,43 @@ For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/N
 Documentation
 ==============
 
-* General documentation: https://timeside.readthedocs.io/en/latest/index.html
-* Tutorials: https://timeside.readthedocs.io/en/latest/tutorials/index.html
-* RESTful API: https://sandbox.wasabi.telemeta.org/timeside/api/docs/
-* Publications: https://github.com/Parisson/Telemeta-doc
-* Slides: https://ircam-web.github.io/timeside-slides/#1
-* Some (old) notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
-* Player UI wiki (v1): https://github.com/Parisson/TimeSide/wiki/Ui-Guide
-* A player example (v1): http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
+- General documentation: https://timeside.readthedocs.io/en/latest/index.html
+- Tutorials: https://timeside.readthedocs.io/en/latest/tutorials/index.html
+- RESTful API: https://timeside.ircam.fr/timeside/api/docs/
+- Publications:
+
+  - https://github.com/Parisson/Telemeta-doc
+  - https://github.com/Ircam-WAM/timeside-papers
+
+- Slides: https://ircam-web.github.io/timeside-slides/#1
+- Some (old) notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
+- Player UI v2: https://github.com/Ircam-WAM/timeside-player
+- Player UI wiki (v1): https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+- A player example (v1): http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
 =======
 
 Thanks to Docker, Timeside is now fully available as a docker composition ready to work. The docker based composition bundles some powerfull applications and modern frameworks out-of-the-box like: Python, Conda, Numpy, Jupyter, Gstreamer, Django, Celery, Haystack, ElasticSearch, MySQL, Redis, uWSGI, Nginx and many more.
 
-First, install `Docker <https://store.docker.com/search?offering=community&q=&type=edition>`_ and `docker-compose <https://docs.docker.com/compose/>`_
+First, install `Docker <https://docs.docker.com/get-docker/>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_
 
 Then clone TimeSide::
 
     git clone --recursive https://github.com/Parisson/TimeSide.git
     cd TimeSide
-    docker-compose pull
+    docker-compose up
 
 That's it! Now please go to the documentation to see how to use it.
 
 .. note::
-   If you need to user TimeSide outside a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this usercase anymore (the dependency list is now huge). To get commercial support in more various usecases, please reach the Parisson dev team.
+   If you need to user TimeSide outside a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this usercase anymore (the dependency list is now huge). To get commercial support in more various usecases, please reach the development team.
 
 Sponsors and Partners
 =====================
 
-* `Parisson <http://parisson.com>`_
+* `IRCAM <https://www.ircam.fr>`_ (Paris, France)
+* `Parisson <http://parisson.com>`_ (Paris, France)
 * `CNRS <http://www.cnrs.fr>`_: National Center of Science Research (France)
 * `Huma-Num <http://www.huma-num.fr/>`_: big data equipment for digital humanities (CNRS, France)
 * `CREM <http://www.crem-cnrs.fr>`_: French National Center of Ethomusicology Research (France)
@@ -154,7 +179,6 @@ Sponsors and Partners
 * `MNHN <http://www.mnhn.fr>`_ : Museum National d'Histoire Naturelle (Paris, France)
 * `C4DM <http://c4dm.eecs.qmul.ac.uk/>`_ : Center for Digital Music, Queen Mary University (London, United Kingdom)
 * `NYU Steinhardt <http://steinhardt.nyu.edu/music/>`_ : Music and Performing Arts Professions, New York University (New York, USA)
-* `IRCAM <https://www.ircam.fr>`_ : IRCAM (Paris, France)
 
 Related projects
 =================
@@ -172,7 +196,9 @@ Copyrights
 
 * Copyright (c) 2019, 2022 IRCAM
 * Copyright (c) 2006, 2022 Guillaume Pellerin
+* Copyright (c) 2022  Guillaume Piccarreta
 * Copyright (c) 2010, 2022 Paul Brossier
+* Copyright (c) 2021       Romain Herbelleau
 * Copyright (c) 2019, 2020 Antoine Grandry
 * Copyright (c) 2006, 2019 Parisson SARL
 * Copyright (c) 2013, 2017 Thomas Fillon

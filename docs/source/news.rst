@@ -2,8 +2,27 @@
 News
 =====
 
+1.1
+---
+
+- Core:
+
+  - Use the libav based aubio decoder by default (fastest audio to numpy array converter on the planet!)
+  - Add a VAMP based analyzer and a few plugins like VampFlatness, VampCrest, VampTempo, VampTuning, VampSpectralCentroid, VampSpectralKurtosis and VampSpectralSlope
+
+- Server:
+
+  - Fix a lot of asynchronous processing issues: now do every pre-processing, processing and post-processing tasks through the worker including source stream fetching from youtube
+  - Add a process monitor based on websocket
+  - Waveform automatically processed on Item.save()
+  - Make UUID really unique
+  - Reordering models
+  - Improve unit tests
+
+
 1.0
 ---
+
 * Server refactoring:
 
   * audio process run on items (REST API track's model)
