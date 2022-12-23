@@ -1,6 +1,6 @@
 Sphinx
 Django
-sphinx-rtd-theme
+sphinx-rtd-theme>=0.5.1
 sphinxcontrib-applehelp
 sphinxcontrib-devhelp
 sphinxcontrib-htmlhelp
