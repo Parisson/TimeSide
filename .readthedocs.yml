@@ -15,6 +15,9 @@ build:
   os: ubuntu-20.04
   tools:
     python: '3.9'
+  apt_packages:
+    - python3-numpy
+    - vamp-plugin-sdk
 
 # Optionally set the version of Python and requirements required to build your docs
 python:

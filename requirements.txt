@@ -81,7 +81,6 @@ kiwisolver==1.1.0
 kombu==4.6.7
 lesscpy==0.14.0
 librosa==0.7.2
-llvmlite==0.39.1
 Mako==1.0.7
 Markdown==3.0.1
 MarkupSafe==1.1.0
@@ -101,7 +100,7 @@ openapi==1.1.0
 opt-einsum==3.1.0
 packaging==20.1
 pamela==1.0.0
-pandas==1.5.2
+pandas==1.3.5
 pandocfilters==1.4.2
 parso==0.6.1
 pathtools==0.1.2
@@ -169,7 +168,7 @@ traits==6.0.0
 uritemplate==3.0.1
 urllib3==1.26.5
 uWSGI==2.0.18
-git+https://github.com/Ircam-WAM/vampy-host.git@hotfix/setup#egg=vamphost
+vamp==1.1.0
 vine==1.3.0
 watchdog==0.10.2
 wcwidth==0.1.8
