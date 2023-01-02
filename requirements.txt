@@ -101,7 +101,7 @@ openapi==1.1.0
 opt-einsum==3.1.0
 packaging==20.1
 pamela==1.0.0
-pandas==1.0.1
+pandas==1.5.2
 pandocfilters==1.4.2
 parso==0.6.1
 pathtools==0.1.2
