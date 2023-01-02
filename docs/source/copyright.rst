@@ -2,17 +2,17 @@
 Copyrights
 ==========
 
-* Copyright (c) 2019, 2022 IRCAM
-* Copyright (c) 2006, 2022 Guillaume Pellerin
-* Copyright (c) 2022  Guillaume Piccarreta
-* Copyright (c) 2010, 2022 Paul Brossier
-* Copyright (c) 2021       Romain Herbelleau
-* Copyright (c) 2019, 2020 Antoine Grandry
-* Copyright (c) 2006, 2019 Parisson SARL
-* Copyright (c) 2013, 2017 Thomas Fillon
-* Copyright (c) 2013, 2014 Maxime Lecoz
-* Copyright (c) 2013, 2014 David Doukhan
-* Copyright (c) 2006, 2010 Olivier Guilyardi
+- Copyright (c) 2019, 2022 IRCAM
+- Copyright (c) 2006, 2022 Guillaume Pellerin
+- Copyright (c) 2022  Guillaume Piccarreta
+- Copyright (c) 2010, 2022 Paul Brossier
+- Copyright (c) 2021       Romain Herbelleau
+- Copyright (c) 2019, 2020 Antoine Grandry
+- Copyright (c) 2006, 2019 Parisson SARL
+- Copyright (c) 2013, 2017 Thomas Fillon
+- Copyright (c) 2013, 2014 Maxime Lecoz
+- Copyright (c) 2013, 2014 David Doukhan
+- Copyright (c) 2006, 2010 Olivier Guilyardi
 
 
 License
