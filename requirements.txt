@@ -167,7 +167,8 @@ traits==6.0.0
 uritemplate==3.0.1
 urllib3==1.26.5
 uWSGI==2.0.18
-vamp==1.1.0
+#vamp==1.1.0
+git+https://github.com/Ircam-WAM/vampy-host.git@setup#egg=vamp
 vine==1.3.0
 watchdog==0.10.2
 wcwidth==0.1.8
