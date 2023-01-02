@@ -16,8 +16,30 @@ build:
   tools:
     python: '3.9'
   apt_packages:
+    - python3-gst-1.0
     - python3-numpy
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-ugly
+    - gstreamer1.0-plugins-bad
+    - gstreamer1.0-alsa
+    - gstreamer1.0-plugins-base-apps
+    - gstreamer1.0-tools
+    - glib-networking
+    - gobject-introspection
+    - ffmpeg
+    - libges-1.0-0
+    - libofa0
+    - libgirepository1.0-dev
+    - libsndfile1-dev
+    - libavcodec-dev
+    - libavformat-dev
+    - libavutil-dev
+    - libavresample-dev
+    - libcairo2-dev
+    - libyaml-dev
+    - vamp-examples
     - vamp-plugin-sdk
+
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
