@@ -18,6 +18,7 @@ build:
   apt_packages:
     - python3-gst-1.0
     - python3-numpy
+    - python3-scipy
     - gstreamer1.0-plugins-good
     - gstreamer1.0-plugins-ugly
     - gstreamer1.0-plugins-bad

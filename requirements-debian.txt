@@ -4,6 +4,8 @@ python3-pip
 
 # Legacy decoders and encoders need Gstreamer
 python3-gst-1.0
+python3-scipy
+python3-numpy
 gstreamer1.0-plugins-good
 #gstreamer1.0-gnonlin
 gstreamer1.0-plugins-ugly
