@@ -177,5 +177,5 @@ Werkzeug==1.0.0
 widgetsnbextension==3.5.1
 wrapt==1.11.2
 xmljson==0.2.0
-youtube-dl==2021.5.16
+youtube-dl
 zipp==2.2.0
