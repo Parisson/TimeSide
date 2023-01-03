@@ -7,21 +7,23 @@ Data management
 
 TimeSide offers various ways to access to audio data or metadata. `AnalyzerResult` is the python data structure where TimeSide embeds all the data resulting from a given analyzer processors after a run. It is thus the base object to access the analysis results and all the corresponding metadata. Bellow are some examples of use of the AnalyzerResult object and some of its methods.
 
-Usage : AnalyzerResult(data_mode=None, time_mode=None)
+Usage ::
 
-Four different *time_mode* can be specified :
+   AnalyzerResult(data_mode=None, time_mode=None)
 
-- 'framewise' : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
-- 'global' : a global data value is return for the entire audio item
-- 'segment' : data are returned on a segment basis (i.e. with specified start time and duration)
-- 'event' :  data are returned on a instantaneous event basis (i.e. with specified start time)
+Four different *time_mode- can be specified:
 
-Two different *data_mode* can be specified :
+- ``framewise`` : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
+- ``global`` : a global data value is return for the entire audio item
+- ``segment`` : data are returned on a segment basis (i.e. with specified start time and duration)
+- ``event`` :  data are returned on a instantaneous event basis (i.e. with specified start time)
 
-- 'value' : data are returned as numpy Array of arbitrary type
-- 'label' : data are returned as label indexes (specified by the label_metadata key)
+Two different *data_mode- can be specified:
 
-Default values are *time_mode = 'framewise'* and *data_mode = 'value'*
+- ``value`` : data are returned as numpy Array of arbitrary type
+- ``label`` : data are returned as label indexes (specified by the label_metadata key)
+
+Default values are ``time_mode = 'framewise'`` and ``data_mode = 'value'``
 
 See : :func:`timeside.core.analyzer.AnalyzerResult`, :class:`timeside.core.analyzer.AnalyzerResult`
 
@@ -50,10 +52,10 @@ Specification of time_mode
 ==========================
 Four different time_mode can be specified :
 
-- 'framewise' : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
-- 'global' : a global data value is return for the entire audio item
-- 'segment' : data are returned on a segment basis (i.e. with specified start time and duration)
-- 'event' :  data are returned on a segment basis (i.e. with specified start time)
+- ``framewise`` : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
+- ``global`` : a global data value is return for the entire audio item
+- ``segment`` : data are returned on a segment basis (i.e. with specified start time and duration)
+- ``event`` :  data are returned on a segment basis (i.e. with specified start time)
 
 
 Framewise
@@ -68,7 +70,7 @@ Global
 ------
 
 No frame metadata information is needed for these modes.
-The 'frame_metadata' key/attribute is deleted.
+The ``frame_metadata`` key/attribute is deleted.
 
 >>> res = AnalyzerResult(time_mode='global')
 >>> res.data_object.keys()
@@ -100,8 +102,8 @@ Specification of data_mode
 ==========================
 Two different data_mode can be specified :
 
-- 'value' : data are returned as numpy Array of arbitrary type
-- 'label' : data are returned as label indexes (specified by the label_metadata key)
+- ``value`` : data are returned as numpy Array of arbitrary type
+- ``label`` : data are returned as label indexes (specified by the label_metadata key)
 
 Value
 -----
@@ -117,7 +119,7 @@ FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64
 
 Label
 -----
-A *label_metadata* key is added.
+A *label_metadata- key is added.
 
 >>> res = AnalyzerResult(data_mode='label')
 >>> res.data_object.keys()
