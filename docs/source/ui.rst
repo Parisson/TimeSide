@@ -75,8 +75,8 @@ Features:
 - seek through various semantic, analytic and time synced data
 - fully skinnable with CSS style
 
-.. image:: https://raw.githubusercontent.com/Parisson/TimeSide/dev/docs/images/timeside_player_01.png
-  :alt: TimeSide player
+.. image:: images/timeside_player_01.png
+  :alt: TimeSide player v1
 
 Examples of the player embeded in the Telemeta open web audio CMS:
 
@@ -91,7 +91,7 @@ Development documentation:
 Web player v2
 -------------
 
-From 2021, thanks to the new RESTful API, a `new enhanced player <https://github.com/Ircam-WAM/timeside-player>`_ has been developed on top of VueJS and D3.js. It enables new strategies and usecases:
+From 2021, thanks to the new RESTful API, a `new enhanced player  has been developed on top of VueJS and D3.js. It enables new strategies and usecases:
 
 - full data streaming (audio and features)
 - multi-track analysis
@@ -99,4 +99,8 @@ From 2021, thanks to the new RESTful API, a `new enhanced player <https://github
 - vectorized visualization
 - infinite zooming
 - embedded login (authentication based on JWT)
+
+.. image:: images/timeside-player-wac-22.png
+  :alt: TimeSide player v1
+
 

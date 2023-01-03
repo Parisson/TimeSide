@@ -55,5 +55,5 @@ Show the analyzer results:
 
 So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.
 
-For more examples, see :refs:`Tutorials` and other links and notebooks from the :refs:`Documentation` section.
+For more examples, see :ref:`Tutorials` and other links and notebooks from the :ref:`Documentation` section.
 
