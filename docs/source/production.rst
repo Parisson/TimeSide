@@ -2,7 +2,7 @@
 Production
 ===========
 
-First, setup the composition environment at the root of the project:
+First, setup the composition environment at the root of the project::
 
     echo "COMPOSE_FILE=docker-compose.yml:env/prod.yml" > .env
 
