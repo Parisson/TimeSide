@@ -26,7 +26,7 @@ Define some processors:
    >>> encoder  =  get_processor('vorbis_encoder')('sweep.ogg')
 
 
-Then run the *magic* pipeline:
+Then run the *magic- pipeline:
 
 .. doctest::
 
@@ -55,4 +55,3 @@ Show the analyzer results:
 
 So, in only one pass, the audio file has been decoded, analyzed, graphed and transcoded.
 
-For more extensive examples, please see the `full documentation <http://files.parisson.com/timeside/doc/>`_.

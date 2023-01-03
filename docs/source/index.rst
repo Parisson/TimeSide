@@ -13,14 +13,13 @@ Contents:
 
    intro
    news
-   architecture
    divein
    install
    ui
    doc
    Tutorials <tutorials/index>
-   core API <core_api/index>
-   server API <server_api/index>
+   Core API <core_api/index>
+   Server API <server_api/index>
    development
    production
    related
@@ -30,6 +29,6 @@ Contents:
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+- :ref:`genindex`
+- :ref:`modindex`
+- :ref:`search`

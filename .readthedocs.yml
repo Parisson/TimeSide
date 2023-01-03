@@ -39,6 +39,7 @@ build:
     - libavresample-dev
     - libcairo2-dev
     - libyaml-dev
+    - libhdf5-dev
     - vamp-examples
     - vamp-plugin-sdk
 

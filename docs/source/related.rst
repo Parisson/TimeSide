@@ -23,3 +23,5 @@ Related projects
 - `KAMoulox <https://anr-kamoulox.github.io/>`_ Online unmixing of large historical archives
 - NYU+CREM+Parisson : arabic music analysis from the full CREM database
 - `WASABI <http://wasabihome.i3s.unice.fr/>`_: Web Audio Semantic Aggregated in the Browser for Indexation, sponsored by the ANR
+- `timeside-player v2 <https://github.com/Ircam-WAM/timeside-player>`_
+- `timeside-sdk-js <https://github.com/Ircam-WAM/timeside-sdk-js>`_

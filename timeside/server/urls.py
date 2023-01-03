@@ -4,6 +4,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
+from django.views.generic import RedirectView
 
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
@@ -39,6 +40,7 @@ api_router.register(r'results', views.ResultViewSet)
 
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url='/api/')),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     # docs

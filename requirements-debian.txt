@@ -6,6 +6,7 @@ python3-pip
 python3-gst-1.0
 python3-scipy
 python3-numpy
+python3-llvmlite
 gstreamer1.0-plugins-good
 #gstreamer1.0-gnonlin
 gstreamer1.0-plugins-ugly
@@ -18,6 +19,7 @@ gobject-introspection
 libges-1.0-0
 libofa0
 libgirepository1.0-dev
+libhdf5-dev
 
 # Optionnal Audio Analysis libraries
 vamp-examples
