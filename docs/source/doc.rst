@@ -4,7 +4,8 @@ Documentation
 
 - Server API: https://timeside.ircam.fr/api/docs/
 - Core tutorials: https://timeside.ircam.fr/docs/tutorials/
-- Some old notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
+- Some notebooks: https://github.com/Parisson/TimeSide/tree/master/docs/ipynb
+- Some other old notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
 - Publications:
 
   - https://github.com/Parisson/Telemeta-doc

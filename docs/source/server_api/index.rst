@@ -20,7 +20,7 @@ In addition to be usable as a library, TimeSide has furthermore been built into 
 Architecture
 =============
 
-The web service are provided by a Docker composition. The following diagram shows how containers interact each other where each container is represented by a specific color. The Backend is able to delegate all the processing asynchronously to the Worker thanks to the Broker. The Backend and the Worker share the same Core library and related plugins.
+The web service are provided by a Docker composition. The following diagram shows how containers interact each other where each container is represented by a specific color. The Backend is able to delegate all the processing asynchronously to the Worker through the Broker. The Backend and the Worker share the same Core library and related plugins.
 
 .. image:: ../images/timeside_architecture.drawio.svg
   :width: 800 px
@@ -31,14 +31,17 @@ Models and Serializers
 
 The models of the backend are defined as usual Django models and are all stored with a UUID. Here is a list of the main ones:
 
-- Item: a resource with a source file or URL
-- Selection: a list of Items
-- Processor: a versioned TimeSide Processor
-- Preset: a Processor with some parameters in the JSON format
-- Experience: a list of Presets
-- Task: a list of Selection linked to an Experience to run
+- ``Item``: an audio resource with a source file or a URL
+- ``Selection``: a list of Items
+- ``Processor``: a processor provided by the core module and all related plugins
+- ``Preset``: a Processor with some parameters in the JSON format
+- ``Experience``: a list of Presets
+- ``Task``: a list of Selection linked to an Experience to run
+- ``Provider``: a web service providing audio content (e.g. Youtube or Deezer)
 
-This modelization allows to define some specific precessing *Experiences* that can be re-processed on any new *Selection* which is espacially convenient for analysis on growing datasets. All model instances and related data are accesible through a REST API with authentication. This ensures that a client can consume TimeSide as a dedicated and autonomous web service.
+See the `full API documentation <https://timeside.ircam.fr/api/docs/>`_ to learn all the private and public properties of these models.
+
+This modelization allows to define a specific precessing ``Experiencee`` that can be re-processed on any new ``Selection`` which is espacially convenient for analysis on growing datasets. All model instances and related data are accesible through a REST API with authentication. This ensures that a client can consume TimeSide as a dedicated and autonomous web service.
 
 All the resources stored in the database are indexed with UUIDs so that any data coming from a timeside instance can be loaded any other without losing links and history. As an example, the following diagram shows how, during the WASABI project, some public data have been processed onto the Deezer infrastructure and then imported back into the main TimeSide database without loosing precious data linkage.
 
@@ -63,6 +66,6 @@ Javascript SDK
 
 In order to build frontends on top of this web API, a `Software Development Kit (SDK) is available <https://github.com/Ircam-WAM/timeside-sdk-js>`_ for the Javascript and Typescript languages. It has been created from the  routes of the OpenAPI schema automatically exported from the backend thanks to the OpenAPI Generator. The SDK proposes  some examples for clients to reach the server and request some processing.
 
-As an example, an augmented HTML5 player is presented in the "User Interfaces" section.
+As an example, an augmented HTML5 player is presented in the :ref:`User Interfaces` section.
 
 
