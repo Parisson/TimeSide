@@ -112,14 +112,14 @@ Value
 >>> res.data_object.keys()
 ['value', 'y_value', 'frame_metadata']
 
-In the dataObject key, the 'value' key is kept and the 'label' key is deleted.
+In the ``dataObject`` key, the ``value`` key is kept and the ``label`` key is deleted.
 
 >>> res.data_object
 FrameValueObject(value=array([], dtype=float64), y_value=array([], dtype=float64), frame_metadata=FrameMetadata(samplerate=None, blocksize=None, stepsize=None))
 
 Label
 -----
-A *label_metadata- key is added.
+A ``label_metadata`` key is added.
 
 >>> res = AnalyzerResult(data_mode='label')
 >>> res.data_object.keys()
