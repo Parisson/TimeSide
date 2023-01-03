@@ -140,6 +140,7 @@ For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/N
 Documentation
 ==============
 
+- Full documentation: https://timeside.ircam.fr/docs/
 - Server API: https://timeside.ircam.fr/api/docs/
 - Core tutorials: https://timeside.ircam.fr/docs/tutorials/
 - Some notebooks: https://github.com/Parisson/TimeSide/tree/master/docs/ipynb
