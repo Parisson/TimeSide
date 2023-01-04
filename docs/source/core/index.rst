@@ -7,11 +7,12 @@ Introduction
 
 TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture, a secure scalable backend and an extensible dynamic web frontend. Some usecases: scaled audio computing (filtering, machine learning, etc), web audio visualization, audio process prototyping, realtime and on-demand transcoding and streaming over the web, automatic segmentation and labelling synchronized with audio events
 
-As a python module, the Core module can be imported with::
+As a python module, the core module can be imported with::
 
   >>> import timeside.core
 
-Because there are a lot of tools available in the Python ecosystem dedicated to music information retrieval, machine learning and data analysis, we have decided to embed all main ones: Aubio, Yaafe, Essentia, VAMP, librosa, GStreamer, TensorFlow, Torch, PyTorch, scikit-learn, Jupyter, Pandas and Pytables. They are used to develop native TimeSide plugins though its simple processing API.
+Because there are a lot of tools available in the Python ecosystem dedicated to music information retrieval, machine learning and data analysis, we have decided to embed all main ones: **Aubio, Yaafe, Essentia, VAMP, librosa, GStreamer, TensorFlow, Torch, PyTorch, scikit-learn, Jupyter, Pandas and Pytables**. They are used to develop native TimeSide plugins through its common and simple processing API.
+
 
 The Pipe
 =========
@@ -22,6 +23,7 @@ The following diagram shows and example of a pipe.
 
 .. image:: ../images/TimeSide_pipe.svg
   :width: 800 px
+
 
 Dive in
 ========
@@ -81,6 +83,7 @@ So, in only one pass, the audio file has been decoded, analyzed, graphed and tra
 
 For more examples, see :ref:`Tutorials` and other links and notebooks from the :ref:`Documentation` section.
 
+
 API
 ===
 
@@ -90,6 +93,6 @@ API
    processors_list/processors_list
    decoder/index
    analyzer/index
-   encoder/index
    grapher/index
+   encoder/index
    provider/index
