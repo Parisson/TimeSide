@@ -108,3 +108,7 @@ if settings.DEBUG:
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
+admin.site.site_header = 'TimeSide Admin'
+admin.site.site_title  = 'TimeSide'
+admin.site.index_title   = 'Admin'
