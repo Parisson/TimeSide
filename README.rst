@@ -2,7 +2,7 @@
 TimeSide : scalable audio processing framework and server written in Python
 ===========================================================================
 
-TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture and a secured scalable backend.
+TimeSide is a Python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture and a secured scalable backend.
 
 
 Introduction
@@ -10,7 +10,12 @@ Introduction
 
 As the number of online audio applications and datasets increase, it becomes crucial for researchers and engineers to be able to prototype and test their own algorithms as fast as possible on various platforms and usecases like computational musicology and streaming services. On the other side, content providers and producers need to enhance user experiences on their platforms with more metadata based on cultural history but also audio feature analyses. Growing those metadata synchronously with the music published on the internet implies that the analysis and storage systems can be easily updated, scaled and deployed.
 
-TimeSide has been developed in this sense to propose an online audio processing service. It provides a REST API as well as a javascript SDK so that web developers can easily embed the service into their own applications without requesting to much local resources on the user side to compute audio features.
+TimeSide has been developed in this sense to propose an online audio processing service. It provides:
+
+- a core module as a python audio processing library to work from a shell or any Python based program
+- a web server with a RESTful API on top of the core module so that web developers can then easily embed the remote processing service into their own applications.
+
+A Javascript SDK based on OpenAPI is also available to easily connect to the server API.
 
 Use cases
 ==========
@@ -43,7 +48,7 @@ Funding and support
 
 To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in a development or experimental setup, please let us know by:
 
-- staring or forking the project on `GitHub <https://github.com/Parisson/TimeSide>`_
+- staring or forking the project on `GitHub <https://github.com/Ircam-WAM/TimeSide>`_
 - droping us an email at <wam@ircam.fr>
 
 Thanks for your help and support!
@@ -111,7 +116,7 @@ News
 * Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy prototyping, experimenting and sharing (see the examples in the doc).
 * Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).
 * Start the development of a new player interface thanks to Angular and WavesJS.
-* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
+* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Ircam-WAM/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
 * Add metadata export to Elan annotation files.
 * Fix and improve some data structures in analyzer result containers.
 * Many various bugfixes.
@@ -132,10 +137,10 @@ News
   * A dummy timeside plugin will soon be provided for easy development start.
 
 * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
-* Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
+* Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Ircam-WAM/TimeSide>`_
 * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
-For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
+For older news, please visit: https://github.com/Ircam-WAM/TimeSide/blob/master/NEWS.rst
 
 Documentation
 ==============
@@ -143,7 +148,7 @@ Documentation
 - Full documentation: https://timeside.ircam.fr/docs/
 - Server API: https://timeside.ircam.fr/api/docs/
 - Core tutorials: https://timeside.ircam.fr/docs/tutorials/
-- Some notebooks: https://github.com/Parisson/TimeSide/tree/master/docs/ipynb
+- Some notebooks: https://github.com/Ircam-WAM/TimeSide/tree/master/docs/ipynb
 - Some other old notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
 - Publications:
 
@@ -152,7 +157,7 @@ Documentation
 
 - Slides: https://ircam-wam.github.io/timeside-slides/#1
 - Player UI v2: https://github.com/Ircam-WAM/timeside-player
-- Player UI v1 guide: https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+- Player UI v1 guide: https://github.com/Ircam-WAM/TimeSide/wiki/Ui-Guide
 - Player UI v1 example: http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
 
 Install
@@ -164,7 +169,7 @@ First, install `Docker <https://docs.docker.com/get-docker/>`_ and `docker-compo
 
 Then clone TimeSide and start it up::
 
-    git clone --recursive https://github.com/Parisson/TimeSide.git
+    git clone --recursive https://github.com/Ircam-WAM/TimeSide.git
     cd TimeSide
     docker-compose up -d
 

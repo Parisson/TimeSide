@@ -8,7 +8,7 @@ First, install `Docker <https://docs.docker.com/get-docker/>`_ and `docker-compo
 
 Then clone TimeSide and start it up::
 
-    git clone --recursive https://github.com/Parisson/TimeSide.git
+    git clone --recursive https://github.com/Ircam-WAM/TimeSide.git
     cd TimeSide
     docker-compose up -d
 

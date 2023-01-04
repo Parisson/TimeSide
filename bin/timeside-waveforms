@@ -118,7 +118,7 @@ if __name__ == '__main__':
  timeside-waveforms : TimeSide simple batch waveform generator
 
  usage      : timeside-waveforms /path/to/media_dir /path/to/img_dir
- infos      : https://github.com/Parisson/TimeSide/
+ infos      : https://github.com/Ircam-WAM/TimeSide/
  version    : %s
         """ % version)
     else:

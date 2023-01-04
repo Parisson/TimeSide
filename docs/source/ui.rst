@@ -29,7 +29,7 @@ Web Server (API)
 
 TimeSide now includes an experimental web service with a REST API::
 
-    git clone https://github.com/Parisson/TimeSide.git
+    git clone https://github.com/Ircam-WAM/TimeSide.git
     cd TimeSide
     docker-compose up
 
@@ -81,7 +81,7 @@ Examples of the player embeded in the Telemeta open web audio CMS:
 
 Development documentation:
 
-- https://github.com/Parisson/TimeSide/wiki/Ui-Guide
+- https://github.com/Ircam-WAM/TimeSide/wiki/Ui-Guide
 
 
 Web player v2

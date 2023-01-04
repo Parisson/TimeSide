@@ -28,7 +28,7 @@ Developing your own external plugins
 
 If the (already huge) python module bundle provided by TimeSide is to short for you, it is possible to make your own plugin bundle outside the core module thanks to the TimeSide namespace. An extensive example of what you can do is available in the `DIADEMS project repository <https://github.com/ANR-DIADEMS/timeside-diadems/>`_. You can also start with the dummy plugin::
 
-    git clone https://github.com/Parisson/TimeSide-Dummy.git lib/plugins/
+    git clone https://github.com/Ircam-WAM/TimeSide-Dummy.git lib/plugins/
 
 Rename it, code it, etc. At the next statup, the new plugins will be loaded automatically. For example, you would do::
 
