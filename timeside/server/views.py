@@ -864,17 +864,8 @@ class CustomSchemaGenerator(SchemaGenerator):
         # Adding production and staging server urls ton title and version infos
         schema = super().get_schema()
 
-        # Add production and staging urls to schema
-        schema['servers'] = [
-                {
-                    "url": "https://timeside.ircam.fr/",
-                    "description": "Production server"
-                },
-                {
-                    "url": "https://staging.timeside.ircam.fr/",
-                    "description": "Staging server"
-                }
-        ]
+        # Add servers defined in settings to schema
+        schema['servers'] = settings.SCHEMA_SERVERS
 
         # Redefine JWT shema fixing the one produced
         # by djangorestframework-simplejwt roots

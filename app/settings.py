@@ -273,6 +273,21 @@ COMPLETION_INTERVAL = 10  # blocks
 
 CACHE_RESULT = True
 
+SCHEMA_SERVERS = [
+    {
+        "url": "https://timeside.ircam.fr/",
+        "description": "Production server"
+    },
+    {
+        "url": "https://staging.timeside.ircam.fr/",
+        "description": "Staging server"
+    },
+    {
+        "url": "http://localhost:8000/",
+        "description": "Local server"
+    }
+    ]
+
 ##################
 # LOCAL SETTINGS #
 ##################
