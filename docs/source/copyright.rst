@@ -4,7 +4,7 @@ Copyrights
 
 - Copyright (c) 2019, 2023 IRCAM
 - Copyright (c) 2006, 2023 Guillaume Pellerin
-- Copyright (c) 2023  Guillaume Piccarreta
+- Copyright (c) 2022, 2023 Guillaume Piccarreta
 - Copyright (c) 2010, 2022 Paul Brossier
 - Copyright (c) 2020, 2021 Romain Herbelleau
 - Copyright (c) 2019, 2020 Antoine Grandry
@@ -28,4 +28,4 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Affero General Public License for more details.
 
-Read the LICENSE.txt file for more details.
+Read the `LICENSE.txt <https://github.com/Ircam-WAM/TimeSide/blob/master/LICENSE.txt>`_ file for more details.
