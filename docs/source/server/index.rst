@@ -40,7 +40,7 @@ The models of the backend are defined as usual Django models. Here is a non-exha
 - ``Result``: a result of the processed Experience for an item
 - ``Provider``: a web service providing audio content (e.g. Youtube or Deezer)
 
-See the `full API documentation <https://timeside.ircam.fr/api/docs/>`_ to learn all the private and public properties of these models.
+See `this diagram <https://github.com/Ircam-WAM/TimeSide/blob/master/docs/diagram/timeside.pdf>`_ and the `full API documentation <https://timeside.ircam.fr/api/docs/>`_ to learn all the properties and methods of these models.
 
 This modelization allows to define a specific precessing ``Experience`` that can be re-processed on any new ``Selection`` which is especially convenient for analysis on growing datasets. All model instances and related data are accesible through a REST API with authentication. This ensures that a client can consume TimeSide as a dedicated and autonomous web service.
 
