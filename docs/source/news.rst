@@ -34,8 +34,8 @@ News
 * Add an `Aubio <https://github.com/aubio/aubio>`_ based decoder
 * Add core and server processors' versioning and server process' run time
 * Regroup all dependencies on pip requirements removing conda use
-* Add :ref:`provider` as a core API component and as a REST API model
-* Add provider plugins :ref:`deezer-preview`, :ref:`deezer-complete` and :ref:`youtube`
+* Add Provider class as a core API component and as a REST API model
+* Add provider plugins deezer-preview, deezer-complete and youtube
 * Improve server unit testing
 * Add JWT authentication on REST API
 * Various bug fixes
