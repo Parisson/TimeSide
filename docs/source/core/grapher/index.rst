@@ -1,5 +1,5 @@
 ================
-Grapher package
+Grapher
 ================
 
 

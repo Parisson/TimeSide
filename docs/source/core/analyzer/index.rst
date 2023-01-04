@@ -1,5 +1,5 @@
 ================
-Analyzer package
+Analyzer
 ================
 
 .. toctree::
