@@ -17,7 +17,7 @@ Because there are a lot of tools available in the Python ecosystem dedicated to 
 The Pipe
 =========
 
-The framework is based on a streaming architecure where each block can be process by each plugin. As a result, the data can be stored afterwards in various formats.
+The framework is based on a streaming architecture where each audio block decoded by one ``Decoder`` will be processed by all plugins of one pipeline. Each plugin calls a ``Processor`` object which embeds common methods like ``setup``, ``pre-process``, ``process`` and ``post-process``. The resulting data can be stored and serialized in various formats.
 
 The following diagram shows and example of a pipe.
 
