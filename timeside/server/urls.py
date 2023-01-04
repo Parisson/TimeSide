@@ -47,6 +47,7 @@ urlpatterns = [
     url('api/docs/', views.ReDocView.as_view(), name='redoc'),
     # Schema
     url(r'^api/schema/$', views.schema_view, name="openapi-schema"),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # API endpoint for Generating Simple Web Token
     url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
     # API endpoints for Generating access and refresh JSON Web Token (JWT)
