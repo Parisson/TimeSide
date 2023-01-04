@@ -2,7 +2,7 @@
 TimeSide : scalable audio processing framework and server written in Python
 ===========================================================================
 
-TimeSide is a python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture and a secured scalable backend.
+TimeSide is a Python framework enabling low and high level audio analysis, imaging, transcoding, streaming and labelling. Its high-level API is designed to enable complex processing on very large datasets of any audio or video assets with a plug-in architecture and a secured scalable backend.
 
 
 Introduction
@@ -10,7 +10,12 @@ Introduction
 
 As the number of online audio applications and datasets increase, it becomes crucial for researchers and engineers to be able to prototype and test their own algorithms as fast as possible on various platforms and usecases like computational musicology and streaming services. On the other side, content providers and producers need to enhance user experiences on their platforms with more metadata based on cultural history but also audio feature analyses. Growing those metadata synchronously with the music published on the internet implies that the analysis and storage systems can be easily updated, scaled and deployed.
 
-TimeSide has been developed in this sense to propose an online audio processing service. It provides a REST API as well as a javascript SDK so that web developers can easily embed the service into their own applications without requesting to much local resources on the user side to compute audio features.
+TimeSide has been developed in this sense to propose an online audio processing service. It provides:
+
+- a core module as a python audio processing library to work from a shell or any Python based program
+- a web server with a RESTful API on top of the core module so that web developers can then easily embed the remote processing service into their own applications.
+
+A Javascript SDK based on OpenAPI is also available to easily connect to the server API.
 
 Use cases
 ==========

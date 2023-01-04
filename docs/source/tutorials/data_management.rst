@@ -5,13 +5,13 @@
 Data management
 ===============
 
-TimeSide offers various ways to access to audio data or metadata. `AnalyzerResult` is the python data structure where TimeSide embeds all the data resulting from a given analyzer processors after a run. It is thus the base object to access the analysis results and all the corresponding metadata. Bellow are some examples of use of the AnalyzerResult object and some of its methods.
+TimeSide offers various ways to access to audio data or metadata. ``AnalyzerResult`` is the python data structure where TimeSide embeds all the data resulting from a given analyzer processors after a run. It is thus the base object to access the analysis results and all the corresponding metadata. Bellow are some examples of use of the ``AnalyzerResult`` object and some of its methods.
 
 Usage ::
 
    AnalyzerResult(data_mode=None, time_mode=None)
 
-Four different *time_mode- can be specified:
+Four different ``time_mode`` can be specified:
 
 - ``framewise`` : data are returned on a frame basis (i.e. with specified blocksize, stepsize and framerate)
 - ``global`` : a global data value is return for the entire audio item

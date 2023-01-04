@@ -4,7 +4,7 @@
 Streaming out encoded audio
 ============================
 
-Instead of calling a pipe.run(), the chunks of an encoding processor can also be retrieved and streamed outside the pipe during the process.
+Instead of calling a ``pipe.run()``, the chunks of an encoding processor can also be retrieved and streamed outside the pipe during the process.
 
 >>> import timeside
 >>> from timeside.core import get_processor

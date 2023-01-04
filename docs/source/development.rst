@@ -10,14 +10,17 @@ First, setup the composition environment at the root of the project::
 Developing the framework
 ------------------------
 
-Thanks to the docker composition, the timeside module is dynamically loaded into the app container. So you can develop the module from the host and use it into the container. For example::
+Thanks to the docker composition, the timeside modules are dynamically loaded into the app container. So you can develop the modules from the host and use it into the container. For example the core module::
 
      docker-compose run app ipython
-     >>> import timeside
+     >>> import timeside.core
+
 
 It is exactly the same idea for the server part which you can update dynamically thanks to the django debug server after starting up::
 
     docker-compose up -d
+    docker-compose exec app python manage.py shell
+    >>> import timeside.server
 
 
 Developing your own external plugins
@@ -27,10 +30,10 @@ If the (already huge) python module bundle provided by TimeSide is to short for 
 
     git clone https://github.com/Parisson/TimeSide-Dummy.git lib/plugins/
 
-Rename it, code it, etc. At the next statup, the new plugins will be loaded automatically. For example, you could do::
+Rename it, code it, etc. At the next statup, the new plugins will be loaded automatically. For example, you would do::
 
     docker-compose run app ipython
-    >>> import timeside
+    >>> import timeside.core
 
 or, for the server::
 

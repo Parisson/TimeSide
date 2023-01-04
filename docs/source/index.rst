@@ -13,15 +13,14 @@ Contents:
 
    intro
    news
-   divein
    install
    ui
-   doc
+   Core <core/index>
+   Server <server/index>
    Tutorials <tutorials/index>
-   Core API <core_api/index>
-   Server API <server_api/index>
    development
    production
+   doc
    related
    copyright
 

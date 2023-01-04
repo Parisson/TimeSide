@@ -24,42 +24,38 @@ and then browse http://localhost:8888 or the URL including the login token given
 .. warning :: Running a Jupyter notebook server with this setup in a non-secured network is not safe. See `Running a notebook server <http://jupyter-notebook.readthedocs.org/en/latest/public_server.html/>`_ for a documented solution to this security problem.
 
 
-Web Server
-----------
+Web Server (API)
+----------------
 
 TimeSide now includes an experimental web service with a REST API::
 
     git clone https://github.com/Parisson/TimeSide.git
     cd TimeSide
-    docker-compose up db
-
-This will pull all needed images for running the server and then initialize the database. Leave the session with CTRL+C and then finally do::
-
     docker-compose up
 
-This will initialize everything and create a bunch a test sample boilerplate. You can browse the TimeSide API at:
+This will pull all needed images for running the server, initialize the database, start the server and create the test boilerplate.
 
-    http://localhost:8000/timeside/api/
+You can then browse the TimeSide API at:
+
+    http://localhost:8000/
 
 and the admin interface (login: admin, password: admin) at:
 
     http://localhost:8000/admin
 
-.. note :: A documentation about using the objects and processors from the webserver will be written soon. We need help on this!
+To run the webserver in background as a daemon, just add the `-d` option::
 
-All (raw, still experimental) results are accessible at :
+    docker-compose up -d
 
-    http://localhost:8000/timeside/
+.. warning :: this is a local instance purpose only, to deploy in production see :ref:`Production`
 
-.. tip :: On MacOS or Windows, replace "localhost" by the virtual machine IP given by `docker-machine ip timeside`
+
+Web Server (Shell)
+------------------
 
 To process some data by hand in the web environment context, just start a django shell session::
 
     docker-compose run app manage.py shell
-
-To run the webserver in background as a daemon, just add the `-d` option::
-
-    docker-compose up -d
 
 
 Web player v1 (not maintained anymore)
