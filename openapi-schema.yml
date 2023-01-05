@@ -3,7 +3,7 @@ info:
   title: ''
   version: ''
 paths:
-  /timeside/api/selections/:
+  /api/selections/:
     get:
       operationId: listSelections
       description: ''
@@ -37,7 +37,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Selection'
           description: ''
-  /timeside/api/selections/{uuid}/:
+  /api/selections/{uuid}/:
     get:
       operationId: retrieveSelection
       description: ''
@@ -120,7 +120,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/items/:
+  /api/items/:
     get:
       operationId: listItems
       description: ''
@@ -160,7 +160,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
           description: ''
-  /timeside/api/items/{uuid}/:
+  /api/items/{uuid}/:
     get:
       operationId: retrieveItem
       description: ''
@@ -267,7 +267,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/experiences/:
+  /api/experiences/:
     get:
       operationId: listExperiences
       description: ''
@@ -301,7 +301,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Experience'
           description: ''
-  /timeside/api/experiences/{uuid}/:
+  /api/experiences/{uuid}/:
     get:
       operationId: retrieveExperience
       description: ''
@@ -384,7 +384,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/processors/:
+  /api/processors/:
     get:
       operationId: listProcessors
       description: ''
@@ -398,7 +398,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Processor'
           description: ''
-  /timeside/api/processors/{pid}/:
+  /api/processors/{pid}/:
     get:
       operationId: retrieveProcessor
       description: ''
@@ -416,7 +416,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Processor'
           description: ''
-  /timeside/api/processors/{pid}/parameters_default/:
+  /api/processors/{pid}/parameters_default/:
     get:
       operationId: parameters_defaultProcessor
       description: ''
@@ -434,7 +434,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Processor'
           description: ''
-  /timeside/api/processors/{pid}/parameters_schema/:
+  /api/processors/{pid}/parameters_schema/:
     get:
       operationId: parameters_schemaProcessor
       description: ''
@@ -452,7 +452,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Processor'
           description: ''
-  /timeside/api/results/:
+  /api/results/:
     get:
       operationId: listResults
       description: ''
@@ -472,7 +472,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Result'
           description: ''
-  /timeside/api/results/{uuid}/:
+  /api/results/{uuid}/:
     get:
       operationId: retrieveResult
       description: ''
@@ -496,7 +496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Result'
           description: ''
-  /timeside/api/presets/:
+  /api/presets/:
     get:
       operationId: listPresets
       description: ''
@@ -530,7 +530,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Preset'
           description: ''
-  /timeside/api/presets/{uuid}/:
+  /api/presets/{uuid}/:
     get:
       operationId: retrievePreset
       description: ''
@@ -613,7 +613,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/tasks/:
+  /api/tasks/:
     get:
       operationId: listTasks
       description: ''
@@ -647,7 +647,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Task'
           description: ''
-  /timeside/api/tasks/{uuid}/:
+  /api/tasks/{uuid}/:
     get:
       operationId: retrieveTask
       description: ''
@@ -730,7 +730,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/users/:
+  /api/users/:
     get:
       operationId: listUsers
       description: ''
@@ -744,7 +744,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
           description: ''
-  /timeside/api/users/{username}/:
+  /api/users/{username}/:
     get:
       operationId: retrieveUser
       description: ''
@@ -763,7 +763,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
-  /timeside/api/analysis/:
+  /api/analysis/:
     get:
       operationId: listAnalysis
       description: ''
@@ -797,7 +797,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Analysis'
           description: ''
-  /timeside/api/analysis/{uuid}/:
+  /api/analysis/{uuid}/:
     get:
       operationId: retrieveAnalysis
       description: ''
@@ -880,7 +880,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/analysis_tracks/:
+  /api/analysis_tracks/:
     get:
       operationId: listAnalysisTracks
       description: ''
@@ -914,7 +914,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AnalysisTrack'
           description: ''
-  /timeside/api/analysis_tracks/{uuid}/:
+  /api/analysis_tracks/{uuid}/:
     get:
       operationId: retrieveAnalysisTrack
       description: ''
@@ -997,7 +997,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/analysis_tracks/{uuid}/parameters_default/:
+  /api/analysis_tracks/{uuid}/parameters_default/:
     get:
       operationId: parameters_defaultAnalysisTrack
       description: ''
@@ -1015,7 +1015,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AnalysisTrack'
           description: ''
-  /timeside/api/annotation_tracks/:
+  /api/annotation_tracks/:
     get:
       operationId: listAnnotationTracks
       description: ''
@@ -1049,7 +1049,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AnnotationTrack'
           description: ''
-  /timeside/api/annotation_tracks/{uuid}/:
+  /api/annotation_tracks/{uuid}/:
     get:
       operationId: retrieveAnnotationTrack
       description: ''
@@ -1132,7 +1132,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/annotations/:
+  /api/annotations/:
     get:
       operationId: listAnnotations
       description: ''
@@ -1166,7 +1166,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Annotation'
           description: ''
-  /timeside/api/annotations/{uuid}/:
+  /api/annotations/{uuid}/:
     get:
       operationId: retrieveAnnotation
       description: ''
@@ -1249,7 +1249,7 @@ paths:
       responses:
         '204':
           description: ''
-  /timeside/api/providers/:
+  /api/providers/:
     get:
       operationId: listProviders
       description: ''
@@ -1263,7 +1263,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Provider'
           description: ''
-  /timeside/api/providers/{uuid}/:
+  /api/providers/{uuid}/:
     get:
       operationId: retrieveProvider
       description: ''
@@ -1281,7 +1281,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Provider'
           description: ''
-  /timeside/api/token-csrf/:
+  /api/token-csrf/:
     get:
       operationId: listCsrf_Tokens
       description: ''
@@ -1294,7 +1294,7 @@ paths:
                 type: array
                 items: {}
           description: ''
-  /timeside/api/items/{uuid}/waveform/:
+  /api/items/{uuid}/waveform/:
     get:
       operationId: RetrieveItem
       description: ''
@@ -1312,7 +1312,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
           description: ''
-  /timeside/api/results/{uuid}/visual/:
+  /api/results/{uuid}/visual/:
     get:
       operationId: RetrieveResult
       description: ''
@@ -1329,7 +1329,7 @@ paths:
             image/png:
               schema: {}
           description: ''
-  /timeside/api/analysis_tracks/{uuid}/set_parameters/:
+  /api/analysis_tracks/{uuid}/set_parameters/:
     post:
       operationId: set_parametersAnalysisTrack
       description: ''
@@ -1356,7 +1356,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AnalysisTrack'
           description: ''
-  /timeside/api-token-auth/:
+  /api-token-auth/:
     post:
       operationId: CreateObtainAuthToken
       description: ''
@@ -1375,7 +1375,7 @@ paths:
             application/json:
               schema: {}
           description: ''
-  /timeside/api/token/:
+  /api/token/:
     post:
       operationId: CreateTokenObtainPair
       description: 'Takes a set of user credentials and returns an access and refresh
@@ -1407,7 +1407,7 @@ paths:
                 required:
                 - username
           description: ''
-  /timeside/api/token/refresh/:
+  /api/token/refresh/:
     post:
       operationId: CreateTokenRefresh
       description: 'Takes a refresh type JSON web token and returns an access type
@@ -1439,7 +1439,7 @@ paths:
                 required:
                 - refresh
           description: ''
-  /timeside/api/token/verify/:
+  /api/token/verify/:
     post:
       operationId: CreateTokenVerify
       description: 'Takes a token and indicates if it is valid.  This view provides
