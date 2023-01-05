@@ -8,7 +8,7 @@ class TestItem(TimeSideTestServer):
 
 
     def test_get_items_list(self):
-        items = self.client.get('/timeside/api/items/', format = 'json')
+        items = self.client.get('/api/items/', format = 'json')
         self.assertEqual(items.status_code, 200)
         self.assertEqual(len(items.data), Item.objects.count())
     
@@ -24,7 +24,7 @@ class TestItem(TimeSideTestServer):
             "description": "mp3 from lgmx website", 
             "source_url": lgmx_mp3_url, 
         }
-        item = self.client.post('/timeside/api/items/',  data,  format = 'json')
+        item = self.client.post('/api/items/',  data,  format = 'json')
         self.assertEqual(item.status_code,  201)
         self.assertEqual(item.data['source_file'], None)
         self.assertEqual(item.data['source_url'], lgmx_mp3_url)
@@ -42,7 +42,7 @@ class TestItem(TimeSideTestServer):
             "description": "sweep.mp3 from local test directory", 
             'source_file': f
         })
-        item = self.client.post('/timeside/api/items/', data, content_type = MULTIPART_CONTENT)
+        item = self.client.post('/api/items/', data, content_type = MULTIPART_CONTENT)
         self.assertEqual(item.status_code,  201)
         self.assertEqual(item.data['source_file'][-5:], '.flac')
 
