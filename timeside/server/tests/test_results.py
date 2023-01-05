@@ -10,10 +10,10 @@ class TestResults(TimeSideTestServer):
 
         param = {
             "title": "string", 
-            "analysis": "/timeside/api/analysis/" + str(analyzer.uuid) + '/', 
+            "analysis": "/api/analysis/" + str(analyzer.uuid) + '/',
             "item": self.item_url
         }
-        analysis_track = self.client.post('/timeside/api/analysis_tracks/', param)
+        analysis_track = self.client.post('/api/analysis_tracks/', param)
         self.assertEqual(analysis_track.status_code, 201)
         result = self.client.get(analysis_track.data['result_url'])
         self.assertEqual(result.status_code, 200)

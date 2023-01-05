@@ -86,7 +86,7 @@ class TestProcessorRequests(TimeSideTestServer):
     
     def test_processors_requests(self):
         #listProcessors
-        response = self.client.get('/timeside/api/processors/', format = 'json')
+        response = self.client.get('api/processors/', format = 'json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), Processor.objects.count())
 
@@ -105,7 +105,7 @@ class TestPresetRequests(TimeSideTestServer):
             'parameters':'{}'
         }
 
-        preset = self.client.post('/timeside/api/presets/', data = data, format = 'json')
+        preset = self.client.post('api/presets/', data = data, format = 'json')
         self.assertEqual(preset.status_code, 201)
 
         #retrieve
@@ -113,7 +113,7 @@ class TestPresetRequests(TimeSideTestServer):
         self.assertEqual(preset.status_code, 200)
 
         #list_presets
-        list_preset = self.client.get('/timeside/api/presets/', format = 'json')
+        list_preset = self.client.get('api/presets/', format = 'json')
         self.assertEqual(len(list_preset.data), Preset.objects.count())
 
         #update 
@@ -138,7 +138,7 @@ class TestExperienceRequests(TimeSideTestServer):
             'presets':[self.preset_url]
         }
         
-        experience = self.client.post('/timeside/api/experiences/', data_experience, format = 'json')
+        experience = self.client.post('api/experiences/', data_experience, format = 'json')
         self.assertEqual(experience.status_code, 201)
 
         #retrieve
@@ -146,7 +146,7 @@ class TestExperienceRequests(TimeSideTestServer):
         self.assertEqual(experience.status_code, 200)
         
         #list experiences
-        list_experiences = self.client.get('/timeside/api/experiences/', format = 'json')
+        list_experiences = self.client.get('api/experiences/', format = 'json')
         self.assertEqual(len(list_experiences.data), Experience.objects.count())
         
         #update
@@ -171,7 +171,7 @@ class TestTaskRequests(TimeSideTestServer):
             'status': 2,
             'item':self.item_url,
             'test':True,
-            'author':'/timeside/api/users/admin/'
+            'author':'api/users/admin/'
         }
 
     def test_task_requests(self):
@@ -179,7 +179,7 @@ class TestTaskRequests(TimeSideTestServer):
         #createTask
         len_results = Result.objects.count()
 
-        task = self.client.post('/timeside/api/tasks/', self.data_task)
+        task = self.client.post('api/tasks/', self.data_task)
         self.assertEqual(len_results + 1, Result.objects.count())
 
         #retrieve
@@ -187,7 +187,7 @@ class TestTaskRequests(TimeSideTestServer):
         self.assertEqual(task.status_code, 200)
         
         #list tasks
-        list_tasks = self.client.get('/timeside/api/tasks/')
+        list_tasks = self.client.get('api/tasks/')
         self.assertEqual(len(list_tasks.data), Task.objects.count())
         
         #update with new item
@@ -200,7 +200,7 @@ class TestTaskRequests(TimeSideTestServer):
         len_results = Result.objects.count()
 
         #create with selection
-        task = self.client.post('/timeside/api/tasks/', self.data_task)
+        task = self.client.post('api/tasks/', self.data_task)
         self.assertEqual(task.status_code, 201)
         self.assertEqual(len_results + 1, Result.objects.count())
     

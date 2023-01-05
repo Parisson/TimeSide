@@ -9,24 +9,24 @@ class TestAnnotation(TimeSideTestServer):
         data = {
             "item": self.item_url, 
             "title": "test_create_annotation_track", 
-            "author": '/timeside/api/users/' + str(user.username) + '/', 
+            "author": '/api/users/' + str(user.username) + '/',
             "is_public": False, 
         }
-        annotation_track = self.client.post('/timeside/api/annotation_tracks/', data)
+        annotation_track = self.client.post('/api/annotation_tracks/', data)
         self.assertEqual(annotation_track.status_code, 201)
         self.assertEqual(len_annotation_track + 1, AnnotationTrack.objects.count())
 
         data = {
             "item": self.item_url, 
             "title": "test_create_annotation_track_2", 
-            "author": '/timeside/api/users/' + str(user.username) + '/', 
+            "author": '/api/users/' + str(user.username) + '/',
             "is_public": True, 
         }
-        annotation_track_2 = self.client.post('/timeside/api/annotation_tracks/', data)
+        annotation_track_2 = self.client.post('/api/annotation_tracks/', data)
         self.assertEqual(annotation_track_2.status_code, 201)
         self.assertEqual(len_annotation_track + 2, AnnotationTrack.objects.count())
 
-        list_annotation_track = self.client.get('/timeside/api/annotation_tracks/')
+        list_annotation_track = self.client.get('/api/annotation_tracks/')
         self.assertEqual(list_annotation_track.status_code, 200)
         self.assertEqual(len(list_annotation_track.data), len_annotation_track + 2)
 
@@ -34,7 +34,7 @@ class TestAnnotation(TimeSideTestServer):
 
         user = User.objects.create(username = 'usertest')
         self.client.force_authenticate(user)
-        list_annotation_track = self.client.get('/timeside/api/annotation_tracks/')
+        list_annotation_track = self.client.get('/api/annotation_tracks/')
         self.assertEqual(list_annotation_track.status_code, 200)
         self.assertEqual(len(list_annotation_track.data), len_annotation_track + 1)
 
