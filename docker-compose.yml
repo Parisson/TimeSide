@@ -31,7 +31,7 @@ services:
       - ./var/lib/postgresql/data:/var/lib/postgresql/data
       - ./var/backup:/srv/backup
     env_file:
-      - env/prod.env
+      - env/debug.env
 
   broker:
     image: redis:5
