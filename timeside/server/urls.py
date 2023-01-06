@@ -40,6 +40,7 @@ api_router.register(r'results', views.ResultViewSet)
 
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url='/api/')),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     # docs
