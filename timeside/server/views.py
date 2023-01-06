@@ -497,7 +497,7 @@ class AnalysisTrackViewSet(AuthorizedViewSetMixin,
         """
         if self.request is None:
             return self.model.objects.none()
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.prefetch_related('analysis').prefetch_related('item').all()
         analysis_uuid = self.request.query_params.get('analysis', None)
         item_uuid = self.request.query_params.get('item', None)
         if analysis_uuid is not None:
