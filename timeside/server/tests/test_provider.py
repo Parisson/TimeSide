@@ -53,7 +53,7 @@ class TestProviderRequests(TimeSideTestServer):
     def setUp(self):
         TimeSideTestServer.setUp(self)
         # self.items_url = reverse('')
-        request_providers = self.client.get('/timeside/api/providers/', format='json')
+        request_providers = self.client.get('/api/providers/', format='json')
         for provider in request_providers.data:
             if provider['pid'] == 'youtube':
                 self.youtube_uuid = provider['uuid']
@@ -67,10 +67,10 @@ class TestProviderRequests(TimeSideTestServer):
         params = {
                 'title':"SevenDoors - Movement Of Whale (LGMX rework)",
                 'external_uri':'https://www.youtube.com/watch?v=BMWpfG_Bpto&ab_channel=LGMX',
-                'provider': '/timeside/api/providers/' + self.youtube_uuid + '/'
+                'provider': '/api/providers/' + self.youtube_uuid + '/'
                 }
 
-        response = self.client.post('/timeside/api/items/', params, format='json')
+        response = self.client.post('/api/items/', params, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertNotEqual(response.data['source_file'],None)
 
@@ -80,10 +80,10 @@ class TestProviderRequests(TimeSideTestServer):
         params = {
                 'title': "LGMX - Elevation (Para One rework)",
                 'external_id':'REdstcbwstg',
-                'provider': '/timeside/api/providers/' + self.youtube_uuid + '/'
+                'provider': '/api/providers/' + self.youtube_uuid + '/'
                 }
 
-        response = self.client.post('/timeside/api/items/', params, format='json')
+        response = self.client.post('/api/items/', params, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertNotEqual(response.data['source_file'],None)
         
@@ -94,9 +94,9 @@ class TestProviderRequests(TimeSideTestServer):
         params = {'title':'Come Together',
                 'description':'Music from The Beatles',
                 'external_uri':'https://www.deezer.com/fr/track/116348452',
-                'provider': '/timeside/api/providers/' + self.deezer_uuid + '/'
+                'provider': '/api/providers/' + self.deezer_uuid + '/'
                 }
-        response = self.client.post('/timeside/api/items/', params, format='json')
+        response = self.client.post('/api/items/', params, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertNotEqual(response.data['source_file'],None)
         
@@ -107,9 +107,9 @@ class TestProviderRequests(TimeSideTestServer):
         params = {'title':'Come Together',
                 'description':'Music from The Beatles',
                 'external_id':'116348452',
-                'provider': '/timeside/api/providers/' + self.deezer_uuid + '/'
+                'provider': '/api/providers/' + self.deezer_uuid + '/'
                 }
-        response = self.client.post('/timeside/api/items/', params, format='json')
+        response = self.client.post('/api/items/', params, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertNotEqual(response.data['source_file'],None)
         

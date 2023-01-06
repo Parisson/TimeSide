@@ -230,7 +230,9 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
-    'EXCEPTION_HANDLER': 'timeside.server.utils.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'timeside.server.utils.custom_exception_handler',
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    #'PAGE_SIZE': 10
 }
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
@@ -272,6 +274,21 @@ MESSAGE_BROKER = env('REDIS_URL') + '/1'
 COMPLETION_INTERVAL = 10  # blocks
 
 CACHE_RESULT = True
+
+SCHEMA_SERVERS = [
+    {
+        "url": "https://timeside.ircam.fr/",
+        "description": "Production server"
+    },
+    {
+        "url": "https://staging.timeside.ircam.fr/",
+        "description": "Staging server"
+    },
+    {
+        "url": "http://localhost:8000/",
+        "description": "Local server"
+    }
+    ]
 
 ##################
 # LOCAL SETTINGS #

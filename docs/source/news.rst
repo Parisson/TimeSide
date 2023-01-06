@@ -2,8 +2,27 @@
 News
 =====
 
+1.1
+---
+
+- Core:
+
+  - Use the libav based aubio decoder by default (fastest audio to numpy array converter on the planet!)
+  - Add a VAMP based analyzer and a few plugins like VampFlatness, VampCrest, VampTempo, VampTuning, VampSpectralCentroid, VampSpectralKurtosis and VampSpectralSlope
+
+- Server:
+
+  - Fix a lot of asynchronous processing issues: now do every pre-processing, processing and post-processing tasks through the worker including source stream fetching from youtube
+  - Add a process monitor based on websocket
+  - Waveform automatically processed on Item.save()
+  - Make UUID really unique
+  - Reordering models
+  - Improve unit tests
+
+
 1.0
 ---
+
 * Server refactoring:
 
   * audio process run on items (REST API track's model)
@@ -15,8 +34,8 @@ News
 * Add an `Aubio <https://github.com/aubio/aubio>`_ based decoder
 * Add core and server processors' versioning and server process' run time
 * Regroup all dependencies on pip requirements removing conda use
-* Add :ref:`provider` as a core API component and as a REST API model
-* Add provider plugins :ref:`deezer-preview`, :ref:`deezer-complete` and :ref:`youtube`
+* Add Provider class as a core API component and as a REST API model
+* Add provider plugins deezer-preview, deezer-complete and youtube
 * Improve server unit testing
 * Add JWT authentication on REST API
 * Various bug fixes
@@ -43,7 +62,7 @@ News
 * Add `Jupyter Notebook <http://jupyter.org/>`_ support for easy prototyping, experimenting and sharing (see the examples in the doc).
 * Add an experimental web server and REST API based on Django REST Framework, Redis and Celery. This now provides a real web audio processing server with high scaling capabilities thanks to Docker (clustering) and Celery (multiprocessing).
 * Start the development of a new player interface thanks to Angular and WavesJS.
-* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Parisson/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
+* Huge cleanup of JS files. Please now use bower to get all JS dependencies as `listed in settings <https://github.com/Ircam-WAM/TimeSide/blob/dev/app/sandbox/settings.py#L199>`_.
 * Add metadata export to Elan annotation files.
 * Fix and improve some data structures in analyzer result containers.
 * Many various bugfixes.
@@ -64,7 +83,7 @@ News
   * A dummy timeside plugin will soon be provided for easy development start.
 
 * Move all analyzers developped by the partners of the Diadems project to a new repository: `timeside-diadems <https://github.com/ANR-DIADEMS/timeside-diadems>`_
-* Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Parisson/TimeSide>`_
+* Many fixes for a better processing by `Travis-CI <https://travis-ci.org/Ircam-WAM/TimeSide>`_
 * Add a dox file to test the docker building continously on `various distributions <https://github.com/Parisson/Docker>`_
 
-For older news, please visit: https://github.com/Parisson/TimeSide/blob/master/NEWS.rst
+For older news, please visit: https://github.com/Ircam-WAM/TimeSide/blob/master/NEWS.rst

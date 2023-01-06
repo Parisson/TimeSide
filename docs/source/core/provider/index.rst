@@ -1,7 +1,7 @@
 .. _provider:
 
 ================
-Provider package
+Provider
 ================
 
 

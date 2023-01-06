@@ -27,31 +27,31 @@ class TimeSideTestServer(APITestCase):
         self.item = Item.objects.get(source_file = 'items/tests/sweep.wav')
         self.item.test=True
         self.item.save()
-        self.item_url = '/timeside/api/items/' + str(self.item.uuid) + '/'
+        self.item_url = '/api/items/' + str(self.item.uuid) + '/'
 
         self.item2 = Item.objects.get(source_file = 'items/tests/sweep.mp3')
         self.item2.test=True
         self.item2.save()
-        self.item2_url = '/timeside/api/items/' + str(self.item2.uuid) + '/'
+        self.item2_url = '/api/items/' + str(self.item2.uuid) + '/'
 
         self.selection = Selection.objects.create()
         self.selection.items.set([self.item])
-        self.selection_url = '/timeside/api/selections/' + str(self.selection.uuid) + '/'
+        self.selection_url = '/api/selections/' + str(self.selection.uuid) + '/'
 
 
         self.processor = Processor.objects.get(pid = 'aubio_pitch')
-        self.processor_url = '/timeside/api/processors/aubio_pitch/'
+        self.processor_url = '/api/processors/aubio_pitch/'
         self.processor2 = Processor.objects.get(pid = 'aubio_silence')
-        self.processor2_url = '/timeside/api/processors/aubio_silence/'
+        self.processor2_url = '/api/processors/aubio_silence/'
 
         self.preset = Preset.objects.create(processor=self.processor)
-        self.preset_url = '/timeside/api/presets/' + str(self.preset.uuid) + '/'
+        self.preset_url = '/api/presets/' + str(self.preset.uuid) + '/'
         self.preset2 = Preset.objects.create(processor=self.processor2)
-        self.preset2_url = '/timeside/api/presets/' + str(self.preset2.uuid) + '/'
+        self.preset2_url = '/api/presets/' + str(self.preset2.uuid) + '/'
 
         self.experience = Experience.objects.create()
         self.experience.presets.add(self.preset)
-        self.experience_url = '/timeside/api/experiences/' + str(self.experience.uuid) + '/'
+        self.experience_url = '/api/experiences/' + str(self.experience.uuid) + '/'
 
         self.analysis = Analysis.objects.get(
             sub_processor = SubProcessor.objects.get(
@@ -59,7 +59,7 @@ class TimeSideTestServer(APITestCase):
             )
         self.analysis.test=True
         self.analysis.save()
-        self.analysis_url = '/timeside/api/analysis/' + str(self.analysis.uuid) + '/'
+        self.analysis_url = '/api/analysis/' + str(self.analysis.uuid) + '/'
 
 
     def delete_test(self, obj):

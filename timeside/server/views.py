@@ -497,15 +497,18 @@ class AnalysisTrackViewSet(AuthorizedViewSetMixin,
         """
         if self.request is None:
             return self.model.objects.none()
+
         queryset = self.model.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+
         analysis_uuid = self.request.query_params.get('analysis', None)
         item_uuid = self.request.query_params.get('item', None)
         if analysis_uuid is not None:
             queryset = queryset.filter(
-                analysis__uuid__startswith=analysis_uuid
+                analysis__uuid=analysis_uuid
                 )
         if item_uuid is not None:
-            queryset = queryset.filter(item__uuid__startswith=item_uuid)
+            queryset = queryset.filter(item__uuid=item_uuid)
 
         return queryset
 
@@ -864,17 +867,8 @@ class CustomSchemaGenerator(SchemaGenerator):
         # Adding production and staging server urls ton title and version infos
         schema = super().get_schema()
 
-        # Add production and staging urls to schema
-        schema['servers'] = [
-                {
-                    "url": "https://timeside.ircam.fr/",
-                    "description": "Production server"
-                },
-                {
-                    "url": "https://staging.timeside.ircam.fr/",
-                    "description": "Staging server"
-                }
-        ]
+        # Add servers defined in settings to schema
+        schema['servers'] = settings.SCHEMA_SERVERS
 
         # Redefine JWT shema fixing the one produced
         # by djangorestframework-simplejwt roots

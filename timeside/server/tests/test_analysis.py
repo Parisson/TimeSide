@@ -6,7 +6,7 @@ class TestAnalysisRequests(TimeSideTestServer):
     
     def test_subprocessor_requests(self):
         #listSubProcessors
-        list_subprocessors = self.client.get('/timeside/api/subprocessors/', format = 'json')
+        list_subprocessors = self.client.get('/api/subprocessors/', format = 'json')
         self.assertEqual(list_subprocessors.status_code, 200)
         self.assertEqual(len(list_subprocessors.data), SubProcessor.objects.count())
         
@@ -16,15 +16,15 @@ class TestAnalysisRequests(TimeSideTestServer):
     
     def test_analysis_requests(self):
         #listAnalysis
-        list_analysis = self.client.get('/timeside/api/analysis/', format = 'json')
+        list_analysis = self.client.get('/api/analysis/', format = 'json')
         self.assertEqual(list_analysis.status_code, 200)
         self.assertEqual(len(list_analysis.data), Analysis.objects.count())
 
         #createAnalysis
-        list_subprocessors = self.client.get('/timeside/api/subprocessors/', format = 'json')
+        list_subprocessors = self.client.get('/api/subprocessors/', format = 'json')
         subprocessor = self.client.get(list_subprocessors.data[0]['url'], format = 'json')
 
-        list_presets = self.client.get('/timeside/api/presets/', format = 'json')
+        list_presets = self.client.get('/api/presets/', format = 'json')
         preset = self.client.get(list_presets.data[0]['url'], format = 'json')
         
         data = {
@@ -33,7 +33,7 @@ class TestAnalysisRequests(TimeSideTestServer):
             'sub_processor':subprocessor.data['url'], 
             "parameters_schema": { }
         }
-        analysis = self.client.post('/timeside/api/analysis/', data, format = 'json')
+        analysis = self.client.post('/api/analysis/', data, format = 'json')
         self.assertEqual(analysis.status_code, 201)
 
         #retrieveAnalysis
@@ -51,7 +51,7 @@ class TestAnalysisRequests(TimeSideTestServer):
 
     def test_analysistrack_requests(self):
         #listAnalysisTracks
-        list_analysis_tracks = self.client.get('/timeside/api/analysis_tracks/', format = 'json')
+        list_analysis_tracks = self.client.get('/api/analysis_tracks/', format = 'json')
         self.assertEqual(list_analysis_tracks.status_code, 200)
         self.assertEqual(len(list_analysis_tracks.data), AnalysisTrack.objects.count())
 
@@ -62,7 +62,7 @@ class TestAnalysisRequests(TimeSideTestServer):
             'analysis':self.analysis_url, 
             'item':self.item_url
         }
-        analysis_track = self.client.post('/timeside/api/analysis_tracks/', data, format = 'json')
+        analysis_track = self.client.post('/api/analysis_tracks/', data, format = 'json')
         self.assertEqual(analysis_track.status_code, 201)
 
         #check result_url
@@ -87,7 +87,7 @@ class TestAnalysisRequests(TimeSideTestServer):
             )
         analysis_obj.test = True
         analysis_obj.save()
-        analysis = self.client.get('/timeside/api/analysis/' + str(analysis_obj.uuid) + '/', format = 'json')
+        analysis = self.client.get('/api/analysis/' + str(analysis_obj.uuid) + '/', format = 'json')
 
         data['analysis'] = analysis.data['url']
         analysis_track = self.client.put(analysis_track.data['url'], data, format = 'json')

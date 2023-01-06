@@ -9,7 +9,7 @@ from timeside.server.models import *
 
 class WorkflowWASABITestCase(TestCase):
     def setUp(self):
-        url = 'http://localhost:9000/timeside/api-token-auth/'
+        url = 'http://localhost:9000/api-token-auth/'
         auth={'username':'admin', 'password':'admin'}
         r = requests.post(url, data=auth)
         token=r.json()['token']
@@ -21,8 +21,8 @@ class WorkflowWASABITestCase(TestCase):
         pass
 
 
-# """ http post http://localhost:9000/timeside/api-token-auth/ username=admin password=admin """
-url = 'http://localhost:9000/timeside/api-token-auth/'
+# """ http post http://localhost:9000/api-token-auth/ username=admin password=admin """
+url = 'http://localhost:9000/api-token-auth/'
 auth={'username':'admin', 'password':'admin'}
 r = requests.post(url, data=auth)
 token=r.json()['token']
@@ -35,7 +35,7 @@ auth = TokenAuthentication(
 client = Client(auth=auth)
 
 #schema of the API
-schema = client.get('http://localhost:9000/timeside/api/schema/')
+schema = client.get('http://localhost:9000/api/schema/')
 
 #Getting uuid of Provider and WASABI selection
 keys = ['api', 'selections', 'list']
@@ -50,7 +50,7 @@ for prv in client.action(schema,keys):
     if prv['pid'] == 'youtube':
         youtube_provider = prv
 
-provider_uri = '/timeside/api/providers/' + youtube_provider['uuid'] + '/'
+provider_uri = '/api/providers/' + youtube_provider['uuid'] + '/'
 
 #creation of an Item for Michael Jackson's Thriller track using YouTube's URL
 keys = ['api', 'items', 'create']
@@ -60,13 +60,13 @@ item = client.action(schema,keys,params)
 
 #adding this track to the WASABI selection
 keys = ['api', 'selections', 'update']
-params = {'uuid':selection_uuid, 'items':['/timeside/api/items/' + item['uuid'] + '/']}
+params = {'uuid':selection_uuid, 'items':['/api/items/' + item['uuid'] + '/']}
 selec = client.action(schema,keys,params)
 
 #Creating an Experience
 keys = ['api', 'experiences', 'create']
 
-spectrogram = '/timeside/api/presets/a1a9cd99-8168-4853-b096-00187ac05ca4/'
+spectrogram = '/api/presets/a1a9cd99-8168-4853-b096-00187ac05ca4/'
 
 params = {'title':'experience_WASABI', 'presets':[spectrogram]}
 exp = client.action(schema,keys,params)
@@ -75,7 +75,7 @@ exp_uuid = exp['uuid']
 #Task
 PENDING = 2
 keys = ['api', 'tasks', 'create']
-params = {'item' : '/timeside/api/items/' + item['uuid'] + '/', 'experience': '/timeside/api/experiences/' + exp_uuid + '/','status':PENDING}
+params = {'item' : '/api/items/' + item['uuid'] + '/', 'experience': '/api/experiences/' + exp_uuid + '/','status':PENDING}
 
 task = client.action(schema,keys,params)
 
@@ -88,4 +88,4 @@ params = {'search' : item['uuid']}
 result = client.action(schema,keys,params)
 
 for r in result:
-    print('http://localhost:9000/timeside/results/' + r['uuid'] + '/json/')
+    print('http://localhost:9000/results/' + r['uuid'] + '/json/')

@@ -4,6 +4,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
+from django.views.generic import RedirectView
 
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
@@ -39,12 +40,14 @@ api_router.register(r'results', views.ResultViewSet)
 
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url='/api/')),
     # ----- API ---------
     url(r'^api/', include(api_router.urls)),
     # docs
     url('api/docs/', views.ReDocView.as_view(), name='redoc'),
     # Schema
     url(r'^api/schema/$', views.schema_view, name="openapi-schema"),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # API endpoint for Generating Simple Web Token
     url(r'^api-token-auth/', obtain_auth_token, name='api_token_auth'),
     # API endpoints for Generating access and refresh JSON Web Token (JWT)
@@ -105,3 +108,7 @@ if settings.DEBUG:
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
+admin.site.site_header = 'TimeSide Admin'
+admin.site.site_title  = 'TimeSide'
+admin.site.index_title   = 'Admin'

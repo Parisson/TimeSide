@@ -820,6 +820,19 @@ class AnalysisTrackSerializer(serializers.HyperlinkedModelSerializer):
     # return reverse(view_name, kwargs=url_kwargs, request=request,
     # format=format)
 
+    @staticmethod
+    def setup_eager_loading(queryset):
+        """ Perform necessary eager loading of data. """
+        # select_related for "to-one" relationships
+        queryset = queryset.select_related('item')
+        queryset = queryset.select_related('analysis')
+
+        # prefetch_related for "to-many" relationships
+        # queryset = queryset.prefetch_related(
+        #     'results',
+        #     )
+        return queryset
+
 
 class AnnotationSerializer_inTrack(serializers.HyperlinkedModelSerializer):
 

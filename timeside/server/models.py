@@ -1149,6 +1149,9 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
         verbose_name = _('Analysis Track')
         ordering = ['-date_modified']
 
+    def __str__(self):
+        return self.analysis.title + ' - ' + self.item.title
+
 
 class AnnotationTrack(Titled, UUID, Dated, Shareable):
 

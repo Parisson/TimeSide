@@ -11,15 +11,42 @@ sphinx:
     configuration: docs/source/conf.py
     fail_on_warning: false
 
-# Build documentation with MkDocs
-#mkdocs:
-#  configuration: mkdocs.yml
+build:
+  os: ubuntu-20.04
+  tools:
+    python: '3.9'
+  apt_packages:
+    - python3-gst-1.0
+    - python3-numpy
+    - python3-scipy
+    - python3-llvmlite
+    - gstreamer1.0-plugins-good
+    - gstreamer1.0-plugins-ugly
+    - gstreamer1.0-plugins-bad
+    - gstreamer1.0-alsa
+    - gstreamer1.0-plugins-base-apps
+    - gstreamer1.0-tools
+    - glib-networking
+    - gobject-introspection
+    - ffmpeg
+    - libges-1.0-0
+    - libofa0
+    - libgirepository1.0-dev
+    - libsndfile1-dev
+    - libavcodec-dev
+    - libavformat-dev
+    - libavutil-dev
+    - libavresample-dev
+    - libcairo2-dev
+    - libyaml-dev
+    - libhdf5-dev
+    - vamp-examples
+    - vamp-plugin-sdk
 
-# Optionally build your docs in additional formats such as PDF and ePub
-formats: all
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
-  version: 3.7
   install:
-    - requirements: docs/requirements-docs.txt
+    - requirements: requirements.txt
+    - method: pip
+      path: .

@@ -1,7 +1,6 @@
-====================
-TimeSide : Tutorials
-====================
-Contents:
+=========
+Tutorials
+=========
 
 .. toctree::
    :maxdepth: 2

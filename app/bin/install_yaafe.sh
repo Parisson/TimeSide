@@ -20,6 +20,8 @@ pushd $VIRTUAL_ENV/src
 
 set -x
 
+echo $yaafe_git
+
 [ ! -d Yaafe ] && git clone $yaafe_git || true
 
 pushd Yaafe

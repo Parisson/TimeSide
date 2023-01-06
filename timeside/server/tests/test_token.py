@@ -15,7 +15,7 @@ class TokenTests(APITestCase):
 
     def test_get_token(self):
         "Test getting a token from username and password through the API"
-        url = '/timeside/api-token-auth/'
+        url = '/api-token-auth/'
         client = APIClient()
         auth = {'username':'john', 'password':'banana'}
         token_request = client.post(url, data = auth, format='json')
@@ -26,10 +26,10 @@ class TokenTests(APITestCase):
     def test_token_auth(self):        
         "Test simple get http request with and without Token credential"
         client = APIClient()
-        users_request = client.get('/timeside/api/users/', format='json')
+        users_request = client.get('/api/users/', format='json')
         self.assertEqual(users_request.status_code, status.HTTP_401_UNAUTHORIZED)
         client.credentials(HTTP_AUTHORIZATION = 'Token ' + self.token.key)
-        users_request_auth = client.get('/timeside/api/users/', format = 'json')
+        users_request_auth = client.get('/api/users/', format = 'json')
         self.assertEqual(users_request_auth.status_code, status.HTTP_200_OK)
         data = users_request_auth.json()
         usernames = []

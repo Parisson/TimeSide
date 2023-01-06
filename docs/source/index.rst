@@ -13,16 +13,14 @@ Contents:
 
    intro
    news
-   architecture
-   divein
    install
    ui
-   doc
+   Core <core/index>
+   Server <server/index>
    Tutorials <tutorials/index>
-   Core framewor <core_api/index>
-   Web API <core_api/index>
    development
    production
+   doc
    related
    copyright
 
@@ -30,6 +28,6 @@ Contents:
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+- :ref:`genindex`
+- :ref:`modindex`
+- :ref:`search`
