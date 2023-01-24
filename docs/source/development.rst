@@ -2,41 +2,29 @@
 Development
 ===========
 
-First, setup the composition environment at the root of the project::
+A new plugin
+------------
 
-    echo "COMPOSE_FILE=docker-compose.yml:env/debug.yml" > .env
+Thanks to the plugin architecture and the *timeside* namespace, it is possible to develop your own plugin independently and outside the core module.
 
-
-Developing the framework
-------------------------
-
-Thanks to the docker composition, the timeside modules are dynamically loaded into the app container. So you can develop the modules from the host and use it into the container. For example the core module::
-
-     docker-compose run app ipython
-     >>> import timeside.core
-
-
-It is exactly the same idea for the server part which you can update dynamically thanks to the django debug server after starting up::
-
-    docker-compose up -d
-    docker-compose exec app python manage.py shell
-    >>> import timeside.server
-
-
-Developing your own external plugins
-------------------------------------
-
-If the (already huge) python module bundle provided by TimeSide is to short for you, it is possible to make your own plugin bundle outside the core module thanks to the TimeSide namespace. An extensive example of what you can do is available in the `DIADEMS project repository <https://github.com/ANR-DIADEMS/timeside-diadems/>`_. You can also start with the dummy plugin::
+An extensive example of what you can do is available in the `Dummy plugin example <https://github.com/Ircam-WAM/TimeSide-Dummy.git>`_. To link it to the core, you simply need to clone it into the ``lib/plugins/`` folder like this::
 
     git clone https://github.com/Ircam-WAM/TimeSide-Dummy.git lib/plugins/
 
-Rename it, code it, etc. At the next statup, the new plugins will be loaded automatically. For example, you would do::
+Then rename the plugin, code it, etc. At the next container statup, the new plugin will be loaded automatically by the core module so that you can develop it and use it out of the box::
 
     docker-compose run app ipython
-    >>> import timeside.core
+    >>> from timeside.core import get_processor
+    >>> my_plugin = get_processor("dummy")
 
-or, for the server::
 
-    docker-compose restart app
+A new server feature
+--------------------
 
+First, setup the composition environment at the root of the project::
+
+    echo "COMPOSE_FILE=docker-compose.yml:env/debug.yml" > .env
+    docker-compose up
+
+Then every change on the server part will be updated dynamically in the container thanks to the django debug server.
 

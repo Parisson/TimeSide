@@ -78,8 +78,7 @@ To develop a client on top of the server, a `API full documentation is available
 Javascript SDK
 ===============
 
-In order to build frontends on top of this web API, a `Typescript / JavaScript SDK is available <https://github.com/Ircam-WAM/timeside-sdk-js>`_. It has been created from the routes of the OpenAPI schema automatically exported from the backend thanks to the OpenAPI Generator. The SDK proposes  some examples for clients to reach the server and request some processing.
+In order to build frontends on top of this web API, a `SDK is available <https://github.com/Ircam-WAM/timeside-sdk-js>`_ for Typescript and JavaScript. It has been created from the routes of the OpenAPI schema automatically exported from the backend thanks to the OpenAPI Generator. The SDK proposes  some examples for clients to reach the server and request some processing.
 
 As an example, an augmented HTML5 player is presented in the :ref:`User Interfaces` section.
-
 
