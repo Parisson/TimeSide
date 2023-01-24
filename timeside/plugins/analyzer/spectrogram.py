@@ -59,8 +59,6 @@ class Spectrogram(Analyzer):
     >>> result.data.shape
     (344, 1025)
 
-     .. plot::
-
       import timeside
       from timeside.core import get_processor
       from timeside.core.tools.test_samples import samples
