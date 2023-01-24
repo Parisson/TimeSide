@@ -17,10 +17,9 @@ Contents:
    ui
    Core <core/index>
    Server <server/index>
-   Tutorials <tutorials/index>
-   development
-   production
    doc
+   Tutorials <tutorials/index>
+   production
    related
    copyright
 
