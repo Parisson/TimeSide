@@ -95,7 +95,7 @@ An extensive example of what you can do is available in the `Dummy plugin exampl
 
 Then rename the plugin, code it, etc. At the next container statup, the new plugin will be loaded automatically by the core module so that you can develop it and use it out of the box::
 
-    docker-compose run app ipython
+    docker compose run app ipython
     >>> from timeside.core import get_processor
     >>> dummy_processor = get_processor("dummy")
 

@@ -16,7 +16,7 @@ Then modify all the paths (especially for the data and media), passwords and sec
 
 Finally, setup the composition environment at the root of the project::
 
-    echo "COMPOSE_FILE=docker-compose.yml:env/prod.yml" > .env
+    echo "COMPOSE_FILE=docker compose.yml:env/prod.yml" > .env
 
 
 Scaling

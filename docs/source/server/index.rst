@@ -57,7 +57,7 @@ When an Experience has been processed on a Item, all the result data are stored 
 
 From the server shell, a result can be retrieved like this::
 
-   docker-compose run app python manage.py shell
+   docker compose run app python manage.py shell
    >>> from timeside.server.models import Result
    >>> from timeside.core.analyzer import AnalyzerResult
    >>> result = Result(uuid="c0a6e49e-b315-467a-8578-d42f796a197a")
@@ -74,8 +74,8 @@ Developing a new server feature
 
 First, setup the development environment at the root of the project::
 
-    echo "COMPOSE_FILE=docker-compose.yml:env/debug.yml" > .env
-    docker-compose up
+    echo "COMPOSE_FILE=docker compose.yml:env/debug.yml" > .env
+    docker compose up
 
 Then any change on the server part will be dynamically updated in the container thanks to the django debug server.
 
