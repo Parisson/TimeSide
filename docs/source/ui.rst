@@ -87,7 +87,7 @@ Development documentation:
 Web player v2
 -------------
 
-From 2021, thanks to the new RESTful API, a `new enhanced player <https://github.com/Ircam-WAM/timeside-player>`_ has been developed on top of VueJS and D3.js. It enables new strategies and usecases:
+From 2021, thanks to the new :ref:`REST API`, a `new multi-dimensional player <https://github.com/Ircam-WAM/timeside-player>`_ has been developed on top of VueJS and D3.js. It enables new original strategies and usecases:
 
 - full data streaming (audio and features)
 - multi-track analysis
@@ -96,9 +96,6 @@ From 2021, thanks to the new RESTful API, a `new enhanced player <https://github
 - infinite zooming
 - embedded login (authentication based on JWT)
 
-https://github.com/Ircam-WAM/timeside-player
-
 .. image:: images/timeside-player-wac-22.png
   :alt: TimeSide player v2
-
 

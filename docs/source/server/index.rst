@@ -69,8 +69,25 @@ To postprocess the data, see :ref:`User Interfaces`.
 .. note:: When the data is requested through the API, it is automatically serialized into JSON for vectors, PNG for images and FLAC for audio.
 
 
-API
-===
+Developing a new server feature
+================================
+
+First, setup the development environment at the root of the project::
+
+    echo "COMPOSE_FILE=docker-compose.yml:env/debug.yml" > .env
+    docker-compose up
+
+Then any change on the server part will be dynamically updated in the container thanks to the django debug server.
+
+To add data and test, just browse::
+
+    http://localhost:8000/admin/
+    or
+    http://localhost:8000/api
+
+
+REST API
+========
 
 To develop a client on top of the server, a `API full documentation is available online <https://timeside.ircam.fr/api/docs/>`_
 
@@ -78,7 +95,41 @@ To develop a client on top of the server, a `API full documentation is available
 Javascript SDK
 ===============
 
-In order to build frontends on top of this web API, a `SDK is available <https://github.com/Ircam-WAM/timeside-sdk-js>`_ for Typescript and JavaScript. It has been created from the routes of the OpenAPI schema automatically exported from the backend thanks to the OpenAPI Generator. The SDK proposes  some examples for clients to reach the server and request some processing.
+In order to build applications on top of the REST API, a `SDK is available <https://github.com/Ircam-WAM/timeside-sdk-js>`_ for the Typescript and JavaScript languages using the OpenAPI standard. It has been created from the routes of the OpenAPI schema automatically exported from the backend thanks to the OpenAPI Generator. The SDK proposes  some examples for clients to reach the server and request some processing.
 
-As an example, an augmented HTML5 player is presented in the :ref:`User Interfaces` section.
+As an example, an original multi-dimensional HTML5 player is described in the :ref:`User Interfaces` section.
+
+Providers
+=========
+
+The Provider class allow to systematize the downloading or the streaming methods of audio content coming from specific platforms thanks to their metadata link URLs or IDs. This is particulary convinient to analyze large playlists and public datasets from YouTube and Deezer for example.
+
+The Provider objects are automatically created in the database at the server startup regarding the :ref:`Provider` plugins available in the Core library.
+
+To add a YouTube video, just fill the ``external_url`` of the new Item. The server will automatically retrieve the metadata, the audio stream of the video (generally taken in the Opus format) and then produce the first waveform.
+
+We provide some `scripts <https://github.com/Ircam-WAM/timeside-scripts>`_ to automatically push a list of YouTube videos into the database from a JSON files containing a list of URLs.
+
+
+Backup
+======
+
+A PostgreSQL server is used as the default database in its own container. The database can be backup with the common *dump* and *restore* postgres commmands. Some shortcuts will soon be provided.
+
+Dump and load
+=============
+
+Every resources stored into the database has an UUID as its primary key. This ensures that a clean export of all the data can be import in another TimeSide instance. It is particulary useful when you need to compute a specific Experience on top of a private datasets somewhere and then import all the Results in another private or public instance, without the original private data.
+
+To dump all data from the database as a JSON file, just do::
+
+    docker compose run app python manage.py dumpdata timeside.server timeside.core -o /srv/backup/data.json
+
+Then copy it in the ``var/backup`` directory of another instance and import it::
+
+    docker compose run app python manage.py loaddata -o /srv/backup/data.json /srv/backup/data.json
+
+Of course, you will also need copy all the binary data stored in the ``var/media`` directory to the same server, using rsync for example::
+
+    rsync -a var/media/ foo.bar.com:/srv/TimeSide/var/media/
 

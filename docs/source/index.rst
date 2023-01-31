@@ -6,6 +6,7 @@
 ==============================================
 TimeSide : open web audio processing framework
 ==============================================
+
 Contents:
 
 .. toctree::
@@ -21,6 +22,7 @@ Contents:
    Tutorials <tutorials/index>
    production
    related
+   references
    copyright
 
 
