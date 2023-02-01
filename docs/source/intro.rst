@@ -12,23 +12,25 @@ As the number of online audio applications and datasets increase, it becomes cru
 
 TimeSide has been developed in this sense to propose an online audio processing service. It provides:
 
-- a core module as a python audio processing library to work from a shell or any Python based program
-- a web server with a RESTful API on top of the core module so that web developers can then easily embed the remote processing service into their own applications.
+- a **core module** for Python to work from a shell or any other Python based program
+- a **web server** for the Web with a RESTful API built on top of the core module so that web developers can then easily embed the remote processing service into their own applications.
+- a **SDK** for Javascript and based on OpenAPI to easily develop a third party application consuming the server API.
 
-A Javascript SDK based on OpenAPI is also available to easily connect to the server API.
 
 Use cases
 ==========
 
-- Scaled audio computing (filtering, machine learning, etc)
-- Web audio visualization
-- Audio process prototyping
-- Realtime and on-demand transcoding and streaming over the web
-- Automatic segmentation and labelling synchronized with audio events
+- Asynchronous audio processing (filtering, feature analysis, machine learning, etc)
+- Scaled and secured data provisioning, processing and accessing
+- Audio plugin prototyping
+- Audio visualization
+- On-demand transcoding and streaming over the Web
+- Enhanced shared audio player
+- Automatic segmentation and manual labelling synchronized with audio events
 
 
-Goals
-=====
+Features
+========
 
 - **Do** asynchronous and fast audio processing with Python,
 - **Decode** audio frames from **any** audio or video media format into numpy arrays,
@@ -49,6 +51,6 @@ Funding and support
 To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in a development or experimental setup, please let us know by:
 
 - staring or forking the project on `GitHub <https://github.com/Ircam-WAM/TimeSide>`_
-- droping us an email at <wam@ircam.fr>
+- droping us an email at <wam at ircam.fr>
 
-Thanks for your help and support!
+Thank you for your help and support!

@@ -25,3 +25,8 @@ Related projects
 - `WASABI <http://wasabihome.i3s.unice.fr/>`_: Web Audio Semantic Aggregated in the Browser for Indexation, sponsored by the ANR
 - `timeside-player v2 <https://github.com/Ircam-WAM/timeside-player>`_
 - `timeside-sdk-js <https://github.com/Ircam-WAM/timeside-sdk-js>`_
+
+Service
+========
+
+The core development team can provide some help and special requests to install, run and integrate a timeside service into your infrastructure. We can also develop plugins and compute experiences on large datasets on our servers or yours. For any request of this type, please contact <wam at ircam.fr>.

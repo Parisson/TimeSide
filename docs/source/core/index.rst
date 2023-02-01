@@ -84,6 +84,22 @@ So, in only one pass, the audio file has been decoded, analyzed, graphed and tra
 For more examples, see :ref:`Tutorials` and other links and notebooks from the :ref:`Documentation` section.
 
 
+Developing a new plugin
+========================
+
+Thanks to the plugin architecture and the *timeside* namespace, it is possible to develop your own plugin independently and outside the core module.
+
+An extensive example of what you can do is available in the `Dummy plugin example <https://github.com/Ircam-WAM/TimeSide-Dummy.git>`_. To link it to the core, you simply need to clone it into the ``lib/plugins/`` folder like this::
+
+    git clone https://github.com/Ircam-WAM/TimeSide-Dummy.git lib/plugins/
+
+Then rename the plugin, code it, etc. At the next container statup, the new plugin will be loaded automatically by the core module so that you can develop it and use it out of the box::
+
+    docker compose run app ipython
+    >>> from timeside.core import get_processor
+    >>> dummy_processor = get_processor("dummy")
+
+
 API
 ===
 

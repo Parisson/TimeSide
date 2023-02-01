@@ -7,11 +7,17 @@ The docker composition already bundles some powerful containers based on: Nginx,
 Deploying
 ---------
 
-First, setup the composition environment at the root of the project::
+First, create the ``env/prod.env`` and ``env/prod.yml`` files from the samples::
 
-    echo "COMPOSE_FILE=docker-compose.yml:env/prod.yml" > .env
+  cp env/prod.env.sample env/prod.env
+  cp env/prod.yml.sample env/prod.yml
 
-then modify all the passwords and secret keys in the ``env/prod.env`` file.
+Then modify all the paths (especially for the data and media), passwords and secret keys in the two files.
+
+Finally, setup the composition environment at the root of the project::
+
+    echo "COMPOSE_FILE=docker compose.yml:env/prod.yml" > .env
+
 
 Scaling
 --------

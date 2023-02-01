@@ -12,23 +12,25 @@ As the number of online audio applications and datasets increase, it becomes cru
 
 TimeSide has been developed in this sense to propose an online audio processing service. It provides:
 
-- a core module as a python audio processing library to work from a shell or any Python based program
-- a web server with a RESTful API on top of the core module so that web developers can then easily embed the remote processing service into their own applications.
+- a **core module** for Python to work from a shell or any other Python based program
+- a **web server** for the Web with a RESTful API built on top of the core module so that web developers can then easily embed the remote processing service into their own applications.
+- a **SDK** for Javascript and based on OpenAPI to easily develop a third party application consuming the server API.
 
-A Javascript SDK based on OpenAPI is also available to easily connect to the server API.
 
 Use cases
 ==========
 
-- Scaled audio computing (filtering, machine learning, etc)
-- Web audio visualization
-- Audio process prototyping
-- Realtime and on-demand transcoding and streaming over the web
-- Automatic segmentation and labelling synchronized with audio events
+- Asynchronous audio processing (filtering, feature analysis, machine learning, etc)
+- Scaled and secured data provisioning, processing and accessing
+- Audio plugin prototyping
+- Audio visualization
+- On-demand transcoding and streaming over the Web
+- Enhanced shared audio player
+- Automatic segmentation and manual labelling synchronized with audio events
 
 
-Goals
-=====
+Features
+========
 
 - **Do** asynchronous and fast audio processing with Python,
 - **Decode** audio frames from **any** audio or video media format into numpy arrays,
@@ -146,16 +148,16 @@ Documentation
 ==============
 
 - Full documentation: https://timeside.ircam.fr/docs/
-- Server API: https://timeside.ircam.fr/api/docs/
+- Server REST API: https://timeside.ircam.fr/api/docs/
+- Slides: https://ircam-wam.github.io/timeside-slides/#1
 - Core tutorials: https://timeside.ircam.fr/docs/tutorials/
 - Some notebooks: https://github.com/Ircam-WAM/TimeSide/tree/master/docs/ipynb
-- Some other old notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
+- Some older notebooks: http://mybinder.org/repo/thomasfillon/Timeside-demos
 - Publications:
 
   - https://github.com/Parisson/Telemeta-doc
   - https://github.com/Ircam-WAM/timeside-papers
 
-- Slides: https://ircam-wam.github.io/timeside-slides/#1
 - Player UI v2: https://github.com/Ircam-WAM/timeside-player
 - Player UI v1 guide: https://github.com/Ircam-WAM/TimeSide/wiki/Ui-Guide
 - Player UI v1 example: http://archives.crem-cnrs.fr/archives/items/CNRSMH_E_2004_017_001_01/
@@ -163,20 +165,20 @@ Documentation
 Install
 =======
 
-Thanks to Docker, Timeside is now fully available as a docker composition ready to work. The docker based composition bundles some powerfull applications and modern frameworks out-of-the-box like: Python, Conda, Numpy, Jupyter, Gstreamer, Django, Celery, Haystack, ElasticSearch, MySQL, Redis, uWSGI, Nginx and many more.
+Thanks to Docker, Timeside is now fully available as a docker composition ready to work. The docker based composition bundles some powerful applications and modern frameworks out-of-the-box like: Python, Numpy, Jupyter, Gstreamer, Django, Celery, PostgreSQL, Redis, uWSGI, Nginx and more.
 
-First, install `Docker <https://docs.docker.com/get-docker/>`_ and `docker-compose <https://docs.docker.com/compose/install/>`_
+First, install `Docker <https://docs.docker.com/get-docker/>`_ and `docker compose <https://docs.docker.com/compose/install/>`_
 
 Then clone TimeSide and start it up::
 
     git clone --recursive https://github.com/Ircam-WAM/TimeSide.git
     cd TimeSide
-    docker-compose up -d
+    docker compose up -d
 
-That's it! Now please go to the User Interfaces section to see how to use it.
+That's it! Now please go to the :ref:`User Interfaces` section to see how to use it.
 
 .. note::
-   To get technical support, please reach the development team. If you need to use TimeSide *outside* a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. But we do not provide any kind of free support in this "third party" usecase anymore.
+   To get technical support, please reach the development team. If you need to use TimeSide *outside* a docker image please refer to the rules of the Dockerfile which is based on a Debian stable system. We will NOT provide any kind of free support in this paticular usecase outside the original docker container.
 
 Sponsors and Partners
 =====================
@@ -204,6 +206,12 @@ Related projects
 - `WASABI <http://wasabihome.i3s.unice.fr/>`_: Web Audio Semantic Aggregated in the Browser for Indexation, sponsored by the ANR
 - `timeside-player v2 <https://github.com/Ircam-WAM/timeside-player>`_
 - `timeside-sdk-js <https://github.com/Ircam-WAM/timeside-sdk-js>`_
+References
+==========
+
+- Aline Menin, Michel Buffa, Maroua Tikat, Benjamin Molinet, Guillaume Pellerin, Laurent Pottier, Franck Michel, & Marco Winckler. (2022, June 28). Incremental and multimodal visualization of discographies: exploring the WASABI music knowledge base. Web Audio Conference 2022 (WAC 2022), Cannes, France. https://doi.org/10.5281/zenodo.6767530
+- Guillaume Pellerin, & Paul Brossier. (2022). TimeSide API as an audio processing web service [Data set]. Web Audio Conference 2022 (WAC 2022), Cannes, France. Zenodo. https://doi.org/10.5281/zenodo.6769477
+- T. Fillon and G. Pellerin. A collaborative web platform for sound archives management and analysis. In Proceedings of 3rd Web Audio Conference, London, page 43. Queen Mary University of London, August 2017.
 
 Copyrights
 ==========
