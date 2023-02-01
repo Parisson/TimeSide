@@ -51,6 +51,6 @@ Funding and support
 To fund the project and continue our fast development process, we need your explicit support. So if you use TimeSide in production or even in a development or experimental setup, please let us know by:
 
 - staring or forking the project on `GitHub <https://github.com/Ircam-WAM/TimeSide>`_
-- droping us an email at <wam@ircam.fr>
+- droping us an email at <wam at ircam.fr>
 
-Thanks for your help and support!
+Thank you for your help and support!

@@ -29,4 +29,4 @@ Related projects
 Service
 ========
 
-The core development team can provide some help and special requests to install, run and integrate a timeside service into your infrastructure. We can also develop plugins and compute experiences on large datasets on our servers or yours. For any request of this type, please contact guillaume.pellerin <at> ircam.fr.
+The core development team can provide some help and special requests to install, run and integrate a timeside service into your infrastructure. We can also develop plugins and compute experiences on large datasets on our servers or yours. For any request of this type, please contact <wam at ircam.fr>.
