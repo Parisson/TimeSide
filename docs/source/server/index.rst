@@ -5,6 +5,7 @@ Server
 .. toctree::
    :maxdepth: 2
 
+
 Introduction
 =============
 
@@ -89,7 +90,7 @@ To add data and test, just browse::
 REST API
 ========
 
-To develop a client on top of the server, a `API full documentation is available online <https://timeside.ircam.fr/api/docs/>`_
+To develop an external client on top of the server API, a full documentation of the rules and object properties is `available online <https://timeside.ircam.fr/api/docs/>`_.
 
 
 Javascript SDK
@@ -99,22 +100,24 @@ In order to build applications on top of the REST API, a `SDK is available <http
 
 As an example, an original multi-dimensional HTML5 player is described in the :ref:`User Interfaces` section.
 
+
 Providers
 =========
 
-The Provider class allow to systematize the downloading or the streaming methods of audio content coming from specific platforms thanks to their metadata link URLs or IDs. This is particulary convinient to analyze large playlists and public datasets from YouTube and Deezer for example.
+The :ref:`Provider` class allow to systematize the downloading or the streaming methods of audio content coming from specific platforms thanks to their metadata link URLs or IDs. This is particulary convinient to analyze large playlists and public datasets from YouTube and Deezer for example.
 
-The Provider objects are automatically created in the database at the server startup regarding the :ref:`Provider` plugins available in the Core library.
+The Provider objects are automatically created in the database at the server startup regarding the Provider plugins available in the Core library.
 
 To add a YouTube video, just fill the ``external_url`` of the new Item. The server will automatically retrieve the metadata, the audio stream of the video (generally taken in the Opus format) and then produce the first waveform.
 
-We provide some `scripts <https://github.com/Ircam-WAM/timeside-scripts>`_ to automatically push a list of YouTube videos into the database from a JSON files containing a list of URLs.
+We provide some `scripts <https://github.com/Ircam-WAM/timeside-scripts>`_ to automatically push a list of YouTube videos into the database from a JSON files containing a list of URLs as well as Deezer preview track lists.
 
 
 Backup
 ======
 
 A PostgreSQL server is used as the default database in its own container. The database can be backup with the common *dump* and *restore* postgres commmands. Some shortcuts will soon be provided.
+
 
 Dump and load
 =============
