@@ -183,7 +183,7 @@ class IDecoder(IProcessor):
         """Return the sample width (8, 16, etc..) of original audio file/stream,
            or None if not applicable/known"""
 
-    def metadata(self):
+    def metadata():
         """Return the metadata embedded into the encoded stream, if any."""
 
     def mime_type():
@@ -273,8 +273,9 @@ class IEffect(IProcessor):
 
 class IProvider(Interface):
 
-    def __init__(self, url=None, id=None, path=None, download=False):
-        """Create a new provider instance from a URL or an ID"""
+    def __init__(self, url=None, resource_id=None, download=False, path=None):
+        """Create a new provider instance from a resource URL or ID
+        (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
 
     @staticmethod
     def id():
@@ -292,22 +293,27 @@ class IProvider(Interface):
         """
 
     @staticmethod
-    def source_access():
-        """Boolean informing if the audio is whether or not
-        freely available from the provider"""
+    def domain():
+        """Return a string equal to the domain of the provider.
+        """
 
-    @staticmethod
-    def resource_exists(self):
+    def exists():
         """Boolean informing if the resource is available
         from the provider instance"""
 
-    def get_title(self):
-       """Get title of the resource from the provider instance"""
+    def access():
+        """Boolean informing if the audio is whether or not
+        freely available from the provider"""
 
-    # def get_source(self):
-    #     """Get source's uri or even download an audio track to the path
-    #     from the URL or ID of the resource of the provider instance
-    #     (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
+    def set_id_from_url():
+        """Set provider's instance url from id"""
 
-    def get_id_from_url(self):
-        """Get provider's id for a ressource from its url"""
+    def set_url_from_id():
+        """Set provider's instance id from url"""
+
+    def get_title():
+       """Return title of the resource from the provider instance"""
+
+    def get_audio():
+        """Return source's uri and even download an audio track to the path
+        of the provider instance"""

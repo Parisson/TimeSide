@@ -18,16 +18,16 @@ class TestItem(TimeSideTestServer):
         self.assertEqual(item.data['uuid'], str(self.item.uuid))
 
     def test_create_item_from_url(self):
-        lgmx_mp3_url = "https://www.lgmx.fr/main/audio/LGMX-Elevation.mp3"
+        url = "https://filesamples.com/samples/audio/flac/sample4.flac"
         data = {
-            "title": "LGMX-Elevation", 
-            "description": "mp3 from lgmx website", 
-            "source_url": lgmx_mp3_url, 
+            "title": "FLAC test sample",
+            "description": "FLAC test sample",
+            "source_url": url,
         }
         item = self.client.post('/api/items/',  data,  format = 'json')
         self.assertEqual(item.status_code,  201)
         self.assertEqual(item.data['source_file'], None)
-        self.assertEqual(item.data['source_url'], lgmx_mp3_url)
+        self.assertEqual(item.data['source_url'], url)
         
         item_obj = Item.objects.get(uuid = item.data['uuid'])
         item_obj.run(self.experience)

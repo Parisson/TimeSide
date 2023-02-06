@@ -11,7 +11,33 @@ import json
 
 class DeezerPreview(Provider):
     """Deezer Plugin to retrieve deezer's 30 seconds tracks preview"""
+
     implements(IProvider)
+
+    def __init__(self, url=None, id=None, download=False, path=""):
+        self.url = url
+        self.id = id
+        self.path = path
+        self.download = download
+        self.info = None
+
+        if not self.url and not self.id:
+            raise AttributeError("A URL or an ID must be given")
+        elif self.id and not self.url:
+            self.set_url_from_id()
+        elif not self.id and self.url:
+            self.set_id_from_url()
+
+        self.get_info()
+
+    def get_info(self):
+        try:
+            request = get(self.url)
+            assert request.status_code == 200
+        except AssertionError:
+            raise ProviderError('deezer_preview', external_id=self.id)
+
+        self.request_dict = json.loads(request.content)
 
     @staticmethod
     @interfacedoc
@@ -25,24 +51,40 @@ class DeezerPreview(Provider):
 
     @staticmethod
     @interfacedoc
-    def resource_access():
+    def description():
+        return "Deezer preview provider"
+
+    @staticmethod
+    @interfacedoc
+    def domain():
+        return "www.deezer.com"
+
+    @staticmethod
+    @interfacedoc
+    def access():
         return True
 
     @interfacedoc
-    def get_source_from_id(self, external_id, path, download=False):
-        request_url = 'https://api.deezer.com/track/' + external_id
+    def exists(self):
+        return True
 
-        try:
-            request = get(request_url)
-            assert request.status_code == 200
-        except AssertionError:
-            raise ProviderError('deezer_preview', external_id=external_id)
+    @interfacedoc
+    def set_id_from_url(self):
+        self.id = self.url.split("/")[-1:][0]
 
-        request_dict = json.loads(request.content)
-        source_uri = request_dict['preview']
+    @interfacedoc
+    def set_url_from_id(self):
+        self.url = 'https://api.deezer.com/track/' + self.id
 
-        if download:
-            file_name = request_dict['artist']['name'] + '-' + request_dict['title_short'] + '-' + external_id
+    @interfacedoc
+    def get_title(self):
+        return self.info['title']
+
+    @interfacedoc
+    def get_audio(self):
+        source_uri = self.request_dict['preview']
+        if self.download:
+            file_name = self.request_dict['artist']['name'] + '-' + self.request_dict['title_short'] + '-' + self.id
             file_name = slugify(file_name) + '.mp3'
             file_path = os.path.join(path,file_name)
             r = get(source_uri)
@@ -55,14 +97,3 @@ class DeezerPreview(Provider):
         else:
             return source_uri
 
-    @interfacedoc
-    def get_source_from_url(self, url, path, download=False):
-        deezer_track_id = self.get_id_from_url(url)
-        try:
-            return self.get_source_from_id(deezer_track_id, path, download)
-        except ProviderError:
-            raise ProviderError('deezer_preview', external_uri=url)
-
-    @interfacedoc
-    def get_id_from_url(self, url):
-        return url.split("/")[-1:][0]

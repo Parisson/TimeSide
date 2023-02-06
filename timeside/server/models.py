@@ -34,10 +34,13 @@ import datetime
 import gc
 from shutil import copyfile
 from builtins import str
+from urllib.parse import urlparse
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 from timeside.core.tools.parameters import DEFAULT_SCHEMA
+from timeside.core.exceptions import ProviderError
+
 from django.db import models
 from django.utils.functional import lazy
 from django.utils.text import slugify
@@ -264,6 +267,7 @@ class Shareable(models.Model):
 class Provider(Named, UUID):
 
     pid = models.CharField(_('pid'), blank=True, max_length=128)
+    domain = models.CharField(_('domain'), blank=True, max_length=1024)
     source_access = models.BooleanField(
         help_text=_(
             "Whether or not the audio is "
@@ -275,20 +279,21 @@ class Provider(Named, UUID):
     def __str__(self):
         return str(self.pid)
 
-    def get_provider(self, url=None, id=None, download=False):
+    def get_resource(self, url=None, id=None,
+                        download=False, path=DOWNLOAD_ROOT):
         provider = timeside.core.provider.get_provider(self.pid)
-        self.provider = provider(url=url,
+        self.resource = provider(url=url,
                             id=id,
                             path=DOWNLOAD_ROOT,
                             download=download
                             )
-        return self.provider
+        return self.resource
 
-    def get_source(self):
-        return self.provider.get_source()
+    def get_title(self):
+        return self.resource.get_title()
 
-    def get_id_from_url(self, url):
-        return self.provider.get_id_from_url()
+    def get_audio(self):
+        return self.resource.get_audio()
 
 
 class Selection(Titled, UUID, Dated, Shareable):
@@ -388,7 +393,7 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def __str__(self):
         if self.title:
-            return '_'.join([str(self.title), str(self.uuid)[:4]])
+            return ' - '.join([str(self.title), str(self.uuid)[:8]])
         else:
             return str(self.uuid)
 
@@ -399,61 +404,51 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_source_from_id(self, download=True):
+    def get_resource_title(self, download=False):
+        title = ""
+        if self.provider and self.provider.source_access:
+            if not self.source_url or not self.source_file:
+                try:
+                    if not hasattr(self, "resource"):
+                        self.resource = self.provider.get_resource(
+                            url=self.external_uri,
+                            id=self.external_id,
+                            download=download
+                            )
+                    title = self.resource.get_title()
+                except timeside.core.exceptions.ProviderError as e:
+                    app_logger.warning(e)
+                    self.external_uri = ''
+                    self.external_id = ''
+        return title
+
+    def get_resource_audio(self, download=True):
         # check if item has not already an audio source url or file,
         # has an external id to retrieve audio source,
         # and a has provider that gives free access to audio sources.
 
-        source = ''
-        if not (self.source_url or self.source_file) and \
-                self.external_id and \
-                self.provider and self.provider.source_access:
-            try:
-                source = self.provider.get_source_from_id(
-                        self.external_id, download
-                        )
-            except timeside.core.exceptions.ProviderError as e:
-                app_logger.warning(e)
-                self.external_uri = ''
-                self.external_id = ''
-        return source
-
-    def get_source_from_uri(self, download=True):
-        # check if item has not already an audio source url or file,
-        # has an external uri to retrieve audio source,
-        # and a has provider that gives free access to audio sources.
-        # TODO: merge this with get_source_from_id
-
-        source = ''
-        if not (self.source_url or self.source_file) and \
-                self.external_uri and \
-                self.provider and \
-                self.provider.source_access:
-            try:
-                source = self.provider.get_source_from_url(
-                        self.external_uri, download
-                        )
-            except timeside.core.exceptions.ProviderError as e:
-                app_logger.warning(e)
-                self.external_uri = ''
-                self.external_id = ''
+        source = ""
+        if self.provider and self.provider.source_access:
+            if not self.source_url or not self.source_file:
+                try:
+                    if not hasattr(self, "resource"):
+                        self.resource = self.provider.get_resource(
+                            url=self.external_uri,
+                            id=self.external_id,
+                            download=download
+                            )
+                    source = self.resource.get_audio()
+                except timeside.core.exceptions.ProviderError as e:
+                    app_logger.warning(e)
+                    self.external_uri = ''
+                    self.external_id = ''
         return source
 
     def get_external_id(self):
         """
+        Return item resource ID
         """
-
-        external_id = ''
-        if not (self.source_url or self.external_id) and self.external_uri:
-            try:
-                external_id = self.provider.get_id_from_url(
-                    self.external_uri
-                    )
-            except timeside.core.exceptions.ProviderError as e:
-                app_logger.warning(e)
-                self.external_uri = ''
-                self.external_id = ''
-        return external_id
+        return self.external_id
 
     def get_uri(self):
         """
@@ -724,9 +719,26 @@ class Item(Titled, UUID, Dated, Shareable):
         del pipe
         gc.collect()
 
+    def get_provider(self):
+        domain = urlparse(self.external_uri).netloc
+        providers = Provider.objects.filter(domain=domain)
+        if not providers:
+            raise ProviderError("No Provider available for this URL",
+                self.external_uri)
+        else:
+            self.provider = providers[0]
+
+    def get_audio_metadata(self):
+        if not self.sha1:
+            self.sha1 = self.get_hash()
+            self.mime_type = self.get_mime_type()
+            self.audio_duration = self.get_audio_duration()
+            self.samplerate = self.get_audio_samplerate()
+            self.process_waveform()
+
     def save(self, **kwargs):
-        if not self.title:
-            self.title = str(self.uuid)
+        if self.external_uri:
+            self.get_provider()
         super(Item, self).save(**kwargs)
 
 
