@@ -156,7 +156,8 @@ class Command(BaseCommand):
                 try :
                     processor,c= Processor.objects.get_or_create(
                                 pid=a.id(),
-                                version=a.version()
+                                version=a.version(),
+                                description=a.description(),
                                 )
             
                     preset,c= Preset.objects.get_or_create(
