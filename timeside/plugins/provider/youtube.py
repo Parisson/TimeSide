@@ -34,7 +34,6 @@ class YouTube(Provider):
             'outtmpl': self.path + '%(title)s-%(id)s.%(ext)s',
             'postprocessors': [{'key': 'FFmpegExtractAudio'}],
             'restrictfilenames': True,
-            'force-ipv4': True,
         }
 
         self.get_info()

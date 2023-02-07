@@ -326,6 +326,7 @@ class Selection(Titled, UUID, Dated, Shareable):
 class Item(Titled, UUID, Dated, Shareable):
 
     element_type = 'timeside_item'
+    resource = None
 
     source_file = models.FileField(
         _('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
@@ -409,7 +410,7 @@ class Item(Titled, UUID, Dated, Shareable):
         if self.provider and self.provider.source_access:
             if not self.source_url or not self.source_file:
                 try:
-                    if not hasattr(self, "resource"):
+                    if not self.resource:
                         self.resource = self.provider.get_resource(
                             url=self.external_uri,
                             id=self.external_id,
@@ -431,7 +432,7 @@ class Item(Titled, UUID, Dated, Shareable):
         if self.provider and self.provider.source_access:
             if not self.source_url or not self.source_file:
                 try:
-                    if not hasattr(self, "resource"):
+                    if not self.resource:
                         self.resource = self.provider.get_resource(
                             url=self.external_uri,
                             id=self.external_id,
@@ -729,12 +730,11 @@ class Item(Titled, UUID, Dated, Shareable):
             self.provider = providers[0]
 
     def get_audio_metadata(self):
-        if not self.sha1:
-            self.sha1 = self.get_hash()
-            self.mime_type = self.get_mime_type()
-            self.audio_duration = self.get_audio_duration()
-            self.samplerate = self.get_audio_samplerate()
-            self.process_waveform()
+        self.sha1 = self.get_hash()
+        self.mime_type = self.get_mime_type()
+        self.audio_duration = self.get_audio_duration()
+        self.samplerate = self.get_audio_samplerate()
+        self.process_waveform()
 
     def save(self, **kwargs):
         if self.external_uri:
