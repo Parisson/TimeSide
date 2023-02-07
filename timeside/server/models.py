@@ -751,11 +751,10 @@ class Experience(Titled, UUID, Dated, Shareable):
 
 
 @python_2_unicode_compatible
-class Processor(UUID):
+class Processor(Named, UUID):
 
     pid = models.CharField(_('pid'), max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
-    name = models.CharField(_('name'), max_length=256, blank=True)
 
     def __init__(self, *args, **kwargs):
         super(Processor, self).__init__(*args, **kwargs)

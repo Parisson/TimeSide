@@ -174,6 +174,7 @@ class Command(BaseCommand):
                                 sub_processor=sub_processor,
                                 preset=preset,
                                 title=a.name(),
+                                description=a.description(),
                                 )
                 except : pass
                 
