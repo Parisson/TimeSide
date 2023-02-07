@@ -89,7 +89,7 @@ class YouTube(Provider):
         self.url = "https://www.youtube.com/watch?v=" + self.id
 
     @interfacedoc
-    def get_audio(self):
+    def get_file(self):
         try:
             file_path = self.ydl.prepare_filename(self.info)
             source_uri = self.info['formats'][0]['url']

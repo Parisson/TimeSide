@@ -45,7 +45,7 @@ class DeezerComplete(Provider):
         return
 
     @interfacedoc
-    def get_audio(self):
+    def get_file(self):
         return
 
     @interfacedoc

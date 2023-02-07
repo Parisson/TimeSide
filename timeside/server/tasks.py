@@ -154,22 +154,33 @@ def task_monitor(task_id, results_id):
 @shared_task
 def item_post_save_async(uuid, download=True):
     items = Item.objects.filter(uuid=uuid)
-
     # arbitrary sleep ensuring the item.save() is already done
     while not items:
         items = Item.objects.filter(uuid=uuid)
         time.sleep(0.5)
-
+    items.update(lock=True)
     item = items[0]
 
-    if item.external_uri and not item.source_file:
-        source_file = item.get_resource_audio(download=download)
-        item.source_file = source_file.replace(settings.MEDIA_ROOT, '')
-        item.title = item.get_resource_title(download=False)
-        item.get_audio_metadata()
-        item.title = item.get_resource_title(download=False)
-        item.save()
+    if not item.source_file:
+        source_file = ""
+        if item.external_id or item.external_uri:
+            title, source_file = item.get_resource(download=download)
+        items.update(source_file=source_file.replace(settings.MEDIA_ROOT, ''))
+        items.update(title=title)
+        item = Item.objects.get(uuid=uuid)
 
-    if not item.external_uri and item.source_file and not item.sha1:
-        item.get_audio_metadata()
-        item.save()
+    if item.source_file:
+        sha1 = item.get_hash()
+        mime_type = item.get_mime_type()
+        audio_duration = item.get_audio_duration()
+        samplerate = item.get_audio_samplerate()
+        items.update(
+            sha1=sha1,
+            mime_type=mime_type,
+            audio_duration=audio_duration,
+            samplerate=samplerate,
+            )
+        item.process_waveform()
+
+    items.update(lock=False)
+

@@ -81,7 +81,7 @@ class DeezerPreview(Provider):
         return self.info['title']
 
     @interfacedoc
-    def get_audio(self):
+    def get_file(self):
         source_uri = self.request_dict['preview']
         if self.download:
             file_name = self.request_dict['artist']['name'] + '-' + self.request_dict['title_short'] + '-' + self.id

@@ -292,8 +292,8 @@ class Provider(Named, UUID):
     def get_title(self):
         return self.resource.get_title()
 
-    def get_audio(self):
-        return self.resource.get_audio()
+    def get_file(self):
+        return self.resource.get_file()
 
 
 class Selection(Titled, UUID, Dated, Shareable):
@@ -326,7 +326,6 @@ class Selection(Titled, UUID, Dated, Shareable):
 class Item(Titled, UUID, Dated, Shareable):
 
     element_type = 'timeside_item'
-    resource = None
 
     source_file = models.FileField(
         _('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
@@ -405,45 +404,24 @@ class Item(Titled, UUID, Dated, Shareable):
         self.lock = lock
         self.save()
 
-    def get_resource_title(self, download=False):
-        title = ""
+    def get_resource(self, download=False):
+        """
+        Return item title and source_file from provider
+        """
         if self.provider and self.provider.source_access:
-            if not self.source_url or not self.source_file:
-                try:
-                    if not self.resource:
-                        self.resource = self.provider.get_resource(
-                            url=self.external_uri,
-                            id=self.external_id,
-                            download=download
-                            )
-                    title = self.resource.get_title()
-                except timeside.core.exceptions.ProviderError as e:
-                    app_logger.warning(e)
-                    self.external_uri = ''
-                    self.external_id = ''
-        return title
-
-    def get_resource_audio(self, download=True):
-        # check if item has not already an audio source url or file,
-        # has an external id to retrieve audio source,
-        # and a has provider that gives free access to audio sources.
-
-        source = ""
-        if self.provider and self.provider.source_access:
-            if not self.source_url or not self.source_file:
-                try:
-                    if not self.resource:
-                        self.resource = self.provider.get_resource(
-                            url=self.external_uri,
-                            id=self.external_id,
-                            download=download
-                            )
-                    source = self.resource.get_audio()
-                except timeside.core.exceptions.ProviderError as e:
-                    app_logger.warning(e)
-                    self.external_uri = ''
-                    self.external_id = ''
-        return source
+            try:
+                self.resource = self.provider.get_resource(
+                        url=self.external_uri,
+                        id=self.external_id,
+                        download=download
+                        )
+                title = self.resource.get_title()
+                source_file = self.resource.get_file()
+            except timeside.core.exceptions.ProviderError as e:
+                app_logger.warning(e)
+                self.external_uri = ''
+                self.external_id = ''
+        return title, source_file
 
     def get_external_id(self):
         """

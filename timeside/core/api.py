@@ -274,27 +274,34 @@ class IEffect(IProcessor):
 class IProvider(Interface):
 
     def __init__(self, url=None, resource_id=None, download=False, path=None):
-        """Create a new provider instance from a resource URL or ID
-        (Youtube video link, Deezer 30 sec preview from track's URL, etc.)"""
+        """
+        Create a new provider instance from a resource URL or ID
+        (Youtube video link, Deezer 30 sec preview from track's URL, etc.),
+        get info from the resource and optionally download the audio file.
+        """
 
     @staticmethod
     def id():
-        """Short alphanumeric, lower-case string which uniquely identify this
+        """
+        Short alphanumeric, lower-case string which uniquely identify this
         provider, suitable for use as an HTTP/GET argument value, in filenames,
-        etc..."""
+        etc...
+        """
 
     @staticmethod
     def name():
-        """name of the provider"""
+        """Name of the provider"""
 
     @staticmethod
     def description():
-        """Return a string describing what this provider is meant for.
+        """
+        Return a string describing what this provider is meant for.
         """
 
     @staticmethod
     def domain():
-        """Return a string equal to the domain of the provider.
+        """
+        Return a string equal to the domain of the provider.
         """
 
     def exists():
@@ -312,8 +319,8 @@ class IProvider(Interface):
         """Set provider's instance id from url"""
 
     def get_title():
-       """Return title of the resource from the provider instance"""
+       """Return the title of the resource from the provider instance"""
 
-    def get_audio():
-        """Return source's uri and even download an audio track to the path
-        of the provider instance"""
+    def get_file():
+        """Return the absolute file path of the resource
+        from the provider instance"""
