@@ -236,8 +236,15 @@ REST_FRAMEWORK = {
 }
 
 CELERY_IMPORTS = ("timeside.server.tasks",)
-CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672//'
-CELERY_BROKER_TRANSPORT = 'rabbitmq'
+
+# rabbitmq
+#CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672//'
+#CELERY_BROKER_TRANSPORT = 'rabbitmq'
+
+# redis
+CELERY_BROKER_URL = env('REDIS_URL') + '/0'
+CELERY_BROKER_TRANSPORT = 'redis'
+
 CELERY_BACKEND_URL = CELERY_BROKER_URL
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
