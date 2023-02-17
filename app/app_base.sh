@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export PYTHONPATH=/srv/lib/timeside:/srv/app
-
 # uwsgi params
 port=8000
 processes=8
@@ -51,7 +49,11 @@ bash /srv/app/bin/setup_plugins.sh
 
 # fix media access rights
 # find $media -maxdepth 1 -path ${media}import -prune -o -type d -not -user $uid -exec chown $uid:$gid {} \;
-chown -R $uid:$gid $media
+#chown -R $uid:$gid $media
 
 # wait for other services
 # bash $app/bin/wait.sh
+
+#pip3 install librosa==0.7.2 numba==0.43.0
+
+chown -R $uid:$gid $NUMBA_CACHE_DIR
