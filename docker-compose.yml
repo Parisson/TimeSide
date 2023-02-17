@@ -82,20 +82,6 @@ services:
       - PYTHONPATH=/srv/lib/timeside:/srv/app
       - NUMBA_CACHE_DIR=/tmp/numbacache
 
-  websockets:
-    build: ./websockets
-    environment:
-      - PORT=13000
-      # ORIGIN needs to be define
-    depends_on:
-      - app
-      - broker
-    expose:
-      - "13000" 
-    ports:
-      - "13000:13000"
-
-
 volumes:
   app:
   db:

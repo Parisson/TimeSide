@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+  websockets:
+    build: ./websockets
+    environment:
+      - PORT=13000
+      # ORIGIN needs to be define
+    depends_on:
+      - app
+      - broker
+    expose:
+      - "13000" 
+    ports:
+      - "13000:13000"
+
