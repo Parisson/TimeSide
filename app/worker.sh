@@ -11,7 +11,7 @@ uid=www-data
 gid=www-data
 
 if [ $DEBUG = True ]; then
-    python3 $manage timeside-celery-worker --loglevel $log_level --logfile $worker_log_file --uid $uid --gid $gid
+    su $uid -g $gid -s /bin/bash -c "python3 $manage timeside-celery-worker --loglevel $log_level --logfile $worker_log_file --uid $uid --gid $gid"
 else
     celery -A worker worker --loglevel=$log_level --logfile=$worker_log_file --uid=$uid --gid=$gid
 fi

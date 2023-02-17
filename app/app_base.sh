@@ -56,4 +56,5 @@ bash /srv/app/bin/setup_plugins.sh
 
 #pip3 install librosa==0.7.2 numba==0.43.0
 
+mkdir -p $NUMBA_CACHE_DIR
 chown -R $uid:$gid $NUMBA_CACHE_DIR
