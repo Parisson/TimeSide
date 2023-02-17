@@ -34,9 +34,3 @@ services:
     env_file:
       - env/prod.env
 
-  websockets:
-    environment:
-      - ORIGIN=https://staging.timeside.ircam.fr
-    env_file:
-      - env/prod.env
-
