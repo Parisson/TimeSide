@@ -33,10 +33,12 @@ services:
       - /archive/CREM/media:/srv/media
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app:/srv/lib/plugins/Timeside-MARL
+      - NUMBA_CACHE_DIR=/tmp/numbacache
 
   worker:
     volumes:
       - /archive/CREM/media:/srv/media
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app:/srv/lib/plugins/Timeside-MARL
+      - NUMBA_CACHE_DIR=/tmp/numbacache
 
