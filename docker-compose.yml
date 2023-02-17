@@ -63,6 +63,7 @@ services:
       - "9080:8000"
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app
+      - NUMBA_CACHE_DIR=/tmp/numbacache
 
   worker:
     build: .
@@ -79,6 +80,7 @@ services:
       - db
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app
+      - NUMBA_CACHE_DIR=/tmp/numbacache
 
   websockets:
     build: ./websockets
