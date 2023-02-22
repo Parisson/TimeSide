@@ -23,17 +23,35 @@ class DeezerComplete(Provider):
 
     @staticmethod
     @interfacedoc
-    def ressource_access():
+    def description():
+        return "Deezer complete provider"
+
+    @staticmethod
+    @interfacedoc
+    def domain():
+        return "www.deezer.com"
+
+    @staticmethod
+    @interfacedoc
+    def access():
         return False
 
     @interfacedoc
-    def get_source_from_id(self, external_id, path, download=False):
-        return ''
+    def exists(self):
+        return True
 
     @interfacedoc
-    def get_source_from_url(self, url, path, download=False):
-        return ''
+    def get_title(self):
+        return
 
     @interfacedoc
-    def get_id_from_url(self, url):
-        return url.split("/")[-1:][0]
+    def get_file(self):
+        return
+
+    @interfacedoc
+    def set_id_from_url(self):
+        return self.url.split("/")[-1:][0]
+
+    @interfacedoc
+    def set_url_from_id(self):
+        return

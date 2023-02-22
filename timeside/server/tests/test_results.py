@@ -24,7 +24,7 @@ class TestResults(TimeSideTestServer):
     def test_get_hdf5(self):
 
         analyzer = Analysis.objects.get(
-            title = 'f0 (aubio)'
+            title = 'F0 (aubio)'
         )
         
         result = self.get_result(analyzer)
@@ -44,7 +44,7 @@ class TestResults(TimeSideTestServer):
 
     def test_get_visual(self):
         analyzer = Analysis.objects.get(
-            title = "Onset Detection Function"
+            title = "Onsets (aubio)"
             )
         result = self.get_result(analyzer)
         self.assertEqual(result.data['hdf5'][-5:], '.hdf5')

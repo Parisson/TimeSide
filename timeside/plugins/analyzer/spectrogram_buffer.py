@@ -116,7 +116,8 @@ class SpectrogramBuffer(Spectrogram):
         self.add_result(spectrogram)
 
     def release(self):
-        self.values.close()
+        if hasattr(self, "values"):
+            self.values.close()
 
 
 if __name__ == "__main__":

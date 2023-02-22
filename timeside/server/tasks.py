@@ -3,12 +3,16 @@ from __future__ import absolute_import
 import time
 import gc
 
+from django.db import transaction
+
 from celery import shared_task
 from celery.result import AsyncResult
 from celery.result import GroupResult
 
-from .models import Item, Selection, Preset, Experience, Task
+from .models import Item, Selection, Preset, Experience, Task, Provider
 from .models import _DONE
+
+from timeside.core.exceptions import ProviderError
 
 from celery.task import chord
 from celery.utils.log import get_task_logger
@@ -158,13 +162,11 @@ def item_post_save_async(uuid, download=True):
     item = items[0]
 
     if not item.source_file:
-        if item.external_id:
-            source_file = item.get_source_from_id(download=download)
-        elif item.external_uri:
-            source_file = item.get_source_from_uri(download=download)
-        else:
-            source_file = ''
+        source_file = ""
+        if item.external_id or item.external_uri:
+            title, source_file = item.get_resource(download=download)
         items.update(source_file=source_file.replace(settings.MEDIA_ROOT, ''))
+        items.update(title=title)
         item = Item.objects.get(uuid=uuid)
 
     if item.source_file:

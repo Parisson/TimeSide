@@ -279,7 +279,7 @@ class ItemAnalysisSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Item
-        fields = ('uuid', 'url', 'analysis_url')
+        fields = ('description', 'uuid', 'url', 'analysis_url')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'}
         }
@@ -429,7 +429,8 @@ class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Processor
-        fields = ('name', 'pid', 'url', 'version', 'parameters_schema')
+        fields = ('name', 'description', 'pid', 'url',
+                    'version', 'parameters_schema')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }
@@ -444,7 +445,7 @@ class ProcessorListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Processor
-        fields = ('name', 'pid', 'url', 'version')
+        fields = ('name', 'description', 'pid', 'url', 'version')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }

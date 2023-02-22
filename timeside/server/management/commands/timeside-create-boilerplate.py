@@ -156,7 +156,8 @@ class Command(BaseCommand):
                 try :
                     processor,c= Processor.objects.get_or_create(
                                 pid=a.id(),
-                                version=a.version()
+                                version=a.version(),
+                                description=a.description(),
                                 )
             
                     preset,c= Preset.objects.get_or_create(
@@ -173,6 +174,7 @@ class Command(BaseCommand):
                                 sub_processor=sub_processor,
                                 preset=preset,
                                 title=a.name(),
+                                description=a.description(),
                                 )
                 except : pass
                 
@@ -182,9 +184,10 @@ class Command(BaseCommand):
             for prov in providers:
                 provider, c = Provider.objects.get_or_create(
                     pid=prov.id(),
-                    source_access=prov.ressource_access(),
+                    source_access=prov.access(),
                     description=prov.description(),
-                    name=prov.name()
+                    name=prov.name(),
+                    domain=prov.domain(),
                     )
 
             # ---------- Experience All ----------
