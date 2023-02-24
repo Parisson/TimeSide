@@ -60,7 +60,6 @@ from celery.utils.log import get_task_logger
 
 import jsonfield
 import json
-import youtube_dl
 from requests import get
 
 from inspect import cleandoc
@@ -408,6 +407,9 @@ class Item(Titled, UUID, Dated, Shareable):
         """
         Return item title and source_file from provider
         """
+        title = ""
+        source_file = ""
+
         if self.provider and self.provider.source_access:
             try:
                 self.resource = self.provider.get_resource(
@@ -421,6 +423,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 app_logger.warning(e)
                 self.external_uri = ''
                 self.external_id = ''
+
         return title, source_file
 
     def get_external_id(self):

@@ -30,14 +30,16 @@ services:
 
   app:
     volumes:
-      - /archive/CREM/media:/srv/media
+      - /mnt/in2p3/media/items:/srv/media/items
+      - /data/nyu/results:/srv/media/results
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app:/srv/lib/plugins/Timeside-MARL
       - NUMBA_CACHE_DIR=/tmp/numbacache
 
   worker:
     volumes:
-      - /archive/CREM/media:/srv/media
+      - /mnt/in2p3/media/items:/srv/media/items
+      - /data/nyu/results:/srv/media/results
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app:/srv/lib/plugins/Timeside-MARL
       - NUMBA_CACHE_DIR=/tmp/numbacache

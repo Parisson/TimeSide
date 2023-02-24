@@ -46,7 +46,7 @@ services:
       - ./timeside:/srv/lib/timeside/timeside
       - ./tests:/srv/lib/timeside/tests
       - ./lib/plugins:/srv/lib/plugins
-      - ./var/media:/srv/media
+        #- ./var/media:/srv/media
       - ./var/backup:/srv/backup
       - ./var/static:/srv/static
       - ./var/log/uwsgi:/var/log/uwsgi
@@ -60,7 +60,7 @@ services:
     expose:
       - "8000"
     ports:
-      - "9080:8000"
+      - "9081:8000"
     environment:
       - PYTHONPATH=/srv/lib/timeside:/srv/app
       - NUMBA_CACHE_DIR=/tmp/numbacache

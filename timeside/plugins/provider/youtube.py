@@ -3,8 +3,8 @@ from timeside.core.provider import Provider
 from timeside.core.api import IProvider
 from timeside.core.exceptions import ProviderError
 
-import youtube_dl
-from youtube_dl.utils import DownloadError
+import yt_dlp
+from yt_dlp.utils import DownloadError
 import os
 
 
@@ -32,14 +32,14 @@ class YouTube(Provider):
             'verbose': False,
             'cachedir': False,
             'outtmpl': self.path + '%(title)s-%(id)s.%(ext)s',
-            'postprocessors': [{'key': 'FFmpegExtractAudio'}],
             'restrictfilenames': True,
+            'postprocessors': [{'key': 'FFmpegExtractAudio'}],
         }
 
         self.get_info()
 
     def get_info(self):
-        self.ydl = youtube_dl.YoutubeDL(self.ydl_opts)
+        self.ydl = yt_dlp.YoutubeDL(self.ydl_opts)
         try:
             self.info = self.ydl.extract_info(self.url,
                                               download=self.download)
