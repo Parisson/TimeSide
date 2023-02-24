@@ -11,8 +11,6 @@ env = environ.Env()
 # Django settings for server project.
 DEBUG = True if env('DEBUG') == 'True' else False
 
-CACHE_RESULT = not DEBUG
-
 ADMINS = (
     ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
     ('Martin Desrumaux', 'martin.desrumaux@ircam.fr'),
@@ -94,13 +92,10 @@ ROOT_URLCONF = 'urls'
 # django-npm
 NPM_ROOT_PATH = APP_PATH
 
-
-# Additional locations of static files
-STATICFILES_DIRS = (
+STATICFILES_DIRS = ()
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-)
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'wsgi.application'

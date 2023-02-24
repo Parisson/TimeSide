@@ -2,12 +2,6 @@
 
 export PYTHONPATH=/srv/lib/timeside:/srv/app
 
-# uwsgi params
-port=8000
-processes=8
-threads=8
-autoreload=3
-
 # uid / gid params for app and worker
 uid='www-data'
 gid='www-data'
@@ -44,7 +38,8 @@ chown -R $uid:$gid $worker_log_dir
 # cd /srv/lib/timeside; pip3 install -e .
 
 # install the last version of those packages
-pip3 install -U youtube-dl
+pip3 uninstall -y youtube-dl
+pip3 install -U yt-dlp
 
 # Install plugins
 bash /srv/app/bin/setup_plugins.sh

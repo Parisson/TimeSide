@@ -60,7 +60,6 @@ from celery.utils.log import get_task_logger
 
 import jsonfield
 import json
-import youtube_dl
 from requests import get
 
 from inspect import cleandoc

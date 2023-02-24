@@ -5,7 +5,6 @@ from .exceptions import Error, PIDError, ApiError
 from .tools.parameters import HasParam
 
 import re
-import youtube_dl
 from requests import get
 import os
 
