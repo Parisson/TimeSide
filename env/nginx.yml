@@ -10,6 +10,5 @@ services:
       - ./var/log/nginx:/var/log/nginx
     volumes_from:
       - app
-      - var
     links:
       - app
