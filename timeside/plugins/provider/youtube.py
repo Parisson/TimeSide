@@ -33,7 +33,7 @@ class YouTube(Provider):
             'cachedir': False,
             'outtmpl': self.path + '%(title)s-%(id)s.%(ext)s',
             'restrictfilenames': True,
-            'extract-audio': True,
+            'postprocessors': [{'key': 'FFmpegExtractAudio'}],
         }
 
         self.get_info()
