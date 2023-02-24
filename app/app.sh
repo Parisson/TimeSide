@@ -23,7 +23,6 @@ if [ "$1" = "--runserver" ]
 then
     su $uid -g $gid -s /bin/bash -c "python3 $manage runserver 0.0.0.0:8000"
 else
-
     # fix static access
     chown -R $uid:$gid $static
 
@@ -33,7 +32,5 @@ else
     # watchmedo shell-command --patterns="*.js;*.css" --recursive \
     #     --command='python '$manage' collectstatic --noinput' $src &
 
-    uwsgi --socket :$port --wsgi-file $wsgi --chdir $app --master \
-        --processes $processes --threads $threads \
-        --uid $uid --gid $gid --logto $app_log_file --touch-reload $wsgi
+    uwsgi /srv/app/wsgi.ini
 fi
