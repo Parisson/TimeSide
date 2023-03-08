@@ -130,14 +130,16 @@ class ItemSerializer(ItemPlayableSerializer):
         model = ts.models.Item
         fields = ('uuid', 'url', 'player_url',
                   'title', 'description',
+                  'album', 'artist',
                   'source_file', 'source_url', 'mime_type',
                   'audio_url', 'audio_duration', 'samplerate',
+                  'provider',
                   'external_uri',
                   'external_id',
+                  'picture_url',
                   'waveform_url',
                   'annotation_tracks',
                   'analysis_tracks',
-                  'provider',
                   )
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
