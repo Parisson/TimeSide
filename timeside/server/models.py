@@ -323,24 +323,32 @@ class Selection(Titled, UUID, Dated, Shareable):
 
 @python_2_unicode_compatible
 class Item(Titled, UUID, Dated, Shareable):
+    """Object representing an audio content
+    """
 
     element_type = 'timeside_item'
 
+    album = models.CharField(
+        _('album'), blank=True, max_length=256
+        )
+    artist = models.CharField(
+        _('artist'), blank=True, max_length=256
+        )
     source_file = models.FileField(
-        _('file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
-        help_text=_("Audio file to process.")
+        _('source file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
+        help_text=_("Audio source file to process")
         )
     source_url = models.URLField(
-        _('URL'), blank=True, max_length=1024,
-        help_text=_("URL of a streamable audio source to process.")
+        _('source URL'), blank=True, max_length=1024,
+        help_text=_("Audio source streamable URL to process")
         )
     audio_duration = models.FloatField(
         _('duration'), blank=True, null=True,
-        help_text=_("Duration of audio track.")
+        help_text=_("Duration of the audio source")
         )
     samplerate = models.IntegerField(
         _('sampling rate'), blank=True, null=True,
-        help_text=_("Sampling rate of audio source file.")
+        help_text=_("Sampling rate of audio source")
     )
     sha1 = models.CharField(
         _('sha1'), blank=True, max_length=512
@@ -353,24 +361,7 @@ class Item(Titled, UUID, Dated, Shareable):
         upload_to='results/%Y/%m/%d',
         blank=True,
         max_length=1024,
-        )
-    lock = models.BooleanField(default=False)
-    external_uri = models.CharField(
-        _('external_uri'), blank=True, max_length=1024,
-        help_text=_(cleandoc("""
-        Provider's URI of the audio source.\n
-        e.g. for Deezer preview: http://www.deezer.com/track/4763165\n
-        e.g. for YouTube: https://www.youtube.com/watch?v=oRdxUFDoQe0
-        """))
-        )
-    external_id = models.CharField(
-        _('external_id'), blank=True, max_length=256,
-        help_text=_(cleandoc("""
-            Provider's id of the audio source.\n
-            e.g. for Deezer preview: 4763165\n
-            e.g. for YouTube: oRdxUFDoQe0
-            """))
-        )
+        ) # TODO deprecated
     provider = models.ForeignKey(
         'Provider',
         verbose_name=_('provider'),
@@ -379,12 +370,31 @@ class Item(Titled, UUID, Dated, Shareable):
         on_delete=models.SET_NULL,
         help_text=_("Audio provider (e.g. Deezer, Youtube, etc.)")
         )
-
-    test= models.BooleanField(
+    external_id = models.CharField(
+        _('external ID'), blank=True, max_length=256,
+        help_text=_(cleandoc("""
+            Provider's id of the audio source.\n
+            e.g. for Deezer preview: 4763165\n
+            e.g. for YouTube: oRdxUFDoQe0
+            """))
+        )
+    external_uri = models.CharField(
+        _('external URI'), blank=True, max_length=1024,
+        help_text=_(cleandoc("""
+        Provider's URI of the audio source.\n
+        e.g. for Deezer preview: http://www.deezer.com/track/4763165\n
+        e.g. for YouTube: https://www.youtube.com/watch?v=oRdxUFDoQe0
+        """))
+        )
+    picture_url = models.URLField(
+        _('picture URL'), blank=True, max_length=1024,
+        )
+    lock = models.BooleanField(default=False)
+    test = models.BooleanField(
         blank=True,
         default=False,
         help_text=_('boolean to avoid celery when testing')
-        )  
+        )
 
     class Meta:
         ordering = ['-date_modified']

@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
         if c | (selection.items.count() == 0):
             if verbosity:
-                print(" -  generate samples")
+                print("generate samples")
 
             samples = generateSamples(samples_dir=samples_dir)
 
@@ -84,7 +84,7 @@ class Command(BaseCommand):
 
 
             if verbosity:
-                print(" - created presets:")
+                print("create presets:")
                 
             for proc in processors:
                 trig = True
@@ -92,9 +92,11 @@ class Command(BaseCommand):
                     if black in proc.id():
                         trig = False
                 if trig:
+                    print(proc.id())
                     processor, c = Processor.objects.get_or_create(
                         pid=proc.id(),
-                        version=proc.version()
+                        version=proc.version(),
+                        description=proc.description(),
                         )
                     
                     try:
@@ -127,7 +129,7 @@ class Command(BaseCommand):
 
                                 sub_processor, c = SubProcessor.objects.get_or_create(
                                                                                     sub_processor_id=proc._result_id,
-                                                                                    processor=processor
+                                                                                    processor=processor,
                                                                                     )
 
                                 analysis, c = Analysis.objects.get_or_create(
@@ -150,9 +152,7 @@ class Command(BaseCommand):
             analyzers = timeside.core.processor.processors(
                 timeside.core.api.IAnalyzer
                 )
-            nb=0
             for a in analyzers :
-                
                 try :
                     processor,c= Processor.objects.get_or_create(
                                 pid=a.id(),
@@ -167,7 +167,8 @@ class Command(BaseCommand):
 
                     sub_processor,c= SubProcessor.objects.get_or_create(
                                 sub_processor_id=a.id(),
-                                processor=processor
+                                processor=processor,
+                                description=a.description(),
                                 )
                                 
                     analysis,c = Analysis.objects.get_or_create(
@@ -176,7 +177,8 @@ class Command(BaseCommand):
                                 title=a.name(),
                                 description=a.description(),
                                 )
-                except : pass
+                except:
+                    continue
                 
             # ------------ Providers -------------
             providers = timeside.core.provider.providers(timeside.core.api.IProvider)
@@ -210,5 +212,6 @@ class Command(BaseCommand):
 
             # ------------- Analysis -------------
             for analysis in Analysis.objects.all():
+                print(analysis)
                 analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
                 analysis.save()
