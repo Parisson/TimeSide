@@ -69,6 +69,33 @@ def stream_from_task(task):
         yield chunk
     task.save()
 
+def serve_media(filename, content_type="", buffering=True):
+    if not settings.DEBUG:
+        return nginx_media_accel(filename,
+                                 content_type=content_type,
+                                 buffering=buffering)
+    else:
+        response = FileResponse(open(filename, 'rb'))
+        response['Content-Disposition'] = 'attachment; filename=' + filename
+        response['Content-Type'] = content_type
+        return response
+
+def nginx_media_accel(media_path, content_type="", buffering=True):
+    """Send a protected media file through nginx with X-Accel-Redirect"""
+
+    response = HttpResponse()
+    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
+    filename = os.path.basename(media_path)
+    response['Content-Disposition'] = "attachment; filename=%s" % (filename)
+    response['Content-Type'] = content_type
+    response['X-Accel-Redirect'] = url
+
+    if not buffering:
+        response['X-Accel-Buffering'] = 'no'
+        # response['X-Accel-Limit-Rate'] = 524288
+
+    return response
+
 
 class UUIDViewSetMixin(object):
     """Abstract class to use UUID as default lookup field."""
@@ -749,35 +776,6 @@ class ItemDetail(DetailView):
         return context
 
 
-def serve_media(filename, content_type="", buffering=True):
-    if not settings.DEBUG:
-        return nginx_media_accel(filename,
-                                 content_type=content_type,
-                                 buffering=buffering)
-    else:
-        response = FileResponse(open(filename, 'rb'))
-        response['Content-Disposition'] = 'attachment; filename=' + filename
-        response['Content-Type'] = content_type
-        return response
-
-
-def nginx_media_accel(media_path, content_type="", buffering=True):
-    """Send a protected media file through nginx with X-Accel-Redirect"""
-
-    response = HttpResponse()
-    url = settings.MEDIA_URL + os.path.relpath(media_path, settings.MEDIA_ROOT)
-    filename = os.path.basename(media_path)
-    response['Content-Disposition'] = "attachment; filename=%s" % (filename)
-    response['Content-Type'] = content_type
-    response['X-Accel-Redirect'] = url
-
-    if not buffering:
-        response['X-Accel-Buffering'] = 'no'
-        # response['X-Accel-Limit-Rate'] = 524288
-
-    return response
-
-
 class ItemTranscode(DetailView):
     """Transcode an item's audio in a different format."""
     model = models.Item
@@ -920,3 +918,5 @@ schema_view = get_schema_view(
     generator_class=CustomSchemaGenerator,
     permission_classes=[AllowAny],
 )
+
+

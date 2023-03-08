@@ -3,7 +3,7 @@
 import os
 import sys
 
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 # Utility function to read file in the setup.py directory
@@ -95,7 +95,7 @@ setup(
     license='Gnu Public License V2',
     classifiers=CLASSIFIERS,
     keywords=KEYWORDS,
-    packages=['timeside'],
+    packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     scripts=['bin/timeside-waveforms', 'bin/timeside-launch'],
