@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PYTHONPATH=/srv/lib/timeside:/srv/app
+# export PYTHONPATH=/srv/lib/timeside:/srv/app
 
 # uid / gid params for app and worker
 uid='www-data'
@@ -33,12 +33,14 @@ mkdir -p $worker_log_dir
 chown -R $uid:$gid $worker_log_dir
 # mkdir -p $media
 # chown -R $uid:$gid $media
+echo $NUMBA_CACHE_DIR
+mkdir -p $NUMBA_CACHE_DIR
+chown -R $uid:$gid $NUMBA_CACHE_DIR
 
 # # FIXME install timeisde at start (pip bug on build)
 # cd /srv/lib/timeside; pip3 install -e .
 
 # install the last version of those packages
-pip3 uninstall -y youtube-dl
 pip3 install -U yt-dlp
 
 # Install plugins
@@ -50,3 +52,5 @@ chown -R $uid:$gid $media
 
 # wait for other services
 # bash $app/bin/wait.sh
+
+chown -R $uid:$gid $NUMBA_CACHE_DIR

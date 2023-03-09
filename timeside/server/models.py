@@ -401,10 +401,14 @@ class Item(Titled, UUID, Dated, Shareable):
         verbose_name = _('item')
 
     def __str__(self):
+        text = ''
         if self.title:
-            return ' - '.join([str(self.title), str(self.uuid)[:8]])
+            text = ' - '.join([str(self.title), str(self.uuid)[:8]])
         else:
-            return str(self.uuid)
+            text = str(self.uuid)
+        if self.mime_type:
+            text += ' - ' + self.mime_type
+        return text
 
     def results(self):
         return [result for result in self.results.all()]
@@ -936,7 +940,7 @@ class Result(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Result')
         verbose_name_plural = _('Results')
-        ordering = ['-date_added']
+        ordering = ['-date_modified']
 
     def status_setter(self, status):
         self.status = status

@@ -3,6 +3,9 @@
 SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/app_base.sh"
 
+uid=www-data
+gid=www-data
+
 # waiting for db
 python3 $manage wait-for-db
 
