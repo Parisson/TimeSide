@@ -46,9 +46,9 @@ RUN pip3 install -r requirements.txt
 COPY ./app /srv/app
 
 # Install Timeside plugins from ./lib
-RUN mkdir -p /srv/lib/plugins
-COPY ./lib/plugins/ /srv/lib/plugins/
-RUN /bin/bash /srv/app/bin/setup_plugins.sh
+# RUN mkdir -p /srv/lib/plugins
+# COPY ./lib/plugins/ /srv/lib/plugins/
+# RUN /bin/bash /srv/app/bin/setup_plugins.sh
 
 # Link python gstreamer
 RUN python3 /srv/app/bin/link_gstreamer.py
