@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2015-2017 Parisson SARL
+# Copyright (c) 2015 Parisson SARL
 
-# This file is part of Telemeta.
+# This file is part of TimeSide.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -21,16 +21,20 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
+version: '3'
 
 services:
 
+  broker:
+    image: redis:5
+
   app:
-    command: /bin/bash /srv/app/app.sh
-    env_file:
-      - env/prod.env
+    volumes:
+      - /mnt/in2p3/media/items:/srv/media/items
+      - /data/nyu/results:/srv/media/results
 
   worker:
-    command: /bin/bash /srv/app/worker.sh
-    env_file:
-      - env/prod.env
+    volumes:
+      - /mnt/in2p3/media/items:/srv/media/items
+      - /data/nyu/results:/srv/media/results
 

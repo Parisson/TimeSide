@@ -60,7 +60,7 @@ services:
     expose:
       - "8000"
     ports:
-      - "9080:8000"
+      - "9081:8000"
 
   worker:
     build: .
