@@ -122,7 +122,6 @@ def experience_run(task_id, exp_id, item_id):
             gc.collect()
             r.publish(
                 'timeside-experience-done',
-
                 str(author) +
                 ":" + str(task.uuid) +
                 ":" + str(experience.uuid) +
@@ -131,7 +130,6 @@ def experience_run(task_id, exp_id, item_id):
     except Exception as e:
         r.publish(
             'timeside-experience-fail',
-
             str(author) +
             ":" + str(task.uuid) +
             ":" + str(experience.uuid) +

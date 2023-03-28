@@ -122,26 +122,19 @@ for ext, mime_type in private_extra_types.items():
 
 # Tasks and Results status
 _FAILED, _DRAFT, _PENDING, _RUNNING, _DONE = 0, 1, 2, 3, 4
-STATUS = ((_FAILED, _('failed')), (_DRAFT, _('draft')),
-          (_PENDING, _('pending')), (_RUNNING, _('running')),
+
+STATUS = ((_FAILED, _('failed')),
+          (_DRAFT, _('draft')),
+          (_PENDING, _('pending')),
+          (_RUNNING, _('running')),
           (_DONE, _('done')))
 
 # Analysis render type
-_VECTOR, _IMAGE,  = 0, 1
-RENDER_TYPES = ((_VECTOR, _('vector')), (_IMAGE, _('image')))
+_VECTOR, _IMAGE, _LIST = 0, 1, 2
 
-RESULTS_ROOT = os.path.join(settings.MEDIA_ROOT, 'results')
-if not os.path.exists(RESULTS_ROOT):
-    os.makedirs(RESULTS_ROOT)
-
-DOWNLOAD_ROOT = os.path.join(
-            settings.MEDIA_ROOT, 'items', 'download', ''
-            )
-if not os.path.exists(DOWNLOAD_ROOT):
-    os.makedirs(DOWNLOAD_ROOT)
-
-
-DEFAULT_DECODER = getattr(settings, 'TIMESIDE_DEFAULT_DECODER', 'aubio_decoder')
+RENDER_TYPES = ((_VECTOR, _('vector')),
+                (_IMAGE, _('image')),
+                )
 
 
 class UUIDEncoder(json.JSONEncoder):
@@ -279,11 +272,11 @@ class Provider(Named, UUID):
         return str(self.pid)
 
     def get_resource(self, url=None, id=None,
-                        download=False, path=DOWNLOAD_ROOT):
+                        download=False, path=settings.DOWNLOAD_ROOT):
         provider = timeside.core.provider.get_provider(self.pid)
         self.resource = provider(url=url,
                             id=id,
-                            path=DOWNLOAD_ROOT,
+                            path=settings.DOWNLOAD_ROOT,
                             download=download
                             )
         return self.resource
@@ -462,7 +455,7 @@ class Item(Titled, UUID, Dated, Shareable):
         Return Item result path
         """
 
-        result_path = os.path.join(RESULTS_ROOT, str(self.uuid))
+        result_path = os.path.join(settings.RESULTS_ROOT, str(self.uuid))
         if not os.path.exists(result_path):
             os.makedirs(result_path)
         return result_path
@@ -477,7 +470,7 @@ class Item(Titled, UUID, Dated, Shareable):
             (force or not self.audio_duration)
             and self.source_file
            ):
-            decoder = timeside.core.get_processor(DEFAULT_DECODER)(
+            decoder = timeside.core.get_processor(settings.TIMESIDE_DEFAULT_DECODER)(
                 uri=self.get_uri())
             return decoder.uri_duration
         else:
@@ -493,7 +486,7 @@ class Item(Titled, UUID, Dated, Shareable):
             (force or not self.samplerate)
             and self.source_file
            ):
-            decoder = timeside.core.get_processor(DEFAULT_DECODER)(
+            decoder = timeside.core.get_processor(settings.TIMESIDE_DEFAULT_DECODER)(
                 uri=self.get_uri())
             return decoder.input_samplerate
         else:
@@ -564,7 +557,7 @@ class Item(Titled, UUID, Dated, Shareable):
         else:
             progress_callback = None 
 
-        if DEFAULT_DECODER == 'aubio_decoder':
+        if settings.TIMESIDE_DEFAULT_DECODER == 'aubio_decoder':
             decoder = timeside.plugins.decoder.aubio.AubioDecoder(
                 uri=uri,
                 sha1=self.sha1,
@@ -1115,7 +1108,7 @@ class Analysis(Titled, UUID, Dated, Shareable):
             image: {_IMAGE}\n
             """))
         )
-    test= models.BooleanField(
+    test = models.BooleanField(
         blank=True,
         default=False,
         help_text=_('boolean to avoid celery when testing')

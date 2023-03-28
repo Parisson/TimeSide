@@ -87,6 +87,20 @@ STATIC_ROOT = '/srv/static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+
+RESULTS_ROOT = os.path.join(MEDIA_ROOT, 'results')
+
+if not os.path.exists(RESULTS_ROOT):
+    os.makedirs(RESULTS_ROOT)
+
+DOWNLOAD_ROOT = os.path.join(
+            MEDIA_ROOT, 'items', 'download', ''
+            )
+
+if not os.path.exists(DOWNLOAD_ROOT):
+    os.makedirs(DOWNLOAD_ROOT)
+
+
 ROOT_URLCONF = 'urls'
 
 # django-npm
@@ -249,21 +263,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-SESSION_COOKIE_SAMESITE = None
-SESSION_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
-
-CSRF_COOKIE_SAMESITE = None
-CSRF_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
-
-X_FRAME_OPTIONS = 'ALLOWALL'
-XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
-
-if DEBUG:
-    DEBUG_TOOLBAR_CONFIG = {
-        'SHOW_TOOLBAR_CALLBACK': lambda x : True
-    }
-
-TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
 
 MESSAGE_BROKER = env('REDIS_URL') + '/1'
 COMPLETION_INTERVAL = 10  # blocks
@@ -284,6 +283,27 @@ SCHEMA_SERVERS = [
         "description": "Local server"
     }
     ]
+
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
+
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_SECURE = False if env('DEBUG') == 'True' else True
+
+X_FRAME_OPTIONS = 'ALLOWALL'
+XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
+
+if DEBUG:
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda x : True
+    }
+
+##################
+# LOCAL SETTINGS #
+##################
+
+TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
+
 
 ##################
 # LOCAL SETTINGS #
