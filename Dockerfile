@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.7-bullseye
+FROM python:3.9-bullseye
 
 MAINTAINER Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 
@@ -25,7 +25,7 @@ WORKDIR /srv/lib
 # install confs, keys and deps
 RUN apt-get update && apt-get install -y apt-transport-https
 COPY requirements-debian.txt /srv/lib/
-RUN apt-get update && \
+RUN --mount=type=cache,mode=0755,target=/var/cache/apt/archives apt-get update && \
     DEBIAN_PACKAGES=$(egrep -v "^\s*(#|$)" requirements-debian.txt) && \
     apt-get install -y --force-yes $DEBIAN_PACKAGES && \
     apt-get clean
@@ -36,11 +36,12 @@ RUN mkdir -p $PYTHON_EGG_CACHE && \
 
 RUN pip3 install -U setuptools pip numpy
 RUN apt-get remove -y python3-yaml
+#RUN apt-get build-dep -y python3-llvmlite)
 
 # Install timeside
 WORKDIR /srv/lib/timeside
 COPY ./requirements.txt /srv/lib/timeside/
-RUN pip3 install -r requirements.txt
+RUN --mount=type=cache,mode=0755,target=/root/.cache pip3 install -r requirements.txt
 
 # Install app
 COPY ./app /srv/app

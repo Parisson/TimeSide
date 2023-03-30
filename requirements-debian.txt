@@ -19,7 +19,16 @@ gobject-introspection
 libges-1.0-0
 libofa0
 libgirepository1.0-dev
+
+# data management
+gfortran
 libhdf5-dev
+liblapack-dev
+libgfortran-10-dev
+libopenblas-dev
+libcairo2-dev
+libyaml-dev
+llvm-9-dev
 
 # Optionnal Audio Analysis libraries
 vamp-examples
@@ -46,5 +55,6 @@ vim
 curl
 procps
 pkg-config
-libcairo2-dev
-libyaml-dev
+gcc
+g++
+pkg-config
