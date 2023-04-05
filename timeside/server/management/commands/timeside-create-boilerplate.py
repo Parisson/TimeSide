@@ -153,6 +153,7 @@ class Command(BaseCommand):
                 timeside.core.api.IAnalyzer
                 )
             for a in analyzers :
+                print(a)
                 try :
                     processor,c= Processor.objects.get_or_create(
                                 pid=a.id(),

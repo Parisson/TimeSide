@@ -23,7 +23,7 @@
 
 
 from traits.api import HasTraits, Unicode, Int, Float, Range, Enum, Bool
-from traits.api import ListUnicode, List, Tuple
+from traits.api import ListUnicode, List, Tuple, Dict
 from traits.api import TraitError
 
 
@@ -39,7 +39,9 @@ TRAIT_TYPES = {Unicode: 'str',
                Range: 'range',
                Enum: 'enum',
                ListUnicode: 'list of str',
-               List: 'list'}
+               List: 'list',
+               Dict: 'dict',
+               }
 
 
 @decorator.decorator

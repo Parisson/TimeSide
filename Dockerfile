@@ -37,24 +37,26 @@ RUN mkdir -p $PYTHON_EGG_CACHE && \
 RUN pip3 install -U setuptools pip numpy
 RUN apt-get remove -y python3-yaml
 
-# Install timeside
+# https://python-poetry.org/docs/configuration/#using-environment-variables
+ENV POETRY_VERSION=1.4.1 \
+        POETRY_NO_INTERACTION=1 \
+    # make poetry install to this location
+    POETRY_HOME="/opt/poetry" \
+        PIP_CACHE_DIR="/root/.cache/pip"
+
+ENV PATH="$POETRY_HOME/bin:$PATH"
+
+# Install poetry - respects $POETRY_VERSION & $POETRY_HOME
+RUN curl -sSL https://install.python-poetry.org | python -
+
+# upgrade pip and pin setuptools
+RUN pip3 install -U pip
+# RUN pip3 install setuptools==58
+
+# Disable Poetry's virtualenv (useless in a container)
+RUN poetry config virtualenvs.create false
+
 WORKDIR /srv/lib/timeside
-COPY ./requirements.txt /srv/lib/timeside/
-RUN pip3 install -r requirements.txt
-
-# Install app
-COPY ./app /srv/app
-
-# Install Timeside plugins from ./lib
-# RUN mkdir -p /srv/lib/plugins
-# COPY ./lib/plugins/ /srv/lib/plugins/
-# RUN /bin/bash /srv/app/bin/setup_plugins.sh
-
-# Link python gstreamer
-RUN python3 /srv/app/bin/link_gstreamer.py
-
-# Install Vamp plugins
-RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 COPY ./README.rst /srv/lib/timeside/
 COPY ./LICENSE.txt /srv/lib/timeside/
@@ -63,7 +65,27 @@ COPY ./docs /srv/lib/timeside/docs/
 COPY ./tests /srv/lib/timeside/tests/
 COPY ./bin /srv/lib/timeside/bin/
 COPY ./timeside /srv/lib/timeside/timeside/
-RUN pip3 install -e .
+RUN cd /srv/lib/timeside && \
+    python setup.py develop
+
+# Install timeside
+COPY ./pyproject.toml /srv/lib/timeside/
+COPY ./poetry.lock /srv/lib/timeside/
+RUN --mount=type=ssh --mount=type=cache,mode=0755,target=/root/.cache/pip poetry install --no-interaction
+
+# Install app
+COPY ./app /srv/app
+
+# Install Timeside plugins from ./lib
+RUN mkdir -p /srv/lib/plugins
+COPY ./lib/plugins/ /srv/lib/plugins/
+RUN --mount=type=ssh --mount=type=cache,mode=0755,target=/root/.cache/pip /bin/bash /srv/app/bin/setup_plugins.sh
+
+# # Link python gstreamer
+# RUN python3 /srv/app/bin/link_gstreamer.py
+
+# # Install Vamp plugins
+RUN /bin/bash /srv/app/bin/install_vamp_plugins.sh
 
 WORKDIR /srv/app
 

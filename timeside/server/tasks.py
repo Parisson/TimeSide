@@ -14,7 +14,6 @@ from .models import _DONE
 
 from timeside.core.exceptions import ProviderError
 
-from celery.task import chord
 from celery.utils.log import get_task_logger
 
 from django.conf import settings

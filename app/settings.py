@@ -5,6 +5,20 @@ from worker import app
 
 sys.dont_write_bytecode = True
 
+################################
+# HIGH PRIORITY LOCAL SETTINGS #
+################################
+
+# Allow any settings to be defined in local_settings.py which should be
+# ignored in your version control system allowing for settings to be
+# defined per machine.
+try:
+    from local_first_settings import *
+except ImportError as e:
+    if "local_first_settings" not in str(e):
+        raise e
+
+
 # set default values and casting
 env = environ.Env()
 
@@ -141,6 +155,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
