@@ -42,11 +42,5 @@ timeside/server/test/test_romain.py
 .env
 prod.env
 poetry-convert.py
-
-poetry-convert.py
-
-poetry-convert.py
-
-poetry-convert.py
-
-poetry-convert.py
+local_settings_first.py
+local_settings_last.py
