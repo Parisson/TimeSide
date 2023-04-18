@@ -754,6 +754,12 @@ class Experience(Titled, UUID, Dated, Shareable):
         verbose_name = _('Experience')
         ordering = ['-date_modified']
 
+    def __str__(self):
+        if self.title:
+            return self.title
+        elif self.presets:
+            return str(self.presets.all()[0])
+
 
 class Processor(Named, UUID):
 
