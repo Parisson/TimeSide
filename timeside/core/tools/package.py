@@ -39,7 +39,8 @@ def discover_modules(subpackage, package=None):
 
     _list = [import_module_with_exceptions(modname)
              for importer, modname, ispkg
-             in pkgutil.walk_packages(pkg_path, pkg_prefix)]
+             in pkgutil.walk_packages(pkg_path, pkg_prefix)
+             if not 'example' in modname]
 
     modules_list = [mod for mod in _list if mod is not None]
     return modules_list
