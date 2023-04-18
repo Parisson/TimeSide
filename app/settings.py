@@ -13,9 +13,9 @@ sys.dont_write_bytecode = True
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
-    from local_first_settings import *
+    from local_settings_first import *
 except ImportError as e:
-    if "local_first_settings" not in str(e):
+    if "local_settings_first" not in str(e):
         raise e
 
 
@@ -229,7 +229,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'timeside': {
+        'django': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
@@ -274,7 +274,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    'https://ircam-web.github.io',
+    'https://ircam-wam.github.io',
     'http://localhost:3000',
 ]
 
@@ -328,7 +328,7 @@ TIMESIDE_DEFAULT_DECODER = 'aubio_decoder'
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
-    from local_settings import *
+    from local_settings_last import *
 except ImportError as e:
-    if "local_settings" not in str(e):
+    if "local_settings_last" not in str(e):
         raise e
