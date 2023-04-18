@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+
+# settings loaded after anything at the very end of settings.py
+
+import os
+from django.utils.translation import ugettext_lazy as _
+from datetime import datetime, date
+
+DEBUG = True if os.environ.get('DEBUG') == 'True' else False
+
+ADMINS = (
+    ('Guillaume Pellerin', 'guillaume.pellerin@ircam.fr'),
+)
+
+# Make these unique, and don't share it with anybody.
+SECRET_KEY = "H7665jhuyUTGuhuUYT6èzpojpertyezçuàçezf09Iikrpokfàçir"
+NEVERCACHE_KEY = "87654RFGhju7665rdfGyuàiPOpkMzefNbGFrzef3zefzrTYuiJK"
+
+SITE_ID = 1
+
+# SMTP server address
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = '25'
+
+SERVER_EMAIL = 'no-reply@example.com'
+DEFAULT_FROM_EMAIL = 'me@example.com'
+DEFAULT_TO_EMAIL = 'me@example.com'
+EMAIL_SUBJECT_PREFIX = "[TimeSide]"
+
+SITE_TITLE = 'TimeSide'
+SITE_TAGLINE = 'TimeSide'
+
+SCHEMA_SERVERS = [
+    {
+        "url": "https://timeside.ircam.fr/",
+        "description": "Production server"
+    },
+    {
+        "url": "https://staging.timeside.ircam.fr/",
+        "description": "Staging server"
+    },
+    {
+        "url": "http://localhost:8000/",
+        "description": "Local server"
+    }
+    ]
