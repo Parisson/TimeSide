@@ -568,7 +568,10 @@ class Item(Titled, UUID, Dated, Shareable):
         for preset in experience.presets.all():
             proc = preset.processor.get_processor()
             if proc.type in ['analyzer', 'grapher']:
-                proc = proc(parameters=json.loads(preset.parameters))
+                try:
+                    proc = proc(parameters=json.loads(preset.parameters))
+                except:
+                    proc = proc(**json.loads(preset.parameters))
                 if 'analyzer' in proc.parents:
                     parent_analyzers.append(proc.parents['analyzer'])
 
@@ -591,7 +594,10 @@ class Item(Titled, UUID, Dated, Shareable):
                 worker_logger.info(f'Run {str(proc)} on {str(self)}')
             elif proc.type in ['analyzer', 'grapher']:
                 # instantiate a core processor of an analyzer or a grapher
-                proc = proc(parameters=json.loads(preset.parameters))
+                try:
+                    proc = proc(parameters=json.loads(preset.parameters))
+                except:
+                    proc = proc(**json.loads(preset.parameters))
                 worker_logger.info(
                     f'Run {proc} on {self} with {preset.parameters}'
                     )
