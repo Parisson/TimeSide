@@ -42,17 +42,6 @@ class Essentia_Dissonance(Analyzer):
 
     implements(IAnalyzer)
 
-    class _Param(HasTraits):
-        input_blocksize = Int()
-        input_stepsize = Int()
-
-    _schema = {'$schema': 'http://json-schema.org/schema#',
-               'properties': {
-                   "input_blocksize": {"type": "integer"},
-                   "input_stepsize": {"type": "integer"},
-               },
-               'type': 'object'}
-
     @store_parameters
     def __init__(self, input_blocksize=1024, input_stepsize=512):
         super(Essentia_Dissonance, self).__init__()

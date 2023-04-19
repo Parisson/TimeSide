@@ -74,14 +74,6 @@ class Spectrogram(Analyzer):
 
     implements(IAnalyzer)
 
-    _schema = {"type": "object",
-               "properties": {
-                   "fft_size": {"type": "integer"},
-                   "input_blocksize": {"type": "integer"},
-                   "input_stepsize": {"type": "integer"}
-               }
-               }
-    # Define Parameters
 
     class _Param(HasTraits):
         fft_size = Int()
