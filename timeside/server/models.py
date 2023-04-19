@@ -344,12 +344,6 @@ class Item(Titled, UUID, Dated, Shareable):
     mime_type = models.CharField(
         _('mime type'), blank=True, max_length=256
         )
-    hdf5 = models.FileField(
-        _('HDF5 result file'),
-        upload_to='results/%Y/%m/%d',
-        blank=True,
-        max_length=1024,
-        ) # TODO deprecated
     provider = models.ForeignKey(
         'Provider',
         verbose_name=_('provider'),
@@ -574,7 +568,7 @@ class Item(Titled, UUID, Dated, Shareable):
         for preset in experience.presets.all():
             proc = preset.processor.get_processor()
             if proc.type in ['analyzer', 'grapher']:
-                proc = proc(**json.loads(preset.parameters))
+                proc = proc(parameters=json.loads(preset.parameters))
                 if 'analyzer' in proc.parents:
                     parent_analyzers.append(proc.parents['analyzer'])
 
@@ -597,7 +591,7 @@ class Item(Titled, UUID, Dated, Shareable):
                 worker_logger.info(f'Run {str(proc)} on {str(self)}')
             elif proc.type in ['analyzer', 'grapher']:
                 # instantiate a core processor of an analyzer or a grapher
-                proc = proc(**json.loads(preset.parameters))
+                proc = proc(parameters=json.loads(preset.parameters))
                 worker_logger.info(
                     f'Run {proc} on {self} with {preset.parameters}'
                     )
@@ -758,7 +752,7 @@ class Experience(Titled, UUID, Dated, Shareable):
         if self.title:
             return self.title
         elif self.presets:
-            return str(self.presets.all()[0])
+            return str(self.presets.all())
 
 
 class Processor(Named, UUID):
