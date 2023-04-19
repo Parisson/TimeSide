@@ -71,6 +71,8 @@ class HasParam(object):
     def get_parameters_schema(cls):
         if cls._schema is None:
             cls._schema = DEFAULT_SCHEMA()
+        else:
+            return cls._schema
         argspec_schema = cls.schema_from_argspec()['properties']
         if argspec_schema and cls._schema['properties']:
             for key in argspec_schema:
