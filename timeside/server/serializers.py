@@ -68,7 +68,8 @@ class ItemListSerializer(ItemPlayableSerializer):
     class Meta:
         model = ts.models.Item
         fields = ('uuid', 'url', 'title', 'description', 'player_url',
-                  'source_file', 'source_url', 'mime_type', 'author')
+                  'source_file', 'source_url', 'mime_type', 'author',
+                  'artist', 'album')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'author': {'lookup_field': 'username'},
