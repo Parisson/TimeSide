@@ -155,7 +155,7 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.2
 sphinxcontrib-serializinghtml==1.1.3
 SQLAlchemy==1.3.13
-sqlparse==0.3.0
+sqlparse==0.4.4
 tables==3.6.1
 termcolor==1.1.0
 terminado==0.8.3
