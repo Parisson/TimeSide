@@ -1132,24 +1132,30 @@ class Analysis(Titled, UUID, Dated, Shareable):
             image: {_IMAGE}\n
             """))
         )
+    featured = models.BooleanField(default=False)
     test = models.BooleanField(
         blank=True,
         default=False,
         help_text=_('boolean to avoid celery when testing')
         )  
 
-    parameters_schema = jsonfield.JSONField(default=DEFAULT_SCHEMA())
+    parameters_schema = models.JSONField(default=dict)
 
     class Meta:
         verbose_name = _('Analysis')
         verbose_name_plural = _('Analyses')
         ordering = ['title']
 
-    def __save__(self):
-        super(Analysis, self).save(**kwargs)
+    def save(self, **kwargs):
         if self.sub_processor:
-            self.parameters_schema = self.sub_processor.get_default_parameters()
+            self.parameters_schema = self.sub_processor.processor.get_parameters_schema()
         super(Analysis, self).save(**kwargs)
+
+    def __str__(self):
+        if self.title:
+            return self.title
+        else:
+            return str(self.preset)
 
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
