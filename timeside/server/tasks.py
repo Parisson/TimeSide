@@ -84,6 +84,7 @@ def task_run(task_id, test=False):
                 )
             )
             results_id = [res.id for res in results]
+            print(results_id)
     if test: 
         task_monitor(task_id, results_id)
     else: 

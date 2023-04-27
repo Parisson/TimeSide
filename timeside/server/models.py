@@ -625,12 +625,27 @@ class Item(Titled, UUID, Dated, Shareable):
                 )
 
             if not hasattr(proc, 'external'):
-                hdf5_file = str(result.uuid) + '.hdf5'
-                result.hdf5 = os.path.join(
-                    result_path,
-                    hdf5_file
-                    ).replace(settings.MEDIA_ROOT, '')
-                proc.results.to_hdf5(result.hdf5.path)
+                if not proc.results.export_mode or proc.results.export_mode == "hdf5":
+                    export_file = str(result.uuid) + '.hdf5'
+                    result.hdf5 = os.path.join(
+                        result_path,
+                        export_file
+                        ).replace(settings.MEDIA_ROOT, '')
+                    proc.results.to_hdf5(result.hdf5.path)
+                elif proc.results.export_mode == "json":
+                    export_file = str(result.uuid) + '.json'
+                    result.file = os.path.join(
+                        result_path,
+                        export_file
+                        ).replace(settings.MEDIA_ROOT, '')
+                    proc.results.to_json(result.file.path)
+                elif proc.results.export_mode == "xml":
+                    export_file = str(result.uuid) + '.xml'
+                    result.file = os.path.join(
+                        result_path,
+                        export_file
+                        ).replace(settings.MEDIA_ROOT, '')
+                    proc.results.to_xml(result.file.path)
             else:
                 if proc.external:
                     filename = proc.result_temp_file.split(os.sep)[-1]
@@ -1119,6 +1134,12 @@ class Analysis(Titled, UUID, Dated, Shareable):
         verbose_name_plural = _('Analyses')
         ordering = ['title']
 
+    def __save__(self):
+        super(Analysis, self).save(**kwargs)
+        if self.sub_processor:
+            self.parameters_schema = self.sub_processor.get_default_parameters()
+        super(Analysis, self).save(**kwargs)
+
 
 class AnalysisTrack(Titled, UUID, Dated, Shareable):
 
@@ -1133,7 +1154,8 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
         Item,
         related_name='analysis_tracks',
         verbose_name=_('item'),
-        blank=False,
+        blank=True,
+        null=True,
         on_delete=models.CASCADE
         )
     color = models.CharField(
@@ -1147,7 +1169,10 @@ class AnalysisTrack(Titled, UUID, Dated, Shareable):
         ordering = ['-date_modified']
 
     def __str__(self):
-        return self.analysis.title + ' - ' + self.item.title
+        if self.item:
+            return self.analysis.title + ' - ' + self.item.title
+        else:
+            return self.analysis.title
 
 
 class AnnotationTrack(Titled, UUID, Dated, Shareable):

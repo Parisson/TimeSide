@@ -1066,10 +1066,11 @@ class AnalyzerResultContainer(dict):
     >>> resContainer = timeside.core.analyzer.AnalyzerResultContainer()
     '''
 
-    def __init__(self, analyzer_results=None):
+    def __init__(self, analyzer_results=None, export_mode=None):
         super(AnalyzerResultContainer, self).__init__()
         if analyzer_results is not None:
             self.add(analyzer_results)
+        self.export_mode = export_mode
 
     def add(self, analyzer_result, overwrite=False):
 
@@ -1100,7 +1101,6 @@ class AnalyzerResultContainer(dict):
         return [res.id for res in self.values()]
 
     def to_xml(self, output_file=None):
-
         import xml.etree.ElementTree as ET
         # TODO : cf. telemeta util
         root = ET.Element('timeside')
@@ -1127,7 +1127,6 @@ class AnalyzerResultContainer(dict):
                      overwrite=True)
 
     def to_json(self, output_file=None):
-
         json_str = json.dumps([res.as_dict() for res in self.values()],
                               default=JSON_NumpyArrayEncoder)
         if output_file:
@@ -1136,7 +1135,6 @@ class AnalyzerResultContainer(dict):
             return json_str
 
     def from_json(self, json_str):
-
         # Define Specialize JSON decoder for numpy array
         def NumpyArrayDecoder(obj):
             if isinstance(obj, dict) and 'numpyArray' in obj:
@@ -1250,9 +1248,10 @@ class Analyzer(Processor):
         self.result_blocksize = self.input_blocksize
         self.result_stepsize = self.input_stepsize
 
-    def add_result(self, result):
+    def add_result(self, result, export_mode=None):
         if not self.uuid() in self.process_pipe.results:
-            self.process_pipe.results[self.uuid()] = AnalyzerResultContainer()
+            self.process_pipe.results[self.uuid()] = \
+                AnalyzerResultContainer(export_mode=export_mode)
         self.process_pipe.results[self.uuid()].add(result)
 
     @property

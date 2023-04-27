@@ -113,6 +113,7 @@ class Command(BaseCommand):
                                                                         )
 
                     else:
+                        print(processor)
                         preset, created = Preset.objects.get_or_create(processor=processor,
                                                                     parameters=json.dumps(processor.get_parameters_default()))
                         if created and verbosity:

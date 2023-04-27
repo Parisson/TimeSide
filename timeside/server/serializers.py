@@ -480,13 +480,29 @@ class ParametersDefaultSerializer(serializers.HyperlinkedModelSerializer):
 
 class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
 
+    parameters_default = serializers.SerializerMethodField()
+    parameters_schema = serializers.SerializerMethodField()
+
     class Meta:
         model = ts.models.SubProcessor
-        fields = ('url', 'name', 'processor', 'sub_processor_id')
+        fields = ('uuid', 'url', 'name', 'processor', 'sub_processor_id',
+            "parameters_schema", "parameters_default")
         extra_kwargs = {
             'url': {'lookup_field': 'sub_processor_id'},
             'processor': {'lookup_field': 'pid'}
         }
+
+    def get_parameters_schema(self, obj):
+        if obj.processor:
+            return obj.processor.get_parameters_schema()
+        else:
+            return None
+
+    def get_parameters_default(self, obj):
+        if obj.processor:
+            return obj.processor.get_parameters_default()
+        else:
+            return None
 
 
 class PresetSerializer(serializers.HyperlinkedModelSerializer):
