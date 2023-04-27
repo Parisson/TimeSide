@@ -30,6 +30,7 @@ services:
     volumes:
       - ./var/lib/postgresql/data:/var/lib/postgresql/data
       - ./var/backup:/srv/backup
+      - ./bin:/srv/bin
     env_file:
       - env/debug.env
 

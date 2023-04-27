@@ -861,12 +861,7 @@ class Preset(UUID, Dated, Shareable):
         blank=True, null=True,
         on_delete=models.SET_NULL
         )
-    parameters = models.TextField(_('Parameters'), blank=True, default='{}')
-    # parameters = models.TextField(
-    # _('Parameters'), blank=False, default='{}', null=False
-    # )
-    # TODO : turn this filed into a JSON Field
-    # see : http://stackoverflow.com/questions/22600056/django-south-changing-field-type-in-data-migration   # noqa
+    parameters = models.JSONField(_('Parameters'), blank=True, default=dict)
 
     class Meta:
         verbose_name = _('Preset')
