@@ -425,35 +425,6 @@ class ExperienceSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('url', 'uuid')
 
 
-class ProcessorSerializer(serializers.HyperlinkedModelSerializer):
-
-    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
-    parameters_schema = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ts.models.Processor
-        fields = ('name', 'description', 'pid', 'url',
-                    'version', 'parameters_schema')
-        extra_kwargs = {
-            'url': {'lookup_field': 'pid'}
-        }
-
-    def get_parameters_schema(self, obj):
-        return obj.get_parameters_schema()
-
-
-class ProcessorListSerializer(serializers.HyperlinkedModelSerializer):
-
-    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
-
-    class Meta:
-        model = ts.models.Processor
-        fields = ('name', 'description', 'pid', 'url', 'version')
-        extra_kwargs = {
-            'url': {'lookup_field': 'pid'}
-        }
-
-
 class ParametersSchemaSerializer(serializers.HyperlinkedModelSerializer):
 
     parameters_schema = serializers.SerializerMethodField()
@@ -478,10 +449,35 @@ class ParametersDefaultSerializer(serializers.HyperlinkedModelSerializer):
         return obj.get_parameters_default()
 
 
-class SubProcessorSerializer(serializers.HyperlinkedModelSerializer):
+class ProcessorSerializer(ParametersSchemaSerializer, ParametersDefaultSerializer):
 
-    parameters_default = serializers.SerializerMethodField()
+    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('name', 'description', 'pid', 'url',
+                    'version', 'parameters_default', 'parameters_schema')
+        extra_kwargs = {
+            'url': {'lookup_field': 'pid'}
+        }
+
+
+class ProcessorListSerializer(ParametersSchemaSerializer, ParametersDefaultSerializer):
+
+    pid = serializers.ChoiceField(choices=ts.models.get_processor_pids())
     parameters_schema = serializers.SerializerMethodField()
+    parameters_default = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ts.models.Processor
+        fields = ('name', 'description', 'pid', 'url', 'version',
+            'parameters_default', 'parameters_schema', )
+        extra_kwargs = {
+            'url': {'lookup_field': 'pid'}
+        }
+
+
+class SubProcessorSerializer(ParametersSchemaSerializer, ParametersDefaultSerializer):
 
     class Meta:
         model = ts.models.SubProcessor

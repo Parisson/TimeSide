@@ -809,10 +809,26 @@ class Processor(Named, UUID):
         return timeside.core.get_processor(self.pid)
 
     def get_parameters_schema(self):
-        return self.get_processor().get_parameters_schema()
+        try:
+            proc = self.get_processor()
+        except:
+            proc = None
+
+        if proc:
+            return proc.get_parameters_schema()
+        else:
+            return None
 
     def get_parameters_default(self):
-        return self.get_processor().get_parameters_default()
+        try:
+            proc = self.get_processor()
+        except:
+            proc = None
+
+        if proc:
+            return proc.get_parameters_default()
+        else:
+            return None
 
 
 class SubProcessor(UUID):
