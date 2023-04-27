@@ -1041,6 +1041,7 @@ class Task(UUID, Dated, Shareable):
         _('status'),
         choices=STATUS,
         default=_PENDING,
+        blank=True, null=True,
         help_text=_(cleandoc(f"""
             Task's status:\n
             failed: {_FAILED}\n
@@ -1071,6 +1072,11 @@ class Task(UUID, Dated, Shareable):
             return '_'.join(
                 [str(self.selection), str(self.experience), str(self.uuid)[:4]]
                 )
+
+    def save(self, **kwargs):
+        if not self.status:
+            self.status = _PENDING
+        super(Task, self).save(**kwargs)
 
     def status_setter(self, status):
         self.status = status
