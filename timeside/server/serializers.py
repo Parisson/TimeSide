@@ -531,7 +531,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
                 msg = '\n'.join(['KeyError :' + str(e), default_msg])
                 raise serializers.ValidationError(msg)
 
-            processor = proc(**json.loads({'parameters': data['parameters']}))
+            processor = proc(**json.loads('{"parameters": ' + data['parameters'] + '}'))
             data['parameters'] = json.dumps(processor.get_parameters())
         return data
 
