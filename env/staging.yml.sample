@@ -28,6 +28,8 @@ services:
     command: /bin/bash /srv/app/app.sh
     env_file:
       - env/prod.env
+    ports:
+      - "9081:8000"
 
   worker:
     command: /bin/bash /srv/app/worker.sh

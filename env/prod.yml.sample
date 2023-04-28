@@ -30,6 +30,8 @@ services:
       - /data/timeside/media:/srv/media
     env_file:
       - env/prod.env
+    ports:
+      - "9081:8000"
 
   worker:
     command: /bin/bash /srv/app/worker.sh
