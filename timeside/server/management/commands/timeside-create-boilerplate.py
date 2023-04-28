@@ -10,7 +10,6 @@ import timeside.core
 from timeside.server.models import RENDER_TYPES, Selection, Item
 from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor, Result
 from timeside.server.models import _PENDING, _DONE
-from timeside.core.tools.test_samples import generateSamples
 import simplejson as json
 
 
@@ -43,6 +42,7 @@ class Command(BaseCommand):
             analysis.delete()
 
     def generate_test_samples(self):
+        from timeside.core.tools.test_samples import generateSamples
         media_dir = os.path.join('items', 'tests')
         samples_dir = os.path.join(settings.MEDIA_ROOT, media_dir)
         selection, c = Selection.objects.get_or_create(title='Tests')
