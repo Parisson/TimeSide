@@ -62,8 +62,6 @@ services:
       - db
     expose:
       - "8000"
-    ports:
-      - "9081:8000"
 
   worker:
     build: .
