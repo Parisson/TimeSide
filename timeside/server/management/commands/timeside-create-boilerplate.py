@@ -149,7 +149,7 @@ class Command(BaseCommand):
                            
                         else:
                             preset, created = Preset.objects.get_or_create(processor=processor,
-                                                                        parameters=json.dumps(processor.get_parameters_default()))
+                                                                        parameters=processor.get_parameters_default())
                             if created and verbosity:
                                                 print("    " + str(preset))
                         presets.append(preset)
@@ -171,7 +171,7 @@ class Command(BaseCommand):
             
                     preset,c= Preset.objects.get_or_create(
                                 processor=processor,
-                                parameters=json.dumps(a.get_parameters_default())
+                                parameters=a.get_parameters_default()
                                 )
 
                     sub_processor,c= SubProcessor.objects.get_or_create(

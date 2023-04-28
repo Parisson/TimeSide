@@ -73,7 +73,6 @@ class Command(BaseCommand):
 
                 try:
 
-
                     if proc in graphers:
 
                         # TODO: resolve missing Graphers !!! maybe if hasattrb ... else : get_or_greate()
@@ -112,12 +111,19 @@ class Command(BaseCommand):
                                                                         )
 
                     else:
-                        print(processor)
-                        preset, created = Preset.objects.get_or_create(processor=processor,
-                                                                    parameters=json.dumps(processor.get_parameters_default()))
-                        if created and verbosity:
-                                            print("    " + str(preset))
-                    presets.append(preset)
+
+                        default_parameters = processor.get_parameters_default()
+                        presets_qs = Preset.objects.filter(processor=processor)
+                        if not presets_qs:
+                            preset = Preset(processor=processor, parameters = default_parameters)
+                            preset.save()
+                            presets.append(preset)
+                        else:
+                            for preset in presets_qs:
+                                preset.parameters = default_parameters
+                                preset.save()
+                                presets.append(preset)
+
                 except Preset.MultipleObjectsReturned:
                     print(Preset.objects.filter(processor=processor, parameters='{}'))
 
@@ -136,7 +142,7 @@ class Command(BaseCommand):
 
                 preset,c= Preset.objects.get_or_create(
                             processor=processor,
-                            parameters=json.dumps(a.get_parameters_default())
+                            parameters=a.get_parameters_default()
                             )
 
                 sub_processor,c= SubProcessor.objects.get_or_create(
