@@ -51,6 +51,7 @@ class Decoder(Processor):
                  sample_cursor=None):
         super(Decoder, self).__init__()
 
+        self.uri = ""
         self.uri_start = float(start)
         if duration:
             self.uri_duration = float(duration)
@@ -69,6 +70,10 @@ class Decoder(Processor):
             self.sample_cursor = sample_cursor
         else:
             self.sample_cursor = 0
+        self._sha1 = ""
+        self.input_samplerate = 44100
+        self.input_channels = 1
+        self.input_totalframes = 1
 
     @interfacedoc
     def channels(self):

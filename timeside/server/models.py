@@ -547,22 +547,19 @@ class Item(Titled, UUID, Dated, Shareable):
             progress_callback = None 
 
         if settings.TIMESIDE_DEFAULT_DECODER == 'aubio_decoder':
-            decoder = timeside.plugins.decoder.aubio.AubioDecoder(
+            decoder = timeside.core.get_processor('aubio_decoder')(
                 uri=uri,
                 sha1=self.sha1,
                 progress_callback=progress_callback
                 )
         else:
-            decoder = timeside.plugins.decoder.file.FileDecoder(
+            decoder = timeside.core.get_processor('file_decoder')(
                 uri=uri,
                 sha1=self.sha1,
                 progress_callback=progress_callback
                 )
 
-        presets = {}
-        pipe = decoder
         parent_analyzers = []
-
         # search for parent analyzer presets
         # not to add as duplicates in the pipe
         for preset in experience.presets.all():
@@ -574,7 +571,14 @@ class Item(Titled, UUID, Dated, Shareable):
                     proc = proc(**json.loads(preset.parameters))
                 if 'analyzer' in proc.parents:
                     parent_analyzers.append(proc.parents['analyzer'])
+            if proc.hasattr("null_decoder"):
+                # use null decoder if the processor doesn't process audio but data only
+                if proc.null_decoder:
+                    decoder = timeside.core.get_processor('null_decoder')()
 
+        pipe = decoder
+
+        presets = {}
         for preset in experience.presets.all():
             # get core audio metaProcessor
             # corresponding to preset.processor.pid
