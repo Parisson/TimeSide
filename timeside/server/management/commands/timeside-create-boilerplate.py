@@ -42,24 +42,14 @@ class Command(BaseCommand):
         for analysis in Analysis.objects.all():
             analysis.delete()
 
-    def handle(self, *args, **options):
+    def generate_test_samples(self):
         media_dir = os.path.join('items', 'tests')
         samples_dir = os.path.join(settings.MEDIA_ROOT, media_dir)
-        verbosity = options.get('verbosity')
-        if verbosity:
-            print("---------------------------")
-            print("--  CREATE BOILERPLATE   --")
-            print("---------------------------")
-
-        # ---------- Test Selection ----------
         selection, c = Selection.objects.get_or_create(title='Tests')
-
         if c | (selection.items.count() == 0):
             if verbosity:
                 print("generate samples")
-
             samples = generateSamples(samples_dir=samples_dir)
-
             for sample in samples.items():
                 filename, path = sample
                 title = os.path.splitext(filename)[0]
@@ -73,6 +63,13 @@ class Command(BaseCommand):
                     for result in item.results.all():
                         result.delete()
 
+    def handle(self, *args, **options):
+        verbosity = options.get('verbosity')
+        if verbosity:
+            print("---------------------------")
+            print("--  CREATE BOILERPLATE   --")
+            print("---------------------------")
+
             presets = []
             blacklist = ['decoder', 'live', 'gain', 'vamp', 'yaafe']
             processors = timeside.core.processor.processors(
@@ -81,7 +78,6 @@ class Command(BaseCommand):
             graphers = timeside.core.processor.processors(
                 timeside.core.api.IGrapher
                 )
-
 
             if verbosity:
                 print("create presets:")
