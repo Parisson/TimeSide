@@ -189,6 +189,13 @@ class Command(BaseCommand):
                     domain=prov.domain(),
                     )
 
+            # ------------- Analysis -------------
+            for analysis in Analysis.objects.all():
+                print(analysis)
+                analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
+                analysis.save()
+
+
             # ---------- Experience All ----------
             experience, c = Experience.objects.get_or_create(title='All')
             for preset in presets:
@@ -207,8 +214,3 @@ class Command(BaseCommand):
                 task.status = _PENDING
                 task.save()
 
-            # ------------- Analysis -------------
-            for analysis in Analysis.objects.all():
-                print(analysis)
-                analysis.parameters_schema = analysis.preset.processor.get_parameters_schema()
-                analysis.save()
