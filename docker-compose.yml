@@ -53,8 +53,8 @@ services:
       - ./var/log/uwsgi:/var/log/uwsgi
       - ./var/log/app:/var/log/app
       - ./var/cache:/srv/cache
-      - ./pyproject.toml:/srv/lib/timeside/pyproject.toml
-      - ./poetry.lock:/srv/lib/timeside/poetry.lock
+      - ./pyproject.toml:/srv/pyproject.toml
+      - ./poetry.lock:/srv/poetry.lock
     env_file:
       - env/debug.env
     links:
