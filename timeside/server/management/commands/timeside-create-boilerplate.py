@@ -63,6 +63,18 @@ class Command(BaseCommand):
                     for result in item.results.all():
                         result.delete()
 
+    def analyze_test_samples(self):
+        task, c = Task.objects.get_or_create(
+            experience=experience,
+            selection=selection
+            )
+        if verbosity and c:
+            print(' - created task:')
+            print(task)
+        if c | task.status != _DONE:
+            task.status = _PENDING
+            task.save()
+
     def handle(self, *args, **options):
         verbosity = options.get('verbosity')
         if verbosity:
@@ -202,15 +214,4 @@ class Command(BaseCommand):
                 if not preset in experience.presets.all():
                     experience.presets.add(preset)
 
-            # ---- Task All on Test selection ----
-            task, c = Task.objects.get_or_create(
-                experience=experience,
-                selection=selection
-                )
-            if verbosity and c:
-                print(' - created task:')
-                print(task)
-            if c | task.status != _DONE:
-                task.status = _PENDING
-                task.save()
 
