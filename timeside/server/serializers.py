@@ -705,7 +705,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ts.models.Task
-        fields = ('url', 'uuid', 'experience',
+        fields = ('url', 'uuid', 'experience', 'status',
                   'selection', 'status', 'author', 'item','test')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},

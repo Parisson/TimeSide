@@ -63,6 +63,7 @@ def task_run(task_id, test=False):
                 )    
         if not test: 
             results_id = [res.id for res in results]
+
     elif task.item:
         logger.info(
             f'Apply {str(task.experience)} on {str(task.item)} in task {str(task)}'
@@ -85,6 +86,30 @@ def task_run(task_id, test=False):
             )
             results_id = [res.id for res in results]
             print(results_id)
+
+    elif not task.item:
+        logger.info(
+            f'Apply {str(task.experience)} with no item in task {str(task)}'
+        )
+        if test:
+            results.append(
+                experience_run(
+                    str(task.uuid),
+                    str(task.experience.uuid),
+                    None,
+                ),
+            )
+        else:
+            results.append(
+                experience_run.delay(
+                    str(task.uuid),
+                    str(task.experience.uuid),
+                    None,
+                )
+            )
+            results_id = [res.id for res in results]
+            print(results_id)
+
     if test: 
         task_monitor(task_id, results_id)
     else: 
@@ -94,9 +119,13 @@ def task_run(task_id, test=False):
 @shared_task
 def experience_run(task_id, exp_id, item_id):
     
-    item = Item.objects.get(uuid=item_id)
     task = Task.objects.get(uuid=task_id)
     experience = Experience.objects.get(uuid=exp_id)
+    if item_id:
+        item = Item.objects.get(uuid=item_id)
+    else:
+        item = None
+
     if task.author:
         author = task.author.username
     else:
@@ -104,7 +133,7 @@ def experience_run(task_id, exp_id, item_id):
 
     try:
         logger.info(f'Run {str(experience)} on {str(item)}')
-        if not (item.source_url or item.source_file):
+        if item and not (item.source_url or item.source_file):
             logger.info(f'Item does not have any source_file nor source_url. \
                             Saving it again to retrieve data. \
                             Please re-run task {str(task.uuid)} after finish')
@@ -116,16 +145,16 @@ def experience_run(task_id, exp_id, item_id):
                 str(author) +
                 ":" + str(task.uuid) +
                 ":" + str(experience.uuid) +
-                ":" + str(item.uuid)
+                ":" + str(item)
             )
-            item.run(experience, task=task, item=item)
+            experience.run(task=task, item=item)
             gc.collect()
             r.publish(
                 'timeside-experience-done',
                 str(author) +
                 ":" + str(task.uuid) +
                 ":" + str(experience.uuid) +
-                ":" + str(item.uuid)
+                ":" + str(item)
             )
     except Exception as e:
         r.publish(
@@ -133,7 +162,7 @@ def experience_run(task_id, exp_id, item_id):
             str(author) +
             ":" + str(task.uuid) +
             ":" + str(experience.uuid) +
-            ":" + str(item.uuid)
+            ":" + str(item)
         )
         raise e
 
