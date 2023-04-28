@@ -10,7 +10,6 @@ import timeside.core
 from timeside.server.models import RENDER_TYPES, Selection, Item
 from timeside.server.models import Processor, Provider, Preset, Experience, Task, Analysis, SubProcessor, Result
 from timeside.server.models import _PENDING, _DONE
-from timeside.core.tools.test_samples import generateSamples
 import simplejson as json
 
 
