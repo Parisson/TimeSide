@@ -66,6 +66,7 @@ class Command(BaseCommand):
                 if black in proc.id():
                     trig = False
             if trig:
+                print(proc.id())
                 processor, c = Processor.objects.get_or_create(
                     pid=proc.id(),
                     version=proc.version()

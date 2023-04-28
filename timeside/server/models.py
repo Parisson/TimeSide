@@ -516,208 +516,6 @@ class Item(Titled, UUID, Dated, Shareable):
         if not c:
             task.run()
 
-    def run(self, experience, task=None, item=None):
-        result_path = self.get_results_path()
-        # get audio source
-        uri = self.get_uri()
-
-        if not uri:
-            raise ValueError('Item does not have any source URI, nothing can be run.')
-
-        # decode audio source
-        # TODO: use get_processor
-
-        if task and experience and item:
-
-            task_uuid = str(task.uuid)
-            experience_uuid = str(experience.uuid)
-            item_uuid = str(item.uuid)
-
-            def progress_callback(completion):
-                r.publish(
-                    'timeside-experience-progress',
-
-                    'cgerard' +
-                    ":" + task_uuid +
-                    ":" + experience_uuid +
-                    ":" + item_uuid +
-                    ":" + str(completion)
-                )
-        else:
-            progress_callback = None 
-
-        if settings.TIMESIDE_DEFAULT_DECODER == 'aubio_decoder':
-            decoder = timeside.plugins.decoder.aubio.AubioDecoder(
-                uri=uri,
-                sha1=self.sha1,
-                progress_callback=progress_callback
-                )
-        else:
-            decoder = timeside.plugins.decoder.file.FileDecoder(
-                uri=uri,
-                sha1=self.sha1,
-                progress_callback=progress_callback
-                )
-
-        presets = {}
-        pipe = decoder
-        parent_analyzers = []
-
-        # search for parent analyzer presets
-        # not to add as duplicates in the pipe
-        for preset in experience.presets.all():
-            proc = preset.processor.get_processor()
-            if proc.type in ['analyzer', 'grapher']:
-                try:
-                    proc = proc(parameters=json.loads(preset.parameters))
-                except:
-                    proc = proc(**json.loads(preset.parameters))
-                if 'analyzer' in proc.parents:
-                    parent_analyzers.append(proc.parents['analyzer'])
-
-        for preset in experience.presets.all():
-            # get core audio metaProcessor
-            # corresponding to preset.processor.pid
-            proc = preset.processor.get_processor()
-            if proc.type == 'encoder':
-                result, c = Result.objects.get_or_create(preset=preset,
-                                                         item=self)
-                media_file = '.'.join([str(result.uuid),
-                                       proc.file_extension()])
-                result.file = os.path.join(result_path, media_file).replace(
-                    settings.MEDIA_ROOT, ''
-                    )
-                result.save()
-                # instantiate a core processor of an encoder
-                proc = proc(result.file.path, overwrite=True,
-                            streaming=False)
-                worker_logger.info(f'Run {str(proc)} on {str(self)}')
-            elif proc.type in ['analyzer', 'grapher']:
-                # instantiate a core processor of an analyzer or a grapher
-                try:
-                    proc = proc(parameters=json.loads(preset.parameters))
-                except:
-                    proc = proc(**json.loads(preset.parameters))
-                worker_logger.info(
-                    f'Run {proc} on {self} with {preset.parameters}'
-                    )
-
-            if proc not in parent_analyzers:
-                presets[preset] = proc
-                pipe |= proc
-
-        pipe.run()
-
-        def set_results_from_processor(proc, preset=None):
-            if preset:
-                parameters = preset.parameters
-            elif preset is None:
-                processor, c = Processor.get_first_or_create(pid=proc.id())
-                parameters = json.dumps(processor.get_parameters_default())
-                preset, c = Preset.get_first_or_create(
-                    processor=processor,
-                    parameters=parameters
-                    )
-
-            result, c = Result.get_first_or_create(
-                preset=preset,
-                item=self
-                )
-
-            if not hasattr(proc, 'external'):
-                if not proc.results.export_mode or proc.results.export_mode == "hdf5":
-                    export_file = str(result.uuid) + '.hdf5'
-                    result.hdf5 = os.path.join(
-                        result_path,
-                        export_file
-                        ).replace(settings.MEDIA_ROOT, '')
-                    proc.results.to_hdf5(result.hdf5.path)
-                elif proc.results.export_mode == "json":
-                    export_file = str(result.uuid) + '.json'
-                    result.file = os.path.join(
-                        result_path,
-                        export_file
-                        ).replace(settings.MEDIA_ROOT, '')
-                    proc.results.to_json(result.file.path)
-                elif proc.results.export_mode == "xml":
-                    export_file = str(result.uuid) + '.xml'
-                    result.file = os.path.join(
-                        result_path,
-                        export_file
-                        ).replace(settings.MEDIA_ROOT, '')
-                    proc.results.to_xml(result.file.path)
-            else:
-                if proc.external:
-                    filename = proc.result_temp_file.split(os.sep)[-1]
-                    name, ext = filename.split('.')
-                    filename = str(result.uuid) + '.' + ext
-                    result_file = os.path.join(result_path, filename)
-                    copyfile(proc.result_temp_file, result_file)
-                    if ext == 'xml':
-                        # XML to JSON conversion
-                        filename_json = str(result.uuid) + '.' + 'json'
-                        result_file = os.path.join(result_path, filename_json)
-                        f_xml = open(proc.result_temp_file, 'r')
-                        xml = f_xml.read()
-                        f = open(result_file, 'w+')
-                        f.write(json.dumps(ab.data(fromstring(xml)), indent=4))
-                        f.close()
-                        f_xml.close()
-                    result.file = result_file.replace(settings.MEDIA_ROOT, '')
-
-            result.run_time_setter(proc.run_time)
-            result.status_setter(_DONE)
-
-        for preset, proc in presets.items():
-            if proc.type == 'analyzer':
-                # TODO : set_proc_results
-                set_results_from_processor(proc, preset)
-
-            elif proc.type == 'grapher':
-                result, c = Result.objects.get_or_create(preset=preset,
-                                                         item=self)
-                image_file = str(result.uuid) + '.png'
-                start = datetime.datetime.utcnow()
-                result.file = os.path.join(
-                    result_path,
-                    image_file
-                    ).replace(settings.MEDIA_ROOT, '')
-
-                # TODO : set as an option
-                proc.watermark('timeside', opacity=.6, margin=(5, 5))
-                proc.render(output=result.file.path)
-                run_time = datetime.datetime.utcnow() - start
-                result.run_time_setter(run_time)
-                result.mime_type_setter(get_mime_type(result.file.path))
-                result.status_setter(_DONE)
-
-                if 'analyzer' in proc.parents:
-                    analyzer = proc.parents['analyzer']
-                    set_results_from_processor(analyzer, None)
-
-            elif proc.type == 'encoder':
-                result = Result.objects.get(preset=preset, item=self)
-                result.run_time_setter(proc.run_time)
-                result.mime_type_setter(get_mime_type(result.file.path))
-                result.status_setter(_DONE)
-
-            if hasattr(proc, 'values'):
-                proc.values = None
-                del proc.values
-            if hasattr(proc, 'result'):
-                proc.result = None
-                del proc.result
-            if hasattr(proc, 'results'):
-                try:
-                    proc.results = None
-                    del proc.results
-                except:  # noqa
-                    continue
-            del proc
-
-        del pipe
-        gc.collect()
-
     def get_provider(self):
         domain = urlparse(self.external_uri).netloc
         providers = Provider.objects.filter(domain=domain)
@@ -774,6 +572,199 @@ class Experience(Titled, UUID, Dated, Shareable):
             return self.title
         elif self.presets:
             return str(self.presets.all())
+
+    def run(self, task=None, item=None):
+        if item:
+            result_path = item.get_results_path()
+            uri = item.get_uri()
+            decoder = timeside.core.get_processor('aubio_decoder')(
+                uri=uri,
+                sha1=item.sha1,
+                progress_callback=progress_callback
+                )
+        else:
+            result_path = settings.RESULTS_ROOT
+            decoder = timeside.core.get_processor('null_decoder')()
+
+        if task and item:
+
+            task_uuid = str(task.uuid)
+            experience_uuid = str(self.uuid)
+            item_uuid = str(item)
+
+            def progress_callback(completion):
+                r.publish(
+                    'timeside-experience-progress',
+
+                    'cgerard' +
+                    ":" + task_uuid +
+                    ":" + experience_uuid +
+                    ":" + item_uuid +
+                    ":" + str(completion)
+                    )
+
+        else:
+            progress_callback = None
+
+
+        parent_analyzers = []
+        # search for parent analyzer presets
+        # not to add as duplicates in the pipe
+        for preset in self.presets.all():
+            proc = preset.processor.get_processor()
+            if proc.type in ['analyzer', 'grapher']:
+                try:
+                    proc = proc(parameters=preset.parameters)
+                except:
+                    proc = proc(**preset.parameters)
+                if 'analyzer' in proc.parents:
+                    parent_analyzers.append(proc.parents['analyzer'])
+
+        pipe = decoder
+
+        presets = {}
+        for preset in self.presets.all():
+            # get core audio metaProcessor
+            # corresponding to preset.processor.pid
+            proc = preset.processor.get_processor()
+            if proc.type == 'encoder':
+                result, c = Result.objects.get_or_create(preset=preset,
+                                                         item=item)
+                media_file = '.'.join([str(result.uuid),
+                                       proc.file_extension()])
+                result.file = os.path.join(result_path, media_file).replace(
+                    settings.MEDIA_ROOT, ''
+                    )
+                result.save()
+                # instantiate a core processor of an encoder
+                proc = proc(result.file.path, overwrite=True,
+                            streaming=False)
+                worker_logger.info(f'Run {str(proc)} on {str(item)}')
+            elif proc.type in ['analyzer', 'grapher']:
+                # instantiate a core processor of an analyzer or a grapher
+                try:
+                    proc = proc(parameters=preset.parameters)
+                except:
+                    proc = proc(**preset.parameters)
+                worker_logger.info(
+                    f'Run {proc} on {item} with {preset.parameters}'
+                    )
+
+            if proc not in parent_analyzers:
+                presets[preset] = proc
+                pipe |= proc
+
+        pipe.run()
+
+        def set_results_from_processor(proc, preset=None):
+            if preset:
+                parameters = preset.parameters
+            elif preset is None:
+                processor, c = Processor.get_first_or_create(pid=proc.id())
+                parameters = json.dumps(processor.get_parameters_default())
+                preset, c = Preset.get_first_or_create(
+                    processor=processor,
+                    parameters=parameters
+                    )
+
+            result, c = Result.get_first_or_create(
+                preset=preset,
+                item=item
+                )
+
+            if not hasattr(proc, 'external'):
+                if not proc.results.export_mode or proc.results.export_mode == "hdf5":
+                    export_file = str(result.uuid) + '.hdf5'
+                    result.hdf5 = os.path.join(
+                        result_path,
+                        export_file
+                        ).replace(settings.MEDIA_ROOT, '')
+                    proc.results.to_hdf5(result.hdf5.path)
+                elif proc.results.export_mode == "json":
+                    export_file = str(result.uuid) + '.json'
+                    result.file = os.path.join(
+                        result_path,
+                        export_file
+                        ).replace(settings.MEDIA_ROOT, '')
+                    proc.results.to_json(result.file.path)
+                elif proc.results.export_mode == "xml":
+                    export_file = str(result.uuid) + '.xml'
+                    result.file = os.path.join(
+                        result_path,
+                        export_file
+                        ).replace(settings.MEDIA_ROOT, '')
+                    proc.results.to_xml(result.file.path)
+            else:
+                if proc.external:
+                    filename = proc.result_temp_file.split(os.sep)[-1]
+                    name, ext = filename.split('.')
+                    filename = str(result.uuid) + '.' + ext
+                    result_file = os.path.join(result_path, filename)
+                    copyfile(proc.result_temp_file, result_file)
+                    if ext == 'xml':
+                        # XML to JSON conversion
+                        filename_json = str(result.uuid) + '.' + 'json'
+                        result_file = os.path.join(result_path, filename_json)
+                        f_xml = open(proc.result_temp_file, 'r')
+                        xml = f_xml.read()
+                        f = open(result_file, 'w+')
+                        f.write(json.dumps(ab.data(fromstring(xml)), indent=4))
+                        f.close()
+                        f_xml.close()
+                    result.file = result_file.replace(settings.MEDIA_ROOT, '')
+
+            result.run_time_setter(proc.run_time)
+            result.status_setter(_DONE)
+
+        for preset, proc in presets.items():
+            if proc.type == 'analyzer':
+                # TODO : set_proc_results
+                set_results_from_processor(proc, preset)
+
+            elif proc.type == 'grapher':
+                result, c = Result.objects.get_or_create(preset=preset,
+                                                         item=item)
+                image_file = str(result.uuid) + '.png'
+                start = datetime.datetime.utcnow()
+                result.file = os.path.join(
+                    result_path,
+                    image_file
+                    ).replace(settings.MEDIA_ROOT, '')
+
+                # TODO : set as an option
+                proc.watermark('timeside', opacity=.6, margin=(5, 5))
+                proc.render(output=result.file.path)
+                run_time = datetime.datetime.utcnow() - start
+                result.run_time_setter(run_time)
+                result.mime_type_setter(get_mime_type(result.file.path))
+                result.status_setter(_DONE)
+
+                if 'analyzer' in proc.parents:
+                    analyzer = proc.parents['analyzer']
+                    set_results_from_processor(analyzer, None)
+
+            elif proc.type == 'encoder':
+                result = Result.objects.get(preset=preset, item=item)
+                result.run_time_setter(proc.run_time)
+                result.mime_type_setter(get_mime_type(result.file.path))
+                result.status_setter(_DONE)
+
+            if hasattr(proc, 'values'):
+                proc.values = None
+                del proc.values
+            if hasattr(proc, 'result'):
+                proc.result = None
+                del proc.result
+            if hasattr(proc, 'results'):
+                try:
+                    proc.results = None
+                    del proc.results
+                except:  # noqa
+                    continue
+            del proc
+
+        del pipe
+        gc.collect()
 
 
 class Processor(Named, UUID):
