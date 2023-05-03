@@ -571,7 +571,7 @@ class Experience(Titled, UUID, Dated, Shareable):
         if self.title:
             return self.title
         elif self.presets:
-            return str(self.presets.all())
+            return str(self.presets.all()[0]) + "..."
 
     def run(self, task=None, item=None):
         if item:
