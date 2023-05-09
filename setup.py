@@ -54,7 +54,7 @@ setup(
     author_email="pellerin@ircam.fr",
     version='1.1.1',
     platforms=['OS Independent'],
-    license='Affero Gnu Public License v2',
+    license='Affero GNU Public License v2',
     classifiers=CLASSIFIERS,
     keywords=KEYWORDS,
     packages=find_packages(),
