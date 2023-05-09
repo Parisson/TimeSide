@@ -512,6 +512,7 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ('url', 'uuid',)
 
+    # TODO: unbypass validation
     # def validate(self, data):
         # import timeside.core
         # print(data)

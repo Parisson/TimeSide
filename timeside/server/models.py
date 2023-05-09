@@ -857,7 +857,7 @@ class Preset(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
-        ordering = ['-date_added', 'processor__pid',]
+        ordering = ['-date_modified', 'processor__pid',]
 
     def __str__(self):
         return str(self.processor) + '_' + str(self.uuid)[:4]
@@ -1059,9 +1059,13 @@ class Task(UUID, Dated, Shareable):
             return '_'.join(
                 [str(self.item), str(self.experience), str(self.uuid)[:4]]
                 )
-        else:
+        elif self.selection:
             return '_'.join(
                 [str(self.selection), str(self.experience), str(self.uuid)[:4]]
+                )
+        else:
+            return '_'.join(
+                [str(self.experience), str(self.uuid)[:4]]
                 )
 
     def save(self, **kwargs):
@@ -1141,7 +1145,7 @@ class Analysis(Titled, UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Analysis')
         verbose_name_plural = _('Analyses')
-        ordering = ['title']
+        ordering = ['-date_modified', 'title']
 
     def save(self, **kwargs):
         if self.sub_processor:
