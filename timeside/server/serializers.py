@@ -544,7 +544,8 @@ class ResultSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Result
         fields = ('uuid', 'url', 'item', 'preset', 'status',
-                  'mime_type', 'hdf5', 'file', 'run_time')
+                  'mime_type', 'hdf5', 'file', 'run_time',
+                  'date_added')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'item': {'lookup_field': 'uuid'},
