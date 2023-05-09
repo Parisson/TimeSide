@@ -44,6 +44,11 @@ def get_result(item, preset, user=None, wait=True):
         item=item
         )
 
+    if item:
+        test = item.test
+    else:
+        test = False
+
     if created or \
             not settings.CACHE_RESULT or \
             (
@@ -55,14 +60,14 @@ def get_result(item, preset, user=None, wait=True):
             task, c = Task.get_first_or_create(
                 experience=preset.get_single_experience(),
                 item=item,
-                test=item.test,
+                test=test,
                 author=user
                 )
         else:
             task, c = Task.get_first_or_create(
                 experience=preset.get_single_experience(),
                 item=item,
-                test=item.test
+                test=test
                 )
 
         task.save()
