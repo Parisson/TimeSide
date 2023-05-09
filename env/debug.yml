@@ -30,7 +30,7 @@ services:
       - env/debug.env
     command: /bin/bash app.sh --runserver
     ports:
-      - "9081:8000"
+      - "9080:8000"
 
   worker:
     env_file:

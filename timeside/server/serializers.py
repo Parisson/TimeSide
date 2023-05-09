@@ -512,28 +512,30 @@ class PresetSerializer(serializers.HyperlinkedModelSerializer):
         }
         read_only_fields = ('url', 'uuid',)
 
-    def validate(self, data):
-        import timeside.core
-        proc = timeside.core.get_processor(data['processor'].pid)
-        if proc.type == 'analyzer':
-            processor = proc()
-            default_params = processor.get_parameters()
-            default_msg = "Defaut parameters:\n%s" % default_params
+    # def validate(self, data):
+        # import timeside.core
+        # print(data)
+        # # proc = timeside.core.get_processor(data['processor'].pid)
+        # proc = timeside.core.get_processor("idmt_attributes")
+        # if proc.type == 'analyzer':
+        #     processor = proc()
+        #     default_params = processor.get_parameters()
+        #     default_msg = "Defaut parameters:\n%s" % default_params
 
-            if not data['parameters']:
-                data['parameters'] = '{}'
-            try:
-                processor.validate_parameters(json.loads(data['parameters']))
-            except ValidationError as e:
-                msg = '\n'.join([str(e), default_msg])
-                raise serializers.ValidationError(msg)
-            except KeyError as e:
-                msg = '\n'.join(['KeyError :' + str(e), default_msg])
-                raise serializers.ValidationError(msg)
+        #     if not data['parameters']:
+        #         data['parameters'] = '{}'
+        #     try:
+        #         processor.validate_parameters(json.loads(data['parameters']))
+        #     except ValidationError as e:
+        #         msg = '\n'.join([str(e), default_msg])
+        #         raise serializers.ValidationError(msg)
+        #     except KeyError as e:
+        #         msg = '\n'.join(['KeyError :' + str(e), default_msg])
+        #         raise serializers.ValidationError(msg)
 
-            processor = proc(**json.loads('{"parameters": ' + data['parameters'] + '}'))
-            data['parameters'] = json.dumps(processor.get_parameters())
-        return data
+        #     processor = proc(**json.loads('{"parameters": ' + data['parameters'] + '}'))
+        #     data['parameters'] = json.dumps(processor.get_parameters())
+        # return data
 
 
 class ResultSerializer(serializers.HyperlinkedModelSerializer):

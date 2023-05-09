@@ -857,7 +857,7 @@ class Preset(UUID, Dated, Shareable):
     class Meta:
         verbose_name = _('Preset')
         verbose_name_plural = _('Presets')
-        ordering = ['processor__pid',]
+        ordering = ['-date_added', 'processor__pid',]
 
     def __str__(self):
         return str(self.processor) + '_' + str(self.uuid)[:4]
@@ -1145,6 +1145,7 @@ class Analysis(Titled, UUID, Dated, Shareable):
 
     def save(self, **kwargs):
         if self.sub_processor:
+            print(self.sub_processor)
             self.parameters_schema = self.sub_processor.processor.get_parameters_schema()
         super(Analysis, self).save(**kwargs)
 
