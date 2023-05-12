@@ -91,18 +91,16 @@ class Command(BaseCommand):
                 name, ext = os.path.splitext(filename)
                 id = name
                 item, c = Item.objects.get_or_create(external_id=id)
-                item.title = metadata_d[id]['title']
-                item.artist = metadata_d[id]['artist']
-                item.album = metadata_d[id]['album']
-                item.external_uri = metadata_d[id]['url']
-                item.picture_url = metadata_d[id]['picture']
-                item.source_file = relpath
-                item.lock = False
-                item.save()
                 if c:
+                    item.title = metadata_d[id]['title']
+                    item.artist = metadata_d[id]['artist']
+                    item.album = metadata_d[id]['album']
+                    item.external_uri = metadata_d[id]['url']
+                    item.picture_url = metadata_d[id]['picture']
+                    item.source_file = relpath
+                    item.lock = False
+                    item.save()
                     print('Item "' + item.title + '" created')
-                else:
-                    print('Item "' + item.title + '" updated')
 
                 if not item in selection.items.all():
                     selection.items.add(item)
