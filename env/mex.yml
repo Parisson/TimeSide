@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2015-2017 Parisson SARL
+
+# This file is part of Telemeta.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+
+# TimeSide is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with TimeSide.  If not, see <http://www.gnu.org/licenses/>.
+
+# Authors:
+# Guillaume Pellerin <yomguy@parisson.com>
+# Thomas Fillon <thomas@parisson.com>
+
+
+services:
+
+  app:
+    command: /bin/bash /srv/app/app.sh
+    env_file:
+      - env/staging.env
+    ports:
+      - "9082:8000"
+    volumes:
+      - /data/mep/media:/srv/media
+
+  worker:
+    command: /bin/bash /srv/app/worker.sh
+    env_file:
+      - env/staging.env
+
+  db:
+    image: postgres:15
+    env_file:
+      - env/staging.env
+
