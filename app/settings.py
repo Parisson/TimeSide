@@ -270,6 +270,13 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_ALWAYS_EAGER = False
 # If this is True, all tasks will be executed locally by blocking until the task returns.
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'timeside_cache',
+    }
+}
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
