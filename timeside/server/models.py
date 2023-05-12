@@ -565,14 +565,24 @@ class Item(Titled, UUID, Dated, Shareable):
             self.get_provider()
         super(Item, self).save(**kwargs)
 
+    def save_without_signals(self):
+        """
+        This allows for updating the model from code running inside post_save()
+        signals without going into an infinite loop:
+        """
+        self._disable_signals = True
+        self.save()
+        self._disable_signals = False
+
 
 @receiver(post_save, sender=Item)
 @on_transaction_commit
 def item_post_save(sender, **kwargs):
     """ """
-    from timeside.server.tasks import item_post_save_async2
+    from timeside.server.tasks import item_post_save_async3
     instance = kwargs['instance']
-    item_post_save_async2.delay(uuid=instance.uuid)
+    if not getattr(instance, '_disable_signals', False):
+        item_post_save_async3.delay(uuid=instance.uuid)
 
 
 class Experience(Titled, UUID, Dated, Shareable):

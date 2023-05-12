@@ -99,7 +99,6 @@ class Command(BaseCommand):
                     item.external_uri = metadata_d[id]['url']
                     item.picture_url = metadata_d[id]['picture']
                     item.source_file = relpath
-                    item.lock = False
                     item.save()
                     print('Item "' + id + '" created')
 

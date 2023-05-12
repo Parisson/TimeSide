@@ -237,3 +237,26 @@ def item_post_save_async2(uuid, download=True, waveform=False):
 
         if waveform:
             item.process_waveform()
+
+
+@shared_task
+def item_post_save_async3(uuid, download=True, waveform=True):
+    item = Item.objects.get(uuid=uuid)
+    title = ""
+
+    if not item.source_file and (item.external_id or item.external_uri):
+        title, source_file = item.get_resource(download=download)
+        item.source_file = source_file.replace(settings.MEDIA_ROOT, '')
+        item.title = title
+        item.save_without_signals()
+
+    if item.source_file:
+        item.sha1 = item.get_hash()
+        item.mime_type = item.get_mime_type()
+        item.audio_duration = item.get_audio_duration()
+        item.samplerate = item.get_audio_samplerate()
+        if waveform:
+            item.process_waveform()
+        item.save_without_signals()
+
+
