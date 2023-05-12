@@ -518,7 +518,8 @@ class Item(Titled, UUID, Dated, Shareable):
         preset, c = Preset.get_first_or_create(processor=processor)
         experience = preset.get_single_experience()
         task, c = Task.get_first_or_create(item=self, experience=experience)
-        task.run()
+        if c or task.status != _DONE:
+            task.run()
 
     def get_provider(self):
         domain = urlparse(self.external_uri).netloc

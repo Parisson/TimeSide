@@ -179,7 +179,7 @@ def task_monitor(task_id, results_id):
 
 
 @shared_task
-def item_post_save_async(uuid, download=True):
+def item_post_save_async(uuid, download=True, waveform=False):
     items = Item.objects.filter(uuid=uuid)
     # arbitrary sleep ensuring the item.save() is already done
     while not items:
@@ -207,7 +207,8 @@ def item_post_save_async(uuid, download=True):
             audio_duration=audio_duration,
             samplerate=samplerate,
             )
-        item.process_waveform()
+        if waveform:
+            item.process_waveform()
 
     items.update(lock=False)
 
