@@ -515,11 +515,10 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def process_waveform(self):
         processor = Processor.get_first(pid='waveform_analyzer')
-        preset, c = Preset.objects.get_or_create(processor=processor)
+        preset = Preset.get_first(processor=processor)
         experience = preset.get_single_experience()
         task, c = Task.objects.get_or_create(item=self, experience=experience)
-        if not c:
-            task.run()
+        task.run()
 
     def get_provider(self):
         domain = urlparse(self.external_uri).netloc
@@ -579,6 +578,23 @@ class Experience(Titled, UUID, Dated, Shareable):
             return str(self.presets.all()[0]) + "..."
 
     def run(self, task=None, item=None):
+        if task and item:
+            task_uuid = str(task.uuid)
+            experience_uuid = str(self.uuid)
+            item_uuid = str(item)
+
+            def progress_callback(completion):
+                r.publish(
+                    'timeside-experience-progress',
+                    'timeside' +
+                    ":" + task_uuid +
+                    ":" + experience_uuid +
+                    ":" + item_uuid +
+                    ":" + str(completion)
+                    )
+        else:
+            progress_callback = None
+
         if item:
             result_path = item.get_results_path()
             uri = item.get_uri()
@@ -590,26 +606,6 @@ class Experience(Titled, UUID, Dated, Shareable):
         else:
             result_path = settings.RESULTS_ROOT
             decoder = timeside.core.get_processor('null_decoder')()
-
-        if task and item:
-
-            task_uuid = str(task.uuid)
-            experience_uuid = str(self.uuid)
-            item_uuid = str(item)
-
-            def progress_callback(completion):
-                r.publish(
-                    'timeside-experience-progress',
-
-                    'cgerard' +
-                    ":" + task_uuid +
-                    ":" + experience_uuid +
-                    ":" + item_uuid +
-                    ":" + str(completion)
-                    )
-
-        else:
-            progress_callback = None
 
 
         parent_analyzers = []
