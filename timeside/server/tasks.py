@@ -240,7 +240,7 @@ def item_post_save_async2(uuid, download=True, waveform=False):
 
 
 @shared_task
-def item_post_save_async3(uuid, download=True, waveform=True):
+def item_post_save_async3(uuid, download=True, waveform=False):
     item = Item.objects.get(uuid=uuid)
     title = ""
 
@@ -248,6 +248,8 @@ def item_post_save_async3(uuid, download=True, waveform=True):
         title, source_file = item.get_resource(download=download)
         item.source_file = source_file.replace(settings.MEDIA_ROOT, '')
         item.title = title
+        if self.external_uri:
+            item.get_provider()
         item.save_without_signals()
 
     if item.source_file:

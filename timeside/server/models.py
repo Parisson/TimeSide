@@ -560,11 +560,6 @@ class Item(Titled, UUID, Dated, Shareable):
         self.samplerate = self.get_audio_samplerate()
         self.process_waveform()
 
-    def save(self, **kwargs):
-        if self.external_uri:
-            self.get_provider()
-        super(Item, self).save(**kwargs)
-
     def save_without_signals(self):
         """
         This allows for updating the model from code running inside post_save()
