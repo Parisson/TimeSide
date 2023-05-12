@@ -99,7 +99,6 @@ class Command(BaseCommand):
                 else:
                     item = Item.objects.get(external_id=external_id)
                     text = "updated"
-                    print('Item "' + external_id + '" updated')
 
                 item.title = meta_track['title']
                 item.artist = meta_track['artist']
