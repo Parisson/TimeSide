@@ -101,9 +101,9 @@ class Command(BaseCommand):
                     item.source_file = relpath
                     item.lock = False
                     item.save()
-                    print('Item "' + item.title + '" created')
+                    print('Item "' + id + '" created')
                 else:
-                    print('Item "' + item.title + '" already created')
+                    print('Item "' + id + '" already created')
 
                 if not item in selection.items.all():
                     selection.items.add(item)
