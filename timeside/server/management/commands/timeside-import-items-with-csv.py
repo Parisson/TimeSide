@@ -82,6 +82,7 @@ class Command(BaseCommand):
             pid=provider_domain
             )
 
+        existing_items_ids = [item.extenal_id for item in Item.objects.all]
 
         for root, dirs, files in os.walk(import_dir):
             for filename in files:
@@ -90,8 +91,8 @@ class Command(BaseCommand):
                 relpath = path[len(media_dir)+1:]
                 name, ext = os.path.splitext(filename)
                 id = name
-                item, c = Item.objects.get_or_create(external_id=id)
-                if c:
+                if not id in existing_items_ids:
+                    item = Item(extenal_id=id)
                     item.title = metadata_d[id]['title']
                     item.artist = metadata_d[id]['artist']
                     item.album = metadata_d[id]['album']
