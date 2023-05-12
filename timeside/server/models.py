@@ -323,11 +323,16 @@ class Item(Titled, UUID, Dated, Shareable):
         _('artist'), blank=True, max_length=256
         )
     source_file = models.FileField(
-        _('source file'), upload_to='items/%Y/%m/%d', blank=True, max_length=1024,
+        _('source file'),
+        upload_to='items/%Y/%m/%d',
+        blank=True,
+        max_length=1024,
         help_text=_("Audio source file to process")
         )
     source_url = models.URLField(
-        _('source URL'), blank=True, max_length=1024,
+        _('source URL'),
+        blank=True,
+        max_length=1024,
         help_text=_("Audio source streamable URL to process")
         )
     audio_duration = models.FloatField(
