@@ -240,7 +240,7 @@ def item_post_save_async2(uuid, download=True, waveform=False):
 
 
 @shared_task
-def item_post_save_async3(uuid, download=True, waveform=False):
+def item_post_save_async3(uuid, download=True, waveform=True):
     item = Item.objects.get(uuid=uuid)
     title = ""
 
