@@ -92,7 +92,7 @@ class Command(BaseCommand):
                 name, ext = os.path.splitext(filename)
                 id = name
                 if not id in existing_items_ids:
-                    item = Item(extenal_id=id)
+                    item = Item(external_id=id)
                     item.title = metadata_d[id]['title']
                     item.artist = metadata_d[id]['artist']
                     item.album = metadata_d[id]['album']
