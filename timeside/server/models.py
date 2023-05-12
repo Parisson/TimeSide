@@ -515,9 +515,9 @@ class Item(Titled, UUID, Dated, Shareable):
 
     def process_waveform(self):
         processor = Processor.get_first(pid='waveform_analyzer')
-        preset = Preset.get_first(processor=processor)
+        preset, c = Preset.get_first_or_create(processor=processor)
         experience = preset.get_single_experience()
-        task = Task.get_first(item=self, experience=experience)
+        task, c = Task.get_first_or_create(item=self, experience=experience)
         task.run()
 
     def get_provider(self):
