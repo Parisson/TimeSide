@@ -524,10 +524,7 @@ class Item(Titled, UUID, Dated, Shareable):
     def get_provider(self):
         domain = urlparse(self.external_uri).netloc
         providers = Provider.objects.filter(domain=domain)
-        if not providers:
-            raise ProviderError("No Provider available for this URL",
-                self.external_uri)
-        else:
+        if providers:
             self.provider = providers[0]
 
     def get_audio_metadata(self):

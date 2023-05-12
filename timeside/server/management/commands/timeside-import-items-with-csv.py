@@ -101,6 +101,8 @@ class Command(BaseCommand):
                     item.lock = False
                     item.save()
                     print('Item "' + item.title + '" created')
+                else:
+                    print('Item "' + item.title + '" already created')
 
                 if not item in selection.items.all():
                     selection.items.add(item)
