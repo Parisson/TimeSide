@@ -212,3 +212,28 @@ def item_post_save_async(uuid, download=True, waveform=False):
 
     items.update(lock=False)
 
+
+@shared_task
+def item_post_save_async2(uuid, download=True, waveform=False):
+    items = Item.objects.filter(uuid=uuid)
+    item = items[0]
+
+    if not item.source_file:
+        if item.external_id or item.external_uri:
+            title, source_file = item.get_resource(download=download)
+            items.update(title=title, source_file=source_file)
+
+    if item.source_file:
+        sha1 = item.get_hash()
+        mime_type = item.get_mime_type()
+        audio_duration = item.get_audio_duration()
+        samplerate = item.get_audio_samplerate()
+        items.update(
+            sha1=sha1,
+            mime_type=mime_type,
+            audio_duration=audio_duration,
+            samplerate=samplerate,
+            )
+
+        if waveform:
+            item.process_waveform()

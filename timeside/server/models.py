@@ -35,13 +35,14 @@ import gc
 from shutil import copyfile
 from builtins import str
 from urllib.parse import urlparse
+from functools import wraps
 
 import timeside.core
 from timeside.plugins.decoder.utils import sha1sum_file, sha1sum_url
 from timeside.core.tools.parameters import DEFAULT_SCHEMA
 from timeside.core.exceptions import ProviderError
 
-from django.db import models
+from django.db import models, transaction
 from django.utils.functional import lazy
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
@@ -134,6 +135,31 @@ _VECTOR, _IMAGE, _LIST = 0, 1, 2
 RENDER_TYPES = ((_VECTOR, _('vector')),
                 (_IMAGE, _('image')),
                 )
+
+
+def prevent_recursion(func):
+    @wraps(func)
+    def no_recursion(sender, instance=None, **kwargs):
+        if not instance:
+            return
+        if hasattr(instance, '_dirty'):
+            return
+
+        func(sender, instance=instance, **kwargs)
+
+        try:
+            instance._dirty = True
+            instance.save()
+        finally:
+            del instance._dirty
+
+    return no_recursion
+
+
+def on_transaction_commit(func):
+    def inner(*args, **kwargs):
+        transaction.on_commit(lambda: func(*args, **kwargs))
+    return inner
 
 
 class UUIDEncoder(json.JSONEncoder):
@@ -540,13 +566,13 @@ class Item(Titled, UUID, Dated, Shareable):
         super(Item, self).save(**kwargs)
 
 
+@receiver(post_save, sender=Item)
+@on_transaction_commit
 def item_post_save(sender, **kwargs):
     """ """
-    from timeside.server.tasks import item_post_save_async
+    from timeside.server.tasks import item_post_save_async2
     instance = kwargs['instance']
-    item_post_save_async.delay(uuid=instance.uuid)
-
-post_save.connect(item_post_save, sender=Item)
+    item_post_save_async2.delay(uuid=instance.uuid)
 
 
 class Experience(Titled, UUID, Dated, Shareable):
