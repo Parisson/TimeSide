@@ -99,7 +99,7 @@ class Command(BaseCommand):
                 else:
                     item = Item.objects.get(external_id=external_id)
                     text = "updated"
-                    print('Item "' + id + '" updated')
+                    print('Item "' + external_id + '" updated')
 
                 item.title = meta_track['title']
                 item.artist = meta_track['artist']
@@ -109,7 +109,7 @@ class Command(BaseCommand):
                 item.source_file = relpath
                 item.save()
 
-                print('Item ' + id + ' ' + text)
+                print('Item ' + external_id + ' ' + text)
 
                 if not item in items_in_selection:
                     selection.items.add(item)
