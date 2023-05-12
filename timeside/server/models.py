@@ -573,7 +573,6 @@ class Item(Titled, UUID, Dated, Shareable):
 @receiver(post_save, sender=Item)
 @on_transaction_commit
 def item_post_save(sender, **kwargs):
-    """ """
     from timeside.server.tasks import item_post_save_async3
     instance = kwargs['instance']
     if not getattr(instance, '_disable_signals', False):

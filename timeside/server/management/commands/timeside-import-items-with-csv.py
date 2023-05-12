@@ -91,24 +91,31 @@ class Command(BaseCommand):
                 os.path.relpath(path, media_dir)
                 relpath = path[len(media_dir)+1:]
                 name, ext = os.path.splitext(filename)
-                id = name
-                if not id in existing_items_ids:
-                    meta_track = metadata_d[id]
-                    item = Item(external_id=id)
-                    item.title = meta_track['title']
-                    item.artist = meta_track['artist']
-                    item.album = meta_track['album']
-                    item.external_uri = meta_track['url']
-                    item.picture_url = meta_track['picture']
-                    item.source_file = relpath
-                    item.save()
-                    print('Item "' + id + '" created')
+                external_id = name
+                meta_track = metadata_d[external_id]
+                if not external_id in existing_items_ids:
+                    item = Item(external_id=external_id)
+                    text = "created"
+                else:
+                    item = Item.objects.get(external_id=external_id)
+                    text = "updated"
+                    print('Item "' + id + '" updated')
 
-                    if not item in items_in_selection:
-                        selection.items.add(item)
-                        print('Item "' + item.title + '" added to selection "' + selection_title +'"')
+                item.title = meta_track['title']
+                item.artist = meta_track['artist']
+                item.album = meta_track['album']
+                item.external_uri = meta_track['url']
+                item.picture_url = meta_track['picture']
+                item.source_file = relpath
+                item.save()
+
+                print('Item ' + id + ' ' + text)
+
+                if not item in items_in_selection:
+                    selection.items.add(item)
+                    print('Item ' + item.external_id + ' added to selection')
 
                 else:
-                    print('Item "' + id + '" already created')
+                    print('Item ' + item.external_id + ' already in selection')
 
 
