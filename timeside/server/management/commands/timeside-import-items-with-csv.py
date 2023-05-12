@@ -83,6 +83,7 @@ class Command(BaseCommand):
             )
 
         existing_items_ids = [item.external_id for item in Item.objects.all()]
+        items_in_selection = selection.items.all()
 
         for root, dirs, files in os.walk(import_dir):
             for filename in files:
@@ -103,7 +104,7 @@ class Command(BaseCommand):
                     item.save()
                     print('Item "' + id + '" created')
 
-                    if not item in selection.items.all():
+                    if not item in items_in_selection:
                         selection.items.add(item)
                         print('Item "' + item.title + '" added to selection "' + selection_title +'"')
 
