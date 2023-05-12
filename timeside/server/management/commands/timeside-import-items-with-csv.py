@@ -82,7 +82,7 @@ class Command(BaseCommand):
             pid=provider_domain
             )
 
-        existing_items_ids = [item.extenal_id for item in Item.objects.all()]
+        existing_items_ids = [item.external_id for item in Item.objects.all()]
 
         for root, dirs, files in os.walk(import_dir):
             for filename in files:
