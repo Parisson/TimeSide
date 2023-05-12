@@ -92,12 +92,13 @@ class Command(BaseCommand):
                 name, ext = os.path.splitext(filename)
                 id = name
                 if not id in existing_items_ids:
+                    meta_track = metadata_d[id]
                     item = Item(external_id=id)
-                    item.title = metadata_d[id]['title']
-                    item.artist = metadata_d[id]['artist']
-                    item.album = metadata_d[id]['album']
-                    item.external_uri = metadata_d[id]['url']
-                    item.picture_url = metadata_d[id]['picture']
+                    item.title = meta_track['title']
+                    item.artist = meta_track['artist']
+                    item.album = meta_track['album']
+                    item.external_uri = meta_track['url']
+                    item.picture_url = meta_track['picture']
                     item.source_file = relpath
                     item.save()
                     print('Item "' + id + '" created')
