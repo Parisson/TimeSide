@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.views.generic import RedirectView
-
 from timeside.server import views
 from timeside.server.utils import TS_ENCODERS_EXT
 
@@ -107,7 +107,8 @@ if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    ]
+    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = 'TimeSide Admin'
 admin.site.site_title  = 'TimeSide'

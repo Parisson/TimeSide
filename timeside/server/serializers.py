@@ -710,7 +710,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Task
         fields = ('url', 'uuid', 'experience', 'status',
-                  'selection', 'status', 'author', 'item','test')
+                  'selection', 'status', 'author', 'item', 'synchronous')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
@@ -739,7 +739,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'uuid',
                   'title', 'description', 'render_type',
                   'preset', 'sub_processor',
-                  'parameters_schema','test')
+                  'parameters_schema', 'synchronous')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},

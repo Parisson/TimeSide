@@ -404,9 +404,8 @@ class Item(Titled, UUID, Dated, Shareable):
         )
     lock = models.BooleanField(default=False)
     test = models.BooleanField(
-        blank=True,
         default=False,
-        help_text=_('boolean to avoid celery when testing')
+        help_text=_('testing purpose')
         )
 
     class Meta:
@@ -635,6 +634,7 @@ class Experience(Titled, UUID, Dated, Shareable):
             result_path = settings.RESULTS_ROOT
             decoder = timeside.core.get_processor('null_decoder')()
 
+        pipe = decoder
 
         parent_analyzers = []
         # search for parent analyzer presets
@@ -643,13 +643,11 @@ class Experience(Titled, UUID, Dated, Shareable):
             proc = preset.processor.get_processor()
             if proc.type in ['analyzer', 'grapher']:
                 try:
-                    proc = proc(parameters=preset.parameters)
+                    p = proc(parameters=preset.parameters)
                 except:
-                    proc = proc(**preset.parameters)
-                if 'analyzer' in proc.parents:
-                    parent_analyzers.append(proc.parents['analyzer'])
-
-        pipe = decoder
+                    p = proc(**preset.parameters)
+                if 'analyzer' in p.parents:
+                    parent_analyzers.append(p.parents['analyzer'])
 
         presets = {}
         for preset in self.presets.all():
@@ -672,18 +670,22 @@ class Experience(Titled, UUID, Dated, Shareable):
             elif proc.type in ['analyzer', 'grapher']:
                 # instantiate a core processor of an analyzer or a grapher
                 try:
-                    proc = proc(parameters=preset.parameters)
+                    p = proc(parameters=preset.parameters)
+                    print("1")
                 except:
-                    proc = proc(**preset.parameters)
+                    p = proc(**preset.parameters)
+                    print("2")
                 worker_logger.info(
-                    f'Run {proc} on {item} with {preset.parameters}'
+                    f'Run {p} on {item} with {preset.parameters}'
                     )
 
-            if proc not in parent_analyzers:
-                presets[preset] = proc
-                pipe |= proc
+            if p not in parent_analyzers:
+                presets[preset] = p
+                pipe |= p
 
+        print(pipe)
         pipe.run()
+        print("OK")
 
         def set_results_from_processor(proc, preset=None):
             if preset:
@@ -1072,11 +1074,10 @@ class Task(UUID, Dated, Shareable):
             """))
         )
 
-    test = models.BooleanField(
-        blank=True,
+    synchronous = models.BooleanField(
         default=False,
-        help_text=_('boolean to avoid celery when testing')
-        )  
+        help_text=_('executed in main thread synchronously')
+        )
 
     class Meta:
         verbose_name = _('Task')
@@ -1113,10 +1114,10 @@ class Task(UUID, Dated, Shareable):
         self.status_setter(_RUNNING)
 
         from timeside.server.tasks import task_run
-        if not self.test:
-            task_run.delay(task_id=str(self.uuid))
+        if not self.synchronous:
+            task_run.delay(str(self.uuid))
         else:
-            task_run(task_id=str(self.uuid),test=True)
+            task_run(str(self.uuid), synchronous=True)
 
         if wait:
             status = Task.objects.get(uuid=str(self.uuid)).status
@@ -1126,12 +1127,12 @@ class Task(UUID, Dated, Shareable):
                 status = Task.objects.get(uuid=str(self.uuid)).status
 
 
-def task_run(sender, **kwargs):
+def task_run_now(sender, **kwargs):
     task = kwargs['instance']
     if task.status == _PENDING:
         task.run()
 
-post_save.connect(task_run, sender=Task)
+post_save.connect(task_run_now, sender=Task)
 
 
 
@@ -1163,11 +1164,10 @@ class Analysis(Titled, UUID, Dated, Shareable):
             """))
         )
     featured = models.BooleanField(default=False)
-    test = models.BooleanField(
-        blank=True,
+    synchronous = models.BooleanField(
         default=False,
-        help_text=_('boolean to avoid celery when testing')
-        )  
+        help_text=_('executed in main thread synchronously')
+        )
 
     parameters_schema = models.JSONField(default=dict)
 

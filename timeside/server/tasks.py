@@ -1,32 +1,28 @@
-from __future__ import absolute_import
-
 import time
 import gc
 
+from django.conf import settings
 from django.db import transaction
 
 from celery import shared_task
 from celery.result import AsyncResult
 from celery.result import GroupResult
+from celery.utils.log import get_task_logger
 
 from .models import Item, Selection, Preset, Experience, Task, Provider
 from .models import _DONE
 
 from timeside.core.exceptions import ProviderError
 
-from celery.utils.log import get_task_logger
-
-from django.conf import settings
-
 import redis
+
 r = redis.Redis.from_url(settings.MESSAGE_BROKER)
 
 logger = get_task_logger(__name__)
 
 
 @shared_task
-def task_run(task_id, test=False):
-    # test : can't access the db with celery when testing
+def task_run(task_id, synchronous=False):
     task = Task.objects.get(uuid=task_id)
     results = []
     results_id = []
@@ -45,7 +41,7 @@ def task_run(task_id, test=False):
             f'Apply {str(task.experience)} on {str(task.selection)} in task {str(task)}'
         )
         for item in task.selection.get_all_items():
-            if test:
+            if synchronous:
                 results.append(
                     experience_run(
                         str(task.uuid),
@@ -61,14 +57,14 @@ def task_run(task_id, test=False):
                         str(item.uuid),
                     )
                 )    
-        if not test: 
+        if not synchronous:
             results_id = [res.id for res in results]
 
     elif task.item:
         logger.info(
             f'Apply {str(task.experience)} on {str(task.item)} in task {str(task)}'
         )
-        if test: 
+        if synchronous:
             results.append(
                 experience_run(
                     str(task.uuid),
@@ -85,13 +81,12 @@ def task_run(task_id, test=False):
                 )
             )
             results_id = [res.id for res in results]
-            print(results_id)
 
     elif not task.item:
         logger.info(
             f'Apply {str(task.experience)} with no item in task {str(task)}'
         )
-        if test:
+        if synchronous:
             results.append(
                 experience_run(
                     str(task.uuid),
@@ -108,9 +103,8 @@ def task_run(task_id, test=False):
                 )
             )
             results_id = [res.id for res in results]
-            print(results_id)
 
-    if test: 
+    if synchronous:
         task_monitor(task_id, results_id)
     else: 
         task_monitor.delay(task_id, results_id)
@@ -118,7 +112,10 @@ def task_run(task_id, test=False):
 
 @shared_task
 def experience_run(task_id, exp_id, item_id):
-    
+    print(task_id)
+    print(exp_id)
+    print(item_id)
+
     task = Task.objects.get(uuid=task_id)
     experience = Experience.objects.get(uuid=exp_id)
     if item_id:
@@ -131,31 +128,33 @@ def experience_run(task_id, exp_id, item_id):
     else:
         author = ''
 
-    try:
-        logger.info(f'Run {str(experience)} on {str(item)}')
-        if item and not (item.source_url or item.source_file):
-            logger.info(f'Item does not have any source_file nor source_url. \
-                            Saving it again to retrieve data. \
-                            Please re-run task {str(task.uuid)} after finish')
-            item.save()
-        else:
-            r.publish(
-                'timeside-experience-start',
+    # try:
+    logger.info(f'Run {str(experience)} on {str(item)}')
+    if item and not (item.source_url or item.source_file):
+        logger.info(f'Item does not have any source_file nor source_url. \
+                        Saving it again to retrieve data. \
+                        Please re-run task {str(task.uuid)} after finish')
+        item.save()
+    else:
+        r.publish(
+            'timeside-experience-start',
 
-                str(author) +
-                ":" + str(task.uuid) +
-                ":" + str(experience.uuid) +
-                ":" + str(item)
-            )
-            experience.run(task=task, item=item)
-            gc.collect()
-            r.publish(
-                'timeside-experience-done',
-                str(author) +
-                ":" + str(task.uuid) +
-                ":" + str(experience.uuid) +
-                ":" + str(item)
-            )
+            str(author) +
+            ":" + str(task.uuid) +
+            ":" + str(experience.uuid) +
+            ":" + str(item)
+        )
+
+    try:
+        experience.run(task=task, item=item)
+        gc.collect()
+        r.publish(
+            'timeside-experience-done',
+            str(author) +
+            ":" + str(task.uuid) +
+            ":" + str(experience.uuid) +
+            ":" + str(item)
+        )
     except Exception as e:
         r.publish(
             'timeside-experience-fail',
@@ -219,11 +218,11 @@ def item_post_save_async3(uuid, download=True, waveform=True):
     title = ""
 
     if not item.source_file and (item.external_id or item.external_uri):
+        if item.external_uri:
+            item.get_provider()
         title, source_file = item.get_resource(download=download)
         item.source_file = source_file.replace(settings.MEDIA_ROOT, '')
         item.title = title
-        if self.external_uri:
-            item.get_provider()
         item.save_without_signals()
 
     if item.source_file:

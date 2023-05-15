@@ -25,7 +25,6 @@ python3 $manage timeside-create-boilerplate
 if [ "$1" = "--runserver" ]
 then
     su $uid -g $gid -s /bin/bash -c "python3 $manage runserver 0.0.0.0:8000"
-    python3 $manage runserver 0.0.0.0:8000
 else
     # fix static access
     chown -R $uid:$gid $static

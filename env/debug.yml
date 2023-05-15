@@ -31,9 +31,11 @@ services:
     command: /bin/bash app.sh --runserver
     ports:
       - "9080:8000"
+    stdin_open: true
 
   worker:
     env_file:
       - env/debug.env
+    stdin_open: true
 
 
