@@ -643,11 +643,11 @@ class Experience(Titled, UUID, Dated, Shareable):
             proc = preset.processor.get_processor()
             if proc.type in ['analyzer', 'grapher']:
                 try:
-                    p = proc(parameters=preset.parameters)
+                    proc = proc(parameters=preset.parameters)
                 except:
-                    p = proc(**preset.parameters)
-                if 'analyzer' in p.parents:
-                    parent_analyzers.append(p.parents['analyzer'])
+                    proc = proc(**preset.parameters)
+                if 'analyzer' in proc.parents:
+                    parent_analyzers.append(proc.parents['analyzer'])
 
         presets = {}
         for preset in self.presets.all():
@@ -670,22 +670,18 @@ class Experience(Titled, UUID, Dated, Shareable):
             elif proc.type in ['analyzer', 'grapher']:
                 # instantiate a core processor of an analyzer or a grapher
                 try:
-                    p = proc(parameters=preset.parameters)
-                    print("1")
+                    proc = proc(parameters=preset.parameters)
                 except:
-                    p = proc(**preset.parameters)
-                    print("2")
+                    proc = proc(**preset.parameters)
                 worker_logger.info(
-                    f'Run {p} on {item} with {preset.parameters}'
+                    f'Run {proc} on {item} with {preset.parameters}'
                     )
 
-            if p not in parent_analyzers:
-                presets[preset] = p
-                pipe |= p
+            if proc not in parent_analyzers:
+                presets[preset] = proc
+                pipe |= proc
 
-        print(pipe)
         pipe.run()
-        print("OK")
 
         def set_results_from_processor(proc, preset=None):
             if preset:
