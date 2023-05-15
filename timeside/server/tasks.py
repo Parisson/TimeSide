@@ -112,10 +112,6 @@ def task_run(task_id, synchronous=False):
 
 @shared_task
 def experience_run(task_id, exp_id, item_id):
-    print(task_id)
-    print(exp_id)
-    print(item_id)
-
     task = Task.objects.get(uuid=task_id)
     experience = Experience.objects.get(uuid=exp_id)
     if item_id:
