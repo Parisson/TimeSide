@@ -44,3 +44,7 @@ prod.env
 poetry-convert.py
 local_settings_first.py
 local_settings_last.py
+app/run
+app/src
+tmp
+lib/plugins
