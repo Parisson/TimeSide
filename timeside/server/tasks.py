@@ -22,95 +22,6 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def task_run(task_id, synchronous=False):
-    task = Task.objects.get(uuid=task_id)
-    results = []
-    results_id = []
-
-    if task.author:
-        message = str(task.author.username) + ":" + str(task.uuid)
-    else:
-        message = str(task.uuid)
-
-    r.publish(
-        'timeside-task-start',
-        message
-    )
-    if task.selection:
-        logger.info(
-            f'Apply {str(task.experience)} on {str(task.selection)} in task {str(task)}'
-        )
-        for item in task.selection.get_all_items():
-            if synchronous:
-                results.append(
-                    experience_run(
-                        str(task.uuid),
-                        str(task.experience.uuid),
-                        str(item.uuid),
-                    )
-                )    
-            else: 
-                results.append(
-                    experience_run.delay(
-                        str(task.uuid),
-                        str(task.experience.uuid),
-                        str(item.uuid),
-                    )
-                )    
-        if not synchronous:
-            results_id = [res.id for res in results]
-
-    elif task.item:
-        logger.info(
-            f'Apply {str(task.experience)} on {str(task.item)} in task {str(task)}'
-        )
-        if synchronous:
-            results.append(
-                experience_run(
-                    str(task.uuid),
-                    str(task.experience.uuid),
-                    str(task.item.uuid),
-                ),
-            )
-        else: 
-            results.append(
-                experience_run.delay(
-                    str(task.uuid),
-                    str(task.experience.uuid),
-                    str(task.item.uuid),
-                )
-            )
-            results_id = [res.id for res in results]
-
-    elif not task.item:
-        logger.info(
-            f'Apply {str(task.experience)} with no item in task {str(task)}'
-        )
-        if synchronous:
-            results.append(
-                experience_run(
-                    str(task.uuid),
-                    str(task.experience.uuid),
-                    None,
-                ),
-            )
-        else:
-            results.append(
-                experience_run.delay(
-                    str(task.uuid),
-                    str(task.experience.uuid),
-                    None,
-                )
-            )
-            results_id = [res.id for res in results]
-
-    if synchronous:
-        task_monitor(task_id, results_id)
-    else: 
-        task_monitor.delay(task_id, results_id)
-
-
-@shared_task
 def experience_run(task_id, exp_id, item_id):
     task = Task.objects.get(uuid=task_id)
     experience = Experience.objects.get(uuid=exp_id)
@@ -132,9 +43,11 @@ def experience_run(task_id, exp_id, item_id):
                         Please re-run task {str(task.uuid)} after finish')
         item.save()
     else:
+        logger.info(
+            f'Apply {str(experience)} on {str(item)} in task {str(task)}'
+        )
         r.publish(
             'timeside-experience-start',
-
             str(author) +
             ":" + str(task.uuid) +
             ":" + str(experience.uuid) +

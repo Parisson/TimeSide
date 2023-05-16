@@ -798,6 +798,10 @@ class Processor(Named, UUID):
 
     pid = models.CharField(_('pid'), max_length=128)
     version = models.CharField(_('version'), max_length=64, blank=True)
+    synchronous = models.BooleanField(
+        default=False,
+        help_text=_('executed in main thread synchronously')
+        )
 
     def __init__(self, *args, **kwargs):
         super(Processor, self).__init__(*args, **kwargs)
@@ -1070,11 +1074,6 @@ class Task(UUID, Dated, Shareable):
             """))
         )
 
-    synchronous = models.BooleanField(
-        default=False,
-        help_text=_('executed in main thread synchronously')
-        )
-
     class Meta:
         verbose_name = _('Task')
         verbose_name_plural = _('Tasks')
@@ -1106,21 +1105,82 @@ class Task(UUID, Dated, Shareable):
     def is_done(self):
         return (self.status == _DONE)
 
-    def run(self, wait=False, streaming=False):
+
+    def run(self, streaming=False):
+        from .tasks import experience_run, task_monitor
+
         self.status_setter(_RUNNING)
+        results = []
+        results_id = []
 
-        from timeside.server.tasks import task_run
-        if not self.synchronous:
-            task_run.delay(str(self.uuid))
+        synchronous = False
+        for preset in self.experience.presets.all():
+            if preset.processor.synchronous:
+                synchronous = True
+
+        if self.selection:
+            for item in self.selection.get_all_items():
+                if synchronous:
+                    results.append(
+                        experience_run(
+                            str(self.uuid),
+                            str(self.experience.uuid),
+                            str(item.uuid),
+                        )
+                    )
+                else:
+                    results.append(
+                        experience_run.delay(
+                            str(self.uuid),
+                            str(self.experience.uuid),
+                            str(item.uuid),
+                        )
+                    )
+            if not synchronous:
+                results_id = [res.id for res in results]
+
+        elif self.item:
+            if synchronous:
+                results.append(
+                    experience_run(
+                        str(self.uuid),
+                        str(self.experience.uuid),
+                        str(self.item.uuid),
+                    ),
+                )
+            else:
+                results.append(
+                    experience_run.delay(
+                        str(self.uuid),
+                        str(self.experience.uuid),
+                        str(self.item.uuid),
+                    )
+                )
+                results_id = [res.id for res in results]
+
+        elif not self.item:
+            if synchronous:
+                results.append(
+                    experience_run(
+                        str(self.uuid),
+                        str(self.experience.uuid),
+                        None,
+                    ),
+                )
+            else:
+                results.append(
+                    experience_run.delay(
+                        str(self.uuid),
+                        str(self.experience.uuid),
+                        None,
+                    )
+                )
+                results_id = [res.id for res in results]
+
+        if synchronous:
+            task_monitor(self.uuid, results_id)
         else:
-            task_run(str(self.uuid), synchronous=True)
-
-        if wait:
-            status = Task.objects.get(uuid=str(self.uuid)).status
-            while (status != _DONE):
-                time.sleep(0.5)
-                worker_logger.info('WAITING')
-                status = Task.objects.get(uuid=str(self.uuid)).status
+            task_monitor.delay(self.uuid, results_id)
 
 
 def task_run_now(sender, **kwargs):
@@ -1160,11 +1220,6 @@ class Analysis(Titled, UUID, Dated, Shareable):
             """))
         )
     featured = models.BooleanField(default=False)
-    synchronous = models.BooleanField(
-        default=False,
-        help_text=_('executed in main thread synchronously')
-        )
-
     parameters_schema = models.JSONField(default=dict)
 
     class Meta:
