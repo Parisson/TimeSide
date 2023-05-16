@@ -4,5 +4,9 @@
 
 # for example, a global model of a plugin:
 
-#from timeside.plugins.similarity.music_explorer_processor.idmt_embeddings.embeddings import load_model
-#load_model()
+from timeside.plugins.similarity.music_explorer_processor.idmt_embeddings.embeddings import load_model
+load_model()
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+
