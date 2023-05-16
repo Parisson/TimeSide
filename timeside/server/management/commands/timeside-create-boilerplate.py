@@ -166,26 +166,30 @@ class Command(BaseCommand):
                     processor,c= Processor.objects.get_or_create(
                                 pid=a.id(),
                                 version=a.version(),
-                                description=a.description(),
                                 )
+                    processor.description = a.description().strip()
+                    processor.save()
             
-                    preset,c= Preset.objects.get_or_create(
+                    preset, c = Preset.objects.get_or_create(
                                 processor=processor,
                                 parameters=a.get_parameters_default()
                                 )
 
-                    sub_processor,c= SubProcessor.objects.get_or_create(
+                    sub_processor, c = SubProcessor.objects.get_or_create(
                                 sub_processor_id=a.id(),
                                 processor=processor,
-                                description=a.description(),
                                 )
-                                
-                    analysis,c = Analysis.objects.get_or_create(
+                    sub_processor.description = a.description().strip()
+                    sub_processor.save()
+
+                    analysis, c = Analysis.objects.get_or_create(
                                 sub_processor=sub_processor,
                                 preset=preset,
                                 title=a.name(),
-                                description=a.description(),
                                 )
+                    analysis.description = a.description().strip()
+                    analysis.save()
+
                 except:
                     continue
                 
@@ -196,10 +200,11 @@ class Command(BaseCommand):
                 provider, c = Provider.objects.get_or_create(
                     pid=prov.id(),
                     source_access=prov.access(),
-                    description=prov.description(),
                     name=prov.name(),
                     domain=prov.domain(),
                     )
+                provider.description = prov.description().strip()
+
 
             # ------------- Analysis -------------
             for analysis in Analysis.objects.all():
