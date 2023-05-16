@@ -456,7 +456,8 @@ class ProcessorSerializer(ParametersSchemaSerializer, ParametersDefaultSerialize
     class Meta:
         model = ts.models.Processor
         fields = ('name', 'description', 'pid', 'url',
-                    'version', 'parameters_default', 'parameters_schema')
+                    'version', 'parameters_default',
+                    'parameters_schema', 'synchronous')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }
@@ -710,7 +711,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ts.models.Task
         fields = ('url', 'uuid', 'experience', 'status',
-                  'selection', 'status', 'author', 'item', 'synchronous')
+                  'selection', 'status', 'author', 'item')
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'experience': {'lookup_field': 'uuid'},
