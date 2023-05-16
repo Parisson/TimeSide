@@ -1149,7 +1149,7 @@ class Task(UUID, Dated, Shareable):
         if self.synchronous:
             task_monitor(self.uuid, self.results_ids)
         else:
-            task_monitor.delay(self.uuid, self.results_id)
+            task_monitor.delay(self.uuid, self.results_ids)
 
 
 def task_run_now(sender, **kwargs):
