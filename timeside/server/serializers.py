@@ -740,7 +740,7 @@ class AnalysisSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'uuid',
                   'title', 'description', 'render_type',
                   'preset', 'sub_processor',
-                  'parameters_schema', 'synchronous')
+                  'parameters_schema',)
         extra_kwargs = {
             'url': {'lookup_field': 'uuid'},
             'preset': {'lookup_field': 'uuid'},
