@@ -44,11 +44,6 @@ def get_result(item, preset, user=None, wait=True):
         item=item
         )
 
-    if item:
-        test = item.test
-    else:
-        test = False
-
     if user.is_authenticated:
         u = user
     else:
@@ -65,7 +60,6 @@ def get_result(item, preset, user=None, wait=True):
         task, c = Task.get_first_or_create(
             experience=preset.get_single_experience(),
             item=item,
-            synchronous=test,
             author=u
             )
 

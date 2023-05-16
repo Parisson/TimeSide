@@ -472,7 +472,7 @@ class ProcessorListSerializer(ParametersSchemaSerializer, ParametersDefaultSeria
     class Meta:
         model = ts.models.Processor
         fields = ('name', 'description', 'pid', 'url', 'version',
-            'parameters_default', 'parameters_schema', )
+            'parameters_default', 'parameters_schema', 'synchronous')
         extra_kwargs = {
             'url': {'lookup_field': 'pid'}
         }
