@@ -1105,82 +1105,51 @@ class Task(UUID, Dated, Shareable):
     def is_done(self):
         return (self.status == _DONE)
 
+    def run_experience(self, item_uuid):
+        from .tasks import experience_run
+
+        if self.synchronous:
+            self.results.append(
+                experience_run(
+                    task_id=str(self.uuid),
+                    experience_id=str(self.experience.uuid),
+                    item_id=item_uuid,
+                )
+            )
+        else:
+            self.results.append(
+                experience_run.delay(
+                    task_id=str(self.uuid),
+                    experience_id=str(self.experience.uuid),
+                    item_id=item_uuid,
+                )
+            )
+            self.results_ids = [res.id for res in self.results]
 
     def run(self, streaming=False):
-        from .tasks import experience_run, task_monitor
+        from .tasks import task_monitor
 
         self.status_setter(_RUNNING)
-        results = []
-        results_id = []
+        self.results = []
+        self.results_ids = []
 
-        synchronous = False
+        self.synchronous = False
         for preset in self.experience.presets.all():
             if preset.processor.synchronous:
-                synchronous = True
+                self.synchronous = True
 
         if self.selection:
             for item in self.selection.get_all_items():
-                if synchronous:
-                    results.append(
-                        experience_run(
-                            str(self.uuid),
-                            str(self.experience.uuid),
-                            str(item.uuid),
-                        )
-                    )
-                else:
-                    results.append(
-                        experience_run.delay(
-                            str(self.uuid),
-                            str(self.experience.uuid),
-                            str(item.uuid),
-                        )
-                    )
-            if not synchronous:
-                results_id = [res.id for res in results]
-
+                self.run_experience(str(self.item.uuid))
         elif self.item:
-            if synchronous:
-                results.append(
-                    experience_run(
-                        str(self.uuid),
-                        str(self.experience.uuid),
-                        str(self.item.uuid),
-                    ),
-                )
-            else:
-                results.append(
-                    experience_run.delay(
-                        str(self.uuid),
-                        str(self.experience.uuid),
-                        str(self.item.uuid),
-                    )
-                )
-                results_id = [res.id for res in results]
-
+            self.run_experience(str(self.item.uuid))
         elif not self.item:
-            if synchronous:
-                results.append(
-                    experience_run(
-                        str(self.uuid),
-                        str(self.experience.uuid),
-                        None,
-                    ),
-                )
-            else:
-                results.append(
-                    experience_run.delay(
-                        str(self.uuid),
-                        str(self.experience.uuid),
-                        None,
-                    )
-                )
-                results_id = [res.id for res in results]
+            self.run_experience(None)
 
-        if synchronous:
-            task_monitor(self.uuid, results_id)
+        if self.synchronous:
+            task_monitor(self.uuid, self.results_ids)
         else:
-            task_monitor.delay(self.uuid, results_id)
+            task_monitor.delay(self.uuid, self.results_id)
 
 
 def task_run_now(sender, **kwargs):

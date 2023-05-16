@@ -22,9 +22,9 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def experience_run(task_id, exp_id, item_id):
+def experience_run(task_id=None, experience_id=None, item_id=None):
     task = Task.objects.get(uuid=task_id)
-    experience = Experience.objects.get(uuid=exp_id)
+    experience = Experience.objects.get(uuid=experience_id)
     if item_id:
         item = Item.objects.get(uuid=item_id)
     else:
@@ -35,8 +35,6 @@ def experience_run(task_id, exp_id, item_id):
     else:
         author = ''
 
-    # try:
-    logger.info(f'Run {str(experience)} on {str(item)}')
     if item and not (item.source_url or item.source_file):
         logger.info(f'Item does not have any source_file nor source_url. \
                         Saving it again to retrieve data. \
