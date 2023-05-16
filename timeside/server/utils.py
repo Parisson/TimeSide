@@ -49,6 +49,11 @@ def get_result(item, preset, user=None, wait=True):
     else:
         test = False
 
+    if user.is_authenticated:
+        u = user
+    else:
+        u = None
+
     if created or \
             not settings.CACHE_RESULT or \
             (
@@ -56,19 +61,13 @@ def get_result(item, preset, user=None, wait=True):
                 not result.has_hdf5()
             ):
 
-        if user.is_authenticated:
-            task, c = Task.get_first_or_create(
-                experience=preset.get_single_experience(),
-                item=item,
-                test=test,
-                author=user
-                )
-        else:
-            task, c = Task.get_first_or_create(
-                experience=preset.get_single_experience(),
-                item=item,
-                test=test
-                )
+
+        task, c = Task.get_first_or_create(
+            experience=preset.get_single_experience(),
+            item=item,
+            synchronous=test,
+            author=u
+            )
 
         task.save()
         task.run(wait=wait)
