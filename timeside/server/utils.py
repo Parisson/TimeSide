@@ -64,7 +64,7 @@ def get_result(item, preset, user=None, wait=True):
             )
 
         task.save()
-        task.run(wait=wait)
+        task.run()
 
         # SMELLS: might not get the last good result
         # TODO: manage Task running return for Analysis through API
