@@ -10,7 +10,7 @@ To run the ipython shell, just do it through the docker composition::
     docker compose run app ipython
 
 .. note::
-  The `var/media` directory is mounted in `/srv/media` inside the container so you can use it to exchange data between the host and the app container.
+  The `var/media` local directory is mounted in `/srv/media` inside the container so you can use it to exchange data between the host and the app container.
 
 Notebook
 ---------
@@ -58,8 +58,8 @@ To process some data by hand in the web environment context, just start a django
     docker compose run app manage.py shell
 
 
-Web player v1 (not maintained anymore)
-----------------------------------------
+Web player v1 (not maintained)
+------------------------------
 
 Until 2017, TimeSide has come with a smart and pure **HTML5** audio player.
 
