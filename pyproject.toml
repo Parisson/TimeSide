@@ -44,6 +44,7 @@ redis = "^4.5.4"
 ffmpeg-python = "^0.2.0"
 pytest = "^7.3.1"
 uritemplate = "^4.1.1"
+pyacoustid = "1.2.2"
 
 
 [build-system]

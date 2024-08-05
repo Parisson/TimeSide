@@ -31,6 +31,9 @@ ffmpeg
 # Add support to both flac and ogg through aubio's sink_sndfile
 libsndfile1-dev
 
+# more audio tools
+libchromaprint-dev
+
 # aubio needs libav
 libavcodec-dev
 libavformat-dev

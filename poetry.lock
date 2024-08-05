@@ -2586,6 +2586,21 @@ files = [
 ]
 
 [[package]]
+name = "pyacoustid"
+version = "1.2.2"
+description = "bindings for Chromaprint acoustic fingerprinting and the Acoustid API"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyacoustid-1.2.2.tar.gz", hash = "sha256:c279d9c30a7f481f1420fc37db65833b5f9816cd364dc2acaa93a11c482d4141"},
+]
+
+[package.dependencies]
+audioread = "*"
+requests = "*"
+
+[[package]]
 name = "pycairo"
 version = "1.23.0"
 description = "Python interface for cairo"
@@ -3873,4 +3888,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "50a198c08ddfb3b5748b6d2316c196df0874ce72dceeb700a775d673f03aa837"
+content-hash = "546f538e2d58e82f3127783d1968868317c347cebd2960a3a8be5eb13c0a1d9a"
