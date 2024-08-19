@@ -474,10 +474,7 @@ class Item(Titled, UUID, Dated, Shareable):
         Return Item result path
         """
 
-        result_path = os.path.join(settings.RESULTS_ROOT, str(self.uuid))
-        if not os.path.exists(result_path):
-            os.makedirs(result_path)
-        return result_path
+        return os.path.join(settings.RESULTS_ROOT, str(self.uuid))
 
     def get_audio_duration(self, force=False):
         """
