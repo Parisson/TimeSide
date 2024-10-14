@@ -38,7 +38,7 @@ RUN pip3 install -U setuptools pip numpy
 RUN apt-get remove -y python3-yaml
 
 # https://python-poetry.org/docs/configuration/#using-environment-variables
-ENV POETRY_VERSION=1.8.3 \
+ENV POETRY_VERSION=1.4.2 \
         POETRY_NO_INTERACTION=1 \
     # make poetry install to this location
     POETRY_HOME="/opt/poetry" \
