@@ -17,7 +17,7 @@ Notebook
 
 You can also run your code in the wonderful `Jupyter Notebook <http://jupyter.org/>`_ which gives you a web interface to run your own code and share the results with your collaborators::
 
-    docker compose -f docker compose.yml -f env/notebook.yml up
+    docker compose -f docker-compose.yml -f env/notebook.yml up
 
 and then browse http://localhost:8888 or the URL including the login token given in the docker logs of the `notebook` container.
 

@@ -75,7 +75,7 @@ Developing a new server feature
 
 First, setup the development environment at the root of the project::
 
-    echo "COMPOSE_FILE=docker compose.yml:env/debug.yml" > .env
+    echo "COMPOSE_FILE=docker-compose.yml:env/debug.yml" > .env
     docker compose up
 
 Then any change on the server part will be dynamically updated in the container thanks to the django debug server.

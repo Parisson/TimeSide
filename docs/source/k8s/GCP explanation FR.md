@@ -257,11 +257,11 @@ OpenShift). Vous trouverez plus d'informations sur le site web de
 Voici les commande a suivre afin d’arriver à nos fin :
 
 Premièrement aller dans le répertoire contenant le fichier
-“docker compose.yml”.
+“docker-compose.yml”.
 
 puis lancer la commande : `''kompose up` '' (Si plusieurs docker compose
 il y a une possibilité de faire ça :
-`''kompose --file ./examples/docker compose.yml up` '' **attention un
+`''kompose --file ./examples/docker-compose.yml up` '' **attention un
 cluster Kubernetes en cours d'exécution avec kubectl pré-configuré doit
 être disponible.** Et seuls les déploiements et les services sont
 générés et déployés dans Kubernetes. Si besoin d'autres types de
@@ -271,7 +271,7 @@ ressources, utiliser les commandes `''kompose convert` '' et
 '' rajouter apres **up** --server suivi de l’adresse du cluster
 kubernetes donner par `''kubectl cluster-info` '')
 
-Maintenant convertir le fichier “docker compose.yml” en fichiers
+Maintenant convertir le fichier “docker-compose.yml” en fichiers
 utilisable avec kubectl, lancer : `''kompose --file ‘name’ convert` ''
 (va créer tout les fichiers(services,deployment) en .yaml. Pas besoin de
 mentionner --file ‘name’ si seul dans le répertoire mais cette commande
