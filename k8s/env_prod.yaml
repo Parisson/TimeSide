@@ -30,7 +30,7 @@ spec:
       value: "ghv8us2587n97dq&w$c((o5rj_$-9#d-8j#57y_a9og8wux1h7"  
       
 
-      # replace broker by localhost if you start your app outside docker-compose
+      # replace broker by localhost if you start your app outside docker compose
     - name: CELERY_BROKER_URL
       value: "redis://broker:6379/0"
       

@@ -26,7 +26,7 @@
 # this was needed because Timeside-diadems IRIT_DIVERG2 plugin generated .so files in the timeside/plugins/diadems directory
 # Those files were thus not present if the plugins setup was done only during the build and not with the lib/timeside-diadems volume mounted at run time
 #
-# Usage : docker-compose -f docker-compose.yml -f env/build.yml -f env/build_plugins.yml run app
+# Usage : docker compose -f docker compose.yml -f env/build.yml -f env/build_plugins.yml run app
 #
 
 services:

@@ -21,7 +21,7 @@
 # Guillaume Pellerin <yomguy@parisson.com>
 # Thomas Fillon <thomas@parisson.com>
 
-# Usage : docker-compose -f docker-compose.yml -f env/build.yml -f env/debug.yml -f env/dev.yml -f env/js_build.yml run --service-ports js_build
+# Usage : docker compose -f docker compose.yml -f env/build.yml -f env/debug.yml -f env/dev.yml -f env/js_build.yml run --service-ports js_build
 
 services:
 

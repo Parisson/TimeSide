@@ -247,11 +247,11 @@ website.
 
 Here are the commands to follow in order to reach our end:
 
-First go to the directory containing the file “docker-compose.yml”.
+First go to the directory containing the file “docker compose.yml”.
 
 then launch the command: `''kompose up`'' (If more than one
-docker-compose there is a possibility to do this:
-`''kompose --file ./examples/docker-compose.yml up`" **beware a
+docker compose there is a possibility to do this:
+`''kompose --file ./examples/docker compose.yml up`" **beware a
 running Kubernetes cluster with pre-configured kubectl must be
 available.** And only deployments and services are generated and
 deployed in Kubernetes. If need other types of resources, use commands
@@ -260,12 +260,12 @@ deployed in Kubernetes. If need other types of resources, use commands
 '' add after **up** --server followed by the address of the
 kubernetes cluster give by `''kubectl cluster-info`'')
 
-Now convert the file “docker-compose.yml” into files usable with
+Now convert the file “docker compose.yml” into files usable with
 kubectl, launch: `'' kompose --file 'name' convert` '' (will create all
 the files (services, deployment) in .yaml, no need to mention --file
 'name 'if alone in the directory but this command can also make several
-examples: kompose -f docker-compose1.yml -f docker-compose2.yml convert
-**but be careful when several files of docker-compose are provided,
+examples: kompose -f docker compose1.yml -f docker compose2.yml convert
+**but be careful when several files of docker compose are provided,
 the configuration is merged**.)
 
 And then `'' kubectl apply -f <output file>` '' (This will correspond to
@@ -285,4 +285,4 @@ resources](https://kubernetes.io/en/docs/tasks/configure-pod-container/translate
 labels](https://github.com/kubernetes/kompose/blob/master/docs/user-guide.md)
 
 [tuto
-KOMPOSE](https://www.katacoda.com/courses/kourses/-docker-compose-using-kompose)
+KOMPOSE](https://www.katacoda.com/courses/kourses/-docker compose-using-kompose)

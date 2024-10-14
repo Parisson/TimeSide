@@ -6,7 +6,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 from django.utils import autoreload
 
-# thanks to https://medium.com/aubergine-solutions/auto-reload-development-mode-for-celery-worker-using-docker-compose-and-django-management-2ba8e313eb37
+# thanks to https://medium.com/aubergine-solutions/auto-reload-development-mode-for-celery-worker-using-docker compose-and-django-management-2ba8e313eb37
 
 
 def restart_celery(*args, **kwargs):
