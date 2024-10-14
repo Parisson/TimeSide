@@ -163,7 +163,7 @@ readme:
 	@echo "Build finished. The README.rst file is up to date."
 
 publish:
-	rsync -a --delete build/html/ yomguy@files.parisson.com:/var/www/files/timeside/doc/
+	rsync -a --delete build/html/ debian@timeside.parisson.com:/home/parisson/www/timeside/docs/
 
 install_deps:
 	pip install $(DEPENDENCIES)
